@@ -1,0 +1,293 @@
+{
+	"login": {
+		"title": "Iniciar sesión en tu cuenta",
+		"subtitle": "¡Bienvenido de vuelta! Inicia sesión para acceder a tu cuenta.",
+		"email": "Correo electrónico",
+		"emailPlaceholder": "Ingresa tu correo electrónico",
+		"password": "Contraseña",
+		"passwordPlaceholder": "Ingresa tu contraseña",
+		"rememberMe": "Recordarme",
+		"forgotPassword": "¿Olvidaste tu contraseña?",
+		"signIn": "Iniciar sesión",
+		"noAccount": "¿No tienes una cuenta?",
+		"signUp": "Regístrate",
+		"or": "o",
+		"continueWith": "Continuar con",
+		"google": "Google",
+		"errors": {
+			"noActivePartner": "Socio no encontrado o inactivo. Contacta al administrador."
+		}
+	},
+	"forgotPassword": {
+		"title": "Recuperar contraseña",
+		"subtitle": "Ingresa tu correo electrónico para recibir las instrucciones de recuperación.",
+		"emailLabel": "Correo electrónico",
+		"emailPlaceholder": "Ingresa tu correo electrónico",
+		"sendButton": "Enviar instrucciones",
+		"sending": "Enviando...",
+		"backToLogin": "Volver al Login",
+		"emailSent": "¡Correo enviado con éxito!",
+		"checkEmail": "Revisa tu bandeja de entrada para las instrucciones de recuperación.",
+		"successMessage": "¡Instrucciones enviadas con éxito!",
+		"error": {
+			"forgotPasswordError": "Error al enviar correo de recuperación"
+		}
+	},
+	"resetPassword": {
+		"title": "Redefinir contraseña",
+		"subtitle": "Ingresa tu nueva contraseña para completar la recuperación.",
+		"newPasswordLabel": "Nueva contraseña",
+		"newPasswordPlaceholder": "Ingresa tu nueva contraseña",
+		"confirmPasswordLabel": "Confirmar nueva contraseña",
+		"confirmPasswordPlaceholder": "Confirma tu nueva contraseña",
+		"resetButton": "Redefinir contraseña",
+		"resetting": "Redefiniendo...",
+		"backToLogin": "Volver al Login",
+		"success": "¡Contraseña redefinida con éxito!",
+		"successMessage": "Tu contraseña ha sido cambiada. Puedes iniciar sesión ahora.",
+		"invalidToken": "Token inválido o expirado",
+		"passwordMismatch": "Las contraseñas no coinciden",
+		"passwordTooShort": "La contraseña debe tener al menos 6 caracteres"
+	},
+	"common": {
+		"home": "Inicio",
+		"loading": "Cargando...",
+		"error": "Error",
+		"success": "Éxito",
+		"cancel": "Cancelar",
+		"confirm": "Confirmar",
+		"save": "Guardar",
+		"create": "Crear",
+		"update": "Actualizar",
+		"edit": "Editar",
+		"delete": "Eliminar",
+		"close": "Cerrar",
+		"access": "Acceder",
+		"actions": "Acciones",
+		"active": "Activo",
+		"inactive": "Inactivo",
+		"activate": "Activar",
+		"deactivate": "Desactivar",
+		"loadError": "Error al cargar datos"
+	},
+	"dashboard": {
+		"title": "Dashboard",
+		"welcome": "¡Bienvenido, {{name}}!",
+		"homeWelcome": "Bienvenido al sistema DOSPY. Accede rápidamente a las principales funcionalidades.",
+		"recentActivity": "Actividad Reciente",
+		"systemStatus": "Estado del Sistema",
+		"quickActions": "Acciones Rápidas",
+		"totalSales": "Ventas Totales",
+		"activeUsers": "Usuarios Activos",
+		"newClient": "Nuevo Cliente",
+		"newProduct": "Nuevo Producto",
+		"viewReports": "Ver Informes",
+		"users": "Usuarios",
+		"totalUsers": "Total de usuarios registrados",
+		"sales": "Ventas",
+		"monthlySales": "Ventas del mes actual",
+		"orders": "Pedidos",
+		"pendingOrders": "Pedidos pendientes",
+		"manageClients": "Gestiona tus clientes"
+	},
+	"header": {
+		"profile": "Preferencias",
+		"logout": "Salir"
+	},
+	"menu": {
+		"home": "Inicio",
+		"registrations": "Registros",
+		"clients": "Clientes",
+		"suppliers": "Proveedores",
+		"products": "Productos",
+		"inventory": "Inventario",
+		"purchaseOrders": "Órdenes de Compra",
+		"expenses": "Gastos",
+		"paymentMethods": "Forma de Pago",
+		"originChannels": "Canales"
+	},
+	"originChannels": {
+		"title": "Canales",
+		"list": "Lista de Canales",
+		"create": "Nuevo Canal",
+		"createFirst": "Crear Primer Canal",
+		"edit": "Editar Canal de Origen",
+		"name": "Nombre",
+		"namePlaceholder": "Ingrese el nombre del canal",
+		"description": "Descripción",
+		"descriptionPlaceholder": "Ingrese una descripción para el canal",
+		"status": "Estado",
+		"noChannels": "No se encontraron canales de origen",
+		"form": {
+			"name": {
+				"required": "El nombre es obligatorio"
+			},
+			"description": {
+				"label": "Descripción",
+				"placeholder": "Ingrese una descripción para el canal"
+			},
+			"active": {
+				"label": "Activo"
+			}
+		}
+	},
+	"sales": {
+		"title": "Ventas",
+		"openOrders": "Pedidos Abiertos",
+		"completedSales": "Ventas Realizadas",
+		"conditionals": "Condicionales",
+		"installments": "Cuotas"
+	},
+	"administration": {
+		"title": "Administración",
+		"users": "Usuarios",
+		"partners": "Socios",
+		"editUser": "Editar Usuario",
+		"deleteUser": "Eliminar Usuario"
+	},
+	"users": {
+		"title": "Usuarios",
+		"subtitle": "Gestiona los usuarios del sistema",
+		"newUser": "Nuevo Usuario",
+		"createUser": "Crear Usuario",
+		"editUser": "Editar Usuario",
+		"filters": "Filtros",
+		"search": "Buscar usuarios...",
+		"filter": "Filtrar",
+		"usersList": "Lista de Usuarios",
+		"usersFound": "usuarios encontrados",
+		"totalUsers": "Total de Usuarios",
+		"activeUsers": "Usuarios Activos",
+		"administrators": "Administradores",
+		"newThisMonth": "nuevos este mes",
+		"ofTotal": "del total",
+		"withFullAccess": "Con acceso total",
+		"lastAccess": "Último acceso:",
+		"status": {
+			"active": "Activo",
+			"inactive": "Inactivo",
+			"label": "Estado"
+		},
+		"name": "Nombre",
+		"email": "Correo electrónico",
+		"phone": "Teléfono",
+		"partner": "Socio",
+		"profile": "Perfil",
+		"password": "Contraseña",
+		"confirmPassword": "Confirmar Contraseña",
+		"partners": "Socios",
+		"create": "Crear Usuario",
+		"edit": "Editar Usuario",
+		"namePlaceholder": "Ingresa el nombre completo",
+		"emailPlaceholder": "Ingresa el correo electrónico",
+		"phonePlaceholder": "Ingresa el teléfono",
+		"passwordPlaceholder": "Ingresa la contraseña",
+		"passwordPlaceholderEdit": "Ingresa una nueva contraseña (opcional)",
+		"confirmPasswordPlaceholder": "Confirma la contraseña",
+		"profilePlaceholder": "Selecciona un perfil",
+		"partnerPlaceholder": "Selecciona un socio",
+		"passwordEditHint": "Deja en blanco para mantener la contraseña actual",
+		"selectProfile": "Selecciona un perfil",
+		"selectPartner": "Selecciona un socio",
+		"optional": "Opcional",
+		"filterByProfile": "Filtrar por perfil",
+		"filterByStatus": "Filtrar por estado",
+		"noResults": "No se encontraron usuarios",
+		"messages": {
+			"activateSuccess": "¡Usuario activado con éxito!",
+			"deactivateSuccess": "¡Usuario desactivado con éxito!",
+			"activateError": "Error al activar usuario. Inténtalo de nuevo.",
+			"deactivateError": "Error al desactivar usuario. Inténtalo de nuevo.",
+			"createSuccess": "¡Usuario creado con éxito!",
+			"updateSuccess": "¡Usuario actualizado con éxito!",
+			"createError": "Error al crear usuario. Inténtalo de nuevo.",
+			"updateError": "Error al actualizar usuario. Inténtalo de nuevo.",
+			"loadError": "Error al cargar datos del usuario."
+		},
+		"common": {
+			"all": "Todos",
+			"actions": "Acciones",
+			"edit": "Editar",
+			"activate": "Activar",
+			"deactivate": "Desactivar",
+			"openMenu": "Abrir menú",
+			"showing": "Mostrando",
+			"to": "hasta",
+			"of": "de",
+			"results": "resultados",
+			"previous": "Anterior",
+			"next": "Siguiente",
+			"search": "Buscar",
+			"filters": "Filtros",
+			"filterByProfile": "Filtrar por perfil",
+			"filterByStatus": "Filtrar por estado",
+			"users": "Usuarios",
+			"usersFound": "usuarios encontrados",
+			"new": "Nuevo",
+			"user": "Usuario",
+			"noResults": "No se encontraron resultados",
+			"loadMore": "Cargar más",
+			"roles": {
+				"administrator": "Administrador",
+				"user": "Usuario"
+			}
+		}
+	},
+	"profiles": {
+		"admin": "Administrador",
+		"user": "Usuario"
+	},
+	"partners": {
+		"title": "Socios",
+		"subtitle": "Gestiona los socios del sistema",
+		"list": "Lista de Socios",
+		"create": "Crear Socio",
+		"edit": "Editar Socio",
+		"search": "Buscar socios...",
+		"noResults": "No se encontraron socios",
+		"results": "resultados",
+		"name": "Nombre",
+		"email": "Correo electrónico",
+		"phone": "Teléfono",
+		"ruccnpj": "RUC/CNPJ",
+		"socialNetwork": "Red Social",
+
+		"namePlaceholder": "Ingresa el nombre del socio",
+		"emailPlaceholder": "Ingresa el correo electrónico",
+		"phonePlaceholder": "Ingresa el teléfono",
+		"ruccnpjPlaceholder": "Ingresa el RUC/CNPJ",
+		"socialNetworkPlaceholder": "Ingresa la red social",
+
+		"status": {
+			"label": "Estado",
+			"active": "Activo",
+			"inactive": "Inactivo",
+			"all": "Todos",
+			"filter": "Filtrar por estado"
+		},
+
+		"messages": {
+			"createSuccess": "¡Socio creado con éxito!",
+			"updateSuccess": "¡Socio actualizado con éxito!",
+			"createError": "Error al crear socio. Inténtalo de nuevo.",
+			"updateError": "Error al actualizar socio. Inténtalo de nuevo.",
+			"activateSuccess": "¡Socio activado con éxito!",
+			"deactivateSuccess": "¡Socio desactivado con éxito!",
+			"activateError": "Error al activar socio. Inténtalo de nuevo.",
+			"deactivateError": "Error al desactivar socio. Inténtalo de nuevo."
+		},
+		"common": {
+			"actions": "Acciones",
+			"edit": "Editar",
+			"activate": "Activar",
+			"deactivate": "Desactivar",
+			"openMenu": "Abrir menú"
+		}
+	},
+	"validation": {
+		"required": "{{field}} es obligatorio",
+		"minLength": "{{field}} debe tener al menos {{min}} caracteres",
+		"email": "El correo electrónico debe tener un formato válido",
+		"passwordMatch": "Las contraseñas deben ser iguales"
+	}
+}

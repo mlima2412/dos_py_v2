@@ -1,0 +1,23 @@
+Preciso que você crie neste projeto api a estratégia de login JWT
+com as seguintes premissas:
+#1 Use o guard
+# proteja todas as rotas com o guard, mas deixe a rota de login sem proteção
+#2 Use o service
+# crie um service para gerenciar o login
+#3 Use o controller
+# crie um controller para gerenciar o login
+#4 Use o dto. Crie o dto no @repo/api e use no api
+# crie um dto para gerenciar o login
+#5 Use o prisma
+# crie um prisma para gerenciar o login
+#6 Use o bcrypt
+# crie um bcrypt para gerenciar o login
+#7 Use o jwt
+# crie um jwt para gerenciar o login
+#8 No .env já tem as variáveis para você usar
+# Essa estratégia de login precisa ter em mente duas coisas.
+    - Vou ter login de aplicativo web
+    - Vou ter login de aplicativo mobile
+# para aplicativo web eu preciso que você gere um cokie persistente de 7 dias
+
+

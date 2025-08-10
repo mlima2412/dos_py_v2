@@ -1,0 +1,21 @@
+{
+  "password-reset": {
+    "subject": "Recuperação de Senha - DOS",
+    "title": "Recuperação de Senha",
+    "greeting": "Olá <strong>{{name}}</strong>,",
+    "message": "Você solicitou a recuperação de sua senha. Para criar uma nova senha, clique no link abaixo:",
+    "buttonText": "Redefinir Senha",
+    "important": "Importante:",
+    "validFor": "Este link é válido por apenas 1 hora",
+    "notRequested": "Se você não solicitou esta recuperação, ignore este email",
+    "doNotShare": "Por segurança, não compartilhe este link com ninguém",
+    "fallbackText": "Se o botão não funcionar, copie e cole o link abaixo no seu navegador:",
+    "footer": "Este é um email automático, não responda a esta mensagem."
+  },
+  "main": {
+    "greeting": "Bem vindo ao backend da DOSPY!"
+  },
+  "auth": {
+    "noActivePartner": "Parceiro não encontrado ou inativo. Entre em contato com o administrador."
+  }
+}

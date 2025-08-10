@@ -1,0 +1,1 @@
+{"type":"object","properties":{"perfilId":{"type":"number","description":"ID do perfil","example":1},"usuarioId":{"type":"number","description":"ID do usuário","example":1},"parceiroId":{"type":"number","description":"ID do parceiro","example":1}},"required":["perfilId","usuarioId","parceiroId"],"x-readme-ref-name":"CreateUsuarioParceiroDto"}

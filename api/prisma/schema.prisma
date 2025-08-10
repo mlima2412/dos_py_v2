@@ -1,0 +1,281 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Perfil {
+  id              Int               @id @default(autoincrement())
+  nome            String
+  ativo           Boolean           @default(true)
+  UsuarioParceiro UsuarioParceiro[]
+
+  @@map("perfil")
+}
+
+model Usuario {
+  id                 Int                  @id @default(autoincrement())
+  publicId           String               @unique @map("public_id")
+  nome               String
+  email              String               @unique
+  telefone           String?              @map("telefone")
+  provider           String               @default("LOCAL") // LOCAL, GOOGLE, FACEBOOK
+  googleId           String?              @map("google_id")
+  senha              String?
+  ativo              Boolean              @default(true)
+  avatar             String?              @default("")
+  createdAt          DateTime             @default(now()) @map("created_at")
+  UsuarioParceiro    UsuarioParceiro[]
+  PasswordResetToken PasswordResetToken[]
+
+  @@map("usuario")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(uuid())
+  userId    Int
+  token     String    @unique
+  used      Boolean   @default(false)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user Usuario @relation(fields: [userId], references: [id])
+
+  @@map("password_reset_token")
+}
+
+model Fornecedor {
+  id           Int       @id @default(autoincrement())
+  publicId     String    @unique @map("public_id")
+  nome         String
+  ruccnpj      String?   @unique
+  email        String?   @unique
+  telefone     String?
+  redesocial   String?
+  ativo        Boolean   @default(true)
+  ultimaCompra DateTime? @map("ultima_compra")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  despesas            Despesa[]
+  despesasRecorrentes DespesaRecorrente[]
+
+  @@map("fornecedor")
+}
+
+model UsuarioParceiro {
+  id         Int      @id @default(autoincrement())
+  usuarioId  Int      @map("usuario_id")
+  parceiroId Int      @map("parceiro_id")
+  perfilId   Int      @map("perfil_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  Parceiro   Parceiro @relation(fields: [parceiroId], references: [id])
+  Usuario    Usuario  @relation(fields: [usuarioId], references: [id])
+  perfil     Perfil   @relation(fields: [perfilId], references: [id])
+
+  @@map("usuario_parceiro")
+}
+
+model Parceiro {
+  id                  Int                 @id @default(autoincrement())
+  publicId            String              @unique @map("public_id")
+  nome                String
+  ruccnpj             String?             @unique
+  email               String              @unique
+  redesocial          String?             @map("rede_social")
+  telefone            String?
+  currencyId          Int?                @unique @map("currency_id")
+  ativo               Boolean             @default(true)
+  logourl             String?             @map("logo_url")
+  thumburl            String?             @map("thumb_url")
+  createdAt           DateTime            @default(now()) @map("created_at")
+  currency            Currency?           @relation(fields: [currencyId], references: [id])
+  Cliente             Cliente[]
+  UsuarioParceiro     UsuarioParceiro[]
+  despesas            Despesa[]
+  despesasRecorrentes DespesaRecorrente[]
+  contasPagar         ContasPagar[]
+
+  @@map("parceiro")
+}
+
+model CanalOrigem {
+  id        Int       @id @default(autoincrement())
+  publicId  String    @unique @map("public_id")
+  nome      String
+  descricao String?
+  ativo     Boolean   @default(true)
+  createdAt DateTime  @default(now()) @map("created_at")
+  Cliente   Cliente[]
+
+  @@map("canal_origem")
+}
+
+model Cliente {
+  id            Int          @id @default(autoincrement())
+  publicId      String       @unique @map("public_id")
+  nome          String
+  sobrenome     String?
+  email         String?
+  telefone      String?
+  ruccnpj       String?      @unique
+  endereco      String?
+  cidade        String?
+  cep           String?
+  observacoes   String?
+  linguagem     Linguagem    @default(Espanol)
+  ativo         Boolean      @default(true)
+  parceiroId    Int          @map("parceiro_id")
+  canalOrigemId Int?         @map("canal_origem_id")
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+  CanalOrigem   CanalOrigem? @relation(fields: [canalOrigemId], references: [id])
+  Parceiro      Parceiro     @relation(fields: [parceiroId], references: [id])
+
+  @@map("cliente")
+}
+
+model Currency {
+  id                  Int                   @id @default(autoincrement())
+  publicId            String                @unique @map("public_id")
+  nome                String
+  prefixo             String
+  isoCode             String                @unique @map("iso_code")
+  precision           Int                   @default(2)
+  locale              String                @default("pt-BR")
+  defaultRate         Decimal               @default(0.0) @map("default_rate") @db.Decimal(12, 3)
+  ativo               Boolean               @default(true)
+  createdAt           DateTime              @default(now()) @map("created_at")
+  parceiro            Parceiro?
+  despesas            Despesa[]
+  despesasRecorrentes DespesaRecorrente[]
+  contasPagar         ContasPagar[]
+  contasPagarParcelas ContasPagarParcelas[]
+
+  @@map("currency")
+}
+
+model CategoriaDespesas {
+  idCategoria         Int                   @id @default(autoincrement()) @map("categoria_id")
+  descricao           String
+  ativo               Boolean               @default(true)
+  createdAt           DateTime              @default(now()) @map("created_at")
+  SubCategoriaDespesa SubCategoriaDespesa[]
+
+  @@map("categoria_despesas")
+}
+
+model SubCategoriaDespesa {
+  idSubCategoria Int      @id @default(autoincrement()) @map("subcategoria_id")
+  categoriaId    Int      @map("categoria_id")
+  descricao      String
+  ativo          Boolean  @default(true)
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  categoria           CategoriaDespesas   @relation(fields: [categoriaId], references: [idCategoria])
+  despesas            Despesa[]
+  despesasRecorrentes DespesaRecorrente[]
+
+  @@map("subcategoria_despesa")
+}
+
+enum Linguagem {
+  Espanol   @map("Español")
+  Portugues
+}
+
+model Despesa {
+  id             Int                 @id @default(autoincrement())
+  publicId       String              @unique @map("public_id")
+  dataDespesa    DateTime            @default(now()) @map("data_despesa")
+  valor          Decimal             @default(0.0) @db.Decimal(12, 3)
+  descricao      String
+  subCategoriaId Int                 @map("sub_categoria_id")
+  parceiroId     Int                 @map("parceiro_id")
+  fornecedorId   Int?                @map("fornecedor_id")
+  dataVencimento DateTime?           @default(now()) @map("data_vencimento")
+  dataPagamento  DateTime?           @map("data_pagamento")
+  currencyId     Int?                @map("currency_id")
+  cotacao        Decimal?            @default(0.0) @map("cotacao") @db.Decimal(12, 3)
+  currency       Currency?           @relation(fields: [currencyId], references: [id])
+  fornecedor     Fornecedor?         @relation(fields: [fornecedorId], references: [id])
+  parceiro       Parceiro            @relation(fields: [parceiroId], references: [id])
+  subCategoria   SubCategoriaDespesa @relation(fields: [subCategoriaId], references: [idSubCategoria])
+
+  @@map("despesa")
+}
+
+// Boilerplate para geração automática no contas a pagar
+model DespesaRecorrente {
+  id             Int                 @id @default(autoincrement())
+  publicId       String              @unique @map("public_id")
+  dataVencimento DateTime            @default(now()) @map("data_vencimento")
+  descricao      String
+  valor          Decimal             @default(0.0) @db.Decimal(12, 3)
+  frequencia     FrequenciaEnum      @default(MENSAL)
+  diaVencimento  Int                 @map("dia_vencimento")
+  dataInicio     DateTime            @default(now()) @map("data_inicio")
+  dataFim        DateTime?           @map("data_fim")
+  subCategoriaId Int                 @map("sub_categoria_id")
+  parceiroId     Int                 @map("parceiro_id")
+  fornecedorId   Int?                @map("fornecedor_id")
+  currencyId     Int?                @map("currency_id")
+  cotacao        Decimal?            @default(0.0) @db.Decimal(12, 3)
+  currency       Currency?           @relation(fields: [currencyId], references: [id])
+  fornecedor     Fornecedor?         @relation(fields: [fornecedorId], references: [id])
+  parceiro       Parceiro            @relation(fields: [parceiroId], references: [id])
+  subCategoria   SubCategoriaDespesa @relation(fields: [subCategoriaId], references: [idSubCategoria])
+
+  @@map("despesa_recorrente")
+}
+
+enum FrequenciaEnum {
+  SEMANAL
+  QUINZENAL
+  MENSAL
+  TRIMESTRAL
+  SEMESTRAL
+  ANUAL
+}
+
+model ContasPagar {
+  id                  Int                   @id @default(autoincrement())
+  publicId            String                @unique @map("public_id")
+  parceiroId          Int                   @map("parceiro_id")
+  origemTipo          String                @map("origem_tipo") // Tipo de origem da conta a pagar
+  origemId            Int                   @map("origem_id")
+  dataVencimento      DateTime              @map("data_vencimento")
+  valorTotal          Decimal               @default(0.0) @map("valor_total") @db.Decimal(12, 3)
+  // saldo É usado para controlar as parcelas pagas. É a soma dos valores
+  // pagos da tabela ContasPagarParcelas
+  saldo               Decimal               @default(0.0) @db.Decimal(12, 3)
+  descricao           String
+  pago                Boolean               @default(false)
+  currencyId          Int?                  @map("currency_id")
+  cotacao             Decimal?              @default(0.0) @db.Decimal(12, 3)
+  dataPagamento       DateTime?             @map("data_pagamento")
+  currency            Currency?             @relation(fields: [currencyId], references: [id])
+  ContasPagarParcelas ContasPagarParcelas[]
+  Parceiro            Parceiro              @relation(fields: [parceiroId], references: [id])
+
+  @@map("contas_a_pagar")
+}
+
+// É usado para controlar as parcelas de contas a pagar
+// Ex: Contas a pagar de um fornecedor, ou de uma despesa
+model ContasPagarParcelas {
+  id            Int         @id @default(autoincrement())
+  publicId      String      @unique @map("public_id")
+  dataPagamento DateTime    @map("data_pagamento")
+  valor         Decimal     @default(0.0) @db.Decimal(12, 3)
+  currencyId    Int?        @map("currency_id")
+  cotacao       Decimal     @default(0.0) @db.Decimal(12, 3)
+  contasPagarId Int         @map("contas_pagar_id")
+  currency      Currency?   @relation(fields: [currencyId], references: [id])
+  contasPagar   ContasPagar @relation(fields: [contasPagarId], references: [id])
+
+  @@map("contas_a_pagar_parcelas")
+}
