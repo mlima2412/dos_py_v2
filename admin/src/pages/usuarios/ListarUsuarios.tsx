@@ -189,7 +189,7 @@ export const ListarUsuarios: React.FC = () => {
                           <TableRow
                             key={row.id}
                             data-state={row.getIsSelected() && 'selected'}
-                            className="h-12"
+                            className="h-12 group"
                           >
                             {row.getVisibleCells().map((cell) => (
                               <TableCell key={cell.id}>

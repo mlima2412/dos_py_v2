@@ -275,8 +275,56 @@
 		"users": "Usuários",
 		"partners": "Parceiros",
 		"paymentMethod": "Forma de pagamento",
-		"originChannels": "Canais"
+		"originChannels": "Canais",
+		"expenseTypes": "Tipos de Despesa",
+		"expenseSubtypes": "Subtipos de Despesa"
 	},
+	"expenseTypes": {
+		"title": "Tipos de Despesa",
+		"newCategory": "Nova Categoria",
+		"editCategory": "Editar Categoria",
+		"searchPlaceholder": "Buscar categorias...",
+		"noResults": "Nenhuma categoria encontrada.",
+		"showing": "Mostrando",
+		"of": "de",
+		"categories": "categorias",
+		"description": "Descrição",
+		"descriptionRequired": "Descrição é obrigatória",
+		"descriptionMinLength": "Descrição deve ter pelo menos 3 caracteres",
+		"descriptionMaxLength": "Descrição deve ter no máximo 100 caracteres",
+		"descriptionPlaceholder": "Ex: Administrativa, Financeira, Operacional",
+		"columns": {
+			"id": "ID",
+			"description": "Descrição",
+			"status": "Status",
+			"createdAt": "Data de Criação",
+			"active": "Ativo",
+			"inactive": "Inativo"
+		}
+	},
+	"expenseSubtypes": {
+       "title": "Subtipos de Despesa",
+       "newSubcategory": "Nova Subcategoria",
+       "editSubcategory": "Editar Subcategoria",
+       "searchPlaceholder": "Buscar por descrição, categoria ou ID...",
+       "noResults": "Nenhuma subcategoria encontrada.",
+       "category": "Categoria",
+       "categoryRequired": "Categoria é obrigatória",
+       "categoryPlaceholder": "Selecione uma categoria",
+       "description": "Descrição",
+       "descriptionPlaceholder": "Ex: Material de Escritório, Telefonia, Internet",
+       "descriptionRequired": "Descrição é obrigatória",
+       "descriptionMinLength": "Descrição deve ter pelo menos 3 caracteres",
+       "descriptionMaxLength": "Descrição deve ter no máximo 100 caracteres",
+       "columns": {
+         "description": "Descrição",
+         "category": "Categoria",
+         "status": "Status",
+         "createdAt": "Data de Criação",
+         "active": "Ativo",
+         "inactive": "Inativo"
+       }
+     },
 	"originChannels": {
 		"title": "Canais",
 		"list": "Lista de Canais",

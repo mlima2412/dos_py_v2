@@ -143,8 +143,58 @@
 		"users": "Usuarios",
 		"partners": "Socios",
 		"editUser": "Editar Usuario",
-		"deleteUser": "Eliminar Usuario"
+		"deleteUser": "Eliminar Usuario",
+		"paymentMethod": "Forma de pago",
+		"originChannels": "Canales",
+		"expenseTypes": "Tipos de Gasto",
+		"expenseSubtypes": "Subtipos de Gasto"
 	},
+	"expenseTypes": {
+		"title": "Tipos de Gasto",
+		"newCategory": "Nueva Categoría",
+		"editCategory": "Editar Categoría",
+		"searchPlaceholder": "Buscar categorías...",
+		"noResults": "Ninguna categoría encontrada.",
+		"showing": "Mostrando",
+		"of": "de",
+		"categories": "categorías",
+		"description": "Descripción",
+		"descriptionRequired": "La descripción es obligatoria",
+		"descriptionMinLength": "La descripción debe tener al menos 3 caracteres",
+		"descriptionMaxLength": "La descripción debe tener máximo 100 caracteres",
+		"descriptionPlaceholder": "Ej: Administrativa, Financiera, Operacional",
+		"columns": {
+			"id": "ID",
+			"description": "Descripción",
+			"status": "Estado",
+			"createdAt": "Fecha de Creación",
+			"active": "Activo",
+			"inactive": "Inactivo"
+		}
+	},
+	"expenseSubtypes": {
+       "title": "Subtipos de Gasto",
+       "newSubcategory": "Nueva Subcategoría",
+       "editSubcategory": "Editar Subcategoría",
+       "searchPlaceholder": "Buscar por descripción, categoría o ID...",
+       "noResults": "Ninguna subcategoría encontrada.",
+       "category": "Categoría",
+       "categoryRequired": "La categoría es obligatoria",
+       "categoryPlaceholder": "Seleccione una categoría",
+       "description": "Descripción",
+       "descriptionPlaceholder": "Ej: Material de Oficina, Telefonía, Internet",
+       "descriptionRequired": "La descripción es obligatoria",
+       "descriptionMinLength": "La descripción debe tener al menos 3 caracteres",
+       "descriptionMaxLength": "La descripción debe tener máximo 100 caracteres",
+       "columns": {
+         "description": "Descripción",
+         "category": "Categoría",
+         "status": "Estado",
+         "createdAt": "Fecha de Creación",
+         "active": "Activo",
+         "inactive": "Inactivo"
+       }
+     },
 	"users": {
 		"title": "Usuarios",
 		"subtitle": "Gestiona los usuarios del sistema",

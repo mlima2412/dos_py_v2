@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
+  const [savedScrollPosition, setSavedScrollPosition] = useState<number | null>(null);
   const menuList = getMenuList(location.pathname, t, user?.perfil);
 
   const toggleMenu = (href: string) => {
@@ -28,7 +29,34 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     );
   };
 
-  const handleLinkClick = () => {
+  const navigate = useNavigate();
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  // Efeito para preservar a posição do scroll
+  useEffect(() => {
+    const viewport = scrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]') as HTMLElement;
+    if (!viewport) return;
+
+    // Restaurar a posição salva se existir
+    if (savedScrollPosition !== null) {
+      // Usar requestAnimationFrame para suavizar a restauração
+      requestAnimationFrame(() => {
+        viewport.scrollTop = savedScrollPosition;
+      });
+    }
+  }, [savedScrollPosition]);
+
+  const handleLinkClick = (event: React.MouseEvent, href: string) => {
+    // Sempre salvar a posição exata atual do scroll
+    const viewport = scrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]') as HTMLElement;
+    const currentScrollTop = viewport?.scrollTop || 0;
+    
+    // Salvar a posição exata onde o usuário está
+    setSavedScrollPosition(currentScrollTop);
+    
+    // Navegar para a nova rota
+    navigate(href);
+    
     // Fechar sidebar em telas móveis quando um link é clicado
     if (window.innerWidth < 768 && onClose) {
       onClose();
@@ -52,7 +80,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           isOpen ? 'translate-x-0' : '-translate-x-full',
         )}
       >
-        <ScrollArea className="h-full py-4">
+        <ScrollArea ref={scrollAreaRef} className="h-full py-4">
           <nav className="space-y-2 px-3">
             {menuList.map((group, groupIndex) => (
               <div key={groupIndex} className="space-y-2">
@@ -97,7 +125,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                         )}
                         asChild
                       >
-                        <Link to={menu.href} onClick={handleLinkClick}>
+                        <Link to={menu.href} onClick={(e) => handleLinkClick(e, menu.href)}>
                           <menu.icon className="mr-3 h-4 w-4" />
                           <span className="text-sm">{menu.label}</span>
                         </Link>
@@ -120,7 +148,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                               )}
                               asChild
                             >
-                              <Link to={submenu.href} onClick={handleLinkClick}>
+                              <Link to={submenu.href} onClick={(e) => handleLinkClick(e, submenu.href)}>
                                 <span>{submenu.label}</span>
                               </Link>
                             </Button>

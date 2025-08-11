@@ -1,4 +1,3 @@
-import React from 'react';
 import { useUserParceiros } from '@/hooks/useUserParceiros';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -26,7 +25,7 @@ export function UserParceiros() {
       <Card>
         <CardContent className="p-6">
           <div className="text-red-600">
-            Erro ao carregar parceiros: {error.data?.message || 'Erro desconhecido'}
+            Erro ao carregar parceiros: {String(error) || 'Erro desconhecido'}
           </div>
         </CardContent>
       </Card>

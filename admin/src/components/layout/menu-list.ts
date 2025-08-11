@@ -13,6 +13,7 @@ import {
   ShoppingCartIcon,
   UserCheck,
   Radio,
+  FolderTree,
 } from 'lucide-react';
 
 type Submenu = {
@@ -195,6 +196,20 @@ export function getMenuList(
                 label: t('administration.originChannels'),
                 active: pathname.includes('/canais-origem'),
                 icon: Radio,
+                submenus: [],
+              },
+              {
+                href: '/tipos-despesa',
+                label: t('administration.expenseTypes'),
+                active: pathname.includes('/tipos-despesa'),
+                icon: FolderTree,
+                submenus: [],
+              },
+              {
+                href: '/subtipos-despesa',
+                label: t('administration.expenseSubtypes'),
+                active: pathname.includes('/subtipos-despesa'),
+                icon: FolderTree,
                 submenus: [],
               },
             ],

@@ -18,6 +18,8 @@ import { ListarUsuarios } from './pages/usuarios';
 import { FormularioUsuario } from './pages/usuarios/FormularioUsuario';
 import Parceiros from './pages/parceiros';
 import CanaisOrigem from './pages/canais-origem';
+import { CategoriaDespesas } from './pages/categoria-despesas';
+import { SubCategoriaDespesas } from './pages/subcategoria-despesas';
 import { NotFound } from './pages/NotFound';
 
 import { ThemeProvider } from './components/theme-provider';
@@ -99,6 +101,22 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <CanaisOrigem />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/tipos-despesa/*"
+                  element={
+                    <ProtectedRoute>
+                      <CategoriaDespesas />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/subtipos-despesa/*"
+                  element={
+                    <ProtectedRoute>
+                      <SubCategoriaDespesas />
                     </ProtectedRoute>
                   }
                 />
