@@ -37,19 +37,29 @@ class FetchClient {
     return { 'Accept-Language': currentLanguage };
   }
 
+  private getPartnerHeaders(): Record<string, string> {
+    const selectedPartnerId = localStorage.getItem('selectedPartnerId');
+    return selectedPartnerId && selectedPartnerId !== 'null' 
+      ? { 'x-parceiro-id': selectedPartnerId } 
+      : {};
+  }
+
   private buildURL(url: string, params?: Record<string, unknown>): string {
     const fullURL = url.startsWith('http') ? url : `${this.baseURL}${url}`;
     
     if (!params) return fullURL;
     
-    const urlObj = new URL(fullURL, window.location.origin);
+    // Para URLs relativas, manter como relativas para funcionar com o proxy
+    const baseForUrl = fullURL.startsWith('http') ? fullURL : `${window.location.origin}${fullURL}`;
+    const urlObj = new URL(baseForUrl);
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
         urlObj.searchParams.append(key, String(value));
       }
     });
     
-    return urlObj.toString();
+    // Se a URL original era relativa, retornar como relativa
+    return fullURL.startsWith('http') ? urlObj.toString() : urlObj.pathname + urlObj.search;
   }
 
   async request<TResponse = unknown, TError = unknown, TData = unknown>(
@@ -67,11 +77,13 @@ class FetchClient {
     const requestURL = this.buildURL(url, params);
     const authHeaders = this.getAuthHeaders();
     const languageHeaders = this.getLanguageHeaders();
+    const partnerHeaders = this.getPartnerHeaders();
     
     const requestHeaders: Record<string, string> = {
       'Content-Type': 'application/json',
       ...authHeaders,
       ...languageHeaders,
+      ...partnerHeaders,
       ...headers
     };
 

@@ -203,7 +203,7 @@ export class PasswordResetService {
     `;
 
     await resend.emails.send({
-      from: 'admin@dos.com.py',
+      from: 'noreply@dos.com.py',
       to: email,
       subject: subject,
       html: emailHtml,

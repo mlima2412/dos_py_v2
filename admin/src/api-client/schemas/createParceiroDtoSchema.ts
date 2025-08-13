@@ -13,6 +13,7 @@ export const createParceiroDtoSchema = z.object({
   email: z.coerce.string().describe('Email do parceiro'),
   redesocial: z.coerce.string().describe('Rede social do parceiro').optional(),
   telefone: z.coerce.string().describe('Telefone do parceiro').optional(),
+  currencyId: z.coerce.number().describe('ID da moeda do parceiro').optional(),
   ativo: z.boolean().default(true).describe('Status ativo do parceiro'),
   logourl: z.coerce.string().describe('URL do logo do parceiro').optional(),
   thumburl: z.coerce.string().describe('URL da imagem reduzida do parceiro').optional(),

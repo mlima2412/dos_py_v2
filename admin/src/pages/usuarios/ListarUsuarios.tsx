@@ -125,7 +125,7 @@ export const ListarUsuarios: React.FC = () => {
           <Button variant="outline" size="sm" asChild>
             <Link to="/usuarios/criar">
               <Plus className="mr-2 h-4 w-4" />
-              {t('users.common.new')} {t('users.common.user')}
+              {t('common.new')} {t('common.user')}
             </Link>
           </Button>
         </div>
@@ -135,7 +135,7 @@ export const ListarUsuarios: React.FC = () => {
             <div className="relative">
               <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder={t('users.common.search')}
+                placeholder={t('common.search')}
                 value={globalFilter}
                 onChange={(e) => setGlobalFilter(e.target.value)}
                 className="pl-10"
@@ -204,7 +204,7 @@ export const ListarUsuarios: React.FC = () => {
                       ) : (
                         <LoadingMessage
                           columns={columns.length}
-                          message={t('users.common.noResults')}
+                          message={t('common.noResults')}
                         />
                       )}
                     </TableBody>
@@ -216,20 +216,20 @@ export const ListarUsuarios: React.FC = () => {
             {/* Load More / Pagination Info */}
             <div className="flex items-center justify-between space-x-2 py-4">
               <div className="text-sm text-muted-foreground">
-                {t('users.common.showing')} {data.length} {t('users.common.of')}{' '}
-                {total} {t('users.common.results')}
+                {t('common.showing')} {data.length} {t('common.of')}{' '}
+                {total} {t('common.results')}
               </div>
               {hasNextPage && (
                 <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleLoadMore}
-                  disabled={isFetchingNextPage}
-                >
-                  {isFetchingNextPage
-                    ? t('common.loading')
-                    : t('users.common.loadMore')}
-                </Button>
+                    variant="outline"
+                    size="sm"
+                    onClick={handleLoadMore}
+                    disabled={isFetchingNextPage}
+                  >
+                    {isFetchingNextPage
+                      ? t('common.loading')
+                      : t('common.loadMore')}
+                  </Button>
               )}
             </div>
           </CardContent>

@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import { Plus, Search } from 'lucide-react';
 
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -120,40 +120,40 @@ export default function ListarParceiros() {
           </Button>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('partners.list')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="relative flex-1 max-w-sm">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder={t('partners.search')}
-                  value={globalFilter}
-                  onChange={(e) => setGlobalFilter(e.target.value)}
-                  className="pl-8"
-                />
-              </div>
-              <div className="flex gap-2">
-                <Select value={ativoFilter} onValueChange={setAtivoFilter}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder={t('partners.status.filter')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">
-                      {t('partners.status.all')}
-                    </SelectItem>
-                    <SelectItem value="true">
-                      {t('partners.status.active')}
-                    </SelectItem>
-                    <SelectItem value="false">
-                      {t('partners.status.inactive')}
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex-1">
+            <div className="relative">
+              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder={t('partners.search')}
+                value={globalFilter}
+                onChange={(e) => setGlobalFilter(e.target.value)}
+                className="pl-10"
+              />
             </div>
+          </div>
+          <div className="flex gap-2">
+            <Select value={ativoFilter} onValueChange={setAtivoFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder={t('partners.status.filter')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">
+                  {t('partners.status.all')}
+                </SelectItem>
+                <SelectItem value="true">
+                  {t('partners.status.active')}
+                </SelectItem>
+                <SelectItem value="false">
+                  {t('partners.status.inactive')}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <Card>
+          <CardContent className="pt-6">
 
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
@@ -196,6 +196,7 @@ export default function ListarParceiros() {
                             <TableRow
                               key={row.id}
                               data-state={row.getIsSelected() && 'selected'}
+                              className="h-12 group"
                             >
                               {row.getVisibleCells().map((cell) => (
                                 <TableCell key={cell.id}>

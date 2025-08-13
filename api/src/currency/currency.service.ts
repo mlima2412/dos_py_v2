@@ -206,7 +206,7 @@ export class CurrencyService {
   async remove(publicId: string): Promise<void> {
     const currency = await this.prisma.currency.findUnique({
       where: { publicId },
-      include: { parceiro: true },
+      include: { parceiros: true },
     });
 
     if (!currency) {
@@ -216,9 +216,9 @@ export class CurrencyService {
     }
 
     // Verificar se a moeda está sendo utilizada por algum parceiro
-    if (currency.parceiro) {
+    if (currency.parceiros && currency.parceiros.length > 0) {
       throw new ConflictException(
-        'Moeda está sendo utilizada por um parceiro e não pode ser removida',
+        'Moeda está sendo utilizada por parceiros e não pode ser removida',
       );
     }
 

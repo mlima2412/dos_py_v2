@@ -79,6 +79,8 @@ export type { DespesasControllerFindBySubCategoriaQueryKey } from './hooks/useDe
 export type { DespesasControllerFindBySubCategoriaSuspenseQueryKey } from './hooks/useDespesasControllerFindBySubCategoriaSuspense.ts'
 export type { DespesasControllerFindOneQueryKey } from './hooks/useDespesasControllerFindOne.ts'
 export type { DespesasControllerFindOneSuspenseQueryKey } from './hooks/useDespesasControllerFindOneSuspense.ts'
+export type { DespesasControllerFindPaginatedQueryKey } from './hooks/useDespesasControllerFindPaginated.ts'
+export type { DespesasControllerFindPaginatedSuspenseQueryKey } from './hooks/useDespesasControllerFindPaginatedSuspense.ts'
 export type { DespesasControllerRemoveMutationKey } from './hooks/useDespesasControllerRemove.ts'
 export type { DespesasControllerUpdateMutationKey } from './hooks/useDespesasControllerUpdate.ts'
 export type { DespesasRecorrentesControllerCreateMutationKey } from './hooks/useDespesasRecorrentesControllerCreate.ts'
@@ -545,6 +547,12 @@ export type {
   DespesasControllerFindOneQueryResponse,
   DespesasControllerFindOneQuery,
 } from './types/DespesasControllerFindOne.ts'
+export type {
+  DespesasControllerFindPaginatedQueryParams,
+  DespesasControllerFindPaginated200,
+  DespesasControllerFindPaginatedQueryResponse,
+  DespesasControllerFindPaginatedQuery,
+} from './types/DespesasControllerFindPaginated.ts'
 export type {
   DespesasControllerRemovePathParams,
   DespesasControllerRemove204,
@@ -1356,6 +1364,18 @@ export {
   despesasControllerFindOneSuspenseQueryOptions,
   useDespesasControllerFindOneSuspense,
 } from './hooks/useDespesasControllerFindOneSuspense.ts'
+export {
+  despesasControllerFindPaginatedQueryKey,
+  despesasControllerFindPaginated,
+  despesasControllerFindPaginatedQueryOptions,
+  useDespesasControllerFindPaginated,
+} from './hooks/useDespesasControllerFindPaginated.ts'
+export {
+  despesasControllerFindPaginatedSuspenseQueryKey,
+  despesasControllerFindPaginatedSuspense,
+  despesasControllerFindPaginatedSuspenseQueryOptions,
+  useDespesasControllerFindPaginatedSuspense,
+} from './hooks/useDespesasControllerFindPaginatedSuspense.ts'
 export { despesasControllerRemoveMutationKey, despesasControllerRemove, useDespesasControllerRemove } from './hooks/useDespesasControllerRemove.ts'
 export { despesasControllerUpdateMutationKey, despesasControllerUpdate, useDespesasControllerUpdate } from './hooks/useDespesasControllerUpdate.ts'
 export {
@@ -2117,6 +2137,11 @@ export {
   despesasControllerFindOne404Schema,
   despesasControllerFindOneQueryResponseSchema,
 } from './schemas/despesasControllerFindOneSchema.ts'
+export {
+  despesasControllerFindPaginatedQueryParamsSchema,
+  despesasControllerFindPaginated200Schema,
+  despesasControllerFindPaginatedQueryResponseSchema,
+} from './schemas/despesasControllerFindPaginatedSchema.ts'
 export {
   despesasControllerRemovePathParamsSchema,
   despesasControllerRemove204Schema,

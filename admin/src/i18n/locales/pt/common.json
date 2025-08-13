@@ -68,7 +68,34 @@
 		"inactive": "Inativo",
 		"activate": "Ativar",
 		"deactivate": "Desativar",
-		"loadError": "Erro ao carregar dados"
+		"loadError": "Erro ao carregar dados",
+		"all": "Todos",
+		"openMenu": "Abrir menu",
+		"showing": "Mostrando",
+		"to": "até",
+		"of": "de",
+		"results": "resultados",
+		"previous": "Anterior",
+		"next": "Próximo",
+		"search": "Pesquisar",
+		"filter": "Filtrar",
+		"filters": "Filtros",
+		"filterByProfile": "Filtrar por perfil",
+		"filterByStatus": "Filtrar por status",
+		"users": "Usuários",
+		"usersFound": "usuários encontrados",
+		"new": "Novo",
+		"user": "Usuário",
+		"noResults": "Nenhum resultado encontrado",
+		"loadMore": "Carregar mais",
+		"status": "Status",
+		"yes": "Sim",
+		"no": "Não",
+		"optional": "Opcional",
+		"roles": {
+			"administrator": "Administrador",
+			"user": "Usuário"
+		}
 	},
 	"dashboard": {
 		"title": "Dashboard",
@@ -183,40 +210,6 @@
 			"createError": "Erro ao criar usuário. Tente novamente.",
 			"updateError": "Erro ao atualizar usuário. Tente novamente.",
 			"loadError": "Erro ao carregar dados do usuário."
-		},
-		"common": {
-			"all": "Todos",
-			"actions": "Ações",
-			"edit": "Editar",
-			"activate": "Ativar",
-			"deactivate": "Desativar",
-			"openMenu": "Abrir menu",
-			"showing": "Mostrando",
-			"to": "até",
-			"of": "de",
-			"results": "resultados",
-			"previous": "Anterior",
-			"next": "Próximo",
-			"search": "Pesquisar",
-			"filter": "Filtrar",
-			"filters": "Filtros",
-			"filterByProfile": "Filtrar por perfil",
-			"filterByStatus": "Filtrar por status",
-			"users": "Usuários",
-			"usersFound": "usuários encontrados",
-			"new": "Novo",
-			"user": "Usuário",
-			"noResults": "Nenhum resultado encontrado",
-			"loadMore": "Carregar mais",
-			"status": "Status",
-			"active": "Ativo",
-			"inactive": "Inativo",
-			"yes": "Sim",
-			"no": "Não",
-			"roles": {
-				"administrator": "Administrador",
-				"user": "Usuário"
-			}
 		}
 	},
 	"profiles": {
@@ -226,7 +219,6 @@
 	"partners": {
 		"title": "Parceiros",
 		"subtitle": "Gerencie os parceiros do sistema",
-		"list": "Lista de Parceiros",
 		"create": "Criar Parceiro",
 		"edit": "Editar Parceiro",
 		"search": "Buscar parceiros...",
@@ -236,12 +228,14 @@
 		"email": "E-mail",
 		"phone": "Telefone",
 		"ruccnpj": "RUC/CNPJ",
+		"currency": "Moeda",
 		"socialNetwork": "Rede Social",
 
 		"namePlaceholder": "Digite o nome do parceiro",
 		"emailPlaceholder": "Digite o e-mail",
 		"phonePlaceholder": "Digite o telefone",
 		"ruccnpjPlaceholder": "Digite o RUC/CNPJ",
+		"selectCurrency": "Selecione uma moeda",
 		"socialNetworkPlaceholder": "Digite a rede social",
 
 		"status": {
@@ -261,13 +255,6 @@
 			"deactivateSuccess": "Parceiro desativado com sucesso!",
 			"activateError": "Erro ao ativar parceiro. Tente novamente.",
 			"deactivateError": "Erro ao desativar parceiro. Tente novamente."
-		},
-		"common": {
-			"actions": "Ações",
-			"edit": "Editar",
-			"activate": "Ativar",
-			"deactivate": "Desativar",
-			"openMenu": "Abrir menu"
 		}
 	},
 	"administration": {
@@ -303,28 +290,28 @@
 		}
 	},
 	"expenseSubtypes": {
-       "title": "Subtipos de Despesa",
-       "newSubcategory": "Nova Subcategoria",
-       "editSubcategory": "Editar Subcategoria",
-       "searchPlaceholder": "Buscar por descrição, categoria ou ID...",
-       "noResults": "Nenhuma subcategoria encontrada.",
-       "category": "Categoria",
-       "categoryRequired": "Categoria é obrigatória",
-       "categoryPlaceholder": "Selecione uma categoria",
-       "description": "Descrição",
-       "descriptionPlaceholder": "Ex: Material de Escritório, Telefonia, Internet",
-       "descriptionRequired": "Descrição é obrigatória",
-       "descriptionMinLength": "Descrição deve ter pelo menos 3 caracteres",
-       "descriptionMaxLength": "Descrição deve ter no máximo 100 caracteres",
-       "columns": {
-         "description": "Descrição",
-         "category": "Categoria",
-         "status": "Status",
-         "createdAt": "Data de Criação",
-         "active": "Ativo",
-         "inactive": "Inativo"
-       }
-     },
+		"title": "Subtipos de Despesa",
+		"newSubcategory": "Nova Subcategoria",
+		"editSubcategory": "Editar Subcategoria",
+		"searchPlaceholder": "Buscar por descrição, categoria ou ID...",
+		"noResults": "Nenhuma subcategoria encontrada.",
+		"category": "Categoria",
+		"categoryRequired": "Categoria é obrigatória",
+		"categoryPlaceholder": "Selecione uma categoria",
+		"description": "Descrição",
+		"descriptionPlaceholder": "Ex: Material de Escritório, Telefonia, Internet",
+		"descriptionRequired": "Descrição é obrigatória",
+		"descriptionMinLength": "Descrição deve ter pelo menos 3 caracteres",
+		"descriptionMaxLength": "Descrição deve ter no máximo 100 caracteres",
+		"columns": {
+			"description": "Descrição",
+			"category": "Categoria",
+			"status": "Status",
+			"createdAt": "Data de Criação",
+			"active": "Ativo",
+			"inactive": "Inativo"
+		}
+	},
 	"originChannels": {
 		"title": "Canais",
 		"list": "Lista de Canais",
@@ -348,6 +335,76 @@
 			"active": {
 				"label": "Ativo"
 			}
+		}
+	},
+	"expenses": {
+		"title": "Despesas",
+		"subtitle": "Gerencie as despesas do sistema",
+		"list": "Lista de Despesas",
+		"create": "Nova Despesa",
+		"new": "Nova Despesa",
+		"edit": "Editar Despesa",
+		"search": "Buscar despesas...",
+		"noResults": "Nenhuma despesa encontrada",
+		"results": "resultados",
+		"description": "Descrição",
+		"date": "Data",
+		"value": "Valor",
+		"amount": "Valor",
+		"currency": "Moeda",
+		"exchange": "Cotação",
+		"exchangeRate": "Cotação",
+		"supplier": "Fornecedor",
+		"dueDate": "Vencimento",
+		"category": "Categoria",
+		"subcategory": "Classificação",
+		"selectDate": "Selecione uma data",
+		"selectDueDate": "Selecione a data de vencimento",
+		"descriptionPlaceholder": "Digite a descrição da despesa",
+		"valuePlaceholder": "0,00",
+		"exchangePlaceholder": "1,00",
+		"selectCurrency": "Selecione uma moeda",
+		"selectSupplier": "Selecione um fornecedor",
+		"selectCategory": "Selecione uma categoria",
+		"selectSubcategory": "Selecione uma subcategoria",
+		"searchCurrency": "Buscar moeda...",
+		"searchSupplier": "Buscar fornecedor...",
+		"searchSubcategory": "Buscar subcategoria...",
+		"noCurrencyFound": "Nenhuma moeda encontrada",
+		"noSupplierFound": "Nenhum fornecedor encontrado",
+		"noSubcategoryFound": "Nenhuma subcategoria encontrada",
+
+		"columns": {
+			"description": "Descrição",
+			"date": "Data",
+			"subcategory": "Subcategoria",
+			"value": "Valor",
+			"actions": "Ações"
+		},
+		"messages": {
+			"createSuccess": "Despesa criada com sucesso!",
+			"updateSuccess": "Despesa atualizada com sucesso!",
+			"deleteSuccess": "Despesa excluída com sucesso!",
+			"createError": "Erro ao criar despesa. Tente novamente.",
+			"updateError": "Erro ao atualizar despesa. Tente novamente.",
+			"deleteError": "Erro ao excluir despesa. Tente novamente.",
+			"loadError": "Erro ao carregar dados da despesa.",
+			"noPartnerSelected": "Nenhum parceiro selecionado",
+			"deleteConfirmTitle": "Eliminar despesa",
+			"deleteConfirmDescription": "Tem certeza de que deseja eliminar esta despesa? Esta ação não pode ser desfeita.",
+			"deleteConfirmCancel": "Cancelar",
+			"deleteConfirmConfirm": "Eliminar"
+		},
+		"validation": {
+			"descriptionRequired": "Descrição é obrigatória",
+			"valueRequired": "Valor é obrigatório",
+			"dateRequired": "Data é obrigatória",
+			"currencyRequired": "Moeda é obrigatória",
+			"categoryRequired": "Categoria é obrigatória",
+			"subcategoryRequired": "Subcategoria é obrigatória",
+			"exchangeRequired": "Cotação é obrigatória",
+			"valueMin": "Valor deve ser maior que zero",
+			"exchangeMin": "Cotação deve ser maior que zero"
 		}
 	},
 	"validation": {

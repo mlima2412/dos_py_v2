@@ -33,6 +33,17 @@ export class ParceirosService {
       }
     }
 
+    // Verificar se a moeda existe (se fornecida)
+    if (createParceiroDto.currencyId) {
+      const currency = await this.prisma.currency.findUnique({
+        where: { id: createParceiroDto.currencyId },
+      });
+      if (!currency) {
+        console.log("Moeda não encontrada", createParceiroDto.currencyId);
+        throw new NotFoundException('Moeda não encontrada');
+      }
+    }
+
     // Criar instância da entidade com valores padrão
     const parceiroEntity = Parceiro.create(createParceiroDto);
 
@@ -44,7 +55,7 @@ export class ParceirosService {
         email: parceiroEntity.email,
         redesocial: parceiroEntity.redesocial,
         telefone: parceiroEntity.telefone,
-
+        currencyId: createParceiroDto.currencyId,
         ativo: parceiroEntity.ativo,
         logourl: parceiroEntity.logourl,
         thumburl: parceiroEntity.thumburl,
@@ -63,6 +74,7 @@ export class ParceirosService {
       email: data.email,
       redesocial: data.redesocial,
       telefone: data.telefone,
+      currencyId: data.currencyId,
       ativo: data.ativo,
       logourl: data.logourl,
       thumburl: data.thumburl,
@@ -176,6 +188,7 @@ export class ParceirosService {
     updateParceiroDto: UpdateParceiroDto,
   ): Promise<Parceiro> {
     // Verificar se o parceiro existe
+    console.log("atualizando parceiro moeda:", updateParceiroDto.currencyId, typeof updateParceiroDto.currencyId )
     await this.findOne(publicId);
 
     // Verificar conflitos de email (se fornecido e diferente do atual)
@@ -191,6 +204,16 @@ export class ParceirosService {
       const existingParceiro = await this.findByRucCnpj(updateParceiroDto.ruccnpj);
       if (existingParceiro && existingParceiro.publicId !== publicId) {
         throw new ConflictException('RUC/CNPJ já está em uso');
+      }
+    }
+
+    // Verificar se a moeda existe (se fornecida)
+    if (updateParceiroDto.currencyId) {
+      const currency = await this.prisma.currency.findUnique({
+        where: { id: updateParceiroDto.currencyId },
+      });
+      if (!currency) {
+        throw new NotFoundException('Moeda não encontrada');
       }
     }
 

@@ -1,17 +1,11 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { ArrowUpDown, ArrowUp, ArrowDown, Edit, Power, PowerOff } from 'lucide-react';
 import { type Parceiro } from '../../../api-client/index';
 import { useActivateParceiro, useDeactivateParceiro } from '../../../hooks/useParceiroMutations';
 import { useToast } from '../../../hooks/useToast';
+import { HoverActions } from '@/components/ui/HoverActions';
 
 const columnHelper = createColumnHelper<Parceiro>();
 
@@ -65,7 +59,7 @@ export const createColumns = (
   }),
   columnHelper.display({
     id: 'actions',
-    header: t('partners.common.actions'),
+    header: '',
     cell: ({ row }) => {
       const parceiro = row.original;
 
@@ -91,26 +85,27 @@ export const createColumns = (
         }
       };
 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">{t('partners.common.openMenu')}</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem asChild>
-              <Link to={`/parceiros/editar/${parceiro.publicId}`}>
-                {t('partners.common.edit')}
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleToggleStatus}>
-              {parceiro.ativo ? t('partners.common.deactivate') : t('partners.common.activate')}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+      const actions = [
+        {
+          type: 'edit' as const,
+          label: t('common.edit'),
+          icon: <Edit className="h-4 w-4" />,
+          href: `/parceiros/editar/${parceiro.publicId}`,
+        },
+        {
+          type: 'toggle' as const,
+          label: parceiro.ativo ? t('common.deactivate') : t('common.activate'),
+          icon: parceiro.ativo ? (
+            <PowerOff className="h-4 w-4" />
+          ) : (
+            <Power className="h-4 w-4" />
+          ),
+          onClick: handleToggleStatus,
+          variant: parceiro.ativo ? 'destructive' as const : 'default' as const,
+        },
+      ];
+
+      return <HoverActions actions={actions} />;
     },
   }),
 ];

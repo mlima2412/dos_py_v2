@@ -23,7 +23,6 @@ import { ParceirosService } from './parceiros.service';
 import { CreateParceiroDto } from './dto/create-parceiro.dto';
 import { UpdateParceiroDto } from './dto/update-parceiro.dto';
 import { Parceiro } from './entities/parceiro.entity';
-import { Public } from '../auth/decorators/public.decorator';
 
 @ApiTags('Parceiros')
 @Controller('parceiros')
@@ -43,6 +42,7 @@ export class ParceirosController {
   @ApiResponse({ status: 400, description: 'Dados inválidos' })
   @ApiResponse({ status: 409, description: 'Email ou RUC/CNPJ já existe' })
   async create(@Body() createParceiroDto: CreateParceiroDto): Promise<Parceiro> {
+    console.log("!Criando um novo parceiro....")
     return this.parceirosService.create(createParceiroDto);
   }
 
@@ -143,6 +143,7 @@ export class ParceirosController {
     @Param('publicId') publicId: string,
     @Body() updateParceiroDto: UpdateParceiroDto,
   ): Promise<Parceiro> {
+    console.log("!Atualizando um parceiro....")
     return this.parceirosService.update(publicId, updateParceiroDto);
   }
 

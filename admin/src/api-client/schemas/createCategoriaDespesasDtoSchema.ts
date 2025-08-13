@@ -7,4 +7,7 @@ import type { CreateCategoriaDespesasDto } from '../types/CreateCategoriaDespesa
 import type { ToZod } from '@kubb/plugin-zod/utils'
 import { z } from 'zod'
 
-export const createCategoriaDespesasDtoSchema = z.object({}) as unknown as ToZod<CreateCategoriaDespesasDto>
+export const createCategoriaDespesasDtoSchema = z.object({
+  descricao: z.coerce.string().describe('Descrição da categoria de despesa'),
+  ativo: z.boolean().describe('Status ativo da categoria').optional(),
+}) as unknown as ToZod<CreateCategoriaDespesasDto>

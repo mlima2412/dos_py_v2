@@ -12,10 +12,10 @@ import { Despesa } from './entities/despesa.entity';
 export class DespesasService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createDespesaDto: CreateDespesaDto): Promise<Despesa> {
+  async create(createDespesaDto: CreateDespesaDto, parceiroId: number): Promise<Despesa> {
     // Verificar se o parceiro existe
     const parceiro = await this.prisma.parceiro.findUnique({
-      where: { id: createDespesaDto.parceiroId },
+      where: { id: parceiroId },
     });
 
     if (!parceiro) {
@@ -47,7 +47,7 @@ export class DespesasService {
       valor: createDespesaDto.valor,
       descricao: createDespesaDto.descricao,
       subCategoriaId: createDespesaDto.subCategoriaId,
-      parceiroId: createDespesaDto.parceiroId,
+      parceiroId: parceiroId,
       fornecedorId: createDespesaDto.fornecedorId,
       currencyId: createDespesaDto.currencyId,
       cotacao: createDespesaDto.cotacao,
@@ -60,9 +60,9 @@ export class DespesasService {
         valor: createDespesaDto.valor,
         descricao: createDespesaDto.descricao,
         subCategoriaId: createDespesaDto.subCategoriaId,
-        parceiroId: createDespesaDto.parceiroId,
+        parceiroId: parceiroId,
         fornecedorId: createDespesaDto.fornecedorId,
-        dataVencimento: createDespesaDto.dataVencimento ? new Date(createDespesaDto.dataVencimento) : new Date(),
+        dataVencimento: createDespesaDto.dataVencimento ? new Date(createDespesaDto.dataVencimento) : null,
         dataPagamento: createDespesaDto.dataPagamento ? new Date(createDespesaDto.dataPagamento) : null,
         currencyId: createDespesaDto.currencyId,
         cotacao: createDespesaDto.cotacao,
@@ -97,9 +97,12 @@ export class DespesasService {
     })) as Despesa[];
   }
 
-  async findOne(publicId: string): Promise<Despesa> {
-    const despesa = await this.prisma.despesa.findUnique({
-      where: { publicId },
+  async findOne(publicId: string, parceiroId: number): Promise<Despesa> {
+    const despesa = await this.prisma.despesa.findFirst({
+      where: { 
+        publicId,
+        parceiroId 
+      },
       include: {
         parceiro: true,
         fornecedor: true,
@@ -135,59 +138,89 @@ export class DespesasService {
     })) as Despesa[];
   }
 
-  async findByFornecedor(fornecedorId: number): Promise<Despesa[]> {
-    const despesas = await this.prisma.despesa.findMany({
-      where: { fornecedorId },
-      include: {
-        parceiro: true,
-        fornecedor: true,
-        subCategoria: true,
-      },
-      orderBy: { dataDespesa: 'desc' },
-    });
-    return despesas.map(despesa => ({
-      ...despesa,
-      valor: Number(despesa.valor),
-      cotacao: despesa.cotacao ? Number(despesa.cotacao) : null,
-    })) as Despesa[];
+
+
+  async findPaginated(params: {
+    page: number;
+    limit: number;
+    search?: string;
+    parceiroId: number;
+    fornecedorId?: number;
+    subCategoriaId?: number;
+  }) {
+    const { page, limit, search, parceiroId, fornecedorId, subCategoriaId } = params;
+    const skip = (page - 1) * limit;
+
+    // Construir filtros
+    const where: any = {};
+    const andConditions: any[] = [];
+
+    // Filtro obrigatório por parceiro
+    andConditions.push({ parceiroId });
+
+    // Filtro de busca (descrição)
+    if (search) {
+      andConditions.push({
+        descricao: { contains: search, mode: 'insensitive' },
+      });
+    }
+
+    // Filtro por fornecedor
+    if (fornecedorId) {
+      andConditions.push({ fornecedorId });
+    }
+
+    // Filtro por subcategoria
+    if (subCategoriaId) {
+      andConditions.push({ subCategoriaId });
+    }
+
+    if (andConditions.length > 0) {
+      where.AND = andConditions;
+    }
+
+    // Buscar dados paginados
+    const [despesas, total] = await Promise.all([
+      this.prisma.despesa.findMany({
+        where,
+        include: {
+          parceiro: true,
+          fornecedor: true,
+          subCategoria: true,
+        },
+        orderBy: { dataDespesa: 'desc' },
+        skip,
+        take: limit,
+      }),
+      this.prisma.despesa.count({ where }),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data: despesas.map(despesa => ({
+        ...despesa,
+        valor: Number(despesa.valor),
+        cotacao: despesa.cotacao ? Number(despesa.cotacao) : null,
+      })) as Despesa[],
+      total,
+      page,
+      limit,
+      totalPages,
+    };
   }
 
-  async findBySubCategoria(subCategoriaId: number): Promise<Despesa[]> {
-    const despesas = await this.prisma.despesa.findMany({
-      where: { subCategoriaId },
-      include: {
-        parceiro: true,
-        fornecedor: true,
-        subCategoria: true,
+  async update(publicId: string, updateDespesaDto: UpdateDespesaDto, parceiroId: number): Promise<Despesa> {
+    // Verificar se a despesa existe e pertence ao parceiro
+    const existingDespesa = await this.prisma.despesa.findFirst({
+      where: { 
+        publicId,
+        parceiroId 
       },
-      orderBy: { dataDespesa: 'desc' },
-    });
-    return despesas.map(despesa => ({
-      ...despesa,
-      valor: Number(despesa.valor),
-      cotacao: despesa.cotacao ? Number(despesa.cotacao) : null,
-    })) as Despesa[];
-  }
-
-  async update(publicId: string, updateDespesaDto: UpdateDespesaDto): Promise<Despesa> {
-    // Verificar se a despesa existe
-    const existingDespesa = await this.prisma.despesa.findUnique({
-      where: { publicId },
     });
 
     if (!existingDespesa) {
       throw new NotFoundException('Despesa não encontrada');
-    }
-
-    // Verificar se o parceiro existe (se fornecido)
-    if (updateDespesaDto.parceiroId) {
-      const parceiro = await this.prisma.parceiro.findUnique({
-        where: { id: updateDespesaDto.parceiroId },
-      });
-
-      if (!parceiro) {
-        throw new BadRequestException('Parceiro não encontrado');
-      }
     }
 
     // Verificar se a subcategoria existe (se fornecida)
@@ -218,7 +251,6 @@ export class DespesasService {
     if (updateDespesaDto.valor !== undefined) updateData.valor = updateDespesaDto.valor;
     if (updateDespesaDto.descricao) updateData.descricao = updateDespesaDto.descricao;
     if (updateDespesaDto.subCategoriaId) updateData.subCategoriaId = updateDespesaDto.subCategoriaId;
-    if (updateDespesaDto.parceiroId) updateData.parceiroId = updateDespesaDto.parceiroId;
     if (updateDespesaDto.fornecedorId !== undefined) updateData.fornecedorId = updateDespesaDto.fornecedorId;
     if (updateDespesaDto.dataVencimento) updateData.dataVencimento = new Date(updateDespesaDto.dataVencimento);
     if (updateDespesaDto.dataPagamento) updateData.dataPagamento = new Date(updateDespesaDto.dataPagamento);
@@ -242,17 +274,21 @@ export class DespesasService {
     } as Despesa;
   }
 
-  async remove(publicId: string): Promise<void> {
-    const despesa = await this.prisma.despesa.findUnique({
-      where: { publicId },
+  async remove(publicId: string, parceiroId: number): Promise<void> {
+    // Verificar se a despesa existe e pertence ao parceiro
+    const existingDespesa = await this.prisma.despesa.findFirst({
+      where: { 
+        publicId,
+        parceiroId 
+      },
     });
 
-    if (!despesa) {
+    if (!existingDespesa) {
       throw new NotFoundException('Despesa não encontrada');
     }
 
     await this.prisma.despesa.delete({
-      where: { publicId },
+      where: { id: existingDespesa.id },
     });
   }
 }

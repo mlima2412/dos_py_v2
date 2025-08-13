@@ -19,6 +19,7 @@ export const CategoriaDespesasActions = ({ categoria }: CategoriaDespesasActions
       {
         id: categoria.idCategoria!,
         data: {
+          descricao: categoria.descricao || '',
           ativo: !categoria.ativo,
         },
       },

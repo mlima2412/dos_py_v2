@@ -49,6 +49,13 @@ export class Parceiro {
   telefone: string | null;
 
   @ApiProperty({
+    description: 'ID da moeda do parceiro',
+    example: 1,
+    required: false,
+  })
+  currencyId: number | null;
+
+  @ApiProperty({
     description: 'Status ativo do parceiro',
     example: true,
   })

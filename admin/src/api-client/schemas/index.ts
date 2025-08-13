@@ -322,6 +322,11 @@ export {
   despesasControllerFindOneQueryResponseSchema,
 } from './despesasControllerFindOneSchema.ts'
 export {
+  despesasControllerFindPaginatedQueryParamsSchema,
+  despesasControllerFindPaginated200Schema,
+  despesasControllerFindPaginatedQueryResponseSchema,
+} from './despesasControllerFindPaginatedSchema.ts'
+export {
   despesasControllerRemovePathParamsSchema,
   despesasControllerRemove204Schema,
   despesasControllerRemove404Schema,

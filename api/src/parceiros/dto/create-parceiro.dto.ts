@@ -3,8 +3,7 @@ import {
   IsString,
   IsEmail,
   IsOptional,
-  IsBoolean,
-  IsUrl,
+  IsBoolean, IsInt
 } from 'class-validator';
 
 export class CreateParceiroDto {
@@ -33,7 +32,7 @@ export class CreateParceiroDto {
 
   @ApiProperty({
     description: 'Rede social do parceiro',
-    example: 'https://instagram.com/parceiroabc',
+    example: '@instagram/Facebook',
     required: false,
   })
   @IsOptional()
@@ -48,6 +47,15 @@ export class CreateParceiroDto {
   @IsOptional()
   @IsString()
   telefone?: string;
+
+  @ApiProperty({
+    description: 'ID da moeda do parceiro',
+    example: 1,
+    required: false,
+  })
+  @IsOptional()
+  @IsInt()
+  currencyId?: number;
 
   @ApiProperty({
     description: 'Status ativo do parceiro',

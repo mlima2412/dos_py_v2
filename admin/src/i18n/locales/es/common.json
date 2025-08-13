@@ -68,7 +68,33 @@
 		"inactive": "Inactivo",
 		"activate": "Activar",
 		"deactivate": "Desactivar",
-		"loadError": "Error al cargar datos"
+		"loadError": "Error al cargar datos",
+		"all": "Todos",
+		"openMenu": "Abrir menú",
+		"showing": "Mostrando",
+		"to": "hasta",
+		"of": "de",
+		"results": "resultados",
+		"previous": "Anterior",
+		"next": "Siguiente",
+		"search": "Buscar",
+		"filters": "Filtros",
+		"filterByProfile": "Filtrar por perfil",
+		"filterByStatus": "Filtrar por estado",
+		"users": "Usuarios",
+		"usersFound": "usuarios encontrados",
+		"new": "Nuevo",
+		"user": "Usuario",
+		"noResults": "No se encontraron resultados",
+		"loadMore": "Cargar más",
+		"status": "Estado",
+		"yes": "Sí",
+		"no": "No",
+		"optional": "Opcional",
+		"roles": {
+			"administrator": "Administrador",
+			"user": "Usuario"
+		}
 	},
 	"dashboard": {
 		"title": "Dashboard",
@@ -173,28 +199,28 @@
 		}
 	},
 	"expenseSubtypes": {
-       "title": "Subtipos de Gasto",
-       "newSubcategory": "Nueva Subcategoría",
-       "editSubcategory": "Editar Subcategoría",
-       "searchPlaceholder": "Buscar por descripción, categoría o ID...",
-       "noResults": "Ninguna subcategoría encontrada.",
-       "category": "Categoría",
-       "categoryRequired": "La categoría es obligatoria",
-       "categoryPlaceholder": "Seleccione una categoría",
-       "description": "Descripción",
-       "descriptionPlaceholder": "Ej: Material de Oficina, Telefonía, Internet",
-       "descriptionRequired": "La descripción es obligatoria",
-       "descriptionMinLength": "La descripción debe tener al menos 3 caracteres",
-       "descriptionMaxLength": "La descripción debe tener máximo 100 caracteres",
-       "columns": {
-         "description": "Descripción",
-         "category": "Categoría",
-         "status": "Estado",
-         "createdAt": "Fecha de Creación",
-         "active": "Activo",
-         "inactive": "Inactivo"
-       }
-     },
+		"title": "Subtipos de Gasto",
+		"newSubcategory": "Nueva Subcategoría",
+		"editSubcategory": "Editar Subcategoría",
+		"searchPlaceholder": "Buscar por descripción, categoría o ID...",
+		"noResults": "Ninguna subcategoría encontrada.",
+		"category": "Categoría",
+		"categoryRequired": "La categoría es obligatoria",
+		"categoryPlaceholder": "Seleccione una categoría",
+		"description": "Descripción",
+		"descriptionPlaceholder": "Ej: Material de Oficina, Telefonía, Internet",
+		"descriptionRequired": "La descripción es obligatoria",
+		"descriptionMinLength": "La descripción debe tener al menos 3 caracteres",
+		"descriptionMaxLength": "La descripción debe tener máximo 100 caracteres",
+		"columns": {
+			"description": "Descripción",
+			"category": "Categoría",
+			"status": "Estado",
+			"createdAt": "Fecha de Creación",
+			"active": "Activo",
+			"inactive": "Inactivo"
+		}
+	},
 	"users": {
 		"title": "Usuarios",
 		"subtitle": "Gestiona los usuarios del sistema",
@@ -253,34 +279,6 @@
 			"createError": "Error al crear usuario. Inténtalo de nuevo.",
 			"updateError": "Error al actualizar usuario. Inténtalo de nuevo.",
 			"loadError": "Error al cargar datos del usuario."
-		},
-		"common": {
-			"all": "Todos",
-			"actions": "Acciones",
-			"edit": "Editar",
-			"activate": "Activar",
-			"deactivate": "Desactivar",
-			"openMenu": "Abrir menú",
-			"showing": "Mostrando",
-			"to": "hasta",
-			"of": "de",
-			"results": "resultados",
-			"previous": "Anterior",
-			"next": "Siguiente",
-			"search": "Buscar",
-			"filters": "Filtros",
-			"filterByProfile": "Filtrar por perfil",
-			"filterByStatus": "Filtrar por estado",
-			"users": "Usuarios",
-			"usersFound": "usuarios encontrados",
-			"new": "Nuevo",
-			"user": "Usuario",
-			"noResults": "No se encontraron resultados",
-			"loadMore": "Cargar más",
-			"roles": {
-				"administrator": "Administrador",
-				"user": "Usuario"
-			}
 		}
 	},
 	"profiles": {
@@ -290,7 +288,6 @@
 	"partners": {
 		"title": "Socios",
 		"subtitle": "Gestiona los socios del sistema",
-		"list": "Lista de Socios",
 		"create": "Crear Socio",
 		"edit": "Editar Socio",
 		"search": "Buscar socios...",
@@ -300,12 +297,14 @@
 		"email": "Correo electrónico",
 		"phone": "Teléfono",
 		"ruccnpj": "RUC/CNPJ",
+		"currency": "Moneda",
 		"socialNetwork": "Red Social",
 
 		"namePlaceholder": "Ingresa el nombre del socio",
 		"emailPlaceholder": "Ingresa el correo electrónico",
 		"phonePlaceholder": "Ingresa el teléfono",
 		"ruccnpjPlaceholder": "Ingresa el RUC/CNPJ",
+		"selectCurrency": "Selecciona una moneda",
 		"socialNetworkPlaceholder": "Ingresa la red social",
 
 		"status": {
@@ -325,13 +324,76 @@
 			"deactivateSuccess": "¡Socio desactivado con éxito!",
 			"activateError": "Error al activar socio. Inténtalo de nuevo.",
 			"deactivateError": "Error al desactivar socio. Inténtalo de nuevo."
+		}
+	},
+	"expenses": {
+		"title": "Gastos",
+		"subtitle": "Gestiona los gastos del sistema",
+		"list": "Lista de Gastos",
+		"create": "Nuevo Gasto",
+		"new": "Nuevo Gasto",
+		"edit": "Editar Gasto",
+		"search": "Buscar gastos...",
+		"noResults": "Ningún gasto encontrado",
+		"results": "resultados",
+		"description": "Descripción",
+		"date": "Fecha",
+		"value": "Valor",
+		"amount": "Valor",
+		"currency": "Moneda",
+		"exchange": "Cotización",
+		"exchangeRate": "Cotización",
+		"supplier": "Proveedor",
+		"dueDate": "Vencimiento",
+		"category": "Categoría",
+		"subcategory": "Clasificación",
+		"selectDate": "Selecciona una fecha",
+		"selectDueDate": "Selecciona la fecha de vencimiento",
+		"descriptionPlaceholder": "Ingresa la descripción del gasto",
+		"valuePlaceholder": "0,00",
+		"exchangePlaceholder": "1,00",
+		"selectCurrency": "Selecciona una moneda",
+		"selectSupplier": "Selecciona un proveedor",
+		"selectCategory": "Selecciona una categoría",
+		"selectSubcategory": "Selecciona una subcategoría",
+		"searchCurrency": "Buscar moneda...",
+		"searchSupplier": "Buscar proveedor...",
+		"searchSubcategory": "Buscar subcategoría...",
+		"noCurrencyFound": "Ninguna moneda encontrada",
+		"noSupplierFound": "Ningún proveedor encontrado",
+		"noSubcategoryFound": "Ninguna subcategoría encontrada",
+
+		"columns": {
+			"description": "Descripción",
+			"date": "Fecha",
+			"subcategory": "Subcategoría",
+			"value": "Valor",
+			"actions": "Acciones"
 		},
-		"common": {
-			"actions": "Acciones",
-			"edit": "Editar",
-			"activate": "Activar",
-			"deactivate": "Desactivar",
-			"openMenu": "Abrir menú"
+		"messages": {
+			"createSuccess": "¡Gasto creado con éxito!",
+			"updateSuccess": "¡Gasto actualizado con éxito!",
+			"deleteSuccess": "¡Gasto eliminado con éxito!",
+			"createError": "Error al crear gasto. Inténtalo de nuevo.",
+			"updateError": "Error al actualizar gasto. Inténtalo de nuevo.",
+			"deleteError": "Error al eliminar gasto. Inténtalo de nuevo.",
+			"loadError": "Error al cargar datos del gasto.",
+			"noPartnerSelected": "Ningún socio seleccionado",
+			"deleteConfirmTitle": "Eliminar gasto",
+			"deleteConfirmDescription": "¿Estás seguro de que deseas eliminar este gasto? Esta acción no se puede deshacer.",
+			"deleteConfirmCancel": "Cancelar",
+			"deleteConfirmConfirm": "Eliminar"
+		},
+		"validation": {
+			"descriptionRequired": "Descripción es obligatoria",
+			"valueRequired": "Valor es obligatorio",
+			"dateRequired": "Fecha es obligatoria",
+			"currencyRequired": "Moneda es obligatoria",
+			"categoryRequired": "Categoría es obligatoria",
+			"subcategoryRequired": "Subcategoría es obligatoria",
+			"exchangeRequired": "Cotización es obligatoria",
+			"valueMin": "Valor debe ser mayor que cero",
+			"exchangeMin": "Cotización debe ser mayor que cero"
 		}
 	},
 	"validation": {

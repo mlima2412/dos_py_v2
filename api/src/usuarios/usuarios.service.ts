@@ -306,12 +306,12 @@ export class UsuariosService {
   async deactivateUser(publicId: string): Promise<Usuario> {
     const resend = new Resend(process.env.RESEND_API);
     const usuario = await this.findOne(publicId);
-    await resend.emails.send({
-      from: 'admin@dos.com.py',
-      to: 'mlima001@gmail.com',
-      subject: 'Sua conta foi desativada',
-      html: '<p>Seu acesso foi desativado. Se você não fez isso, entre em contato conosco.</p>',
-    });
+    // await resend.emails.send({
+    //   from: 'admin@dos.com.py',
+    //   to: 'mlima001@gmail.com',
+    //   subject: 'Sua conta foi desativada',
+    //   html: '<p>Seu acesso foi desativado. Se você não fez isso, entre em contato conosco.</p>',
+    // });
     return this.update(publicId, { ativo: false });
   }
 

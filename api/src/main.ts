@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import { PrismaService } from './prisma/prisma.service';
 import { ensureSystemInitialized } from './usuarios/ipl';
@@ -43,6 +43,13 @@ async function bootstrap() {
       transform: true,
       whitelist: true,
       forbidNonWhitelisted: true,
+      exceptionFactory: (errors) => {
+        console.error('Erros de validação:', JSON.stringify(errors, null, 2));
+        return new BadRequestException({
+          message: 'Dados inválidos',
+          errors,
+        });
+      },
     }),
   );
 
@@ -51,7 +58,7 @@ async function bootstrap() {
     origin: ['http://localhost:3000', 'http://localhost:5173'], // URLs do frontend
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept-Language'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept-Language', 'x-parceiro-id'],
   });
 
   // Configuração do Swagger

@@ -26,7 +26,7 @@ export type CategoriaDespesasControllerUpdateMutationKey = ReturnType<typeof cat
  */
 export async function categoriaDespesasControllerUpdate(
   id: CategoriaDespesasControllerUpdatePathParams['id'],
-  data?: CategoriaDespesasControllerUpdateMutationRequest,
+  data: CategoriaDespesasControllerUpdateMutationRequest,
   config: Partial<RequestConfig<CategoriaDespesasControllerUpdateMutationRequest>> & { client?: typeof fetch } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
@@ -49,7 +49,7 @@ export function useCategoriaDespesasControllerUpdate<TContext>(
     mutation?: UseMutationOptions<
       CategoriaDespesasControllerUpdateMutationResponse,
       ResponseErrorConfig<CategoriaDespesasControllerUpdate401 | CategoriaDespesasControllerUpdate404 | CategoriaDespesasControllerUpdate409>,
-      { id: CategoriaDespesasControllerUpdatePathParams['id']; data?: CategoriaDespesasControllerUpdateMutationRequest },
+      { id: CategoriaDespesasControllerUpdatePathParams['id']; data: CategoriaDespesasControllerUpdateMutationRequest },
       TContext
     > & { client?: QueryClient }
     client?: Partial<RequestConfig<CategoriaDespesasControllerUpdateMutationRequest>> & { client?: typeof fetch }
@@ -62,7 +62,7 @@ export function useCategoriaDespesasControllerUpdate<TContext>(
   return useMutation<
     CategoriaDespesasControllerUpdateMutationResponse,
     ResponseErrorConfig<CategoriaDespesasControllerUpdate401 | CategoriaDespesasControllerUpdate404 | CategoriaDespesasControllerUpdate409>,
-    { id: CategoriaDespesasControllerUpdatePathParams['id']; data?: CategoriaDespesasControllerUpdateMutationRequest },
+    { id: CategoriaDespesasControllerUpdatePathParams['id']; data: CategoriaDespesasControllerUpdateMutationRequest },
     TContext
   >(
     {

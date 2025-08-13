@@ -87,7 +87,7 @@ model Parceiro {
   email               String              @unique
   redesocial          String?             @map("rede_social")
   telefone            String?
-  currencyId          Int?                @unique @map("currency_id")
+  currencyId          Int?                @map("currency_id")
   ativo               Boolean             @default(true)
   logourl             String?             @map("logo_url")
   thumburl            String?             @map("thumb_url")
@@ -149,7 +149,7 @@ model Currency {
   defaultRate         Decimal               @default(0.0) @map("default_rate") @db.Decimal(12, 3)
   ativo               Boolean               @default(true)
   createdAt           DateTime              @default(now()) @map("created_at")
-  parceiro            Parceiro?
+  parceiros           Parceiro[]
   despesas            Despesa[]
   despesasRecorrentes DespesaRecorrente[]
   contasPagar         ContasPagar[]

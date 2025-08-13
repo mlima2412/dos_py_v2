@@ -3,4 +3,15 @@
  * Do not edit manually.
  */
 
-export type UpdateCategoriaDespesasDto = object
+export type UpdateCategoriaDespesasDto = {
+  /**
+   * @description Descrição da categoria de despesa
+   * @type string
+   */
+  descricao: string
+  /**
+   * @description Status ativo da categoria
+   * @type boolean | undefined
+   */
+  ativo?: boolean
+}

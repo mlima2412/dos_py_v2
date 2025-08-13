@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { uuidv7 } from 'uuidv7';
-import { Parceiro } from '../../parceiros/entities/parceiro.entity';
+//import { Parceiro } from '../../parceiros/entities/parceiro.entity';
 import { Fornecedor } from '../../fornecedores/entities/fornecedor.entity';
 import { SubCategoriaDespesa } from '../../subcategoria-despesa/entities/subcategoria-despesa.entity';
 
@@ -89,11 +89,11 @@ export class Despesa {
   })
   fornecedor?: Fornecedor;
 
-  @ApiProperty({
-    description: 'Parceiro responsável pela despesa',
-    type: () => Parceiro,
-  })
-  parceiro: Parceiro;
+  // @ApiProperty({
+  //   description: 'Parceiro responsável pela despesa',
+  //   type: () => Parceiro,
+  // })
+  // parceiro: Parceiro;
 
   @ApiProperty({
     description: 'Subcategoria da despesa',

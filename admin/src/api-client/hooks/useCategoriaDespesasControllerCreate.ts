@@ -23,7 +23,7 @@ export type CategoriaDespesasControllerCreateMutationKey = ReturnType<typeof cat
  * {@link /categoria-despesas}
  */
 export async function categoriaDespesasControllerCreate(
-  data?: CategoriaDespesasControllerCreateMutationRequest,
+  data: CategoriaDespesasControllerCreateMutationRequest,
   config: Partial<RequestConfig<CategoriaDespesasControllerCreateMutationRequest>> & { client?: typeof fetch } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
@@ -46,7 +46,7 @@ export function useCategoriaDespesasControllerCreate<TContext>(
     mutation?: UseMutationOptions<
       CategoriaDespesasControllerCreateMutationResponse,
       ResponseErrorConfig<CategoriaDespesasControllerCreate401 | CategoriaDespesasControllerCreate409>,
-      { data?: CategoriaDespesasControllerCreateMutationRequest },
+      { data: CategoriaDespesasControllerCreateMutationRequest },
       TContext
     > & { client?: QueryClient }
     client?: Partial<RequestConfig<CategoriaDespesasControllerCreateMutationRequest>> & { client?: typeof fetch }
@@ -59,7 +59,7 @@ export function useCategoriaDespesasControllerCreate<TContext>(
   return useMutation<
     CategoriaDespesasControllerCreateMutationResponse,
     ResponseErrorConfig<CategoriaDespesasControllerCreate401 | CategoriaDespesasControllerCreate409>,
-    { data?: CategoriaDespesasControllerCreateMutationRequest },
+    { data: CategoriaDespesasControllerCreateMutationRequest },
     TContext
   >(
     {

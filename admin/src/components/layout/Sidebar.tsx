@@ -46,7 +46,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     }
   }, [savedScrollPosition]);
 
-  const handleLinkClick = (event: React.MouseEvent, href: string) => {
+  const handleLinkClick = (_event: React.MouseEvent, href: string) => {
     // Sempre salvar a posição exata atual do scroll
     const viewport = scrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]') as HTMLElement;
     const currentScrollTop = viewport?.scrollTop || 0;

@@ -79,6 +79,8 @@ export type { DespesasControllerFindBySubCategoriaQueryKey } from './useDespesas
 export type { DespesasControllerFindBySubCategoriaSuspenseQueryKey } from './useDespesasControllerFindBySubCategoriaSuspense.ts'
 export type { DespesasControllerFindOneQueryKey } from './useDespesasControllerFindOne.ts'
 export type { DespesasControllerFindOneSuspenseQueryKey } from './useDespesasControllerFindOneSuspense.ts'
+export type { DespesasControllerFindPaginatedQueryKey } from './useDespesasControllerFindPaginated.ts'
+export type { DespesasControllerFindPaginatedSuspenseQueryKey } from './useDespesasControllerFindPaginatedSuspense.ts'
 export type { DespesasControllerRemoveMutationKey } from './useDespesasControllerRemove.ts'
 export type { DespesasControllerUpdateMutationKey } from './useDespesasControllerUpdate.ts'
 export type { DespesasRecorrentesControllerCreateMutationKey } from './useDespesasRecorrentesControllerCreate.ts'
@@ -546,6 +548,18 @@ export {
   despesasControllerFindOneSuspenseQueryOptions,
   useDespesasControllerFindOneSuspense,
 } from './useDespesasControllerFindOneSuspense.ts'
+export {
+  despesasControllerFindPaginatedQueryKey,
+  despesasControllerFindPaginated,
+  despesasControllerFindPaginatedQueryOptions,
+  useDespesasControllerFindPaginated,
+} from './useDespesasControllerFindPaginated.ts'
+export {
+  despesasControllerFindPaginatedSuspenseQueryKey,
+  despesasControllerFindPaginatedSuspense,
+  despesasControllerFindPaginatedSuspenseQueryOptions,
+  useDespesasControllerFindPaginatedSuspense,
+} from './useDespesasControllerFindPaginatedSuspense.ts'
 export { despesasControllerRemoveMutationKey, despesasControllerRemove, useDespesasControllerRemove } from './useDespesasControllerRemove.ts'
 export { despesasControllerUpdateMutationKey, despesasControllerUpdate, useDespesasControllerUpdate } from './useDespesasControllerUpdate.ts'
 export {

@@ -381,6 +381,12 @@ export type {
   DespesasControllerFindOneQuery,
 } from './DespesasControllerFindOne.ts'
 export type {
+  DespesasControllerFindPaginatedQueryParams,
+  DespesasControllerFindPaginated200,
+  DespesasControllerFindPaginatedQueryResponse,
+  DespesasControllerFindPaginatedQuery,
+} from './DespesasControllerFindPaginated.ts'
+export type {
   DespesasControllerRemovePathParams,
   DespesasControllerRemove204,
   DespesasControllerRemove404,

@@ -42,6 +42,11 @@ export type Parceiro = {
    */
   telefone?: string
   /**
+   * @description ID da moeda do parceiro
+   * @type number | undefined
+   */
+  currencyId?: number
+  /**
    * @description Status ativo do parceiro
    * @type boolean
    */

@@ -72,11 +72,24 @@ export const PartnerProvider: React.FC<PartnerProviderProps> = ({ children }) =>
         }
       }
     } else if (parceiros.length === 1) {
-      // Para usuários com apenas um parceiro, não selecionar automaticamente
-      // O PartnerSelector irá exibir apenas o nome como texto simples
+      // Para usuários com apenas um parceiro, selecionar automaticamente
+      // e salvar no localStorage para que o header x-parceiro-id seja enviado
       const singlePartner = parceiros[0];
-      if (singlePartner?.parceiroId && singlePartner?.Parceiro?.nome && updateSelectedPartner) {
-        updateSelectedPartner(singlePartner);
+      if (singlePartner?.parceiroId && singlePartner?.Parceiro?.nome) {
+        const partnerId = singlePartner.parceiroId.toString();
+        const partnerName = singlePartner.Parceiro.nome;
+        
+        setSelectedPartnerId(partnerId);
+        setSelectedPartnerName(partnerName);
+        
+        // Salvar no localStorage
+        localStorage.setItem('selectedPartnerId', partnerId);
+        localStorage.setItem('selectedPartnerName', partnerName);
+        
+        // Atualizar contexto de autenticação
+        if (updateSelectedPartner) {
+          updateSelectedPartner(singlePartner);
+        }
       }
     }
   }, [isAuthenticated, parceiros, isLoading, updateSelectedPartner]);

@@ -9,6 +9,7 @@ import {
 import { usePartnerContext } from '@/hooks/usePartnerContext';
 import { Spinner } from '@/components/ui/spinner';
 import { useTranslation } from 'react-i18next';
+import { useQueryClient } from '@tanstack/react-query';
 import type { AuthControllerGetUserParceiros200 } from '@/api-client';
 
 type ParceiroItem = AuthControllerGetUserParceiros200[0];
@@ -23,6 +24,7 @@ export const PartnerSelector: React.FC<PartnerSelectorProps> = ({
   onPartnerChange: propOnPartnerChange,
 }) => {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const {
     selectedPartnerId: contextSelectedPartnerId,
     parceiros,
@@ -49,6 +51,10 @@ export const PartnerSelector: React.FC<PartnerSelectorProps> = ({
     const parceiro = validParceiros.find((p: ParceiroItem) => p.parceiroId?.toString() === value);
     if (parceiro?.Parceiro?.nome) {
       onPartnerChange(value, parceiro.Parceiro.nome);
+      
+      // Invalidar todas as queries relacionadas a despesas para forçar refresh
+      queryClient.invalidateQueries({ queryKey: ['despesas'] });
+      queryClient.invalidateQueries({ queryKey: ['despesa'] });
     }
   };
 

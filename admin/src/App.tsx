@@ -20,6 +20,7 @@ import Parceiros from './pages/parceiros';
 import CanaisOrigem from './pages/canais-origem';
 import { CategoriaDespesas } from './pages/categoria-despesas';
 import { SubCategoriaDespesas } from './pages/subcategoria-despesas';
+import DespesasPage from './pages/despesas';
 import { NotFound } from './pages/NotFound';
 
 import { ThemeProvider } from './components/theme-provider';
@@ -117,6 +118,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <SubCategoriaDespesas />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/despesas/*"
+                  element={
+                    <ProtectedRoute>
+                      <DespesasPage />
                     </ProtectedRoute>
                   }
                 />
