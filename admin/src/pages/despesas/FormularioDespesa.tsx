@@ -99,7 +99,11 @@ export function FormularioDespesa() {
 
 	// Queries
 	const { data: despesa, isLoading: isLoadingDespesa } =
-		useDespesasControllerFindOne(id!, { query: { enabled: isEditing } });
+		useDespesasControllerFindOne(
+			id!,
+			{ 'x-parceiro-id': Number(selectedPartnerId!) },
+			{ query: { enabled: isEditing && Boolean(selectedPartnerId) } }
+		);
 
 	const { data: categorias = [], isLoading: isLoadingCategorias } =
 		useCategoriaDespesasControllerFindAll();
@@ -216,10 +220,17 @@ export function FormularioDespesa() {
 			console.log(payload);
 
 			if (isEditing) {
-				await updateMutation.mutateAsync({ publicId: id!, data: payload });
+				await updateMutation.mutateAsync({ 
+					publicId: id!, 
+					data: payload,
+					headers: { 'x-parceiro-id': Number(selectedPartnerId!) }
+				});
 				toast.success(t("expenses.messages.updateSuccess"));
 			} else {
-				await createMutation.mutateAsync({ data: payload });
+				await createMutation.mutateAsync({ 
+					data: payload,
+					headers: { 'x-parceiro-id': Number(selectedPartnerId!) }
+				});
 				toast.success(t("expenses.messages.createSuccess"));
 			}
 

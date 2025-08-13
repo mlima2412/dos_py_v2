@@ -396,6 +396,45 @@
 			"exchangeMin": "Cotización debe ser mayor que cero"
 		}
 	},
+	"suppliers": {
+		"title": "Proveedores",
+		"supplier": "Proveedor",
+		"list": "Lista de Proveedores",
+		"create": "Nuevo Proveedor",
+		"edit": "Editar Proveedor",
+		"search": "Buscar proveedores...",
+		"searchPlaceholder": "Buscar por nombre o email...",
+		"noResults": "Ningún proveedor encontrado",
+		"name": "Nombre",
+		"email": "Correo electrónico",
+		"phone": "Teléfono",
+		"rucCnpj": "RUC/CNPJ",
+		"socialNetwork": "Red Social",
+		"lastPurchase": "Última Compra",
+		"neverPurchase": "Nunca ha comprado",
+		"activate": "Activar",
+		"deactivate": "Desactivar",
+		"namePlaceholder": "Ingrese el nombre del proveedor",
+		"emailPlaceholder": "Ingrese el correo electrónico",
+		"phonePlaceholder": "Ingrese el teléfono",
+		"rucCnpjPlaceholder": "Ingrese el RUC/CNPJ",
+		"socialNetworkPlaceholder": "Ingrese la red social",
+		"status": {
+			"label": "Estado",
+			"active": "Activo",
+			"inactive": "Inactivo"
+		},
+		"messages": {
+			"createSuccess": "¡Proveedor creado con éxito!",
+			"updateSuccess": "¡Proveedor actualizado con éxito!",
+			"createError": "Error al crear proveedor. Inténtelo de nuevo.",
+			"updateError": "Error al actualizar proveedor. Inténtelo de nuevo.",
+			"activateSuccess": "¡Proveedor activado con éxito!",
+			"deactivateSuccess": "¡Proveedor desactivado con éxito!",
+			"activateError": "Error al activar proveedor. Inténtelo de nuevo.",
+			"deactivateError": "Error al desactivar proveedor. Inténtelo de nuevo."
+		}
+	},
 	"validation": {
 		"required": "{{field}} es obligatorio",
 		"minLength": "{{field}} debe tener al menos {{min}} caracteres",

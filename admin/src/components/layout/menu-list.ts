@@ -64,9 +64,9 @@ export function getMenuList(
           submenus: [],
         },
         {
-          href: '/fornecedor',
-          label: t('menu.suppliers'),
-          active: pathname.includes('/fornecedor'),
+          href: '/fornecedores',
+          label: t('suppliers.title'),
+          active: pathname.includes('/fornecedores'),
           icon: Truck,
           submenus: [],
         },

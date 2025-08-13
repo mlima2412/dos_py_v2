@@ -21,6 +21,7 @@ import CanaisOrigem from './pages/canais-origem';
 import { CategoriaDespesas } from './pages/categoria-despesas';
 import { SubCategoriaDespesas } from './pages/subcategoria-despesas';
 import DespesasPage from './pages/despesas';
+import { FornecedoresRoutes } from './pages/fornecedores/fornecedores';
 import { NotFound } from './pages/NotFound';
 
 import { ThemeProvider } from './components/theme-provider';
@@ -126,6 +127,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <DespesasPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/fornecedores/*"
+                  element={
+                    <ProtectedRoute>
+                      <FornecedoresRoutes />
                     </ProtectedRoute>
                   }
                 />
