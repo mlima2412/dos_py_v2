@@ -7,6 +7,7 @@ import fetch from '@/lib/fetch-client'
 import type {
   DespesasControllerFindOneQueryResponse,
   DespesasControllerFindOnePathParams,
+  DespesasControllerFindOneHeaderParams,
   DespesasControllerFindOne404,
 } from '../types/DespesasControllerFindOne.ts'
 import type { RequestConfig, ResponseErrorConfig } from '@/lib/fetch-client'
@@ -24,6 +25,7 @@ export type DespesasControllerFindOneQueryKey = ReturnType<typeof despesasContro
  */
 export async function despesasControllerFindOne(
   publicId: DespesasControllerFindOnePathParams['publicId'],
+  headers: DespesasControllerFindOneHeaderParams,
   config: Partial<RequestConfig> & { client?: typeof fetch } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
@@ -32,12 +34,14 @@ export async function despesasControllerFindOne(
     method: 'GET',
     url: `/despesas/${publicId}`,
     ...requestConfig,
+    headers: { ...headers, ...requestConfig.headers },
   })
   return res.data
 }
 
 export function despesasControllerFindOneQueryOptions(
   publicId: DespesasControllerFindOnePathParams['publicId'],
+  headers: DespesasControllerFindOneHeaderParams,
   config: Partial<RequestConfig> & { client?: typeof fetch } = {},
 ) {
   const queryKey = despesasControllerFindOneQueryKey(publicId)
@@ -51,7 +55,7 @@ export function despesasControllerFindOneQueryOptions(
     queryKey,
     queryFn: async ({ signal }) => {
       config.signal = signal
-      return despesasControllerFindOne(publicId, config)
+      return despesasControllerFindOne(publicId, headers, config)
     },
   })
 }
@@ -66,6 +70,7 @@ export function useDespesasControllerFindOne<
   TQueryKey extends QueryKey = DespesasControllerFindOneQueryKey,
 >(
   publicId: DespesasControllerFindOnePathParams['publicId'],
+  headers: DespesasControllerFindOneHeaderParams,
   options: {
     query?: Partial<
       QueryObserverOptions<DespesasControllerFindOneQueryResponse, ResponseErrorConfig<DespesasControllerFindOne404>, TData, TQueryData, TQueryKey>
@@ -78,7 +83,7 @@ export function useDespesasControllerFindOne<
 
   const query = useQuery(
     {
-      ...despesasControllerFindOneQueryOptions(publicId, config),
+      ...despesasControllerFindOneQueryOptions(publicId, headers, config),
       queryKey,
       ...queryOptions,
     } as unknown as QueryObserverOptions,

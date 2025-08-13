@@ -212,7 +212,6 @@ model Despesa {
 model DespesaRecorrente {
   id             Int                 @id @default(autoincrement())
   publicId       String              @unique @map("public_id")
-  dataVencimento DateTime            @default(now()) @map("data_vencimento")
   descricao      String
   valor          Decimal             @default(0.0) @db.Decimal(12, 3)
   frequencia     FrequenciaEnum      @default(MENSAL)

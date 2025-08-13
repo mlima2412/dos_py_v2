@@ -7,6 +7,7 @@ import fetch from '@/lib/fetch-client'
 import type {
   DespesasControllerRemoveMutationResponse,
   DespesasControllerRemovePathParams,
+  DespesasControllerRemoveHeaderParams,
   DespesasControllerRemove404,
 } from '../types/DespesasControllerRemove.ts'
 import type { RequestConfig, ResponseErrorConfig } from '@/lib/fetch-client'
@@ -23,6 +24,7 @@ export type DespesasControllerRemoveMutationKey = ReturnType<typeof despesasCont
  */
 export async function despesasControllerRemove(
   publicId: DespesasControllerRemovePathParams['publicId'],
+  headers: DespesasControllerRemoveHeaderParams,
   config: Partial<RequestConfig> & { client?: typeof fetch } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
@@ -31,6 +33,7 @@ export async function despesasControllerRemove(
     method: 'DELETE',
     url: `/despesas/${publicId}`,
     ...requestConfig,
+    headers: { ...headers, ...requestConfig.headers },
   })
   return res.data
 }
@@ -44,7 +47,7 @@ export function useDespesasControllerRemove<TContext>(
     mutation?: UseMutationOptions<
       DespesasControllerRemoveMutationResponse,
       ResponseErrorConfig<DespesasControllerRemove404>,
-      { publicId: DespesasControllerRemovePathParams['publicId'] },
+      { publicId: DespesasControllerRemovePathParams['publicId']; headers: DespesasControllerRemoveHeaderParams },
       TContext
     > & { client?: QueryClient }
     client?: Partial<RequestConfig> & { client?: typeof fetch }
@@ -57,12 +60,12 @@ export function useDespesasControllerRemove<TContext>(
   return useMutation<
     DespesasControllerRemoveMutationResponse,
     ResponseErrorConfig<DespesasControllerRemove404>,
-    { publicId: DespesasControllerRemovePathParams['publicId'] },
+    { publicId: DespesasControllerRemovePathParams['publicId']; headers: DespesasControllerRemoveHeaderParams },
     TContext
   >(
     {
-      mutationFn: async ({ publicId }) => {
-        return despesasControllerRemove(publicId, config)
+      mutationFn: async ({ publicId, headers }) => {
+        return despesasControllerRemove(publicId, headers, config)
       },
       mutationKey,
       ...mutationOptions,

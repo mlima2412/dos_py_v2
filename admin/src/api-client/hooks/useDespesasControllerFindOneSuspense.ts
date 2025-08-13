@@ -7,6 +7,7 @@ import fetch from '@/lib/fetch-client'
 import type {
   DespesasControllerFindOneQueryResponse,
   DespesasControllerFindOnePathParams,
+  DespesasControllerFindOneHeaderParams,
   DespesasControllerFindOne404,
 } from '../types/DespesasControllerFindOne.ts'
 import type { RequestConfig, ResponseErrorConfig } from '@/lib/fetch-client'
@@ -24,6 +25,7 @@ export type DespesasControllerFindOneSuspenseQueryKey = ReturnType<typeof despes
  */
 export async function despesasControllerFindOneSuspense(
   publicId: DespesasControllerFindOnePathParams['publicId'],
+  headers: DespesasControllerFindOneHeaderParams,
   config: Partial<RequestConfig> & { client?: typeof fetch } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
@@ -32,12 +34,14 @@ export async function despesasControllerFindOneSuspense(
     method: 'GET',
     url: `/despesas/${publicId}`,
     ...requestConfig,
+    headers: { ...headers, ...requestConfig.headers },
   })
   return res.data
 }
 
 export function despesasControllerFindOneSuspenseQueryOptions(
   publicId: DespesasControllerFindOnePathParams['publicId'],
+  headers: DespesasControllerFindOneHeaderParams,
   config: Partial<RequestConfig> & { client?: typeof fetch } = {},
 ) {
   const queryKey = despesasControllerFindOneSuspenseQueryKey(publicId)
@@ -51,7 +55,7 @@ export function despesasControllerFindOneSuspenseQueryOptions(
     queryKey,
     queryFn: async ({ signal }) => {
       config.signal = signal
-      return despesasControllerFindOneSuspense(publicId, config)
+      return despesasControllerFindOneSuspense(publicId, headers, config)
     },
   })
 }
@@ -65,6 +69,7 @@ export function useDespesasControllerFindOneSuspense<
   TQueryKey extends QueryKey = DespesasControllerFindOneSuspenseQueryKey,
 >(
   publicId: DespesasControllerFindOnePathParams['publicId'],
+  headers: DespesasControllerFindOneHeaderParams,
   options: {
     query?: Partial<UseSuspenseQueryOptions<DespesasControllerFindOneQueryResponse, ResponseErrorConfig<DespesasControllerFindOne404>, TData, TQueryKey>> & {
       client?: QueryClient
@@ -77,7 +82,7 @@ export function useDespesasControllerFindOneSuspense<
 
   const query = useSuspenseQuery(
     {
-      ...despesasControllerFindOneSuspenseQueryOptions(publicId, config),
+      ...despesasControllerFindOneSuspenseQueryOptions(publicId, headers, config),
       queryKey,
       ...queryOptions,
     } as unknown as UseSuspenseQueryOptions,

@@ -5,6 +5,7 @@
 
 import type {
   DespesasControllerFindPaginatedQueryParams,
+  DespesasControllerFindPaginatedHeaderParams,
   DespesasControllerFindPaginated200,
   DespesasControllerFindPaginatedQueryResponse,
 } from '../types/DespesasControllerFindPaginated.ts'
@@ -16,10 +17,13 @@ export const despesasControllerFindPaginatedQueryParamsSchema = z.object({
   page: z.string(),
   limit: z.string(),
   search: z.string(),
-  parceiroId: z.string(),
   fornecedorId: z.string(),
   subCategoriaId: z.string(),
 }) as unknown as ToZod<DespesasControllerFindPaginatedQueryParams>
+
+export const despesasControllerFindPaginatedHeaderParamsSchema = z.object({
+  'x-parceiro-id': z.coerce.number().int().describe('ID do parceiro logado'),
+}) as unknown as ToZod<DespesasControllerFindPaginatedHeaderParams>
 
 /**
  * @description Lista paginada de despesas retornada com sucesso

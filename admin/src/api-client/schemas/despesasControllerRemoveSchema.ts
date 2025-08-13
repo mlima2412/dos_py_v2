@@ -5,6 +5,7 @@
 
 import type {
   DespesasControllerRemovePathParams,
+  DespesasControllerRemoveHeaderParams,
   DespesasControllerRemove204,
   DespesasControllerRemove404,
   DespesasControllerRemoveMutationResponse,
@@ -15,6 +16,10 @@ import { z } from 'zod'
 export const despesasControllerRemovePathParamsSchema = z.object({
   publicId: z.string().describe('ID público da despesa'),
 }) as unknown as ToZod<DespesasControllerRemovePathParams>
+
+export const despesasControllerRemoveHeaderParamsSchema = z.object({
+  'x-parceiro-id': z.coerce.number().int().describe('ID do parceiro logado'),
+}) as unknown as ToZod<DespesasControllerRemoveHeaderParams>
 
 /**
  * @description Despesa removida com sucesso

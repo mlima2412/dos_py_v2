@@ -8,6 +8,7 @@ import type {
   DespesasControllerUpdateMutationRequest,
   DespesasControllerUpdateMutationResponse,
   DespesasControllerUpdatePathParams,
+  DespesasControllerUpdateHeaderParams,
   DespesasControllerUpdate400,
   DespesasControllerUpdate404,
 } from '../types/DespesasControllerUpdate.ts'
@@ -25,6 +26,7 @@ export type DespesasControllerUpdateMutationKey = ReturnType<typeof despesasCont
  */
 export async function despesasControllerUpdate(
   publicId: DespesasControllerUpdatePathParams['publicId'],
+  headers: DespesasControllerUpdateHeaderParams,
   data?: DespesasControllerUpdateMutationRequest,
   config: Partial<RequestConfig<DespesasControllerUpdateMutationRequest>> & { client?: typeof fetch } = {},
 ) {
@@ -35,7 +37,7 @@ export async function despesasControllerUpdate(
     DespesasControllerUpdateMutationResponse,
     ResponseErrorConfig<DespesasControllerUpdate400 | DespesasControllerUpdate404>,
     DespesasControllerUpdateMutationRequest
-  >({ method: 'PATCH', url: `/despesas/${publicId}`, data: requestData, ...requestConfig })
+  >({ method: 'PATCH', url: `/despesas/${publicId}`, data: requestData, ...requestConfig, headers: { ...headers, ...requestConfig.headers } })
   return res.data
 }
 
@@ -48,7 +50,11 @@ export function useDespesasControllerUpdate<TContext>(
     mutation?: UseMutationOptions<
       DespesasControllerUpdateMutationResponse,
       ResponseErrorConfig<DespesasControllerUpdate400 | DespesasControllerUpdate404>,
-      { publicId: DespesasControllerUpdatePathParams['publicId']; data?: DespesasControllerUpdateMutationRequest },
+      {
+        publicId: DespesasControllerUpdatePathParams['publicId']
+        headers: DespesasControllerUpdateHeaderParams
+        data?: DespesasControllerUpdateMutationRequest
+      },
       TContext
     > & { client?: QueryClient }
     client?: Partial<RequestConfig<DespesasControllerUpdateMutationRequest>> & { client?: typeof fetch }
@@ -61,12 +67,12 @@ export function useDespesasControllerUpdate<TContext>(
   return useMutation<
     DespesasControllerUpdateMutationResponse,
     ResponseErrorConfig<DespesasControllerUpdate400 | DespesasControllerUpdate404>,
-    { publicId: DespesasControllerUpdatePathParams['publicId']; data?: DespesasControllerUpdateMutationRequest },
+    { publicId: DespesasControllerUpdatePathParams['publicId']; headers: DespesasControllerUpdateHeaderParams; data?: DespesasControllerUpdateMutationRequest },
     TContext
   >(
     {
-      mutationFn: async ({ publicId, data }) => {
-        return despesasControllerUpdate(publicId, data, config)
+      mutationFn: async ({ publicId, headers, data }) => {
+        return despesasControllerUpdate(publicId, headers, data, config)
       },
       mutationKey,
       ...mutationOptions,

@@ -5,6 +5,7 @@
 
 import type {
   DespesasControllerUpdatePathParams,
+  DespesasControllerUpdateHeaderParams,
   DespesasControllerUpdate200,
   DespesasControllerUpdate400,
   DespesasControllerUpdate404,
@@ -19,6 +20,10 @@ import { z } from 'zod'
 export const despesasControllerUpdatePathParamsSchema = z.object({
   publicId: z.string().describe('ID público da despesa'),
 }) as unknown as ToZod<DespesasControllerUpdatePathParams>
+
+export const despesasControllerUpdateHeaderParamsSchema = z.object({
+  'x-parceiro-id': z.coerce.number().int().describe('ID do parceiro logado'),
+}) as unknown as ToZod<DespesasControllerUpdateHeaderParams>
 
 /**
  * @description Despesa atualizada com sucesso

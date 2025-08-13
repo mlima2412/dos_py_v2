@@ -7,6 +7,7 @@ import fetch from '@/lib/fetch-client'
 import type {
   DespesasControllerCreateMutationRequest,
   DespesasControllerCreateMutationResponse,
+  DespesasControllerCreateHeaderParams,
   DespesasControllerCreate400,
 } from '../types/DespesasControllerCreate.ts'
 import type { RequestConfig, ResponseErrorConfig } from '@/lib/fetch-client'
@@ -23,6 +24,7 @@ export type DespesasControllerCreateMutationKey = ReturnType<typeof despesasCont
  */
 export async function despesasControllerCreate(
   data: DespesasControllerCreateMutationRequest,
+  headers: DespesasControllerCreateHeaderParams,
   config: Partial<RequestConfig<DespesasControllerCreateMutationRequest>> & { client?: typeof fetch } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
@@ -32,7 +34,7 @@ export async function despesasControllerCreate(
     DespesasControllerCreateMutationResponse,
     ResponseErrorConfig<DespesasControllerCreate400>,
     DespesasControllerCreateMutationRequest
-  >({ method: 'POST', url: `/despesas`, data: requestData, ...requestConfig })
+  >({ method: 'POST', url: `/despesas`, data: requestData, ...requestConfig, headers: { ...headers, ...requestConfig.headers } })
   return res.data
 }
 
@@ -45,7 +47,7 @@ export function useDespesasControllerCreate<TContext>(
     mutation?: UseMutationOptions<
       DespesasControllerCreateMutationResponse,
       ResponseErrorConfig<DespesasControllerCreate400>,
-      { data: DespesasControllerCreateMutationRequest },
+      { data: DespesasControllerCreateMutationRequest; headers: DespesasControllerCreateHeaderParams },
       TContext
     > & { client?: QueryClient }
     client?: Partial<RequestConfig<DespesasControllerCreateMutationRequest>> & { client?: typeof fetch }
@@ -58,12 +60,12 @@ export function useDespesasControllerCreate<TContext>(
   return useMutation<
     DespesasControllerCreateMutationResponse,
     ResponseErrorConfig<DespesasControllerCreate400>,
-    { data: DespesasControllerCreateMutationRequest },
+    { data: DespesasControllerCreateMutationRequest; headers: DespesasControllerCreateHeaderParams },
     TContext
   >(
     {
-      mutationFn: async ({ data }) => {
-        return despesasControllerCreate(data, config)
+      mutationFn: async ({ data, headers }) => {
+        return despesasControllerCreate(data, headers, config)
       },
       mutationKey,
       ...mutationOptions,

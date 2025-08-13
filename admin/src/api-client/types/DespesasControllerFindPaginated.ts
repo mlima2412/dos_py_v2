@@ -21,15 +21,19 @@ export type DespesasControllerFindPaginatedQueryParams = {
   /**
    * @type string
    */
-  parceiroId: string
-  /**
-   * @type string
-   */
   fornecedorId: string
   /**
    * @type string
    */
   subCategoriaId: string
+}
+
+export type DespesasControllerFindPaginatedHeaderParams = {
+  /**
+   * @description ID do parceiro logado
+   * @type integer
+   */
+  'x-parceiro-id': number
 }
 
 /**
@@ -67,5 +71,6 @@ export type DespesasControllerFindPaginatedQueryResponse = DespesasControllerFin
 export type DespesasControllerFindPaginatedQuery = {
   Response: DespesasControllerFindPaginated200
   QueryParams: DespesasControllerFindPaginatedQueryParams
+  HeaderParams: DespesasControllerFindPaginatedHeaderParams
   Errors: any
 }

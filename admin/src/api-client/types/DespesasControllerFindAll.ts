@@ -5,8 +5,23 @@
 
 import type { Despesa } from './Despesa.ts'
 
+export type DespesasControllerFindAllQueryParams = {
+  /**
+   * @type string
+   */
+  search: string
+}
+
+export type DespesasControllerFindAllHeaderParams = {
+  /**
+   * @description ID do parceiro logado
+   * @type integer
+   */
+  'x-parceiro-id': number
+}
+
 /**
- * @description Lista de despesas
+ * @description Lista de despesas do parceiro
  */
 export type DespesasControllerFindAll200 = Despesa[]
 
@@ -14,5 +29,7 @@ export type DespesasControllerFindAllQueryResponse = DespesasControllerFindAll20
 
 export type DespesasControllerFindAllQuery = {
   Response: DespesasControllerFindAll200
+  QueryParams: DespesasControllerFindAllQueryParams
+  HeaderParams: DespesasControllerFindAllHeaderParams
   Errors: any
 }

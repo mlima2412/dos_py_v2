@@ -11,6 +11,14 @@ export type DespesasControllerRemovePathParams = {
   publicId: string
 }
 
+export type DespesasControllerRemoveHeaderParams = {
+  /**
+   * @description ID do parceiro logado
+   * @type integer
+   */
+  'x-parceiro-id': number
+}
+
 /**
  * @description Despesa removida com sucesso
  */
@@ -26,5 +34,6 @@ export type DespesasControllerRemoveMutationResponse = DespesasControllerRemove2
 export type DespesasControllerRemoveMutation = {
   Response: DespesasControllerRemove204
   PathParams: DespesasControllerRemovePathParams
+  HeaderParams: DespesasControllerRemoveHeaderParams
   Errors: DespesasControllerRemove404
 }

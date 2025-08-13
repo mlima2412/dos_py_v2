@@ -81,6 +81,9 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
+  app.getHttpAdapter().get('/api-json', (req, res) => {
+    res.json(document);
+  });
 
   const port = process.env.APP_PORT || 3000;
   await app.listen(port);

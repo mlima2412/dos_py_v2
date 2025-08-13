@@ -8,7 +8,6 @@ import type { ToZod } from '@kubb/plugin-zod/utils'
 import { z } from 'zod'
 
 export const updateDespesaRecorrenteDtoSchema = z.object({
-  dataVencimento: z.coerce.string().describe('Data de vencimento da despesa recorrente').optional(),
   descricao: z.coerce.string().describe('Descrição da despesa recorrente').optional(),
   valor: z.coerce.number().describe('Valor da despesa recorrente').optional(),
   frequencia: z.enum(['SEMANAL', 'QUINZENAL', 'MENSAL', 'TRIMESTRAL', 'SEMESTRAL', 'ANUAL']).describe('Frequência da despesa recorrente').optional(),

@@ -13,7 +13,6 @@ import { z } from 'zod'
 export const despesaRecorrenteSchema = z.object({
   id: z.coerce.number().describe('ID único da despesa recorrente'),
   publicId: z.coerce.string().describe('ID público da despesa recorrente'),
-  dataVencimento: z.string().datetime().describe('Data de vencimento da despesa recorrente'),
   descricao: z.coerce.string().describe('Descrição da despesa recorrente'),
   valor: z.coerce.number().describe('Valor da despesa recorrente'),
   frequencia: z.enum(['SEMANAL', 'QUINZENAL', 'MENSAL', 'TRIMESTRAL', 'SEMESTRAL', 'ANUAL']).describe('Frequência da despesa recorrente'),

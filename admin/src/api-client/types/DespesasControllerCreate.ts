@@ -6,6 +6,14 @@
 import type { CreateDespesaDto } from './CreateDespesaDto.ts'
 import type { Despesa } from './Despesa.ts'
 
+export type DespesasControllerCreateHeaderParams = {
+  /**
+   * @description ID do parceiro logado
+   * @type integer
+   */
+  'x-parceiro-id': number
+}
+
 /**
  * @description Despesa criada com sucesso
  */
@@ -23,5 +31,6 @@ export type DespesasControllerCreateMutationResponse = DespesasControllerCreate2
 export type DespesasControllerCreateMutation = {
   Response: DespesasControllerCreate201
   Request: DespesasControllerCreateMutationRequest
+  HeaderParams: DespesasControllerCreateHeaderParams
   Errors: DespesasControllerCreate400
 }

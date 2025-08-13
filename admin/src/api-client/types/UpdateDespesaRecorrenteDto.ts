@@ -16,11 +16,6 @@ export type UpdateDespesaRecorrenteDtoFrequenciaEnum = (typeof updateDespesaReco
 
 export type UpdateDespesaRecorrenteDto = {
   /**
-   * @description Data de vencimento da despesa recorrente
-   * @type string | undefined
-   */
-  dataVencimento?: string
-  /**
    * @description Descrição da despesa recorrente
    * @type string | undefined
    */

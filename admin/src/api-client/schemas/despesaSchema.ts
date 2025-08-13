@@ -6,7 +6,6 @@
 import type { Despesa } from '../types/Despesa.ts'
 import type { ToZod } from '@kubb/plugin-zod/utils'
 import { fornecedorSchema } from './fornecedorSchema.ts'
-import { parceiroSchema } from './parceiroSchema.ts'
 import { subCategoriaDespesaSchema } from './subCategoriaDespesaSchema.ts'
 import { z } from 'zod'
 
@@ -27,6 +26,5 @@ export const despesaSchema = z.object({
     .lazy(() => fornecedorSchema)
     .describe('Fornecedor da despesa')
     .optional(),
-  parceiro: z.lazy(() => parceiroSchema).describe('Parceiro responsável pela despesa'),
   subCategoria: z.lazy(() => subCategoriaDespesaSchema).describe('Subcategoria da despesa'),
 }) as unknown as ToZod<Despesa>

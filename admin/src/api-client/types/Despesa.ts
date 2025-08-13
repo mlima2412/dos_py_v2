@@ -4,7 +4,6 @@
  */
 
 import type { Fornecedor } from './Fornecedor.ts'
-import type { Parceiro } from './Parceiro.ts'
 import type { SubCategoriaDespesa } from './SubCategoriaDespesa.ts'
 
 export type Despesa = {
@@ -72,10 +71,6 @@ export type Despesa = {
    * @description Fornecedor da despesa
    */
   fornecedor?: Fornecedor
-  /**
-   * @description Parceiro responsável pela despesa
-   */
-  parceiro: Parceiro
   /**
    * @description Subcategoria da despesa
    */

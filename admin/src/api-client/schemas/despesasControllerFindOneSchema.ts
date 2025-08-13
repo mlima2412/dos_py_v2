@@ -5,6 +5,7 @@
 
 import type {
   DespesasControllerFindOnePathParams,
+  DespesasControllerFindOneHeaderParams,
   DespesasControllerFindOne200,
   DespesasControllerFindOne404,
   DespesasControllerFindOneQueryResponse,
@@ -16,6 +17,10 @@ import { z } from 'zod'
 export const despesasControllerFindOnePathParamsSchema = z.object({
   publicId: z.string().describe('ID público da despesa'),
 }) as unknown as ToZod<DespesasControllerFindOnePathParams>
+
+export const despesasControllerFindOneHeaderParamsSchema = z.object({
+  'x-parceiro-id': z.coerce.number().int().describe('ID do parceiro logado'),
+}) as unknown as ToZod<DespesasControllerFindOneHeaderParams>
 
 /**
  * @description Dados da despesa

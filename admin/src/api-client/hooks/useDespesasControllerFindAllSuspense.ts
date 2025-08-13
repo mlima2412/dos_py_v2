@@ -4,56 +4,78 @@
  */
 
 import fetch from '@/lib/fetch-client'
-import type { DespesasControllerFindAllQueryResponse } from '../types/DespesasControllerFindAll.ts'
+import type {
+  DespesasControllerFindAllQueryResponse,
+  DespesasControllerFindAllQueryParams,
+  DespesasControllerFindAllHeaderParams,
+} from '../types/DespesasControllerFindAll.ts'
 import type { RequestConfig, ResponseErrorConfig } from '@/lib/fetch-client'
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from '@tanstack/react-query'
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query'
 
-export const despesasControllerFindAllSuspenseQueryKey = () => [{ url: '/despesas' }] as const
+export const despesasControllerFindAllSuspenseQueryKey = (params: DespesasControllerFindAllQueryParams) =>
+  [{ url: '/despesas' }, ...(params ? [params] : [])] as const
 
 export type DespesasControllerFindAllSuspenseQueryKey = ReturnType<typeof despesasControllerFindAllSuspenseQueryKey>
 
 /**
- * @summary Listar todas as despesas
+ * @summary Listar todas as despesas do parceiro
  * {@link /despesas}
  */
-export async function despesasControllerFindAllSuspense(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+export async function despesasControllerFindAllSuspense(
+  params: DespesasControllerFindAllQueryParams,
+  headers: DespesasControllerFindAllHeaderParams,
+  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+) {
   const { client: request = fetch, ...requestConfig } = config
 
-  const res = await request<DespesasControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method: 'GET', url: `/despesas`, ...requestConfig })
+  const res = await request<DespesasControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({
+    method: 'GET',
+    url: `/despesas`,
+    params,
+    ...requestConfig,
+    headers: { ...headers, ...requestConfig.headers },
+  })
   return res.data
 }
 
-export function despesasControllerFindAllSuspenseQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const queryKey = despesasControllerFindAllSuspenseQueryKey()
+export function despesasControllerFindAllSuspenseQueryOptions(
+  params: DespesasControllerFindAllQueryParams,
+  headers: DespesasControllerFindAllHeaderParams,
+  config: Partial<RequestConfig> & { client?: typeof fetch } = {},
+) {
+  const queryKey = despesasControllerFindAllSuspenseQueryKey(params)
   return queryOptions<DespesasControllerFindAllQueryResponse, ResponseErrorConfig<Error>, DespesasControllerFindAllQueryResponse, typeof queryKey>({
+    enabled: !!params,
     queryKey,
     queryFn: async ({ signal }) => {
       config.signal = signal
-      return despesasControllerFindAllSuspense(config)
+      return despesasControllerFindAllSuspense(params, headers, config)
     },
   })
 }
 
 /**
- * @summary Listar todas as despesas
+ * @summary Listar todas as despesas do parceiro
  * {@link /despesas}
  */
 export function useDespesasControllerFindAllSuspense<
   TData = DespesasControllerFindAllQueryResponse,
   TQueryKey extends QueryKey = DespesasControllerFindAllSuspenseQueryKey,
 >(
+  params: DespesasControllerFindAllQueryParams,
+  headers: DespesasControllerFindAllHeaderParams,
   options: {
     query?: Partial<UseSuspenseQueryOptions<DespesasControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient }
     client?: Partial<RequestConfig> & { client?: typeof fetch }
   } = {},
 ) {
   const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-  const queryKey = queryOptions?.queryKey ?? despesasControllerFindAllSuspenseQueryKey()
+  const queryKey = queryOptions?.queryKey ?? despesasControllerFindAllSuspenseQueryKey(params)
 
   const query = useSuspenseQuery(
     {
-      ...despesasControllerFindAllSuspenseQueryOptions(config),
+      ...despesasControllerFindAllSuspenseQueryOptions(params, headers, config),
       queryKey,
       ...queryOptions,
     } as unknown as UseSuspenseQueryOptions,

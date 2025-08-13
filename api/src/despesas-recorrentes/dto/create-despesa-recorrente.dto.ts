@@ -13,14 +13,6 @@ import {
 import { FrequenciaEnum } from '../entities/despesa-recorrente.entity';
 
 export class CreateDespesaRecorrenteDto {
-  @ApiProperty({
-    description: 'Data de vencimento da despesa recorrente',
-    example: '2024-01-01T00:00:00Z',
-    required: false,
-  })
-  @IsOptional()
-  @IsDateString()
-  dataVencimento?: string;
 
   @ApiProperty({
     description: 'Descrição da despesa recorrente',

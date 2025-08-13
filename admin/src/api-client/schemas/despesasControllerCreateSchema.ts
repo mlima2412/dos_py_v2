@@ -4,6 +4,7 @@
  */
 
 import type {
+  DespesasControllerCreateHeaderParams,
   DespesasControllerCreate201,
   DespesasControllerCreate400,
   DespesasControllerCreateMutationRequest,
@@ -13,6 +14,10 @@ import type { ToZod } from '@kubb/plugin-zod/utils'
 import { createDespesaDtoSchema } from './createDespesaDtoSchema.ts'
 import { despesaSchema } from './despesaSchema.ts'
 import { z } from 'zod'
+
+export const despesasControllerCreateHeaderParamsSchema = z.object({
+  'x-parceiro-id': z.coerce.number().int().describe('ID do parceiro logado'),
+}) as unknown as ToZod<DespesasControllerCreateHeaderParams>
 
 /**
  * @description Despesa criada com sucesso

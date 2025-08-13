@@ -13,6 +13,14 @@ export type DespesasControllerFindOnePathParams = {
   publicId: string
 }
 
+export type DespesasControllerFindOneHeaderParams = {
+  /**
+   * @description ID do parceiro logado
+   * @type integer
+   */
+  'x-parceiro-id': number
+}
+
 /**
  * @description Dados da despesa
  */
@@ -28,5 +36,6 @@ export type DespesasControllerFindOneQueryResponse = DespesasControllerFindOne20
 export type DespesasControllerFindOneQuery = {
   Response: DespesasControllerFindOne200
   PathParams: DespesasControllerFindOnePathParams
+  HeaderParams: DespesasControllerFindOneHeaderParams
   Errors: DespesasControllerFindOne404
 }

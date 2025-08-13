@@ -14,6 +14,14 @@ export type DespesasControllerUpdatePathParams = {
   publicId: string
 }
 
+export type DespesasControllerUpdateHeaderParams = {
+  /**
+   * @description ID do parceiro logado
+   * @type integer
+   */
+  'x-parceiro-id': number
+}
+
 /**
  * @description Despesa atualizada com sucesso
  */
@@ -37,5 +45,6 @@ export type DespesasControllerUpdateMutation = {
   Response: DespesasControllerUpdate200
   Request: DespesasControllerUpdateMutationRequest
   PathParams: DespesasControllerUpdatePathParams
+  HeaderParams: DespesasControllerUpdateHeaderParams
   Errors: DespesasControllerUpdate400 | DespesasControllerUpdate404
 }

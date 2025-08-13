@@ -4,7 +4,11 @@
  */
 
 import fetch from '@/lib/fetch-client'
-import type { DespesasControllerFindPaginatedQueryResponse, DespesasControllerFindPaginatedQueryParams } from '../types/DespesasControllerFindPaginated.ts'
+import type {
+  DespesasControllerFindPaginatedQueryResponse,
+  DespesasControllerFindPaginatedQueryParams,
+  DespesasControllerFindPaginatedHeaderParams,
+} from '../types/DespesasControllerFindPaginated.ts'
 import type { RequestConfig, ResponseErrorConfig } from '@/lib/fetch-client'
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from '@tanstack/react-query'
 import { queryOptions, useQuery } from '@tanstack/react-query'
@@ -20,6 +24,7 @@ export type DespesasControllerFindPaginatedQueryKey = ReturnType<typeof despesas
  */
 export async function despesasControllerFindPaginated(
   params: DespesasControllerFindPaginatedQueryParams,
+  headers: DespesasControllerFindPaginatedHeaderParams,
   config: Partial<RequestConfig> & { client?: typeof fetch } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
@@ -29,12 +34,14 @@ export async function despesasControllerFindPaginated(
     url: `/despesas/paginated`,
     params,
     ...requestConfig,
+    headers: { ...headers, ...requestConfig.headers },
   })
   return res.data
 }
 
 export function despesasControllerFindPaginatedQueryOptions(
   params: DespesasControllerFindPaginatedQueryParams,
+  headers: DespesasControllerFindPaginatedHeaderParams,
   config: Partial<RequestConfig> & { client?: typeof fetch } = {},
 ) {
   const queryKey = despesasControllerFindPaginatedQueryKey(params)
@@ -43,7 +50,7 @@ export function despesasControllerFindPaginatedQueryOptions(
     queryKey,
     queryFn: async ({ signal }) => {
       config.signal = signal
-      return despesasControllerFindPaginated(params, config)
+      return despesasControllerFindPaginated(params, headers, config)
     },
   })
 }
@@ -58,6 +65,7 @@ export function useDespesasControllerFindPaginated<
   TQueryKey extends QueryKey = DespesasControllerFindPaginatedQueryKey,
 >(
   params: DespesasControllerFindPaginatedQueryParams,
+  headers: DespesasControllerFindPaginatedHeaderParams,
   options: {
     query?: Partial<QueryObserverOptions<DespesasControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & {
       client?: QueryClient
@@ -70,7 +78,7 @@ export function useDespesasControllerFindPaginated<
 
   const query = useQuery(
     {
-      ...despesasControllerFindPaginatedQueryOptions(params, config),
+      ...despesasControllerFindPaginatedQueryOptions(params, headers, config),
       queryKey,
       ...queryOptions,
     } as unknown as QueryObserverOptions,

@@ -16,11 +16,6 @@ export type CreateDespesaRecorrenteDtoFrequenciaEnum = (typeof createDespesaReco
 
 export type CreateDespesaRecorrenteDto = {
   /**
-   * @description Data de vencimento da despesa recorrente
-   * @type string | undefined
-   */
-  dataVencimento?: string
-  /**
    * @description Descrição da despesa recorrente
    * @type string
    */

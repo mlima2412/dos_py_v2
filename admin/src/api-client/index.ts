@@ -71,12 +71,6 @@ export type { CurrencyControllerUpdateMutationKey } from './hooks/useCurrencyCon
 export type { DespesasControllerCreateMutationKey } from './hooks/useDespesasControllerCreate.ts'
 export type { DespesasControllerFindAllQueryKey } from './hooks/useDespesasControllerFindAll.ts'
 export type { DespesasControllerFindAllSuspenseQueryKey } from './hooks/useDespesasControllerFindAllSuspense.ts'
-export type { DespesasControllerFindByFornecedorQueryKey } from './hooks/useDespesasControllerFindByFornecedor.ts'
-export type { DespesasControllerFindByFornecedorSuspenseQueryKey } from './hooks/useDespesasControllerFindByFornecedorSuspense.ts'
-export type { DespesasControllerFindByParceiroQueryKey } from './hooks/useDespesasControllerFindByParceiro.ts'
-export type { DespesasControllerFindByParceiroSuspenseQueryKey } from './hooks/useDespesasControllerFindByParceiroSuspense.ts'
-export type { DespesasControllerFindBySubCategoriaQueryKey } from './hooks/useDespesasControllerFindBySubCategoria.ts'
-export type { DespesasControllerFindBySubCategoriaSuspenseQueryKey } from './hooks/useDespesasControllerFindBySubCategoriaSuspense.ts'
 export type { DespesasControllerFindOneQueryKey } from './hooks/useDespesasControllerFindOne.ts'
 export type { DespesasControllerFindOneSuspenseQueryKey } from './hooks/useDespesasControllerFindOneSuspense.ts'
 export type { DespesasControllerFindPaginatedQueryKey } from './hooks/useDespesasControllerFindPaginated.ts'
@@ -515,33 +509,23 @@ export type {
 export type { Despesa } from './types/Despesa.ts'
 export type { DespesaRecorrenteFrequenciaEnum, DespesaRecorrente } from './types/DespesaRecorrente.ts'
 export type {
+  DespesasControllerCreateHeaderParams,
   DespesasControllerCreate201,
   DespesasControllerCreate400,
   DespesasControllerCreateMutationRequest,
   DespesasControllerCreateMutationResponse,
   DespesasControllerCreateMutation,
 } from './types/DespesasControllerCreate.ts'
-export type { DespesasControllerFindAll200, DespesasControllerFindAllQueryResponse, DespesasControllerFindAllQuery } from './types/DespesasControllerFindAll.ts'
 export type {
-  DespesasControllerFindByFornecedorPathParams,
-  DespesasControllerFindByFornecedor200,
-  DespesasControllerFindByFornecedorQueryResponse,
-  DespesasControllerFindByFornecedorQuery,
-} from './types/DespesasControllerFindByFornecedor.ts'
-export type {
-  DespesasControllerFindByParceiroPathParams,
-  DespesasControllerFindByParceiro200,
-  DespesasControllerFindByParceiroQueryResponse,
-  DespesasControllerFindByParceiroQuery,
-} from './types/DespesasControllerFindByParceiro.ts'
-export type {
-  DespesasControllerFindBySubCategoriaPathParams,
-  DespesasControllerFindBySubCategoria200,
-  DespesasControllerFindBySubCategoriaQueryResponse,
-  DespesasControllerFindBySubCategoriaQuery,
-} from './types/DespesasControllerFindBySubCategoria.ts'
+  DespesasControllerFindAllQueryParams,
+  DespesasControllerFindAllHeaderParams,
+  DespesasControllerFindAll200,
+  DespesasControllerFindAllQueryResponse,
+  DespesasControllerFindAllQuery,
+} from './types/DespesasControllerFindAll.ts'
 export type {
   DespesasControllerFindOnePathParams,
+  DespesasControllerFindOneHeaderParams,
   DespesasControllerFindOne200,
   DespesasControllerFindOne404,
   DespesasControllerFindOneQueryResponse,
@@ -549,12 +533,14 @@ export type {
 } from './types/DespesasControllerFindOne.ts'
 export type {
   DespesasControllerFindPaginatedQueryParams,
+  DespesasControllerFindPaginatedHeaderParams,
   DespesasControllerFindPaginated200,
   DespesasControllerFindPaginatedQueryResponse,
   DespesasControllerFindPaginatedQuery,
 } from './types/DespesasControllerFindPaginated.ts'
 export type {
   DespesasControllerRemovePathParams,
+  DespesasControllerRemoveHeaderParams,
   DespesasControllerRemove204,
   DespesasControllerRemove404,
   DespesasControllerRemoveMutationResponse,
@@ -562,6 +548,7 @@ export type {
 } from './types/DespesasControllerRemove.ts'
 export type {
   DespesasControllerUpdatePathParams,
+  DespesasControllerUpdateHeaderParams,
   DespesasControllerUpdate200,
   DespesasControllerUpdate400,
   DespesasControllerUpdate404,
@@ -1316,42 +1303,6 @@ export {
   despesasControllerFindAllSuspenseQueryOptions,
   useDespesasControllerFindAllSuspense,
 } from './hooks/useDespesasControllerFindAllSuspense.ts'
-export {
-  despesasControllerFindByFornecedorQueryKey,
-  despesasControllerFindByFornecedor,
-  despesasControllerFindByFornecedorQueryOptions,
-  useDespesasControllerFindByFornecedor,
-} from './hooks/useDespesasControllerFindByFornecedor.ts'
-export {
-  despesasControllerFindByFornecedorSuspenseQueryKey,
-  despesasControllerFindByFornecedorSuspense,
-  despesasControllerFindByFornecedorSuspenseQueryOptions,
-  useDespesasControllerFindByFornecedorSuspense,
-} from './hooks/useDespesasControllerFindByFornecedorSuspense.ts'
-export {
-  despesasControllerFindByParceiroQueryKey,
-  despesasControllerFindByParceiro,
-  despesasControllerFindByParceiroQueryOptions,
-  useDespesasControllerFindByParceiro,
-} from './hooks/useDespesasControllerFindByParceiro.ts'
-export {
-  despesasControllerFindByParceiroSuspenseQueryKey,
-  despesasControllerFindByParceiroSuspense,
-  despesasControllerFindByParceiroSuspenseQueryOptions,
-  useDespesasControllerFindByParceiroSuspense,
-} from './hooks/useDespesasControllerFindByParceiroSuspense.ts'
-export {
-  despesasControllerFindBySubCategoriaQueryKey,
-  despesasControllerFindBySubCategoria,
-  despesasControllerFindBySubCategoriaQueryOptions,
-  useDespesasControllerFindBySubCategoria,
-} from './hooks/useDespesasControllerFindBySubCategoria.ts'
-export {
-  despesasControllerFindBySubCategoriaSuspenseQueryKey,
-  despesasControllerFindBySubCategoriaSuspense,
-  despesasControllerFindBySubCategoriaSuspenseQueryOptions,
-  useDespesasControllerFindBySubCategoriaSuspense,
-} from './hooks/useDespesasControllerFindBySubCategoriaSuspense.ts'
 export {
   despesasControllerFindOneQueryKey,
   despesasControllerFindOne,
@@ -2110,46 +2061,41 @@ export { currencySchema } from './schemas/currencySchema.ts'
 export { despesaRecorrenteSchema } from './schemas/despesaRecorrenteSchema.ts'
 export { despesaSchema } from './schemas/despesaSchema.ts'
 export {
+  despesasControllerCreateHeaderParamsSchema,
   despesasControllerCreate201Schema,
   despesasControllerCreate400Schema,
   despesasControllerCreateMutationRequestSchema,
   despesasControllerCreateMutationResponseSchema,
 } from './schemas/despesasControllerCreateSchema.ts'
-export { despesasControllerFindAll200Schema, despesasControllerFindAllQueryResponseSchema } from './schemas/despesasControllerFindAllSchema.ts'
 export {
-  despesasControllerFindByFornecedorPathParamsSchema,
-  despesasControllerFindByFornecedor200Schema,
-  despesasControllerFindByFornecedorQueryResponseSchema,
-} from './schemas/despesasControllerFindByFornecedorSchema.ts'
-export {
-  despesasControllerFindByParceiroPathParamsSchema,
-  despesasControllerFindByParceiro200Schema,
-  despesasControllerFindByParceiroQueryResponseSchema,
-} from './schemas/despesasControllerFindByParceiroSchema.ts'
-export {
-  despesasControllerFindBySubCategoriaPathParamsSchema,
-  despesasControllerFindBySubCategoria200Schema,
-  despesasControllerFindBySubCategoriaQueryResponseSchema,
-} from './schemas/despesasControllerFindBySubCategoriaSchema.ts'
+  despesasControllerFindAllQueryParamsSchema,
+  despesasControllerFindAllHeaderParamsSchema,
+  despesasControllerFindAll200Schema,
+  despesasControllerFindAllQueryResponseSchema,
+} from './schemas/despesasControllerFindAllSchema.ts'
 export {
   despesasControllerFindOnePathParamsSchema,
+  despesasControllerFindOneHeaderParamsSchema,
   despesasControllerFindOne200Schema,
   despesasControllerFindOne404Schema,
   despesasControllerFindOneQueryResponseSchema,
 } from './schemas/despesasControllerFindOneSchema.ts'
 export {
   despesasControllerFindPaginatedQueryParamsSchema,
+  despesasControllerFindPaginatedHeaderParamsSchema,
   despesasControllerFindPaginated200Schema,
   despesasControllerFindPaginatedQueryResponseSchema,
 } from './schemas/despesasControllerFindPaginatedSchema.ts'
 export {
   despesasControllerRemovePathParamsSchema,
+  despesasControllerRemoveHeaderParamsSchema,
   despesasControllerRemove204Schema,
   despesasControllerRemove404Schema,
   despesasControllerRemoveMutationResponseSchema,
 } from './schemas/despesasControllerRemoveSchema.ts'
 export {
   despesasControllerUpdatePathParamsSchema,
+  despesasControllerUpdateHeaderParamsSchema,
   despesasControllerUpdate200Schema,
   despesasControllerUpdate400Schema,
   despesasControllerUpdate404Schema,

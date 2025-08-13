@@ -26,11 +26,6 @@ export class DespesaRecorrente {
   })
   publicId: string;
 
-  @ApiProperty({
-    description: 'Data de vencimento da despesa recorrente',
-    example: '2024-01-01T00:00:00Z',
-  })
-  dataVencimento: Date;
 
   @ApiProperty({
     description: 'Descrição da despesa recorrente',

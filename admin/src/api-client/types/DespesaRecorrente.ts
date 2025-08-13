@@ -30,11 +30,6 @@ export type DespesaRecorrente = {
    */
   publicId: string
   /**
-   * @description Data de vencimento da despesa recorrente
-   * @type string, date-time
-   */
-  dataVencimento: string
-  /**
    * @description Descrição da despesa recorrente
    * @type string
    */

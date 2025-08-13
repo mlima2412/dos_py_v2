@@ -71,12 +71,6 @@ export type { CurrencyControllerUpdateMutationKey } from './useCurrencyControlle
 export type { DespesasControllerCreateMutationKey } from './useDespesasControllerCreate.ts'
 export type { DespesasControllerFindAllQueryKey } from './useDespesasControllerFindAll.ts'
 export type { DespesasControllerFindAllSuspenseQueryKey } from './useDespesasControllerFindAllSuspense.ts'
-export type { DespesasControllerFindByFornecedorQueryKey } from './useDespesasControllerFindByFornecedor.ts'
-export type { DespesasControllerFindByFornecedorSuspenseQueryKey } from './useDespesasControllerFindByFornecedorSuspense.ts'
-export type { DespesasControllerFindByParceiroQueryKey } from './useDespesasControllerFindByParceiro.ts'
-export type { DespesasControllerFindByParceiroSuspenseQueryKey } from './useDespesasControllerFindByParceiroSuspense.ts'
-export type { DespesasControllerFindBySubCategoriaQueryKey } from './useDespesasControllerFindBySubCategoria.ts'
-export type { DespesasControllerFindBySubCategoriaSuspenseQueryKey } from './useDespesasControllerFindBySubCategoriaSuspense.ts'
 export type { DespesasControllerFindOneQueryKey } from './useDespesasControllerFindOne.ts'
 export type { DespesasControllerFindOneSuspenseQueryKey } from './useDespesasControllerFindOneSuspense.ts'
 export type { DespesasControllerFindPaginatedQueryKey } from './useDespesasControllerFindPaginated.ts'
@@ -500,42 +494,6 @@ export {
   despesasControllerFindAllSuspenseQueryOptions,
   useDespesasControllerFindAllSuspense,
 } from './useDespesasControllerFindAllSuspense.ts'
-export {
-  despesasControllerFindByFornecedorQueryKey,
-  despesasControllerFindByFornecedor,
-  despesasControllerFindByFornecedorQueryOptions,
-  useDespesasControllerFindByFornecedor,
-} from './useDespesasControllerFindByFornecedor.ts'
-export {
-  despesasControllerFindByFornecedorSuspenseQueryKey,
-  despesasControllerFindByFornecedorSuspense,
-  despesasControllerFindByFornecedorSuspenseQueryOptions,
-  useDespesasControllerFindByFornecedorSuspense,
-} from './useDespesasControllerFindByFornecedorSuspense.ts'
-export {
-  despesasControllerFindByParceiroQueryKey,
-  despesasControllerFindByParceiro,
-  despesasControllerFindByParceiroQueryOptions,
-  useDespesasControllerFindByParceiro,
-} from './useDespesasControllerFindByParceiro.ts'
-export {
-  despesasControllerFindByParceiroSuspenseQueryKey,
-  despesasControllerFindByParceiroSuspense,
-  despesasControllerFindByParceiroSuspenseQueryOptions,
-  useDespesasControllerFindByParceiroSuspense,
-} from './useDespesasControllerFindByParceiroSuspense.ts'
-export {
-  despesasControllerFindBySubCategoriaQueryKey,
-  despesasControllerFindBySubCategoria,
-  despesasControllerFindBySubCategoriaQueryOptions,
-  useDespesasControllerFindBySubCategoria,
-} from './useDespesasControllerFindBySubCategoria.ts'
-export {
-  despesasControllerFindBySubCategoriaSuspenseQueryKey,
-  despesasControllerFindBySubCategoriaSuspense,
-  despesasControllerFindBySubCategoriaSuspenseQueryOptions,
-  useDespesasControllerFindBySubCategoriaSuspense,
-} from './useDespesasControllerFindBySubCategoriaSuspense.ts'
 export {
   despesasControllerFindOneQueryKey,
   despesasControllerFindOne,

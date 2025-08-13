@@ -51,7 +51,6 @@ export class DespesasRecorrentesService {
     const despesaRecorrente = await this.prisma.despesaRecorrente.create({
       data: {
         publicId: despesaRecorrenteEntity.publicId,
-        dataVencimento: createDespesaRecorrenteDto.dataVencimento ? new Date(createDespesaRecorrenteDto.dataVencimento) : new Date(),
         descricao: createDespesaRecorrenteDto.descricao,
         valor: createDespesaRecorrenteDto.valor,
         frequencia: createDespesaRecorrenteDto.frequencia || 'MENSAL',
@@ -84,8 +83,7 @@ export class DespesasRecorrentesService {
         parceiro: true,
         fornecedor: true,
         subCategoria: true,
-      },
-      orderBy: { dataVencimento: 'desc' },
+      }
     });
     return despesasRecorrentes.map(despesaRecorrente => ({
       ...despesaRecorrente,
@@ -122,8 +120,7 @@ export class DespesasRecorrentesService {
         parceiro: true,
         fornecedor: true,
         subCategoria: true,
-      },
-      orderBy: { dataVencimento: 'desc' },
+      }
     });
     return despesasRecorrentes.map(despesaRecorrente => ({
       ...despesaRecorrente,
@@ -139,8 +136,7 @@ export class DespesasRecorrentesService {
         parceiro: true,
         fornecedor: true,
         subCategoria: true,
-      },
-      orderBy: { dataVencimento: 'desc' },
+      }
     });
     return despesasRecorrentes.map(despesaRecorrente => ({
       ...despesaRecorrente,
@@ -156,8 +152,7 @@ export class DespesasRecorrentesService {
         parceiro: true,
         fornecedor: true,
         subCategoria: true,
-      },
-      orderBy: { dataVencimento: 'desc' },
+      }
     });
     return despesasRecorrentes.map(despesaRecorrente => ({
       ...despesaRecorrente,
@@ -173,8 +168,7 @@ export class DespesasRecorrentesService {
         parceiro: true,
         fornecedor: true,
         subCategoria: true,
-      },
-      orderBy: { dataVencimento: 'desc' },
+      }
     });
     return despesasRecorrentes.map(despesaRecorrente => ({
       ...despesaRecorrente,
@@ -225,9 +219,7 @@ export class DespesasRecorrentesService {
 
     const updateData: any = {};
     
-    if (updateDespesaRecorrenteDto.dataVencimento) {
-      updateData.dataVencimento = new Date(updateDespesaRecorrenteDto.dataVencimento);
-    }
+
     if (updateDespesaRecorrenteDto.descricao !== undefined) {
       updateData.descricao = updateDespesaRecorrenteDto.descricao;
     }

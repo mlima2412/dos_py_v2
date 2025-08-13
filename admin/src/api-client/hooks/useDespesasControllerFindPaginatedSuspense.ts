@@ -4,7 +4,11 @@
  */
 
 import fetch from '@/lib/fetch-client'
-import type { DespesasControllerFindPaginatedQueryResponse, DespesasControllerFindPaginatedQueryParams } from '../types/DespesasControllerFindPaginated.ts'
+import type {
+  DespesasControllerFindPaginatedQueryResponse,
+  DespesasControllerFindPaginatedQueryParams,
+  DespesasControllerFindPaginatedHeaderParams,
+} from '../types/DespesasControllerFindPaginated.ts'
 import type { RequestConfig, ResponseErrorConfig } from '@/lib/fetch-client'
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from '@tanstack/react-query'
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query'
@@ -20,6 +24,7 @@ export type DespesasControllerFindPaginatedSuspenseQueryKey = ReturnType<typeof 
  */
 export async function despesasControllerFindPaginatedSuspense(
   params: DespesasControllerFindPaginatedQueryParams,
+  headers: DespesasControllerFindPaginatedHeaderParams,
   config: Partial<RequestConfig> & { client?: typeof fetch } = {},
 ) {
   const { client: request = fetch, ...requestConfig } = config
@@ -29,12 +34,14 @@ export async function despesasControllerFindPaginatedSuspense(
     url: `/despesas/paginated`,
     params,
     ...requestConfig,
+    headers: { ...headers, ...requestConfig.headers },
   })
   return res.data
 }
 
 export function despesasControllerFindPaginatedSuspenseQueryOptions(
   params: DespesasControllerFindPaginatedQueryParams,
+  headers: DespesasControllerFindPaginatedHeaderParams,
   config: Partial<RequestConfig> & { client?: typeof fetch } = {},
 ) {
   const queryKey = despesasControllerFindPaginatedSuspenseQueryKey(params)
@@ -43,7 +50,7 @@ export function despesasControllerFindPaginatedSuspenseQueryOptions(
     queryKey,
     queryFn: async ({ signal }) => {
       config.signal = signal
-      return despesasControllerFindPaginatedSuspense(params, config)
+      return despesasControllerFindPaginatedSuspense(params, headers, config)
     },
   })
 }
@@ -57,6 +64,7 @@ export function useDespesasControllerFindPaginatedSuspense<
   TQueryKey extends QueryKey = DespesasControllerFindPaginatedSuspenseQueryKey,
 >(
   params: DespesasControllerFindPaginatedQueryParams,
+  headers: DespesasControllerFindPaginatedHeaderParams,
   options: {
     query?: Partial<UseSuspenseQueryOptions<DespesasControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & {
       client?: QueryClient
@@ -69,7 +77,7 @@ export function useDespesasControllerFindPaginatedSuspense<
 
   const query = useSuspenseQuery(
     {
-      ...despesasControllerFindPaginatedSuspenseQueryOptions(params, config),
+      ...despesasControllerFindPaginatedSuspenseQueryOptions(params, headers, config),
       queryKey,
       ...queryOptions,
     } as unknown as UseSuspenseQueryOptions,

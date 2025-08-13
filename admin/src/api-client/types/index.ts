@@ -348,33 +348,23 @@ export type {
 export type { Despesa } from './Despesa.ts'
 export type { DespesaRecorrenteFrequenciaEnum, DespesaRecorrente } from './DespesaRecorrente.ts'
 export type {
+  DespesasControllerCreateHeaderParams,
   DespesasControllerCreate201,
   DespesasControllerCreate400,
   DespesasControllerCreateMutationRequest,
   DespesasControllerCreateMutationResponse,
   DespesasControllerCreateMutation,
 } from './DespesasControllerCreate.ts'
-export type { DespesasControllerFindAll200, DespesasControllerFindAllQueryResponse, DespesasControllerFindAllQuery } from './DespesasControllerFindAll.ts'
 export type {
-  DespesasControllerFindByFornecedorPathParams,
-  DespesasControllerFindByFornecedor200,
-  DespesasControllerFindByFornecedorQueryResponse,
-  DespesasControllerFindByFornecedorQuery,
-} from './DespesasControllerFindByFornecedor.ts'
-export type {
-  DespesasControllerFindByParceiroPathParams,
-  DespesasControllerFindByParceiro200,
-  DespesasControllerFindByParceiroQueryResponse,
-  DespesasControllerFindByParceiroQuery,
-} from './DespesasControllerFindByParceiro.ts'
-export type {
-  DespesasControllerFindBySubCategoriaPathParams,
-  DespesasControllerFindBySubCategoria200,
-  DespesasControllerFindBySubCategoriaQueryResponse,
-  DespesasControllerFindBySubCategoriaQuery,
-} from './DespesasControllerFindBySubCategoria.ts'
+  DespesasControllerFindAllQueryParams,
+  DespesasControllerFindAllHeaderParams,
+  DespesasControllerFindAll200,
+  DespesasControllerFindAllQueryResponse,
+  DespesasControllerFindAllQuery,
+} from './DespesasControllerFindAll.ts'
 export type {
   DespesasControllerFindOnePathParams,
+  DespesasControllerFindOneHeaderParams,
   DespesasControllerFindOne200,
   DespesasControllerFindOne404,
   DespesasControllerFindOneQueryResponse,
@@ -382,12 +372,14 @@ export type {
 } from './DespesasControllerFindOne.ts'
 export type {
   DespesasControllerFindPaginatedQueryParams,
+  DespesasControllerFindPaginatedHeaderParams,
   DespesasControllerFindPaginated200,
   DespesasControllerFindPaginatedQueryResponse,
   DespesasControllerFindPaginatedQuery,
 } from './DespesasControllerFindPaginated.ts'
 export type {
   DespesasControllerRemovePathParams,
+  DespesasControllerRemoveHeaderParams,
   DespesasControllerRemove204,
   DespesasControllerRemove404,
   DespesasControllerRemoveMutationResponse,
@@ -395,6 +387,7 @@ export type {
 } from './DespesasControllerRemove.ts'
 export type {
   DespesasControllerUpdatePathParams,
+  DespesasControllerUpdateHeaderParams,
   DespesasControllerUpdate200,
   DespesasControllerUpdate400,
   DespesasControllerUpdate404,
