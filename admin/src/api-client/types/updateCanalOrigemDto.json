@@ -1,1 +1,9 @@
-{"type":"object","properties":{"nome":{"type":"string","description":"Nome do canal de origem","example":"Site Institucional"},"descricao":{"type":"string","description":"Descrição do canal de origem","example":"Clientes que chegaram através do site institucional"},"ativo":{"type":"boolean","description":"Status ativo do canal de origem","example":true,"default":true}},"x-readme-ref-name":"UpdateCanalOrigemDto"}
+{
+  "type": "object",
+  "properties": {
+    "nome": { "type": "string", "description": "Nome do canal de origem", "example": "Site Institucional" },
+    "descricao": { "type": "string", "description": "Descrição do canal de origem", "example": "Clientes que chegaram através do site institucional" },
+    "ativo": { "type": "boolean", "description": "Status ativo do canal de origem", "example": true, "default": true }
+  },
+  "x-readme-ref-name": "UpdateCanalOrigemDto"
+}

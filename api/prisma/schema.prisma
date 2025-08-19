@@ -187,12 +187,19 @@ enum Linguagem {
   Portugues
 }
 
+enum TipoPagamento {
+  A_VISTA_IMEDIATA
+  A_PRAZO_SEM_PARCELAS
+  PARCELADO
+}
+
 model Despesa {
   id             Int                 @id @default(autoincrement())
   publicId       String              @unique @map("public_id")
   dataRegistro   DateTime            @default(now()) @map("data_registro")
   valorTotal     Decimal             @default(0.0) @map("valor_total") @db.Decimal(12, 3)
   descricao      String
+  tipoPagamento  TipoPagamento       @default(A_VISTA_IMEDIATA) @map("tipo_pagamento")
   subCategoriaId Int                 @map("sub_categoria_id")
   parceiroId     Int                 @map("parceiro_id")
   fornecedorId   Int?                @map("fornecedor_id")

@@ -1,1 +1,10 @@
-{"type":"object","properties":{"id":{"type":"number","description":"ID interno do perfil","example":1},"nome":{"type":"string","description":"Nome do perfil","example":"Administrador"},"ativo":{"type":"boolean","description":"Status ativo do perfil","example":true,"default":true}},"required":["id","nome","ativo"],"x-readme-ref-name":"Perfil"}
+{
+  "type": "object",
+  "properties": {
+    "id": { "type": "number", "description": "ID interno do perfil", "example": 1 },
+    "nome": { "type": "string", "description": "Nome do perfil", "example": "Administrador" },
+    "ativo": { "type": "boolean", "description": "Status ativo do perfil", "example": true, "default": true }
+  },
+  "required": ["id", "nome", "ativo"],
+  "x-readme-ref-name": "Perfil"
+}

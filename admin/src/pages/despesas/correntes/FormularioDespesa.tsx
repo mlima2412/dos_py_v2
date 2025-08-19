@@ -51,6 +51,7 @@ import {
 	useFornecedoresControllerFindActiveFornecedores,
 	useCurrencyControllerFindAllActive,
 	type CreateDespesaDto,
+	type ContasPagar,
 } from "@/api-client";
 import { TabelaParcelas } from "../components/TabelaParcelas";
 import { useContasPagarControllerFindByDespesa } from "@/api-client";
@@ -91,7 +92,7 @@ export function FormularioDespesa() {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { id } = useParams<{ id: string }>();
-	const { selectedPartnerId } = usePartnerContext();
+	const { selectedPartnerId, selectedPartnerCurrencyId } = usePartnerContext();
 	const isEditing = Boolean(id);
 	const isViewing = location.pathname.includes("/visualizar/");
 
@@ -116,7 +117,7 @@ export function FormularioDespesa() {
 			fornecedorId: "",
 			categoriaId: "",
 			subCategoriaId: "",
-			currencyId: "",
+			currencyId: selectedPartnerCurrencyId?.toString() || "",
 			cotacao: 0,
 			tipoPagamento: "A_VISTA_IMEDIATA",
 			valorEntrada: 0,
@@ -161,10 +162,41 @@ export function FormularioDespesa() {
 	// Mutations
 	const createMutation = useDespesasControllerCreate();
 
+	// Determine payment type based on parcelas
+	const determineTipoPagamento = (contasPagar: ContasPagar[]) => {
+		if (!contasPagar || contasPagar.length === 0) {
+			return "A_VISTA_IMEDIATA";
+		}
+
+		const parcelas = contasPagar[0]?.contasPagarParcelas || [];
+		if (parcelas.length === 0) {
+			return "A_VISTA_IMEDIATA";
+		}
+
+		if (parcelas.length === 1) {
+			// Se tem uma parcela e a data de vencimento é diferente da data de registro, é A_PRAZO_SEM_PARCELAS
+			const parcela = parcelas[0];
+			const dataVencimento = new Date(parcela.dataVencimento);
+			const dataRegistro = new Date(despesa?.dataRegistro || new Date());
+
+			// Se a diferença for maior que 1 dia, considera como prazo
+			const diffDays =
+				Math.abs(dataVencimento.getTime() - dataRegistro.getTime()) /
+				(1000 * 60 * 60 * 24);
+			return diffDays > 1 ? "A_PRAZO_SEM_PARCELAS" : "A_VISTA_IMEDIATA";
+		}
+
+		return "PARCELADO";
+	};
+
 	// Populate form when editing
 	useEffect(() => {
 		if (despesa && isEditing) {
 			setIsInitialLoad(true);
+
+			// Determine payment type from parcelas
+			const tipoPagamentoDetectado = determineTipoPagamento(contasPagar || []);
+
 			form.reset({
 				descricao: despesa.descricao,
 				valorTotal: despesa.valorTotal,
@@ -174,7 +206,7 @@ export function FormularioDespesa() {
 				subCategoriaId: "", // Será preenchido após carregar as subcategorias
 				currencyId: despesa.currencyId?.toString() || "",
 				cotacao: despesa.cotacao || 0,
-				tipoPagamento: "A_VISTA_IMEDIATA", // Valor padrão para edição
+				tipoPagamento: tipoPagamentoDetectado,
 				valorEntrada: 0,
 				numeroParcelas: 1,
 				dataPrimeiraParcela: undefined,
@@ -186,9 +218,17 @@ export function FormularioDespesa() {
 			setCotacaoInput(
 				despesa.cotacao ? despesa.cotacao.toFixed(4).replace(".", ",") : ""
 			);
-			setTipoPagamento("avista");
+
+			// Set tipoPagamento state based on detected type
+			if (tipoPagamentoDetectado === "A_VISTA_IMEDIATA") {
+				setTipoPagamento("avista");
+			} else if (tipoPagamentoDetectado === "A_PRAZO_SEM_PARCELAS") {
+				setTipoPagamento("prazo");
+			} else {
+				setTipoPagamento("parcelado");
+			}
 		}
-	}, [despesa, isEditing, form]);
+	}, [despesa, isEditing, form, contasPagar]);
 
 	// Preencher subcategoria após carregar as subcategorias durante edição
 	useEffect(() => {
@@ -272,7 +312,12 @@ export function FormularioDespesa() {
 				}
 			}
 
-			console.log(payload);
+			// Campo específico para pagamento a prazo sem parcelas
+			if (data.tipoPagamento === "A_PRAZO_SEM_PARCELAS") {
+				if (data.dataVencimento) {
+					payload.dataVencimento = data.dataVencimento.toISOString();
+				}
+			}
 
 			await createMutation.mutateAsync({
 				data: payload,
@@ -672,8 +717,15 @@ export function FormularioDespesa() {
 													{isViewing ? (
 														<Input
 															value={
-																despesa?.currency
-																	? `${despesa.currency.isoCode} - ${despesa.currency.nome}`
+																despesa?.currencyId
+																	? (() => {
+																			const currency = currencies.find(
+																				(c) => c.id === despesa.currencyId
+																			);
+																			return currency
+																				? `${currency.isoCode} - ${currency.nome}`
+																				: "";
+																		})()
 																	: ""
 															}
 															disabled
@@ -749,12 +801,19 @@ export function FormularioDespesa() {
 											<TabelaParcelas
 												contasPagarId={contasPagar[0].id}
 												currency={
-													despesa?.currency
-														? {
-																isoCode: despesa.currency.isoCode,
-																locale: despesa.currency.locale,
-																precision: despesa.currency.precision,
-															}
+													despesa?.currencyId
+														? (() => {
+																const currency = currencies.find(
+																	(c) => c.id === despesa.currencyId
+																);
+																return currency
+																	? {
+																			isoCode: currency.isoCode,
+																			locale: currency.locale,
+																			precision: currency.precision,
+																		}
+																	: undefined;
+															})()
 														: undefined
 												}
 											/>

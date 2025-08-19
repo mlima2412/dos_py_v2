@@ -1,1 +1,15 @@
-{"type":"object","properties":{"id":{"type":"number","description":"ID único da parcela","example":1},"publicId":{"type":"string","description":"ID público da parcela","example":"0198bed0-ff3c-78e7-9a5d-3833db783fef"},"dataPagamento":{"format":"date-time","type":"string","description":"Data do pagamento da parcela","example":"2024-12-31T23:59:59.000Z"},"dataVencimento":{"format":"date-time","type":"string","description":"Data de vencimento da parcela","example":"2024-12-31T23:59:59.000Z"},"valor":{"type":"number","description":"Valor da parcela","example":500},"pago":{"type":"boolean","description":"Indica se a parcela foi paga","example":false},"contasPagarId":{"type":"number","description":"ID da conta a pagar relacionada","example":1},"contasPagar":{"description":"Conta a pagar relacionada","allOf":[{"$ref":"#/components/schemas/ContasPagar"}]}},"required":["id","publicId","dataPagamento","dataVencimento","valor","pago","contasPagarId"],"x-readme-ref-name":"ContasPagarParcelas"}
+{
+  "type": "object",
+  "properties": {
+    "id": { "type": "number", "description": "ID único da parcela", "example": 1 },
+    "publicId": { "type": "string", "description": "ID público da parcela", "example": "0198bed0-ff3c-78e7-9a5d-3833db783fef" },
+    "dataPagamento": { "format": "date-time", "type": "string", "description": "Data do pagamento da parcela", "example": "2024-12-31T23:59:59.000Z" },
+    "dataVencimento": { "format": "date-time", "type": "string", "description": "Data de vencimento da parcela", "example": "2024-12-31T23:59:59.000Z" },
+    "valor": { "type": "number", "description": "Valor da parcela", "example": 500 },
+    "pago": { "type": "boolean", "description": "Indica se a parcela foi paga", "example": false },
+    "contasPagarId": { "type": "number", "description": "ID da conta a pagar relacionada", "example": 1 },
+    "contasPagar": { "description": "Conta a pagar relacionada", "allOf": [{ "$ref": "#/components/schemas/ContasPagar" }] }
+  },
+  "required": ["id", "publicId", "dataPagamento", "dataVencimento", "valor", "pago", "contasPagarId"],
+  "x-readme-ref-name": "ContasPagarParcelas"
+}

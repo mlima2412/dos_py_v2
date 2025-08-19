@@ -30,6 +30,14 @@ type DespesaExtended = Despesa & {
 		isoCode: string;
 		prefixo?: string;
 	};
+	ContasPagar?: {
+		id: number;
+		ContasPagarParcelas?: {
+			id: number;
+			publicId: string;
+			pago: boolean;
+		}[];
+	}[];
 };
 
 const columnHelper = createColumnHelper<DespesaExtended>();
@@ -254,15 +262,25 @@ export const createColumns = (
 					},
 				];
 
-				// Adicionar botão de marcar como paga apenas para despesas em aberto
+				// Adicionar botão de marcar como paga apenas para despesas em aberto e com uma única parcela
 				if (onMarkAsPaid && row.original.statusPagamento === "em_aberto") {
-					actions.push({
-						type: "custom" as const,
-						label: t("expenses.markAsPaid"),
-						icon: <CheckCircle className='h-4 w-4 text-green-600' />,
-						onClick: () => onMarkAsPaid(row.original.publicId),
-						variant: "ghost" as const,
-					});
+					// Verificar se a despesa tem apenas uma parcela
+					const contasPagar = row.original.ContasPagar;
+					const hasMultipleParcelas = contasPagar && 
+						contasPagar.length > 0 && 
+						contasPagar[0].ContasPagarParcelas && 
+						contasPagar[0].ContasPagarParcelas.length > 1;
+
+					// Só mostrar o botão se não tiver múltiplas parcelas
+					if (!hasMultipleParcelas) {
+						actions.push({
+							type: "custom" as const,
+							label: t("expenses.markAsPaid"),
+							icon: <CheckCircle className='h-4 w-4 text-green-600' />,
+							onClick: () => onMarkAsPaid(row.original.publicId),
+							variant: "ghost" as const,
+						});
+					}
 				}
 
 				// Adicionar botão de deletar apenas para ADMIN

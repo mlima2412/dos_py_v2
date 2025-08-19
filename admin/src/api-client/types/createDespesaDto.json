@@ -1,1 +1,25 @@
-{"type":"object","properties":{"dataRegistro":{"type":"string","description":"Data do registro","example":"2024-01-01T00:00:00Z"},"valorTotal":{"type":"number","description":"Valor da despesa","example":1500.5},"descricao":{"type":"string","description":"Descrição da despesa","example":"Compra de material de escritório"},"subCategoriaId":{"type":"number","description":"ID da subcategoria da despesa","example":1},"parceiroId":{"type":"number","description":"ID do parceiro responsável pela despesa","example":1},"fornecedorId":{"type":"number","description":"ID do fornecedor da despesa","example":1},"tipoPagamento":{"type":"string","description":"Tipo de pagamento da despesa","enum":["A_VISTA_IMEDIATA","A_PRAZO_SEM_PARCELAS","PARCELADO"],"example":"A_VISTA_IMEDIATA"},"valorEntrada":{"type":"number","description":"Valor da entrada (apenas para pagamento parcelado)","example":500},"dataPrimeiraParcela":{"type":"string","description":"Data da primeira parcela (apenas para pagamento parcelado)","example":"2024-02-01T00:00:00Z"},"numeroParcelas":{"type":"number","description":"Número de parcelas (apenas para pagamento parcelado)","example":12},"dataVencimento":{"type":"string","description":"Data de vencimento (apenas para pagamento à prazo sem parcelas)","example":"2024-02-01T00:00:00Z"},"currencyId":{"type":"number","description":"ID da moeda da despesa","example":1},"cotacao":{"type":"number","description":"Cotação da moeda no momento da despesa","example":5.25}},"required":["valorTotal","descricao","subCategoriaId","parceiroId","tipoPagamento"],"x-readme-ref-name":"CreateDespesaDto"}
+{
+  "type": "object",
+  "properties": {
+    "dataRegistro": { "type": "string", "description": "Data do registro", "example": "2024-01-01T00:00:00Z" },
+    "valorTotal": { "type": "number", "description": "Valor da despesa", "example": 1500.5 },
+    "descricao": { "type": "string", "description": "Descrição da despesa", "example": "Compra de material de escritório" },
+    "subCategoriaId": { "type": "number", "description": "ID da subcategoria da despesa", "example": 1 },
+    "parceiroId": { "type": "number", "description": "ID do parceiro responsável pela despesa", "example": 1 },
+    "fornecedorId": { "type": "number", "description": "ID do fornecedor da despesa", "example": 1 },
+    "tipoPagamento": {
+      "type": "string",
+      "description": "Tipo de pagamento da despesa",
+      "enum": ["A_VISTA_IMEDIATA", "A_PRAZO_SEM_PARCELAS", "PARCELADO"],
+      "example": "A_VISTA_IMEDIATA"
+    },
+    "valorEntrada": { "type": "number", "description": "Valor da entrada (apenas para pagamento parcelado)", "example": 500 },
+    "dataPrimeiraParcela": { "type": "string", "description": "Data da primeira parcela (apenas para pagamento parcelado)", "example": "2024-02-01T00:00:00Z" },
+    "numeroParcelas": { "type": "number", "description": "Número de parcelas (apenas para pagamento parcelado)", "example": 12 },
+    "dataVencimento": { "type": "string", "description": "Data de vencimento (apenas para pagamento à prazo sem parcelas)", "example": "2024-02-01T00:00:00Z" },
+    "currencyId": { "type": "number", "description": "ID da moeda da despesa", "example": 1 },
+    "cotacao": { "type": "number", "description": "Cotação da moeda no momento da despesa", "example": 5.25 }
+  },
+  "required": ["valorTotal", "descricao", "subCategoriaId", "parceiroId", "tipoPagamento"],
+  "x-readme-ref-name": "CreateDespesaDto"
+}

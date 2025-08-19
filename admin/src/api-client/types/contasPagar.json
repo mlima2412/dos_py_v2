@@ -1,1 +1,15 @@
-{"type":"object","properties":{"id":{"type":"number","description":"ID único da conta a pagar","example":1},"publicId":{"type":"string","description":"ID público da conta a pagar","example":"0198bed0-ff3c-78e7-9a5d-38347e9b47e8"},"despesaId":{"type":"number","description":"ID da despesa relacionada","example":1},"dataCriacao":{"format":"date-time","type":"string","description":"Data de criação da conta","example":"2024-12-31T23:59:59.000Z"},"valorTotal":{"type":"number","description":"Valor total da conta a pagar","example":1500.5},"saldo":{"type":"number","description":"Saldo atual da conta (soma dos valores pagos)","example":750.25},"pago":{"type":"boolean","description":"Indica se a conta foi totalmente paga","example":false},"contasPagarParcelas":{"description":"Parcelas da conta a pagar","type":"array","items":{"$ref":"#/components/schemas/ContasPagarParcelas"}}},"required":["id","publicId","dataCriacao","valorTotal","saldo","pago"],"x-readme-ref-name":"ContasPagar"}
+{
+  "type": "object",
+  "properties": {
+    "id": { "type": "number", "description": "ID único da conta a pagar", "example": 1 },
+    "publicId": { "type": "string", "description": "ID público da conta a pagar", "example": "0198bed0-ff3c-78e7-9a5d-38347e9b47e8" },
+    "despesaId": { "type": "number", "description": "ID da despesa relacionada", "example": 1 },
+    "dataCriacao": { "format": "date-time", "type": "string", "description": "Data de criação da conta", "example": "2024-12-31T23:59:59.000Z" },
+    "valorTotal": { "type": "number", "description": "Valor total da conta a pagar", "example": 1500.5 },
+    "saldo": { "type": "number", "description": "Saldo atual da conta (soma dos valores pagos)", "example": 750.25 },
+    "pago": { "type": "boolean", "description": "Indica se a conta foi totalmente paga", "example": false },
+    "contasPagarParcelas": { "description": "Parcelas da conta a pagar", "type": "array", "items": { "$ref": "#/components/schemas/ContasPagarParcelas" } }
+  },
+  "required": ["id", "publicId", "dataCriacao", "valorTotal", "saldo", "pago"],
+  "x-readme-ref-name": "ContasPagar"
+}

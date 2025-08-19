@@ -78,6 +78,7 @@ export class DespesasService {
           dataRegistro: createDespesaDto.dataRegistro ? new Date(createDespesaDto.dataRegistro) : new Date(),
           valorTotal: createDespesaDto.valorTotal,  
           descricao: createDespesaDto.descricao,
+          tipoPagamento: createDespesaDto.tipoPagamento,
           subCategoriaId: createDespesaDto.subCategoriaId,
           parceiroId: parceiroId,
           fornecedorId: createDespesaDto.fornecedorId,
@@ -105,6 +106,9 @@ export class DespesasService {
 
       // Criar ContasPagarParcelas baseado no tipo de pagamento
       await this.createContasPagarParcelas(prisma, contasPagar.id, createDespesaDto);
+
+      // Atualizar cache de despesas
+      await this.updateCacheForNewDespesa(despesa, createDespesaDto);
 
       return {
         ...despesa,
@@ -151,7 +155,7 @@ export class DespesasService {
             contasPagarId,
             valor: createDespesaDto.valorTotal,
             dataVencimento,
-            dataPagamento: dataVencimento, // Prisma exige o campo, mas será null no banco
+            dataPagamento: null, // Não foi pago ainda
             pago: false,
           },
         });
@@ -192,7 +196,7 @@ export class DespesasService {
               contasPagarId,
               valor: valorParcela,
               dataVencimento: dataVencimentoParcela,
-              dataPagamento: dataVencimentoParcela, // Prisma exige o campo, mas será null no banco
+              dataPagamento: null, // Parcelas não pagas devem ter dataPagamento null
               pago: false,
             },
           });
@@ -484,18 +488,100 @@ export class DespesasService {
     }
 
     // Remover do cache antes de deletar
-    // Como não temos mais dataVencimento, todas as despesas são consideradas realizadas
-    const isFuture = false;
-    await this.despesaCacheService.removeDespesaFromCache(
-      existingDespesa.parceiro.publicId,
-      existingDespesa.dataRegistro,
-      Number(existingDespesa.valorTotal),
-      isFuture
-    );
+    await this.removeCacheForDeletedDespesa(existingDespesa);
 
     // O delete cascade do Prisma irá automaticamente remover ContasPagar e ContasPagarParcelas
     await this.prisma.despesa.delete({
       where: { id: existingDespesa.id },
     });
   }
-}
+
+  /**
+   * Atualiza o cache de despesas para uma nova despesa criada
+   */
+  private async updateCacheForNewDespesa(
+    despesa: any,
+    createDespesaDto: CreateDespesaDto
+  ): Promise<void> {
+    const parceiroPublicId = despesa.parceiro.publicId;
+    const tipoPagamento = createDespesaDto.tipoPagamento;
+    
+    if (tipoPagamento === TipoPagamento.PARCELADO) {
+      // Para pagamentos parcelados, processar cada parcela individualmente
+      const valorEntrada = createDespesaDto.valorEntrada || 0;
+      const valorRestante = createDespesaDto.valorTotal - valorEntrada;
+      const numeroParcelas = createDespesaDto.numeroParcelas || 1;
+      const valorParcela = valorRestante / numeroParcelas;
+      const dataPrimeiraParcela = new Date(createDespesaDto.dataPrimeiraParcela!);
+      
+      // Se tem entrada, adicionar ao cache como pago (realized)
+      if (valorEntrada > 0) {
+        await this.despesaCacheService.updateDespesaCache(
+          parceiroPublicId,
+          despesa.dataRegistro,
+          valorEntrada,
+          false // isFuture = false (já pago)
+        );
+      }
+      
+      // Adicionar cada parcela ao cache como futuro (to_pay)
+      for (let i = 1; i <= numeroParcelas; i++) {
+        const dataVencimentoParcela = new Date(dataPrimeiraParcela);
+        dataVencimentoParcela.setMonth(dataVencimentoParcela.getMonth() + (i - 1));
+        
+        await this.despesaCacheService.updateDespesaCache(
+          parceiroPublicId,
+          dataVencimentoParcela,
+          valorParcela,
+          true // isFuture = true (a pagar)
+        );
+      }
+    } else {
+      // Para outros tipos de pagamento, usar a lógica original
+      let dataParaCache: Date;
+      if (tipoPagamento === TipoPagamento.A_PRAZO_SEM_PARCELAS && createDespesaDto.dataVencimento) {
+        dataParaCache = new Date(createDespesaDto.dataVencimento);
+      } else {
+        dataParaCache = despesa.dataRegistro;
+      }
+
+      // Determinar se é futuro baseado no tipo de pagamento
+      const isFuture = tipoPagamento === TipoPagamento.A_PRAZO_SEM_PARCELAS;
+      
+      await this.despesaCacheService.updateDespesaCache(
+        parceiroPublicId,
+        dataParaCache,
+        createDespesaDto.valorTotal,
+        isFuture
+      );
+    }
+  }
+
+   /**
+    * Remove do cache uma despesa que está sendo deletada
+    */
+   private async removeCacheForDeletedDespesa(despesa: any): Promise<void> {
+     const parceiroPublicId = despesa.parceiro.publicId;
+     
+     // Para cada conta a pagar da despesa
+     for (const contasPagar of despesa.ContasPagar) {
+       // Para cada parcela da conta a pagar
+       for (const parcela of contasPagar.ContasPagarParcelas) {
+         const valorParcela = Number(parcela.valor);
+         const dataVencimento = parcela.dataVencimento;
+         const isPago = parcela.pago;
+         
+         // Se a parcela está paga, remover do realized
+         // Se não está paga, remover do to_pay
+         await this.despesaCacheService.removeDespesaFromCache(
+           parceiroPublicId,
+           dataVencimento,
+           valorParcela,
+           !isPago // isFuture: se não está pago, estava em to_pay (future)
+         );
+       }
+     }
+   }
+
+
+ }

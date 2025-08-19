@@ -1,1 +1,11 @@
-{"type":"object","properties":{"idCategoria":{"type":"number","description":"ID interno da categoria de despesas","example":1},"descricao":{"type":"string","description":"Descrição da categoria de despesas","example":"Alimentação"},"ativo":{"type":"boolean","description":"Status ativo da categoria","example":true,"default":true},"createdAt":{"format":"date-time","type":"string","description":"Data de criação da categoria","example":"2024-01-01T00:00:00.000Z"}},"required":["idCategoria","descricao","ativo","createdAt"],"x-readme-ref-name":"CategoriaDespesas"}
+{
+  "type": "object",
+  "properties": {
+    "idCategoria": { "type": "number", "description": "ID interno da categoria de despesas", "example": 1 },
+    "descricao": { "type": "string", "description": "Descrição da categoria de despesas", "example": "Alimentação" },
+    "ativo": { "type": "boolean", "description": "Status ativo da categoria", "example": true, "default": true },
+    "createdAt": { "format": "date-time", "type": "string", "description": "Data de criação da categoria", "example": "2024-01-01T00:00:00.000Z" }
+  },
+  "required": ["idCategoria", "descricao", "ativo", "createdAt"],
+  "x-readme-ref-name": "CategoriaDespesas"
+}

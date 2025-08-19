@@ -1,1 +1,17 @@
-{"type":"object","properties":{"id":{"type":"number","description":"ID único da moeda","example":1},"publicId":{"type":"string","description":"ID público da moeda","example":"f47ac10b-58cc-4372-a567-0e02b2c3d479"},"nome":{"type":"string","description":"Nome da moeda","example":"Real Brasileiro"},"prefixo":{"type":"string","description":"Prefixo da moeda","example":"R$"},"isoCode":{"type":"string","description":"Código ISO da moeda","example":"BRL"},"precision":{"type":"number","description":"Precisão decimal da moeda","example":2},"locale":{"type":"string","description":"Locale para formatação","example":"pt-BR"},"defaultRate":{"type":"number","description":"Taxa de câmbio padrão","example":1},"ativo":{"type":"boolean","description":"Status ativo da moeda","example":true},"createdAt":{"format":"date-time","type":"string","description":"Data de criação da moeda","example":"2024-01-01T00:00:00Z"}},"required":["id","publicId","nome","prefixo","isoCode","precision","locale","defaultRate","ativo","createdAt"],"x-readme-ref-name":"Currency"}
+{
+  "type": "object",
+  "properties": {
+    "id": { "type": "number", "description": "ID único da moeda", "example": 1 },
+    "publicId": { "type": "string", "description": "ID público da moeda", "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479" },
+    "nome": { "type": "string", "description": "Nome da moeda", "example": "Real Brasileiro" },
+    "prefixo": { "type": "string", "description": "Prefixo da moeda", "example": "R$" },
+    "isoCode": { "type": "string", "description": "Código ISO da moeda", "example": "BRL" },
+    "precision": { "type": "number", "description": "Precisão decimal da moeda", "example": 2 },
+    "locale": { "type": "string", "description": "Locale para formatação", "example": "pt-BR" },
+    "defaultRate": { "type": "number", "description": "Taxa de câmbio padrão", "example": 1 },
+    "ativo": { "type": "boolean", "description": "Status ativo da moeda", "example": true },
+    "createdAt": { "format": "date-time", "type": "string", "description": "Data de criação da moeda", "example": "2024-01-01T00:00:00Z" }
+  },
+  "required": ["id", "publicId", "nome", "prefixo", "isoCode", "precision", "locale", "defaultRate", "ativo", "createdAt"],
+  "x-readme-ref-name": "Currency"
+}

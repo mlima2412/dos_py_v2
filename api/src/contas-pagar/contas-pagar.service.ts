@@ -89,7 +89,6 @@ export class ContasPagarService {
     if (!existingConta) {
       throw new NotFoundException('Conta a pagar não encontrada');
     }
-    console.log("Dados------->", updateContasPagarDto)
     const contasPagar = await this.prisma.contasPagar.update({
       where: { publicId },
       data: {

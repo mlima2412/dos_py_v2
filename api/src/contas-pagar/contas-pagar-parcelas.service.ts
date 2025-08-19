@@ -1,17 +1,17 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateContasPagarParcelasDto } from './dto/create-contas-pagar-parcelas.dto';
 import { UpdateContasPagarParcelasDto } from './dto/update-contas-pagar-parcelas.dto';
 import { ContasPagarParcelas } from './entities/contas-pagar-parcelas.entity';
+import { DespesaCacheService } from '../despesa-cache/despesa-cache.service';
 import { uuidv7 } from 'uuidv7';
 
 @Injectable()
 export class ContasPagarParcelasService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly despesaCacheService: DespesaCacheService
+  ) {}
 
   async create(createContasPagarParcelasDto: CreateContasPagarParcelasDto): Promise<ContasPagarParcelas> {
     // Verificar se a conta a pagar existe
@@ -96,11 +96,27 @@ export class ContasPagarParcelasService {
   async update(publicId: string, updateContasPagarParcelasDto: UpdateContasPagarParcelasDto): Promise<ContasPagarParcelas> {
     const existingParcela = await this.prisma.contasPagarParcelas.findUnique({
       where: { publicId },
+      include: {
+        contasPagar: {
+          include: {
+            despesa: {
+              include: {
+                parceiro: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!existingParcela) {
       throw new NotFoundException('Parcela não encontrada');
     }
+
+    // Verificar se houve mudança no status de pagamento
+    const statusChanged = existingParcela.pago !== updateContasPagarParcelasDto.pago;
+    const wasUnpaidNowPaid = !existingParcela.pago && updateContasPagarParcelasDto.pago === true;
+    const wasPaidNowUnpaid = existingParcela.pago && updateContasPagarParcelasDto.pago === false;
 
     const parcela = await this.prisma.contasPagarParcelas.update({
       where: { publicId },
@@ -111,9 +127,44 @@ export class ContasPagarParcelasService {
         pago: updateContasPagarParcelasDto.pago,
       },
       include: {
-        contasPagar: true,
+        contasPagar: {
+          include: {
+            despesa: {
+              include: {
+                parceiro: true,
+              },
+            },
+          },
+        },
       },
     });
+
+    // Atualizar cache se houve mudança no status de pagamento
+    if (statusChanged && parcela.contasPagar?.despesa?.parceiro) {
+      const parceiroPublicId = parcela.contasPagar.despesa.parceiro.publicId;
+      const valorParcela = Number(parcela.valor);
+      const dataVencimento = parcela.dataVencimento;
+
+      if (wasUnpaidNowPaid) {
+        // Parcela foi marcada como paga: decrementar to_pay e incrementar realized
+        await this.despesaCacheService.updateDespesaStatus(
+          parceiroPublicId,
+          dataVencimento,
+          valorParcela,
+          true, // oldIsFuture: estava em to_pay
+          false // newIsFuture: agora vai para realized
+        );
+      } else if (wasPaidNowUnpaid) {
+        // Parcela foi desmarcada como paga: decrementar realized e incrementar to_pay
+        await this.despesaCacheService.updateDespesaStatus(
+          parceiroPublicId,
+          dataVencimento,
+          valorParcela,
+          false, // oldIsFuture: estava em realized
+          true // newIsFuture: agora vai para to_pay
+        );
+      }
+    }
 
     // Atualizar o saldo da conta a pagar
     await this.updateContasPagarSaldo(existingParcela.contasPagarId);

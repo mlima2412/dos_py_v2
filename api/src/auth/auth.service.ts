@@ -152,6 +152,7 @@ export class AuthService {
             logourl: true,
             thumburl: true,
             ativo: true,
+            currencyId: true,
           },
         },
         perfil: {

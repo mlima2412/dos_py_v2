@@ -1,1 +1,12 @@
-{"type":"object","properties":{"nome":{"type":"string","description":"Nome do fornecedor","example":"Fornecedor ABC Ltda"},"ruccnpj":{"type":"string","description":"RUC/CNPJ do fornecedor","example":"12.345.678/0001-90"},"email":{"type":"string","description":"Email do fornecedor","example":"contato@fornecedorabc.com"},"telefone":{"type":"string","description":"Telefone do fornecedor","example":"+55 11 99999-9999"},"redesocial":{"type":"string","description":"Rede social do fornecedor","example":"@fornecedorabc"},"ativo":{"type":"boolean","description":"Status ativo do fornecedor","example":true}},"x-readme-ref-name":"UpdateFornecedorDto"}
+{
+  "type": "object",
+  "properties": {
+    "nome": { "type": "string", "description": "Nome do fornecedor", "example": "Fornecedor ABC Ltda" },
+    "ruccnpj": { "type": "string", "description": "RUC/CNPJ do fornecedor", "example": "12.345.678/0001-90" },
+    "email": { "type": "string", "description": "Email do fornecedor", "example": "contato@fornecedorabc.com" },
+    "telefone": { "type": "string", "description": "Telefone do fornecedor", "example": "+55 11 99999-9999" },
+    "redesocial": { "type": "string", "description": "Rede social do fornecedor", "example": "@fornecedorabc" },
+    "ativo": { "type": "boolean", "description": "Status ativo do fornecedor", "example": true }
+  },
+  "x-readme-ref-name": "UpdateFornecedorDto"
+}

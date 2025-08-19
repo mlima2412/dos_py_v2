@@ -1,1 +1,9 @@
-{"type":"object","properties":{"email":{"type":"string","description":"Email do usuário","example":"usuario@exemplo.com"},"senha":{"type":"string","description":"Senha do usuário","example":"minhasenha123","minLength":6}},"required":["email","senha"],"x-readme-ref-name":"LoginDto"}
+{
+  "type": "object",
+  "properties": {
+    "email": { "type": "string", "description": "Email do usuário", "example": "usuario@exemplo.com" },
+    "senha": { "type": "string", "description": "Senha do usuário", "example": "minhasenha123", "minLength": 6 }
+  },
+  "required": ["email", "senha"],
+  "x-readme-ref-name": "LoginDto"
+}

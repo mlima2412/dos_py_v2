@@ -20,6 +20,7 @@ import { Spinner } from "@/components/ui/spinner";
 import {
 	useContasPagarParcelasControllerFindByContasPagar,
 	useContasPagarParcelasControllerUpdate,
+	contasPagarParcelasControllerFindByContasPagarQueryKey,
 	type ContasPagarParcelas,
 } from "@/api-client";
 import { useToast } from "@/hooks/useToast";
@@ -73,10 +74,7 @@ export function TabelaParcelas({
 			toast.success("Parcela marcada como paga com sucesso!");
 			// Invalidar queries específicas para atualizar a tabela e listas relacionadas
 			queryClient.invalidateQueries({
-				queryKey: [
-					"useContasPagarParcelasControllerFindByContasPagar",
-					contasPagarId,
-				],
+				queryKey: contasPagarParcelasControllerFindByContasPagarQueryKey(contasPagarId),
 			});
 			// Invalidar query de despesas para atualizar status na listagem
 			queryClient.invalidateQueries({
@@ -85,6 +83,10 @@ export function TabelaParcelas({
 			// Invalidar query de contas a pagar
 			queryClient.invalidateQueries({
 				queryKey: ["contas-pagar"],
+			});
+			// Forçar refetch da query atual para garantir atualização imediata
+			queryClient.refetchQueries({
+				queryKey: contasPagarParcelasControllerFindByContasPagarQueryKey(contasPagarId),
 			});
 		} catch (error) {
 			console.error("Erro ao marcar parcela como paga:", error);

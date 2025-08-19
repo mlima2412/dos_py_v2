@@ -94,6 +94,7 @@ export function usePartnerContext() {
     // Estados derivados
     hasPartners: parceiros && parceiros.length > 0,
     selectedPartnerData: getSelectedPartnerData(),
+    selectedPartnerCurrencyId: getSelectedPartnerData()?.Parceiro?.currencyId,
   };
 }
 
