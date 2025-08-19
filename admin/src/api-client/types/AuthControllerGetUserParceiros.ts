@@ -35,10 +35,6 @@ export type AuthControllerGetUserParceiros200 = {
      * @type string | undefined
      */
     logourl?: string
-    /**
-     * @type number | undefined
-     */
-    currencyId?: number
   }
   /**
    * @type object | undefined
@@ -59,5 +55,5 @@ export type AuthControllerGetUserParceirosQueryResponse = AuthControllerGetUserP
 
 export type AuthControllerGetUserParceirosQuery = {
   Response: AuthControllerGetUserParceiros200
-  Errors: Error
+  Errors: any
 }

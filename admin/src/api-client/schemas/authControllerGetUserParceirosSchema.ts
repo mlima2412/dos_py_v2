@@ -20,7 +20,6 @@ export const authControllerGetUserParceiros200Schema = z.array(
         publicId: z.coerce.string().optional(),
         nome: z.coerce.string().optional(),
         logourl: z.coerce.string().optional(),
-        currencyId: z.coerce.number().optional(),
       })
       .optional(),
     perfil: z

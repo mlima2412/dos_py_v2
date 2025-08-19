@@ -92,7 +92,7 @@ export function FormularioDespesa() {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { id } = useParams<{ id: string }>();
-	const { selectedPartnerId, selectedPartnerCurrencyId } = usePartnerContext();
+	const { selectedPartnerId } = usePartnerContext();
 	const isEditing = Boolean(id);
 	const isViewing = location.pathname.includes("/visualizar/");
 
@@ -117,7 +117,7 @@ export function FormularioDespesa() {
 			fornecedorId: "",
 			categoriaId: "",
 			subCategoriaId: "",
-			currencyId: selectedPartnerCurrencyId?.toString() || "",
+			currencyId: "", // currencyId será selecionado pelo usuário no formulário
 			cotacao: 0,
 			tipoPagamento: "A_VISTA_IMEDIATA",
 			valorEntrada: 0,

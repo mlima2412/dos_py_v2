@@ -3,7 +3,8 @@ import { Dashboard } from "./Dashboard";
 import { ListarDespesas } from "./correntes/ListarDespesas";
 import { FormularioDespesa } from "./correntes/FormularioDespesa";
 import { ContasPagarEmConstrucao } from "./contas-pagar/EmConstrucao";
-import { DespesasRecorrentesEmConstrucao } from "./recorrentes/EmConstrucao";
+import { ListarDespesasRecorrentes } from "./recorrentes/ListarDespesasRecorrentes";
+import { FormularioDespesaRecorrente } from "./recorrentes/FormularioDespesaRecorrente";
 
 export function DespesasPage() {
 	return (
@@ -38,7 +39,19 @@ export function DespesasPage() {
 			/>
 			<Route
 				path='recorrentes'
-				element={<DespesasRecorrentesEmConstrucao />}
+				element={<ListarDespesasRecorrentes />}
+			/>
+			<Route
+				path='recorrentes/novo'
+				element={<FormularioDespesaRecorrente />}
+			/>
+			<Route
+				path='recorrentes/editar/:id'
+				element={<FormularioDespesaRecorrente />}
+			/>
+			<Route
+				path='recorrentes/visualizar/:id'
+				element={<FormularioDespesaRecorrente />}
 			/>
 		</Routes>
 	);

@@ -8,7 +8,7 @@ import { UpdateDespesaRecorrenteDto } from './dto/update-despesa-recorrente.dto'
 export class DespesasRecorrentesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createDespesaRecorrenteDto: CreateDespesaRecorrenteDto): Promise<DespesaRecorrente> {
+  async create(createDespesaRecorrenteDto: CreateDespesaRecorrenteDto): Promise<any> {
     // Validar se o parceiro existe
     const parceiro = await this.prisma.parceiro.findUnique({
       where: { id: createDespesaRecorrenteDto.parceiroId },
@@ -35,22 +35,13 @@ export class DespesasRecorrentesService {
       }
     }
 
-    // Criar instância da entidade com valores padrão
-    const despesaRecorrenteEntity = DespesaRecorrente.create({
-      valor: createDespesaRecorrenteDto.valor,
-      descricao: createDespesaRecorrenteDto.descricao,
-      frequencia: createDespesaRecorrenteDto.frequencia,
-      diaVencimento: createDespesaRecorrenteDto.diaVencimento,
-      subCategoriaId: createDespesaRecorrenteDto.subCategoriaId,
-      parceiroId: createDespesaRecorrenteDto.parceiroId,
-      fornecedorId: createDespesaRecorrenteDto.fornecedorId,
-      currencyId: createDespesaRecorrenteDto.currencyId,
-      cotacao: createDespesaRecorrenteDto.cotacao,
-    });
+    // Gerar publicId usando uuidv7
+    const { uuidv7 } = await import('uuidv7');
+    const publicId = uuidv7();
 
     const despesaRecorrente = await this.prisma.despesaRecorrente.create({
       data: {
-        publicId: despesaRecorrenteEntity.publicId,
+        publicId,
         descricao: createDespesaRecorrenteDto.descricao,
         valor: createDespesaRecorrenteDto.valor,
         frequencia: createDespesaRecorrenteDto.frequencia || 'MENSAL',
@@ -67,6 +58,7 @@ export class DespesasRecorrentesService {
         parceiro: true,
         fornecedor: true,
         subCategoria: true,
+        currency: true,
       },
     });
 
@@ -74,31 +66,33 @@ export class DespesasRecorrentesService {
       ...despesaRecorrente,
       valor: Number(despesaRecorrente.valor),
       cotacao: despesaRecorrente.cotacao ? Number(despesaRecorrente.cotacao) : null,
-    } as DespesaRecorrente;
+    };
   }
 
-  async findAll(): Promise<DespesaRecorrente[]> {
+  async findAll(): Promise<any[]> {
     const despesasRecorrentes = await this.prisma.despesaRecorrente.findMany({
       include: {
         parceiro: true,
         fornecedor: true,
         subCategoria: true,
+        currency: true,
       }
     });
     return despesasRecorrentes.map(despesaRecorrente => ({
       ...despesaRecorrente,
       valor: Number(despesaRecorrente.valor),
       cotacao: despesaRecorrente.cotacao ? Number(despesaRecorrente.cotacao) : null,
-    })) as DespesaRecorrente[];
+    }));
   }
 
-  async findOne(publicId: string): Promise<DespesaRecorrente> {
+  async findOne(publicId: string): Promise<any> {
     const despesaRecorrente = await this.prisma.despesaRecorrente.findUnique({
       where: { publicId },
       include: {
         parceiro: true,
         fornecedor: true,
         subCategoria: true,
+        currency: true,
       },
     });
 
@@ -110,74 +104,78 @@ export class DespesasRecorrentesService {
       ...despesaRecorrente,
       valor: Number(despesaRecorrente.valor),
       cotacao: despesaRecorrente.cotacao ? Number(despesaRecorrente.cotacao) : null,
-    } as DespesaRecorrente;
+    };
   }
 
-  async findByParceiro(parceiroId: number): Promise<DespesaRecorrente[]> {
+  async findByParceiro(parceiroId: number): Promise<any[]> {
     const despesasRecorrentes = await this.prisma.despesaRecorrente.findMany({
       where: { parceiroId },
       include: {
         parceiro: true,
         fornecedor: true,
         subCategoria: true,
+        currency: true,
       }
     });
     return despesasRecorrentes.map(despesaRecorrente => ({
       ...despesaRecorrente,
       valor: Number(despesaRecorrente.valor),
       cotacao: despesaRecorrente.cotacao ? Number(despesaRecorrente.cotacao) : null,
-    })) as DespesaRecorrente[];
+    }));
   }
 
-  async findByFornecedor(fornecedorId: number): Promise<DespesaRecorrente[]> {
+  async findByFornecedor(fornecedorId: number): Promise<any[]> {
     const despesasRecorrentes = await this.prisma.despesaRecorrente.findMany({
       where: { fornecedorId },
       include: {
         parceiro: true,
         fornecedor: true,
         subCategoria: true,
+        currency: true,
       }
     });
     return despesasRecorrentes.map(despesaRecorrente => ({
       ...despesaRecorrente,
       valor: Number(despesaRecorrente.valor),
       cotacao: despesaRecorrente.cotacao ? Number(despesaRecorrente.cotacao) : null,
-    })) as DespesaRecorrente[];
+    }));
   }
 
-  async findBySubCategoria(subCategoriaId: number): Promise<DespesaRecorrente[]> {
+  async findBySubCategoria(subCategoriaId: number): Promise<any[]> {
     const despesasRecorrentes = await this.prisma.despesaRecorrente.findMany({
       where: { subCategoriaId },
       include: {
         parceiro: true,
         fornecedor: true,
         subCategoria: true,
+        currency: true,
       }
     });
     return despesasRecorrentes.map(despesaRecorrente => ({
       ...despesaRecorrente,
       valor: Number(despesaRecorrente.valor),
       cotacao: despesaRecorrente.cotacao ? Number(despesaRecorrente.cotacao) : null,
-    })) as DespesaRecorrente[];
+    }));
   }
 
-  async findByFrequencia(frequencia: any): Promise<DespesaRecorrente[]> {
+  async findByFrequencia(frequencia: any): Promise<any[]> {
     const despesasRecorrentes = await this.prisma.despesaRecorrente.findMany({
       where: { frequencia },
       include: {
         parceiro: true,
         fornecedor: true,
         subCategoria: true,
+        currency: true,
       }
     });
     return despesasRecorrentes.map(despesaRecorrente => ({
       ...despesaRecorrente,
       valor: Number(despesaRecorrente.valor),
       cotacao: despesaRecorrente.cotacao ? Number(despesaRecorrente.cotacao) : null,
-    })) as DespesaRecorrente[];
+    }));
   }
 
-  async update(publicId: string, updateDespesaRecorrenteDto: UpdateDespesaRecorrenteDto): Promise<DespesaRecorrente> {
+  async update(publicId: string, updateDespesaRecorrenteDto: UpdateDespesaRecorrenteDto): Promise<any> {
     // Verificar se a despesa recorrente existe
     const despesaRecorrenteExistente = await this.prisma.despesaRecorrente.findUnique({
       where: { publicId },
@@ -261,6 +259,7 @@ export class DespesasRecorrentesService {
         parceiro: true,
         fornecedor: true,
         subCategoria: true,
+        currency: true,
       },
     });
 
@@ -268,7 +267,7 @@ export class DespesasRecorrentesService {
       ...despesaRecorrente,
       valor: Number(despesaRecorrente.valor),
       cotacao: despesaRecorrente.cotacao ? Number(despesaRecorrente.cotacao) : null,
-    } as DespesaRecorrente;
+    };
   }
 
   async remove(publicId: string): Promise<void> {

@@ -22,8 +22,8 @@ import { UpdateDespesaRecorrenteDto } from './dto/update-despesa-recorrente.dto'
 import { DespesaRecorrente } from './entities/despesa-recorrente.entity';
 
 @ApiTags('Despesas Recorrentes')
-@Controller('despesas-recorrentes')
 @ApiBearerAuth()
+@Controller('despesas-recorrentes')
 export class DespesasRecorrentesController {
   constructor(private readonly despesasRecorrentesService: DespesasRecorrentesService) {}
 

@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { uuidv7 } from 'uuidv7';
 import { Cliente } from '../../clientes/entities/cliente.entity';
+import { Currency } from '../../currency/entities/currency.entity';
 
 export class Parceiro {
   @ApiProperty({
@@ -87,6 +88,13 @@ export class Parceiro {
     required: false,
   })
   clientes?: Cliente[];
+
+  @ApiProperty({
+    description: 'Moeda do parceiro',
+    type: () => Currency,
+    required: false,
+  })
+  currency?: Currency;
 
   constructor(data?: Partial<Parceiro>) {
     if (data) {

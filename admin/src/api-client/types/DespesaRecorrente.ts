@@ -6,6 +6,7 @@
 import type { Fornecedor } from './Fornecedor.ts'
 import type { Parceiro } from './Parceiro.ts'
 import type { SubCategoriaDespesa } from './SubCategoriaDespesa.ts'
+import type { Currency } from './Currency.ts'
 
 export const despesaRecorrenteFrequenciaEnum = {
   SEMANAL: 'SEMANAL',
@@ -96,4 +97,8 @@ export type DespesaRecorrente = {
    * @description Subcategoria da despesa
    */
   subCategoria: SubCategoriaDespesa
+  /**
+   * @description Moeda da despesa
+   */
+  currency?: Currency
 }

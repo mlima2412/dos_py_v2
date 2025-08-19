@@ -4,6 +4,7 @@
  */
 
 import type { Cliente } from './Cliente.ts'
+import type { Currency } from './Currency.ts'
 
 export type Parceiro = {
   /**
@@ -71,4 +72,9 @@ export type Parceiro = {
    * @type array | undefined
    */
   clientes?: Cliente[]
+  /**
+   * @description Moeda do parceiro
+   * @type Currency | undefined
+   */
+  currency?: Currency
 }

@@ -85,6 +85,9 @@ export class ParceirosService {
 
   async findAll(): Promise<Parceiro[]> {
     const parceiros = await this.prisma.parceiro.findMany({
+      include: {
+        currency: true,
+      },
       orderBy: { createdAt: 'desc' },
     });
     return parceiros.map(p => this.mapToParceiroEntity(p));
@@ -138,7 +141,7 @@ export class ParceirosService {
           email: true,
           redesocial: true,
           telefone: true,
-
+          currencyId: true,
           ativo: true,
           logourl: true,
           thumburl: true,
@@ -162,6 +165,9 @@ export class ParceirosService {
   async findOne(publicId: string): Promise<Parceiro> {
     const parceiro = await this.prisma.parceiro.findUnique({
       where: { publicId },
+      include: {
+        currency: true,
+      },
     });
     if (!parceiro) {
       throw new NotFoundException('Parceiro não encontrado');
@@ -228,6 +234,9 @@ export class ParceirosService {
   async findActiveParceiros(): Promise<Parceiro[]> {
     const parceiros = await this.prisma.parceiro.findMany({
       where: { ativo: true },
+      include: {
+        currency: true,
+      },
       orderBy: { nome: 'asc' },
     });
     return parceiros.map(p => this.mapToParceiroEntity(p));
