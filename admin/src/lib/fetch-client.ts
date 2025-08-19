@@ -6,7 +6,7 @@ export interface RequestConfig<TData = unknown> {
   url?: string;
   data?: TData;
   params?: Record<string, unknown>;
-  headers?: Record<string, string>;
+  headers?: Record<string, unknown>;
   signal?: AbortSignal;
 }
 
@@ -42,6 +42,14 @@ class FetchClient {
     return selectedPartnerId && selectedPartnerId !== 'null' 
       ? { 'x-parceiro-id': selectedPartnerId } 
       : {};
+  }
+
+  private normalizeHeaders(headers: Record<string, unknown>): Record<string, string> {
+    const normalized: Record<string, string> = {};
+    for (const [key, value] of Object.entries(headers)) {
+      normalized[key] = String(value);
+    }
+    return normalized;
   }
 
   private buildURL(url: string, params?: Record<string, unknown>): string {
@@ -84,7 +92,7 @@ class FetchClient {
       ...authHeaders,
       ...languageHeaders,
       ...partnerHeaders,
-      ...headers
+      ...this.normalizeHeaders(headers)
     };
 
     const requestInit: RequestInit = {

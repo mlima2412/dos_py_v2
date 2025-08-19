@@ -1,16 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional, IsNumber, IsDateString, IsInt } from 'class-validator';
+import { IsString, IsOptional, IsNumber, IsDateString, IsInt, IsEnum } from 'class-validator';
 import { Type, Exclude } from 'class-transformer';
+
+export enum TipoPagamento {
+  A_VISTA_IMEDIATA = 'A_VISTA_IMEDIATA',
+  A_PRAZO_SEM_PARCELAS = 'A_PRAZO_SEM_PARCELAS',
+  PARCELADO = 'PARCELADO'
+}
 
 export class CreateDespesaDto {
   @ApiProperty({
-    description: 'Data da despesa',
+    description: 'Data do registro',
     example: '2024-01-01T00:00:00Z',
     required: false,
   })
   @IsOptional()
   @IsDateString()
-  dataDespesa?: string;
+  dataRegistro?: string;
 
   @ApiProperty({
     description: 'Valor da despesa',
@@ -18,7 +24,7 @@ export class CreateDespesaDto {
   })
   @IsNumber({ maxDecimalPlaces: 3 })
   @Type(() => Number)
-  valor: number;
+  valorTotal: number;
 
   @ApiProperty({
     description: 'Descrição da despesa',
@@ -54,22 +60,50 @@ export class CreateDespesaDto {
   fornecedorId?: number;
 
   @ApiProperty({
-    description: 'Data de vencimento da despesa',
-    example: '2024-01-15T00:00:00Z',
+    description: 'Tipo de pagamento da despesa',
+    enum: TipoPagamento,
+    example: TipoPagamento.A_VISTA_IMEDIATA,
+  })
+  @IsEnum(TipoPagamento)
+  tipoPagamento: TipoPagamento;
+
+  @ApiProperty({
+    description: 'Valor da entrada (apenas para pagamento parcelado)',
+    example: 500.00,
+    required: false,
+  })
+  @IsOptional()
+  @IsNumber({ maxDecimalPlaces: 3 })
+  @Type(() => Number)
+  valorEntrada?: number;
+
+  @ApiProperty({
+    description: 'Data da primeira parcela (apenas para pagamento parcelado)',
+    example: '2024-02-01T00:00:00Z',
+    required: false,
+  })
+  @IsOptional()
+  @IsDateString()
+  dataPrimeiraParcela?: string;
+
+  @ApiProperty({
+    description: 'Número de parcelas (apenas para pagamento parcelado)',
+    example: 12,
+    required: false,
+  })
+  @IsOptional()
+  @IsInt()
+  @Type(() => Number)
+  numeroParcelas?: number;
+
+  @ApiProperty({
+    description: 'Data de vencimento (apenas para pagamento à prazo sem parcelas)',
+    example: '2024-02-01T00:00:00Z',
     required: false,
   })
   @IsOptional()
   @IsDateString()
   dataVencimento?: string;
-
-  @ApiProperty({
-    description: 'Data de pagamento da despesa',
-    example: '2024-01-10T00:00:00Z',
-    required: false,
-  })
-  @IsOptional()
-  @IsDateString()
-  dataPagamento?: string;
 
   @ApiProperty({
     description: 'ID da moeda da despesa',

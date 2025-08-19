@@ -12,9 +12,9 @@ export const contasPagarParcelasSchema = z.object({
   id: z.coerce.number().describe('ID único da parcela'),
   publicId: z.coerce.string().describe('ID público da parcela'),
   dataPagamento: z.string().datetime().describe('Data do pagamento da parcela'),
-  valor: z.coerce.number().describe('Valor da parcela paga'),
-  currencyId: z.coerce.number().describe('ID da moeda da parcela').optional(),
-  cotacao: z.coerce.number().describe('Cotação da moeda no momento do pagamento'),
+  dataVencimento: z.string().datetime().describe('Data de vencimento da parcela'),
+  valor: z.coerce.number().describe('Valor da parcela'),
+  pago: z.boolean().describe('Indica se a parcela foi paga'),
   contasPagarId: z.coerce.number().describe('ID da conta a pagar relacionada'),
   contasPagar: z
     .lazy(() => contasPagarSchema)

@@ -3,74 +3,45 @@
  * Do not edit manually.
  */
 
-import type { Despesa } from './Despesa.ts'
-
 export type DespesasControllerFindPaginatedQueryParams = {
   /**
-   * @type string
+   * @description Número da página
+   * @default "1"
+   * @type string | undefined
    */
-  page: string
+  page?: string
   /**
-   * @type string
+   * @description Número de itens por página
+   * @default "20"
+   * @type string | undefined
    */
-  limit: string
+  limit?: string
   /**
-   * @type string
+   * @description Termo de busca para filtrar por descrição
+   * @type string | undefined
    */
-  search: string
+  search?: string
   /**
-   * @type string
+   * @description ID do fornecedor para filtrar
+   * @type string | undefined
    */
-  fornecedorId: string
+  fornecedorId?: string
   /**
-   * @type string
+   * @description ID da subcategoria para filtrar
+   * @type string | undefined
    */
-  subCategoriaId: string
-}
-
-export type DespesasControllerFindPaginatedHeaderParams = {
-  /**
-   * @description ID do parceiro logado
-   * @type integer
-   */
-  'x-parceiro-id': number
+  subCategoriaId?: string
 }
 
 /**
- * @description Lista paginada de despesas retornada com sucesso
+ * @description Lista paginada de despesas
  */
-export type DespesasControllerFindPaginated200 = {
-  /**
-   * @type array | undefined
-   */
-  data?: Despesa[]
-  /**
-   * @description Total de registros
-   * @type number | undefined
-   */
-  total?: number
-  /**
-   * @description Página atual
-   * @type number | undefined
-   */
-  page?: number
-  /**
-   * @description Itens por página
-   * @type number | undefined
-   */
-  limit?: number
-  /**
-   * @description Total de páginas
-   * @type number | undefined
-   */
-  totalPages?: number
-}
+export type DespesasControllerFindPaginated200 = any
 
 export type DespesasControllerFindPaginatedQueryResponse = DespesasControllerFindPaginated200
 
 export type DespesasControllerFindPaginatedQuery = {
   Response: DespesasControllerFindPaginated200
   QueryParams: DespesasControllerFindPaginatedQueryParams
-  HeaderParams: DespesasControllerFindPaginatedHeaderParams
   Errors: any
 }

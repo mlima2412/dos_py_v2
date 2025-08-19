@@ -4,13 +4,17 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateDespesaDto } from './dto/create-despesa.dto';
-import { UpdateDespesaDto } from './dto/update-despesa.dto';
+import { CreateDespesaDto, TipoPagamento } from './dto/create-despesa.dto';
+
 import { Despesa } from './entities/despesa.entity';
+import { DespesaCacheService } from '../despesa-cache/despesa-cache.service';
 
 @Injectable()
 export class DespesasService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private despesaCacheService: DespesaCacheService,
+  ) {}
 
   async create(createDespesaDto: CreateDespesaDto, parceiroId: number): Promise<Despesa> {
     // Verificar se o parceiro existe
@@ -42,43 +46,173 @@ export class DespesasService {
       }
     }
 
-    // Criar instância da entidade com valores padrão
-    const despesaEntity = Despesa.create({
-      valor: createDespesaDto.valor,
-      descricao: createDespesaDto.descricao,
-      subCategoriaId: createDespesaDto.subCategoriaId,
-      parceiroId: parceiroId,
-      fornecedorId: createDespesaDto.fornecedorId,
-      currencyId: createDespesaDto.currencyId,
-      cotacao: createDespesaDto.cotacao,
-    });
+    // Validações específicas por tipo de pagamento
+    if (createDespesaDto.tipoPagamento === TipoPagamento.PARCELADO) {
+      if (!createDespesaDto.numeroParcelas || createDespesaDto.numeroParcelas < 2) {
+        throw new BadRequestException('Número de parcelas deve ser maior que 1 para pagamento parcelado');
+      }
+      if (!createDespesaDto.dataPrimeiraParcela) {
+        throw new BadRequestException('Data da primeira parcela é obrigatória para pagamento parcelado');
+      }
+      if (createDespesaDto.valorEntrada && createDespesaDto.valorEntrada >= createDespesaDto.valorTotal) {
+        throw new BadRequestException('Valor de entrada deve ser menor que o valor total');
+      }
+    }
 
-    const despesa = await this.prisma.despesa.create({
-      data: {
-        publicId: despesaEntity.publicId,
-        dataDespesa: createDespesaDto.dataDespesa ? new Date(createDespesaDto.dataDespesa) : new Date(),
-        valor: createDespesaDto.valor,
+    return await this.prisma.$transaction(async (prisma) => {
+      // Criar instância da entidade com valores padrão
+      const despesaEntity = Despesa.create({
+        valorTotal: createDespesaDto.valorTotal,
         descricao: createDespesaDto.descricao,
         subCategoriaId: createDespesaDto.subCategoriaId,
         parceiroId: parceiroId,
         fornecedorId: createDespesaDto.fornecedorId,
-        dataVencimento: createDespesaDto.dataVencimento ? new Date(createDespesaDto.dataVencimento) : null,
-        dataPagamento: createDespesaDto.dataPagamento ? new Date(createDespesaDto.dataPagamento) : null,
         currencyId: createDespesaDto.currencyId,
         cotacao: createDespesaDto.cotacao,
-      },
-      include: {
-        parceiro: true,
-        fornecedor: true,
-        subCategoria: true,
-      },
-    });
+      });
 
-    return {
-      ...despesa,
-      valor: Number(despesa.valor),
-      cotacao: despesa.cotacao ? Number(despesa.cotacao) : null,
-    } as Despesa;
+      // Criar a despesa
+      const despesa = await prisma.despesa.create({
+        data: {
+          publicId: despesaEntity.publicId,
+          dataRegistro: createDespesaDto.dataRegistro ? new Date(createDespesaDto.dataRegistro) : new Date(),
+          valorTotal: createDespesaDto.valorTotal,  
+          descricao: createDespesaDto.descricao,
+          subCategoriaId: createDespesaDto.subCategoriaId,
+          parceiroId: parceiroId,
+          fornecedorId: createDespesaDto.fornecedorId,
+          currencyId: createDespesaDto.currencyId,
+          cotacao: createDespesaDto.cotacao,
+        },
+        include: {
+          parceiro: true,
+          fornecedor: true,
+          subCategoria: true,
+        },
+      });
+
+      // Criar ContasPagar
+      const contasPagar = await prisma.contasPagar.create({
+        data: {
+          publicId: `cp_${despesaEntity.publicId}`,
+          despesaId: despesa.id,
+          dataCriacao: new Date(),
+          valorTotal: createDespesaDto.valorTotal,
+          saldo: 0,
+          pago: false,
+        },
+      });
+
+      // Criar ContasPagarParcelas baseado no tipo de pagamento
+      await this.createContasPagarParcelas(prisma, contasPagar.id, createDespesaDto);
+
+      return {
+        ...despesa,
+        valorTotal: Number(despesa.valorTotal),
+        cotacao: despesa.cotacao ? Number(despesa.cotacao) : null,
+      } as Despesa;
+    });
+  }
+
+  private async createContasPagarParcelas(prisma: any, contasPagarId: number, createDespesaDto: CreateDespesaDto) {
+    const now = new Date();
+    
+    switch (createDespesaDto.tipoPagamento) {
+      case TipoPagamento.A_VISTA_IMEDIATA:
+        // À vista imediata: 1 parcela já paga
+        await prisma.contasPagarParcelas.create({
+          data: {
+            publicId: `cpp_${Date.now()}_1`,
+            contasPagarId,
+            valor: createDespesaDto.valorTotal,
+            dataVencimento: now,
+            dataPagamento: now,
+            pago: true,
+          },
+        });
+        
+        // Atualizar saldo e status do ContasPagar
+        await prisma.contasPagar.update({
+          where: { id: contasPagarId },
+          data: {
+            saldo: createDespesaDto.valorTotal,
+            dataPagamento: now,
+            pago: true,
+          },
+        });
+        break;
+
+      case TipoPagamento.A_PRAZO_SEM_PARCELAS:
+        // À prazo sem parcelas: 1 parcela para a data de vencimento
+        const dataVencimento = createDespesaDto.dataVencimento ? new Date(createDespesaDto.dataVencimento) : now;
+        await prisma.contasPagarParcelas.create({
+          data: {
+            publicId: `cpp_${Date.now()}_1`,
+            contasPagarId,
+            valor: createDespesaDto.valorTotal,
+            dataVencimento,
+            dataPagamento: dataVencimento, // Prisma exige o campo, mas será null no banco
+            pago: false,
+          },
+        });
+        break;
+
+      case TipoPagamento.PARCELADO:
+        const valorEntrada = createDespesaDto.valorEntrada || 0;
+        const valorRestante = createDespesaDto.valorTotal - valorEntrada;
+        const numeroParcelas = createDespesaDto.numeroParcelas || 1;
+        const valorParcela = valorRestante / numeroParcelas;
+        const dataPrimeiraParcela = new Date(createDespesaDto.dataPrimeiraParcela!);
+        
+        let saldoPago = 0;
+        
+        // Se tem entrada, criar parcela de entrada paga imediatamente
+        if (valorEntrada > 0) {
+          await prisma.contasPagarParcelas.create({
+            data: {
+              publicId: `cpp_${Date.now()}_0`,
+              contasPagarId,
+              valor: valorEntrada,
+              dataVencimento: now,
+              dataPagamento: now,
+              pago: true,
+            },
+          });
+          saldoPago = valorEntrada;
+        }
+        
+        // Criar parcelas restantes
+        for (let i = 1; i <= numeroParcelas; i++) {
+          const dataVencimentoParcela = new Date(dataPrimeiraParcela);
+          dataVencimentoParcela.setMonth(dataVencimentoParcela.getMonth() + (i - 1));
+          
+          await prisma.contasPagarParcelas.create({
+            data: {
+              publicId: `cpp_${Date.now()}_${i}`,
+              contasPagarId,
+              valor: valorParcela,
+              dataVencimento: dataVencimentoParcela,
+              dataPagamento: dataVencimentoParcela, // Prisma exige o campo, mas será null no banco
+              pago: false,
+            },
+          });
+        }
+        
+        // Atualizar saldo do ContasPagar se houve entrada
+        if (saldoPago > 0) {
+          await prisma.contasPagar.update({
+            where: { id: contasPagarId },
+            data: {
+              saldo: saldoPago,
+              pago: saldoPago >= createDespesaDto.valorTotal,
+            },
+          });
+        }
+        break;
+
+      default:
+        throw new BadRequestException('Tipo de pagamento inválido');
+    }
   }
 
   async findAll(): Promise<Despesa[]> {
@@ -88,11 +222,11 @@ export class DespesasService {
         fornecedor: true,
         subCategoria: true,
       },
-      orderBy: { dataDespesa: 'desc' },
+      orderBy: { dataRegistro: 'desc' },
     });
     return despesas.map(despesa => ({
       ...despesa,
-      valor: Number(despesa.valor),
+      valorTotal: Number(despesa.valorTotal),
       cotacao: despesa.cotacao ? Number(despesa.cotacao) : null,
     })) as Despesa[];
   }
@@ -106,7 +240,17 @@ export class DespesasService {
       include: {
         parceiro: true,
         fornecedor: true,
-        subCategoria: true,
+        currency: true,
+        subCategoria: {
+          include: {
+            categoria: true,
+          },
+        },
+        ContasPagar: {
+          include: {
+            ContasPagarParcelas: true,
+          },
+        },
       },
     });
 
@@ -114,11 +258,38 @@ export class DespesasService {
       throw new NotFoundException('Despesa não encontrada');
     }
 
+    // Calcular status de pagamento baseado nas parcelas
+    let statusPagamento = 'em_aberto';
+    let valorPago = 0;
+    let valorTotal = Number(despesa.valorTotal);
+    
+    if (despesa.ContasPagar && despesa.ContasPagar.length > 0) {
+      const contasPagar = despesa.ContasPagar[0]; // Assumindo uma conta por despesa
+      if (contasPagar.ContasPagarParcelas && contasPagar.ContasPagarParcelas.length > 0) {
+        valorPago = contasPagar.ContasPagarParcelas
+          .filter(parcela => parcela.pago)
+          .reduce((sum, parcela) => sum + Number(parcela.valor), 0);
+        
+        const totalParcelas = contasPagar.ContasPagarParcelas.length;
+        const parcelasPagas = contasPagar.ContasPagarParcelas.filter(p => p.pago).length;
+        
+        // Verificar se o valor pago é igual ou maior que o valor total (para lidar com arredondamentos)
+        if (parcelasPagas === totalParcelas || valorPago >= valorTotal) {
+          statusPagamento = 'paga';
+        } else if (parcelasPagas > 0 || valorPago > 0) {
+          statusPagamento = 'parcialmente_paga';
+        }
+      }
+    }
+
     return {
       ...despesa,
-      valor: Number(despesa.valor),
+      valorTotal,
       cotacao: despesa.cotacao ? Number(despesa.cotacao) : null,
-    } as Despesa;
+      statusPagamento,
+      valorPago,
+      categoria: despesa.subCategoria?.categoria,
+    } as any;
   }
 
   async findByParceiro(parceiroId: number): Promise<Despesa[]> {
@@ -127,15 +298,55 @@ export class DespesasService {
       include: {
         parceiro: true,
         fornecedor: true,
-        subCategoria: true,
+        currency: true,
+        subCategoria: {
+          include: {
+            categoria: true,
+          },
+        },
+        ContasPagar: {
+          include: {
+            ContasPagarParcelas: true,
+          },
+        },
       },
-      orderBy: { dataDespesa: 'desc' }, // Ordenação decrescente conforme solicitado
+      orderBy: { dataRegistro: 'desc' }, // Ordenação decrescente conforme solicitado
     });
-    return despesas.map(despesa => ({
-      ...despesa,
-      valor: Number(despesa.valor),
-      cotacao: despesa.cotacao ? Number(despesa.cotacao) : null,
-    })) as Despesa[];
+    
+    return despesas.map(despesa => {
+      // Calcular status de pagamento baseado nas parcelas
+      let statusPagamento = 'em_aberto';
+      let valorPago = 0;
+      let valorTotal = Number(despesa.valorTotal);
+      
+      if (despesa.ContasPagar && despesa.ContasPagar.length > 0) {
+        const contasPagar = despesa.ContasPagar[0]; // Assumindo uma conta por despesa
+        if (contasPagar.ContasPagarParcelas && contasPagar.ContasPagarParcelas.length > 0) {
+          valorPago = contasPagar.ContasPagarParcelas
+            .filter(parcela => parcela.pago)
+            .reduce((sum, parcela) => sum + Number(parcela.valor), 0);
+          
+          const totalParcelas = contasPagar.ContasPagarParcelas.length;
+          const parcelasPagas = contasPagar.ContasPagarParcelas.filter(p => p.pago).length;
+          
+          // Verificar se o valor pago é igual ou maior que o valor total (para lidar com arredondamentos)
+          if (parcelasPagas === totalParcelas || valorPago >= valorTotal) {
+            statusPagamento = 'paga';
+          } else if (parcelasPagas > 0 || valorPago > 0) {
+            statusPagamento = 'parcialmente_paga';
+          }
+        }
+      }
+      
+      return {
+        ...despesa,
+        valorTotal,
+        cotacao: despesa.cotacao ? Number(despesa.cotacao) : null,
+        statusPagamento,
+        valorPago,
+        categoria: despesa.subCategoria?.categoria,
+      };
+    }) as any[];
   }
 
 
@@ -186,9 +397,19 @@ export class DespesasService {
         include: {
           parceiro: true,
           fornecedor: true,
-          subCategoria: true,
+          currency: true,
+          subCategoria: {
+            include: {
+              categoria: true,
+            },
+          },
+          ContasPagar: {
+            include: {
+              ContasPagarParcelas: true,
+            },
+          },
         },
-        orderBy: { dataDespesa: 'desc' },
+        orderBy: { dataRegistro: 'desc' },
         skip,
         take: limit,
       }),
@@ -198,11 +419,40 @@ export class DespesasService {
     const totalPages = Math.ceil(total / limit);
 
     return {
-      data: despesas.map(despesa => ({
-        ...despesa,
-        valor: Number(despesa.valor),
-        cotacao: despesa.cotacao ? Number(despesa.cotacao) : null,
-      })) as Despesa[],
+      data: despesas.map(despesa => {
+        // Calcular status de pagamento baseado nas parcelas
+        let statusPagamento = 'em_aberto';
+        let valorPago = 0;
+        let valorTotal = Number(despesa.valorTotal);
+        
+        if (despesa.ContasPagar && despesa.ContasPagar.length > 0) {
+          const contasPagar = despesa.ContasPagar[0]; // Assumindo uma conta por despesa
+          if (contasPagar.ContasPagarParcelas && contasPagar.ContasPagarParcelas.length > 0) {
+            valorPago = contasPagar.ContasPagarParcelas
+              .filter(parcela => parcela.pago)
+              .reduce((sum, parcela) => sum + Number(parcela.valor), 0);
+            
+            const totalParcelas = contasPagar.ContasPagarParcelas.length;
+            const parcelasPagas = contasPagar.ContasPagarParcelas.filter(p => p.pago).length;
+            
+            // Verificar se o valor pago é igual ou maior que o valor total (para lidar com arredondamentos)
+            if (parcelasPagas === totalParcelas || valorPago >= valorTotal) {
+              statusPagamento = 'paga';
+            } else if (parcelasPagas > 0 || valorPago > 0) {
+              statusPagamento = 'parcialmente_paga';
+            }
+          }
+        }
+        
+        return {
+          ...despesa,
+          valorTotal,
+          cotacao: despesa.cotacao ? Number(despesa.cotacao) : null,
+          statusPagamento,
+          valorPago,
+          categoria: despesa.subCategoria?.categoria,
+        };
+      }) as any[],
       total,
       page,
       limit,
@@ -210,69 +460,7 @@ export class DespesasService {
     };
   }
 
-  async update(publicId: string, updateDespesaDto: UpdateDespesaDto, parceiroId: number): Promise<Despesa> {
-    // Verificar se a despesa existe e pertence ao parceiro
-    const existingDespesa = await this.prisma.despesa.findFirst({
-      where: { 
-        publicId,
-        parceiroId 
-      },
-    });
 
-    if (!existingDespesa) {
-      throw new NotFoundException('Despesa não encontrada');
-    }
-
-    // Verificar se a subcategoria existe (se fornecida)
-    if (updateDespesaDto.subCategoriaId) {
-      const subCategoria = await this.prisma.subCategoriaDespesa.findUnique({
-        where: { idSubCategoria: updateDespesaDto.subCategoriaId },
-      });
-
-      if (!subCategoria) {
-        throw new BadRequestException('Subcategoria não encontrada');
-      }
-    }
-
-    // Verificar se o fornecedor existe (se fornecido)
-    if (updateDespesaDto.fornecedorId) {
-      const fornecedor = await this.prisma.fornecedor.findUnique({
-        where: { id: updateDespesaDto.fornecedorId },
-      });
-
-      if (!fornecedor) {
-        throw new BadRequestException('Fornecedor não encontrado');
-      }
-    }
-
-    const updateData: any = {};
-    
-    if (updateDespesaDto.dataDespesa) updateData.dataDespesa = new Date(updateDespesaDto.dataDespesa);
-    if (updateDespesaDto.valor !== undefined) updateData.valor = updateDespesaDto.valor;
-    if (updateDespesaDto.descricao) updateData.descricao = updateDespesaDto.descricao;
-    if (updateDespesaDto.subCategoriaId) updateData.subCategoriaId = updateDespesaDto.subCategoriaId;
-    if (updateDespesaDto.fornecedorId !== undefined) updateData.fornecedorId = updateDespesaDto.fornecedorId;
-    if (updateDespesaDto.dataVencimento) updateData.dataVencimento = new Date(updateDespesaDto.dataVencimento);
-    if (updateDespesaDto.dataPagamento) updateData.dataPagamento = new Date(updateDespesaDto.dataPagamento);
-    if (updateDespesaDto.currencyId !== undefined) updateData.currencyId = updateDespesaDto.currencyId;
-    if (updateDespesaDto.cotacao !== undefined) updateData.cotacao = updateDespesaDto.cotacao;
-
-    const despesa = await this.prisma.despesa.update({
-      where: { publicId },
-      data: updateData,
-      include: {
-        parceiro: true,
-        fornecedor: true,
-        subCategoria: true,
-      },
-    });
-
-    return {
-      ...despesa,
-      valor: Number(despesa.valor),
-      cotacao: despesa.cotacao ? Number(despesa.cotacao) : null,
-    } as Despesa;
-  }
 
   async remove(publicId: string, parceiroId: number): Promise<void> {
     // Verificar se a despesa existe e pertence ao parceiro
@@ -281,12 +469,31 @@ export class DespesasService {
         publicId,
         parceiroId 
       },
+      include: {
+        parceiro: true,
+        ContasPagar: {
+          include: {
+            ContasPagarParcelas: true,
+          },
+        },
+      },
     });
 
     if (!existingDespesa) {
       throw new NotFoundException('Despesa não encontrada');
     }
 
+    // Remover do cache antes de deletar
+    // Como não temos mais dataVencimento, todas as despesas são consideradas realizadas
+    const isFuture = false;
+    await this.despesaCacheService.removeDespesaFromCache(
+      existingDespesa.parceiro.publicId,
+      existingDespesa.dataRegistro,
+      Number(existingDespesa.valorTotal),
+      isFuture
+    );
+
+    // O delete cascade do Prisma irá automaticamente remover ContasPagar e ContasPagarParcelas
     await this.prisma.despesa.delete({
       where: { id: existingDespesa.id },
     });

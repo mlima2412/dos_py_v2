@@ -149,15 +149,10 @@ export {
 } from './contasPagarControllerCreateSchema.ts'
 export { contasPagarControllerFindAll200Schema, contasPagarControllerFindAllQueryResponseSchema } from './contasPagarControllerFindAllSchema.ts'
 export {
-  contasPagarControllerFindByOrigemTipoPathParamsSchema,
-  contasPagarControllerFindByOrigemTipo200Schema,
-  contasPagarControllerFindByOrigemTipoQueryResponseSchema,
-} from './contasPagarControllerFindByOrigemTipoSchema.ts'
-export {
-  contasPagarControllerFindByParceiroPathParamsSchema,
-  contasPagarControllerFindByParceiro200Schema,
-  contasPagarControllerFindByParceiroQueryResponseSchema,
-} from './contasPagarControllerFindByParceiroSchema.ts'
+  contasPagarControllerFindByDespesaPathParamsSchema,
+  contasPagarControllerFindByDespesa200Schema,
+  contasPagarControllerFindByDespesaQueryResponseSchema,
+} from './contasPagarControllerFindByDespesaSchema.ts'
 export {
   contasPagarControllerFindByStatusPathParamsSchema,
   contasPagarControllerFindByStatus200Schema,
@@ -315,7 +310,6 @@ export {
 } from './despesasControllerFindOneSchema.ts'
 export {
   despesasControllerFindPaginatedQueryParamsSchema,
-  despesasControllerFindPaginatedHeaderParamsSchema,
   despesasControllerFindPaginated200Schema,
   despesasControllerFindPaginatedQueryResponseSchema,
 } from './despesasControllerFindPaginatedSchema.ts'
@@ -326,15 +320,6 @@ export {
   despesasControllerRemove404Schema,
   despesasControllerRemoveMutationResponseSchema,
 } from './despesasControllerRemoveSchema.ts'
-export {
-  despesasControllerUpdatePathParamsSchema,
-  despesasControllerUpdateHeaderParamsSchema,
-  despesasControllerUpdate200Schema,
-  despesasControllerUpdate400Schema,
-  despesasControllerUpdate404Schema,
-  despesasControllerUpdateMutationRequestSchema,
-  despesasControllerUpdateMutationResponseSchema,
-} from './despesasControllerUpdateSchema.ts'
 export {
   despesasRecorrentesControllerCreate201Schema,
   despesasRecorrentesControllerCreate400Schema,
@@ -583,7 +568,6 @@ export { updateClienteDtoSchema } from './updateClienteDtoSchema.ts'
 export { updateContasPagarDtoSchema } from './updateContasPagarDtoSchema.ts'
 export { updateContasPagarParcelasDtoSchema } from './updateContasPagarParcelasDtoSchema.ts'
 export { updateCurrencyDtoSchema } from './updateCurrencyDtoSchema.ts'
-export { updateDespesaDtoSchema } from './updateDespesaDtoSchema.ts'
 export { updateDespesaRecorrenteDtoSchema } from './updateDespesaRecorrenteDtoSchema.ts'
 export { updateFornecedorDtoSchema } from './updateFornecedorDtoSchema.ts'
 export { updateParceiroDtoSchema } from './updateParceiroDtoSchema.ts'

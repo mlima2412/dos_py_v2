@@ -80,24 +80,25 @@ model UsuarioParceiro {
 }
 
 model Parceiro {
-  id                  Int                 @id @default(autoincrement())
-  publicId            String              @unique @map("public_id")
-  nome                String
-  ruccnpj             String?             @unique
-  email               String              @unique
-  redesocial          String?             @map("rede_social")
-  telefone            String?
-  currencyId          Int?                @map("currency_id")
-  ativo               Boolean             @default(true)
-  logourl             String?             @map("logo_url")
-  thumburl            String?             @map("thumb_url")
-  createdAt           DateTime            @default(now()) @map("created_at")
-  currency            Currency?           @relation(fields: [currencyId], references: [id])
-  Cliente             Cliente[]
-  UsuarioParceiro     UsuarioParceiro[]
-  despesas            Despesa[]
-  despesasRecorrentes DespesaRecorrente[]
-  contasPagar         ContasPagar[]
+  id                             Int                              @id @default(autoincrement())
+  publicId                       String                           @unique @map("public_id")
+  nome                           String
+  ruccnpj                        String?                          @unique
+  email                          String                           @unique
+  redesocial                     String?                          @map("rede_social")
+  telefone                       String?
+  currencyId                     Int?                             @map("currency_id")
+  ativo                          Boolean                          @default(true)
+  logourl                        String?                          @map("logo_url")
+  thumburl                       String?                          @map("thumb_url")
+  createdAt                      DateTime                         @default(now()) @map("created_at")
+  currency                       Currency?                        @relation(fields: [currencyId], references: [id])
+  Cliente                        Cliente[]
+  UsuarioParceiro                UsuarioParceiro[]
+  despesas                       Despesa[]
+  despesasRecorrentes            DespesaRecorrente[]
+  RollupDespesasMensais          RollupDespesasMensais[]
+  RollupDespesasMensaisCategoria RollupDespesasMensaisCategoria[]
 
   @@map("parceiro")
 }
@@ -139,31 +140,30 @@ model Cliente {
 }
 
 model Currency {
-  id                  Int                   @id @default(autoincrement())
-  publicId            String                @unique @map("public_id")
+  id                  Int                 @id @default(autoincrement())
+  publicId            String              @unique @map("public_id")
   nome                String
   prefixo             String
-  isoCode             String                @unique @map("iso_code")
-  precision           Int                   @default(2)
-  locale              String                @default("pt-BR")
-  defaultRate         Decimal               @default(0.0) @map("default_rate") @db.Decimal(12, 3)
-  ativo               Boolean               @default(true)
-  createdAt           DateTime              @default(now()) @map("created_at")
+  isoCode             String              @unique @map("iso_code")
+  precision           Int                 @default(2)
+  locale              String              @default("pt-BR")
+  defaultRate         Decimal             @default(0.0) @map("default_rate") @db.Decimal(12, 3)
+  ativo               Boolean             @default(true)
+  createdAt           DateTime            @default(now()) @map("created_at")
   parceiros           Parceiro[]
   despesas            Despesa[]
   despesasRecorrentes DespesaRecorrente[]
-  contasPagar         ContasPagar[]
-  contasPagarParcelas ContasPagarParcelas[]
 
   @@map("currency")
 }
 
 model CategoriaDespesas {
-  idCategoria         Int                   @id @default(autoincrement()) @map("categoria_id")
-  descricao           String
-  ativo               Boolean               @default(true)
-  createdAt           DateTime              @default(now()) @map("created_at")
-  SubCategoriaDespesa SubCategoriaDespesa[]
+  idCategoria                    Int                              @id @default(autoincrement()) @map("categoria_id")
+  descricao                      String
+  ativo                          Boolean                          @default(true)
+  createdAt                      DateTime                         @default(now()) @map("created_at")
+  SubCategoriaDespesa            SubCategoriaDespesa[]
+  RollupDespesasMensaisCategoria RollupDespesasMensaisCategoria[]
 
   @@map("categoria_despesas")
 }
@@ -190,20 +190,19 @@ enum Linguagem {
 model Despesa {
   id             Int                 @id @default(autoincrement())
   publicId       String              @unique @map("public_id")
-  dataDespesa    DateTime            @default(now()) @map("data_despesa")
-  valor          Decimal             @default(0.0) @db.Decimal(12, 3)
+  dataRegistro   DateTime            @default(now()) @map("data_registro")
+  valorTotal     Decimal             @default(0.0) @map("valor_total") @db.Decimal(12, 3)
   descricao      String
   subCategoriaId Int                 @map("sub_categoria_id")
   parceiroId     Int                 @map("parceiro_id")
   fornecedorId   Int?                @map("fornecedor_id")
-  dataVencimento DateTime?           @default(now()) @map("data_vencimento")
-  dataPagamento  DateTime?           @map("data_pagamento")
   currencyId     Int?                @map("currency_id")
   cotacao        Decimal?            @default(0.0) @map("cotacao") @db.Decimal(12, 3)
   currency       Currency?           @relation(fields: [currencyId], references: [id])
   fornecedor     Fornecedor?         @relation(fields: [fornecedorId], references: [id])
   parceiro       Parceiro            @relation(fields: [parceiroId], references: [id])
   subCategoria   SubCategoriaDespesa @relation(fields: [subCategoriaId], references: [idSubCategoria])
+  ContasPagar    ContasPagar[]
 
   @@map("despesa")
 }
@@ -243,22 +242,16 @@ enum FrequenciaEnum {
 model ContasPagar {
   id                  Int                   @id @default(autoincrement())
   publicId            String                @unique @map("public_id")
-  parceiroId          Int                   @map("parceiro_id")
-  origemTipo          String                @map("origem_tipo") // Tipo de origem da conta a pagar
-  origemId            Int                   @map("origem_id")
-  dataVencimento      DateTime              @map("data_vencimento")
+  despesaId           Int?                  @map("despesa_id")
+  dataCriacao         DateTime              @default(now()) @map("data_criacao")
+  dataPagamento       DateTime?             @map("data_pagamento")
   valorTotal          Decimal               @default(0.0) @map("valor_total") @db.Decimal(12, 3)
   // saldo É usado para controlar as parcelas pagas. É a soma dos valores
   // pagos da tabela ContasPagarParcelas
   saldo               Decimal               @default(0.0) @db.Decimal(12, 3)
-  descricao           String
   pago                Boolean               @default(false)
-  currencyId          Int?                  @map("currency_id")
-  cotacao             Decimal?              @default(0.0) @db.Decimal(12, 3)
-  dataPagamento       DateTime?             @map("data_pagamento")
-  currency            Currency?             @relation(fields: [currencyId], references: [id])
+  despesa             Despesa?              @relation(fields: [despesaId], references: [id], onDelete: Cascade)
   ContasPagarParcelas ContasPagarParcelas[]
-  Parceiro            Parceiro              @relation(fields: [parceiroId], references: [id])
 
   @@map("contas_a_pagar")
 }
@@ -266,15 +259,39 @@ model ContasPagar {
 // É usado para controlar as parcelas de contas a pagar
 // Ex: Contas a pagar de um fornecedor, ou de uma despesa
 model ContasPagarParcelas {
-  id            Int         @id @default(autoincrement())
-  publicId      String      @unique @map("public_id")
-  dataPagamento DateTime    @map("data_pagamento")
-  valor         Decimal     @default(0.0) @db.Decimal(12, 3)
-  currencyId    Int?        @map("currency_id")
-  cotacao       Decimal     @default(0.0) @db.Decimal(12, 3)
-  contasPagarId Int         @map("contas_pagar_id")
-  currency      Currency?   @relation(fields: [currencyId], references: [id])
-  contasPagar   ContasPagar @relation(fields: [contasPagarId], references: [id])
+  id             Int         @id @default(autoincrement())
+  publicId       String      @unique @map("public_id")
+  dataPagamento  DateTime?   @map("data_pagamento")
+  dataVencimento DateTime    @map("data_vencimento")
+  valor          Decimal     @default(0.0) @db.Decimal(12, 3)
+  pago           Boolean     @default(false)
+  contasPagarId  Int         @map("contas_pagar_id")
+  contasPagar    ContasPagar @relation(fields: [contasPagarId], references: [id], onDelete: Cascade)
 
   @@map("contas_a_pagar_parcelas")
+}
+
+model RollupDespesasMensais {
+  parceiro_id String   @map("parceiro_id")
+  ym          String   @map("ym")
+  realized    Decimal  @default(0.0) @map("realized") @db.Decimal(12, 3)
+  to_pay      Decimal  @default(0.0) @map("to_pay") @db.Decimal(12, 3)
+  Parceiro    Parceiro @relation(fields: [parceiro_id], references: [publicId])
+
+  @@id([parceiro_id, ym])
+  @@map("rollup_despesas_mensais")
+}
+
+model RollupDespesasMensaisCategoria {
+  parceiro_id  String  @map("parceiro_id")
+  categoria_id Int     @map("categoria_id")
+  ym           String  @map("ym")
+  realized     Decimal @default(0.0) @map("realized") @db.Decimal(12, 3)
+  to_pay       Decimal @default(0.0) @map("to_pay") @db.Decimal(12, 3)
+
+  Parceiro  Parceiro          @relation(fields: [parceiro_id], references: [publicId])
+  Categoria CategoriaDespesas @relation(fields: [categoria_id], references: [idCategoria])
+
+  @@id([parceiro_id, ym, categoria_id])
+  @@map("rollup_despesas_mensais_categoria")
 }

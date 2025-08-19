@@ -3,17 +3,25 @@
  * Do not edit manually.
  */
 
+export const createDespesaDtoTipoPagamentoEnum = {
+  A_VISTA_IMEDIATA: 'A_VISTA_IMEDIATA',
+  A_PRAZO_SEM_PARCELAS: 'A_PRAZO_SEM_PARCELAS',
+  PARCELADO: 'PARCELADO',
+} as const
+
+export type CreateDespesaDtoTipoPagamentoEnum = (typeof createDespesaDtoTipoPagamentoEnum)[keyof typeof createDespesaDtoTipoPagamentoEnum]
+
 export type CreateDespesaDto = {
   /**
-   * @description Data da despesa
+   * @description Data do registro
    * @type string | undefined
    */
-  dataDespesa?: string
+  dataRegistro?: string
   /**
    * @description Valor da despesa
    * @type number
    */
-  valor: number
+  valorTotal: number
   /**
    * @description Descrição da despesa
    * @type string
@@ -35,15 +43,30 @@ export type CreateDespesaDto = {
    */
   fornecedorId?: number
   /**
-   * @description Data de vencimento da despesa
+   * @description Tipo de pagamento da despesa
+   * @type string
+   */
+  tipoPagamento: CreateDespesaDtoTipoPagamentoEnum
+  /**
+   * @description Valor da entrada (apenas para pagamento parcelado)
+   * @type number | undefined
+   */
+  valorEntrada?: number
+  /**
+   * @description Data da primeira parcela (apenas para pagamento parcelado)
+   * @type string | undefined
+   */
+  dataPrimeiraParcela?: string
+  /**
+   * @description Número de parcelas (apenas para pagamento parcelado)
+   * @type number | undefined
+   */
+  numeroParcelas?: number
+  /**
+   * @description Data de vencimento (apenas para pagamento à prazo sem parcelas)
    * @type string | undefined
    */
   dataVencimento?: string
-  /**
-   * @description Data de pagamento da despesa
-   * @type string | undefined
-   */
-  dataPagamento?: string
   /**
    * @description ID da moeda da despesa
    * @type number | undefined

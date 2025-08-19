@@ -38,10 +38,8 @@ export type { ClientesControllerUpdateMutationKey } from './hooks/useClientesCon
 export type { ContasPagarControllerCreateMutationKey } from './hooks/useContasPagarControllerCreate.ts'
 export type { ContasPagarControllerFindAllQueryKey } from './hooks/useContasPagarControllerFindAll.ts'
 export type { ContasPagarControllerFindAllSuspenseQueryKey } from './hooks/useContasPagarControllerFindAllSuspense.ts'
-export type { ContasPagarControllerFindByOrigemTipoQueryKey } from './hooks/useContasPagarControllerFindByOrigemTipo.ts'
-export type { ContasPagarControllerFindByOrigemTipoSuspenseQueryKey } from './hooks/useContasPagarControllerFindByOrigemTipoSuspense.ts'
-export type { ContasPagarControllerFindByParceiroQueryKey } from './hooks/useContasPagarControllerFindByParceiro.ts'
-export type { ContasPagarControllerFindByParceiroSuspenseQueryKey } from './hooks/useContasPagarControllerFindByParceiroSuspense.ts'
+export type { ContasPagarControllerFindByDespesaQueryKey } from './hooks/useContasPagarControllerFindByDespesa.ts'
+export type { ContasPagarControllerFindByDespesaSuspenseQueryKey } from './hooks/useContasPagarControllerFindByDespesaSuspense.ts'
 export type { ContasPagarControllerFindByStatusQueryKey } from './hooks/useContasPagarControllerFindByStatus.ts'
 export type { ContasPagarControllerFindByStatusSuspenseQueryKey } from './hooks/useContasPagarControllerFindByStatusSuspense.ts'
 export type { ContasPagarControllerFindOneQueryKey } from './hooks/useContasPagarControllerFindOne.ts'
@@ -76,7 +74,6 @@ export type { DespesasControllerFindOneSuspenseQueryKey } from './hooks/useDespe
 export type { DespesasControllerFindPaginatedQueryKey } from './hooks/useDespesasControllerFindPaginated.ts'
 export type { DespesasControllerFindPaginatedSuspenseQueryKey } from './hooks/useDespesasControllerFindPaginatedSuspense.ts'
 export type { DespesasControllerRemoveMutationKey } from './hooks/useDespesasControllerRemove.ts'
-export type { DespesasControllerUpdateMutationKey } from './hooks/useDespesasControllerUpdate.ts'
 export type { DespesasRecorrentesControllerCreateMutationKey } from './hooks/useDespesasRecorrentesControllerCreate.ts'
 export type { DespesasRecorrentesControllerFindAllQueryKey } from './hooks/useDespesasRecorrentesControllerFindAll.ts'
 export type { DespesasRecorrentesControllerFindAllSuspenseQueryKey } from './hooks/useDespesasRecorrentesControllerFindAllSuspense.ts'
@@ -345,17 +342,11 @@ export type {
   ContasPagarControllerFindAllQuery,
 } from './types/ContasPagarControllerFindAll.ts'
 export type {
-  ContasPagarControllerFindByOrigemTipoPathParams,
-  ContasPagarControllerFindByOrigemTipo200,
-  ContasPagarControllerFindByOrigemTipoQueryResponse,
-  ContasPagarControllerFindByOrigemTipoQuery,
-} from './types/ContasPagarControllerFindByOrigemTipo.ts'
-export type {
-  ContasPagarControllerFindByParceiroPathParams,
-  ContasPagarControllerFindByParceiro200,
-  ContasPagarControllerFindByParceiroQueryResponse,
-  ContasPagarControllerFindByParceiroQuery,
-} from './types/ContasPagarControllerFindByParceiro.ts'
+  ContasPagarControllerFindByDespesaPathParams,
+  ContasPagarControllerFindByDespesa200,
+  ContasPagarControllerFindByDespesaQueryResponse,
+  ContasPagarControllerFindByDespesaQuery,
+} from './types/ContasPagarControllerFindByDespesa.ts'
 export type {
   ContasPagarControllerFindByStatusPathParams,
   ContasPagarControllerFindByStatus200,
@@ -431,7 +422,7 @@ export type { CreateClienteDtoLinguagemEnum, CreateClienteDto } from './types/Cr
 export type { CreateContasPagarDto } from './types/CreateContasPagarDto.ts'
 export type { CreateContasPagarParcelasDto } from './types/CreateContasPagarParcelasDto.ts'
 export type { CreateCurrencyDto } from './types/CreateCurrencyDto.ts'
-export type { CreateDespesaDto } from './types/CreateDespesaDto.ts'
+export type { CreateDespesaDtoTipoPagamentoEnum, CreateDespesaDto } from './types/CreateDespesaDto.ts'
 export type { CreateDespesaRecorrenteDtoFrequenciaEnum, CreateDespesaRecorrenteDto } from './types/CreateDespesaRecorrenteDto.ts'
 export type { CreateFornecedorDto } from './types/CreateFornecedorDto.ts'
 export type { CreateParceiroDto } from './types/CreateParceiroDto.ts'
@@ -533,7 +524,6 @@ export type {
 } from './types/DespesasControllerFindOne.ts'
 export type {
   DespesasControllerFindPaginatedQueryParams,
-  DespesasControllerFindPaginatedHeaderParams,
   DespesasControllerFindPaginated200,
   DespesasControllerFindPaginatedQueryResponse,
   DespesasControllerFindPaginatedQuery,
@@ -546,16 +536,6 @@ export type {
   DespesasControllerRemoveMutationResponse,
   DespesasControllerRemoveMutation,
 } from './types/DespesasControllerRemove.ts'
-export type {
-  DespesasControllerUpdatePathParams,
-  DespesasControllerUpdateHeaderParams,
-  DespesasControllerUpdate200,
-  DespesasControllerUpdate400,
-  DespesasControllerUpdate404,
-  DespesasControllerUpdateMutationRequest,
-  DespesasControllerUpdateMutationResponse,
-  DespesasControllerUpdateMutation,
-} from './types/DespesasControllerUpdate.ts'
 export type {
   DespesasRecorrentesControllerCreate201,
   DespesasRecorrentesControllerCreate400,
@@ -848,7 +828,6 @@ export type { UpdateClienteDtoLinguagemEnum, UpdateClienteDto } from './types/Up
 export type { UpdateContasPagarDto } from './types/UpdateContasPagarDto.ts'
 export type { UpdateContasPagarParcelasDto } from './types/UpdateContasPagarParcelasDto.ts'
 export type { UpdateCurrencyDto } from './types/UpdateCurrencyDto.ts'
-export type { UpdateDespesaDto } from './types/UpdateDespesaDto.ts'
 export type { UpdateDespesaRecorrenteDtoFrequenciaEnum, UpdateDespesaRecorrenteDto } from './types/UpdateDespesaRecorrenteDto.ts'
 export type { UpdateFornecedorDto } from './types/UpdateFornecedorDto.ts'
 export type { UpdateParceiroDto } from './types/UpdateParceiroDto.ts'
@@ -1145,29 +1124,17 @@ export {
   useContasPagarControllerFindAllSuspense,
 } from './hooks/useContasPagarControllerFindAllSuspense.ts'
 export {
-  contasPagarControllerFindByOrigemTipoQueryKey,
-  contasPagarControllerFindByOrigemTipo,
-  contasPagarControllerFindByOrigemTipoQueryOptions,
-  useContasPagarControllerFindByOrigemTipo,
-} from './hooks/useContasPagarControllerFindByOrigemTipo.ts'
+  contasPagarControllerFindByDespesaQueryKey,
+  contasPagarControllerFindByDespesa,
+  contasPagarControllerFindByDespesaQueryOptions,
+  useContasPagarControllerFindByDespesa,
+} from './hooks/useContasPagarControllerFindByDespesa.ts'
 export {
-  contasPagarControllerFindByOrigemTipoSuspenseQueryKey,
-  contasPagarControllerFindByOrigemTipoSuspense,
-  contasPagarControllerFindByOrigemTipoSuspenseQueryOptions,
-  useContasPagarControllerFindByOrigemTipoSuspense,
-} from './hooks/useContasPagarControllerFindByOrigemTipoSuspense.ts'
-export {
-  contasPagarControllerFindByParceiroQueryKey,
-  contasPagarControllerFindByParceiro,
-  contasPagarControllerFindByParceiroQueryOptions,
-  useContasPagarControllerFindByParceiro,
-} from './hooks/useContasPagarControllerFindByParceiro.ts'
-export {
-  contasPagarControllerFindByParceiroSuspenseQueryKey,
-  contasPagarControllerFindByParceiroSuspense,
-  contasPagarControllerFindByParceiroSuspenseQueryOptions,
-  useContasPagarControllerFindByParceiroSuspense,
-} from './hooks/useContasPagarControllerFindByParceiroSuspense.ts'
+  contasPagarControllerFindByDespesaSuspenseQueryKey,
+  contasPagarControllerFindByDespesaSuspense,
+  contasPagarControllerFindByDespesaSuspenseQueryOptions,
+  useContasPagarControllerFindByDespesaSuspense,
+} from './hooks/useContasPagarControllerFindByDespesaSuspense.ts'
 export {
   contasPagarControllerFindByStatusQueryKey,
   contasPagarControllerFindByStatus,
@@ -1328,7 +1295,6 @@ export {
   useDespesasControllerFindPaginatedSuspense,
 } from './hooks/useDespesasControllerFindPaginatedSuspense.ts'
 export { despesasControllerRemoveMutationKey, despesasControllerRemove, useDespesasControllerRemove } from './hooks/useDespesasControllerRemove.ts'
-export { despesasControllerUpdateMutationKey, despesasControllerUpdate, useDespesasControllerUpdate } from './hooks/useDespesasControllerUpdate.ts'
 export {
   despesasRecorrentesControllerCreateMutationKey,
   despesasRecorrentesControllerCreate,
@@ -1916,15 +1882,10 @@ export {
 } from './schemas/contasPagarControllerCreateSchema.ts'
 export { contasPagarControllerFindAll200Schema, contasPagarControllerFindAllQueryResponseSchema } from './schemas/contasPagarControllerFindAllSchema.ts'
 export {
-  contasPagarControllerFindByOrigemTipoPathParamsSchema,
-  contasPagarControllerFindByOrigemTipo200Schema,
-  contasPagarControllerFindByOrigemTipoQueryResponseSchema,
-} from './schemas/contasPagarControllerFindByOrigemTipoSchema.ts'
-export {
-  contasPagarControllerFindByParceiroPathParamsSchema,
-  contasPagarControllerFindByParceiro200Schema,
-  contasPagarControllerFindByParceiroQueryResponseSchema,
-} from './schemas/contasPagarControllerFindByParceiroSchema.ts'
+  contasPagarControllerFindByDespesaPathParamsSchema,
+  contasPagarControllerFindByDespesa200Schema,
+  contasPagarControllerFindByDespesaQueryResponseSchema,
+} from './schemas/contasPagarControllerFindByDespesaSchema.ts'
 export {
   contasPagarControllerFindByStatusPathParamsSchema,
   contasPagarControllerFindByStatus200Schema,
@@ -2082,7 +2043,6 @@ export {
 } from './schemas/despesasControllerFindOneSchema.ts'
 export {
   despesasControllerFindPaginatedQueryParamsSchema,
-  despesasControllerFindPaginatedHeaderParamsSchema,
   despesasControllerFindPaginated200Schema,
   despesasControllerFindPaginatedQueryResponseSchema,
 } from './schemas/despesasControllerFindPaginatedSchema.ts'
@@ -2093,15 +2053,6 @@ export {
   despesasControllerRemove404Schema,
   despesasControllerRemoveMutationResponseSchema,
 } from './schemas/despesasControllerRemoveSchema.ts'
-export {
-  despesasControllerUpdatePathParamsSchema,
-  despesasControllerUpdateHeaderParamsSchema,
-  despesasControllerUpdate200Schema,
-  despesasControllerUpdate400Schema,
-  despesasControllerUpdate404Schema,
-  despesasControllerUpdateMutationRequestSchema,
-  despesasControllerUpdateMutationResponseSchema,
-} from './schemas/despesasControllerUpdateSchema.ts'
 export {
   despesasRecorrentesControllerCreate201Schema,
   despesasRecorrentesControllerCreate400Schema,
@@ -2350,7 +2301,6 @@ export { updateClienteDtoSchema } from './schemas/updateClienteDtoSchema.ts'
 export { updateContasPagarDtoSchema } from './schemas/updateContasPagarDtoSchema.ts'
 export { updateContasPagarParcelasDtoSchema } from './schemas/updateContasPagarParcelasDtoSchema.ts'
 export { updateCurrencyDtoSchema } from './schemas/updateCurrencyDtoSchema.ts'
-export { updateDespesaDtoSchema } from './schemas/updateDespesaDtoSchema.ts'
 export { updateDespesaRecorrenteDtoSchema } from './schemas/updateDespesaRecorrenteDtoSchema.ts'
 export { updateFornecedorDtoSchema } from './schemas/updateFornecedorDtoSchema.ts'
 export { updateParceiroDtoSchema } from './schemas/updateParceiroDtoSchema.ts'
@@ -2449,6 +2399,7 @@ export {
 } from './schemas/usuariosControllerUpdateSchema.ts'
 export { clienteLinguagemEnum } from './types/Cliente.ts'
 export { createClienteDtoLinguagemEnum } from './types/CreateClienteDto.ts'
+export { createDespesaDtoTipoPagamentoEnum } from './types/CreateDespesaDto.ts'
 export { createDespesaRecorrenteDtoFrequenciaEnum } from './types/CreateDespesaRecorrenteDto.ts'
 export { despesaRecorrenteFrequenciaEnum } from './types/DespesaRecorrente.ts'
 export { updateClienteDtoLinguagemEnum } from './types/UpdateClienteDto.ts'

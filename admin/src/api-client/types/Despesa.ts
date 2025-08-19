@@ -5,6 +5,7 @@
 
 import type { Fornecedor } from './Fornecedor.ts'
 import type { SubCategoriaDespesa } from './SubCategoriaDespesa.ts'
+import type { Currency } from './Currency.ts'
 
 export type Despesa = {
   /**
@@ -18,15 +19,15 @@ export type Despesa = {
    */
   publicId: string
   /**
-   * @description Data da despesa
+   * @description Data de registro da despesa
    * @type string, date-time
    */
-  dataDespesa: string
+  dataRegistro: string
   /**
-   * @description Valor da despesa
+   * @description Valor total da despesa
    * @type number
    */
-  valor: number
+  valorTotal: number
   /**
    * @description Descrição da despesa
    * @type string
@@ -48,16 +49,6 @@ export type Despesa = {
    */
   fornecedorId?: number
   /**
-   * @description Data de vencimento da despesa
-   * @type string | undefined, date-time
-   */
-  dataVencimento?: string
-  /**
-   * @description Data de pagamento da despesa
-   * @type string | undefined, date-time
-   */
-  dataPagamento?: string
-  /**
    * @description ID da moeda da despesa
    * @type number | undefined
    */
@@ -71,6 +62,10 @@ export type Despesa = {
    * @description Fornecedor da despesa
    */
   fornecedor?: Fornecedor
+  /**
+   * @description Moeda da despesa
+   */
+  currency?: Currency
   /**
    * @description Subcategoria da despesa
    */

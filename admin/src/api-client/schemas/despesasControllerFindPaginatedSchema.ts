@@ -5,36 +5,24 @@
 
 import type {
   DespesasControllerFindPaginatedQueryParams,
-  DespesasControllerFindPaginatedHeaderParams,
   DespesasControllerFindPaginated200,
   DespesasControllerFindPaginatedQueryResponse,
 } from '../types/DespesasControllerFindPaginated.ts'
 import type { ToZod } from '@kubb/plugin-zod/utils'
-import { despesaSchema } from './despesaSchema.ts'
 import { z } from 'zod'
 
 export const despesasControllerFindPaginatedQueryParamsSchema = z.object({
-  page: z.string(),
-  limit: z.string(),
-  search: z.string(),
-  fornecedorId: z.string(),
-  subCategoriaId: z.string(),
+  page: z.string().default('1').describe('Número da página'),
+  limit: z.string().default('20').describe('Número de itens por página'),
+  search: z.string().describe('Termo de busca para filtrar por descrição').optional(),
+  fornecedorId: z.string().describe('ID do fornecedor para filtrar').optional(),
+  subCategoriaId: z.string().describe('ID da subcategoria para filtrar').optional(),
 }) as unknown as ToZod<DespesasControllerFindPaginatedQueryParams>
 
-export const despesasControllerFindPaginatedHeaderParamsSchema = z.object({
-  'x-parceiro-id': z.coerce.number().int().describe('ID do parceiro logado'),
-}) as unknown as ToZod<DespesasControllerFindPaginatedHeaderParams>
-
 /**
- * @description Lista paginada de despesas retornada com sucesso
+ * @description Lista paginada de despesas
  */
-export const despesasControllerFindPaginated200Schema = z.object({
-  data: z.array(z.lazy(() => despesaSchema)).optional(),
-  total: z.coerce.number().describe('Total de registros').optional(),
-  page: z.coerce.number().describe('Página atual').optional(),
-  limit: z.coerce.number().describe('Itens por página').optional(),
-  totalPages: z.coerce.number().describe('Total de páginas').optional(),
-}) as unknown as ToZod<DespesasControllerFindPaginated200>
+export const despesasControllerFindPaginated200Schema = z.unknown() as unknown as ToZod<DespesasControllerFindPaginated200>
 
 export const despesasControllerFindPaginatedQueryResponseSchema = z.lazy(
   () => despesasControllerFindPaginated200Schema,

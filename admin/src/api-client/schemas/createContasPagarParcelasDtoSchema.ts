@@ -9,8 +9,8 @@ import { z } from 'zod'
 
 export const createContasPagarParcelasDtoSchema = z.object({
   dataPagamento: z.coerce.string().describe('Data do pagamento da parcela'),
-  valor: z.coerce.number().describe('Valor da parcela paga'),
-  currencyId: z.coerce.number().describe('ID da moeda da parcela').optional(),
-  cotacao: z.coerce.number().describe('Cotação da moeda no momento do pagamento').optional(),
+  dataVencimento: z.coerce.string().describe('Data de vencimento da parcela'),
+  valor: z.coerce.number().describe('Valor da parcela'),
+  pago: z.boolean().describe('Se a parcela foi paga').optional(),
   contasPagarId: z.coerce.number().describe('ID da conta a pagar relacionada'),
 }) as unknown as ToZod<CreateContasPagarParcelasDto>

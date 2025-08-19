@@ -22,20 +22,20 @@ export type ContasPagarParcelas = {
    */
   dataPagamento: string
   /**
-   * @description Valor da parcela paga
+   * @description Data de vencimento da parcela
+   * @type string, date-time
+   */
+  dataVencimento: string
+  /**
+   * @description Valor da parcela
    * @type number
    */
   valor: number
   /**
-   * @description ID da moeda da parcela
-   * @type number | undefined
+   * @description Indica se a parcela foi paga
+   * @type boolean
    */
-  currencyId?: number
-  /**
-   * @description Cotação da moeda no momento do pagamento
-   * @type number
-   */
-  cotacao: number
+  pago: boolean
   /**
    * @description ID da conta a pagar relacionada
    * @type number

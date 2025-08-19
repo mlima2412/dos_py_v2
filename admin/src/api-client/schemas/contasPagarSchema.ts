@@ -6,27 +6,16 @@
 import type { ContasPagar } from '../types/ContasPagar.ts'
 import type { ToZod } from '@kubb/plugin-zod/utils'
 import { contasPagarParcelasSchema } from './contasPagarParcelasSchema.ts'
-import { parceiroSchema } from './parceiroSchema.ts'
 import { z } from 'zod'
 
 export const contasPagarSchema = z.object({
   id: z.coerce.number().describe('ID único da conta a pagar'),
   publicId: z.coerce.string().describe('ID público da conta a pagar'),
-  parceiroId: z.coerce.number().describe('ID do parceiro responsável'),
-  origemTipo: z.coerce.string().describe('Tipo de origem da conta a pagar'),
-  origemId: z.coerce.number().describe('ID da origem da conta a pagar'),
-  dataVencimento: z.string().datetime().describe('Data de vencimento da conta'),
+  despesaId: z.coerce.number().describe('ID da despesa relacionada').optional(),
+  dataCriacao: z.string().datetime().describe('Data de criação da conta'),
   valorTotal: z.coerce.number().describe('Valor total da conta a pagar'),
   saldo: z.coerce.number().describe('Saldo atual da conta (soma dos valores pagos)'),
-  descricao: z.coerce.string().describe('Descrição da conta a pagar'),
   pago: z.boolean().describe('Indica se a conta foi totalmente paga'),
-  currencyId: z.coerce.number().describe('ID da moeda da conta').optional(),
-  cotacao: z.coerce.number().describe('Cotação da moeda no momento da conta').optional(),
-  dataPagamento: z.string().datetime().describe('Data do pagamento completo').optional(),
-  parceiro: z
-    .lazy(() => parceiroSchema)
-    .describe('Parceiro responsável pela conta')
-    .optional(),
   contasPagarParcelas: z
     .array(z.lazy(() => contasPagarParcelasSchema))
     .describe('Parcelas da conta a pagar')

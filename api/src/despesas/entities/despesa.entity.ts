@@ -18,16 +18,16 @@ export class Despesa {
   publicId: string;
 
   @ApiProperty({
-    description: 'Data da despesa',
+    description: 'Data de registro da despesa',
     example: '2024-01-01T00:00:00Z',
   })
-  dataDespesa: Date;
+  dataRegistro: Date;
 
   @ApiProperty({
-    description: 'Valor da despesa',
+    description: 'Valor total da despesa',
     example: 1500.50,
   })
-  valor: number;
+  valorTotal: number;
 
   @ApiProperty({
     description: 'Descrição da despesa',
@@ -54,19 +54,7 @@ export class Despesa {
   })
   fornecedorId: number | null;
 
-  @ApiProperty({
-    description: 'Data de vencimento da despesa',
-    example: '2024-01-15T00:00:00Z',
-    required: false,
-  })
-  dataVencimento: Date | null;
 
-  @ApiProperty({
-    description: 'Data de pagamento da despesa',
-    example: '2024-01-10T00:00:00Z',
-    required: false,
-  })
-  dataPagamento: Date | null;
 
   @ApiProperty({
     description: 'ID da moeda da despesa',

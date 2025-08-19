@@ -38,10 +38,8 @@ export type { ClientesControllerUpdateMutationKey } from './useClientesControlle
 export type { ContasPagarControllerCreateMutationKey } from './useContasPagarControllerCreate.ts'
 export type { ContasPagarControllerFindAllQueryKey } from './useContasPagarControllerFindAll.ts'
 export type { ContasPagarControllerFindAllSuspenseQueryKey } from './useContasPagarControllerFindAllSuspense.ts'
-export type { ContasPagarControllerFindByOrigemTipoQueryKey } from './useContasPagarControllerFindByOrigemTipo.ts'
-export type { ContasPagarControllerFindByOrigemTipoSuspenseQueryKey } from './useContasPagarControllerFindByOrigemTipoSuspense.ts'
-export type { ContasPagarControllerFindByParceiroQueryKey } from './useContasPagarControllerFindByParceiro.ts'
-export type { ContasPagarControllerFindByParceiroSuspenseQueryKey } from './useContasPagarControllerFindByParceiroSuspense.ts'
+export type { ContasPagarControllerFindByDespesaQueryKey } from './useContasPagarControllerFindByDespesa.ts'
+export type { ContasPagarControllerFindByDespesaSuspenseQueryKey } from './useContasPagarControllerFindByDespesaSuspense.ts'
 export type { ContasPagarControllerFindByStatusQueryKey } from './useContasPagarControllerFindByStatus.ts'
 export type { ContasPagarControllerFindByStatusSuspenseQueryKey } from './useContasPagarControllerFindByStatusSuspense.ts'
 export type { ContasPagarControllerFindOneQueryKey } from './useContasPagarControllerFindOne.ts'
@@ -76,7 +74,6 @@ export type { DespesasControllerFindOneSuspenseQueryKey } from './useDespesasCon
 export type { DespesasControllerFindPaginatedQueryKey } from './useDespesasControllerFindPaginated.ts'
 export type { DespesasControllerFindPaginatedSuspenseQueryKey } from './useDespesasControllerFindPaginatedSuspense.ts'
 export type { DespesasControllerRemoveMutationKey } from './useDespesasControllerRemove.ts'
-export type { DespesasControllerUpdateMutationKey } from './useDespesasControllerUpdate.ts'
 export type { DespesasRecorrentesControllerCreateMutationKey } from './useDespesasRecorrentesControllerCreate.ts'
 export type { DespesasRecorrentesControllerFindAllQueryKey } from './useDespesasRecorrentesControllerFindAll.ts'
 export type { DespesasRecorrentesControllerFindAllSuspenseQueryKey } from './useDespesasRecorrentesControllerFindAllSuspense.ts'
@@ -340,29 +337,17 @@ export {
   useContasPagarControllerFindAllSuspense,
 } from './useContasPagarControllerFindAllSuspense.ts'
 export {
-  contasPagarControllerFindByOrigemTipoQueryKey,
-  contasPagarControllerFindByOrigemTipo,
-  contasPagarControllerFindByOrigemTipoQueryOptions,
-  useContasPagarControllerFindByOrigemTipo,
-} from './useContasPagarControllerFindByOrigemTipo.ts'
+  contasPagarControllerFindByDespesaQueryKey,
+  contasPagarControllerFindByDespesa,
+  contasPagarControllerFindByDespesaQueryOptions,
+  useContasPagarControllerFindByDespesa,
+} from './useContasPagarControllerFindByDespesa.ts'
 export {
-  contasPagarControllerFindByOrigemTipoSuspenseQueryKey,
-  contasPagarControllerFindByOrigemTipoSuspense,
-  contasPagarControllerFindByOrigemTipoSuspenseQueryOptions,
-  useContasPagarControllerFindByOrigemTipoSuspense,
-} from './useContasPagarControllerFindByOrigemTipoSuspense.ts'
-export {
-  contasPagarControllerFindByParceiroQueryKey,
-  contasPagarControllerFindByParceiro,
-  contasPagarControllerFindByParceiroQueryOptions,
-  useContasPagarControllerFindByParceiro,
-} from './useContasPagarControllerFindByParceiro.ts'
-export {
-  contasPagarControllerFindByParceiroSuspenseQueryKey,
-  contasPagarControllerFindByParceiroSuspense,
-  contasPagarControllerFindByParceiroSuspenseQueryOptions,
-  useContasPagarControllerFindByParceiroSuspense,
-} from './useContasPagarControllerFindByParceiroSuspense.ts'
+  contasPagarControllerFindByDespesaSuspenseQueryKey,
+  contasPagarControllerFindByDespesaSuspense,
+  contasPagarControllerFindByDespesaSuspenseQueryOptions,
+  useContasPagarControllerFindByDespesaSuspense,
+} from './useContasPagarControllerFindByDespesaSuspense.ts'
 export {
   contasPagarControllerFindByStatusQueryKey,
   contasPagarControllerFindByStatus,
@@ -519,7 +504,6 @@ export {
   useDespesasControllerFindPaginatedSuspense,
 } from './useDespesasControllerFindPaginatedSuspense.ts'
 export { despesasControllerRemoveMutationKey, despesasControllerRemove, useDespesasControllerRemove } from './useDespesasControllerRemove.ts'
-export { despesasControllerUpdateMutationKey, despesasControllerUpdate, useDespesasControllerUpdate } from './useDespesasControllerUpdate.ts'
 export {
   despesasRecorrentesControllerCreateMutationKey,
   despesasRecorrentesControllerCreate,

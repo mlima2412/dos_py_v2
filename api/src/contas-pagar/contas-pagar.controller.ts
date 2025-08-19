@@ -57,32 +57,18 @@ export class ContasPagarController {
     return this.contasPagarService.findAll();
   }
 
-  @Get('parceiro/:parceiroId')
-  @ApiOperation({ summary: 'Buscar contas a pagar por parceiro' })
-  @ApiParam({ name: 'parceiroId', description: 'ID do parceiro' })
+  @Get('despesa/:despesaId')
+  @ApiOperation({ summary: 'Buscar contas a pagar por despesa' })
+  @ApiParam({ name: 'despesaId', description: 'ID da despesa' })
   @ApiResponse({
     status: 200,
-    description: 'Contas a pagar do parceiro.',
+    description: 'Contas a pagar da despesa.',
     type: [ContasPagar],
   })
-  async findByParceiro(
-    @Param('parceiroId', ParseIntPipe) parceiroId: number,
+  async findByDespesa(
+    @Param('despesaId', ParseIntPipe) despesaId: number,
   ): Promise<ContasPagar[]> {
-    return this.contasPagarService.findByParceiro(parceiroId);
-  }
-
-  @Get('origem-tipo/:origemTipo')
-  @ApiOperation({ summary: 'Buscar contas a pagar por tipo de origem' })
-  @ApiParam({ name: 'origemTipo', description: 'Tipo de origem da conta' })
-  @ApiResponse({
-    status: 200,
-    description: 'Contas a pagar por tipo de origem.',
-    type: [ContasPagar],
-  })
-  async findByOrigemTipo(
-    @Param('origemTipo') origemTipo: string,
-  ): Promise<ContasPagar[]> {
-    return this.contasPagarService.findByOrigemTipo(origemTipo);
+    return this.contasPagarService.findByDespesa(despesaId);
   }
 
   @Get('status/:pago')

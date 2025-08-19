@@ -12,14 +12,12 @@ import { z } from 'zod'
 export const despesaSchema = z.object({
   id: z.coerce.number().describe('ID único da despesa'),
   publicId: z.coerce.string().describe('ID público da despesa'),
-  dataDespesa: z.string().datetime().describe('Data da despesa'),
-  valor: z.coerce.number().describe('Valor da despesa'),
+  dataRegistro: z.string().datetime().describe('Data de registro da despesa'),
+  valorTotal: z.coerce.number().describe('Valor total da despesa'),
   descricao: z.coerce.string().describe('Descrição da despesa'),
   subCategoriaId: z.coerce.number().describe('ID da subcategoria da despesa'),
   parceiroId: z.coerce.number().describe('ID do parceiro responsável pela despesa'),
   fornecedorId: z.coerce.number().describe('ID do fornecedor da despesa').optional(),
-  dataVencimento: z.string().datetime().describe('Data de vencimento da despesa').optional(),
-  dataPagamento: z.string().datetime().describe('Data de pagamento da despesa').optional(),
   currencyId: z.coerce.number().describe('ID da moeda da despesa').optional(),
   cotacao: z.coerce.number().describe('Cotação da moeda no momento da despesa').optional(),
   fornecedor: z

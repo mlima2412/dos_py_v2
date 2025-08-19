@@ -8,14 +8,17 @@ import type { ToZod } from '@kubb/plugin-zod/utils'
 import { z } from 'zod'
 
 export const createDespesaDtoSchema = z.object({
-  dataDespesa: z.coerce.string().describe('Data da despesa').optional(),
-  valor: z.coerce.number().describe('Valor da despesa'),
+  dataRegistro: z.coerce.string().describe('Data do registro').optional(),
+  valorTotal: z.coerce.number().describe('Valor da despesa'),
   descricao: z.coerce.string().describe('Descrição da despesa'),
   subCategoriaId: z.coerce.number().describe('ID da subcategoria da despesa'),
   parceiroId: z.coerce.number().describe('ID do parceiro responsável pela despesa'),
   fornecedorId: z.coerce.number().describe('ID do fornecedor da despesa').optional(),
-  dataVencimento: z.coerce.string().describe('Data de vencimento da despesa').optional(),
-  dataPagamento: z.coerce.string().describe('Data de pagamento da despesa').optional(),
+  tipoPagamento: z.enum(['A_VISTA_IMEDIATA', 'A_PRAZO_SEM_PARCELAS', 'PARCELADO']).describe('Tipo de pagamento da despesa'),
+  valorEntrada: z.coerce.number().describe('Valor da entrada (apenas para pagamento parcelado)').optional(),
+  dataPrimeiraParcela: z.coerce.string().describe('Data da primeira parcela (apenas para pagamento parcelado)').optional(),
+  numeroParcelas: z.coerce.number().describe('Número de parcelas (apenas para pagamento parcelado)').optional(),
+  dataVencimento: z.coerce.string().describe('Data de vencimento (apenas para pagamento à prazo sem parcelas)').optional(),
   currencyId: z.coerce.number().describe('ID da moeda da despesa').optional(),
   cotacao: z.coerce.number().describe('Cotação da moeda no momento da despesa').optional(),
 }) as unknown as ToZod<CreateDespesaDto>

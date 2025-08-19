@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   HttpCode,
@@ -23,7 +22,8 @@ import {
 } from '@nestjs/swagger';
 import { DespesasService } from './despesas.service';
 import { CreateDespesaDto } from './dto/create-despesa.dto';
-import { UpdateDespesaDto } from './dto/update-despesa.dto';
+import { PaginatedQueryDto } from './dto/paginated-query.dto';
+
 import { Despesa } from './entities/despesa.entity';
 import { ParceiroId } from '../auth/decorators/parceiro-id.decorator';
 
@@ -52,53 +52,30 @@ export class DespesasController {
     @Body() createDespesaDto: CreateDespesaDto,
     @ParceiroId() parceiroId: number
   ): Promise<Despesa> {
-    console.log("Criando Despesa.....", createDespesaDto, parceiroId)
     return this.despesasService.create(createDespesaDto, parceiroId);
   }
 
   @Get('paginated')
   @ApiBearerAuth('JWT-auth')
-  @ApiOperation({ summary: 'Listar despesas com paginação, busca e filtros' })
-  @ApiHeader({
-    name: 'x-parceiro-id',
-    description: 'ID do parceiro logado',
-    required: true,
-    schema: { type: 'integer', example: 1 }
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Lista paginada de despesas retornada com sucesso',
-    schema: {
-      type: 'object',
-      properties: {
-        data: { type: 'array', items: { $ref: '#/components/schemas/Despesa' } },
-        total: { type: 'number', description: 'Total de registros' },
-        page: { type: 'number', description: 'Página atual' },
-        limit: { type: 'number', description: 'Itens por página' },
-        totalPages: { type: 'number', description: 'Total de páginas' }
-      }
-    }
-  })
-  findPaginated(
+  @ApiOperation({ summary: 'Listar despesas paginadas' })
+  @ApiResponse({ status: 200, description: 'Lista paginada de despesas' })
+  async findPaginated(
+    @Query() query: PaginatedQueryDto,
     @ParceiroId() parceiroId: number,
-    @Query('page') page: string = '1',
-    @Query('limit') limit: string = '20',
-    @Query('search') search?: string,
-    @Query('fornecedorId') fornecedorId?: string,
-    @Query('subCategoriaId') subCategoriaId?: string
   ) {
-    const pageNum = parseInt(page, 10) || 1;
-    const limitNum = parseInt(limit, 10) || 20;
-    const fornecedorIdNum = fornecedorId ? parseInt(fornecedorId, 10) : undefined;
-    const subCategoriaIdNum = subCategoriaId ? parseInt(subCategoriaId, 10) : undefined;
-    
+    const pageNum = parseInt(query.page || '1', 10);
+    const limitNum = parseInt(query.limit || '20', 10);
+    const fornecedorIdNum = query.fornecedorId && query.fornecedorId.trim() !== '' ? parseInt(query.fornecedorId, 10) : undefined;
+    const subCategoriaIdNum = query.subCategoriaId && query.subCategoriaId.trim() !== '' ? parseInt(query.subCategoriaId, 10) : undefined;
+    const searchTerm = query.search && query.search.trim() !== '' ? query.search : undefined;
+
     return this.despesasService.findPaginated({
       page: pageNum,
       limit: limitNum,
-      search,
+      search: searchTerm,
       parceiroId,
       fornecedorId: fornecedorIdNum,
-      subCategoriaId: subCategoriaIdNum
+      subCategoriaId: subCategoriaIdNum,
     });
   }
 
@@ -152,35 +129,7 @@ export class DespesasController {
     return this.despesasService.findOne(publicId, parceiroId);
   }
 
-  @Patch(':publicId')
-  @ApiBearerAuth('JWT-auth')
-  @ApiOperation({ summary: 'Atualizar despesa' })
-  @ApiHeader({
-    name: 'x-parceiro-id',
-    description: 'ID do parceiro logado',
-    required: true,
-    schema: { type: 'integer', example: 1 }
-  })
-  @ApiParam({
-    name: 'publicId',
-    description: 'ID público da despesa',
-    example: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-  })
-  @ApiBody({ type: UpdateDespesaDto })
-  @ApiResponse({
-    status: 200,
-    description: 'Despesa atualizada com sucesso',
-    type: Despesa,
-  })
-  @ApiResponse({ status: 404, description: 'Despesa não encontrada' })
-  @ApiResponse({ status: 400, description: 'Dados inválidos' })
-  async update(
-    @Param('publicId') publicId: string,
-    @Body() updateDespesaDto: UpdateDespesaDto,
-    @ParceiroId() parceiroId: number
-  ): Promise<Despesa> {
-    return this.despesasService.update(publicId, updateDespesaDto, parceiroId);
-  }
+
 
   @Delete(':publicId')
   @ApiBearerAuth('JWT-auth')

@@ -4,7 +4,6 @@
  */
 
 import type { ContasPagarParcelas } from './ContasPagarParcelas.ts'
-import type { Parceiro } from './Parceiro.ts'
 
 export type ContasPagar = {
   /**
@@ -18,25 +17,15 @@ export type ContasPagar = {
    */
   publicId: string
   /**
-   * @description ID do parceiro responsável
-   * @type number
+   * @description ID da despesa relacionada
+   * @type number | undefined
    */
-  parceiroId: number
+  despesaId?: number
   /**
-   * @description Tipo de origem da conta a pagar
-   * @type string
-   */
-  origemTipo: string
-  /**
-   * @description ID da origem da conta a pagar
-   * @type number
-   */
-  origemId: number
-  /**
-   * @description Data de vencimento da conta
+   * @description Data de criação da conta
    * @type string, date-time
    */
-  dataVencimento: string
+  dataCriacao: string
   /**
    * @description Valor total da conta a pagar
    * @type number
@@ -48,34 +37,10 @@ export type ContasPagar = {
    */
   saldo: number
   /**
-   * @description Descrição da conta a pagar
-   * @type string
-   */
-  descricao: string
-  /**
    * @description Indica se a conta foi totalmente paga
    * @type boolean
    */
   pago: boolean
-  /**
-   * @description ID da moeda da conta
-   * @type number | undefined
-   */
-  currencyId?: number
-  /**
-   * @description Cotação da moeda no momento da conta
-   * @type number | undefined
-   */
-  cotacao?: number
-  /**
-   * @description Data do pagamento completo
-   * @type string | undefined, date-time
-   */
-  dataPagamento?: string
-  /**
-   * @description Parceiro responsável pela conta
-   */
-  parceiro?: Parceiro
   /**
    * @description Parcelas da conta a pagar
    * @type array | undefined

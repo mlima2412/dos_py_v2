@@ -128,7 +128,13 @@
 		"products": "Productos",
 		"inventory": "Inventario",
 		"purchaseOrders": "Órdenes de Compra",
-		"expenses": "Gastos",
+		"expenses": {
+			"main": "Gastos",
+			"panel": "Panel de Gastos",
+			"actual": "Gastos Correntes",
+			"payable": "Gastos por pagar",
+			"recurring": "Gastos Recurrentes"
+		},
 		"paymentMethods": "Forma de Pago",
 		"originChannels": "Canales"
 	},
@@ -354,6 +360,12 @@
 		"exchangePlaceholder": "1,00",
 		"selectCurrency": "Selecciona una moneda",
 		"selectSupplier": "Selecciona un proveedor",
+		"cashPayment": "Al contado",
+		"creditPayment": "Pago a Plazo",
+		"entryValue": "Valor de Entrada",
+		"installmentPayment": "Pago en cuotas",
+		"numberOfInstallments": "Número de cuotas",
+		"firstInstallmentDate": "Fecha de la primera cuota",
 		"selectCategory": "Selecciona una categoría",
 		"selectSubcategory": "Selecciona una subcategoría",
 		"searchCurrency": "Buscar moneda...",
@@ -370,13 +382,28 @@
 			"value": "Valor",
 			"actions": "Acciones"
 		},
+		"status": {
+			"title": "Estado",
+			"pending": "Pendiente",
+			"paid": "Pagado",
+			"partiallyPaid": "Parcialmente Pagado"
+		},
+		"actions": {
+			"markAsPaid": "Marcar como Pagado",
+			"markingAsPaid": "Marcando como pagado...",
+			"view": "Ver",
+			"edit": "Editar",
+			"delete": "Eliminar"
+		},
 		"messages": {
 			"createSuccess": "¡Gasto creado con éxito!",
 			"updateSuccess": "¡Gasto actualizado con éxito!",
 			"deleteSuccess": "¡Gasto eliminado con éxito!",
+			"markAsPaidSuccess": "¡Gasto marcado como pagado con éxito!",
 			"createError": "Error al crear gasto. Inténtalo de nuevo.",
 			"updateError": "Error al actualizar gasto. Inténtalo de nuevo.",
 			"deleteError": "Error al eliminar gasto. Inténtalo de nuevo.",
+			"markAsPaidError": "Error al marcar gasto como pagado. Inténtalo de nuevo.",
 			"loadError": "Error al cargar datos del gasto.",
 			"noPartnerSelected": "Ningún socio seleccionado",
 			"deleteConfirmTitle": "Eliminar gasto",

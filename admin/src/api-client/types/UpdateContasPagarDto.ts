@@ -5,25 +5,10 @@
 
 export type UpdateContasPagarDto = {
   /**
-   * @description ID do parceiro responsável
+   * @description ID da despesa relacionada
    * @type number | undefined
    */
-  parceiroId?: number
-  /**
-   * @description Tipo de origem da conta a pagar
-   * @type string | undefined
-   */
-  origemTipo?: string
-  /**
-   * @description ID da origem da conta a pagar
-   * @type number | undefined
-   */
-  origemId?: number
-  /**
-   * @description Data de vencimento da conta
-   * @type string | undefined
-   */
-  dataVencimento?: string
+  despesaId?: number
   /**
    * @description Valor total da conta a pagar
    * @type number | undefined
@@ -35,28 +20,8 @@ export type UpdateContasPagarDto = {
    */
   saldo?: number
   /**
-   * @description Descrição da conta a pagar
-   * @type string | undefined
-   */
-  descricao?: string
-  /**
    * @description Indica se a conta foi totalmente paga
    * @type boolean | undefined
    */
   pago?: boolean
-  /**
-   * @description ID da moeda da conta
-   * @type number | undefined
-   */
-  currencyId?: number
-  /**
-   * @description Cotação da moeda no momento da conta
-   * @type number | undefined
-   */
-  cotacao?: number
-  /**
-   * @description Data do pagamento completo
-   * @type string | undefined
-   */
-  dataPagamento?: string
 }

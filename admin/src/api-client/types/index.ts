@@ -184,17 +184,11 @@ export type {
   ContasPagarControllerFindAllQuery,
 } from './ContasPagarControllerFindAll.ts'
 export type {
-  ContasPagarControllerFindByOrigemTipoPathParams,
-  ContasPagarControllerFindByOrigemTipo200,
-  ContasPagarControllerFindByOrigemTipoQueryResponse,
-  ContasPagarControllerFindByOrigemTipoQuery,
-} from './ContasPagarControllerFindByOrigemTipo.ts'
-export type {
-  ContasPagarControllerFindByParceiroPathParams,
-  ContasPagarControllerFindByParceiro200,
-  ContasPagarControllerFindByParceiroQueryResponse,
-  ContasPagarControllerFindByParceiroQuery,
-} from './ContasPagarControllerFindByParceiro.ts'
+  ContasPagarControllerFindByDespesaPathParams,
+  ContasPagarControllerFindByDespesa200,
+  ContasPagarControllerFindByDespesaQueryResponse,
+  ContasPagarControllerFindByDespesaQuery,
+} from './ContasPagarControllerFindByDespesa.ts'
 export type {
   ContasPagarControllerFindByStatusPathParams,
   ContasPagarControllerFindByStatus200,
@@ -270,7 +264,7 @@ export type { CreateClienteDtoLinguagemEnum, CreateClienteDto } from './CreateCl
 export type { CreateContasPagarDto } from './CreateContasPagarDto.ts'
 export type { CreateContasPagarParcelasDto } from './CreateContasPagarParcelasDto.ts'
 export type { CreateCurrencyDto } from './CreateCurrencyDto.ts'
-export type { CreateDespesaDto } from './CreateDespesaDto.ts'
+export type { CreateDespesaDtoTipoPagamentoEnum, CreateDespesaDto } from './CreateDespesaDto.ts'
 export type { CreateDespesaRecorrenteDtoFrequenciaEnum, CreateDespesaRecorrenteDto } from './CreateDespesaRecorrenteDto.ts'
 export type { CreateFornecedorDto } from './CreateFornecedorDto.ts'
 export type { CreateParceiroDto } from './CreateParceiroDto.ts'
@@ -372,7 +366,6 @@ export type {
 } from './DespesasControllerFindOne.ts'
 export type {
   DespesasControllerFindPaginatedQueryParams,
-  DespesasControllerFindPaginatedHeaderParams,
   DespesasControllerFindPaginated200,
   DespesasControllerFindPaginatedQueryResponse,
   DespesasControllerFindPaginatedQuery,
@@ -385,16 +378,6 @@ export type {
   DespesasControllerRemoveMutationResponse,
   DespesasControllerRemoveMutation,
 } from './DespesasControllerRemove.ts'
-export type {
-  DespesasControllerUpdatePathParams,
-  DespesasControllerUpdateHeaderParams,
-  DespesasControllerUpdate200,
-  DespesasControllerUpdate400,
-  DespesasControllerUpdate404,
-  DespesasControllerUpdateMutationRequest,
-  DespesasControllerUpdateMutationResponse,
-  DespesasControllerUpdateMutation,
-} from './DespesasControllerUpdate.ts'
 export type {
   DespesasRecorrentesControllerCreate201,
   DespesasRecorrentesControllerCreate400,
@@ -683,7 +666,6 @@ export type { UpdateClienteDtoLinguagemEnum, UpdateClienteDto } from './UpdateCl
 export type { UpdateContasPagarDto } from './UpdateContasPagarDto.ts'
 export type { UpdateContasPagarParcelasDto } from './UpdateContasPagarParcelasDto.ts'
 export type { UpdateCurrencyDto } from './UpdateCurrencyDto.ts'
-export type { UpdateDespesaDto } from './UpdateDespesaDto.ts'
 export type { UpdateDespesaRecorrenteDtoFrequenciaEnum, UpdateDespesaRecorrenteDto } from './UpdateDespesaRecorrenteDto.ts'
 export type { UpdateFornecedorDto } from './UpdateFornecedorDto.ts'
 export type { UpdateParceiroDto } from './UpdateParceiroDto.ts'
@@ -797,6 +779,7 @@ export type {
 } from './UsuariosControllerUpdate.ts'
 export { clienteLinguagemEnum } from './Cliente.ts'
 export { createClienteDtoLinguagemEnum } from './CreateClienteDto.ts'
+export { createDespesaDtoTipoPagamentoEnum } from './CreateDespesaDto.ts'
 export { createDespesaRecorrenteDtoFrequenciaEnum } from './CreateDespesaRecorrenteDto.ts'
 export { despesaRecorrenteFrequenciaEnum } from './DespesaRecorrente.ts'
 export { updateClienteDtoLinguagemEnum } from './UpdateClienteDto.ts'

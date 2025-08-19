@@ -21,6 +21,32 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const [savedScrollPosition, setSavedScrollPosition] = useState<number | null>(null);
   const menuList = getMenuList(location.pathname, t, user?.perfil);
 
+  // Efeito para manter menus expandidos quando há submenus ativos
+  useEffect(() => {
+    const menusToExpand: string[] = [];
+    
+    menuList.forEach(group => {
+      group.menus.forEach(menu => {
+        if (menu.submenus.length > 0) {
+          // Se o menu principal está ativo ou algum submenu está ativo, expandir
+          const hasActiveSubmenu = menu.submenus.some(submenu => submenu.active);
+          if (menu.active || hasActiveSubmenu) {
+            menusToExpand.push(menu.href);
+          }
+        }
+      });
+    });
+    
+    setExpandedMenus(prev => {
+      // Verificar se há mudanças antes de atualizar para evitar loops
+      const newExpanded = [...new Set([...prev, ...menusToExpand])];
+      const hasChanges = newExpanded.length !== prev.length || 
+        newExpanded.some(item => !prev.includes(item));
+      
+      return hasChanges ? newExpanded : prev;
+    });
+  }, [location.pathname]); // Removido menuList da dependência para evitar loops
+
   const toggleMenu = (href: string) => {
     setExpandedMenus((prev) =>
       prev.includes(href)

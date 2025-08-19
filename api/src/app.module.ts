@@ -21,6 +21,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
+import { DespesaCacheModule } from './despesa-cache/despesa-cache.module';
 
 
 @Module({
@@ -41,6 +42,7 @@ import { AppController } from './app.controller';
     ContasPagarModule,
     CurrencyModule,
     PasswordResetModule,
+    DespesaCacheModule,
   ],
   controllers: [AppController],
   providers: [

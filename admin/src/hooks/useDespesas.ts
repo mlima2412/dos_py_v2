@@ -28,7 +28,6 @@ export function useDespesas(params: UseDespesasParams = {}) {
     page: '1',
     limit: limit.toString(),
     search: search || '',
-    parceiroId: parceiroId || '',
     fornecedorId: fornecedorId || '',
     subCategoriaId: subCategoriaId || '',
   };

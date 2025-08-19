@@ -8,15 +8,8 @@ import type { ToZod } from '@kubb/plugin-zod/utils'
 import { z } from 'zod'
 
 export const updateContasPagarDtoSchema = z.object({
-  parceiroId: z.coerce.number().describe('ID do parceiro responsável').optional(),
-  origemTipo: z.coerce.string().describe('Tipo de origem da conta a pagar').optional(),
-  origemId: z.coerce.number().describe('ID da origem da conta a pagar').optional(),
-  dataVencimento: z.coerce.string().describe('Data de vencimento da conta').optional(),
+  despesaId: z.coerce.number().describe('ID da despesa relacionada').optional(),
   valorTotal: z.coerce.number().describe('Valor total da conta a pagar').optional(),
   saldo: z.coerce.number().describe('Saldo atual da conta (soma dos valores pagos)').optional(),
-  descricao: z.coerce.string().describe('Descrição da conta a pagar').optional(),
   pago: z.boolean().describe('Indica se a conta foi totalmente paga').optional(),
-  currencyId: z.coerce.number().describe('ID da moeda da conta').optional(),
-  cotacao: z.coerce.number().describe('Cotação da moeda no momento da conta').optional(),
-  dataPagamento: z.coerce.string().describe('Data do pagamento completo').optional(),
 }) as unknown as ToZod<UpdateContasPagarDto>

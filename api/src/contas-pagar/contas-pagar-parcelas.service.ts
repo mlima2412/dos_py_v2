@@ -27,17 +27,13 @@ export class ContasPagarParcelasService {
       data: {
         publicId: uuidv7(),
         dataPagamento: new Date(createContasPagarParcelasDto.dataPagamento),
+        dataVencimento: new Date(createContasPagarParcelasDto.dataVencimento),
         valor: createContasPagarParcelasDto.valor,
-        currencyId: createContasPagarParcelasDto.currencyId,
-        cotacao: createContasPagarParcelasDto.cotacao || 0,
+        pago: createContasPagarParcelasDto.pago || false,
         contasPagarId: createContasPagarParcelasDto.contasPagarId,
       },
       include: {
-        contasPagar: {
-          include: {
-            Parceiro: true,
-          },
-        },
+        contasPagar: true,
       },
     });
 
@@ -47,12 +43,10 @@ export class ContasPagarParcelasService {
     return new ContasPagarParcelas({
       ...parcela,
       valor: Number(parcela.valor),
-      cotacao: Number(parcela.cotacao),
       contasPagar: parcela.contasPagar ? {
         ...parcela.contasPagar,
         valorTotal: Number(parcela.contasPagar.valorTotal),
         saldo: Number(parcela.contasPagar.saldo),
-        cotacao: Number(parcela.contasPagar.cotacao),
       } : undefined,
     });
   }
@@ -60,11 +54,7 @@ export class ContasPagarParcelasService {
   async findAll(): Promise<ContasPagarParcelas[]> {
     const parcelas = await this.prisma.contasPagarParcelas.findMany({
       include: {
-        contasPagar: {
-          include: {
-            Parceiro: true,
-          },
-        },
+        contasPagar: true,
       },
       orderBy: { dataPagamento: 'desc' },
     });
@@ -72,12 +62,10 @@ export class ContasPagarParcelasService {
     return parcelas.map(parcela => new ContasPagarParcelas({
       ...parcela,
       valor: Number(parcela.valor),
-      cotacao: Number(parcela.cotacao),
       contasPagar: parcela.contasPagar ? {
         ...parcela.contasPagar,
         valorTotal: Number(parcela.contasPagar.valorTotal),
         saldo: Number(parcela.contasPagar.saldo),
-        cotacao: Number(parcela.contasPagar.cotacao),
       } : undefined,
     }));
   }
@@ -86,11 +74,7 @@ export class ContasPagarParcelasService {
     const parcela = await this.prisma.contasPagarParcelas.findUnique({
       where: { publicId },
       include: {
-        contasPagar: {
-          include: {
-            Parceiro: true,
-          },
-        },
+        contasPagar: true,
       },
     });
 
@@ -101,63 +85,46 @@ export class ContasPagarParcelasService {
     return new ContasPagarParcelas({
       ...parcela,
       valor: Number(parcela.valor),
-      cotacao: Number(parcela.cotacao),
       contasPagar: parcela.contasPagar ? {
         ...parcela.contasPagar,
         valorTotal: Number(parcela.contasPagar.valorTotal),
         saldo: Number(parcela.contasPagar.saldo),
-        cotacao: Number(parcela.contasPagar.cotacao),
       } : undefined,
     });
   }
 
   async update(publicId: string, updateContasPagarParcelasDto: UpdateContasPagarParcelasDto): Promise<ContasPagarParcelas> {
-    const parcelaExistente = await this.prisma.contasPagarParcelas.findUnique({
+    const existingParcela = await this.prisma.contasPagarParcelas.findUnique({
       where: { publicId },
     });
 
-    if (!parcelaExistente) {
+    if (!existingParcela) {
       throw new NotFoundException('Parcela não encontrada');
-    }
-
-    // Verificar se a conta a pagar existe (se fornecida)
-    if (updateContasPagarParcelasDto.contasPagarId) {
-      const contasPagar = await this.prisma.contasPagar.findUnique({
-        where: { id: updateContasPagarParcelasDto.contasPagarId },
-      });
-
-      if (!contasPagar) {
-        throw new BadRequestException('Conta a pagar não encontrada');
-      }
     }
 
     const parcela = await this.prisma.contasPagarParcelas.update({
       where: { publicId },
       data: {
-        ...updateContasPagarParcelasDto,
         dataPagamento: updateContasPagarParcelasDto.dataPagamento ? new Date(updateContasPagarParcelasDto.dataPagamento) : undefined,
+        dataVencimento: updateContasPagarParcelasDto.dataVencimento ? new Date(updateContasPagarParcelasDto.dataVencimento) : undefined,
+        valor: updateContasPagarParcelasDto.valor,
+        pago: updateContasPagarParcelasDto.pago,
       },
       include: {
-        contasPagar: {
-          include: {
-            Parceiro: true,
-          },
-        },
+        contasPagar: true,
       },
     });
 
     // Atualizar o saldo da conta a pagar
-    await this.updateContasPagarSaldo(parcela.contasPagarId);
+    await this.updateContasPagarSaldo(existingParcela.contasPagarId);
 
     return new ContasPagarParcelas({
       ...parcela,
       valor: Number(parcela.valor),
-      cotacao: Number(parcela.cotacao),
       contasPagar: parcela.contasPagar ? {
         ...parcela.contasPagar,
         valorTotal: Number(parcela.contasPagar.valorTotal),
         saldo: Number(parcela.contasPagar.saldo),
-        cotacao: Number(parcela.contasPagar.cotacao),
       } : undefined,
     });
   }
@@ -171,25 +138,19 @@ export class ContasPagarParcelasService {
       throw new NotFoundException('Parcela não encontrada');
     }
 
-    const contasPagarId = parcela.contasPagarId;
-
     await this.prisma.contasPagarParcelas.delete({
       where: { publicId },
     });
 
     // Atualizar o saldo da conta a pagar
-    await this.updateContasPagarSaldo(contasPagarId);
+    await this.updateContasPagarSaldo(parcela.contasPagarId);
   }
 
   async findByContasPagar(contasPagarId: number): Promise<ContasPagarParcelas[]> {
     const parcelas = await this.prisma.contasPagarParcelas.findMany({
       where: { contasPagarId },
       include: {
-        contasPagar: {
-          include: {
-            Parceiro: true,
-          },
-        },
+        contasPagar: true,
       },
       orderBy: { dataPagamento: 'desc' },
     });
@@ -197,12 +158,10 @@ export class ContasPagarParcelasService {
     return parcelas.map(parcela => new ContasPagarParcelas({
       ...parcela,
       valor: Number(parcela.valor),
-      cotacao: Number(parcela.cotacao),
       contasPagar: parcela.contasPagar ? {
         ...parcela.contasPagar,
         valorTotal: Number(parcela.contasPagar.valorTotal),
         saldo: Number(parcela.contasPagar.saldo),
-        cotacao: Number(parcela.contasPagar.cotacao),
       } : undefined,
     }));
   }
@@ -210,7 +169,7 @@ export class ContasPagarParcelasService {
   private async updateContasPagarSaldo(contasPagarId: number): Promise<void> {
     // Calcular o saldo total das parcelas pagas
     const result = await this.prisma.contasPagarParcelas.aggregate({
-      where: { contasPagarId },
+      where: { contasPagarId, pago: true },
       _sum: {
         valor: true,
       },
@@ -218,21 +177,27 @@ export class ContasPagarParcelasService {
 
     const saldoTotal = result._sum.valor || 0;
 
-    // Atualizar o saldo na conta a pagar
-    await this.prisma.contasPagar.update({
+    // Atualizar o saldo e status da conta a pagar
+    const contasPagar = await this.prisma.contasPagar.findUnique({
       where: { id: contasPagarId },
-      data: {
-        saldo: saldoTotal,
-        // Verificar se a conta está totalmente paga
-        pago: await this.isContaTotalmentePaga(contasPagarId, Number(saldoTotal)),
-      },
     });
+
+    if (contasPagar) {
+      const isPago = await this.isContaTotalmentePaga(contasPagarId, Number(saldoTotal));
+      
+      await this.prisma.contasPagar.update({
+        where: { id: contasPagarId },
+        data: {
+          saldo: saldoTotal,
+          pago: isPago,
+        },
+      });
+    }
   }
 
   private async isContaTotalmentePaga(contasPagarId: number, saldo: number): Promise<boolean> {
     const contasPagar = await this.prisma.contasPagar.findUnique({
       where: { id: contasPagarId },
-      select: { valorTotal: true },
     });
 
     if (!contasPagar) {
