@@ -18,7 +18,6 @@ import {
 	ChevronDownIcon,
 	ChevronLeftIcon,
 	ChevronRightIcon,
-	PlusIcon,
 } from "lucide-react";
 import { toast } from "sonner";
 

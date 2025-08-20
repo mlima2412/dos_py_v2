@@ -580,6 +580,7 @@
 		"previous": "Anterior",
 		"next": "Siguiente",
 		"newEvent": "Nuevo Gasto",
+		"click": "Haga clic en el gasto para ver los detalles",
 		"views": {
 			"month": "Mes",
 			"week": "Semana",

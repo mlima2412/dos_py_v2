@@ -1,5 +1,5 @@
 "use client";
-
+import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
 import type { DraggableAttributes } from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
@@ -12,6 +12,12 @@ import {
 	type CalendarEvent,
 } from "@/components/event-calendar";
 import { cn } from "@/lib/utils";
+import {
+	TooltipContent,
+	Tooltip,
+	TooltipProvider,
+	TooltipTrigger,
+} from "../ui/tooltip";
 
 // Using date-fns format with custom formatting:
 // 'h' - hours (1-12)
@@ -122,7 +128,7 @@ export function EventItem({
 	locale,
 }: EventItemProps) {
 	const eventColor = event.color;
-
+	const { i18n } = useTranslation();
 	// Use the provided currentTime (for dragging) or the event's actual time
 	const displayStart = useMemo(() => {
 		return currentTime || new Date(event.start);
@@ -173,14 +179,31 @@ export function EventItem({
 				onTouchStart={onTouchStart}
 			>
 				{children || (
-					<span className='truncate'>
-						{!event.allDay && (
-							<span className='truncate font-normal opacity-70 sm:text-[11px]'>
-								{formatTimeWithOptionalMinutes(displayStart, locale)}{" "}
-							</span>
-						)}
-						{event.title}
-					</span>
+					<TooltipProvider delayDuration={0}>
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<span className='truncate'>
+									{!event.allDay && (
+										<span className='truncate font-normal opacity-70 sm:text-[11px]'>
+											{formatTimeWithOptionalMinutes(displayStart, locale)}{" "}
+										</span>
+									)}
+									{event.title}
+								</span>
+							</TooltipTrigger>
+							<TooltipContent className='py-3'>
+								<div className='space-y-1'>
+									<p className='text-[13px] font-medium'>{event.description}</p>
+									<p className='text-muted-foreground text-xs'>
+										{i18n.t("expenses.amount")}:{event.title}
+									</p>
+									<p className='text-muted-foreground text-xs'>
+										{i18n.t("calendar.click")}
+									</p>
+								</div>
+							</TooltipContent>
+						</Tooltip>
+					</TooltipProvider>
 				)}
 			</EventWrapper>
 		);

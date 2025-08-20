@@ -682,6 +682,7 @@
 		"previous": "Anterior",
 		"next": "Próximo",
 		"newEvent": "Nova Despesa",
+		"click": "Clique na despesa para visualizar os detalhes",
 		"views": {
 			"month": "Mês",
 			"week": "Semana",
