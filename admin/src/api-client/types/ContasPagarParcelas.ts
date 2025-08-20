@@ -4,6 +4,7 @@
  */
 
 import type { ContasPagar } from './ContasPagar.ts'
+import type { Currency } from './Currency.ts'
 
 export type ContasPagarParcelas = {
   /**
@@ -45,4 +46,13 @@ export type ContasPagarParcelas = {
    * @description Conta a pagar relacionada
    */
   contasPagar?: ContasPagar
+  /**
+   * @description Moeda da parcela
+   */
+  currency?: Currency
+  /**
+   * @description ID da moeda
+   * @type number
+   */
+  currencyId: number
 }

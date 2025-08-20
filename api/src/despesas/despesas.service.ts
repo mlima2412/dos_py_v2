@@ -128,6 +128,7 @@ export class DespesasService {
           data: {
             publicId: `cpp_${Date.now()}_1`,
             contasPagarId,
+            currencyId: createDespesaDto.currencyId,
             valor: createDespesaDto.valorTotal,
             dataVencimento: now,
             dataPagamento: now,
@@ -157,6 +158,7 @@ export class DespesasService {
             dataVencimento,
             dataPagamento: null, // Não foi pago ainda
             pago: false,
+            currencyId: createDespesaDto.currencyId,
           },
         });
         break;
@@ -179,6 +181,7 @@ export class DespesasService {
               valor: valorEntrada,
               dataVencimento: now,
               dataPagamento: now,
+              currencyId: createDespesaDto.currencyId,
               pago: true,
             },
           });
@@ -194,6 +197,7 @@ export class DespesasService {
             data: {
               publicId: `cpp_${Date.now()}_${i}`,
               contasPagarId,
+              currencyId: createDespesaDto.currencyId,
               valor: valorParcela,
               dataVencimento: dataVencimentoParcela,
               dataPagamento: null, // Parcelas não pagas devem ter dataPagamento null

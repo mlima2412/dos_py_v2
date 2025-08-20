@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { uuidv7 } from 'uuidv7';
-//import { Parceiro } from '../../parceiros/entities/parceiro.entity';
+// import { Parceiro } from '../../parceiros/entities/parceiro.entity';
 import { Fornecedor } from '../../fornecedores/entities/fornecedor.entity';
 import { SubCategoriaDespesa } from '../../subcategoria-despesa/entities/subcategoria-despesa.entity';
+import { Currency } from '../../currency/entities/currency.entity';
 
 export class Despesa {
   @ApiProperty({
@@ -88,6 +89,13 @@ export class Despesa {
     type: () => SubCategoriaDespesa,
   })
   subCategoria: SubCategoriaDespesa;
+
+  @ApiProperty({
+    description: 'Moeda da despesa',
+    type: () => Currency,
+    required: false,
+  })
+  currency?: Currency;
 
   constructor(data?: Partial<Despesa>) {
     if (data) {

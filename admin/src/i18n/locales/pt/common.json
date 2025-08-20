@@ -676,5 +676,27 @@
 		"minLength": "{{field}} deve ter pelo menos {{min}} caracteres",
 		"email": "E-mail deve ter um formato válido",
 		"passwordMatch": "As senhas devem ser iguais"
+	},
+	"calendar": {
+		"today": "Hoje",
+		"previous": "Anterior",
+		"next": "Próximo",
+		"newEvent": "Nova Despesa",
+		"views": {
+			"month": "Mês",
+			"week": "Semana",
+			"day": "Dia",
+			"agenda": "Agenda"
+		},
+		"shortcuts": {
+			"month": "M",
+			"week": "S",
+			"day": "D",
+			"agenda": "A"
+		},
+		"messages": {
+			"eventDeleted": "Despesa \"{{title}}\" excluída",
+			"eventMoved": "Despesa \"{{title}}\" movida"
+		}
 	}
 }

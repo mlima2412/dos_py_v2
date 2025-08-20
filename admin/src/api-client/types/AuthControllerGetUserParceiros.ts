@@ -35,6 +35,27 @@ export type AuthControllerGetUserParceiros200 = {
      * @type string | undefined
      */
     logourl?: string
+    /**
+     * @type number | undefined
+     */
+    currencyId?: number
+    /**
+     * @type object | undefined
+     */
+    currency?: {
+      /**
+       * @type number | undefined
+       */
+      id?: number
+      /**
+       * @type string | undefined
+       */
+      locale?: string
+      /**
+       * @type string | undefined
+       */
+      isoCode?: string
+    }
   }
   /**
    * @type object | undefined

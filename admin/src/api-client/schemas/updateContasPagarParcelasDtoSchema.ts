@@ -13,4 +13,5 @@ export const updateContasPagarParcelasDtoSchema = z.object({
   valor: z.coerce.number().describe('Valor da parcela').optional(),
   pago: z.boolean().describe('Se a parcela foi paga').optional(),
   contasPagarId: z.coerce.number().describe('ID da conta a pagar relacionada').optional(),
+  currencyId: z.coerce.number().describe('ID da moeda').optional(),
 }) as unknown as ToZod<UpdateContasPagarParcelasDto>

@@ -163,8 +163,8 @@ export const useRecurringExpensesColumns = (
 					</Button>
 				),
 				cell: ({ row }) => {
-					const despesa = row.original;
-					const currencyCode = despesa.currency?.isoCode || "BRL";
+				const despesa = row.original;
+				const currencyCode = "BRL"; // Usar Real brasileiro como padrão
 					return (
 						<span className="font-medium">
 							{formatCurrency(despesa.valor, currencyCode)}

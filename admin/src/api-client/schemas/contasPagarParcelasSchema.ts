@@ -6,6 +6,7 @@
 import type { ContasPagarParcelas } from '../types/ContasPagarParcelas.ts'
 import type { ToZod } from '@kubb/plugin-zod/utils'
 import { contasPagarSchema } from './contasPagarSchema.ts'
+import { currencySchema } from './currencySchema.ts'
 import { z } from 'zod'
 
 export const contasPagarParcelasSchema = z.object({
@@ -20,4 +21,9 @@ export const contasPagarParcelasSchema = z.object({
     .lazy(() => contasPagarSchema)
     .describe('Conta a pagar relacionada')
     .optional(),
+  currency: z
+    .lazy(() => currencySchema)
+    .describe('Moeda da parcela')
+    .optional(),
+  currencyId: z.coerce.number().describe('ID da moeda'),
 }) as unknown as ToZod<ContasPagarParcelas>

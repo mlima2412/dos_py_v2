@@ -6,6 +6,7 @@
 import type { ContasPagar } from '../types/ContasPagar.ts'
 import type { ToZod } from '@kubb/plugin-zod/utils'
 import { contasPagarParcelasSchema } from './contasPagarParcelasSchema.ts'
+import { despesaSchema } from './despesaSchema.ts'
 import { z } from 'zod'
 
 export const contasPagarSchema = z.object({
@@ -13,11 +14,16 @@ export const contasPagarSchema = z.object({
   publicId: z.coerce.string().describe('ID público da conta a pagar'),
   despesaId: z.coerce.number().describe('ID da despesa relacionada').optional(),
   dataCriacao: z.string().datetime().describe('Data de criação da conta'),
+  dataPagamento: z.string().datetime().describe('Data do pagamento da conta').optional(),
   valorTotal: z.coerce.number().describe('Valor total da conta a pagar'),
   saldo: z.coerce.number().describe('Saldo atual da conta (soma dos valores pagos)'),
   pago: z.boolean().describe('Indica se a conta foi totalmente paga'),
   contasPagarParcelas: z
     .array(z.lazy(() => contasPagarParcelasSchema))
     .describe('Parcelas da conta a pagar')
+    .optional(),
+  despesa: z
+    .lazy(() => despesaSchema)
+    .describe('Despesa relacionada')
     .optional(),
 }) as unknown as ToZod<ContasPagar>

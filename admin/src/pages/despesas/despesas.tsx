@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { Dashboard } from "./Dashboard";
 import { ListarDespesas } from "./correntes/ListarDespesas";
 import { FormularioDespesa } from "./correntes/FormularioDespesa";
-import { ContasPagarEmConstrucao } from "./contas-pagar/EmConstrucao";
+import { ContasPagarCalendar } from "./contas-pagar/ContasPagarCalendar";
 import { ListarDespesasRecorrentes } from "./recorrentes/ListarDespesasRecorrentes";
 import { FormularioDespesaRecorrente } from "./recorrentes/FormularioDespesaRecorrente";
 
@@ -35,7 +35,7 @@ export function DespesasPage() {
 			/>
 			<Route
 				path='contas-pagar'
-				element={<ContasPagarEmConstrucao />}
+				element={<ContasPagarCalendar />}
 			/>
 			<Route
 				path='recorrentes'

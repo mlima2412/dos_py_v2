@@ -574,5 +574,27 @@
 		"minLength": "{{field}} debe tener al menos {{min}} caracteres",
 		"email": "El correo electrónico debe tener un formato válido",
 		"passwordMatch": "Las contraseñas deben ser iguales"
+	},
+	"calendar": {
+		"today": "Hoy",
+		"previous": "Anterior",
+		"next": "Siguiente",
+		"newEvent": "Nuevo Gasto",
+		"views": {
+			"month": "Mes",
+			"week": "Semana",
+			"day": "Día",
+			"agenda": "Agenda"
+		},
+		"shortcuts": {
+			"month": "M",
+			"week": "S",
+			"day": "D",
+			"agenda": "A"
+		},
+		"messages": {
+			"eventDeleted": "Gasto \"{{title}}\" eliminado",
+			"eventMoved": "Gasto \"{{title}}\" movido"
+		}
 	}
 }

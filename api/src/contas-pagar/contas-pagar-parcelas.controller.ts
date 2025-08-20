@@ -54,8 +54,28 @@ export class ContasPagarParcelasController {
     description: 'Lista de parcelas.',
     type: [ContasPagarParcelas],
   })
-  async findAll(): Promise<ContasPagarParcelas[]> {
+  async findAll(
+  ): Promise<ContasPagarParcelas[]> {
     return this.contasPagarParcelasService.findAll();
+  }
+
+  @Get('agenda/:parceiroId')
+  @ApiOperation({ summary: 'Listar todas as parcelas de contas a pagar da agenda de compromissos' })
+  @ApiParam({
+    name: 'parceiroId',
+    required: true,
+    schema: { type: 'integer', format: 'int64' }, // ou type: Number
+    description: 'ID do parceiro',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de parcelas.',
+    type: [ContasPagarParcelas],
+  })
+  async findAllAgenda(
+    @Param('parceiroId', ParseIntPipe) parceiroId: number,
+  ): Promise<ContasPagarParcelas[]> {
+    return this.contasPagarParcelasService.findAllAgenda(parceiroId);
   }
 
   @Get('contas-pagar/:contasPagarId')

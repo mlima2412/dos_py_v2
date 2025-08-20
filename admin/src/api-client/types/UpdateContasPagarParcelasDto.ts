@@ -29,4 +29,9 @@ export type UpdateContasPagarParcelasDto = {
    * @type number | undefined
    */
   contasPagarId?: number
+  /**
+   * @description ID da moeda
+   * @type number | undefined
+   */
+  currencyId?: number
 }

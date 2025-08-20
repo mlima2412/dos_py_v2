@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { uuidv7 } from 'uuidv7';
 import { ContasPagarParcelas } from './contas-pagar-parcelas.entity';
+import { Despesa } from '../../despesas/entities/despesa.entity';
 
 export class ContasPagar {
   @ApiProperty({
@@ -59,6 +60,13 @@ export class ContasPagar {
     required: false,
   })
   contasPagarParcelas?: ContasPagarParcelas[];
+
+  @ApiProperty({
+    description: 'Despesa relacionada',
+    type: () => Despesa,
+    required: false,
+  })
+  despesa?: Despesa;
 
   constructor(partial: Partial<ContasPagar>) {
     Object.assign(this, partial);

@@ -40,12 +40,14 @@ export class ContasPagarService {
   }
 
   async findAll(): Promise<ContasPagar[]> {
+    console.log("Entrou aqui")
     const contasPagar = await this.prisma.contasPagar.findMany({
       include: {
         ContasPagarParcelas: true,
       },
       orderBy: { dataCriacao: 'desc' },
     });
+    console.log(contasPagar)
 
     return contasPagar.map(conta => new ContasPagar({
       ...conta,

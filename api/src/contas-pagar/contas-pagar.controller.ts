@@ -53,7 +53,8 @@ export class ContasPagarController {
     description: 'Lista de contas a pagar.',
     type: [ContasPagar],
   })
-  async findAll(): Promise<ContasPagar[]> {
+  async findAll(
+  ): Promise<ContasPagar[]> {
     return this.contasPagarService.findAll();
   }
 

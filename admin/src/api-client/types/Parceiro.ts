@@ -74,7 +74,6 @@ export type Parceiro = {
   clientes?: Cliente[]
   /**
    * @description Moeda do parceiro
-   * @type Currency | undefined
    */
   currency?: Currency
 }

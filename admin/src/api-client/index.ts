@@ -48,6 +48,8 @@ export type { ContasPagarControllerRemoveMutationKey } from './hooks/useContasPa
 export type { ContasPagarControllerUpdateMutationKey } from './hooks/useContasPagarControllerUpdate.ts'
 export type { ContasPagarParcelasControllerCreateMutationKey } from './hooks/useContasPagarParcelasControllerCreate.ts'
 export type { ContasPagarParcelasControllerFindAllQueryKey } from './hooks/useContasPagarParcelasControllerFindAll.ts'
+export type { ContasPagarParcelasControllerFindAllAgendaQueryKey } from './hooks/useContasPagarParcelasControllerFindAllAgenda.ts'
+export type { ContasPagarParcelasControllerFindAllAgendaSuspenseQueryKey } from './hooks/useContasPagarParcelasControllerFindAllAgendaSuspense.ts'
 export type { ContasPagarParcelasControllerFindAllSuspenseQueryKey } from './hooks/useContasPagarParcelasControllerFindAllSuspense.ts'
 export type { ContasPagarParcelasControllerFindByContasPagarQueryKey } from './hooks/useContasPagarParcelasControllerFindByContasPagar.ts'
 export type { ContasPagarParcelasControllerFindByContasPagarSuspenseQueryKey } from './hooks/useContasPagarParcelasControllerFindByContasPagarSuspense.ts'
@@ -388,6 +390,12 @@ export type {
   ContasPagarParcelasControllerFindAllQueryResponse,
   ContasPagarParcelasControllerFindAllQuery,
 } from './types/ContasPagarParcelasControllerFindAll.ts'
+export type {
+  ContasPagarParcelasControllerFindAllAgendaPathParams,
+  ContasPagarParcelasControllerFindAllAgenda200,
+  ContasPagarParcelasControllerFindAllAgendaQueryResponse,
+  ContasPagarParcelasControllerFindAllAgendaQuery,
+} from './types/ContasPagarParcelasControllerFindAllAgenda.ts'
 export type {
   ContasPagarParcelasControllerFindByContasPagarPathParams,
   ContasPagarParcelasControllerFindByContasPagar200,
@@ -1173,6 +1181,18 @@ export {
   useContasPagarParcelasControllerFindAll,
 } from './hooks/useContasPagarParcelasControllerFindAll.ts'
 export {
+  contasPagarParcelasControllerFindAllAgendaQueryKey,
+  contasPagarParcelasControllerFindAllAgenda,
+  contasPagarParcelasControllerFindAllAgendaQueryOptions,
+  useContasPagarParcelasControllerFindAllAgenda,
+} from './hooks/useContasPagarParcelasControllerFindAllAgenda.ts'
+export {
+  contasPagarParcelasControllerFindAllAgendaSuspenseQueryKey,
+  contasPagarParcelasControllerFindAllAgendaSuspense,
+  contasPagarParcelasControllerFindAllAgendaSuspenseQueryOptions,
+  useContasPagarParcelasControllerFindAllAgendaSuspense,
+} from './hooks/useContasPagarParcelasControllerFindAllAgendaSuspense.ts'
+export {
   contasPagarParcelasControllerFindAllSuspenseQueryKey,
   contasPagarParcelasControllerFindAllSuspense,
   contasPagarParcelasControllerFindAllSuspenseQueryOptions,
@@ -1916,6 +1936,11 @@ export {
   contasPagarParcelasControllerCreateMutationRequestSchema,
   contasPagarParcelasControllerCreateMutationResponseSchema,
 } from './schemas/contasPagarParcelasControllerCreateSchema.ts'
+export {
+  contasPagarParcelasControllerFindAllAgendaPathParamsSchema,
+  contasPagarParcelasControllerFindAllAgenda200Schema,
+  contasPagarParcelasControllerFindAllAgendaQueryResponseSchema,
+} from './schemas/contasPagarParcelasControllerFindAllAgendaSchema.ts'
 export {
   contasPagarParcelasControllerFindAll200Schema,
   contasPagarParcelasControllerFindAllQueryResponseSchema,

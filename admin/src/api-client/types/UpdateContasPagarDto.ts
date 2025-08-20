@@ -24,4 +24,9 @@ export type UpdateContasPagarDto = {
    * @type boolean | undefined
    */
   pago?: boolean
+  /**
+   * @description Data do pagamento da conta
+   * @type string | undefined
+   */
+  dataPagamento?: string
 }

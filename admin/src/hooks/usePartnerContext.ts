@@ -16,6 +16,8 @@ export function usePartnerContext() {
   const {
     selectedPartnerId,
     selectedPartnerName,
+    selectedPartnerLocale,
+    selectedPartnerIsoCode,
     setSelectedPartner,
     clearSelectedPartner,
   } = usePartner();
@@ -77,6 +79,8 @@ export function usePartnerContext() {
     // Estados básicos
     selectedPartnerId,
     selectedPartnerName,
+    selectedPartnerLocale,
+    selectedPartnerIsoCode,
     parceiros,
     isLoading,
     error,

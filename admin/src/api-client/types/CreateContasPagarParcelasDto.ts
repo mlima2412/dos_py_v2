@@ -29,4 +29,9 @@ export type CreateContasPagarParcelasDto = {
    * @type number
    */
   contasPagarId: number
+  /**
+   * @description ID da moeda
+   * @type number
+   */
+  currencyId: number
 }

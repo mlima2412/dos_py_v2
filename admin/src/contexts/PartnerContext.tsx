@@ -13,6 +13,8 @@ interface PartnerProviderProps {
 export const PartnerProvider: React.FC<PartnerProviderProps> = ({ children }) => {
   const [selectedPartnerId, setSelectedPartnerId] = useState<string | null>(null);
   const [selectedPartnerName, setSelectedPartnerName] = useState<string>('');
+  const [selectedPartnerLocale, setSelectedPartnerLocale] = useState<string | null>(null);
+  const [selectedPartnerIsoCode, setSelectedPartnerIsoCode] = useState<string | null>(null);
   const { isAuthenticated, updateSelectedPartner } = useAuth();
   const { parceiros, isLoading } = useUserParceiros();
 
@@ -21,8 +23,12 @@ export const PartnerProvider: React.FC<PartnerProviderProps> = ({ children }) =>
     if (!isAuthenticated) {
       setSelectedPartnerId(null);
       setSelectedPartnerName('');
+      setSelectedPartnerLocale(null);
+      setSelectedPartnerIsoCode(null);
       localStorage.removeItem('selectedPartnerId');
       localStorage.removeItem('selectedPartnerName');
+      localStorage.removeItem('selectedPartnerLocale');
+      localStorage.removeItem('selectedPartnerIsoCode');
       if (updateSelectedPartner) {
         updateSelectedPartner(null);
       }
@@ -36,6 +42,8 @@ export const PartnerProvider: React.FC<PartnerProviderProps> = ({ children }) =>
 
     const savedPartnerId = localStorage.getItem('selectedPartnerId');
     const savedPartnerName = localStorage.getItem('selectedPartnerName');
+    const savedPartnerLocale = localStorage.getItem('selectedPartnerLocale');
+    const savedPartnerIsoCode = localStorage.getItem('selectedPartnerIsoCode');
     
     // Verificar se o parceiro salvo ainda existe na lista
     const savedPartnerExists = savedPartnerId && savedPartnerId !== 'null' && 
@@ -44,6 +52,8 @@ export const PartnerProvider: React.FC<PartnerProviderProps> = ({ children }) =>
     if (savedPartnerExists && savedPartnerName) {
       setSelectedPartnerId(savedPartnerId);
       setSelectedPartnerName(savedPartnerName);
+      setSelectedPartnerLocale(savedPartnerLocale && savedPartnerLocale !== 'null' ? savedPartnerLocale : null);
+      setSelectedPartnerIsoCode(savedPartnerIsoCode && savedPartnerIsoCode !== 'null' ? savedPartnerIsoCode : null);
       
       // Atualizar contexto de autenticação com parceiro salvo
       const savedPartnerData = parceiros.find((p: ParceiroItem) => p.parceiroId?.toString() === savedPartnerId);
@@ -58,13 +68,18 @@ export const PartnerProvider: React.FC<PartnerProviderProps> = ({ children }) =>
       if (firstPartner?.parceiroId && firstPartner?.Parceiro?.nome) {
         const partnerId = firstPartner.parceiroId.toString();
         const partnerName = firstPartner.Parceiro.nome;
+        const { locale, isoCode } = getPartnerCurrencyInfo(partnerId);
         
         setSelectedPartnerId(partnerId);
         setSelectedPartnerName(partnerName);
+        setSelectedPartnerLocale(locale);
+        setSelectedPartnerIsoCode(isoCode);
         
         // Salvar no localStorage
         localStorage.setItem('selectedPartnerId', partnerId);
         localStorage.setItem('selectedPartnerName', partnerName);
+        localStorage.setItem('selectedPartnerLocale', locale || 'null');
+        localStorage.setItem('selectedPartnerIsoCode', isoCode || 'null');
         
         // Atualizar contexto de autenticação com primeiro parceiro
         if (updateSelectedPartner) {
@@ -78,13 +93,18 @@ export const PartnerProvider: React.FC<PartnerProviderProps> = ({ children }) =>
       if (singlePartner?.parceiroId && singlePartner?.Parceiro?.nome) {
         const partnerId = singlePartner.parceiroId.toString();
         const partnerName = singlePartner.Parceiro.nome;
+        const { locale, isoCode } = getPartnerCurrencyInfo(partnerId);
         
         setSelectedPartnerId(partnerId);
         setSelectedPartnerName(partnerName);
+        setSelectedPartnerLocale(locale);
+        setSelectedPartnerIsoCode(isoCode);
         
         // Salvar no localStorage
         localStorage.setItem('selectedPartnerId', partnerId);
         localStorage.setItem('selectedPartnerName', partnerName);
+        localStorage.setItem('selectedPartnerLocale', locale || 'null');
+        localStorage.setItem('selectedPartnerIsoCode', isoCode || 'null');
         
         // Atualizar contexto de autenticação
         if (updateSelectedPartner) {
@@ -94,13 +114,30 @@ export const PartnerProvider: React.FC<PartnerProviderProps> = ({ children }) =>
     }
   }, [isAuthenticated, parceiros, isLoading, updateSelectedPartner]);
 
+  // Função auxiliar para extrair locale e isoCode do parceiro
+  const getPartnerCurrencyInfo = (partnerId: string | null) => {
+    if (!partnerId || !parceiros) return { locale: null, isoCode: null };
+    
+    return {
+      locale: 'pt-BR', // Padrão brasileiro
+      isoCode: 'BRL' // Padrão Real brasileiro
+    };
+  };
+
   const setSelectedPartner = (partnerId: string | null, partnerName: string) => {
     setSelectedPartnerId(partnerId);
     setSelectedPartnerName(partnerName);
     
+    // Obter informações de currency do parceiro
+    const { locale, isoCode } = getPartnerCurrencyInfo(partnerId);
+    setSelectedPartnerLocale(locale);
+    setSelectedPartnerIsoCode(isoCode);
+    
     // Salvar no localStorage
     localStorage.setItem('selectedPartnerId', partnerId || 'null');
     localStorage.setItem('selectedPartnerName', partnerName);
+    localStorage.setItem('selectedPartnerLocale', locale || 'null');
+    localStorage.setItem('selectedPartnerIsoCode', isoCode || 'null');
     
     // Atualizar dados do parceiro no contexto de autenticação
        if (partnerId && parceiros) {
@@ -116,10 +153,14 @@ export const PartnerProvider: React.FC<PartnerProviderProps> = ({ children }) =>
   const clearSelectedPartner = () => {
     setSelectedPartnerId(null);
     setSelectedPartnerName('');
+    setSelectedPartnerLocale(null);
+    setSelectedPartnerIsoCode(null);
     
     // Limpar do localStorage
     localStorage.removeItem('selectedPartnerId');
     localStorage.removeItem('selectedPartnerName');
+    localStorage.removeItem('selectedPartnerLocale');
+    localStorage.removeItem('selectedPartnerIsoCode');
     
     // Se ainda há parceiros disponíveis, selecionar o primeiro
     if (parceiros && parceiros.length > 0) {
@@ -127,13 +168,18 @@ export const PartnerProvider: React.FC<PartnerProviderProps> = ({ children }) =>
       if (firstPartner?.parceiroId && firstPartner?.Parceiro?.nome) {
         const partnerId = firstPartner.parceiroId.toString();
         const partnerName = firstPartner.Parceiro.nome;
+        const { locale, isoCode } = getPartnerCurrencyInfo(partnerId);
         
         setSelectedPartnerId(partnerId);
         setSelectedPartnerName(partnerName);
+        setSelectedPartnerLocale(locale);
+        setSelectedPartnerIsoCode(isoCode);
         
         // Salvar no localStorage
         localStorage.setItem('selectedPartnerId', partnerId);
         localStorage.setItem('selectedPartnerName', partnerName);
+        localStorage.setItem('selectedPartnerLocale', locale || 'null');
+        localStorage.setItem('selectedPartnerIsoCode', isoCode || 'null');
       }
     }
   };
@@ -141,6 +187,8 @@ export const PartnerProvider: React.FC<PartnerProviderProps> = ({ children }) =>
   const value: PartnerContextType = {
     selectedPartnerId,
     selectedPartnerName,
+    selectedPartnerLocale,
+    selectedPartnerIsoCode,
     setSelectedPartner,
     clearSelectedPartner,
   };

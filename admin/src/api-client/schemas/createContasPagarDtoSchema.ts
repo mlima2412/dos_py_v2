@@ -12,4 +12,5 @@ export const createContasPagarDtoSchema = z.object({
   valorTotal: z.coerce.number().describe('Valor total da conta a pagar'),
   saldo: z.coerce.number().describe('Saldo atual da conta (soma dos valores pagos)').optional(),
   pago: z.boolean().describe('Indica se a conta foi totalmente paga').optional(),
+  dataPagamento: z.coerce.string().describe('Data do pagamento da conta').optional(),
 }) as unknown as ToZod<CreateContasPagarDto>

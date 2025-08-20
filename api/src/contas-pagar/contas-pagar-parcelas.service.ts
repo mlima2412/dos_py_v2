@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateContasPagarParcelasDto } from './dto/create-contas-pagar-parcelas.dto';
 import { UpdateContasPagarParcelasDto } from './dto/update-contas-pagar-parcelas.dto';
 import { ContasPagarParcelas } from './entities/contas-pagar-parcelas.entity';
+import { Currency } from '../currency/entities/currency.entity';
 import { DespesaCacheService } from '../despesa-cache/despesa-cache.service';
 import { uuidv7 } from 'uuidv7';
 
@@ -31,6 +32,7 @@ export class ContasPagarParcelasService {
         valor: createContasPagarParcelasDto.valor,
         pago: createContasPagarParcelasDto.pago || false,
         contasPagarId: createContasPagarParcelasDto.contasPagarId,
+        currencyId:createContasPagarParcelasDto.currencyId
       },
       include: {
         contasPagar: true,
@@ -52,20 +54,86 @@ export class ContasPagarParcelasService {
   }
 
   async findAll(): Promise<ContasPagarParcelas[]> {
+    // preciso criar uma clausula where e filtrar o parceiroId
     const parcelas = await this.prisma.contasPagarParcelas.findMany({
       include: {
-        contasPagar: true,
+        contasPagar: {
+          include: {
+            despesa: {
+              include: {
+                subCategoria: true,
+              },
+            },
+          },
+        },
+        currency: true,
       },
-      orderBy: { dataPagamento: 'desc' },
+      orderBy: { dataVencimento: 'asc' },
     });
 
     return parcelas.map(parcela => new ContasPagarParcelas({
       ...parcela,
       valor: Number(parcela.valor),
+      currency: parcela.currency ? new Currency({
+        ...parcela.currency,
+        defaultRate: Number(parcela.currency.defaultRate),
+      }) : undefined,
       contasPagar: parcela.contasPagar ? {
         ...parcela.contasPagar,
         valorTotal: Number(parcela.contasPagar.valorTotal),
         saldo: Number(parcela.contasPagar.saldo),
+        despesa: parcela.contasPagar.despesa ? {
+          ...parcela.contasPagar.despesa,
+          valorTotal: Number(parcela.contasPagar.despesa.valorTotal),
+          cotacao: parcela.contasPagar.despesa.cotacao ? Number(parcela.contasPagar.despesa.cotacao) : null,
+          subCategoria: parcela.contasPagar.despesa.subCategoria,
+        } : undefined,
+      } : undefined,
+    }));
+  }
+
+  async findAllAgenda(parceiroId: number): Promise<ContasPagarParcelas[]> {
+    // preciso criar uma clausula where e filtrar o parceiroId
+    const parcelas = await this.prisma.contasPagarParcelas.findMany({
+      where: {
+        contasPagar: {
+          despesa: {
+            parceiroId,
+          },
+        },
+      },
+      include: {
+        contasPagar: {
+          include: {
+            despesa: {
+              include: {
+                subCategoria: true,
+              },
+            },
+          },
+        },
+        currency: true,
+      },
+      orderBy: { dataVencimento: 'asc' },
+    });
+
+    return parcelas.map(parcela => new ContasPagarParcelas({
+      ...parcela,
+      valor: Number(parcela.valor),
+      currency: parcela.currency ? new Currency({
+        ...parcela.currency,
+        defaultRate: Number(parcela.currency.defaultRate),
+      }) : undefined,
+      contasPagar: parcela.contasPagar ? {
+        ...parcela.contasPagar,
+        valorTotal: Number(parcela.contasPagar.valorTotal),
+        saldo: Number(parcela.contasPagar.saldo),
+        despesa: parcela.contasPagar.despesa ? {
+          ...parcela.contasPagar.despesa,
+          valorTotal: Number(parcela.contasPagar.despesa.valorTotal),
+          cotacao: parcela.contasPagar.despesa.cotacao ? Number(parcela.contasPagar.despesa.cotacao) : null,
+          subCategoria: parcela.contasPagar.despesa.subCategoria,
+        } : undefined,
       } : undefined,
     }));
   }
@@ -97,15 +165,7 @@ export class ContasPagarParcelasService {
     const existingParcela = await this.prisma.contasPagarParcelas.findUnique({
       where: { publicId },
       include: {
-        contasPagar: {
-          include: {
-            despesa: {
-              include: {
-                parceiro: true,
-              },
-            },
-          },
-        },
+        contasPagar: true,
       },
     });
 
@@ -127,44 +187,11 @@ export class ContasPagarParcelasService {
         pago: updateContasPagarParcelasDto.pago,
       },
       include: {
-        contasPagar: {
-          include: {
-            despesa: {
-              include: {
-                parceiro: true,
-              },
-            },
-          },
-        },
+        contasPagar: true,
       },
     });
 
-    // Atualizar cache se houve mudança no status de pagamento
-    if (statusChanged && parcela.contasPagar?.despesa?.parceiro) {
-      const parceiroPublicId = parcela.contasPagar.despesa.parceiro.publicId;
-      const valorParcela = Number(parcela.valor);
-      const dataVencimento = parcela.dataVencimento;
-
-      if (wasUnpaidNowPaid) {
-        // Parcela foi marcada como paga: decrementar to_pay e incrementar realized
-        await this.despesaCacheService.updateDespesaStatus(
-          parceiroPublicId,
-          dataVencimento,
-          valorParcela,
-          true, // oldIsFuture: estava em to_pay
-          false // newIsFuture: agora vai para realized
-        );
-      } else if (wasPaidNowUnpaid) {
-        // Parcela foi desmarcada como paga: decrementar realized e incrementar to_pay
-        await this.despesaCacheService.updateDespesaStatus(
-          parceiroPublicId,
-          dataVencimento,
-          valorParcela,
-          false, // oldIsFuture: estava em realized
-          true // newIsFuture: agora vai para to_pay
-        );
-      }
-    }
+    // TODO: Implementar atualização do cache quando necessário
 
     // Atualizar o saldo da conta a pagar
     await this.updateContasPagarSaldo(existingParcela.contasPagarId);

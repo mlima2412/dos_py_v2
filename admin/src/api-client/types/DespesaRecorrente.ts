@@ -3,10 +3,10 @@
  * Do not edit manually.
  */
 
+import type { Currency } from './Currency.ts'
 import type { Fornecedor } from './Fornecedor.ts'
 import type { Parceiro } from './Parceiro.ts'
 import type { SubCategoriaDespesa } from './SubCategoriaDespesa.ts'
-import type { Currency } from './Currency.ts'
 
 export const despesaRecorrenteFrequenciaEnum = {
   SEMANAL: 'SEMANAL',

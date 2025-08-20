@@ -4,6 +4,7 @@
  */
 
 import type { ContasPagarParcelas } from './ContasPagarParcelas.ts'
+import type { Despesa } from './Despesa.ts'
 
 export type ContasPagar = {
   /**
@@ -27,6 +28,11 @@ export type ContasPagar = {
    */
   dataCriacao: string
   /**
+   * @description Data do pagamento da conta
+   * @type string | undefined, date-time
+   */
+  dataPagamento?: string
+  /**
    * @description Valor total da conta a pagar
    * @type number
    */
@@ -46,4 +52,8 @@ export type ContasPagar = {
    * @type array | undefined
    */
   contasPagarParcelas?: ContasPagarParcelas[]
+  /**
+   * @description Despesa relacionada
+   */
+  despesa?: Despesa
 }

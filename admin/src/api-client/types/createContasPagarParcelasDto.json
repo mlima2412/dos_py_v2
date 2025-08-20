@@ -5,8 +5,9 @@
     "dataVencimento": { "type": "string", "description": "Data de vencimento da parcela", "example": "2024-12-31T23:59:59.000Z" },
     "valor": { "type": "number", "description": "Valor da parcela", "example": 500 },
     "pago": { "type": "boolean", "description": "Se a parcela foi paga", "example": false },
-    "contasPagarId": { "type": "number", "description": "ID da conta a pagar relacionada", "example": 1 }
+    "contasPagarId": { "type": "number", "description": "ID da conta a pagar relacionada", "example": 1 },
+    "currencyId": { "type": "number", "description": "ID da moeda", "example": 1 }
   },
-  "required": ["dataPagamento", "dataVencimento", "valor", "contasPagarId"],
+  "required": ["dataPagamento", "dataVencimento", "valor", "contasPagarId", "currencyId"],
   "x-readme-ref-name": "CreateContasPagarParcelasDto"
 }

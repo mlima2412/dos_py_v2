@@ -145,14 +145,8 @@ export class AuthService {
       },
       include: {
         Parceiro: {
-          select: {
-            id: true,
-            publicId: true,
-            nome: true,
-            logourl: true,
-            thumburl: true,
-            ativo: true,
-            currencyId: true,
+          include: {
+            currency: true,
           },
         },
         perfil: {

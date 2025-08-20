@@ -6,6 +6,7 @@
 import type { Parceiro } from '../types/Parceiro.ts'
 import type { ToZod } from '@kubb/plugin-zod/utils'
 import { clienteSchema } from './clienteSchema.ts'
+import { currencySchema } from './currencySchema.ts'
 import { z } from 'zod'
 
 export const parceiroSchema = z.object({
@@ -24,5 +25,9 @@ export const parceiroSchema = z.object({
   clientes: z
     .array(z.lazy(() => clienteSchema))
     .describe('Clientes associados ao parceiro')
+    .optional(),
+  currency: z
+    .lazy(() => currencySchema)
+    .describe('Moeda do parceiro')
     .optional(),
 }) as unknown as ToZod<Parceiro>

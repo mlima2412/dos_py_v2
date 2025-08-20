@@ -38,4 +38,11 @@ export class CreateContasPagarParcelasDto {
   })
   @IsInt()
   contasPagarId: number;
+
+  @ApiProperty({
+    description: 'ID da moeda',
+    example: 1,
+  })
+  @IsInt()
+  currencyId: number;
 }

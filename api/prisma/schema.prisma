@@ -140,19 +140,20 @@ model Cliente {
 }
 
 model Currency {
-  id                  Int                 @id @default(autoincrement())
-  publicId            String              @unique @map("public_id")
+  id                  Int                   @id @default(autoincrement())
+  publicId            String                @unique @map("public_id")
   nome                String
   prefixo             String
-  isoCode             String              @unique @map("iso_code")
-  precision           Int                 @default(2)
-  locale              String              @default("pt-BR")
-  defaultRate         Decimal             @default(0.0) @map("default_rate") @db.Decimal(12, 3)
-  ativo               Boolean             @default(true)
-  createdAt           DateTime            @default(now()) @map("created_at")
+  isoCode             String                @unique @map("iso_code")
+  precision           Int                   @default(2)
+  locale              String                @default("pt-BR")
+  defaultRate         Decimal               @default(0.0) @map("default_rate") @db.Decimal(12, 3)
+  ativo               Boolean               @default(true)
+  createdAt           DateTime              @default(now()) @map("created_at")
   parceiros           Parceiro[]
   despesas            Despesa[]
   despesasRecorrentes DespesaRecorrente[]
+  ContasPagarParcelas ContasPagarParcelas[]
 
   @@map("currency")
 }
@@ -272,6 +273,8 @@ model ContasPagarParcelas {
   dataVencimento DateTime    @map("data_vencimento")
   valor          Decimal     @default(0.0) @db.Decimal(12, 3)
   pago           Boolean     @default(false)
+  currencyId     Int?        @map("currency_id")
+  currency       Currency?   @relation(fields: [currencyId], references: [id])
   contasPagarId  Int         @map("contas_pagar_id")
   contasPagar    ContasPagar @relation(fields: [contasPagarId], references: [id], onDelete: Cascade)
 

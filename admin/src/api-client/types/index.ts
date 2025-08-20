@@ -231,6 +231,12 @@ export type {
   ContasPagarParcelasControllerFindAllQuery,
 } from './ContasPagarParcelasControllerFindAll.ts'
 export type {
+  ContasPagarParcelasControllerFindAllAgendaPathParams,
+  ContasPagarParcelasControllerFindAllAgenda200,
+  ContasPagarParcelasControllerFindAllAgendaQueryResponse,
+  ContasPagarParcelasControllerFindAllAgendaQuery,
+} from './ContasPagarParcelasControllerFindAllAgenda.ts'
+export type {
   ContasPagarParcelasControllerFindByContasPagarPathParams,
   ContasPagarParcelasControllerFindByContasPagar200,
   ContasPagarParcelasControllerFindByContasPagarQueryResponse,

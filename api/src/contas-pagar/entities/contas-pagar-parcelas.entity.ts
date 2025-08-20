@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { uuidv7 } from 'uuidv7';
 import { ContasPagar } from './contas-pagar.entity';
+import { Currency } from 'src/currency/entities/currency.entity';
 
 export class ContasPagarParcelas {
   @ApiProperty({
@@ -51,6 +52,19 @@ export class ContasPagarParcelas {
     required: false,
   })
   contasPagar?: ContasPagar;
+  
+  @ApiProperty({
+    description: 'Moeda da parcela',
+    type: () => Currency,
+    required: false,
+  })
+  currency?: Currency;
+
+  @ApiProperty({
+    description: 'ID da moeda',
+    example: 1,
+  })
+  currencyId: number;
 
   constructor(partial: Partial<ContasPagarParcelas>) {
     Object.assign(this, partial);

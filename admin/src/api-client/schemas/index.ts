@@ -184,6 +184,11 @@ export {
   contasPagarParcelasControllerCreateMutationResponseSchema,
 } from './contasPagarParcelasControllerCreateSchema.ts'
 export {
+  contasPagarParcelasControllerFindAllAgendaPathParamsSchema,
+  contasPagarParcelasControllerFindAllAgenda200Schema,
+  contasPagarParcelasControllerFindAllAgendaQueryResponseSchema,
+} from './contasPagarParcelasControllerFindAllAgendaSchema.ts'
+export {
   contasPagarParcelasControllerFindAll200Schema,
   contasPagarParcelasControllerFindAllQueryResponseSchema,
 } from './contasPagarParcelasControllerFindAllSchema.ts'

@@ -13,4 +13,5 @@ export const createContasPagarParcelasDtoSchema = z.object({
   valor: z.coerce.number().describe('Valor da parcela'),
   pago: z.boolean().describe('Se a parcela foi paga').optional(),
   contasPagarId: z.coerce.number().describe('ID da conta a pagar relacionada'),
+  currencyId: z.coerce.number().describe('ID da moeda'),
 }) as unknown as ToZod<CreateContasPagarParcelasDto>

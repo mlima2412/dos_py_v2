@@ -200,7 +200,16 @@ export class AuthController {
               id: { type: 'number', example: 1 },
               publicId: { type: 'string', example: 'f47ac10b-58cc-4372-a567-0e02b2c3d479' },
               nome: { type: 'string', example: 'Parceiro Exemplo' },
-              logourl: { type: 'string', example: 'https://exemplo.com/logo.png' }
+              logourl: { type: 'string', example: 'https://exemplo.com/logo.png' },
+              currencyId: { type: 'number', example: 1 },
+              currency: {
+                type: 'object',
+                properties: {
+                  id: { type: 'number', example: 1 },
+                  locale: { type: 'string', example: 'pt-BR' },
+                  isoCode: { type: 'string', example: 'BRL' }
+                }
+              }
             }
           },
           perfil: {
