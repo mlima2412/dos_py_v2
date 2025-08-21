@@ -10,6 +10,11 @@ export type CreateFornecedorDto = {
    */
   nome: string
   /**
+   * @description ID parceiro do fornecedor
+   * @type number
+   */
+  parceiroId: number
+  /**
    * @description RUC/CNPJ do fornecedor
    * @type string | undefined
    */

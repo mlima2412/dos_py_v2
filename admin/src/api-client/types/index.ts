@@ -480,6 +480,7 @@ export type {
   FornecedoresControllerFindActiveFornecedoresQuery,
 } from './FornecedoresControllerFindActiveFornecedores.ts'
 export type {
+  FornecedoresControllerFindAllPathParams,
   FornecedoresControllerFindAll200,
   FornecedoresControllerFindAllQueryResponse,
   FornecedoresControllerFindAllQuery,

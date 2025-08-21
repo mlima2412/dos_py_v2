@@ -14,22 +14,24 @@ export class CategoriaDespesasService {
 
   async create(createCategoriaDespesasDto: CreateCategoriaDespesasDto): Promise<CategoriaDespesas> {
     // Verificar se a descrição já existe
-    const existingCategoria = await this.prisma.categoriaDespesas.findFirst({
-      where: { descricao: createCategoriaDespesasDto.descricao },
-    });
+    // const existingCategoria = await this.prisma.categoriaDespesas.findFirst({
+    //   where: { descricao: createCategoriaDespesasDto.descricao },
+    // });
 
-    if (existingCategoria) {
-      throw new ConflictException('Descrição da categoria já está em uso');
-    }
+    // if (existingCategoria) {
+    //   throw new ConflictException('Descrição da categoria já está em uso');
+    // }
 
     // Criar instância da entidade CategoriaDespesas
     const categoriaEntity = CategoriaDespesas.create({
+      idCategoria: createCategoriaDespesasDto.idCategoria,
       descricao: createCategoriaDespesasDto.descricao,
       ativo: createCategoriaDespesasDto.ativo,
     });
 
     const categoria = await this.prisma.categoriaDespesas.create({
       data: {
+        idCategoria: categoriaEntity.idCategoria,
         descricao: categoriaEntity.descricao,
         ativo: categoriaEntity.ativo,
       },

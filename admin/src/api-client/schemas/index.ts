@@ -406,7 +406,11 @@ export {
   fornecedoresControllerFindActiveFornecedores200Schema,
   fornecedoresControllerFindActiveFornecedoresQueryResponseSchema,
 } from './fornecedoresControllerFindActiveFornecedoresSchema.ts'
-export { fornecedoresControllerFindAll200Schema, fornecedoresControllerFindAllQueryResponseSchema } from './fornecedoresControllerFindAllSchema.ts'
+export {
+  fornecedoresControllerFindAllPathParamsSchema,
+  fornecedoresControllerFindAll200Schema,
+  fornecedoresControllerFindAllQueryResponseSchema,
+} from './fornecedoresControllerFindAllSchema.ts'
 export {
   fornecedoresControllerFindOnePathParamsSchema,
   fornecedoresControllerFindOne200Schema,

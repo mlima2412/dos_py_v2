@@ -41,6 +41,7 @@ export class FornecedoresService {
     const fornecedor = await this.prisma.fornecedor.create({
       data: {
         publicId: fornecedorEntity.publicId,
+        parceiroId: fornecedorEntity.parceiroId,
         nome: fornecedorEntity.nome,
         ruccnpj: fornecedorEntity.ruccnpj,
         email: fornecedorEntity.email,
@@ -54,8 +55,9 @@ export class FornecedoresService {
     return fornecedor as Fornecedor;
   }
 
-  async findAll(): Promise<Fornecedor[]> {
+  async findAll(id: number): Promise<Fornecedor[]> {
     const fornecedores = await this.prisma.fornecedor.findMany({
+      where: { parceiroId: id },
       orderBy: { createdAt: 'desc' },
     });
     return fornecedores as Fornecedor[];

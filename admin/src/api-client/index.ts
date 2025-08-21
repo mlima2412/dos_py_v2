@@ -640,6 +640,7 @@ export type {
   FornecedoresControllerFindActiveFornecedoresQuery,
 } from './types/FornecedoresControllerFindActiveFornecedores.ts'
 export type {
+  FornecedoresControllerFindAllPathParams,
   FornecedoresControllerFindAll200,
   FornecedoresControllerFindAllQueryResponse,
   FornecedoresControllerFindAllQuery,
@@ -2159,7 +2160,11 @@ export {
   fornecedoresControllerFindActiveFornecedores200Schema,
   fornecedoresControllerFindActiveFornecedoresQueryResponseSchema,
 } from './schemas/fornecedoresControllerFindActiveFornecedoresSchema.ts'
-export { fornecedoresControllerFindAll200Schema, fornecedoresControllerFindAllQueryResponseSchema } from './schemas/fornecedoresControllerFindAllSchema.ts'
+export {
+  fornecedoresControllerFindAllPathParamsSchema,
+  fornecedoresControllerFindAll200Schema,
+  fornecedoresControllerFindAllQueryResponseSchema,
+} from './schemas/fornecedoresControllerFindAllSchema.ts'
 export {
   fornecedoresControllerFindOnePathParamsSchema,
   fornecedoresControllerFindOne200Schema,

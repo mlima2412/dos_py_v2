@@ -10,6 +10,7 @@ import { z } from 'zod'
 export const fornecedorSchema = z.object({
   id: z.coerce.number().describe('ID único do fornecedor'),
   publicId: z.coerce.string().describe('ID público do fornecedor'),
+  parceiroId: z.coerce.number().describe('ID do parceiro do fornecedor'),
   nome: z.coerce.string().describe('Nome do fornecedor'),
   ruccnpj: z.coerce.string().describe('RUC/CNPJ do fornecedor').optional(),
   email: z.coerce.string().describe('Email do fornecedor').optional(),

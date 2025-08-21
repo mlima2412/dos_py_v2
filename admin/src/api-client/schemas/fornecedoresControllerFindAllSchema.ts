@@ -3,10 +3,18 @@
  * Do not edit manually.
  */
 
-import type { FornecedoresControllerFindAll200, FornecedoresControllerFindAllQueryResponse } from '../types/FornecedoresControllerFindAll.ts'
+import type {
+  FornecedoresControllerFindAllPathParams,
+  FornecedoresControllerFindAll200,
+  FornecedoresControllerFindAllQueryResponse,
+} from '../types/FornecedoresControllerFindAll.ts'
 import type { ToZod } from '@kubb/plugin-zod/utils'
 import { fornecedorSchema } from './fornecedorSchema.ts'
 import { z } from 'zod'
+
+export const fornecedoresControllerFindAllPathParamsSchema = z.object({
+  parceiroId: z.coerce.number().describe('ID do parceiro'),
+}) as unknown as ToZod<FornecedoresControllerFindAllPathParams>
 
 /**
  * @description Lista de fornecedores retornada com sucesso

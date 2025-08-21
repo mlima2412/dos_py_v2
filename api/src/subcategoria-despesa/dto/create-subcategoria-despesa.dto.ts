@@ -3,6 +3,14 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateSubCategoriaDespesaDto {
   @ApiProperty({
+    description: 'ID da subcategoria de despesa',
+    example: 1,
+  })
+  @IsOptional()
+  @IsInt()
+  idSubCategoria: number;
+
+  @ApiProperty({
     description: 'ID da categoria de despesa',
     example: 1,
   })

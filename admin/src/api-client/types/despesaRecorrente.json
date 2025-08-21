@@ -27,6 +27,7 @@
           "properties": {
             "id": { "type": "number", "description": "ID único do fornecedor", "example": 1 },
             "publicId": { "type": "string", "description": "ID público do fornecedor", "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479" },
+            "parceiroId": { "type": "number", "description": "ID do parceiro do fornecedor", "example": 1 },
             "nome": { "type": "string", "description": "Nome do fornecedor", "example": "Fornecedor ABC Ltda" },
             "ruccnpj": { "type": "string", "description": "RUC/CNPJ do fornecedor", "example": "12.345.678/0001-90" },
             "email": { "type": "string", "description": "Email do fornecedor", "example": "contato@fornecedorabc.com" },
@@ -36,7 +37,7 @@
             "ultimaCompra": { "format": "date-time", "type": "string", "description": "Data da última compra", "example": "2024-01-15T10:30:00Z" },
             "createdAt": { "format": "date-time", "type": "string", "description": "Data de criação do fornecedor", "example": "2024-01-01T00:00:00Z" }
           },
-          "required": ["id", "publicId", "nome", "ativo", "createdAt"],
+          "required": ["id", "publicId", "parceiroId", "nome", "ativo", "createdAt"],
           "x-readme-ref-name": "Fornecedor"
         }
       ]

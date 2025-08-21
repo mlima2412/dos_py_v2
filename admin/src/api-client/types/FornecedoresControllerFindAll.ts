@@ -5,6 +5,14 @@
 
 import type { Fornecedor } from './Fornecedor.ts'
 
+export type FornecedoresControllerFindAllPathParams = {
+  /**
+   * @description ID do parceiro
+   * @type number
+   */
+  parceiroId: number
+}
+
 /**
  * @description Lista de fornecedores retornada com sucesso
  */
@@ -14,5 +22,6 @@ export type FornecedoresControllerFindAllQueryResponse = FornecedoresControllerF
 
 export type FornecedoresControllerFindAllQuery = {
   Response: FornecedoresControllerFindAll200
+  PathParams: FornecedoresControllerFindAllPathParams
   Errors: any
 }

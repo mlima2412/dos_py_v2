@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsEmail, IsOptional, IsBoolean } from 'class-validator';
+import { IsString, IsEmail, IsOptional, IsBoolean, IsNumber } from 'class-validator';
 
 export class CreateFornecedorDto {
   @ApiProperty({
@@ -8,6 +8,13 @@ export class CreateFornecedorDto {
   })
   @IsString()
   nome: string;
+
+  @ApiProperty({
+    description: 'ID parceiro do fornecedor',
+    example: 1,
+  })
+  @IsNumber()
+  parceiroId: number;
 
   @ApiProperty({
     description: 'RUC/CNPJ do fornecedor',

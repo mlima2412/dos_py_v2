@@ -15,6 +15,12 @@ export class Fornecedor {
   publicId: string;
 
   @ApiProperty({
+    description: 'ID do parceiro do fornecedor',
+    example: 1,
+  })
+  parceiroId: number;
+
+  @ApiProperty({
     description: 'Nome do fornecedor',
     example: 'Fornecedor ABC Ltda',
   })

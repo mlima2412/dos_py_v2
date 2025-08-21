@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from '@/hooks/useToast';
 import { ResponseErrorConfig } from '@/lib/fetch-client';
+import { usePartnerContext } from '@/hooks/usePartnerContext';
 
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -76,6 +77,7 @@ export function FormularioFornecedor() {
 	const { publicId } = useParams<{ publicId: string }>();
 	const queryClient = useQueryClient();
 	const toast = useToast();
+	const { selectedPartnerId } = usePartnerContext();
 	const isEditing = !!publicId;
 	const schema = isEditing
 		? updateFornecedorSchema(t)
@@ -169,8 +171,14 @@ export function FormularioFornecedor() {
 					data: cleanData,
 				});
 			} else {
+				if (!selectedPartnerId) {
+					throw new Error('Parceiro não selecionado');
+				}
 				await createMutation.mutateAsync({
-					data: cleanData,
+					data: {
+						...cleanData,
+						parceiroId: Number(selectedPartnerId),
+					},
 				});
 			}
 		} catch (error) {

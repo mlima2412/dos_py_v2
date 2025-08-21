@@ -49,16 +49,21 @@ export class FornecedoresController {
     return this.fornecedoresService.create(createFornecedorDto);
   }
 
-  @Get()
+  @Get(':parceiroId')
   @ApiBearerAuth('JWT-auth')
-  @ApiOperation({ summary: 'Listar todos os fornecedores' })
+  @ApiOperation({ summary: 'Listar todos os fornecedores de um parceiro' })
+  @ApiParam({
+    name: 'parceiroId',
+    description: 'ID do parceiro',
+    example: 1,
+  })
   @ApiResponse({
     status: 200,
     description: 'Lista de fornecedores retornada com sucesso',
     type: [Fornecedor],
   })
-  findAll(): Promise<Fornecedor[]> {
-    return this.fornecedoresService.findAll();
+  findAll(@Param('parceiroId') parceiroId: number): Promise<Fornecedor[]> {
+    return this.fornecedoresService.findAll(parceiroId);
   }
 
   @Get('ativos')

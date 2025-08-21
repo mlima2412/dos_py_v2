@@ -9,6 +9,7 @@ import { z } from 'zod'
 
 export const updateFornecedorDtoSchema = z.object({
   nome: z.coerce.string().describe('Nome do fornecedor').optional(),
+  parceiroId: z.coerce.number().describe('ID parceiro do fornecedor').optional(),
   ruccnpj: z.coerce.string().describe('RUC/CNPJ do fornecedor').optional(),
   email: z.coerce.string().describe('Email do fornecedor').optional(),
   telefone: z.coerce.string().describe('Telefone do fornecedor').optional(),

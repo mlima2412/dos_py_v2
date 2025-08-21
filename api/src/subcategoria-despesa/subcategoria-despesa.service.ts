@@ -25,6 +25,7 @@ export class SubCategoriaDespesaService {
     // Verificar se a descrição já existe na mesma categoria
     const existingItem = await this.prisma.subCategoriaDespesa.findFirst({
       where: {
+        idSubCategoria: createSubCategoriaDespesaDto.idSubCategoria,
         descricao: createSubCategoriaDespesaDto.descricao,
         categoriaId: createSubCategoriaDespesaDto.categoriaId,
       },
@@ -36,6 +37,7 @@ export class SubCategoriaDespesaService {
 
     // Criar instância da entidade SubCategoriaDespesa
     const itemEntity = SubCategoriaDespesa.create({
+      idSubCategoria: createSubCategoriaDespesaDto.idSubCategoria,
       categoriaId: createSubCategoriaDespesaDto.categoriaId,
       descricao: createSubCategoriaDespesaDto.descricao,
       ativo: createSubCategoriaDespesaDto.ativo,
@@ -43,6 +45,7 @@ export class SubCategoriaDespesaService {
 
     const item = await this.prisma.subCategoriaDespesa.create({
       data: {
+        idSubCategoria: itemEntity.idSubCategoria,
         categoriaId: itemEntity.categoriaId,
         descricao: itemEntity.descricao,
         ativo: itemEntity.ativo,

@@ -2,7 +2,7 @@
   "type": "object",
   "properties": {
     "id": { "type": "number", "description": "ID único da parcela", "example": 1 },
-    "publicId": { "type": "string", "description": "ID público da parcela", "example": "0198c9c6-551f-7a6b-b2a6-7d4750475a85" },
+    "publicId": { "type": "string", "description": "ID público da parcela", "example": "0198cd0d-f654-720e-b5a4-d427fdcbcb1c" },
     "dataPagamento": { "format": "date-time", "type": "string", "description": "Data do pagamento da parcela", "example": "2024-12-31T23:59:59.000Z" },
     "dataVencimento": { "format": "date-time", "type": "string", "description": "Data de vencimento da parcela", "example": "2024-12-31T23:59:59.000Z" },
     "valor": { "type": "number", "description": "Valor da parcela", "example": 500 },

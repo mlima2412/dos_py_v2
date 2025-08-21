@@ -59,6 +59,8 @@ model Fornecedor {
   ativo        Boolean   @default(true)
   ultimaCompra DateTime? @map("ultima_compra")
   createdAt    DateTime  @default(now()) @map("created_at")
+  parceiroId   Int       @map("parceiro_id")
+  Parceiro     Parceiro  @relation(fields: [parceiroId], references: [id])
 
   despesas            Despesa[]
   despesasRecorrentes DespesaRecorrente[]
@@ -99,6 +101,7 @@ model Parceiro {
   despesasRecorrentes            DespesaRecorrente[]
   RollupDespesasMensais          RollupDespesasMensais[]
   RollupDespesasMensaisCategoria RollupDespesasMensaisCategoria[]
+  Fornecedor                     Fornecedor[]
 
   @@map("parceiro")
 }

@@ -1,75 +1,112 @@
-import { PrismaClient } from '@prisma/client';
+import 'reflect-metadata';
+import { NestFactory } from '@nestjs/core';
+import { SeedModule } from './seed.module';
+
 import { Client } from 'pg';
-import * as bcrypt from 'bcrypt';
-import { uuidv7 } from 'uuidv7';
-import { faker } from '@faker-js/faker';
+import { DespesasService } from '../src/despesas/despesas.service';
+import { CategoriaDespesasService } from '../src/categoria-despesas/categoria-despesas.service'
+import { SubCategoriaDespesaService } from '../src/subcategoria-despesa/subcategoria-despesa.service'
 
-const prisma = new PrismaClient();
+import { CreateDespesaDto, TipoPagamento as TipoPagamentoEnum } from '../src/despesas/dto/create-despesa.dto';
+import { CreateCategoriaDespesasDto } from '../src/categoria-despesas/dto/create-categoria-despesas.dto'
+import { CreateSubCategoriaDespesaDto } from 'src/subcategoria-despesa/dto/create-subcategoria-despesa.dto'
 
-async function main() {
-  console.log('🌱 Iniciando migração DOSv1 para DOSv2...');
-  console.log("PATH:",process.env.LEGACY_DATABASE_URL )
+async function fetchDespesaFromLegacy(legacyDb) {
+ 
+  console.log('🌱 Migrando Categoria de Despesas');
+  const despesas = await legacyDb.query('SELECT * FROM public."Despesas"');
+  return despesas.rows
+}
+
+async function fetchCategoriaFromLegacy(legacyDb) {
+  console.log('🌱 Migrando Categorias de Despesas');
+  const categorias = await legacyDb.query('SELECT * FROM public."CategoriaDespesas"');
+
+  return categorias.rows
+}
+
+async function fetchSubCategoriaFromLegacy(legacyDb) {
+  console.log('🌱 Migrando Categorias de Despesas');
+  const subcategorias = await legacyDb.query('SELECT * FROM public."ItensDespesas"');
+
+  return subcategorias.rows
+}
+
+
+
+async function run() {
+  // Sobe o Nest sem HTTP/Express (só DI)
+  const app = await NestFactory.createApplicationContext(SeedModule, {
+    logger: ['error', 'warn'],
+  });
   const legacyDb = new Client({
     connectionString: process.env.LEGACY_DATABASE_URL,
   });
   await legacyDb.connect();
-  console.log('🌱 Migrando Categoria de Despesas');
-  const categorias = await legacyDb.query('SELECT * FROM public."CategoriaDespesas"');
-  categorias.rows.forEach(async (categoria) => {
-    categoria.id = Number(categoria.id);
-    await prisma.categoriaDespesas.create({
-      data: {
-        idCategoria: categoria.idCategoria,
-        descricao: categoria.descricao,
-        createdAt: new Date(),
-      },
-    });
-  });
-  console.log('🌱 Migrando SubCategoria de Despesas');
-  const subcategorias = await legacyDb.query('SELECT * FROM public."ItensDespesas"');
-  subcategorias.rows.forEach(async (subcategoria) => {
-    subcategoria.id = Number(subcategoria.id);
-    await prisma.subCategoriaDespesa.create({
-      data: {
-        idSubCategoria: subcategoria.idItem,
-        categoriaId:subcategoria.categoriaId,
-        descricao: subcategoria.descricao,
-      },
-    });
-  });
-  
-  // Insere os dados no banco de dados de forma massiva
+  try {
+    
 
-  
-  legacyDb.end();
-  // // Buscar todos os usuários criados
-  // const usuariosCriados = await prisma.usuario.findMany({ select: { id: true } });
+    console.log('🌱 Iniciando migração DOSv1 para DOSv2 Módulo Despesas...');
+    console.log("PATH:",process.env.LEGACY_DATABASE_URL )
 
-  // // Criar relação usuario_parceiro para cada usuário, associando ao perfil admin
-  // await prisma.usuarioParceiro.createMany({
-  //   data: usuariosCriados.map((u) => ({
-  //     usuarioId: u.id,
-  //     perfilId: perfil.id,
-  //     parceiroId: 1, // ajuste conforme necessário para o parceiro padrão
-  //   })),
-  //   skipDuplicates: true,
-  // });
+    // const categoriaLegacy = await fetchCategoriaFromLegacy(legacyDb);
+    // const categoriaService = app.get(CategoriaDespesasService);
+    // for (const raw of categoriaLegacy) {
+    //   // mapeie do legado -> DTO do seu service
+    //   console.log(`Criando a categoria:${raw.descricao}`)
+    //   const dto: CreateCategoriaDespesasDto = {
+    //     idCategoria: raw.idCategoria,
+    //     descricao: raw.descricao,
+    //     ativo: true,
+    //   };
+    //   await categoriaService.create(dto);
+    // }
 
-  //const perfis = await oldPrisma.categoria.findMany();
+    // const subcategoriaLegacy = await fetchSubCategoriaFromLegacy(legacyDb);
+    // const subcategoriaService = app.get(SubCategoriaDespesaService);
+    // for (const raw of subcategoriaLegacy) {
+    //   // mapeie do legado -> DTO do seu service
+    //   console.log(`Criando a subcategoria:${raw.descricao}`)
+    //   const dto: CreateSubCategoriaDespesaDto = {
+    //     idSubCategoria: raw.idItem,
+    //     categoriaId: raw.categoriaId,
+    //     descricao: raw.descricao,
+    //     ativo: true,
+    //   };
+    //   await subcategoriaService.create(dto);
+    // }
 
-  console.log('✅ Seed concluído com sucesso!');
-  console.log('👤 Usuários criados:');
+
+    // const subcategoriaService = app.get(SubCategoriaDespesaService);
+    const despesasLegacy = await fetchDespesaFromLegacy(legacyDb);
+    const despesaService = app.get(DespesasService);
+    for (const raw of despesasLegacy) {
+      // mapeie do legado -> DTO do seu service
+      console.log(`Criando a despesa:${raw.descricao}`)
+      const dto: CreateDespesaDto = {
+        tipoPagamento: TipoPagamentoEnum.A_VISTA_IMEDIATA,
+        parceiroId: 5,
+        currencyId: 1,
+        descricao: raw.descricao,
+        valorTotal: raw.valorDespesa,
+        valorEntrada: 0,
+        dataRegistro: raw.dataDespesa,
+        subCategoriaId: raw.itemId,
+      };
+
+      await despesaService.create(dto, 5);
+    }
+    legacyDb.end();
+    console.log('Seed concluído com sucesso.');
+  } catch (err) {
+    console.error('Seed falhou:', err);
+    process.exitCode = 1;
+  } finally {
+    await app.close(); // encerra Prisma/DI
+  }
 }
 
-main()
-  .catch((e) => {
-    console.error('❌ Erro durante o seed:', e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
-
+run();
 
 
 

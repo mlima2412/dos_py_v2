@@ -15,6 +15,11 @@ export type Fornecedor = {
    */
   publicId: string
   /**
+   * @description ID do parceiro do fornecedor
+   * @type number
+   */
+  parceiroId: number
+  /**
    * @description Nome do fornecedor
    * @type string
    */

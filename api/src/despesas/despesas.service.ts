@@ -97,7 +97,7 @@ export class DespesasService {
         data: {
           publicId: `cp_${despesaEntity.publicId}`,
           despesaId: despesa.id,
-          dataCriacao: new Date(),
+          dataCriacao: createDespesaDto.dataRegistro,
           valorTotal: createDespesaDto.valorTotal,
           saldo: 0,
           pago: false,
@@ -130,8 +130,8 @@ export class DespesasService {
             contasPagarId,
             currencyId: createDespesaDto.currencyId,
             valor: createDespesaDto.valorTotal,
-            dataVencimento: now,
-            dataPagamento: now,
+            dataVencimento: createDespesaDto.dataRegistro,
+            dataPagamento: createDespesaDto.dataRegistro,
             pago: true,
           },
         });

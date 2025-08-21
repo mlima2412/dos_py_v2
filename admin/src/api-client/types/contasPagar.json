@@ -2,7 +2,7 @@
   "type": "object",
   "properties": {
     "id": { "type": "number", "description": "ID único da conta a pagar", "example": 1 },
-    "publicId": { "type": "string", "description": "ID público da conta a pagar", "example": "0198c9c6-5520-745d-870d-a470a4028151" },
+    "publicId": { "type": "string", "description": "ID público da conta a pagar", "example": "0198cd0d-f654-720e-b5a4-d428e93001ae" },
     "despesaId": { "type": "number", "description": "ID da despesa relacionada", "example": 1 },
     "dataCriacao": { "format": "date-time", "type": "string", "description": "Data de criação da conta", "example": "2024-12-31T23:59:59.000Z" },
     "dataPagamento": { "format": "date-time", "type": "string", "description": "Data do pagamento da conta", "example": "2024-12-31T23:59:59.000Z" },
@@ -34,6 +34,7 @@
                   "properties": {
                     "id": { "type": "number", "description": "ID único do fornecedor", "example": 1 },
                     "publicId": { "type": "string", "description": "ID público do fornecedor", "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479" },
+                    "parceiroId": { "type": "number", "description": "ID do parceiro do fornecedor", "example": 1 },
                     "nome": { "type": "string", "description": "Nome do fornecedor", "example": "Fornecedor ABC Ltda" },
                     "ruccnpj": { "type": "string", "description": "RUC/CNPJ do fornecedor", "example": "12.345.678/0001-90" },
                     "email": { "type": "string", "description": "Email do fornecedor", "example": "contato@fornecedorabc.com" },
@@ -43,7 +44,7 @@
                     "ultimaCompra": { "format": "date-time", "type": "string", "description": "Data da última compra", "example": "2024-01-15T10:30:00Z" },
                     "createdAt": { "format": "date-time", "type": "string", "description": "Data de criação do fornecedor", "example": "2024-01-01T00:00:00Z" }
                   },
-                  "required": ["id", "publicId", "nome", "ativo", "createdAt"],
+                  "required": ["id", "publicId", "parceiroId", "nome", "ativo", "createdAt"],
                   "x-readme-ref-name": "Fornecedor"
                 }
               ]

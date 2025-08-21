@@ -48,7 +48,7 @@ import {
 	useDespesasControllerFindOne,
 	useCategoriaDespesasControllerFindAll,
 	useSubCategoriaDespesaControllerFindByCategoria,
-	useFornecedoresControllerFindActiveFornecedores,
+	useFornecedoresControllerFindAll,
 	useCurrencyControllerFindAllActive,
 	type CreateDespesaDto,
 	type ContasPagar,
@@ -154,7 +154,9 @@ export function FormularioDespesa() {
 		});
 
 	const { data: fornecedores = [], isLoading: isLoadingFornecedores } =
-		useFornecedoresControllerFindActiveFornecedores();
+		useFornecedoresControllerFindAll(Number(selectedPartnerId!), {
+			query: { enabled: Boolean(selectedPartnerId) },
+		});
 
 	const { data: currencies = [], isLoading: isLoadingCurrencies } =
 		useCurrencyControllerFindAllActive();
