@@ -5,9 +5,9 @@ import { z } from "zod";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { useToast } from '@/hooks/useToast';
-import { ResponseErrorConfig } from '@/lib/fetch-client';
-import { usePartnerContext } from '@/hooks/usePartnerContext';
+import { useToast } from "@/hooks/useToast";
+import { ResponseErrorConfig } from "@/lib/fetch-client";
+import { usePartnerContext } from "@/hooks/usePartnerContext";
 
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -172,7 +172,7 @@ export function FormularioFornecedor() {
 				});
 			} else {
 				if (!selectedPartnerId) {
-					throw new Error('Parceiro não selecionado');
+					throw new Error("Parceiro não selecionado");
 				}
 				await createMutation.mutateAsync({
 					data: {
@@ -194,8 +194,8 @@ export function FormularioFornecedor() {
 	if (isEditing && isLoadingFornecedor) {
 		return (
 			<DashboardLayout>
-				<div className='flex items-center justify-center h-64'>
-					<Spinner size='lg' />
+				<div className="flex items-center justify-center h-64">
+					<Spinner size="lg" />
 				</div>
 			</DashboardLayout>
 		);
@@ -203,16 +203,16 @@ export function FormularioFornecedor() {
 
 	return (
 		<DashboardLayout>
-			<div className='space-y-6'>
+			<div className="space-y-6">
 				{/* Breadcrumb */}
 				<Breadcrumb>
 					<BreadcrumbList>
 						<BreadcrumbItem>
-							<BreadcrumbLink href='/'>{t("menu.home")}</BreadcrumbLink>
+							<BreadcrumbLink href="/">{t("menu.home")}</BreadcrumbLink>
 						</BreadcrumbItem>
 						<BreadcrumbSeparator />
 						<BreadcrumbItem>
-							<BreadcrumbLink href='/fornecedores'>
+							<BreadcrumbLink href="/fornecedores">
 								{t("suppliers.title")}
 							</BreadcrumbLink>
 						</BreadcrumbItem>
@@ -233,41 +233,38 @@ export function FormularioFornecedor() {
 						</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<form
-							onSubmit={handleSubmit(onSubmit)}
-							className='space-y-6'
-						>
+						<form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
 							{/* Primeira linha: Nome, Email */}
-							<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-								<div className='space-y-2'>
-									<Label htmlFor='nome'>
+							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+								<div className="space-y-2">
+									<Label htmlFor="nome">
 										{t("suppliers.name")}{" "}
-										<span className='text-red-500'>*</span>
+										<span className="text-red-500">*</span>
 									</Label>
 									<Input
-										id='nome'
+										id="nome"
 										placeholder={t("suppliers.namePlaceholder")}
 										{...register("nome")}
 										className={errors.nome ? "border-red-500" : ""}
 									/>
 									{errors.nome && (
-										<p className='text-sm text-red-500'>
+										<p className="text-sm text-red-500">
 											{errors.nome.message}
 										</p>
 									)}
 								</div>
 
-								<div className='space-y-2'>
-									<Label htmlFor='email'>{t("suppliers.email")}</Label>
+								<div className="space-y-2">
+									<Label htmlFor="email">{t("suppliers.email")}</Label>
 									<Input
-										id='email'
-										type='email'
+										id="email"
+										type="email"
 										placeholder={t("suppliers.emailPlaceholder")}
 										{...register("email")}
 										className={errors.email ? "border-red-500" : ""}
 									/>
 									{errors.email && (
-										<p className='text-sm text-red-500'>
+										<p className="text-sm text-red-500">
 											{errors.email.message}
 										</p>
 									)}
@@ -275,32 +272,32 @@ export function FormularioFornecedor() {
 							</div>
 
 							{/* Segunda linha: Telefone, RUC/CNPJ */}
-							<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-								<div className='space-y-2'>
-									<Label htmlFor='telefone'>{t("suppliers.phone")}</Label>
+							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+								<div className="space-y-2">
+									<Label htmlFor="telefone">{t("suppliers.phone")}</Label>
 									<Input
-										id='telefone'
+										id="telefone"
 										placeholder={t("suppliers.phonePlaceholder")}
 										{...register("telefone")}
 										className={errors.telefone ? "border-red-500" : ""}
 									/>
 									{errors.telefone && (
-										<p className='text-sm text-red-500'>
+										<p className="text-sm text-red-500">
 											{errors.telefone.message}
 										</p>
 									)}
 								</div>
 
-								<div className='space-y-2'>
-									<Label htmlFor='ruccnpj'>{t("suppliers.rucCnpj")}</Label>
+								<div className="space-y-2">
+									<Label htmlFor="ruccnpj">{t("suppliers.rucCnpj")}</Label>
 									<Input
-										id='ruccnpj'
+										id="ruccnpj"
 										placeholder={t("suppliers.rucCnpjPlaceholder")}
 										{...register("ruccnpj")}
 										className={errors.ruccnpj ? "border-red-500" : ""}
 									/>
 									{errors.ruccnpj && (
-										<p className='text-sm text-red-500'>
+										<p className="text-sm text-red-500">
 											{errors.ruccnpj.message}
 										</p>
 									)}
@@ -308,52 +305,46 @@ export function FormularioFornecedor() {
 							</div>
 
 							{/* Terceira linha: Rede Social */}
-							<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-								<div className='space-y-2'>
-									<Label htmlFor='redesocial'>
+							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+								<div className="space-y-2">
+									<Label htmlFor="redesocial">
 										{t("suppliers.socialNetwork")}
 									</Label>
 									<Input
-										id='redesocial'
+										id="redesocial"
 										placeholder={t("suppliers.socialNetworkPlaceholder")}
 										{...register("redesocial")}
 										className={errors.redesocial ? "border-red-500" : ""}
 									/>
 									{errors.redesocial && (
-										<p className='text-sm text-red-500'>
+										<p className="text-sm text-red-500">
 											{errors.redesocial.message}
 										</p>
 									)}
 								</div>
 
-								<div className='space-y-2'>
+								<div className="space-y-2">
 									{/* Campo vazio para manter layout */}
 									<div></div>
 								</div>
 							</div>
 
 							{/* Botões */}
-							<div className='flex justify-end space-x-2'>
+							<div className="flex justify-end space-x-2">
 								<Button
-									type='button'
-									variant='outline'
+									type="button"
+									variant="outline"
 									onClick={handleCancel}
 									disabled={isSubmitting}
 								>
-									<X className='mr-2 h-4 w-4' />
+									<X className="mr-2 h-4 w-4" />
 									{t("common.cancel")}
 								</Button>
-								<Button
-									type='submit'
-									disabled={isSubmitting}
-								>
+								<Button type="submit" disabled={isSubmitting}>
 									{isSubmitting ? (
-										<Spinner
-											size='sm'
-											className='mr-2'
-										/>
+										<Spinner size="sm" className="mr-2" />
 									) : (
-										<Save className='mr-2 h-4 w-4' />
+										<Save className="mr-2 h-4 w-4" />
 									)}
 									{isEditing ? t("common.update") : t("common.create")}
 								</Button>

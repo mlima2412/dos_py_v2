@@ -8,15 +8,23 @@ import { CreateDespesaDto, TipoPagamento } from './dto/create-despesa.dto';
 
 import { Despesa } from './entities/despesa.entity';
 import { DespesaCacheService } from '../despesa-cache/despesa-cache.service';
+import { RollupDespesasCacheService } from '../despesa-cache/rollup-despesas-cache.service';
+import { DespesaClassificacaoCacheService } from '../despesa-classificacao-cache/despesa-classiificacao-cache.service';
+import { Decimal } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class DespesasService {
   constructor(
     private prisma: PrismaService,
     private despesaCacheService: DespesaCacheService,
+    private rollupDespesasCacheService: RollupDespesasCacheService,
+    private DespesaClassificacaoCacheService: DespesaClassificacaoCacheService,
   ) {}
 
-  async create(createDespesaDto: CreateDespesaDto, parceiroId: number): Promise<Despesa> {
+  async create(
+    createDespesaDto: CreateDespesaDto,
+    parceiroId: number,
+  ): Promise<Despesa> {
     // Verificar se o parceiro existe
     const parceiro = await this.prisma.parceiro.findUnique({
       where: { id: parceiroId },
@@ -48,18 +56,30 @@ export class DespesasService {
 
     // Validações específicas por tipo de pagamento
     if (createDespesaDto.tipoPagamento === TipoPagamento.PARCELADO) {
-      if (!createDespesaDto.numeroParcelas || createDespesaDto.numeroParcelas < 2) {
-        throw new BadRequestException('Número de parcelas deve ser maior que 1 para pagamento parcelado');
+      if (
+        !createDespesaDto.numeroParcelas ||
+        createDespesaDto.numeroParcelas < 2
+      ) {
+        throw new BadRequestException(
+          'Número de parcelas deve ser maior que 1 para pagamento parcelado',
+        );
       }
       if (!createDespesaDto.dataPrimeiraParcela) {
-        throw new BadRequestException('Data da primeira parcela é obrigatória para pagamento parcelado');
+        throw new BadRequestException(
+          'Data da primeira parcela é obrigatória para pagamento parcelado',
+        );
       }
-      if (createDespesaDto.valorEntrada && createDespesaDto.valorEntrada >= createDespesaDto.valorTotal) {
-        throw new BadRequestException('Valor de entrada deve ser menor que o valor total');
+      if (
+        createDespesaDto.valorEntrada &&
+        createDespesaDto.valorEntrada >= createDespesaDto.valorTotal
+      ) {
+        throw new BadRequestException(
+          'Valor de entrada deve ser menor que o valor total',
+        );
       }
     }
 
-    return await this.prisma.$transaction(async (prisma) => {
+    return await this.prisma.$transaction(async prisma => {
       // Criar instância da entidade com valores padrão
       const despesaEntity = Despesa.create({
         valorTotal: createDespesaDto.valorTotal,
@@ -75,8 +95,10 @@ export class DespesasService {
       const despesa = await prisma.despesa.create({
         data: {
           publicId: despesaEntity.publicId,
-          dataRegistro: createDespesaDto.dataRegistro ? new Date(createDespesaDto.dataRegistro) : new Date(),
-          valorTotal: createDespesaDto.valorTotal,  
+          dataRegistro: createDespesaDto.dataRegistro
+            ? new Date(createDespesaDto.dataRegistro)
+            : new Date(),
+          valorTotal: createDespesaDto.valorTotal,
           descricao: createDespesaDto.descricao,
           tipoPagamento: createDespesaDto.tipoPagamento,
           subCategoriaId: createDespesaDto.subCategoriaId,
@@ -88,7 +110,11 @@ export class DespesasService {
         include: {
           parceiro: true,
           fornecedor: true,
-          subCategoria: true,
+          subCategoria: {
+            include: {
+              categoria: true,
+            }
+          },
         },
       });
 
@@ -105,11 +131,31 @@ export class DespesasService {
       });
 
       // Criar ContasPagarParcelas baseado no tipo de pagamento
-      await this.createContasPagarParcelas(prisma, contasPagar.id, createDespesaDto);
+      await this.createContasPagarParcelas(
+        prisma,
+        contasPagar.id,
+        createDespesaDto,
+      );
 
       // Atualizar cache de despesas
       await this.updateCacheForNewDespesa(despesa, createDespesaDto);
 
+      // Atualizar cache de despesas classificacao
+      await this.DespesaClassificacaoCacheService.updateDespesaClassificacaoCache(
+        despesa.parceiroId,
+        despesa.dataRegistro,
+        despesa.subCategoria.categoriaId,
+        despesa.subCategoriaId,
+        new Decimal(despesa.valorTotal),
+        despesa.subCategoria.descricao,
+        despesa.subCategoria.categoria.descricao,
+      );
+
+      // incremente o contador de despesas no ano.
+      await this.rollupDespesasCacheService.incrYear(
+        parceiroId,
+        new Date(createDespesaDto.dataRegistro).getFullYear().toString(),
+      );
       return {
         ...despesa,
         valorTotal: Number(despesa.valorTotal),
@@ -118,9 +164,13 @@ export class DespesasService {
     });
   }
 
-  private async createContasPagarParcelas(prisma: any, contasPagarId: number, createDespesaDto: CreateDespesaDto) {
+  private async createContasPagarParcelas(
+    prisma: any,
+    contasPagarId: number,
+    createDespesaDto: CreateDespesaDto,
+  ) {
     const now = new Date();
-    
+
     switch (createDespesaDto.tipoPagamento) {
       case TipoPagamento.A_VISTA_IMEDIATA:
         // À vista imediata: 1 parcela já paga
@@ -135,7 +185,7 @@ export class DespesasService {
             pago: true,
           },
         });
-        
+
         // Atualizar saldo e status do ContasPagar
         await prisma.contasPagar.update({
           where: { id: contasPagarId },
@@ -149,7 +199,9 @@ export class DespesasService {
 
       case TipoPagamento.A_PRAZO_SEM_PARCELAS:
         // À prazo sem parcelas: 1 parcela para a data de vencimento
-        const dataVencimento = createDespesaDto.dataVencimento ? new Date(createDespesaDto.dataVencimento) : now;
+        const dataVencimento = createDespesaDto.dataVencimento
+          ? new Date(createDespesaDto.dataVencimento)
+          : now;
         await prisma.contasPagarParcelas.create({
           data: {
             publicId: `cpp_${Date.now()}_1`,
@@ -168,10 +220,12 @@ export class DespesasService {
         const valorRestante = createDespesaDto.valorTotal - valorEntrada;
         const numeroParcelas = createDespesaDto.numeroParcelas || 1;
         const valorParcela = valorRestante / numeroParcelas;
-        const dataPrimeiraParcela = new Date(createDespesaDto.dataPrimeiraParcela!);
-        
+        const dataPrimeiraParcela = new Date(
+          createDespesaDto.dataPrimeiraParcela!,
+        );
+
         let saldoPago = 0;
-        
+
         // Se tem entrada, criar parcela de entrada paga imediatamente
         if (valorEntrada > 0) {
           await prisma.contasPagarParcelas.create({
@@ -187,12 +241,14 @@ export class DespesasService {
           });
           saldoPago = valorEntrada;
         }
-        
+
         // Criar parcelas restantes
         for (let i = 1; i <= numeroParcelas; i++) {
           const dataVencimentoParcela = new Date(dataPrimeiraParcela);
-          dataVencimentoParcela.setMonth(dataVencimentoParcela.getMonth() + (i - 1));
-          
+          dataVencimentoParcela.setMonth(
+            dataVencimentoParcela.getMonth() + (i - 1),
+          );
+
           await prisma.contasPagarParcelas.create({
             data: {
               publicId: `cpp_${Date.now()}_${i}`,
@@ -205,7 +261,7 @@ export class DespesasService {
             },
           });
         }
-        
+
         // Atualizar saldo do ContasPagar se houve entrada
         if (saldoPago > 0) {
           await prisma.contasPagar.update({
@@ -241,9 +297,9 @@ export class DespesasService {
 
   async findOne(publicId: string, parceiroId: number): Promise<Despesa> {
     const despesa = await this.prisma.despesa.findFirst({
-      where: { 
+      where: {
         publicId,
-        parceiroId 
+        parceiroId,
       },
       include: {
         parceiro: true,
@@ -270,17 +326,22 @@ export class DespesasService {
     let statusPagamento = 'em_aberto';
     let valorPago = 0;
     let valorTotal = Number(despesa.valorTotal);
-    
+
     if (despesa.ContasPagar && despesa.ContasPagar.length > 0) {
       const contasPagar = despesa.ContasPagar[0]; // Assumindo uma conta por despesa
-      if (contasPagar.ContasPagarParcelas && contasPagar.ContasPagarParcelas.length > 0) {
-        valorPago = contasPagar.ContasPagarParcelas
-          .filter(parcela => parcela.pago)
-          .reduce((sum, parcela) => sum + Number(parcela.valor), 0);
-        
+      if (
+        contasPagar.ContasPagarParcelas &&
+        contasPagar.ContasPagarParcelas.length > 0
+      ) {
+        valorPago = contasPagar.ContasPagarParcelas.filter(
+          parcela => parcela.pago,
+        ).reduce((sum, parcela) => sum + Number(parcela.valor), 0);
+
         const totalParcelas = contasPagar.ContasPagarParcelas.length;
-        const parcelasPagas = contasPagar.ContasPagarParcelas.filter(p => p.pago).length;
-        
+        const parcelasPagas = contasPagar.ContasPagarParcelas.filter(
+          p => p.pago,
+        ).length;
+
         // Verificar se o valor pago é igual ou maior que o valor total (para lidar com arredondamentos)
         if (parcelasPagas === totalParcelas || valorPago >= valorTotal) {
           statusPagamento = 'paga';
@@ -320,23 +381,28 @@ export class DespesasService {
       },
       orderBy: { dataRegistro: 'desc' }, // Ordenação decrescente conforme solicitado
     });
-    
+
     return despesas.map(despesa => {
       // Calcular status de pagamento baseado nas parcelas
       let statusPagamento = 'em_aberto';
       let valorPago = 0;
       let valorTotal = Number(despesa.valorTotal);
-      
+
       if (despesa.ContasPagar && despesa.ContasPagar.length > 0) {
         const contasPagar = despesa.ContasPagar[0]; // Assumindo uma conta por despesa
-        if (contasPagar.ContasPagarParcelas && contasPagar.ContasPagarParcelas.length > 0) {
-          valorPago = contasPagar.ContasPagarParcelas
-            .filter(parcela => parcela.pago)
-            .reduce((sum, parcela) => sum + Number(parcela.valor), 0);
-          
+        if (
+          contasPagar.ContasPagarParcelas &&
+          contasPagar.ContasPagarParcelas.length > 0
+        ) {
+          valorPago = contasPagar.ContasPagarParcelas.filter(
+            parcela => parcela.pago,
+          ).reduce((sum, parcela) => sum + Number(parcela.valor), 0);
+
           const totalParcelas = contasPagar.ContasPagarParcelas.length;
-          const parcelasPagas = contasPagar.ContasPagarParcelas.filter(p => p.pago).length;
-          
+          const parcelasPagas = contasPagar.ContasPagarParcelas.filter(
+            p => p.pago,
+          ).length;
+
           // Verificar se o valor pago é igual ou maior que o valor total (para lidar com arredondamentos)
           if (parcelasPagas === totalParcelas || valorPago >= valorTotal) {
             statusPagamento = 'paga';
@@ -345,7 +411,7 @@ export class DespesasService {
           }
         }
       }
-      
+
       return {
         ...despesa,
         valorTotal,
@@ -357,8 +423,6 @@ export class DespesasService {
     }) as any[];
   }
 
-
-
   async findPaginated(params: {
     page: number;
     limit: number;
@@ -367,7 +431,8 @@ export class DespesasService {
     fornecedorId?: number;
     subCategoriaId?: number;
   }) {
-    const { page, limit, search, parceiroId, fornecedorId, subCategoriaId } = params;
+    const { page, limit, search, parceiroId, fornecedorId, subCategoriaId } =
+      params;
     const skip = (page - 1) * limit;
 
     // Construir filtros
@@ -432,17 +497,22 @@ export class DespesasService {
         let statusPagamento = 'em_aberto';
         let valorPago = 0;
         let valorTotal = Number(despesa.valorTotal);
-        
+
         if (despesa.ContasPagar && despesa.ContasPagar.length > 0) {
           const contasPagar = despesa.ContasPagar[0]; // Assumindo uma conta por despesa
-          if (contasPagar.ContasPagarParcelas && contasPagar.ContasPagarParcelas.length > 0) {
-            valorPago = contasPagar.ContasPagarParcelas
-              .filter(parcela => parcela.pago)
-              .reduce((sum, parcela) => sum + Number(parcela.valor), 0);
-            
+          if (
+            contasPagar.ContasPagarParcelas &&
+            contasPagar.ContasPagarParcelas.length > 0
+          ) {
+            valorPago = contasPagar.ContasPagarParcelas.filter(
+              parcela => parcela.pago,
+            ).reduce((sum, parcela) => sum + Number(parcela.valor), 0);
+
             const totalParcelas = contasPagar.ContasPagarParcelas.length;
-            const parcelasPagas = contasPagar.ContasPagarParcelas.filter(p => p.pago).length;
-            
+            const parcelasPagas = contasPagar.ContasPagarParcelas.filter(
+              p => p.pago,
+            ).length;
+
             // Verificar se o valor pago é igual ou maior que o valor total (para lidar com arredondamentos)
             if (parcelasPagas === totalParcelas || valorPago >= valorTotal) {
               statusPagamento = 'paga';
@@ -451,7 +521,7 @@ export class DespesasService {
             }
           }
         }
-        
+
         return {
           ...despesa,
           valorTotal,
@@ -468,17 +538,20 @@ export class DespesasService {
     };
   }
 
-
-
   async remove(publicId: string, parceiroId: number): Promise<void> {
     // Verificar se a despesa existe e pertence ao parceiro
     const existingDespesa = await this.prisma.despesa.findFirst({
-      where: { 
+      where: {
         publicId,
-        parceiroId 
+        parceiroId,
       },
       include: {
         parceiro: true,
+        subCategoria: {
+          include: {
+            categoria: true,
+          },
+        },
         ContasPagar: {
           include: {
             ContasPagarParcelas: true,
@@ -490,9 +563,20 @@ export class DespesasService {
     if (!existingDespesa) {
       throw new NotFoundException('Despesa não encontrada');
     }
+    await this.DespesaClassificacaoCacheService.removeDespesaClassificacaoCache(
+      existingDespesa.parceiroId,
+      existingDespesa.dataRegistro,
+      existingDespesa.subCategoria.categoria.idCategoria,
+      existingDespesa.subCategoriaId,
+      existingDespesa.valorTotal,
+    );
 
     // Remover do cache antes de deletar
     await this.removeCacheForDeletedDespesa(existingDespesa);
+    await this.rollupDespesasCacheService.decrYear(
+      parceiroId,
+      new Date(existingDespesa.dataRegistro).getFullYear().toString(),
+    );
 
     // O delete cascade do Prisma irá automaticamente remover ContasPagar e ContasPagarParcelas
     await this.prisma.despesa.delete({
@@ -505,45 +589,52 @@ export class DespesasService {
    */
   private async updateCacheForNewDespesa(
     despesa: any,
-    createDespesaDto: CreateDespesaDto
+    createDespesaDto: CreateDespesaDto,
   ): Promise<void> {
-    const parceiroPublicId = despesa.parceiro.publicId;
+    const parceiroId = despesa.parceiro.id;
     const tipoPagamento = createDespesaDto.tipoPagamento;
-    
+
     if (tipoPagamento === TipoPagamento.PARCELADO) {
       // Para pagamentos parcelados, processar cada parcela individualmente
       const valorEntrada = createDespesaDto.valorEntrada || 0;
       const valorRestante = createDespesaDto.valorTotal - valorEntrada;
       const numeroParcelas = createDespesaDto.numeroParcelas || 1;
       const valorParcela = valorRestante / numeroParcelas;
-      const dataPrimeiraParcela = new Date(createDespesaDto.dataPrimeiraParcela!);
-      
+      const dataPrimeiraParcela = new Date(
+        createDespesaDto.dataPrimeiraParcela!,
+      );
+
       // Se tem entrada, adicionar ao cache como pago (realized)
       if (valorEntrada > 0) {
         await this.despesaCacheService.updateDespesaCache(
-          parceiroPublicId,
+          parceiroId,
           despesa.dataRegistro,
           valorEntrada,
-          false // isFuture = false (já pago)
+          false, // isFuture = false (já pago)
         );
       }
-      
+
       // Adicionar cada parcela ao cache como futuro (to_pay)
       for (let i = 1; i <= numeroParcelas; i++) {
         const dataVencimentoParcela = new Date(dataPrimeiraParcela);
-        dataVencimentoParcela.setMonth(dataVencimentoParcela.getMonth() + (i - 1));
-        
+        dataVencimentoParcela.setMonth(
+          dataVencimentoParcela.getMonth() + (i - 1),
+        );
+
         await this.despesaCacheService.updateDespesaCache(
-          parceiroPublicId,
+          parceiroId,
           dataVencimentoParcela,
           valorParcela,
-          true // isFuture = true (a pagar)
+          true, // isFuture = true (a pagar)
         );
       }
     } else {
       // Para outros tipos de pagamento, usar a lógica original
       let dataParaCache: Date;
-      if (tipoPagamento === TipoPagamento.A_PRAZO_SEM_PARCELAS && createDespesaDto.dataVencimento) {
+      if (
+        tipoPagamento === TipoPagamento.A_PRAZO_SEM_PARCELAS &&
+        createDespesaDto.dataVencimento
+      ) {
         dataParaCache = new Date(createDespesaDto.dataVencimento);
       } else {
         dataParaCache = despesa.dataRegistro;
@@ -551,41 +642,46 @@ export class DespesasService {
 
       // Determinar se é futuro baseado no tipo de pagamento
       const isFuture = tipoPagamento === TipoPagamento.A_PRAZO_SEM_PARCELAS;
-      
+
       await this.despesaCacheService.updateDespesaCache(
-        parceiroPublicId,
+        parceiroId,
         dataParaCache,
         createDespesaDto.valorTotal,
-        isFuture
+        isFuture,
       );
     }
   }
 
-   /**
-    * Remove do cache uma despesa que está sendo deletada
-    */
-   private async removeCacheForDeletedDespesa(despesa: any): Promise<void> {
-     const parceiroPublicId = despesa.parceiro.publicId;
-     
-     // Para cada conta a pagar da despesa
-     for (const contasPagar of despesa.ContasPagar) {
-       // Para cada parcela da conta a pagar
-       for (const parcela of contasPagar.ContasPagarParcelas) {
-         const valorParcela = Number(parcela.valor);
-         const dataVencimento = parcela.dataVencimento;
-         const isPago = parcela.pago;
-         
-         // Se a parcela está paga, remover do realized
-         // Se não está paga, remover do to_pay
-         await this.despesaCacheService.removeDespesaFromCache(
-           parceiroPublicId,
-           dataVencimento,
-           valorParcela,
-           !isPago // isFuture: se não está pago, estava em to_pay (future)
-         );
-       }
-     }
-   }
+  /**
+   * Lista todas os anos que tiveram despesas
+   */
+  async listYears(parceiroId: number) {
+    return await this.rollupDespesasCacheService.listYears(parceiroId);
+  }
+  /**
+   * Remove do cache uma despesa que está sendo deletada
+   */
+  private async removeCacheForDeletedDespesa(despesa: any): Promise<void> {
+    const parceiroId = despesa.parceiro.id;
+    // Para cada conta a pagar da despesa
+    for (const contasPagar of despesa.ContasPagar) {
+      // Para cada parcela da conta a pagar
+      console.log('contasPagar:', contasPagar);
+      for (const parcela of contasPagar.ContasPagarParcelas) {
+        console.log('parcela:', parcela);
+        const valorParcela = Number(parcela.valor);
+        const dataVencimento = parcela.dataVencimento;
 
-
- }
+        // Se a parcela está paga, remover do realized
+        // Se não está paga, remover do to_pay
+        console.log('parcela.pago', parcela);
+        await this.despesaCacheService.removeDespesaFromCache(
+          parceiroId,
+          dataVencimento,
+          valorParcela,
+          parcela.pago,
+        );
+      }
+    }
+  }
+}

@@ -5,7 +5,6 @@ import { PrismaModule } from '../src/prisma/prisma.module'
 import { DespesasModule } from '../src/despesas/despesas.module';
 import { CategoriaDespesasModule } from '../src/categoria-despesas/categoria-despesas.module'
 import { SubCategoriaDespesaModule } from '../src/subcategoria-despesa/subcategoria-despesa.module'
-
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),

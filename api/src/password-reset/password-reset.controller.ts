@@ -20,7 +20,7 @@ import { RequestPasswordResetDto } from './dto/request-password-reset.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { Public } from '../auth/decorators/public.decorator';
 
-import { TFunction } from 'i18next'
+import { TFunction } from 'i18next';
 
 @ApiTags('password-reset')
 @Controller('password-reset')
@@ -51,9 +51,9 @@ export class PasswordResetController {
   })
   async requestPasswordReset(
     @Body() requestDto: RequestPasswordResetDto,
-    @Req() req: Request & { language: string; t: TFunction }
+    @Req() req: Request & { language: string; t: TFunction },
   ) {
-    const lang = req.language || 'pt'
+    const lang = req.language || 'pt';
     return this.passwordResetService.requestPasswordReset(requestDto, lang);
   }
 

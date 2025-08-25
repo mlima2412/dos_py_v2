@@ -57,7 +57,9 @@ export class UsuarioParceiroService {
     return usuarioParceiroEntity;
   }
 
-  async create(createUsuarioParceiroDto: CreateUsuarioParceiroDto): Promise<UsuarioParceiro> {
+  async create(
+    createUsuarioParceiroDto: CreateUsuarioParceiroDto,
+  ): Promise<UsuarioParceiro> {
     // Verificar se o usuário existe
     const usuario = await this.prisma.usuario.findUnique({
       where: { id: createUsuarioParceiroDto.usuarioId },
@@ -87,7 +89,9 @@ export class UsuarioParceiroService {
     }
 
     // Criar instância da entidade com valores padrão
-    const usuarioParceiroEntity = UsuarioParceiro.create(createUsuarioParceiroDto);
+    const usuarioParceiroEntity = UsuarioParceiro.create(
+      createUsuarioParceiroDto,
+    );
 
     const usuarioParceiro = await this.prisma.usuarioParceiro.create({
       data: {
@@ -132,11 +136,11 @@ export class UsuarioParceiroService {
 
   async findByUsuario(usuarioId: number): Promise<UsuarioParceiro[]> {
     const usuarioParceiros = await this.prisma.usuarioParceiro.findMany({
-      where: { 
+      where: {
         usuarioId,
         Parceiro: {
-          ativo: true
-        }
+          ativo: true,
+        },
       },
       include: {
         Usuario: true,
@@ -168,7 +172,10 @@ export class UsuarioParceiroService {
     });
   }
 
-  async removeByUsuarioAndParceiro(usuarioId: number, parceiroId: number): Promise<void> {
+  async removeByUsuarioAndParceiro(
+    usuarioId: number,
+    parceiroId: number,
+  ): Promise<void> {
     const usuarioParceiro = await this.prisma.usuarioParceiro.findFirst({
       where: {
         usuarioId,

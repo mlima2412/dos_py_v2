@@ -8,6 +8,7 @@ import {
   Delete,
   ParseIntPipe,
   UseGuards,
+  Headers,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -54,13 +55,15 @@ export class ContasPagarParcelasController {
     description: 'Lista de parcelas.',
     type: [ContasPagarParcelas],
   })
-  async findAll(
-  ): Promise<ContasPagarParcelas[]> {
+  async findAll(): Promise<ContasPagarParcelas[]> {
     return this.contasPagarParcelasService.findAll();
   }
 
   @Get('agenda/:parceiroId')
-  @ApiOperation({ summary: 'Listar todas as parcelas de contas a pagar da agenda de compromissos' })
+  @ApiOperation({
+    summary:
+      'Listar todas as parcelas de contas a pagar da agenda de compromissos',
+  })
   @ApiParam({
     name: 'parceiroId',
     required: true,
@@ -120,10 +123,13 @@ export class ContasPagarParcelasController {
   async update(
     @Param('publicId') publicId: string,
     @Body() updateContasPagarParcelasDto: UpdateContasPagarParcelasDto,
+    @Headers('x-parceiro-id') parceiroId?: string,
   ): Promise<ContasPagarParcelas> {
+    const parceiroIdNumber = parceiroId ? Number(parceiroId) : undefined;
     return this.contasPagarParcelasService.update(
       publicId,
       updateContasPagarParcelasDto,
+      parceiroIdNumber,
     );
   }
 

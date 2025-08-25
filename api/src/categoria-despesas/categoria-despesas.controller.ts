@@ -25,7 +25,9 @@ import { CategoriaDespesas } from './entities/categoria-despesas.entity';
 @ApiBearerAuth('JWT-auth')
 @Controller('categoria-despesas')
 export class CategoriaDespesasController {
-  constructor(private readonly categoriaDespesasService: CategoriaDespesasService) {}
+  constructor(
+    private readonly categoriaDespesasService: CategoriaDespesasService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Criar nova categoria de despesas' })
@@ -61,9 +63,14 @@ export class CategoriaDespesasController {
       },
     },
   })
-  @ApiResponse({ status: 409, description: 'Descrição da categoria já está em uso' })
+  @ApiResponse({
+    status: 409,
+    description: 'Descrição da categoria já está em uso',
+  })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
-  create(@Body() createCategoriaDespesasDto: CreateCategoriaDespesasDto): Promise<CategoriaDespesas> {
+  create(
+    @Body() createCategoriaDespesasDto: CreateCategoriaDespesasDto,
+  ): Promise<CategoriaDespesas> {
     return this.categoriaDespesasService.create(createCategoriaDespesasDto);
   }
 
@@ -92,7 +99,11 @@ export class CategoriaDespesasController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Buscar categoria de despesas por ID' })
-  @ApiParam({ name: 'id', description: 'ID da categoria de despesas', type: 'number' })
+  @ApiParam({
+    name: 'id',
+    description: 'ID da categoria de despesas',
+    type: 'number',
+  })
   @ApiResponse({
     status: 200,
     description: 'Categoria de despesas encontrada',
@@ -106,7 +117,10 @@ export class CategoriaDespesasController {
       },
     },
   })
-  @ApiResponse({ status: 404, description: 'Categoria de despesas não encontrada' })
+  @ApiResponse({
+    status: 404,
+    description: 'Categoria de despesas não encontrada',
+  })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
   findOne(@Param('id', ParseIntPipe) id: number): Promise<CategoriaDespesas> {
     return this.categoriaDespesasService.findOne(id);
@@ -114,7 +128,11 @@ export class CategoriaDespesasController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Atualizar categoria de despesas' })
-  @ApiParam({ name: 'id', description: 'ID da categoria de despesas', type: 'number' })
+  @ApiParam({
+    name: 'id',
+    description: 'ID da categoria de despesas',
+    type: 'number',
+  })
   @ApiBody({
     type: UpdateCategoriaDespesasDto,
     examples: {
@@ -145,8 +163,14 @@ export class CategoriaDespesasController {
       },
     },
   })
-  @ApiResponse({ status: 404, description: 'Categoria de despesas não encontrada' })
-  @ApiResponse({ status: 409, description: 'Descrição da categoria já está em uso' })
+  @ApiResponse({
+    status: 404,
+    description: 'Categoria de despesas não encontrada',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Descrição da categoria já está em uso',
+  })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -157,9 +181,19 @@ export class CategoriaDespesasController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Remover categoria de despesas (soft delete)' })
-  @ApiParam({ name: 'id', description: 'ID da categoria de despesas', type: 'number' })
-  @ApiResponse({ status: 200, description: 'Categoria de despesas removida com sucesso' })
-  @ApiResponse({ status: 404, description: 'Categoria de despesas não encontrada' })
+  @ApiParam({
+    name: 'id',
+    description: 'ID da categoria de despesas',
+    type: 'number',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Categoria de despesas removida com sucesso',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Categoria de despesas não encontrada',
+  })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
   remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.categoriaDespesasService.remove(id);

@@ -168,7 +168,10 @@ export class CurrencyController {
   })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
   @ApiResponse({ status: 404, description: 'Moeda não encontrada' })
-  @ApiResponse({ status: 409, description: 'Moeda está sendo utilizada e não pode ser removida' })
+  @ApiResponse({
+    status: 409,
+    description: 'Moeda está sendo utilizada e não pode ser removida',
+  })
   @HttpCode(HttpStatus.OK)
   remove(@Param('publicId') publicId: string) {
     return this.currencyService.remove(publicId);

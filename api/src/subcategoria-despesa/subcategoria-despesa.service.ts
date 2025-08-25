@@ -12,7 +12,9 @@ import { SubCategoriaDespesa } from './entities/subcategoria-despesa.entity';
 export class SubCategoriaDespesaService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createSubCategoriaDespesaDto: CreateSubCategoriaDespesaDto): Promise<SubCategoriaDespesa> {
+  async create(
+    createSubCategoriaDespesaDto: CreateSubCategoriaDespesaDto,
+  ): Promise<SubCategoriaDespesa> {
     // Verificar se a categoria existe
     const categoria = await this.prisma.categoriaDespesas.findUnique({
       where: { idCategoria: createSubCategoriaDespesaDto.categoriaId },
@@ -32,7 +34,9 @@ export class SubCategoriaDespesaService {
     });
 
     if (existingItem) {
-      throw new ConflictException('Descrição da subcategoria já existe nesta categoria');
+      throw new ConflictException(
+        'Descrição da subcategoria já existe nesta categoria',
+      );
     }
 
     // Criar instância da entidade SubCategoriaDespesa
@@ -96,7 +100,10 @@ export class SubCategoriaDespesaService {
     return item;
   }
 
-  async update(idSubCategoria: number, updateSubCategoriaDespesaDto: UpdateSubCategoriaDespesaDto): Promise<SubCategoriaDespesa> {
+  async update(
+    idSubCategoria: number,
+    updateSubCategoriaDespesaDto: UpdateSubCategoriaDespesaDto,
+  ): Promise<SubCategoriaDespesa> {
     // Verificar se a subcategoria existe
     await this.findOne(idSubCategoria);
 
@@ -112,13 +119,18 @@ export class SubCategoriaDespesaService {
     }
 
     // Verificar se a nova descrição já existe na categoria (se fornecida)
-    if (updateSubCategoriaDespesaDto.descricao || updateSubCategoriaDespesaDto.categoriaId) {
+    if (
+      updateSubCategoriaDespesaDto.descricao ||
+      updateSubCategoriaDespesaDto.categoriaId
+    ) {
       const currentItem = await this.prisma.subCategoriaDespesa.findUnique({
         where: { idSubCategoria },
       });
 
-      const descricao = updateSubCategoriaDespesaDto.descricao || currentItem.descricao;
-      const categoriaId = updateSubCategoriaDespesaDto.categoriaId || currentItem.categoriaId;
+      const descricao =
+        updateSubCategoriaDespesaDto.descricao || currentItem.descricao;
+      const categoriaId =
+        updateSubCategoriaDespesaDto.categoriaId || currentItem.categoriaId;
 
       const existingItem = await this.prisma.subCategoriaDespesa.findFirst({
         where: {
@@ -129,7 +141,9 @@ export class SubCategoriaDespesaService {
       });
 
       if (existingItem) {
-        throw new ConflictException('Descrição da subcategoria já existe nesta categoria');
+        throw new ConflictException(
+          'Descrição da subcategoria já existe nesta categoria',
+        );
       }
     }
 

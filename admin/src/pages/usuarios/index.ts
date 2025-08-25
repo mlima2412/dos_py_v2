@@ -1,1 +1,1 @@
-export { ListarUsuarios } from './ListarUsuarios';
+export { ListarUsuarios } from "./ListarUsuarios";

@@ -1,4 +1,4 @@
-import { Eye, EyeOff, Lock, Mail, LockOpen } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, LockOpen } from "lucide-react";
 
 export const EyeIcon = Eye;
 export const EyeOffIcon = EyeOff;

@@ -125,7 +125,7 @@ export function FormularioParceiro() {
 			if (
 				current &&
 				currencies &&
-				!currencies.some((c) => c.id.toString() === current)
+				!currencies.some(c => c.id.toString() === current)
 			) {
 				setValue("currencyId", "");
 			}
@@ -197,8 +197,8 @@ export function FormularioParceiro() {
 	if (isLoading) {
 		return (
 			<DashboardLayout>
-				<div className='flex items-center justify-center min-h-[400px]'>
-					<Spinner size='lg' />
+				<div className="flex items-center justify-center min-h-[400px]">
+					<Spinner size="lg" />
 				</div>
 			</DashboardLayout>
 		);
@@ -206,16 +206,16 @@ export function FormularioParceiro() {
 
 	return (
 		<DashboardLayout>
-			<div className='space-y-6'>
+			<div className="space-y-6">
 				{/* Breadcrumb */}
 				<Breadcrumb>
 					<BreadcrumbList>
 						<BreadcrumbItem>
-							<BreadcrumbLink href='/'>{t("navigation.home")}</BreadcrumbLink>
+							<BreadcrumbLink href="/">{t("navigation.home")}</BreadcrumbLink>
 						</BreadcrumbItem>
 						<BreadcrumbSeparator />
 						<BreadcrumbItem>
-							<BreadcrumbLink href='/parceiros'>
+							<BreadcrumbLink href="/parceiros">
 								{t("partners.title")}
 							</BreadcrumbLink>
 						</BreadcrumbItem>
@@ -230,57 +230,54 @@ export function FormularioParceiro() {
 
 				{/* Formulário */}
 				<Card>
-					<CardContent className='pt-6'>
-						<form
-							onSubmit={handleSubmit(onSubmit)}
-							className='space-y-6'
-						>
+					<CardContent className="pt-6">
+						<form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
 							{/* Primeira linha: Nome, Email, RUC/CNPJ */}
-							<div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+							<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 								{/* Nome */}
-								<div className='space-y-2'>
-									<Label htmlFor='nome'>{t("partners.name")} *</Label>
+								<div className="space-y-2">
+									<Label htmlFor="nome">{t("partners.name")} *</Label>
 									<Input
-										id='nome'
+										id="nome"
 										{...register("nome")}
 										placeholder={t("partners.namePlaceholder")}
 										className={errors.nome ? "border-destructive" : ""}
 									/>
 									{errors.nome && (
-										<p className='text-sm text-destructive'>
+										<p className="text-sm text-destructive">
 											{errors.nome.message}
 										</p>
 									)}
 								</div>
 
 								{/* Email */}
-								<div className='space-y-2'>
-									<Label htmlFor='email'>{t("partners.email")} *</Label>
+								<div className="space-y-2">
+									<Label htmlFor="email">{t("partners.email")} *</Label>
 									<Input
-										id='email'
-										type='email'
+										id="email"
+										type="email"
 										{...register("email")}
 										placeholder={t("partners.emailPlaceholder")}
 										className={errors.email ? "border-destructive" : ""}
 									/>
 									{errors.email && (
-										<p className='text-sm text-destructive'>
+										<p className="text-sm text-destructive">
 											{errors.email.message}
 										</p>
 									)}
 								</div>
 
 								{/* RUC/CNPJ */}
-								<div className='space-y-2'>
-									<Label htmlFor='ruccnpj'>{t("partners.ruccnpj")} *</Label>
+								<div className="space-y-2">
+									<Label htmlFor="ruccnpj">{t("partners.ruccnpj")} *</Label>
 									<Input
-										id='ruccnpj'
+										id="ruccnpj"
 										{...register("ruccnpj")}
 										placeholder={t("partners.ruccnpjPlaceholder")}
 										className={errors.ruccnpj ? "border-destructive" : ""}
 									/>
 									{errors.ruccnpj && (
-										<p className='text-sm text-destructive'>
+										<p className="text-sm text-destructive">
 											{errors.ruccnpj.message}
 										</p>
 									)}
@@ -288,18 +285,18 @@ export function FormularioParceiro() {
 							</div>
 
 							{/* Segunda linha: Moeda, Telefone, Rede Social */}
-							<div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+							<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 								{/* Moeda */}
-								<div className='space-y-2'>
-									<Label htmlFor='currencyId'>{t("partners.currency")}</Label>
+								<div className="space-y-2">
+									<Label htmlFor="currencyId">{t("partners.currency")}</Label>
 
 									<Controller
-										name='currencyId'
+										name="currencyId"
 										control={control}
 										render={({ field }) => (
 											<Select
 												value={field.value || undefined} // evita "" e problemas de placeholder
-												onValueChange={(v) => field.onChange(v)} // mantém string no form
+												onValueChange={v => field.onChange(v)} // mantém string no form
 												disabled={isLoadingCurrencies}
 											>
 												<SelectTrigger
@@ -313,14 +310,11 @@ export function FormularioParceiro() {
 												</SelectTrigger>
 												<SelectContent>
 													{isLoadingCurrencies ? (
-														<SelectItem
-															value=''
-															disabled
-														>
+														<SelectItem value="" disabled>
 															{t("common.loading")}
 														</SelectItem>
 													) : (
-														currencies?.map((currency) => (
+														currencies?.map(currency => (
 															<SelectItem
 																key={currency.publicId}
 																value={currency.id.toString()} // Select sempre lida com string
@@ -335,29 +329,29 @@ export function FormularioParceiro() {
 									/>
 
 									{errors.currencyId && (
-										<p className='text-sm text-destructive'>
+										<p className="text-sm text-destructive">
 											{errors.currencyId.message}
 										</p>
 									)}
 								</div>
 
 								{/* Telefone */}
-								<div className='space-y-2'>
-									<Label htmlFor='telefone'>{t("partners.phone")}</Label>
+								<div className="space-y-2">
+									<Label htmlFor="telefone">{t("partners.phone")}</Label>
 									<Input
-										id='telefone'
+										id="telefone"
 										{...register("telefone")}
 										placeholder={t("partners.phonePlaceholder")}
 									/>
 								</div>
 
 								{/* Rede Social */}
-								<div className='space-y-2'>
-									<Label htmlFor='redesocial'>
+								<div className="space-y-2">
+									<Label htmlFor="redesocial">
 										{t("partners.socialNetwork")}
 									</Label>
 									<Input
-										id='redesocial'
+										id="redesocial"
 										{...register("redesocial")}
 										placeholder={t("partners.socialNetworkPlaceholder")}
 									/>
@@ -365,27 +359,21 @@ export function FormularioParceiro() {
 							</div>
 
 							{/* Botões */}
-							<div className='flex justify-end space-x-4'>
+							<div className="flex justify-end space-x-4">
 								<Button
-									type='button'
-									variant='outline'
+									type="button"
+									variant="outline"
 									onClick={() => navigate("/parceiros")}
 									disabled={isSaving}
 								>
-									<X className='mr-2 h-4 w-4' />
+									<X className="mr-2 h-4 w-4" />
 									{t("common.cancel")}
 								</Button>
-								<Button
-									type='submit'
-									disabled={isSaving}
-								>
+								<Button type="submit" disabled={isSaving}>
 									{isSaving ? (
-										<Spinner
-											size='sm'
-											className='mr-2'
-										/>
+										<Spinner size="sm" className="mr-2" />
 									) : (
-										<Save className='mr-2 h-4 w-4' />
+										<Save className="mr-2 h-4 w-4" />
 									)}
 									{isEditing ? t("common.update") : t("common.create")}
 								</Button>

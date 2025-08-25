@@ -5,11 +5,11 @@ import { SeedModule } from './seed.module';
 import { Client } from 'pg';
 import { DespesasService } from '../src/despesas/despesas.service';
 import { CategoriaDespesasService } from '../src/categoria-despesas/categoria-despesas.service'
-import { SubCategoriaDespesaService } from '../src/subcategoria-despesa/subcategoria-despesa.service'
+import { RollupDespesasCacheService } from '../src/despesa-cache/rollup-despesas-cache.service'
 
 import { CreateDespesaDto, TipoPagamento as TipoPagamentoEnum } from '../src/despesas/dto/create-despesa.dto';
 import { CreateCategoriaDespesasDto } from '../src/categoria-despesas/dto/create-categoria-despesas.dto'
-import { CreateSubCategoriaDespesaDto } from 'src/subcategoria-despesa/dto/create-subcategoria-despesa.dto'
+import { CreateSubCategoriaDespesaDto } from '../src/subcategoria-despesa/dto/create-subcategoria-despesa.dto'
 
 async function fetchDespesaFromLegacy(legacyDb) {
  

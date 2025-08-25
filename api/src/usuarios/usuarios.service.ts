@@ -52,7 +52,7 @@ export class UsuariosService {
       },
     });
 
-  return usuario;
+    return usuario;
   }
 
   async findAll(): Promise<Usuario[]> {
@@ -239,7 +239,7 @@ export class UsuariosService {
     const usuario = await this.prisma.usuario.findUnique({
       where: { email },
     });
-  return usuario;
+    return usuario;
   }
 
   async update(
@@ -279,7 +279,7 @@ export class UsuariosService {
       data: updateData,
     });
 
-  return usuario;
+    return usuario;
   }
 
   async findActiveUsers(): Promise<any[]> {

@@ -4,7 +4,7 @@
  * @returns String vazia se for 'all' ou falsy, senão retorna o valor original
  */
 export const normalizePerfilFilter = (perfilFilter: string): string => {
-  return perfilFilter && perfilFilter !== 'all' ? perfilFilter : '';
+	return perfilFilter && perfilFilter !== "all" ? perfilFilter : "";
 };
 
 /**
@@ -13,5 +13,5 @@ export const normalizePerfilFilter = (perfilFilter: string): string => {
  * @returns true se o filtro estiver ativo
  */
 export const isFilterActive = (filter: string): boolean => {
-  return Boolean(filter && filter !== 'all');
+	return Boolean(filter && filter !== "all");
 };

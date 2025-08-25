@@ -15,9 +15,11 @@ export class FornecedoresService {
   async create(createFornecedorDto: CreateFornecedorDto): Promise<Fornecedor> {
     // Verificar se o email já existe (se fornecido)
     if (createFornecedorDto.email) {
-      const existingFornecedorByEmail = await this.prisma.fornecedor.findUnique({
-        where: { email: createFornecedorDto.email },
-      });
+      const existingFornecedorByEmail = await this.prisma.fornecedor.findUnique(
+        {
+          where: { email: createFornecedorDto.email },
+        },
+      );
 
       if (existingFornecedorByEmail) {
         throw new ConflictException('Email já está em uso');
@@ -26,9 +28,10 @@ export class FornecedoresService {
 
     // Verificar se o RUC/CNPJ já existe (se fornecido)
     if (createFornecedorDto.ruccnpj) {
-      const existingFornecedorByRucCnpj = await this.prisma.fornecedor.findUnique({
-        where: { ruccnpj: createFornecedorDto.ruccnpj },
-      });
+      const existingFornecedorByRucCnpj =
+        await this.prisma.fornecedor.findUnique({
+          where: { ruccnpj: createFornecedorDto.ruccnpj },
+        });
 
       if (existingFornecedorByRucCnpj) {
         throw new ConflictException('RUC/CNPJ já está em uso');

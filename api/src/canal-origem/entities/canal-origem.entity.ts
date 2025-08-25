@@ -51,12 +51,12 @@ export class CanalOrigem {
     if (data) {
       Object.assign(this, data);
     }
-    
+
     // Gerar UUID sempre que uma nova instância é criada
     if (!this.publicId) {
       this.publicId = uuidv7();
     }
-    
+
     // Definir valores padrão se não fornecidos
     if (this.ativo === undefined) {
       this.ativo = true;
@@ -69,29 +69,29 @@ export class CanalOrigem {
     canalOrigem.validateBusinessRules();
     return canalOrigem;
   }
-  
+
   validateBusinessRules(): void {
     if (!this.nome || this.nome.trim().length === 0) {
       throw new Error('Nome é obrigatório');
     }
-    
+
     if (this.nome.length > 100) {
       throw new Error('Nome não pode ter mais de 100 caracteres');
     }
-    
+
     if (this.descricao && this.descricao.length > 500) {
       throw new Error('Descrição não pode ter mais de 500 caracteres');
     }
   }
-  
+
   activate(): void {
     this.ativo = true;
   }
-  
+
   deactivate(): void {
     this.ativo = false;
   }
-  
+
   canBeDeleted(): boolean {
     // Canal de origem pode ser removido apenas se não tiver clientes associados
     return !this.clientes || this.clientes.length === 0;

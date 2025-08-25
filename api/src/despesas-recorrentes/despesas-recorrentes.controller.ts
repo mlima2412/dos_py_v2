@@ -25,7 +25,9 @@ import { DespesaRecorrente } from './entities/despesa-recorrente.entity';
 @ApiBearerAuth()
 @Controller('despesas-recorrentes')
 export class DespesasRecorrentesController {
-  constructor(private readonly despesasRecorrentesService: DespesasRecorrentesService) {}
+  constructor(
+    private readonly despesasRecorrentesService: DespesasRecorrentesService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Criar nova despesa recorrente' })
@@ -37,7 +39,9 @@ export class DespesasRecorrentesController {
   })
   @ApiResponse({ status: 400, description: 'Dados inválidos' })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
-  create(@Body() createDespesaRecorrenteDto: CreateDespesaRecorrenteDto): Promise<DespesaRecorrente> {
+  create(
+    @Body() createDespesaRecorrenteDto: CreateDespesaRecorrenteDto,
+  ): Promise<DespesaRecorrente> {
     return this.despesasRecorrentesService.create(createDespesaRecorrenteDto);
   }
 
@@ -62,7 +66,9 @@ export class DespesasRecorrentesController {
     type: [DespesaRecorrente],
   })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
-  findByParceiro(@Param('parceiroId', ParseIntPipe) parceiroId: number): Promise<DespesaRecorrente[]> {
+  findByParceiro(
+    @Param('parceiroId', ParseIntPipe) parceiroId: number,
+  ): Promise<DespesaRecorrente[]> {
     return this.despesasRecorrentesService.findByParceiro(parceiroId);
   }
 
@@ -75,7 +81,9 @@ export class DespesasRecorrentesController {
     type: [DespesaRecorrente],
   })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
-  findByFornecedor(@Param('fornecedorId', ParseIntPipe) fornecedorId: number): Promise<DespesaRecorrente[]> {
+  findByFornecedor(
+    @Param('fornecedorId', ParseIntPipe) fornecedorId: number,
+  ): Promise<DespesaRecorrente[]> {
     return this.despesasRecorrentesService.findByFornecedor(fornecedorId);
   }
 
@@ -88,32 +96,45 @@ export class DespesasRecorrentesController {
     type: [DespesaRecorrente],
   })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
-  findBySubCategoria(@Param('subCategoriaId', ParseIntPipe) subCategoriaId: number): Promise<DespesaRecorrente[]> {
+  findBySubCategoria(
+    @Param('subCategoriaId', ParseIntPipe) subCategoriaId: number,
+  ): Promise<DespesaRecorrente[]> {
     return this.despesasRecorrentesService.findBySubCategoria(subCategoriaId);
   }
 
   @Get('frequencia/:frequencia')
   @ApiOperation({ summary: 'Buscar despesas recorrentes por frequência' })
-  @ApiParam({ name: 'frequencia', description: 'Frequência da despesa recorrente' })
+  @ApiParam({
+    name: 'frequencia',
+    description: 'Frequência da despesa recorrente',
+  })
   @ApiResponse({
     status: 200,
     description: 'Lista de despesas recorrentes da frequência',
     type: [DespesaRecorrente],
   })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
-  findByFrequencia(@Param('frequencia') frequencia: string): Promise<DespesaRecorrente[]> {
+  findByFrequencia(
+    @Param('frequencia') frequencia: string,
+  ): Promise<DespesaRecorrente[]> {
     return this.despesasRecorrentesService.findByFrequencia(frequencia);
   }
 
   @Get(':publicId')
   @ApiOperation({ summary: 'Buscar despesa recorrente por ID público' })
-  @ApiParam({ name: 'publicId', description: 'ID público da despesa recorrente' })
+  @ApiParam({
+    name: 'publicId',
+    description: 'ID público da despesa recorrente',
+  })
   @ApiResponse({
     status: 200,
     description: 'Despesa recorrente encontrada',
     type: DespesaRecorrente,
   })
-  @ApiResponse({ status: 404, description: 'Despesa recorrente não encontrada' })
+  @ApiResponse({
+    status: 404,
+    description: 'Despesa recorrente não encontrada',
+  })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
   findOne(@Param('publicId') publicId: string): Promise<DespesaRecorrente> {
     return this.despesasRecorrentesService.findOne(publicId);
@@ -121,7 +142,10 @@ export class DespesasRecorrentesController {
 
   @Patch(':publicId')
   @ApiOperation({ summary: 'Atualizar despesa recorrente' })
-  @ApiParam({ name: 'publicId', description: 'ID público da despesa recorrente' })
+  @ApiParam({
+    name: 'publicId',
+    description: 'ID público da despesa recorrente',
+  })
   @ApiBody({ type: UpdateDespesaRecorrenteDto })
   @ApiResponse({
     status: 200,
@@ -129,20 +153,35 @@ export class DespesasRecorrentesController {
     type: DespesaRecorrente,
   })
   @ApiResponse({ status: 400, description: 'Dados inválidos' })
-  @ApiResponse({ status: 404, description: 'Despesa recorrente não encontrada' })
+  @ApiResponse({
+    status: 404,
+    description: 'Despesa recorrente não encontrada',
+  })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
   update(
     @Param('publicId') publicId: string,
     @Body() updateDespesaRecorrenteDto: UpdateDespesaRecorrenteDto,
   ): Promise<DespesaRecorrente> {
-    return this.despesasRecorrentesService.update(publicId, updateDespesaRecorrenteDto);
+    return this.despesasRecorrentesService.update(
+      publicId,
+      updateDespesaRecorrenteDto,
+    );
   }
 
   @Delete(':publicId')
   @ApiOperation({ summary: 'Remover despesa recorrente' })
-  @ApiParam({ name: 'publicId', description: 'ID público da despesa recorrente' })
-  @ApiResponse({ status: 200, description: 'Despesa recorrente removida com sucesso' })
-  @ApiResponse({ status: 404, description: 'Despesa recorrente não encontrada' })
+  @ApiParam({
+    name: 'publicId',
+    description: 'ID público da despesa recorrente',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Despesa recorrente removida com sucesso',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Despesa recorrente não encontrada',
+  })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
   remove(@Param('publicId') publicId: string): Promise<void> {
     return this.despesasRecorrentesService.remove(publicId);

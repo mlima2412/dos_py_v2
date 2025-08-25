@@ -115,7 +115,26 @@
 		"monthlySales": "Vendas do mês atual",
 		"orders": "Pedidos",
 		"pendingOrders": "Pedidos pendentes",
-		"manageClients": "Gerencie seus clientes"
+		"manageClients": "Gerencie seus clientes",
+		"expenses": {
+			"paid": "Despesas Pagas"
+		},
+		"noDataAvailable": "Nenhum dado disponível",
+		"noDataToDisplay": "Nenhum dado para exibir",
+		"months": {
+			"january": "Janeiro",
+			"february": "Fevereiro",
+			"march": "Março",
+			"april": "Abril",
+			"may": "Maio",
+			"june": "Junho",
+			"july": "Julho",
+			"august": "Agosto",
+			"september": "Setembro",
+			"october": "Outubro",
+			"november": "Novembro",
+			"december": "Dezembro"
+		}
 	},
 	"navigation": {
 		"dashboard": "Dashboard",
@@ -142,7 +161,7 @@
 			"panel": "Painel de Despesas",
 			"actual": "Despesas Correntes",
 			"recurring": "Despesas Recorrentes",
-			"payable": "Contas a Pagar"
+			"payable": "Agenda de Pagamentos"
 		},
 		"paymentMethods": "Forma de Pagamento",
 		"sales": "Vendas",
@@ -391,6 +410,36 @@
 		"noCurrencyFound": "Nenhuma moeda encontrada",
 		"noSupplierFound": "Nenhum fornecedor encontrado",
 		"noSubcategoryFound": "Nenhuma subcategoria encontrada",
+
+		"dashboard": {
+			"title": "Dashboard de Despesas",
+			"totalMonth": "Total do Mês",
+			"totalYear": "Total do Ano",
+			"pending": "Pendentes",
+			"average": "Média Mensal",
+			"currentMonth": "Mês atual",
+			"currentYear": "Ano atual",
+			"pendingPayments": "Contas a pagar",
+			"monthlyAverage": "Média mensal do ano",
+			"recentExpenses": "Despesas Recentes",
+			"categoryDistributionMonthly": "Por Categoria - Mensal",
+			"categoryDistributionYearly": "Por Categoria - Anual",
+			"yearlyClassification": "Por Classificação - Anual",
+			"yearlyClassificationDesc": "Distribuição das despesas por classificação no ano",
+			"monthlyClassification": "Por Classificação - Mensal",
+			"monthlyClassificationDesc": "Distribuição das despesas por classificação no mês atual",
+			"classification": {
+				"total": "Total"
+			},
+			"loading": "Carregando...",
+			"error": {
+				"loadingData": "Erro ao carregar dados"
+			},
+			"paid": "Despesas Pagas",
+			"noDataAvailable": "Nenhum dado disponível",
+			"noDataToDisplay": "Nenhum dado para exibir",
+			"noRecentExpenses": "Nenhuma despesa recente"
+		},
 
 		"columns": {
 			"description": "Descrição",

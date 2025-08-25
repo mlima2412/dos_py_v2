@@ -245,7 +245,7 @@ export function FormularioDespesa() {
 			if (
 				subCategoriaId &&
 				subcategorias.some(
-					(sub) => sub.idSubCategoria?.toString() === subCategoriaId
+					sub => sub.idSubCategoria?.toString() === subCategoriaId
 				)
 			) {
 				form.setValue("subCategoriaId", subCategoriaId);
@@ -336,25 +336,23 @@ export function FormularioDespesa() {
 	// Prepare options for selects
 	const subcategoriaOptions: ComboboxOption[] = subcategorias
 		.filter(
-			(subcategoria) => subcategoria.idSubCategoria && subcategoria.descricao
+			subcategoria => subcategoria.idSubCategoria && subcategoria.descricao
 		)
-		.map((subcategoria) => ({
+		.map(subcategoria => ({
 			value: subcategoria.idSubCategoria!.toString(),
 			label: subcategoria.descricao!,
 		}));
 
-	const fornecedorOptions: ComboboxOption[] = fornecedores.map(
-		(fornecedor) => ({
-			value: fornecedor.id.toString(),
-			label: fornecedor.nome,
-		})
-	);
+	const fornecedorOptions: ComboboxOption[] = fornecedores.map(fornecedor => ({
+		value: fornecedor.id.toString(),
+		label: fornecedor.nome,
+	}));
 
 	if (isLoadingDespesa && isEditing) {
 		return (
 			<DashboardLayout>
-				<div className='flex items-center justify-center h-64'>
-					<Spinner size='lg' />
+				<div className="flex items-center justify-center h-64">
+					<Spinner size="lg" />
 				</div>
 			</DashboardLayout>
 		);
@@ -362,15 +360,15 @@ export function FormularioDespesa() {
 
 	return (
 		<DashboardLayout>
-			<div className='space-y-6'>
+			<div className="space-y-6">
 				<Breadcrumb>
 					<BreadcrumbList>
 						<BreadcrumbItem>
-							<BreadcrumbLink href='/'>{t("menu.home")}</BreadcrumbLink>
+							<BreadcrumbLink href="/">{t("menu.home")}</BreadcrumbLink>
 						</BreadcrumbItem>
 						<BreadcrumbSeparator />
 						<BreadcrumbItem>
-							<BreadcrumbLink href='/despesas'>
+							<BreadcrumbLink href="/despesas">
 								{t("expenses.title")}
 							</BreadcrumbLink>
 						</BreadcrumbItem>
@@ -388,17 +386,17 @@ export function FormularioDespesa() {
 				</Breadcrumb>
 
 				<Card>
-					<CardContent className='pt-6'>
+					<CardContent className="pt-6">
 						<Form {...form}>
 							<form
 								onSubmit={form.handleSubmit(onSubmit)}
-								className='space-y-6'
+								className="space-y-6"
 							>
 								{/* Primeira linha: Descrição */}
-								<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 									<FormField
 										control={form.control}
-										name='descricao'
+										name="descricao"
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>{t("expenses.description")}</FormLabel>
@@ -415,25 +413,25 @@ export function FormularioDespesa() {
 									/>
 									<FormField
 										control={form.control}
-										name='valorTotal'
+										name="valorTotal"
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>{t("expenses.totalAmount")}</FormLabel>
 												<FormControl>
 													<CurrencyInput
-														placeholder='0,00'
+														placeholder="0,00"
 														value={valorTotalInput}
 														decimalsLimit={2}
-														decimalSeparator=','
-														groupSeparator='.'
+														decimalSeparator=","
+														groupSeparator="."
 														disabled={isViewing}
-														onValueChange={(value) => {
+														onValueChange={value => {
 															setValorTotalInput(value || "");
 															field.onChange(
 																parseFloat(value?.replace(",", ".") || "0")
 															);
 														}}
-														className='flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+														className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 													/>
 												</FormControl>
 												<FormMessage />
@@ -443,10 +441,10 @@ export function FormularioDespesa() {
 								</div>
 
 								{/* Terceira linha: Fornecedor, Data de Registro, Tipo de Pagamento */}
-								<div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+								<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 									<FormField
 										control={form.control}
-										name='fornecedorId'
+										name="fornecedorId"
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>
@@ -470,7 +468,7 @@ export function FormularioDespesa() {
 
 									<FormField
 										control={form.control}
-										name='dataRegistro'
+										name="dataRegistro"
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>{t("expenses.selectDate")}</FormLabel>
@@ -489,7 +487,7 @@ export function FormularioDespesa() {
 
 									<FormField
 										control={form.control}
-										name='tipoPagamento'
+										name="tipoPagamento"
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>{t("expenses.paymentType")}</FormLabel>
@@ -497,7 +495,7 @@ export function FormularioDespesa() {
 													<Select
 														value={field.value}
 														disabled={isViewing}
-														onValueChange={(value) => {
+														onValueChange={value => {
 															field.onChange(value);
 															setTipoPagamento(value);
 														}}
@@ -508,13 +506,13 @@ export function FormularioDespesa() {
 															/>
 														</SelectTrigger>
 														<SelectContent>
-															<SelectItem value='A_VISTA_IMEDIATA'>
+															<SelectItem value="A_VISTA_IMEDIATA">
 																{t("expenses.cashPayment")}
 															</SelectItem>
-															<SelectItem value='A_PRAZO_SEM_PARCELAS'>
+															<SelectItem value="A_PRAZO_SEM_PARCELAS">
 																{t("expenses.creditPayment")}
 															</SelectItem>
-															<SelectItem value='PARCELADO'>
+															<SelectItem value="PARCELADO">
 																{t("expenses.installmentPayment")}
 															</SelectItem>
 														</SelectContent>
@@ -528,10 +526,10 @@ export function FormularioDespesa() {
 
 								{/* Campos condicionais para pagamento parcelado */}
 								{tipoPagamento === "PARCELADO" && (
-									<div className='grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-muted/50 rounded-lg'>
+									<div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-muted/50 rounded-lg">
 										<FormField
 											control={form.control}
-											name='valorEntrada'
+											name="valorEntrada"
 											render={({ field }) => (
 												<FormItem>
 													<FormLabel>
@@ -539,19 +537,19 @@ export function FormularioDespesa() {
 													</FormLabel>
 													<FormControl>
 														<CurrencyInput
-															placeholder='0,00'
+															placeholder="0,00"
 															value={valorEntradaInput}
 															decimalsLimit={2}
-															decimalSeparator=','
-															groupSeparator='.'
+															decimalSeparator=","
+															groupSeparator="."
 															disabled={isViewing}
-															onValueChange={(value) => {
+															onValueChange={value => {
 																setValorEntradaInput(value || "");
 																field.onChange(
 																	parseFloat(value?.replace(",", ".") || "0")
 																);
 															}}
-															className='flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+															className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 														/>
 													</FormControl>
 													<FormMessage />
@@ -561,7 +559,7 @@ export function FormularioDespesa() {
 
 										<FormField
 											control={form.control}
-											name='numeroParcelas'
+											name="numeroParcelas"
 											render={({ field }) => (
 												<FormItem>
 													<FormLabel>
@@ -569,13 +567,13 @@ export function FormularioDespesa() {
 													</FormLabel>
 													<FormControl>
 														<Input
-															type='number'
-															min='1'
-															max='60'
-															placeholder='1'
+															type="number"
+															min="1"
+															max="60"
+															placeholder="1"
 															disabled={isViewing}
 															value={field.value || ""}
-															onChange={(e) =>
+															onChange={e =>
 																field.onChange(parseInt(e.target.value) || 1)
 															}
 														/>
@@ -587,7 +585,7 @@ export function FormularioDespesa() {
 
 										<FormField
 											control={form.control}
-											name='dataPrimeiraParcela'
+											name="dataPrimeiraParcela"
 											render={({ field }) => (
 												<FormItem>
 													<FormLabel>
@@ -612,10 +610,10 @@ export function FormularioDespesa() {
 
 								{/* Campo condicional para pagamento à prazo sem parcelas */}
 								{tipoPagamento === "A_PRAZO_SEM_PARCELAS" && (
-									<div className='grid grid-cols-1 gap-4 p-4 bg-muted/50 rounded-lg'>
+									<div className="grid grid-cols-1 gap-4 p-4 bg-muted/50 rounded-lg">
 										<FormField
 											control={form.control}
-											name='dataVencimento'
+											name="dataVencimento"
 											render={({ field }) => (
 												<FormItem>
 													<FormLabel>{t("expenses.dueDate")}</FormLabel>
@@ -635,27 +633,27 @@ export function FormularioDespesa() {
 								)}
 
 								{/* Quarta linha: Categoria e Subcategoria */}
-								<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 									<FormField
 										control={form.control}
-										name='categoriaId'
+										name="categoriaId"
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>{t("expenses.category")}</FormLabel>
 												<FormControl>
 													<RadioGroup
 														value={field.value}
-														onValueChange={(value) => {
+														onValueChange={value => {
 															field.onChange(value);
 															setSelectedCategoria(value);
 														}}
-														className='grid grid-cols-1 gap-2'
+														className="grid grid-cols-1 gap-2"
 														disabled={isLoadingCategorias || isViewing}
 													>
-														{categorias.map((categoria) => (
+														{categorias.map(categoria => (
 															<div
 																key={categoria.idCategoria}
-																className='flex items-center space-x-2'
+																className="flex items-center space-x-2"
 															>
 																<RadioGroupItem
 																	value={
@@ -665,7 +663,7 @@ export function FormularioDespesa() {
 																/>
 																<Label
 																	htmlFor={`categoria-${categoria.idCategoria}`}
-																	className='text-sm font-normal cursor-pointer'
+																	className="text-sm font-normal cursor-pointer"
 																>
 																	{categoria.descricao}
 																</Label>
@@ -680,7 +678,7 @@ export function FormularioDespesa() {
 
 									<FormField
 										control={form.control}
-										name='subCategoriaId'
+										name="subCategoriaId"
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>{t("expenses.subcategory")}</FormLabel>
@@ -706,10 +704,10 @@ export function FormularioDespesa() {
 								</div>
 
 								{/* Quinta linha: Moeda e Cotação */}
-								<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 									<FormField
 										control={form.control}
-										name='currencyId'
+										name="currencyId"
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>
@@ -722,7 +720,7 @@ export function FormularioDespesa() {
 																despesa?.currencyId
 																	? (() => {
 																			const currency = currencies.find(
-																				(c) => c.id === despesa.currencyId
+																				c => c.id === despesa.currencyId
 																			);
 																			return currency
 																				? `${currency.isoCode} - ${currency.nome}`
@@ -746,8 +744,8 @@ export function FormularioDespesa() {
 															</SelectTrigger>
 															<SelectContent>
 																{currencies
-																	.filter((currency) => currency.id)
-																	.map((currency) => (
+																	.filter(currency => currency.id)
+																	.map(currency => (
 																		<SelectItem
 																			key={currency.id}
 																			value={currency.id!.toString()}
@@ -766,7 +764,7 @@ export function FormularioDespesa() {
 
 									<FormField
 										control={form.control}
-										name='cotacao'
+										name="cotacao"
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>
@@ -774,19 +772,19 @@ export function FormularioDespesa() {
 												</FormLabel>
 												<FormControl>
 													<CurrencyInput
-														placeholder='1,000'
+														placeholder="1,000"
 														value={cotacaoInput}
 														decimalsLimit={3}
-														decimalSeparator=','
-														groupSeparator='.'
+														decimalSeparator=","
+														groupSeparator="."
 														disabled={isViewing}
-														onValueChange={(value) => {
+														onValueChange={value => {
 															setCotacaoInput(value || "");
 															field.onChange(
 																parseFloat(value?.replace(",", ".") || "0")
 															);
 														}}
-														className='flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+														className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 													/>
 												</FormControl>
 												<FormMessage />
@@ -799,14 +797,14 @@ export function FormularioDespesa() {
 								{(isEditing || isViewing) &&
 									contasPagar &&
 									contasPagar.length > 0 && (
-										<div className='mt-6'>
+										<div className="mt-6">
 											<TabelaParcelas
 												contasPagarId={contasPagar[0].id}
 												currency={
 													despesa?.currencyId
 														? (() => {
 																const currency = currencies.find(
-																	(c) => c.id === despesa.currencyId
+																	c => c.id === despesa.currencyId
 																);
 																return currency
 																	? {
@@ -822,31 +820,25 @@ export function FormularioDespesa() {
 										</div>
 									)}
 
-								<div className='flex justify-end space-x-4'>
+								<div className="flex justify-end space-x-4">
 									<Button
-										type='button'
-										variant='outline'
+										type="button"
+										variant="outline"
 										onClick={() => navigate("/despesas")}
 									>
-										<X className='mr-2 h-4 w-4' />
+										<X className="mr-2 h-4 w-4" />
 										{isViewing ? t("common.close") : t("common.cancel")}
 									</Button>
 									{!isViewing && (
-										<Button
-											type='submit'
-											disabled={createMutation.isPending}
-										>
+										<Button type="submit" disabled={createMutation.isPending}>
 											{createMutation.isPending ? (
 												<>
-													<Spinner
-														size='sm'
-														className='mr-2'
-													/>
+													<Spinner size="sm" className="mr-2" />
 													{t("common.creating")}
 												</>
 											) : (
 												<>
-													<Save className='mr-2 h-4 w-4' />
+													<Save className="mr-2 h-4 w-4" />
 													{t("common.create")}
 												</>
 											)}

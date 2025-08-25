@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional, IsEmail, IsNumber, IsBoolean, IsEnum } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsEmail,
+  IsNumber,
+  IsBoolean,
+  IsEnum,
+} from 'class-validator';
 import { Linguagem } from '@prisma/client';
 
 export class CreateClienteDto {

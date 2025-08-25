@@ -7,7 +7,6 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  ParseIntPipe,
   Query,
 } from '@nestjs/common';
 import {
@@ -18,7 +17,6 @@ import {
   ApiBody,
   ApiBearerAuth,
   ApiHeader,
-  ApiExtraModels,
 } from '@nestjs/swagger';
 import { DespesasService } from './despesas.service';
 import { CreateDespesaDto } from './dto/create-despesa.dto';
@@ -39,7 +37,7 @@ export class DespesasController {
     name: 'x-parceiro-id',
     description: 'ID do parceiro logado',
     required: true,
-    schema: { type: 'integer', example: 1 }
+    schema: { type: 'integer', example: 1 },
   })
   @ApiBody({ type: CreateDespesaDto })
   @ApiResponse({
@@ -50,7 +48,7 @@ export class DespesasController {
   @ApiResponse({ status: 400, description: 'Dados inválidos' })
   async create(
     @Body() createDespesaDto: CreateDespesaDto,
-    @ParceiroId() parceiroId: number
+    @ParceiroId() parceiroId: number,
   ): Promise<Despesa> {
     return this.despesasService.create(createDespesaDto, parceiroId);
   }
@@ -65,9 +63,16 @@ export class DespesasController {
   ) {
     const pageNum = parseInt(query.page || '1', 10);
     const limitNum = parseInt(query.limit || '20', 10);
-    const fornecedorIdNum = query.fornecedorId && query.fornecedorId.trim() !== '' ? parseInt(query.fornecedorId, 10) : undefined;
-    const subCategoriaIdNum = query.subCategoriaId && query.subCategoriaId.trim() !== '' ? parseInt(query.subCategoriaId, 10) : undefined;
-    const searchTerm = query.search && query.search.trim() !== '' ? query.search : undefined;
+    const fornecedorIdNum =
+      query.fornecedorId && query.fornecedorId.trim() !== ''
+        ? parseInt(query.fornecedorId, 10)
+        : undefined;
+    const subCategoriaIdNum =
+      query.subCategoriaId && query.subCategoriaId.trim() !== ''
+        ? parseInt(query.subCategoriaId, 10)
+        : undefined;
+    const searchTerm =
+      query.search && query.search.trim() !== '' ? query.search : undefined;
 
     return this.despesasService.findPaginated({
       page: pageNum,
@@ -86,7 +91,7 @@ export class DespesasController {
     name: 'x-parceiro-id',
     description: 'ID do parceiro logado',
     required: true,
-    schema: { type: 'integer', example: 1 }
+    schema: { type: 'integer', example: 1 },
   })
   @ApiResponse({
     status: 200,
@@ -95,12 +100,27 @@ export class DespesasController {
   })
   async findAll(
     @ParceiroId() parceiroId: number,
-    @Query('search') search?: string
+    @Query('search') search?: string,
   ): Promise<Despesa[]> {
     return this.despesasService.findByParceiro(parceiroId);
   }
 
-
+  @Get('DespesasAno')
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Lista todos os anos que tiveram despesas' })
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro logado',
+    required: true,
+    schema: { type: 'integer', example: 1 },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de anos com despesas',
+  })
+  async listYears(@ParceiroId() parceiroId: number) {
+    return this.despesasService.listYears(parceiroId);
+  }
 
   @Get(':publicId')
   @ApiBearerAuth('JWT-auth')
@@ -109,7 +129,7 @@ export class DespesasController {
     name: 'x-parceiro-id',
     description: 'ID do parceiro logado',
     required: true,
-    schema: { type: 'integer', example: 1 }
+    schema: { type: 'integer', example: 1 },
   })
   @ApiParam({
     name: 'publicId',
@@ -124,12 +144,10 @@ export class DespesasController {
   @ApiResponse({ status: 404, description: 'Despesa não encontrada' })
   async findOne(
     @Param('publicId') publicId: string,
-    @ParceiroId() parceiroId: number
+    @ParceiroId() parceiroId: number,
   ): Promise<Despesa> {
     return this.despesasService.findOne(publicId, parceiroId);
   }
-
-
 
   @Delete(':publicId')
   @ApiBearerAuth('JWT-auth')
@@ -139,7 +157,7 @@ export class DespesasController {
     name: 'x-parceiro-id',
     description: 'ID do parceiro logado',
     required: true,
-    schema: { type: 'integer', example: 1 }
+    schema: { type: 'integer', example: 1 },
   })
   @ApiParam({
     name: 'publicId',
@@ -153,7 +171,7 @@ export class DespesasController {
   @ApiResponse({ status: 404, description: 'Despesa não encontrada' })
   async remove(
     @Param('publicId') publicId: string,
-    @ParceiroId() parceiroId: number
+    @ParceiroId() parceiroId: number,
   ): Promise<void> {
     return this.despesasService.remove(publicId, parceiroId);
   }

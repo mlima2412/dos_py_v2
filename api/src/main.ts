@@ -5,34 +5,33 @@ import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import { PrismaService } from './prisma/prisma.service';
 import { ensureSystemInitialized } from './usuarios/ipl';
-import * as path from 'path'
+import * as path from 'path';
 
-import i18next from 'i18next'
-import Backend from 'i18next-fs-backend'
-import middleware from 'i18next-http-middleware'
+import i18next from 'i18next';
+import Backend from 'i18next-fs-backend';
+import middleware from 'i18next-http-middleware';
 
 async function bootstrap() {
-
   await i18next
     .use(Backend)
     .use(middleware.LanguageDetector)
     .init({
       fallbackLng: {
-        'es-419': ['es'],  // redireciona espanhol latino-americano para o espanhol genérico
-        'default': ['pt'], // fallback padrão
+        'es-419': ['es'], // redireciona espanhol latino-americano para o espanhol genérico
+        default: ['pt'], // fallback padrão
       },
       preload: ['pt', 'es'],
       //debug: true, // pré-carrega os idiomas
       backend: {
         loadPath: path.join(__dirname, '../i18n/{{lng}}/translation.json'),
       },
-      ns: ['translation'],          // nome do arquivo
-      defaultNS: 'translation',     // padrão (você pode omitir se quiser)
-    })
+      ns: ['translation'], // nome do arquivo
+      defaultNS: 'translation', // padrão (você pode omitir se quiser)
+    });
 
   const app = await NestFactory.create(AppModule);
 
-  app.use(middleware.handle(i18next))
+  app.use(middleware.handle(i18next));
 
   // Configuração de middlewares
   app.use(cookieParser());
@@ -43,7 +42,7 @@ async function bootstrap() {
       transform: true,
       whitelist: true,
       forbidNonWhitelisted: true,
-      exceptionFactory: (errors) => {
+      exceptionFactory: errors => {
         console.error('Erros de validação:', JSON.stringify(errors, null, 2));
         return new BadRequestException({
           message: 'Dados inválidos',
@@ -58,7 +57,12 @@ async function bootstrap() {
     origin: ['http://localhost:3000', 'http://localhost:5173'], // URLs do frontend
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept-Language', 'x-parceiro-id'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Accept-Language',
+      'x-parceiro-id',
+    ],
   });
 
   // Configuração do Swagger
@@ -76,7 +80,7 @@ async function bootstrap() {
       'JWT-auth',
     )
     .addTag('auth', 'Endpoints de autenticação')
-
+    .addApiKey({ type: 'apiKey', name: 'x-parceiro-id', in: 'header' }, '1')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
@@ -98,6 +102,5 @@ async function bootstrap() {
   console.log(
     `📚 Documentação Swagger disponível em: http://localhost:${port}/docs`,
   );
-
 }
 bootstrap();

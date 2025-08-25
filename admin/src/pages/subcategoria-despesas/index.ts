@@ -1,1 +1,1 @@
-export { default as SubCategoriaDespesas } from './subcategoria-despesas';
+export { default as SubCategoriaDespesas } from "./subcategoria-despesas";

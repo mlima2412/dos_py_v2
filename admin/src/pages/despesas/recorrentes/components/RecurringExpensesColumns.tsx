@@ -75,15 +75,23 @@ export const useRecurringExpensesColumns = (
 	const deleteMutation = useDespesasRecorrentesControllerRemove({
 		mutation: {
 			onSuccess: () => {
-					toast.success(t("recurringExpenses.messages.deleteSuccess"));
-					// Invalidar queries relacionadas
-					queryClient.invalidateQueries({
-						queryKey: [{ url: '/despesas-recorrentes/parceiro/:parceiroId', params: { parceiroId: Number(selectedPartnerId) } }],
-					});
-				},
-				onError: (error: unknown) => {
-					toast.error((error as Error)?.message || t("recurringExpenses.messages.deleteError"));
-				},
+				toast.success(t("recurringExpenses.messages.deleteSuccess"));
+				// Invalidar queries relacionadas
+				queryClient.invalidateQueries({
+					queryKey: [
+						{
+							url: "/despesas-recorrentes/parceiro/:parceiroId",
+							params: { parceiroId: Number(selectedPartnerId) },
+						},
+					],
+				});
+			},
+			onError: (error: unknown) => {
+				toast.error(
+					(error as Error)?.message ||
+						t("recurringExpenses.messages.deleteError")
+				);
+			},
 		},
 	});
 
@@ -163,8 +171,8 @@ export const useRecurringExpensesColumns = (
 					</Button>
 				),
 				cell: ({ row }) => {
-				const despesa = row.original;
-				const currencyCode = "BRL"; // Usar Real brasileiro como padrão
+					const despesa = row.original;
+					const currencyCode = "BRL"; // Usar Real brasileiro como padrão
 					return (
 						<span className="font-medium">
 							{formatCurrency(despesa.valor, currencyCode)}
@@ -179,7 +187,9 @@ export const useRecurringExpensesColumns = (
 						<Button
 							variant="ghost"
 							size="sm"
-							onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+							onClick={() =>
+								column.toggleSorting(column.getIsSorted() === "asc")
+							}
 							className="h-8 px-2 lg:px-3"
 						>
 							{t("recurringExpenses.dueDay")}
@@ -190,9 +200,7 @@ export const useRecurringExpensesColumns = (
 				cell: ({ row }) => {
 					return (
 						<div className="text-center">
-							<span className="font-medium">
-								{row.original.diaVencimento}
-							</span>
+							<span className="font-medium">{row.original.diaVencimento}</span>
 						</div>
 					);
 				},
@@ -228,18 +236,20 @@ export const useRecurringExpensesColumns = (
 							icon: (
 								<AlertDialogWithIcon
 									trigger={
-										<Button
-											variant="ghost"
-											size="sm"
-											className="h-8 w-8 p-0"
-										>
+										<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
 											<Trash2 className="h-4 w-4 text-destructive" />
 										</Button>
 									}
 									title={t("recurringExpenses.messages.deleteConfirmTitle")}
-									description={t("recurringExpenses.messages.deleteConfirmDescription")}
-									confirmText={t("recurringExpenses.messages.deleteConfirmConfirm")}
-									cancelText={t("recurringExpenses.messages.deleteConfirmCancel")}
+									description={t(
+										"recurringExpenses.messages.deleteConfirmDescription"
+									)}
+									confirmText={t(
+										"recurringExpenses.messages.deleteConfirmConfirm"
+									)}
+									cancelText={t(
+										"recurringExpenses.messages.deleteConfirmCancel"
+									)}
 									onConfirm={() => handleDelete(despesa)}
 									icon={<AlertTriangle className="h-6 w-6" />}
 									variant="destructive"
@@ -258,10 +268,18 @@ export const useRecurringExpensesColumns = (
 
 	// Filtrar colunas para dispositivos móveis
 	const mobileColumns = useMemo(() => {
-		return allColumns.filter((column) => {
-			const columnWithAccessor = column as ColumnDef<DespesaRecorrente> & { accessorKey?: string };
-			if (!columnWithAccessor.accessorKey && column.id !== "actions") return false;
-			const essentialColumns = ["descricao", "frequencia", "valor", "diaVencimento"];
+		return allColumns.filter(column => {
+			const columnWithAccessor = column as ColumnDef<DespesaRecorrente> & {
+				accessorKey?: string;
+			};
+			if (!columnWithAccessor.accessorKey && column.id !== "actions")
+				return false;
+			const essentialColumns = [
+				"descricao",
+				"frequencia",
+				"valor",
+				"diaVencimento",
+			];
 			return (
 				essentialColumns.includes(columnWithAccessor.accessorKey as string) ||
 				column.id === "actions"

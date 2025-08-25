@@ -41,8 +41,10 @@ export class ParceirosController {
   })
   @ApiResponse({ status: 400, description: 'Dados inválidos' })
   @ApiResponse({ status: 409, description: 'Email ou RUC/CNPJ já existe' })
-  async create(@Body() createParceiroDto: CreateParceiroDto): Promise<Parceiro> {
-    console.log("!Criando um novo parceiro....")
+  async create(
+    @Body() createParceiroDto: CreateParceiroDto,
+  ): Promise<Parceiro> {
+    console.log('!Criando um novo parceiro....');
     return this.parceirosService.create(createParceiroDto);
   }
 
@@ -67,29 +69,33 @@ export class ParceirosController {
     schema: {
       type: 'object',
       properties: {
-        data: { type: 'array', items: { $ref: '#/components/schemas/Parceiro' } },
+        data: {
+          type: 'array',
+          items: { $ref: '#/components/schemas/Parceiro' },
+        },
         total: { type: 'number', description: 'Total de registros' },
         page: { type: 'number', description: 'Página atual' },
         limit: { type: 'number', description: 'Itens por página' },
-        totalPages: { type: 'number', description: 'Total de páginas' }
-      }
-    }
+        totalPages: { type: 'number', description: 'Total de páginas' },
+      },
+    },
   })
   findPaginated(
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '20',
     @Query('search') search?: string,
-    @Query('ativo') ativo?: string
+    @Query('ativo') ativo?: string,
   ) {
     const pageNum = parseInt(page, 10) || 1;
     const limitNum = parseInt(limit, 10) || 20;
-    const ativoFilter = ativo === 'true' ? true : ativo === 'false' ? false : undefined;
-    
+    const ativoFilter =
+      ativo === 'true' ? true : ativo === 'false' ? false : undefined;
+
     return this.parceirosService.findPaginated({
       page: pageNum,
       limit: limitNum,
       search,
-      ativo: ativoFilter
+      ativo: ativoFilter,
     });
   }
 
@@ -143,7 +149,7 @@ export class ParceirosController {
     @Param('publicId') publicId: string,
     @Body() updateParceiroDto: UpdateParceiroDto,
   ): Promise<Parceiro> {
-    console.log("!Atualizando um parceiro....")
+    console.log('!Atualizando um parceiro....');
     return this.parceirosService.update(publicId, updateParceiroDto);
   }
 
@@ -162,7 +168,9 @@ export class ParceirosController {
     type: Parceiro,
   })
   @ApiResponse({ status: 404, description: 'Parceiro não encontrado' })
-  async deactivateParceiro(@Param('publicId') publicId: string): Promise<Parceiro> {
+  async deactivateParceiro(
+    @Param('publicId') publicId: string,
+  ): Promise<Parceiro> {
     return this.parceirosService.deactivateParceiro(publicId);
   }
 
@@ -181,7 +189,9 @@ export class ParceirosController {
     type: Parceiro,
   })
   @ApiResponse({ status: 404, description: 'Parceiro não encontrado' })
-  async activateParceiro(@Param('publicId') publicId: string): Promise<Parceiro> {
+  async activateParceiro(
+    @Param('publicId') publicId: string,
+  ): Promise<Parceiro> {
     return this.parceirosService.activateParceiro(publicId);
   }
 }

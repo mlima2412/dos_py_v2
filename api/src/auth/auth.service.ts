@@ -24,7 +24,12 @@ export class AuthService {
     });
 
     // Validar se o usuário existe e tem senha válida
-    if (user && user.senha && typeof user.senha === 'string' && user.senha.length > 0) {
+    if (
+      user &&
+      user.senha &&
+      typeof user.senha === 'string' &&
+      user.senha.length > 0
+    ) {
       try {
         const isPasswordValid = await bcrypt.compare(senha, user.senha);
         if (isPasswordValid) {
@@ -137,11 +142,11 @@ export class AuthService {
 
   async getUserParceiros(userId: number): Promise<any[]> {
     const usuarioParceiros = await this.prisma.usuarioParceiro.findMany({
-      where: { 
+      where: {
         usuarioId: userId,
         Parceiro: {
-          ativo: true
-        }
+          ativo: true,
+        },
       },
       include: {
         Parceiro: {

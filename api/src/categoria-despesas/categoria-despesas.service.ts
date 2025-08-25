@@ -12,7 +12,9 @@ import { CategoriaDespesas } from './entities/categoria-despesas.entity';
 export class CategoriaDespesasService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createCategoriaDespesasDto: CreateCategoriaDespesasDto): Promise<CategoriaDespesas> {
+  async create(
+    createCategoriaDespesasDto: CreateCategoriaDespesasDto,
+  ): Promise<CategoriaDespesas> {
     // Verificar se a descrição já existe
     // const existingCategoria = await this.prisma.categoriaDespesas.findFirst({
     //   where: { descricao: createCategoriaDespesasDto.descricao },
@@ -59,7 +61,10 @@ export class CategoriaDespesasService {
     return categoria;
   }
 
-  async update(idCategoria: number, updateCategoriaDespesasDto: UpdateCategoriaDespesasDto): Promise<CategoriaDespesas> {
+  async update(
+    idCategoria: number,
+    updateCategoriaDespesasDto: UpdateCategoriaDespesasDto,
+  ): Promise<CategoriaDespesas> {
     // Verificar se a categoria existe
     await this.findOne(idCategoria);
 

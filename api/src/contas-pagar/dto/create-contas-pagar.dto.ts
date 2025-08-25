@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsDecimal, IsBoolean, IsOptional, IsDateString, IsNumber } from 'class-validator';
+import {
+  IsInt,
+  IsDecimal,
+  IsBoolean,
+  IsOptional,
+  IsDateString,
+  IsNumber,
+} from 'class-validator';
 
 export class CreateContasPagarDto {
   @ApiProperty({
@@ -13,7 +20,7 @@ export class CreateContasPagarDto {
 
   @ApiProperty({
     description: 'Valor total da conta a pagar',
-    example: 1500.50,
+    example: 1500.5,
   })
   @IsNumber({ maxDecimalPlaces: 3 })
   valorTotal: number;

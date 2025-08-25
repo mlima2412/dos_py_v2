@@ -32,7 +32,7 @@ export function useFornecedores(params: UseFornecedoresParams = {}) {
 		queryFn: async ({ pageParam = 1 }) => {
 			// Como não há endpoint paginado, vamos simular paginação no frontend
 			if (!parceiroId) {
-				throw new Error('parceiroId é obrigatório');
+				throw new Error("parceiroId é obrigatório");
 			}
 			const allFornecedores = await fornecedoresControllerFindAll(parceiroId);
 
@@ -40,7 +40,7 @@ export function useFornecedores(params: UseFornecedoresParams = {}) {
 			let filteredFornecedores = allFornecedores;
 			if (search) {
 				filteredFornecedores = allFornecedores.filter(
-					(fornecedor) =>
+					fornecedor =>
 						fornecedor.nome.toLowerCase().includes(search.toLowerCase()) ||
 						(fornecedor.email &&
 							fornecedor.email.toLowerCase().includes(search.toLowerCase()))
@@ -50,7 +50,7 @@ export function useFornecedores(params: UseFornecedoresParams = {}) {
 			// Filtrar por ativo
 			if (ativo !== undefined) {
 				filteredFornecedores = filteredFornecedores.filter(
-					(fornecedor) => fornecedor.ativo === ativo
+					fornecedor => fornecedor.ativo === ativo
 				);
 			}
 
@@ -69,7 +69,7 @@ export function useFornecedores(params: UseFornecedoresParams = {}) {
 				totalPages,
 			};
 		},
-		getNextPageParam: (lastPage) => {
+		getNextPageParam: lastPage => {
 			const currentPage = lastPage.page || 0;
 			const totalPages = lastPage.totalPages || 0;
 			return currentPage < totalPages ? currentPage + 1 : undefined;

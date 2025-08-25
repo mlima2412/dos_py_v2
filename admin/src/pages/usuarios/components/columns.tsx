@@ -28,59 +28,59 @@ export const createColumns = (
 	columnHelper.accessor("nome", {
 		header: ({ column }) => (
 			<Button
-				variant='ghost'
+				variant="ghost"
 				onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-				className='h-auto p-0 font-semibold'
+				className="h-auto p-0 font-semibold"
 			>
 				{t("users.name")}
 				{column.getIsSorted() === "asc" ? (
-					<ArrowUp className='ml-2 h-4 w-4' />
+					<ArrowUp className="ml-2 h-4 w-4" />
 				) : column.getIsSorted() === "desc" ? (
-					<ArrowDown className='ml-2 h-4 w-4' />
+					<ArrowDown className="ml-2 h-4 w-4" />
 				) : (
-					<ArrowUpDown className='ml-2 h-4 w-4' />
+					<ArrowUpDown className="ml-2 h-4 w-4" />
 				)}
 			</Button>
 		),
 		cell: ({ row }) => (
-			<div className='font-medium'>{row.getValue("nome")}</div>
+			<div className="font-medium">{row.getValue("nome")}</div>
 		),
 	}),
 	columnHelper.accessor("email", {
 		header: ({ column }) => (
 			<Button
-				variant='ghost'
+				variant="ghost"
 				onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-				className='h-auto p-0 font-semibold'
+				className="h-auto p-0 font-semibold"
 			>
 				{t("users.email")}
 				{column.getIsSorted() === "asc" ? (
-					<ArrowUp className='ml-2 h-4 w-4' />
+					<ArrowUp className="ml-2 h-4 w-4" />
 				) : column.getIsSorted() === "desc" ? (
-					<ArrowDown className='ml-2 h-4 w-4' />
+					<ArrowDown className="ml-2 h-4 w-4" />
 				) : (
-					<ArrowUpDown className='ml-2 h-4 w-4' />
+					<ArrowUpDown className="ml-2 h-4 w-4" />
 				)}
 			</Button>
 		),
 		cell: ({ row }) => (
-			<div className='text-muted-foreground'>{row.getValue("email")}</div>
+			<div className="text-muted-foreground">{row.getValue("email")}</div>
 		),
 	}),
 	columnHelper.accessor("telefone", {
 		header: ({ column }) => (
 			<Button
-				variant='ghost'
+				variant="ghost"
 				onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-				className='h-auto p-0 font-semibold'
+				className="h-auto p-0 font-semibold"
 			>
 				{t("users.phone")}
 				{column.getIsSorted() === "asc" ? (
-					<ArrowUp className='ml-2 h-4 w-4' />
+					<ArrowUp className="ml-2 h-4 w-4" />
 				) : column.getIsSorted() === "desc" ? (
-					<ArrowDown className='ml-2 h-4 w-4' />
+					<ArrowDown className="ml-2 h-4 w-4" />
 				) : (
-					<ArrowUpDown className='ml-2 h-4 w-4' />
+					<ArrowUpDown className="ml-2 h-4 w-4" />
 				)}
 			</Button>
 		),
@@ -90,17 +90,17 @@ export const createColumns = (
 	columnHelper.accessor("ativo", {
 		header: ({ column }) => (
 			<Button
-				variant='ghost'
+				variant="ghost"
 				onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-				className='h-auto p-0 font-semibold'
+				className="h-auto p-0 font-semibold"
 			>
 				{t("users.status.label")}
 				{column.getIsSorted() === "asc" ? (
-					<ArrowUp className='ml-2 h-4 w-4' />
+					<ArrowUp className="ml-2 h-4 w-4" />
 				) : column.getIsSorted() === "desc" ? (
-					<ArrowDown className='ml-2 h-4 w-4' />
+					<ArrowDown className="ml-2 h-4 w-4" />
 				) : (
-					<ArrowUpDown className='ml-2 h-4 w-4' />
+					<ArrowUpDown className="ml-2 h-4 w-4" />
 				)}
 			</Button>
 		),
@@ -146,7 +146,7 @@ export const createColumns = (
 				{
 					type: "edit" as const,
 					label: t("users.common.edit"),
-					icon: <Edit className='h-4 w-4' />,
+					icon: <Edit className="h-4 w-4" />,
 					href: `/usuarios/editar/${user.publicId}`,
 				},
 				{
@@ -155,12 +155,12 @@ export const createColumns = (
 						? t("users.common.deactivate")
 						: t("users.common.activate"),
 					icon: user.ativo ? (
-						<PowerOff className='h-4 w-4' />
+						<PowerOff className="h-4 w-4" />
 					) : (
-						<Power className='h-4 w-4' />
+						<Power className="h-4 w-4" />
 					),
 					onClick: handleToggleStatus,
-					variant: user.ativo ? "destructive" as const : "default" as const,
+					variant: user.ativo ? ("destructive" as const) : ("default" as const),
 				},
 			];
 

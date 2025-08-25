@@ -1,11 +1,1 @@
-{
-  "type": "object",
-  "properties": {
-    "despesaId": { "type": "number", "description": "ID da despesa relacionada", "example": 1 },
-    "valorTotal": { "type": "number", "description": "Valor total da conta a pagar", "example": 1500.5 },
-    "saldo": { "type": "number", "description": "Saldo atual da conta (soma dos valores pagos)", "example": 0 },
-    "pago": { "type": "boolean", "description": "Indica se a conta foi totalmente paga", "example": false },
-    "dataPagamento": { "type": "string", "description": "Data do pagamento da conta", "example": "2024-12-31T23:59:59.000Z" }
-  },
-  "x-readme-ref-name": "UpdateContasPagarDto"
-}
+{"type":"object","properties":{"despesaId":{"type":"number","description":"ID da despesa relacionada","example":1},"valorTotal":{"type":"number","description":"Valor total da conta a pagar","example":1500.5},"saldo":{"type":"number","description":"Saldo atual da conta (soma dos valores pagos)","example":0},"pago":{"type":"boolean","description":"Indica se a conta foi totalmente paga","example":false},"dataPagamento":{"type":"string","description":"Data do pagamento da conta","example":"2024-12-31T23:59:59.000Z"}},"x-readme-ref-name":"UpdateContasPagarDto"}

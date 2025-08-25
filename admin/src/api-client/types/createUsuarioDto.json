@@ -1,15 +1,1 @@
-{
-  "type": "object",
-  "properties": {
-    "nome": { "type": "string", "description": "Nome completo do usuário", "example": "João Silva", "minLength": 2, "maxLength": 100 },
-    "email": { "type": "string", "description": "Email do usuário", "example": "joao@exemplo.com" },
-    "telefone": { "type": "string", "description": "Telefone do usuário para SMS ou WhatsApp", "example": "+5511999999999" },
-    "provider": { "type": "string", "description": "Provedor de autenticação", "example": "LOCAL", "default": "LOCAL" },
-    "googleId": { "type": "string", "description": "ID do Google para autenticação OAuth", "example": "google_123456789" },
-    "senha": { "type": "string", "description": "Senha do usuário", "example": "minhasenha123", "minLength": 6 },
-    "ativo": { "type": "boolean", "description": "Status ativo do usuário", "example": true, "default": true },
-    "avatar": { "type": "string", "description": "URL do avatar do usuário", "example": "https://exemplo.com/avatar.jpg" }
-  },
-  "required": ["nome", "email"],
-  "x-readme-ref-name": "CreateUsuarioDto"
-}
+{"type":"object","properties":{"nome":{"type":"string","description":"Nome completo do usuário","example":"João Silva","minLength":2,"maxLength":100},"email":{"type":"string","description":"Email do usuário","example":"joao@exemplo.com"},"telefone":{"type":"string","description":"Telefone do usuário para SMS ou WhatsApp","example":"+5511999999999"},"provider":{"type":"string","description":"Provedor de autenticação","example":"LOCAL","default":"LOCAL"},"googleId":{"type":"string","description":"ID do Google para autenticação OAuth","example":"google_123456789"},"senha":{"type":"string","description":"Senha do usuário","example":"minhasenha123","minLength":6},"ativo":{"type":"boolean","description":"Status ativo do usuário","example":true,"default":true},"avatar":{"type":"string","description":"URL do avatar do usuário","example":"https://exemplo.com/avatar.jpg"}},"required":["nome","email"],"x-readme-ref-name":"CreateUsuarioDto"}

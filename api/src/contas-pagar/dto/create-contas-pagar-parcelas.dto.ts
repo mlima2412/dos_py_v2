@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsDecimal, IsOptional, IsInt, IsBoolean } from 'class-validator';
+import {
+  IsDateString,
+  IsDecimal,
+  IsOptional,
+  IsInt,
+  IsBoolean,
+} from 'class-validator';
 
 export class CreateContasPagarParcelasDto {
   @ApiProperty({
@@ -18,7 +24,7 @@ export class CreateContasPagarParcelasDto {
 
   @ApiProperty({
     description: 'Valor da parcela',
-    example: 500.00,
+    example: 500.0,
   })
   @IsDecimal({ decimal_digits: '0,3' })
   valor: number;

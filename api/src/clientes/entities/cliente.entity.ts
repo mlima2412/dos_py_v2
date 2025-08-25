@@ -135,17 +135,17 @@ export class Cliente {
     if (data) {
       Object.assign(this, data);
     }
-    
+
     // Gerar UUID sempre que uma nova instância é criada
     if (!this.publicId) {
       this.publicId = uuidv7();
     }
-    
+
     // Definir valores padrão se não fornecidos
     if (!this.linguagem) {
       this.linguagem = Linguagem.Espanol;
     }
-    
+
     if (this.ativo === undefined) {
       this.ativo = true;
     }
@@ -157,43 +157,43 @@ export class Cliente {
     cliente.validateBusinessRules();
     return cliente;
   }
-  
+
   validateBusinessRules(): void {
     if (!this.nome || this.nome.trim().length === 0) {
       throw new Error('Nome é obrigatório');
     }
-    
+
     if (!this.parceiroId) {
       throw new Error('Parceiro é obrigatório');
     }
-    
+
     if (this.email) {
       this.validateEmail();
     }
   }
-  
+
   validateEmail(): void {
     if (!this.email) return;
-    
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(this.email)) {
       throw new Error('Email inválido');
     }
   }
-  
+
   activate(): void {
     this.ativo = true;
   }
-  
+
   deactivate(): void {
     this.ativo = false;
   }
-  
+
   updateEmail(newEmail: string): void {
     this.email = newEmail;
     this.validateEmail();
   }
-  
+
   canBeDeleted(): boolean {
     // Cliente nunca pode ser removido, apenas desativado
     return false;

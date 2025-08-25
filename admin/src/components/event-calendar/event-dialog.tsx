@@ -233,54 +233,48 @@ export function EventDialog({
 	];
 
 	return (
-		<Dialog
-			open={isOpen}
-			onOpenChange={(open) => !open && onClose()}
-		>
-			<DialogContent className='sm:max-w-[425px]'>
+		<Dialog open={isOpen} onOpenChange={open => !open && onClose()}>
+			<DialogContent className="sm:max-w-[425px]">
 				<DialogHeader>
 					<DialogTitle>{event?.id ? "Edit Event" : "Create Event"}</DialogTitle>
-					<DialogDescription className='sr-only'>
+					<DialogDescription className="sr-only">
 						{event?.id
 							? "Edit the details of this event"
 							: "Add a new event to your calendar"}
 					</DialogDescription>
 				</DialogHeader>
 				{error && (
-					<div className='bg-destructive/15 text-destructive rounded-md px-3 py-2 text-sm'>
+					<div className="bg-destructive/15 text-destructive rounded-md px-3 py-2 text-sm">
 						{error}
 					</div>
 				)}
-				<div className='grid gap-4 py-4'>
-					<div className='*:not-first:mt-1.5'>
-						<Label htmlFor='title'>Title</Label>
+				<div className="grid gap-4 py-4">
+					<div className="*:not-first:mt-1.5">
+						<Label htmlFor="title">Title</Label>
 						<Input
-							id='title'
+							id="title"
 							value={title}
-							onChange={(e) => setTitle(e.target.value)}
+							onChange={e => setTitle(e.target.value)}
 						/>
 					</div>
 
-					<div className='*:not-first:mt-1.5'>
-						<Label htmlFor='description'>Description</Label>
+					<div className="*:not-first:mt-1.5">
+						<Label htmlFor="description">Description</Label>
 						<Textarea
-							id='description'
+							id="description"
 							value={description}
-							onChange={(e) => setDescription(e.target.value)}
+							onChange={e => setDescription(e.target.value)}
 							rows={3}
 						/>
 					</div>
 
-					<div className='flex gap-4'>
-						<div className='flex-1 *:not-first:mt-1.5'>
-							<Label htmlFor='start-date'>Start Date</Label>
-							<Popover
-								open={startDateOpen}
-								onOpenChange={setStartDateOpen}
-							>
+					<div className="flex gap-4">
+						<div className="flex-1 *:not-first:mt-1.5">
+							<Label htmlFor="start-date">Start Date</Label>
+							<Popover open={startDateOpen} onOpenChange={setStartDateOpen}>
 								<PopoverTrigger asChild>
 									<Button
-										id='start-date'
+										id="start-date"
 										variant={"outline"}
 										className={cn(
 											"group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
@@ -293,24 +287,23 @@ export function EventDialog({
 												!startDate && "text-muted-foreground"
 											)}
 										>
-											{startDate ? format(startDate, "PPP", locale ? { locale } : {}) : "Pick a date"}
+											{startDate
+												? format(startDate, "PPP", locale ? { locale } : {})
+												: "Pick a date"}
 										</span>
 										<RiCalendarLine
 											size={16}
-											className='text-muted-foreground/80 shrink-0'
-											aria-hidden='true'
+											className="text-muted-foreground/80 shrink-0"
+											aria-hidden="true"
 										/>
 									</Button>
 								</PopoverTrigger>
-								<PopoverContent
-									className='w-auto p-2'
-									align='start'
-								>
+								<PopoverContent className="w-auto p-2" align="start">
 									<Calendar
-										mode='single'
+										mode="single"
 										selected={startDate}
 										defaultMonth={startDate}
-										onSelect={(date) => {
+										onSelect={date => {
 											if (date) {
 												setStartDate(date);
 												// If end date is before the new start date, update it to match the start date
@@ -327,21 +320,15 @@ export function EventDialog({
 						</div>
 
 						{!allDay && (
-							<div className='min-w-28 *:not-first:mt-1.5'>
-								<Label htmlFor='start-time'>Start Time</Label>
-								<Select
-									value={startTime}
-									onValueChange={setStartTime}
-								>
-									<SelectTrigger id='start-time'>
-										<SelectValue placeholder='Select time' />
+							<div className="min-w-28 *:not-first:mt-1.5">
+								<Label htmlFor="start-time">Start Time</Label>
+								<Select value={startTime} onValueChange={setStartTime}>
+									<SelectTrigger id="start-time">
+										<SelectValue placeholder="Select time" />
 									</SelectTrigger>
 									<SelectContent>
-										{timeOptions.map((option) => (
-											<SelectItem
-												key={option.value}
-												value={option.value}
-											>
+										{timeOptions.map(option => (
+											<SelectItem key={option.value} value={option.value}>
 												{option.label}
 											</SelectItem>
 										))}
@@ -351,16 +338,13 @@ export function EventDialog({
 						)}
 					</div>
 
-					<div className='flex gap-4'>
-						<div className='flex-1 *:not-first:mt-1.5'>
-							<Label htmlFor='end-date'>End Date</Label>
-							<Popover
-								open={endDateOpen}
-								onOpenChange={setEndDateOpen}
-							>
+					<div className="flex gap-4">
+						<div className="flex-1 *:not-first:mt-1.5">
+							<Label htmlFor="end-date">End Date</Label>
+							<Popover open={endDateOpen} onOpenChange={setEndDateOpen}>
 								<PopoverTrigger asChild>
 									<Button
-										id='end-date'
+										id="end-date"
 										variant={"outline"}
 										className={cn(
 											"group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
@@ -373,25 +357,24 @@ export function EventDialog({
 												!endDate && "text-muted-foreground"
 											)}
 										>
-											{endDate ? format(endDate, "PPP", locale ? { locale } : {}) : "Pick a date"}
+											{endDate
+												? format(endDate, "PPP", locale ? { locale } : {})
+												: "Pick a date"}
 										</span>
 										<RiCalendarLine
 											size={16}
-											className='text-muted-foreground/80 shrink-0'
-											aria-hidden='true'
+											className="text-muted-foreground/80 shrink-0"
+											aria-hidden="true"
 										/>
 									</Button>
 								</PopoverTrigger>
-								<PopoverContent
-									className='w-auto p-2'
-									align='start'
-								>
+								<PopoverContent className="w-auto p-2" align="start">
 									<Calendar
-										mode='single'
+										mode="single"
 										selected={endDate}
 										defaultMonth={endDate}
 										disabled={{ before: startDate }}
-										onSelect={(date) => {
+										onSelect={date => {
 											if (date) {
 												setEndDate(date);
 												setError(null);
@@ -404,21 +387,15 @@ export function EventDialog({
 						</div>
 
 						{!allDay && (
-							<div className='min-w-28 *:not-first:mt-1.5'>
-								<Label htmlFor='end-time'>End Time</Label>
-								<Select
-									value={endTime}
-									onValueChange={setEndTime}
-								>
-									<SelectTrigger id='end-time'>
-										<SelectValue placeholder='Select time' />
+							<div className="min-w-28 *:not-first:mt-1.5">
+								<Label htmlFor="end-time">End Time</Label>
+								<Select value={endTime} onValueChange={setEndTime}>
+									<SelectTrigger id="end-time">
+										<SelectValue placeholder="Select time" />
 									</SelectTrigger>
 									<SelectContent>
-										{timeOptions.map((option) => (
-											<SelectItem
-												key={option.value}
-												value={option.value}
-											>
+										{timeOptions.map(option => (
+											<SelectItem key={option.value} value={option.value}>
 												{option.label}
 											</SelectItem>
 										))}
@@ -428,34 +405,34 @@ export function EventDialog({
 						)}
 					</div>
 
-					<div className='flex items-center gap-2'>
+					<div className="flex items-center gap-2">
 						<Checkbox
-							id='all-day'
+							id="all-day"
 							checked={allDay}
-							onCheckedChange={(checked) => setAllDay(checked === true)}
+							onCheckedChange={checked => setAllDay(checked === true)}
 						/>
-						<Label htmlFor='all-day'>All day</Label>
+						<Label htmlFor="all-day">All day</Label>
 					</div>
 
-					<div className='*:not-first:mt-1.5'>
-						<Label htmlFor='location'>Location</Label>
+					<div className="*:not-first:mt-1.5">
+						<Label htmlFor="location">Location</Label>
 						<Input
-							id='location'
+							id="location"
 							value={location}
-							onChange={(e) => setLocation(e.target.value)}
+							onChange={e => setLocation(e.target.value)}
 						/>
 					</div>
-					<fieldset className='space-y-4'>
-						<legend className='text-foreground text-sm leading-none font-medium'>
+					<fieldset className="space-y-4">
+						<legend className="text-foreground text-sm leading-none font-medium">
 							Etiquette
 						</legend>
 						<RadioGroup
-							className='flex gap-1.5'
+							className="flex gap-1.5"
 							defaultValue={colorOptions[0]?.value}
 							value={color}
 							onValueChange={(value: EventColor) => setColor(value)}
 						>
-							{colorOptions.map((colorOption) => (
+							{colorOptions.map(colorOption => (
 								<RadioGroupItem
 									key={colorOption.value}
 									id={`color-${colorOption.value}`}
@@ -471,25 +448,19 @@ export function EventDialog({
 						</RadioGroup>
 					</fieldset>
 				</div>
-				<DialogFooter className='flex-row sm:justify-between'>
+				<DialogFooter className="flex-row sm:justify-between">
 					{event?.id && (
 						<Button
-							variant='outline'
-							size='icon'
+							variant="outline"
+							size="icon"
 							onClick={handleDelete}
-							aria-label='Delete event'
+							aria-label="Delete event"
 						>
-							<RiDeleteBinLine
-								size={16}
-								aria-hidden='true'
-							/>
+							<RiDeleteBinLine size={16} aria-hidden="true" />
 						</Button>
 					)}
-					<div className='flex flex-1 justify-end gap-2'>
-						<Button
-							variant='outline'
-							onClick={onClose}
-						>
+					<div className="flex flex-1 justify-end gap-2">
+						<Button variant="outline" onClick={onClose}>
 							Cancel
 						</Button>
 						<Button onClick={handleSave}>Save</Button>

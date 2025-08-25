@@ -23,7 +23,7 @@ import {
   ApiBearerAuth,
   ApiBody,
 } from '@nestjs/swagger';
-import { TFunction } from 'i18next'
+import { TFunction } from 'i18next';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -41,8 +41,8 @@ export class AuthController {
         summary: 'Login como Admin',
         description: 'Exemplo de login com usuário administrador',
         value: {
-          email: 'admin@email.com',
-          senha: 'admin123',
+          email: 'mlima001@gmail.com',
+          senha: '123456',
         },
       },
       usuario: {
@@ -93,10 +93,10 @@ export class AuthController {
   async login(
     @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) response: Response,
-    @Req() req: Request & { language: string; t: TFunction }
+    @Req() req: Request & { language: string; t: TFunction },
   ) {
     const result = await this.authService.login(loginDto);
-    console.log(req.t('main.greeting'))
+    console.log(req.t('main.greeting'));
     // Configurar cookie para aplicação web (7 dias)
     response.cookie('refreshToken', result.refreshToken, {
       domain:
@@ -184,8 +184,8 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Obter parceiros do usuário logado' })
-  @ApiResponse({ 
-    status: 200, 
+  @ApiResponse({
+    status: 200,
     description: 'Lista de parceiros do usuário',
     schema: {
       type: 'array',
@@ -198,30 +198,36 @@ export class AuthController {
             type: 'object',
             properties: {
               id: { type: 'number', example: 1 },
-              publicId: { type: 'string', example: 'f47ac10b-58cc-4372-a567-0e02b2c3d479' },
+              publicId: {
+                type: 'string',
+                example: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+              },
               nome: { type: 'string', example: 'Parceiro Exemplo' },
-              logourl: { type: 'string', example: 'https://exemplo.com/logo.png' },
+              logourl: {
+                type: 'string',
+                example: 'https://exemplo.com/logo.png',
+              },
               currencyId: { type: 'number', example: 1 },
               currency: {
                 type: 'object',
                 properties: {
                   id: { type: 'number', example: 1 },
                   locale: { type: 'string', example: 'pt-BR' },
-                  isoCode: { type: 'string', example: 'BRL' }
-                }
-              }
-            }
+                  isoCode: { type: 'string', example: 'BRL' },
+                },
+              },
+            },
           },
           perfil: {
             type: 'object',
             properties: {
               id: { type: 'number', example: 1 },
-              nome: { type: 'string', example: 'Admin' }
-            }
-          }
-        }
-      }
-    }
+              nome: { type: 'string', example: 'Admin' },
+            },
+          },
+        },
+      },
+    },
   })
   async getUserParceiros(@Request() req) {
     return this.authService.getUserParceiros(req.user.id);

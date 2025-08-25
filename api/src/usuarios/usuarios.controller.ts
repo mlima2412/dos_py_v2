@@ -43,7 +43,7 @@ export class UsuariosController {
           senha: 'senha123',
           telefone: '(11) 99999-9999',
           // perfilId removido (agora via UsuarioParceiro)
-        }
+        },
       },
       usuario: {
         summary: 'Usuário Comum',
@@ -54,9 +54,9 @@ export class UsuariosController {
           senha: 'senha456',
           telefone: '(11) 88888-8888',
           // perfilId removido (agora via UsuarioParceiro)
-        }
-      }
-    }
+        },
+      },
+    },
   })
   @ApiResponse({
     status: 201,
@@ -96,34 +96,38 @@ export class UsuariosController {
     schema: {
       type: 'object',
       properties: {
-        data: { type: 'array', items: { $ref: '#/components/schemas/Usuario' } },
+        data: {
+          type: 'array',
+          items: { $ref: '#/components/schemas/Usuario' },
+        },
         total: { type: 'number', description: 'Total de registros' },
         page: { type: 'number', description: 'Página atual' },
         limit: { type: 'number', description: 'Itens por página' },
-        totalPages: { type: 'number', description: 'Total de páginas' }
-      }
-    }
+        totalPages: { type: 'number', description: 'Total de páginas' },
+      },
+    },
   })
   findPaginated(
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '20',
     @Query('search') search?: string,
     @Query('organizacao') organizacao?: string,
-  // @Query('perfil') perfil?: string, // filtro de perfil agora via UsuarioParceiro
-    @Query('ativo') ativo?: string
+    // @Query('perfil') perfil?: string, // filtro de perfil agora via UsuarioParceiro
+    @Query('ativo') ativo?: string,
   ) {
     const pageNum = parseInt(page, 10) || 1;
     const limitNum = parseInt(limit, 10) || 20;
-    const ativoFilter = ativo === 'true' ? true : ativo === 'false' ? false : undefined;
-  // const perfilFilter = perfil ? parseInt(perfil, 10) : undefined;
-    
+    const ativoFilter =
+      ativo === 'true' ? true : ativo === 'false' ? false : undefined;
+    // const perfilFilter = perfil ? parseInt(perfil, 10) : undefined;
+
     // Para filtrar por perfil, utilize o endpoint de UsuarioParceiro
     return this.usuariosService.findPaginated({
       page: pageNum,
       limit: limitNum,
       search,
       organizacao,
-      ativo: ativoFilter
+      ativo: ativoFilter,
     });
   }
 
@@ -177,18 +181,18 @@ export class UsuariosController {
         value: {
           nome: 'João Silva Santos',
           telefone: '(11) 99999-0000',
-          avatar: 'https://exemplo.com/avatar.jpg'
-        }
+          avatar: 'https://exemplo.com/avatar.jpg',
+        },
       },
       changePassword: {
         summary: 'Alterar Senha',
         description: 'Exemplo de alteração de senha',
         value: {
-          senha: 'novaSenha123'
-        }
+          senha: 'novaSenha123',
+        },
       },
-  // Exemplo de alteração de perfil removido (agora via UsuarioParceiro)
-    }
+      // Exemplo de alteração de perfil removido (agora via UsuarioParceiro)
+    },
   })
   @ApiResponse({
     status: 200,
@@ -258,9 +262,9 @@ export class UsuariosController {
 
   @Post('initialize-system')
   @Public()
-  @ApiOperation({ 
-    summary: 'Inicializar sistema', 
-    description: 'Cria perfis padrão e usuário admin se não existirem' 
+  @ApiOperation({
+    summary: 'Inicializar sistema',
+    description: 'Cria perfis padrão e usuário admin se não existirem',
   })
   @ApiResponse({
     status: 201,

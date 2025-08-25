@@ -13,7 +13,9 @@
     "test:watch": "jest --watch",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\""
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\""
   },
   "dependencies": {
     "@isaacs/brace-expansion": "^5.0.0",
@@ -38,6 +40,7 @@
     "i18next": "^25.3.2",
     "i18next-fs-backend": "^2.6.0",
     "i18next-http-middleware": "^3.8.0",
+    "ioredis": "^5.7.0",
     "nanoid": "^5.1.5",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",

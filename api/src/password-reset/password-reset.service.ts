@@ -9,17 +9,15 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 const { nanoid } = require('nanoid');
 import { Resend } from 'resend';
 import { Usuario } from '../usuarios/entities/usuario.entity';
-import i18next from 'i18next'
+import i18next from 'i18next';
 
 @Injectable()
 export class PasswordResetService {
-  constructor(
-    private prisma: PrismaService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async requestPasswordReset(
     requestDto: RequestPasswordResetDto,
-    lang:string
+    lang: string,
   ): Promise<{ message: string }> {
     // Verificar se o usuário existe com o email fornecido
     const user = await this.prisma.usuario.findFirst({
@@ -68,14 +66,8 @@ export class PasswordResetService {
     }
 
     // Enviar email com o link de recuperação
-  
 
-    await this.sendPasswordResetEmail(
-      user.email,
-      user.nome,
-      token,
-      lang,
-    );
+    await this.sendPasswordResetEmail(user.email, user.nome, token, lang);
 
     return { message: 'Email de recuperação enviado com sucesso' };
   }
@@ -144,8 +136,8 @@ export class PasswordResetService {
     token: string,
     lang,
   ): Promise<void> {
-    const t = i18next.getFixedT(lang)
-    
+    const t = i18next.getFixedT(lang);
+
     const resend = new Resend(process.env.RESEND_API);
 
     // Determinar a URL base baseada no ambiente
@@ -160,7 +152,7 @@ export class PasswordResetService {
     // Obter traduções baseadas no idioma
     const subject = t('password-reset.subject');
     const title = t('password-reset.title');
-    const greeting = t('password-reset.greeting', {name:nome})
+    const greeting = t('password-reset.greeting', { name: nome });
     const message = t('password-reset.message');
     const buttonText = t('password-reset.buttonText');
     const important = t('password-reset.important');

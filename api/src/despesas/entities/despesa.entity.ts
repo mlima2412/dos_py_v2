@@ -26,7 +26,7 @@ export class Despesa {
 
   @ApiProperty({
     description: 'Valor total da despesa',
-    example: 1500.50,
+    example: 1500.5,
   })
   valorTotal: number;
 
@@ -54,8 +54,6 @@ export class Despesa {
     required: false,
   })
   fornecedorId: number | null;
-
-
 
   @ApiProperty({
     description: 'ID da moeda da despesa',

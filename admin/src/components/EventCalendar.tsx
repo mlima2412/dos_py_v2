@@ -69,9 +69,9 @@ export function EventCalendar({ className }: EventCalendarProps) {
 	if (isLoading) {
 		return (
 			<Card className={className}>
-				<CardContent className='p-6'>
-					<div className='flex items-center justify-center h-64'>
-						<div className='text-muted-foreground'>Carregando...</div>
+				<CardContent className="p-6">
+					<div className="flex items-center justify-center h-64">
+						<div className="text-muted-foreground">Carregando...</div>
 					</div>
 				</CardContent>
 			</Card>
@@ -82,7 +82,7 @@ export function EventCalendar({ className }: EventCalendarProps) {
 		<div className={className}>
 			<OriginEventCalendar
 				events={events}
-				initialView='mes'
+				initialView="mes"
 				onEventAdd={handleEventAdd}
 				onEventUpdate={handleEventUpdate}
 				onEventDelete={() => {}} // Não permitir deletar eventos

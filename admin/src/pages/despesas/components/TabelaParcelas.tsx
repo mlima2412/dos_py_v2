@@ -74,7 +74,8 @@ export function TabelaParcelas({
 			toast.success("Parcela marcada como paga com sucesso!");
 			// Invalidar queries específicas para atualizar a tabela e listas relacionadas
 			queryClient.invalidateQueries({
-				queryKey: contasPagarParcelasControllerFindByContasPagarQueryKey(contasPagarId),
+				queryKey:
+					contasPagarParcelasControllerFindByContasPagarQueryKey(contasPagarId),
 			});
 			// Invalidar query de despesas para atualizar status na listagem
 			queryClient.invalidateQueries({
@@ -86,7 +87,8 @@ export function TabelaParcelas({
 			});
 			// Forçar refetch da query atual para garantir atualização imediata
 			queryClient.refetchQueries({
-				queryKey: contasPagarParcelasControllerFindByContasPagarQueryKey(contasPagarId),
+				queryKey:
+					contasPagarParcelasControllerFindByContasPagarQueryKey(contasPagarId),
 			});
 		} catch (error) {
 			console.error("Erro ao marcar parcela como paga:", error);
@@ -123,8 +125,8 @@ export function TabelaParcelas({
 					<CardTitle>{t("expenses.installments")}</CardTitle>
 				</CardHeader>
 				<CardContent>
-					<div className='flex items-center justify-center h-32'>
-						<Spinner size='lg' />
+					<div className="flex items-center justify-center h-32">
+						<Spinner size="lg" />
 					</div>
 				</CardContent>
 			</Card>
@@ -138,7 +140,7 @@ export function TabelaParcelas({
 					<CardTitle>{t("expenses.installments")}</CardTitle>
 				</CardHeader>
 				<CardContent>
-					<p className='text-muted-foreground text-center py-8'>
+					<p className="text-muted-foreground text-center py-8">
 						{t("expenses.noInstallmentsFound")}
 					</p>
 				</CardContent>
@@ -155,19 +157,19 @@ export function TabelaParcelas({
 				<Table>
 					<TableHeader>
 						<TableRow>
-							<TableHead className='w-[100px]'>
+							<TableHead className="w-[100px]">
 								{t("expenses.installmentNumber")}
 							</TableHead>
 							<TableHead>{t("expenses.dueDate")}</TableHead>
 							<TableHead>{t("expenses.amount")}</TableHead>
 							<TableHead>Status</TableHead>
-							<TableHead className='w-[100px]'>{t("common.actions")}</TableHead>
+							<TableHead className="w-[100px]">{t("common.actions")}</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
 						{parcelas.map((parcela: ContasPagarParcelas, index: number) => (
 							<TableRow key={parcela.publicId}>
-								<TableCell className='font-medium'>{index + 1}</TableCell>
+								<TableCell className="font-medium">{index + 1}</TableCell>
 								<TableCell>{formatDate(parcela.dataVencimento)}</TableCell>
 								<TableCell>{formatCurrency(parcela.valor)}</TableCell>
 								<TableCell>
@@ -178,17 +180,17 @@ export function TabelaParcelas({
 								<TableCell>
 									{!parcela.pago && (
 										<Button
-											variant='ghost'
-											size='sm'
+											variant="ghost"
+											size="sm"
 											onClick={() => handleMarkParcelaAsPaid(parcela)}
 											disabled={loadingParcela === parcela.publicId}
-											className='h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50'
-											title='Marcar como paga'
+											className="h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
+											title="Marcar como paga"
 										>
 											{loadingParcela === parcela.publicId ? (
-												<Spinner size='sm' />
+												<Spinner size="sm" />
 											) : (
-												<Check className='h-4 w-4' />
+												<Check className="h-4 w-4" />
 											)}
 										</Button>
 									)}

@@ -30,7 +30,7 @@ export class ContasPagarParcelas {
 
   @ApiProperty({
     description: 'Valor da parcela',
-    example: 500.00,
+    example: 500.0,
   })
   valor: number;
 
@@ -52,7 +52,7 @@ export class ContasPagarParcelas {
     required: false,
   })
   contasPagar?: ContasPagar;
-  
+
   @ApiProperty({
     description: 'Moeda da parcela',
     type: () => Currency,

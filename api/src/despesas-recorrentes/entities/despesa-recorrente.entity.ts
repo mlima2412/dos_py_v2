@@ -27,7 +27,6 @@ export class DespesaRecorrente {
   })
   publicId: string;
 
-
   @ApiProperty({
     description: 'Descrição da despesa recorrente',
     example: 'Aluguel mensal do escritório',
@@ -36,7 +35,7 @@ export class DespesaRecorrente {
 
   @ApiProperty({
     description: 'Valor da despesa recorrente',
-    example: 2500.00,
+    example: 2500.0,
   })
   valor: number;
 

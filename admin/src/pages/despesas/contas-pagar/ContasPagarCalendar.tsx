@@ -15,16 +15,16 @@ export function ContasPagarCalendar() {
 
 	return (
 		<DashboardLayout>
-			<div className='space-y-6'>
+			<div className="space-y-6">
 				{/* Breadcrumb */}
 				<Breadcrumb>
 					<BreadcrumbList>
 						<BreadcrumbItem>
-							<BreadcrumbLink href='/'>{t("menu.home")}</BreadcrumbLink>
+							<BreadcrumbLink href="/">{t("menu.home")}</BreadcrumbLink>
 						</BreadcrumbItem>
 						<BreadcrumbSeparator />
 						<BreadcrumbItem>
-							<BreadcrumbLink href='/despesas'>
+							<BreadcrumbLink href="/despesas">
 								{t("expenses.title")}
 							</BreadcrumbLink>
 						</BreadcrumbItem>
@@ -36,7 +36,7 @@ export function ContasPagarCalendar() {
 				</Breadcrumb>
 
 				{/* Calendário de eventos */}
-				<EventCalendar className='w-full' />
+				<EventCalendar className="w-full" />
 			</div>
 		</DashboardLayout>
 	);

@@ -8,7 +8,14 @@ import {
   Delete,
   ParseIntPipe,
 } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiParam,
+} from '@nestjs/swagger';
 import { PerfisService } from './perfis.service';
 import { CreatePerfilDto } from './dto/create-perfil.dto';
 import { UpdatePerfilDto } from './dto/update-perfil.dto';
@@ -29,18 +36,18 @@ export class PerfisController {
         description: 'Exemplo de criação de perfil administrativo',
         value: {
           nome: 'Administrador',
-          descricao: 'Perfil com acesso total ao sistema'
-        }
+          descricao: 'Perfil com acesso total ao sistema',
+        },
       },
       usuario: {
         summary: 'Perfil Usuário',
         description: 'Exemplo de criação de perfil de usuário comum',
         value: {
           nome: 'Usuário',
-          descricao: 'Perfil com acesso limitado ao sistema'
-        }
-      }
-    }
+          descricao: 'Perfil com acesso limitado ao sistema',
+        },
+      },
+    },
   })
   @ApiResponse({
     status: 201,
@@ -50,12 +57,23 @@ export class PerfisController {
       properties: {
         id: { type: 'number', example: 1 },
         nome: { type: 'string', example: 'Administrador' },
-        descricao: { type: 'string', example: 'Perfil com acesso total ao sistema' },
+        descricao: {
+          type: 'string',
+          example: 'Perfil com acesso total ao sistema',
+        },
         ativo: { type: 'boolean', example: true },
-        createdAt: { type: 'string', format: 'date-time', example: '2024-01-01T00:00:00.000Z' },
-        updatedAt: { type: 'string', format: 'date-time', example: '2024-01-01T00:00:00.000Z' }
-      }
-    }
+        createdAt: {
+          type: 'string',
+          format: 'date-time',
+          example: '2024-01-01T00:00:00.000Z',
+        },
+        updatedAt: {
+          type: 'string',
+          format: 'date-time',
+          example: '2024-01-01T00:00:00.000Z',
+        },
+      },
+    },
   })
   @ApiResponse({ status: 400, description: 'Dados de entrada inválidos' })
   @ApiResponse({ status: 409, description: 'Perfil com este nome já existe' })
@@ -76,13 +94,16 @@ export class PerfisController {
         properties: {
           id: { type: 'number', example: 1 },
           nome: { type: 'string', example: 'Administrador' },
-          descricao: { type: 'string', example: 'Perfil com acesso total ao sistema' },
+          descricao: {
+            type: 'string',
+            example: 'Perfil com acesso total ao sistema',
+          },
           ativo: { type: 'boolean', example: true },
           createdAt: { type: 'string', format: 'date-time' },
-          updatedAt: { type: 'string', format: 'date-time' }
-        }
-      }
-    }
+          updatedAt: { type: 'string', format: 'date-time' },
+        },
+      },
+    },
   })
   findAll() {
     return this.perfisService.findAll();
@@ -100,12 +121,15 @@ export class PerfisController {
       properties: {
         id: { type: 'number', example: 1 },
         nome: { type: 'string', example: 'Administrador' },
-        descricao: { type: 'string', example: 'Perfil com acesso total ao sistema' },
+        descricao: {
+          type: 'string',
+          example: 'Perfil com acesso total ao sistema',
+        },
         ativo: { type: 'boolean', example: true },
         createdAt: { type: 'string', format: 'date-time' },
-        updatedAt: { type: 'string', format: 'date-time' }
-      }
-    }
+        updatedAt: { type: 'string', format: 'date-time' },
+      },
+    },
   })
   @ApiResponse({ status: 404, description: 'Perfil não encontrado' })
   findOne(@Param('id', ParseIntPipe) id: number) {
@@ -124,10 +148,10 @@ export class PerfisController {
         description: 'Exemplo de atualização de perfil',
         value: {
           nome: 'Administrador Geral',
-          descricao: 'Perfil com acesso total e gerenciamento do sistema'
-        }
-      }
-    }
+          descricao: 'Perfil com acesso total e gerenciamento do sistema',
+        },
+      },
+    },
   })
   @ApiResponse({
     status: 200,
@@ -137,12 +161,15 @@ export class PerfisController {
       properties: {
         id: { type: 'number', example: 1 },
         nome: { type: 'string', example: 'Administrador Geral' },
-        descricao: { type: 'string', example: 'Perfil com acesso total e gerenciamento do sistema' },
+        descricao: {
+          type: 'string',
+          example: 'Perfil com acesso total e gerenciamento do sistema',
+        },
         ativo: { type: 'boolean', example: true },
         createdAt: { type: 'string', format: 'date-time' },
-        updatedAt: { type: 'string', format: 'date-time' }
-      }
-    }
+        updatedAt: { type: 'string', format: 'date-time' },
+      },
+    },
   })
   @ApiResponse({ status: 404, description: 'Perfil não encontrado' })
   @ApiResponse({ status: 400, description: 'Dados de entrada inválidos' })
@@ -160,7 +187,10 @@ export class PerfisController {
   @ApiParam({ name: 'id', description: 'ID do perfil', example: 1 })
   @ApiResponse({ status: 200, description: 'Perfil removido com sucesso' })
   @ApiResponse({ status: 404, description: 'Perfil não encontrado' })
-  @ApiResponse({ status: 400, description: 'Não é possível remover perfil em uso' })
+  @ApiResponse({
+    status: 400,
+    description: 'Não é possível remover perfil em uso',
+  })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.perfisService.remove(id);
   }

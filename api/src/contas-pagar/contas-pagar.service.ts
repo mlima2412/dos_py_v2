@@ -13,7 +13,9 @@ import { uuidv7 } from 'uuidv7';
 export class ContasPagarService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createContasPagarDto: CreateContasPagarDto): Promise<ContasPagar> {
+  async create(
+    createContasPagarDto: CreateContasPagarDto,
+  ): Promise<ContasPagar> {
     const contasPagar = await this.prisma.contasPagar.create({
       data: {
         publicId: uuidv7(),
@@ -40,24 +42,27 @@ export class ContasPagarService {
   }
 
   async findAll(): Promise<ContasPagar[]> {
-    console.log("Entrou aqui")
+    console.log('Entrou aqui');
     const contasPagar = await this.prisma.contasPagar.findMany({
       include: {
         ContasPagarParcelas: true,
       },
       orderBy: { dataCriacao: 'desc' },
     });
-    console.log(contasPagar)
+    console.log(contasPagar);
 
-    return contasPagar.map(conta => new ContasPagar({
-      ...conta,
-      valorTotal: Number(conta.valorTotal),
-      saldo: Number(conta.saldo),
-      contasPagarParcelas: conta.ContasPagarParcelas.map(parcela => ({
-        ...parcela,
-        valor: Number(parcela.valor),
-      })),
-    }));
+    return contasPagar.map(
+      conta =>
+        new ContasPagar({
+          ...conta,
+          valorTotal: Number(conta.valorTotal),
+          saldo: Number(conta.saldo),
+          contasPagarParcelas: conta.ContasPagarParcelas.map(parcela => ({
+            ...parcela,
+            valor: Number(parcela.valor),
+          })),
+        }),
+    );
   }
 
   async findOne(publicId: string): Promise<ContasPagar> {
@@ -83,7 +88,10 @@ export class ContasPagarService {
     });
   }
 
-  async update(publicId: string, updateContasPagarDto: UpdateContasPagarDto): Promise<ContasPagar> {
+  async update(
+    publicId: string,
+    updateContasPagarDto: UpdateContasPagarDto,
+  ): Promise<ContasPagar> {
     const existingConta = await this.prisma.contasPagar.findUnique({
       where: { publicId },
     });
@@ -97,7 +105,9 @@ export class ContasPagarService {
         valorTotal: updateContasPagarDto.valorTotal,
         saldo: updateContasPagarDto.saldo,
         pago: updateContasPagarDto.pago,
-        dataPagamento: updateContasPagarDto.dataPagamento ? new Date(updateContasPagarDto.dataPagamento) : undefined,
+        dataPagamento: updateContasPagarDto.dataPagamento
+          ? new Date(updateContasPagarDto.dataPagamento)
+          : undefined,
       },
       include: {
         ContasPagarParcelas: true,
@@ -138,15 +148,18 @@ export class ContasPagarService {
       orderBy: { dataCriacao: 'desc' },
     });
 
-    return contasPagar.map(conta => new ContasPagar({
-      ...conta,
-      valorTotal: Number(conta.valorTotal),
-      saldo: Number(conta.saldo),
-      contasPagarParcelas: conta.ContasPagarParcelas.map(parcela => ({
-        ...parcela,
-        valor: Number(parcela.valor),
-      })),
-    }));
+    return contasPagar.map(
+      conta =>
+        new ContasPagar({
+          ...conta,
+          valorTotal: Number(conta.valorTotal),
+          saldo: Number(conta.saldo),
+          contasPagarParcelas: conta.ContasPagarParcelas.map(parcela => ({
+            ...parcela,
+            valor: Number(parcela.valor),
+          })),
+        }),
+    );
   }
 
   async findByStatus(pago: boolean): Promise<ContasPagar[]> {
@@ -158,14 +171,17 @@ export class ContasPagarService {
       orderBy: { dataCriacao: 'desc' },
     });
 
-    return contasPagar.map(conta => new ContasPagar({
-      ...conta,
-      valorTotal: Number(conta.valorTotal),
-      saldo: Number(conta.saldo),
-      contasPagarParcelas: conta.ContasPagarParcelas.map(parcela => ({
-        ...parcela,
-        valor: Number(parcela.valor),
-      })),
-    }));
+    return contasPagar.map(
+      conta =>
+        new ContasPagar({
+          ...conta,
+          valorTotal: Number(conta.valorTotal),
+          saldo: Number(conta.saldo),
+          contasPagarParcelas: conta.ContasPagarParcelas.map(parcela => ({
+            ...parcela,
+            valor: Number(parcela.valor),
+          })),
+        }),
+    );
   }
 }

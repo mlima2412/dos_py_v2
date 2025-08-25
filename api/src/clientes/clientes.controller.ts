@@ -48,8 +48,8 @@ export class ClientesController {
           estado: 'SP',
           cep: '01234-567',
           parceiroId: 1,
-          canalOrigemId: 1
-        }
+          canalOrigemId: 1,
+        },
       },
       pessoaJuridica: {
         summary: 'Cliente Pessoa Jurídica',
@@ -64,10 +64,10 @@ export class ClientesController {
           estado: 'SP',
           cep: '01310-100',
           parceiroId: 2,
-          canalOrigemId: 2
-        }
-      }
-    }
+          canalOrigemId: 2,
+        },
+      },
+    },
   })
   @ApiResponse({
     status: 201,
@@ -83,8 +83,16 @@ export class ClientesController {
   @Get()
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Listar todos os clientes' })
-  @ApiQuery({ name: 'parceiroId', required: false, description: 'Filtrar por ID do parceiro' })
-  @ApiQuery({ name: 'canalOrigemId', required: false, description: 'Filtrar por ID do canal de origem' })
+  @ApiQuery({
+    name: 'parceiroId',
+    required: false,
+    description: 'Filtrar por ID do parceiro',
+  })
+  @ApiQuery({
+    name: 'canalOrigemId',
+    required: false,
+    description: 'Filtrar por ID do canal de origem',
+  })
   @ApiResponse({
     status: 200,
     description: 'Lista de clientes',
@@ -188,7 +196,9 @@ export class ClientesController {
     description: 'Lista de clientes do canal de origem',
     type: [Cliente],
   })
-  findByCanalOrigem(@Param('canalOrigemId') canalOrigemId: string): Promise<Cliente[]> {
+  findByCanalOrigem(
+    @Param('canalOrigemId') canalOrigemId: string,
+  ): Promise<Cliente[]> {
     return this.clientesService.findByCanalOrigem(parseInt(canalOrigemId));
   }
 }

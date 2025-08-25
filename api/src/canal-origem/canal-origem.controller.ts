@@ -34,8 +34,13 @@ export class CanalOrigemController {
     description: 'Canal de origem criado com sucesso',
     type: CanalOrigem,
   })
-  @ApiResponse({ status: 400, description: 'Dados inválidos ou regras de negócio violadas' })
-  create(@Body() createCanalOrigemDto: CreateCanalOrigemDto): Promise<CanalOrigem> {
+  @ApiResponse({
+    status: 400,
+    description: 'Dados inválidos ou regras de negócio violadas',
+  })
+  create(
+    @Body() createCanalOrigemDto: CreateCanalOrigemDto,
+  ): Promise<CanalOrigem> {
     return this.canalOrigemService.create(createCanalOrigemDto);
   }
 
@@ -75,7 +80,10 @@ export class CanalOrigemController {
     type: CanalOrigem,
   })
   @ApiResponse({ status: 404, description: 'Canal de origem não encontrado' })
-  @ApiResponse({ status: 400, description: 'Dados inválidos ou regras de negócio violadas' })
+  @ApiResponse({
+    status: 400,
+    description: 'Dados inválidos ou regras de negócio violadas',
+  })
   update(
     @Param('publicId') publicId: string,
     @Body() updateCanalOrigemDto: UpdateCanalOrigemDto,
@@ -88,9 +96,16 @@ export class CanalOrigemController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Excluir canal de origem' })
   @ApiParam({ name: 'publicId', description: 'ID público do canal de origem' })
-  @ApiResponse({ status: 204, description: 'Canal de origem excluído com sucesso' })
+  @ApiResponse({
+    status: 204,
+    description: 'Canal de origem excluído com sucesso',
+  })
   @ApiResponse({ status: 404, description: 'Canal de origem não encontrado' })
-  @ApiResponse({ status: 400, description: 'Canal de origem não pode ser removido pois possui clientes associados' })
+  @ApiResponse({
+    status: 400,
+    description:
+      'Canal de origem não pode ser removido pois possui clientes associados',
+  })
   remove(@Param('publicId') publicId: string): Promise<void> {
     return this.canalOrigemService.remove(publicId);
   }

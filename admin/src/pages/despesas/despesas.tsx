@@ -9,48 +9,24 @@ import { FormularioDespesaRecorrente } from "./recorrentes/FormularioDespesaReco
 export function DespesasPage() {
 	return (
 		<Routes>
+			<Route index element={<Dashboard />} />
+			<Route path="correntes" element={<ListarDespesas />} />
+			<Route path="correntes/novo" element={<FormularioDespesa />} />
+			<Route path="novo" element={<FormularioDespesa />} />
+			<Route path="editar/:id" element={<FormularioDespesa />} />
+			<Route path="visualizar/:id" element={<FormularioDespesa />} />
+			<Route path="contas-pagar" element={<ContasPagarCalendar />} />
+			<Route path="recorrentes" element={<ListarDespesasRecorrentes />} />
 			<Route
-				index
-				element={<Dashboard />}
-			/>
-			<Route
-				path='correntes'
-				element={<ListarDespesas />}
-			/>
-			<Route
-				path='correntes/novo'
-				element={<FormularioDespesa />}
-			/>
-			<Route
-				path='novo'
-				element={<FormularioDespesa />}
-			/>
-			<Route
-				path='editar/:id'
-				element={<FormularioDespesa />}
-			/>
-			<Route
-				path='visualizar/:id'
-				element={<FormularioDespesa />}
-			/>
-			<Route
-				path='contas-pagar'
-				element={<ContasPagarCalendar />}
-			/>
-			<Route
-				path='recorrentes'
-				element={<ListarDespesasRecorrentes />}
-			/>
-			<Route
-				path='recorrentes/novo'
+				path="recorrentes/novo"
 				element={<FormularioDespesaRecorrente />}
 			/>
 			<Route
-				path='recorrentes/editar/:id'
+				path="recorrentes/editar/:id"
 				element={<FormularioDespesaRecorrente />}
 			/>
 			<Route
-				path='recorrentes/visualizar/:id'
+				path="recorrentes/visualizar/:id"
 				element={<FormularioDespesaRecorrente />}
 			/>
 		</Routes>

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { DespesaRecorrente } from './entities/despesa-recorrente.entity';
 import { CreateDespesaRecorrenteDto } from './dto/create-despesa-recorrente.dto';
@@ -8,7 +12,9 @@ import { UpdateDespesaRecorrenteDto } from './dto/update-despesa-recorrente.dto'
 export class DespesasRecorrentesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createDespesaRecorrenteDto: CreateDespesaRecorrenteDto): Promise<any> {
+  async create(
+    createDespesaRecorrenteDto: CreateDespesaRecorrenteDto,
+  ): Promise<any> {
     // Validar se o parceiro existe
     const parceiro = await this.prisma.parceiro.findUnique({
       where: { id: createDespesaRecorrenteDto.parceiroId },
@@ -46,8 +52,12 @@ export class DespesasRecorrentesService {
         valor: createDespesaRecorrenteDto.valor,
         frequencia: createDespesaRecorrenteDto.frequencia || 'MENSAL',
         diaVencimento: createDespesaRecorrenteDto.diaVencimento,
-        dataInicio: createDespesaRecorrenteDto.dataInicio ? new Date(createDespesaRecorrenteDto.dataInicio) : new Date(),
-        dataFim: createDespesaRecorrenteDto.dataFim ? new Date(createDespesaRecorrenteDto.dataFim) : null,
+        dataInicio: createDespesaRecorrenteDto.dataInicio
+          ? new Date(createDespesaRecorrenteDto.dataInicio)
+          : new Date(),
+        dataFim: createDespesaRecorrenteDto.dataFim
+          ? new Date(createDespesaRecorrenteDto.dataFim)
+          : null,
         subCategoriaId: createDespesaRecorrenteDto.subCategoriaId,
         parceiroId: createDespesaRecorrenteDto.parceiroId,
         fornecedorId: createDespesaRecorrenteDto.fornecedorId,
@@ -65,7 +75,9 @@ export class DespesasRecorrentesService {
     return {
       ...despesaRecorrente,
       valor: Number(despesaRecorrente.valor),
-      cotacao: despesaRecorrente.cotacao ? Number(despesaRecorrente.cotacao) : null,
+      cotacao: despesaRecorrente.cotacao
+        ? Number(despesaRecorrente.cotacao)
+        : null,
     };
   }
 
@@ -76,12 +88,14 @@ export class DespesasRecorrentesService {
         fornecedor: true,
         subCategoria: true,
         currency: true,
-      }
+      },
     });
     return despesasRecorrentes.map(despesaRecorrente => ({
       ...despesaRecorrente,
       valor: Number(despesaRecorrente.valor),
-      cotacao: despesaRecorrente.cotacao ? Number(despesaRecorrente.cotacao) : null,
+      cotacao: despesaRecorrente.cotacao
+        ? Number(despesaRecorrente.cotacao)
+        : null,
     }));
   }
 
@@ -103,7 +117,9 @@ export class DespesasRecorrentesService {
     return {
       ...despesaRecorrente,
       valor: Number(despesaRecorrente.valor),
-      cotacao: despesaRecorrente.cotacao ? Number(despesaRecorrente.cotacao) : null,
+      cotacao: despesaRecorrente.cotacao
+        ? Number(despesaRecorrente.cotacao)
+        : null,
     };
   }
 
@@ -115,12 +131,14 @@ export class DespesasRecorrentesService {
         fornecedor: true,
         subCategoria: true,
         currency: true,
-      }
+      },
     });
     return despesasRecorrentes.map(despesaRecorrente => ({
       ...despesaRecorrente,
       valor: Number(despesaRecorrente.valor),
-      cotacao: despesaRecorrente.cotacao ? Number(despesaRecorrente.cotacao) : null,
+      cotacao: despesaRecorrente.cotacao
+        ? Number(despesaRecorrente.cotacao)
+        : null,
     }));
   }
 
@@ -132,12 +150,14 @@ export class DespesasRecorrentesService {
         fornecedor: true,
         subCategoria: true,
         currency: true,
-      }
+      },
     });
     return despesasRecorrentes.map(despesaRecorrente => ({
       ...despesaRecorrente,
       valor: Number(despesaRecorrente.valor),
-      cotacao: despesaRecorrente.cotacao ? Number(despesaRecorrente.cotacao) : null,
+      cotacao: despesaRecorrente.cotacao
+        ? Number(despesaRecorrente.cotacao)
+        : null,
     }));
   }
 
@@ -149,12 +169,14 @@ export class DespesasRecorrentesService {
         fornecedor: true,
         subCategoria: true,
         currency: true,
-      }
+      },
     });
     return despesasRecorrentes.map(despesaRecorrente => ({
       ...despesaRecorrente,
       valor: Number(despesaRecorrente.valor),
-      cotacao: despesaRecorrente.cotacao ? Number(despesaRecorrente.cotacao) : null,
+      cotacao: despesaRecorrente.cotacao
+        ? Number(despesaRecorrente.cotacao)
+        : null,
     }));
   }
 
@@ -166,20 +188,26 @@ export class DespesasRecorrentesService {
         fornecedor: true,
         subCategoria: true,
         currency: true,
-      }
+      },
     });
     return despesasRecorrentes.map(despesaRecorrente => ({
       ...despesaRecorrente,
       valor: Number(despesaRecorrente.valor),
-      cotacao: despesaRecorrente.cotacao ? Number(despesaRecorrente.cotacao) : null,
+      cotacao: despesaRecorrente.cotacao
+        ? Number(despesaRecorrente.cotacao)
+        : null,
     }));
   }
 
-  async update(publicId: string, updateDespesaRecorrenteDto: UpdateDespesaRecorrenteDto): Promise<any> {
+  async update(
+    publicId: string,
+    updateDespesaRecorrenteDto: UpdateDespesaRecorrenteDto,
+  ): Promise<any> {
     // Verificar se a despesa recorrente existe
-    const despesaRecorrenteExistente = await this.prisma.despesaRecorrente.findUnique({
-      where: { publicId },
-    });
+    const despesaRecorrenteExistente =
+      await this.prisma.despesaRecorrente.findUnique({
+        where: { publicId },
+      });
 
     if (!despesaRecorrenteExistente) {
       throw new NotFoundException('Despesa recorrente não encontrada');
@@ -216,7 +244,6 @@ export class DespesasRecorrentesService {
     }
 
     const updateData: any = {};
-    
 
     if (updateDespesaRecorrenteDto.descricao !== undefined) {
       updateData.descricao = updateDespesaRecorrenteDto.descricao;
@@ -266,7 +293,9 @@ export class DespesasRecorrentesService {
     return {
       ...despesaRecorrente,
       valor: Number(despesaRecorrente.valor),
-      cotacao: despesaRecorrente.cotacao ? Number(despesaRecorrente.cotacao) : null,
+      cotacao: despesaRecorrente.cotacao
+        ? Number(despesaRecorrente.cotacao)
+        : null,
     };
   }
 

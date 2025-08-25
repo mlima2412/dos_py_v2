@@ -39,7 +39,7 @@ export class ParceirosService {
         where: { id: createParceiroDto.currencyId },
       });
       if (!currency) {
-        console.log("Moeda não encontrada", createParceiroDto.currencyId);
+        console.log('Moeda não encontrada', createParceiroDto.currencyId);
         throw new NotFoundException('Moeda não encontrada');
       }
     }
@@ -194,7 +194,11 @@ export class ParceirosService {
     updateParceiroDto: UpdateParceiroDto,
   ): Promise<Parceiro> {
     // Verificar se o parceiro existe
-    console.log("atualizando parceiro moeda:", updateParceiroDto.currencyId, typeof updateParceiroDto.currencyId )
+    console.log(
+      'atualizando parceiro moeda:',
+      updateParceiroDto.currencyId,
+      typeof updateParceiroDto.currencyId,
+    );
     await this.findOne(publicId);
 
     // Verificar conflitos de email (se fornecido e diferente do atual)
@@ -207,7 +211,9 @@ export class ParceirosService {
 
     // Verificar conflitos de RUC/CNPJ (se fornecido e diferente do atual)
     if (updateParceiroDto.ruccnpj) {
-      const existingParceiro = await this.findByRucCnpj(updateParceiroDto.ruccnpj);
+      const existingParceiro = await this.findByRucCnpj(
+        updateParceiroDto.ruccnpj,
+      );
       if (existingParceiro && existingParceiro.publicId !== publicId) {
         throw new ConflictException('RUC/CNPJ já está em uso');
       }
@@ -250,7 +256,10 @@ export class ParceirosService {
     return this.updateStatus(publicId, true);
   }
 
-  private async updateStatus(publicId: string, ativo: boolean): Promise<Parceiro> {
+  private async updateStatus(
+    publicId: string,
+    ativo: boolean,
+  ): Promise<Parceiro> {
     // Verificar se o parceiro existe
     await this.findOne(publicId);
 

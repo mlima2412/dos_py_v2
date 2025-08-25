@@ -84,22 +84,22 @@ export const createColumns = (
 		columnHelper.accessor("descricao", {
 			header: ({ column }) => (
 				<Button
-					variant='ghost'
+					variant="ghost"
 					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-					className='h-auto p-0 font-semibold'
+					className="h-auto p-0 font-semibold"
 				>
 					{t("expenses.description")}
 					{column.getIsSorted() === "asc" ? (
-						<ArrowUp className='ml-2 h-4 w-4' />
+						<ArrowUp className="ml-2 h-4 w-4" />
 					) : column.getIsSorted() === "desc" ? (
-						<ArrowDown className='ml-2 h-4 w-4' />
+						<ArrowDown className="ml-2 h-4 w-4" />
 					) : (
-						<ArrowUpDown className='ml-2 h-4 w-4' />
+						<ArrowUpDown className="ml-2 h-4 w-4" />
 					)}
 				</Button>
 			),
 			cell: ({ row }) => (
-				<div className='font-medium max-w-[300px] truncate'>
+				<div className="font-medium max-w-[300px] truncate">
 					{row.getValue("descricao")}
 				</div>
 			),
@@ -107,111 +107,111 @@ export const createColumns = (
 		columnHelper.accessor("dataRegistro", {
 			header: ({ column }) => (
 				<Button
-					variant='ghost'
+					variant="ghost"
 					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-					className='h-auto p-0 font-semibold'
+					className="h-auto p-0 font-semibold"
 				>
 					{t("expenses.date")}
 					{column.getIsSorted() === "asc" ? (
-						<ArrowUp className='ml-2 h-4 w-4' />
+						<ArrowUp className="ml-2 h-4 w-4" />
 					) : column.getIsSorted() === "desc" ? (
-						<ArrowDown className='ml-2 h-4 w-4' />
+						<ArrowDown className="ml-2 h-4 w-4" />
 					) : (
-						<ArrowUpDown className='ml-2 h-4 w-4' />
+						<ArrowUpDown className="ml-2 h-4 w-4" />
 					)}
 				</Button>
 			),
 			cell: ({ row }) => (
-				<div className='text-muted-foreground'>
+				<div className="text-muted-foreground">
 					{formatDate(row.getValue("dataRegistro"))}
 				</div>
 			),
 		}),
-		columnHelper.accessor((row) => row.fornecedor?.nome, {
+		columnHelper.accessor(row => row.fornecedor?.nome, {
 			id: "fornecedor",
 			header: ({ column }) => (
 				<Button
-					variant='ghost'
+					variant="ghost"
 					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-					className='h-auto p-0 font-semibold'
+					className="h-auto p-0 font-semibold"
 				>
 					{t("expenses.supplier")}
 					{column.getIsSorted() === "asc" ? (
-						<ArrowUp className='ml-2 h-4 w-4' />
+						<ArrowUp className="ml-2 h-4 w-4" />
 					) : column.getIsSorted() === "desc" ? (
-						<ArrowDown className='ml-2 h-4 w-4' />
+						<ArrowDown className="ml-2 h-4 w-4" />
 					) : (
-						<ArrowUpDown className='ml-2 h-4 w-4' />
+						<ArrowUpDown className="ml-2 h-4 w-4" />
 					)}
 				</Button>
 			),
 			cell: ({ row }) => (
-				<div className='text-sm'>{row.original.fornecedor?.nome || "-"}</div>
+				<div className="text-sm">{row.original.fornecedor?.nome || "-"}</div>
 			),
 		}),
-		columnHelper.accessor((row) => row.categoria?.descricao, {
+		columnHelper.accessor(row => row.categoria?.descricao, {
 			id: "categoria",
 			header: ({ column }) => (
 				<Button
-					variant='ghost'
+					variant="ghost"
 					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-					className='h-auto p-0 font-semibold'
+					className="h-auto p-0 font-semibold"
 				>
 					{t("expenses.category")}
 					{column.getIsSorted() === "asc" ? (
-						<ArrowUp className='ml-2 h-4 w-4' />
+						<ArrowUp className="ml-2 h-4 w-4" />
 					) : column.getIsSorted() === "desc" ? (
-						<ArrowDown className='ml-2 h-4 w-4' />
+						<ArrowDown className="ml-2 h-4 w-4" />
 					) : (
-						<ArrowUpDown className='ml-2 h-4 w-4' />
+						<ArrowUpDown className="ml-2 h-4 w-4" />
 					)}
 				</Button>
 			),
 			cell: ({ row }) => (
-				<Badge variant='outline'>
+				<Badge variant="outline">
 					{row.original.categoria?.descricao || "-"}
 				</Badge>
 			),
 		}),
-		columnHelper.accessor((row) => row.currency?.isoCode, {
+		columnHelper.accessor(row => row.currency?.isoCode, {
 			id: "currency",
 			header: ({ column }) => (
 				<Button
-					variant='ghost'
+					variant="ghost"
 					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-					className='h-auto p-0 font-semibold'
+					className="h-auto p-0 font-semibold"
 				>
 					{t("expenses.currency")}
 					{column.getIsSorted() === "asc" ? (
-						<ArrowUp className='ml-2 h-4 w-4' />
+						<ArrowUp className="ml-2 h-4 w-4" />
 					) : column.getIsSorted() === "desc" ? (
-						<ArrowDown className='ml-2 h-4 w-4' />
+						<ArrowDown className="ml-2 h-4 w-4" />
 					) : (
-						<ArrowUpDown className='ml-2 h-4 w-4' />
+						<ArrowUpDown className="ml-2 h-4 w-4" />
 					)}
 				</Button>
 			),
 			cell: ({ row }) => (
-				<Badge variant='secondary'>
+				<Badge variant="secondary">
 					{row.original.currency?.isoCode || "BRL"}
 				</Badge>
 			),
 		}),
-		columnHelper.accessor((row) => row.statusPagamento, {
+		columnHelper.accessor(row => row.statusPagamento, {
 			id: "status",
 			header: ({ column }) => (
 				<Button
-					variant='ghost'
+					variant="ghost"
 					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-					className='h-auto p-0 font-semibold'
+					className="h-auto p-0 font-semibold"
 				>
 					{t("expenses.status.title")}
 					{column.getIsSorted() === "asc" ? (
-						<ArrowUp className='ml-2 h-4 w-4' />
+						<ArrowUp className="ml-2 h-4 w-4" />
 					) : column.getIsSorted() === "desc" ? (
-						<ArrowDown className='ml-2 h-4 w-4' />
+						<ArrowDown className="ml-2 h-4 w-4" />
 					) : (
-						<ArrowUpDown className='ml-2 h-4 w-4' />
+						<ArrowUpDown className="ml-2 h-4 w-4" />
 					)}
 				</Button>
 			),
@@ -221,28 +221,28 @@ export const createColumns = (
 				return <Badge variant={variant}>{label}</Badge>;
 			},
 		}),
-		columnHelper.accessor((row) => row.valorTotal, {
+		columnHelper.accessor(row => row.valorTotal, {
 			id: "valorTotal",
 			header: ({ column }) => (
 				<Button
-					variant='ghost'
+					variant="ghost"
 					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-					className='h-auto p-0 font-semibold'
+					className="h-auto p-0 font-semibold"
 				>
 					{t("expenses.value")}
 					{column.getIsSorted() === "asc" ? (
-						<ArrowUp className='ml-2 h-4 w-4' />
+						<ArrowUp className="ml-2 h-4 w-4" />
 					) : column.getIsSorted() === "desc" ? (
-						<ArrowDown className='ml-2 h-4 w-4' />
+						<ArrowDown className="ml-2 h-4 w-4" />
 					) : (
-						<ArrowUpDown className='ml-2 h-4 w-4' />
+						<ArrowUpDown className="ml-2 h-4 w-4" />
 					)}
 				</Button>
 			),
 			cell: ({ row }) => {
 				const currencyCode = row.original.currency?.isoCode || "BRL";
 				return (
-					<div className='font-medium text-right'>
+					<div className="font-medium text-right">
 						{formatCurrency(row.getValue("valorTotal"), currencyCode)}
 					</div>
 				);
@@ -256,7 +256,7 @@ export const createColumns = (
 					{
 						type: "custom" as const,
 						label: t("common.view"),
-						icon: <Eye className='h-4 w-4' />,
+						icon: <Eye className="h-4 w-4" />,
 						href: `/despesas/visualizar/${row.original.publicId}`,
 						variant: "ghost" as const,
 					},
@@ -266,9 +266,10 @@ export const createColumns = (
 				if (onMarkAsPaid && row.original.statusPagamento === "em_aberto") {
 					// Verificar se a despesa tem apenas uma parcela
 					const contasPagar = row.original.ContasPagar;
-					const hasMultipleParcelas = contasPagar && 
-						contasPagar.length > 0 && 
-						contasPagar[0].ContasPagarParcelas && 
+					const hasMultipleParcelas =
+						contasPagar &&
+						contasPagar.length > 0 &&
+						contasPagar[0].ContasPagarParcelas &&
 						contasPagar[0].ContasPagarParcelas.length > 1;
 
 					// Só mostrar o botão se não tiver múltiplas parcelas
@@ -276,7 +277,7 @@ export const createColumns = (
 						actions.push({
 							type: "custom" as const,
 							label: t("expenses.markAsPaid"),
-							icon: <CheckCircle className='h-4 w-4 text-green-600' />,
+							icon: <CheckCircle className="h-4 w-4 text-green-600" />,
 							onClick: () => onMarkAsPaid(row.original.publicId),
 							variant: "ghost" as const,
 						});
@@ -291,21 +292,17 @@ export const createColumns = (
 						icon: (
 							<AlertDialogWithIcon
 								trigger={
-									<Button
-										variant='ghost'
-										size='sm'
-										className='h-8 w-8 p-0'
-									>
-										<Trash2 className='h-4 w-4 text-destructive' />
+									<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+										<Trash2 className="h-4 w-4 text-destructive" />
 									</Button>
 								}
-								icon={<AlertTriangle className='h-6 w-6' />}
+								icon={<AlertTriangle className="h-6 w-6" />}
 								title={t("expenses.messages.deleteConfirmTitle")}
 								description={t("expenses.messages.deleteConfirmDescription")}
 								cancelText={t("expenses.messages.deleteConfirmCancel")}
 								confirmText={t("expenses.messages.deleteConfirmConfirm")}
 								onConfirm={() => onDelete(row.original.publicId)}
-								variant='destructive'
+								variant="destructive"
 							/>
 						),
 						variant: "ghost" as const,

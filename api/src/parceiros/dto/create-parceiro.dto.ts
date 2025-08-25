@@ -3,7 +3,8 @@ import {
   IsString,
   IsEmail,
   IsOptional,
-  IsBoolean, IsInt
+  IsBoolean,
+  IsInt,
 } from 'class-validator';
 
 export class CreateParceiroDto {

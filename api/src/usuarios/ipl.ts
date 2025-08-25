@@ -191,12 +191,13 @@ export async function ensureSystemInitialized(prisma: PrismaService) {
   }
 
   // Criar vínculo UsuarioParceiro para o usuário de teste com parceiro inativo
-  const usuarioParceiroInativoExistente = await prisma.usuarioParceiro.findFirst({
-    where: {
-      usuarioId: testUser.id,
-      parceiroId: parceiroInativo.id,
-    },
-  });
+  const usuarioParceiroInativoExistente =
+    await prisma.usuarioParceiro.findFirst({
+      where: {
+        usuarioId: testUser.id,
+        parceiroId: parceiroInativo.id,
+      },
+    });
 
   if (!usuarioParceiroInativoExistente) {
     await prisma.usuarioParceiro.create({
@@ -206,8 +207,12 @@ export async function ensureSystemInitialized(prisma: PrismaService) {
         perfilId: perfilAdmin.id,
       },
     });
-    console.log('Vínculo UsuarioParceiro criado para usuário de teste com parceiro inativo.');
+    console.log(
+      'Vínculo UsuarioParceiro criado para usuário de teste com parceiro inativo.',
+    );
   } else {
-    console.log('Vínculo UsuarioParceiro já existe para usuário de teste com parceiro inativo.');
+    console.log(
+      'Vínculo UsuarioParceiro já existe para usuário de teste com parceiro inativo.',
+    );
   }
 }

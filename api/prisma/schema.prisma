@@ -179,9 +179,10 @@ model SubCategoriaDespesa {
   ativo          Boolean  @default(true)
   createdAt      DateTime @default(now()) @map("created_at")
 
-  categoria           CategoriaDespesas   @relation(fields: [categoriaId], references: [idCategoria])
-  despesas            Despesa[]
-  despesasRecorrentes DespesaRecorrente[]
+  categoria                      CategoriaDespesas                @relation(fields: [categoriaId], references: [idCategoria])
+  despesas                       Despesa[]
+  despesasRecorrentes            DespesaRecorrente[]
+  RollupDespesasMensaisCategoria RollupDespesasMensaisCategoria[]
 
   @@map("subcategoria_despesa")
 }
@@ -285,26 +286,27 @@ model ContasPagarParcelas {
 }
 
 model RollupDespesasMensais {
-  parceiro_id String   @map("parceiro_id")
+  parceiro_id Int      @map("parceiro_id")
   ym          String   @map("ym")
   realized    Decimal  @default(0.0) @map("realized") @db.Decimal(12, 3)
   to_pay      Decimal  @default(0.0) @map("to_pay") @db.Decimal(12, 3)
-  Parceiro    Parceiro @relation(fields: [parceiro_id], references: [publicId])
+  Parceiro    Parceiro @relation(fields: [parceiro_id], references: [id])
 
   @@id([parceiro_id, ym])
   @@map("rollup_despesas_mensais")
 }
 
 model RollupDespesasMensaisCategoria {
-  parceiro_id  String  @map("parceiro_id")
-  categoria_id Int     @map("categoria_id")
-  ym           String  @map("ym")
-  realized     Decimal @default(0.0) @map("realized") @db.Decimal(12, 3)
-  to_pay       Decimal @default(0.0) @map("to_pay") @db.Decimal(12, 3)
+  parceiro_id      Int     @map("parceiro_id")
+  categoria_id     Int     @map("categoria_id")
+  sub_categoria_id Int     @map("sub_categoria_id")
+  ym               String  @map("ym")
+  realized         Decimal @default(0.0) @map("realized") @db.Decimal(12, 3)
 
-  Parceiro  Parceiro          @relation(fields: [parceiro_id], references: [publicId])
-  Categoria CategoriaDespesas @relation(fields: [categoria_id], references: [idCategoria])
+  Parceiro     Parceiro            @relation(fields: [parceiro_id], references: [id])
+  Categoria    CategoriaDespesas   @relation(fields: [categoria_id], references: [idCategoria])
+  SubCategoria SubCategoriaDespesa @relation(fields: [sub_categoria_id], references: [idSubCategoria])
 
-  @@id([parceiro_id, ym, categoria_id])
+  @@id([parceiro_id, ym, categoria_id, sub_categoria_id])
   @@map("rollup_despesas_mensais_categoria")
 }

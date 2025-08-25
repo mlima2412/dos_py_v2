@@ -182,22 +182,22 @@ export function EventItem({
 					<TooltipProvider delayDuration={0}>
 						<Tooltip>
 							<TooltipTrigger asChild>
-								<span className='truncate'>
+								<span className="truncate">
 									{!event.allDay && (
-										<span className='truncate font-normal opacity-70 sm:text-[11px]'>
+										<span className="truncate font-normal opacity-70 sm:text-[11px]">
 											{formatTimeWithOptionalMinutes(displayStart, locale)}{" "}
 										</span>
 									)}
 									{event.title}
 								</span>
 							</TooltipTrigger>
-							<TooltipContent className='py-3'>
-								<div className='space-y-1'>
-									<p className='text-[13px] font-medium'>{event.description}</p>
-									<p className='text-muted-foreground text-xs'>
+							<TooltipContent className="py-3">
+								<div className="space-y-1">
+									<p className="text-[13px] font-medium">{event.description}</p>
+									<p className="text-muted-foreground text-xs">
 										{i18n.t("expenses.amount")}:{event.title}
 									</p>
-									<p className='text-muted-foreground text-xs'>
+									<p className="text-muted-foreground text-xs">
 										{i18n.t("calendar.click")}
 									</p>
 								</div>
@@ -230,19 +230,19 @@ export function EventItem({
 				onTouchStart={onTouchStart}
 			>
 				{durationMinutes < 45 ? (
-					<div className='truncate'>
+					<div className="truncate">
 						{event.title}{" "}
 						{showTime && (
-							<span className='opacity-70'>
+							<span className="opacity-70">
 								{formatTimeWithOptionalMinutes(displayStart)}
 							</span>
 						)}
 					</div>
 				) : (
 					<>
-						<div className='truncate font-medium'>{event.title}</div>
+						<div className="truncate font-medium">{event.title}</div>
 						{showTime && (
-							<div className='truncate font-normal opacity-70 sm:text-[11px]'>
+							<div className="truncate font-normal opacity-70 sm:text-[11px]">
 								{getEventTime()}
 							</div>
 						)}
@@ -267,25 +267,25 @@ export function EventItem({
 			{...dndListeners}
 			{...dndAttributes}
 		>
-			<div className='text-sm font-medium'>{event.title}</div>
-			<div className='text-xs opacity-70'>
+			<div className="text-sm font-medium">{event.title}</div>
+			<div className="text-xs opacity-70">
 				{event.allDay ? (
 					<span>All day</span>
 				) : (
-					<span className='uppercase'>
+					<span className="uppercase">
 						{formatTimeWithOptionalMinutes(displayStart)} -{" "}
 						{formatTimeWithOptionalMinutes(displayEnd)}
 					</span>
 				)}
 				{event.location && (
 					<>
-						<span className='px-1 opacity-35'> · </span>
+						<span className="px-1 opacity-35"> · </span>
 						<span>{event.location}</span>
 					</>
 				)}
 			</div>
 			{event.description && (
-				<div className='my-1 text-xs opacity-90'>{event.description}</div>
+				<div className="my-1 text-xs opacity-90">{event.description}</div>
 			)}
 		</button>
 	);

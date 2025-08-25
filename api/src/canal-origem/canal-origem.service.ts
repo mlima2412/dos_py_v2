@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCanalOrigemDto } from './dto/create-canal-origem.dto';
 import { UpdateCanalOrigemDto } from './dto/update-canal-origem.dto';
@@ -49,13 +53,18 @@ export class CanalOrigemService {
     });
 
     if (!canalOrigem) {
-      throw new NotFoundException(`Canal de origem com ID ${publicId} não encontrado`);
+      throw new NotFoundException(
+        `Canal de origem com ID ${publicId} não encontrado`,
+      );
     }
 
     return canalOrigem;
   }
 
-  async update(publicId: string, updateCanalOrigemDto: UpdateCanalOrigemDto): Promise<any> {
+  async update(
+    publicId: string,
+    updateCanalOrigemDto: UpdateCanalOrigemDto,
+  ): Promise<any> {
     const existingCanalOrigem = await this.findOne(publicId);
 
     // Criar entidade com dados atualizados para validar
@@ -76,11 +85,13 @@ export class CanalOrigemService {
 
   async remove(publicId: string): Promise<void> {
     const canalOrigem = await this.findOne(publicId);
-    
+
     // Verificar se pode ser removido usando regra de negócio da entidade
     const canalOrigemEntity = new CanalOrigem(canalOrigem);
     if (!canalOrigemEntity.canBeDeleted()) {
-      throw new BadRequestException('Canal de origem não pode ser removido pois possui clientes associados');
+      throw new BadRequestException(
+        'Canal de origem não pode ser removido pois possui clientes associados',
+      );
     }
 
     await this.prisma.canalOrigem.delete({

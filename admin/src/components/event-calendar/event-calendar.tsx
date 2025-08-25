@@ -218,7 +218,7 @@ export function EventCalendar({
 	};
 
 	const handleEventDelete = (eventId: string) => {
-		const deletedEvent = events.find((e) => e.id === eventId);
+		const deletedEvent = events.find(e => e.id === eventId);
 		onEventDelete?.(eventId);
 		setIsEventDialogOpen(false);
 		setSelectedEvent(null);
@@ -260,10 +260,7 @@ export function EventCalendar({
 		} else if (view === "dia") {
 			return (
 				<>
-					<span
-						className='min-[480px]:hidden'
-						aria-hidden='true'
-					>
+					<span className="min-[480px]:hidden" aria-hidden="true">
 						{format(currentDate, "MMM d, yyyy", { locale: currentLocale })}
 					</span>
 					{/* <span
@@ -272,7 +269,7 @@ export function EventCalendar({
 					>
 						{format(currentDate, "MMMM d, yyyy", { locale: currentLocale })}
 					</span> */}
-					<span className='max-md:hidden'>
+					<span className="max-md:hidden">
 						{format(currentDate, "EEE, d 'de' MMMM yyyy", {
 							locale: currentLocale,
 						})}
@@ -296,7 +293,7 @@ export function EventCalendar({
 
 	return (
 		<div
-			className='flex flex-col rounded-lg border has-data-[slot=month-view]:flex-1'
+			className="flex flex-col rounded-lg border has-data-[slot=month-view]:flex-1"
 			style={
 				{
 					"--event-height": `${EventHeight}px`,
@@ -312,78 +309,63 @@ export function EventCalendar({
 						className
 					)}
 				>
-					<div className='flex items-center gap-1 sm:gap-4'>
+					<div className="flex items-center gap-1 sm:gap-4">
 						<Button
-							variant='outline'
-							className='max-[479px]:aspect-square max-[479px]:p-0!'
+							variant="outline"
+							className="max-[479px]:aspect-square max-[479px]:p-0!"
 							onClick={handleToday}
 						>
 							<RiCalendarCheckLine
-								className='min-[480px]:hidden'
+								className="min-[480px]:hidden"
 								size={16}
-								aria-hidden='true'
+								aria-hidden="true"
 							/>
-							<span className='max-[479px]:sr-only'>
+							<span className="max-[479px]:sr-only">
 								{i18n.t("calendar.today")}
 							</span>
 						</Button>
-						<div className='flex items-center sm:gap-2'>
+						<div className="flex items-center sm:gap-2">
 							<Button
-								variant='ghost'
-								size='icon'
+								variant="ghost"
+								size="icon"
 								onClick={handlePrevious}
-								aria-label='Previous'
+								aria-label="Previous"
 							>
-								<ChevronLeftIcon
-									size={16}
-									aria-hidden='true'
-								/>
+								<ChevronLeftIcon size={16} aria-hidden="true" />
 							</Button>
 							<Button
-								variant='ghost'
-								size='icon'
+								variant="ghost"
+								size="icon"
 								onClick={handleNext}
-								aria-label='Next'
+								aria-label="Next"
 							>
-								<ChevronRightIcon
-									size={16}
-									aria-hidden='true'
-								/>
+								<ChevronRightIcon size={16} aria-hidden="true" />
 							</Button>
 						</div>
-						<h2 className='text-sm font-semibold sm:text-lg md:text-xl'>
+						<h2 className="text-sm font-semibold sm:text-lg md:text-xl">
 							{viewTitle}
 						</h2>
 					</div>
-					<div className='flex items-center gap-2'>
+					<div className="flex items-center gap-2">
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
-								<Button
-									variant='outline'
-									className='gap-1.5 max-[479px]:h-8'
-								>
+								<Button variant="outline" className="gap-1.5 max-[479px]:h-8">
 									<span>
-										<span
-											className='min-[480px]:hidden'
-											aria-hidden='true'
-										>
+										<span className="min-[480px]:hidden" aria-hidden="true">
 											{view.charAt(0).toUpperCase()}
 										</span>
-										<span className='max-[479px]:sr-only'>
+										<span className="max-[479px]:sr-only">
 											{view.charAt(0).toUpperCase() + view.slice(1)}
 										</span>
 									</span>
 									<ChevronDownIcon
-										className='-me-1 opacity-60'
+										className="-me-1 opacity-60"
 										size={16}
-										aria-hidden='true'
+										aria-hidden="true"
 									/>
 								</Button>
 							</DropdownMenuTrigger>
-							<DropdownMenuContent
-								align='end'
-								className='min-w-32'
-							>
+							<DropdownMenuContent align="end" className="min-w-32">
 								<DropdownMenuItem onClick={() => setView("mes")}>
 									{i18n.t("calendar.today")}{" "}
 									<DropdownMenuShortcut>M</DropdownMenuShortcut>
@@ -404,7 +386,7 @@ export function EventCalendar({
 					</div>
 				</div>
 
-				<div className='flex flex-1 flex-col'>
+				<div className="flex flex-1 flex-col">
 					{view === "mes" && (
 						<MonthView
 							currentDate={currentDate}

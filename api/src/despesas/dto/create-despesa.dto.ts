@@ -1,11 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional, IsNumber, IsDateString, IsInt, IsEnum } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsNumber,
+  IsDateString,
+  IsInt,
+  IsEnum,
+} from 'class-validator';
 import { Type, Exclude } from 'class-transformer';
 
 export enum TipoPagamento {
   A_VISTA_IMEDIATA = 'A_VISTA_IMEDIATA',
   A_PRAZO_SEM_PARCELAS = 'A_PRAZO_SEM_PARCELAS',
-  PARCELADO = 'PARCELADO'
+  PARCELADO = 'PARCELADO',
 }
 
 export class CreateDespesaDto {
@@ -20,7 +27,7 @@ export class CreateDespesaDto {
 
   @ApiProperty({
     description: 'Valor da despesa',
-    example: 1500.50,
+    example: 1500.5,
   })
   @IsNumber({ maxDecimalPlaces: 3 })
   @Type(() => Number)
@@ -69,7 +76,7 @@ export class CreateDespesaDto {
 
   @ApiProperty({
     description: 'Valor da entrada (apenas para pagamento parcelado)',
-    example: 500.00,
+    example: 500.0,
     required: false,
   })
   @IsOptional()
@@ -97,7 +104,8 @@ export class CreateDespesaDto {
   numeroParcelas?: number;
 
   @ApiProperty({
-    description: 'Data de vencimento (apenas para pagamento à prazo sem parcelas)',
+    description:
+      'Data de vencimento (apenas para pagamento à prazo sem parcelas)',
     example: '2024-02-01T00:00:00Z',
     required: false,
   })

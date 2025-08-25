@@ -81,7 +81,7 @@ export function DraggableEvent({
 		return (
 			<div
 				ref={setNodeRef}
-				className='opacity-0'
+				className="opacity-0"
 				style={{ height: height || "auto" }}
 			/>
 		);
@@ -116,12 +116,12 @@ export function DraggableEvent({
 
 	return (
 		<div
-			ref={(node) => {
+			ref={node => {
 				setNodeRef(node);
 				if (elementRef) elementRef.current = node;
 			}}
 			style={style}
-			className='touch-none'
+			className="touch-none"
 		>
 			<EventItem
 				event={event}

@@ -69,7 +69,6 @@ export class Usuario {
   })
   avatar: string | null;
 
-
   @ApiProperty({
     description: 'Data de criação do usuário',
     example: '2024-01-01T00:00:00.000Z',
@@ -80,7 +79,7 @@ export class Usuario {
     if (data) {
       Object.assign(this, data);
     }
-    
+
     // Gerar valores padrão se não fornecidos
     this.publicId = this.publicId || uuidv7();
     this.provider = this.provider || 'LOCAL';

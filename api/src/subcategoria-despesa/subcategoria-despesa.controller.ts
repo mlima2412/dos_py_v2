@@ -25,7 +25,9 @@ import { SubCategoriaDespesa } from './entities/subcategoria-despesa.entity';
 @ApiBearerAuth('JWT-auth')
 @Controller('subcategoria-despesa')
 export class SubCategoriaDespesaController {
-  constructor(private readonly subCategoriaDespesaService: SubCategoriaDespesaService) {}
+  constructor(
+    private readonly subCategoriaDespesaService: SubCategoriaDespesaService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Criar nova subcategoria de despesas' })
@@ -72,10 +74,18 @@ export class SubCategoriaDespesaController {
       },
     },
   })
-  @ApiResponse({ status: 404, description: 'Categoria de despesas não encontrada' })
-  @ApiResponse({ status: 409, description: 'Descrição da subcategoria já existe nesta categoria' })
+  @ApiResponse({
+    status: 404,
+    description: 'Categoria de despesas não encontrada',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Descrição da subcategoria já existe nesta categoria',
+  })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
-  create(@Body() createSubCategoriaDespesaDto: CreateSubCategoriaDespesaDto): Promise<SubCategoriaDespesa> {
+  create(
+    @Body() createSubCategoriaDespesaDto: CreateSubCategoriaDespesaDto,
+  ): Promise<SubCategoriaDespesa> {
     return this.subCategoriaDespesaService.create(createSubCategoriaDespesaDto);
   }
 
@@ -113,7 +123,11 @@ export class SubCategoriaDespesaController {
 
   @Get('categoria/:categoriaId')
   @ApiOperation({ summary: 'Listar subcategorias de despesas por categoria' })
-  @ApiParam({ name: 'categoriaId', description: 'ID da categoria de despesas', type: 'number' })
+  @ApiParam({
+    name: 'categoriaId',
+    description: 'ID da categoria de despesas',
+    type: 'number',
+  })
   @ApiResponse({
     status: 200,
     description: 'Lista de subcategorias da categoria retornada com sucesso',
@@ -140,13 +154,19 @@ export class SubCategoriaDespesaController {
     },
   })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
-  findByCategoria(@Param('categoriaId', ParseIntPipe) categoriaId: number): Promise<SubCategoriaDespesa[]> {
+  findByCategoria(
+    @Param('categoriaId', ParseIntPipe) categoriaId: number,
+  ): Promise<SubCategoriaDespesa[]> {
     return this.subCategoriaDespesaService.findByCategoria(categoriaId);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Buscar subcategoria de despesas por ID' })
-  @ApiParam({ name: 'id', description: 'ID da subcategoria de despesas', type: 'number' })
+  @ApiParam({
+    name: 'id',
+    description: 'ID da subcategoria de despesas',
+    type: 'number',
+  })
   @ApiResponse({
     status: 200,
     description: 'Subcategoria de despesas encontrada',
@@ -169,7 +189,10 @@ export class SubCategoriaDespesaController {
       },
     },
   })
-  @ApiResponse({ status: 404, description: 'Subcategoria de despesas não encontrada' })
+  @ApiResponse({
+    status: 404,
+    description: 'Subcategoria de despesas não encontrada',
+  })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
   findOne(@Param('id', ParseIntPipe) id: number): Promise<SubCategoriaDespesa> {
     return this.subCategoriaDespesaService.findOne(id);
@@ -177,7 +200,11 @@ export class SubCategoriaDespesaController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Atualizar subcategoria de despesas' })
-  @ApiParam({ name: 'id', description: 'ID da subcategoria de despesas', type: 'number' })
+  @ApiParam({
+    name: 'id',
+    description: 'ID da subcategoria de despesas',
+    type: 'number',
+  })
   @ApiBody({
     type: UpdateSubCategoriaDespesaDto,
     examples: {
@@ -223,21 +250,40 @@ export class SubCategoriaDespesaController {
       },
     },
   })
-  @ApiResponse({ status: 404, description: 'Subcategoria de despesas não encontrada' })
-  @ApiResponse({ status: 409, description: 'Descrição da subcategoria já existe nesta categoria' })
+  @ApiResponse({
+    status: 404,
+    description: 'Subcategoria de despesas não encontrada',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Descrição da subcategoria já existe nesta categoria',
+  })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateSubCategoriaDespesaDto: UpdateSubCategoriaDespesaDto,
   ): Promise<SubCategoriaDespesa> {
-    return this.subCategoriaDespesaService.update(id, updateSubCategoriaDespesaDto);
+    return this.subCategoriaDespesaService.update(
+      id,
+      updateSubCategoriaDespesaDto,
+    );
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Remover subcategoria de despesas (soft delete)' })
-  @ApiParam({ name: 'id', description: 'ID da subcategoria de despesas', type: 'number' })
-  @ApiResponse({ status: 200, description: 'Subcategoria de despesas removida com sucesso' })
-  @ApiResponse({ status: 404, description: 'Subcategoria de despesas não encontrada' })
+  @ApiParam({
+    name: 'id',
+    description: 'ID da subcategoria de despesas',
+    type: 'number',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Subcategoria de despesas removida com sucesso',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Subcategoria de despesas não encontrada',
+  })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
   remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.subCategoriaDespesaService.remove(id);

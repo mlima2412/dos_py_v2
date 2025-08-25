@@ -24,7 +24,9 @@ import { UsuarioParceiro } from './entities/usuario-parceiro.entity';
 @ApiTags('Usuario-Parceiro')
 @Controller('usuario-parceiro')
 export class UsuarioParceiroController {
-  constructor(private readonly usuarioParceiroService: UsuarioParceiroService) {}
+  constructor(
+    private readonly usuarioParceiroService: UsuarioParceiroService,
+  ) {}
 
   @Post()
   @ApiBearerAuth('JWT-auth')
@@ -36,9 +38,14 @@ export class UsuarioParceiroController {
     type: UsuarioParceiro,
   })
   @ApiResponse({ status: 400, description: 'Dados inválidos' })
-  @ApiResponse({ status: 404, description: 'Usuário ou parceiro não encontrado' })
+  @ApiResponse({
+    status: 404,
+    description: 'Usuário ou parceiro não encontrado',
+  })
   @ApiResponse({ status: 409, description: 'Relação já existe' })
-  async create(@Body() createUsuarioParceiroDto: CreateUsuarioParceiroDto): Promise<UsuarioParceiro> {
+  async create(
+    @Body() createUsuarioParceiroDto: CreateUsuarioParceiroDto,
+  ): Promise<UsuarioParceiro> {
     return this.usuarioParceiroService.create(createUsuarioParceiroDto);
   }
 
@@ -68,7 +75,9 @@ export class UsuarioParceiroController {
     type: UsuarioParceiro,
   })
   @ApiResponse({ status: 404, description: 'Relação não encontrada' })
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<UsuarioParceiro> {
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<UsuarioParceiro> {
     return this.usuarioParceiroService.findOne(id);
   }
 
@@ -85,7 +94,9 @@ export class UsuarioParceiroController {
     description: 'Lista de relações do usuário',
     type: [UsuarioParceiro],
   })
-  async findByUsuario(@Param('usuarioId', ParseIntPipe) usuarioId: number): Promise<UsuarioParceiro[]> {
+  async findByUsuario(
+    @Param('usuarioId', ParseIntPipe) usuarioId: number,
+  ): Promise<UsuarioParceiro[]> {
     return this.usuarioParceiroService.findByUsuario(usuarioId);
   }
 
@@ -102,7 +113,9 @@ export class UsuarioParceiroController {
     description: 'Lista de relações do parceiro',
     type: [UsuarioParceiro],
   })
-  async findByParceiro(@Param('parceiroId', ParseIntPipe) parceiroId: number): Promise<UsuarioParceiro[]> {
+  async findByParceiro(
+    @Param('parceiroId', ParseIntPipe) parceiroId: number,
+  ): Promise<UsuarioParceiro[]> {
     return this.usuarioParceiroService.findByParceiro(parceiroId);
   }
 
@@ -147,6 +160,9 @@ export class UsuarioParceiroController {
     @Param('usuarioId', ParseIntPipe) usuarioId: number,
     @Param('parceiroId', ParseIntPipe) parceiroId: number,
   ): Promise<void> {
-    return this.usuarioParceiroService.removeByUsuarioAndParceiro(usuarioId, parceiroId);
+    return this.usuarioParceiroService.removeByUsuarioAndParceiro(
+      usuarioId,
+      parceiroId,
+    );
   }
 }

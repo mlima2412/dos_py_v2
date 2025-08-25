@@ -11,8 +11,8 @@ model RollupDespesasMensais {
 }
 */
 export class CreateDespesaCacheDto {
-    parceiro_id: string;
-    ym: string;
-    realized: number;
-    to_pay: number;
+  parceiro_id: number;
+  ym: string;
+  realized: number;
+  to_pay: number;
 }

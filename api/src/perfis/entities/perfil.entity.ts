@@ -24,7 +24,7 @@ export class Perfil {
     if (data) {
       Object.assign(this, data);
     }
-    
+
     // Definir valor padrão para ativo
     this.ativo = this.ativo ?? true;
   }

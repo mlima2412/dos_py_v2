@@ -1,9 +1,9 @@
 export function Code({
-  children,
-  className,
+	children,
+	className,
 }: {
-  children: React.ReactNode;
-  className?: string;
+	children: React.ReactNode;
+	className?: string;
 }) {
-  return <code className={className}>{children}</code>;
+	return <code className={className}>{children}</code>;
 }

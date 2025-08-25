@@ -13,12 +13,12 @@ export function ContasPagarEmConstrucao() {
 					<CardHeader className="text-center">
 						<Construction className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
 						<CardTitle className="text-2xl">
-							{t('common.underConstruction')}
+							{t("common.underConstruction")}
 						</CardTitle>
 					</CardHeader>
 					<CardContent className="text-center">
 						<p className="text-muted-foreground">
-							{t('expenses.accountsPayable.comingSoon')}
+							{t("expenses.accountsPayable.comingSoon")}
 						</p>
 					</CardContent>
 				</Card>

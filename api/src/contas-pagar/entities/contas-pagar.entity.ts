@@ -38,7 +38,7 @@ export class ContasPagar {
 
   @ApiProperty({
     description: 'Valor total da conta a pagar',
-    example: 1500.50,
+    example: 1500.5,
   })
   valorTotal: number;
 

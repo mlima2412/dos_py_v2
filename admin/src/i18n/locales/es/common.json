@@ -114,7 +114,26 @@
 		"monthlySales": "Ventas del mes actual",
 		"orders": "Pedidos",
 		"pendingOrders": "Pedidos pendientes",
-		"manageClients": "Gestiona tus clientes"
+		"manageClients": "Gestiona tus clientes",
+		"expenses": {
+			"paid": "Gastos Pagados"
+		},
+		"noDataAvailable": "No hay datos disponibles",
+		"noDataToDisplay": "No hay datos para mostrar",
+		"months": {
+			"january": "Enero",
+			"february": "Febrero",
+			"march": "Marzo",
+			"april": "Abril",
+			"may": "Mayo",
+			"june": "Junio",
+			"july": "Julio",
+			"august": "Agosto",
+			"september": "Septiembre",
+			"october": "Octubre",
+			"november": "Noviembre",
+			"december": "Diciembre"
+		}
 	},
 	"header": {
 		"profile": "Preferencias",
@@ -132,7 +151,7 @@
 			"main": "Gastos",
 			"panel": "Panel de Gastos",
 			"actual": "Gastos Correntes",
-			"payable": "Gastos por pagar",
+			"payable": "Agenda de pagos",
 			"recurring": "Gastos Recurrentes"
 		},
 		"paymentMethods": "Forma de Pago",
@@ -374,6 +393,36 @@
 		"noCurrencyFound": "Ninguna moneda encontrada",
 		"noSupplierFound": "Ningún proveedor encontrado",
 		"noSubcategoryFound": "Ninguna subcategoría encontrada",
+
+		"dashboard": {
+			"title": "Dashboard de Gastos",
+			"totalMonth": "Total del Mes",
+			"totalYear": "Total del Año",
+			"pending": "Pendientes",
+			"average": "Promedio Mensual",
+			"currentMonth": "Mes actual",
+			"currentYear": "Año actual",
+			"pendingPayments": "Cuentas a Pagar",
+			"monthlyAverage": "Promedio mensual del año",
+			"recentExpenses": "Gastos Recientes",
+			"categoryDistributionMonthly": "Por Categoria - Mensal",
+			"categoryDistributionYearly": "Por Categoria - Anual",
+			"yearlyClassification": "Por Clasificación - Anual",
+			"yearlyClassificationDesc": "Distribución de gastos por clasificación en el año",
+			"monthlyClassification": "Por Clasificación - Mensual",
+			"monthlyClassificationDesc": "Distribución de gastos por clasificación en el mes actual",
+			"classification": {
+				"total": "Total"
+			},
+			"loading": "Cargando...",
+			"error": {
+				"loadingData": "Error al cargar datos"
+			},
+			"paid": "Gastos Pagados",
+			"noDataAvailable": "No hay datos disponibles",
+			"noDataToDisplay": "No hay datos para mostrar",
+			"noRecentExpenses": "No hay gastos recientes"
+		},
 
 		"columns": {
 			"description": "Descripción",

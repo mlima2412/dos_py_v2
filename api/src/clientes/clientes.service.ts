@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  ConflictException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
@@ -73,11 +78,17 @@ export class ClientesService {
     return cliente;
   }
 
-  async update(publicId: string, updateClienteDto: UpdateClienteDto): Promise<any> {
+  async update(
+    publicId: string,
+    updateClienteDto: UpdateClienteDto,
+  ): Promise<any> {
     const existingCliente = await this.findOne(publicId);
 
     // Verificar se email já existe (se está sendo alterado)
-    if (updateClienteDto.email && updateClienteDto.email !== existingCliente.email) {
+    if (
+      updateClienteDto.email &&
+      updateClienteDto.email !== existingCliente.email
+    ) {
       await this.validateUniqueEmail(updateClienteDto.email);
     }
 
@@ -100,7 +111,9 @@ export class ClientesService {
 
   async remove(publicId: string): Promise<void> {
     // Cliente não pode ser removido, apenas desativado
-    throw new BadRequestException('Clientes não podem ser removidos. Use a funcionalidade de desativar.');
+    throw new BadRequestException(
+      'Clientes não podem ser removidos. Use a funcionalidade de desativar.',
+    );
   }
 
   async activate(publicId: string): Promise<any> {

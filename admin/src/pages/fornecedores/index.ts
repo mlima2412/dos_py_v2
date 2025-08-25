@@ -1,2 +1,2 @@
-export { ListarFornecedores } from './ListarFornecedores';
-export { FormularioFornecedor } from './FormularioFornecedor';
+export { ListarFornecedores } from "./ListarFornecedores";
+export { FormularioFornecedor } from "./FormularioFornecedor";

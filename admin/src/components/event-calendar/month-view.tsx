@@ -97,25 +97,22 @@ export function MonthView({
 	}, []);
 
 	return (
-		<div
-			data-slot='month-view'
-			className='contents'
-		>
-			<div className='border-border/70 grid grid-cols-7 border-b'>
-				{weekdays.map((day) => (
+		<div data-slot="month-view" className="contents">
+			<div className="border-border/70 grid grid-cols-7 border-b">
+				{weekdays.map(day => (
 					<div
 						key={day}
-						className='text-muted-foreground/70 py-2 text-center text-sm'
+						className="text-muted-foreground/70 py-2 text-center text-sm"
 					>
 						{day}
 					</div>
 				))}
 			</div>
-			<div className='grid flex-1 auto-rows-fr'>
+			<div className="grid flex-1 auto-rows-fr">
 				{weeks.map((week, weekIndex) => (
 					<div
 						key={`semana-${weekIndex}`}
-						className='grid grid-cols-7 [&:last-child>*]:border-b-0'
+						className="grid grid-cols-7 [&:last-child>*]:border-b-0"
 					>
 						{week.map((day, dayIndex) => {
 							if (!day) return null; // Skip if day is undefined
@@ -141,7 +138,7 @@ export function MonthView({
 							return (
 								<div
 									key={day.toString()}
-									className='group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0'
+									className="group border-border/70 data-outside-cell:bg-muted/25 data-outside-cell:text-muted-foreground/70 border-r border-b last:border-r-0"
 									data-today={isToday(day) || undefined}
 									data-outside-cell={!isCurrentMonth || undefined}
 								>
@@ -154,12 +151,12 @@ export function MonthView({
 											onEventCreate(startTime);
 										}}
 									>
-										<div className='group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm'>
+										<div className="group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm">
 											{format(day, "d")}
 										</div>
 										<div
 											ref={isReferenceCell ? contentRef : null}
-											className='min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]'
+											className="min-h-[calc((var(--event-height)+var(--event-gap))*2)] sm:min-h-[calc((var(--event-height)+var(--event-gap))*3)] lg:min-h-[calc((var(--event-height)+var(--event-gap))*4)]"
 										>
 											{sortEvents(allDayEvents).map((event, index) => {
 												const eventStart = new Date(event.start);
@@ -176,21 +173,18 @@ export function MonthView({
 													return (
 														<div
 															key={`spanning-${event.id}-${day.toISOString().slice(0, 10)}`}
-															className='aria-hidden:hidden'
+															className="aria-hidden:hidden"
 															aria-hidden={isHidden ? "true" : undefined}
 														>
 															<EventItem
-																onClick={(e) => handleEventClick(event, e)}
+																onClick={e => handleEventClick(event, e)}
 																event={event}
-																view='mes'
+																view="mes"
 																isFirstDay={isFirstDay}
 																isLastDay={isLastDay}
 																locale={locale}
 															>
-																<div
-																	className='invisible'
-																	aria-hidden={true}
-																>
+																<div className="invisible" aria-hidden={true}>
 																	{!event.allDay && (
 																		<span>
 																			{format(
@@ -209,13 +203,13 @@ export function MonthView({
 												return (
 													<div
 														key={event.id}
-														className='aria-hidden:hidden'
+														className="aria-hidden:hidden"
 														aria-hidden={isHidden ? "true" : undefined}
 													>
 														<DraggableEvent
 															event={event}
-															view='mes'
-															onClick={(e) => handleEventClick(event, e)}
+															view="mes"
+															onClick={e => handleEventClick(event, e)}
 															isFirstDay={isFirstDay}
 															isLastDay={isLastDay}
 															locale={locale}
@@ -228,30 +222,30 @@ export function MonthView({
 												<Popover modal>
 													<PopoverTrigger asChild>
 														<button
-															className='focus-visible:border-ring focus-visible:ring-ring/50 text-muted-foreground hover:text-foreground hover:bg-muted/50 mt-[var(--event-gap)] flex h-[var(--event-height)] w-full items-center overflow-hidden px-1 text-left text-[10px] backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] sm:px-2 sm:text-xs'
-															onClick={(e) => e.stopPropagation()}
+															className="focus-visible:border-ring focus-visible:ring-ring/50 text-muted-foreground hover:text-foreground hover:bg-muted/50 mt-[var(--event-gap)] flex h-[var(--event-height)] w-full items-center overflow-hidden px-1 text-left text-[10px] backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] sm:px-2 sm:text-xs"
+															onClick={e => e.stopPropagation()}
 														>
 															<span>
 																+ {remainingCount}{" "}
-																<span className='max-sm:sr-only'>more</span>
+																<span className="max-sm:sr-only">more</span>
 															</span>
 														</button>
 													</PopoverTrigger>
 													<PopoverContent
-														align='center'
-														className='max-w-52 p-3'
+														align="center"
+														className="max-w-52 p-3"
 														style={
 															{
 																"--event-height": `${EventHeight}px`,
 															} as React.CSSProperties
 														}
 													>
-														<div className='space-y-2'>
-															<div className='text-sm font-medium'>
+														<div className="space-y-2">
+															<div className="text-sm font-medium">
 																{format(day, "EEE d", locale ? { locale } : {})}
 															</div>
-															<div className='space-y-1'>
-																{sortEvents(allEvents).map((event) => {
+															<div className="space-y-1">
+																{sortEvents(allEvents).map(event => {
 																	const eventStart = new Date(event.start);
 																	const eventEnd = new Date(event.end);
 																	const isFirstDay = isSameDay(day, eventStart);
@@ -260,11 +254,9 @@ export function MonthView({
 																	return (
 																		<EventItem
 																			key={event.id}
-																			onClick={(e) =>
-																				handleEventClick(event, e)
-																			}
+																			onClick={e => handleEventClick(event, e)}
 																			event={event}
-																			view='mes'
+																			view="mes"
 																			isFirstDay={isFirstDay}
 																			isLastDay={isLastDay}
 																			locale={locale}

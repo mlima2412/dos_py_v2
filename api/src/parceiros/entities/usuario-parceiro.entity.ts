@@ -10,7 +10,6 @@ export class UsuarioParceiro {
   })
   id: number;
 
-
   @ApiProperty({
     description: 'ID do usuário',
     example: 1,

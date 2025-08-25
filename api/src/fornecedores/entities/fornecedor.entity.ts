@@ -77,7 +77,7 @@ export class Fornecedor {
     if (data) {
       Object.assign(this, data);
     }
-    
+
     // Gerar valores padrão se não fornecidos
     this.publicId = this.publicId || uuidv7();
     this.ativo = this.ativo ?? true;

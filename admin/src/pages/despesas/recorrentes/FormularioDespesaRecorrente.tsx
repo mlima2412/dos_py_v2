@@ -171,9 +171,9 @@ export function FormularioDespesaRecorrente() {
 
 	// Populate form when editing
 	useEffect(() => {
-		console.log('useEffect triggered:', { despesaRecorrente, isEditing, id });
+		console.log("useEffect triggered:", { despesaRecorrente, isEditing, id });
 		if (despesaRecorrente && isEditing) {
-			console.log('Populating form with data:', despesaRecorrente);
+			console.log("Populating form with data:", despesaRecorrente);
 			const subcategoriaId = despesaRecorrente.subCategoriaId?.toString() || "";
 			const categoriaId =
 				despesaRecorrente.subCategoria?.categoriaId?.toString() || "";
@@ -245,26 +245,24 @@ export function FormularioDespesaRecorrente() {
 	};
 
 	// Prepare options for comboboxes
-	const categoriaOptions: ComboboxOption[] = categorias.map((categoria) => ({
+	const categoriaOptions: ComboboxOption[] = categorias.map(categoria => ({
 		value: categoria.idCategoria?.toString() || "",
 		label: categoria.descricao || "",
 	}));
 
 	const subcategoriaOptions: ComboboxOption[] = subcategorias.map(
-		(subcategoria) => ({
+		subcategoria => ({
 			value: subcategoria.idSubCategoria?.toString() || "",
 			label: subcategoria.descricao || "",
 		})
 	);
 
-	const fornecedorOptions: ComboboxOption[] = fornecedores.map(
-		(fornecedor) => ({
-			value: fornecedor.id.toString(),
-			label: fornecedor.nome,
-		})
-	);
+	const fornecedorOptions: ComboboxOption[] = fornecedores.map(fornecedor => ({
+		value: fornecedor.id.toString(),
+		label: fornecedor.nome,
+	}));
 
-	const currencyOptions: ComboboxOption[] = currencies.map((currency) => ({
+	const currencyOptions: ComboboxOption[] = currencies.map(currency => ({
 		value: currency.id?.toString() || "",
 		label: `${currency.isoCode || currency.prefixo} - ${currency.nome || ""}`,
 	}));
@@ -290,8 +288,8 @@ export function FormularioDespesaRecorrente() {
 	if (isLoadingDespesa) {
 		return (
 			<DashboardLayout>
-				<div className='flex items-center justify-center h-64'>
-					<Spinner size='lg' />
+				<div className="flex items-center justify-center h-64">
+					<Spinner size="lg" />
 				</div>
 			</DashboardLayout>
 		);
@@ -299,17 +297,17 @@ export function FormularioDespesaRecorrente() {
 
 	return (
 		<DashboardLayout>
-			<div className='space-y-6'>
+			<div className="space-y-6">
 				{/* Breadcrumb */}
 				<Breadcrumb>
 					<BreadcrumbList>
 						<BreadcrumbItem>
-							<BreadcrumbLink href='/'>{t("menu.home")}</BreadcrumbLink>
+							<BreadcrumbLink href="/">{t("menu.home")}</BreadcrumbLink>
 						</BreadcrumbItem>
 						<BreadcrumbSeparator />
 
 						<BreadcrumbItem>
-							<BreadcrumbLink href='/despesas/recorrentes'>
+							<BreadcrumbLink href="/despesas/recorrentes">
 								{t("recurringExpenses.title")}
 							</BreadcrumbLink>
 						</BreadcrumbItem>
@@ -326,17 +324,17 @@ export function FormularioDespesaRecorrente() {
 
 				{/* Form */}
 				<Card>
-					<CardContent className='pt-2'>
+					<CardContent className="pt-2">
 						<Form {...form}>
 							<form
 								onSubmit={form.handleSubmit(onSubmit)}
-								className='space-y-3'
+								className="space-y-3"
 							>
 								{/* Informações Básicas */}
-								<div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 									<FormField
 										control={form.control}
-										name='descricao'
+										name="descricao"
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>
@@ -357,12 +355,12 @@ export function FormularioDespesaRecorrente() {
 
 									<FormField
 										control={form.control}
-										name='valor'
+										name="valor"
 										render={({ field }) => {
 											// Buscar a moeda selecionada para obter o prefixo
 											const selectedCurrencyId = form.watch("currencyId");
 											const selectedCurrency = currencies?.find(
-												(c) => c.id?.toString() === selectedCurrencyId
+												c => c.id?.toString() === selectedCurrencyId
 											);
 											const currencyPrefix = selectedCurrency?.prefixo || "R$ ";
 
@@ -375,15 +373,15 @@ export function FormularioDespesaRecorrente() {
 																"recurringExpenses.valuePlaceholder"
 															)}
 															value={valorInput}
-															onValueChange={(value) => {
+															onValueChange={value => {
 																setValorInput(value || "");
 																field.onChange(parseFloat(value || "0"));
 															}}
-															decimalSeparator=','
-															groupSeparator='.'
+															decimalSeparator=","
+															groupSeparator="."
 															prefix={currencyPrefix + " "}
 															decimalScale={2}
-															className='flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+															className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 														/>
 													</FormControl>
 													<FormMessage />
@@ -394,10 +392,10 @@ export function FormularioDespesaRecorrente() {
 								</div>
 
 								{/* Frequência e Vencimento */}
-								<div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
 									<FormField
 										control={form.control}
-										name='frequencia'
+										name="frequencia"
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>
@@ -417,7 +415,7 @@ export function FormularioDespesaRecorrente() {
 														</SelectTrigger>
 													</FormControl>
 													<SelectContent>
-														{frequencyOptions.map((option) => (
+														{frequencyOptions.map(option => (
 															<SelectItem
 																key={option.value}
 																value={option.value}
@@ -434,20 +432,20 @@ export function FormularioDespesaRecorrente() {
 
 									<FormField
 										control={form.control}
-										name='diaVencimento'
+										name="diaVencimento"
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>{t("recurringExpenses.dueDay")}</FormLabel>
 												<FormControl>
 													<Input
-														type='number'
+														type="number"
 														min={1}
 														max={31}
 														placeholder={t(
 															"recurringExpenses.dueDayPlaceholder"
 														)}
 														{...field}
-														onChange={(e) =>
+														onChange={e =>
 															field.onChange(parseInt(e.target.value) || 1)
 														}
 													/>
@@ -459,10 +457,10 @@ export function FormularioDespesaRecorrente() {
 								</div>
 
 								{/* Datas */}
-								<div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
 									<FormField
 										control={form.control}
-										name='dataInicio'
+										name="dataInicio"
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>
@@ -484,7 +482,7 @@ export function FormularioDespesaRecorrente() {
 
 									<FormField
 										control={form.control}
-										name='dataFim'
+										name="dataFim"
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>
@@ -505,10 +503,10 @@ export function FormularioDespesaRecorrente() {
 								</div>
 
 								{/* Categoria e Subcategoria */}
-								<div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
 									<FormField
 										control={form.control}
-										name='categoriaId'
+										name="categoriaId"
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>{t("recurringExpenses.category")}</FormLabel>
@@ -534,7 +532,7 @@ export function FormularioDespesaRecorrente() {
 
 									<FormField
 										control={form.control}
-										name='subCategoriaId'
+										name="subCategoriaId"
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>
@@ -561,10 +559,10 @@ export function FormularioDespesaRecorrente() {
 								</div>
 
 								{/* Fornecedor */}
-								<div className='grid grid-cols-1 gap-3'>
+								<div className="grid grid-cols-1 gap-3">
 									<FormField
 										control={form.control}
-										name='fornecedorId'
+										name="fornecedorId"
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>
@@ -589,10 +587,10 @@ export function FormularioDespesaRecorrente() {
 								</div>
 
 								{/* Moeda e Cotação */}
-								<div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
 									<FormField
 										control={form.control}
-										name='currencyId'
+										name="currencyId"
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>
@@ -617,7 +615,7 @@ export function FormularioDespesaRecorrente() {
 
 									<FormField
 										control={form.control}
-										name='cotacao'
+										name="cotacao"
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>
@@ -630,14 +628,14 @@ export function FormularioDespesaRecorrente() {
 															"recurringExpenses.exchangeRatePlaceholder"
 														)}
 														value={cotacaoInput}
-														onValueChange={(value) => {
+														onValueChange={value => {
 															setCotacaoInput(value || "");
 															field.onChange(parseFloat(value || "1"));
 														}}
-														decimalSeparator=','
-														groupSeparator='.'
+														decimalSeparator=","
+														groupSeparator="."
 														decimalScale={4}
-														className='flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+														className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 													/>
 												</FormControl>
 												<FormMessage />
@@ -647,31 +645,28 @@ export function FormularioDespesaRecorrente() {
 								</div>
 
 								{/* Botões */}
-								<div className='flex justify-end space-x-4'>
+								<div className="flex justify-end space-x-4">
 									<Button
-										type='button'
-										variant='outline'
+										type="button"
+										variant="outline"
 										onClick={handleCancel}
 										disabled={
 											createMutation.isPending || updateMutation.isPending
 										}
 									>
-										<X className='mr-2 h-4 w-4' />
+										<X className="mr-2 h-4 w-4" />
 										{t("common.cancel")}
 									</Button>
 									<Button
-										type='submit'
+										type="submit"
 										disabled={
 											createMutation.isPending || updateMutation.isPending
 										}
 									>
 										{createMutation.isPending || updateMutation.isPending ? (
-											<Spinner
-												size='sm'
-												className='mr-2'
-											/>
+											<Spinner size="sm" className="mr-2" />
 										) : (
-											<Save className='mr-2 h-4 w-4' />
+											<Save className="mr-2 h-4 w-4" />
 										)}
 										{isEditing ? t("common.update") : t("common.save")}
 									</Button>

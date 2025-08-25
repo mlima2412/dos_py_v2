@@ -55,44 +55,44 @@ function ForgotPassword() {
 	};
 
 	return (
-		<div className='min-h-screen grid lg:grid-cols-[70%_30%]'>
+		<div className="min-h-screen grid lg:grid-cols-[70%_30%]">
 			{/* Left Column - Logo */}
-			<div className='hidden lg:flex items-center justify-center bg-muted p-8'>
-				<div className='text-center'>
+			<div className="hidden lg:flex items-center justify-center bg-muted p-8">
+				<div className="text-center">
 					<img
-						className='mx-auto h-48 w-auto mb-8'
-						src='/logo-central-color.png'
-						alt='Logo'
+						className="mx-auto h-48 w-auto mb-8"
+						src="/logo-central-color.png"
+						alt="Logo"
 					/>
-					<div className='flex justify-center'>
+					<div className="flex justify-center">
 						<LanguageSelector />
 					</div>
 				</div>
 			</div>
 
 			{/* Right Column - Forgot Password Form */}
-			<div className='flex items-center justify-center p-8'>
-				<div className='w-full max-w-md space-y-6'>
+			<div className="flex items-center justify-center p-8">
+				<div className="w-full max-w-md space-y-6">
 					{/* Mobile Logo */}
-					<div className='lg:hidden text-center space-y-4'>
+					<div className="lg:hidden text-center space-y-4">
 						<img
-							className='mx-auto h-16 w-auto'
-							src='/logo-central-color.png'
-							alt='DOS Logo'
+							className="mx-auto h-16 w-auto"
+							src="/logo-central-color.png"
+							alt="DOS Logo"
 						/>
-						<div className='flex justify-center'>
+						<div className="flex justify-center">
 							<LanguageSelector />
 						</div>
 					</div>
 
-					<Card className='w-full max-w-md'>
-						<CardHeader className='text-center'>
-							<CardTitle className='text-xl font-bold'>
+					<Card className="w-full max-w-md">
+						<CardHeader className="text-center">
+							<CardTitle className="text-xl font-bold">
 								{sent
 									? t("forgotPassword.emailSent")
 									: t("forgotPassword.title")}
 							</CardTitle>
-							<CardDescription className='text-sm'>
+							<CardDescription className="text-sm">
 								{sent
 									? t("forgotPassword.checkEmail")
 									: t("forgotPassword.subtitle")}
@@ -100,26 +100,20 @@ function ForgotPassword() {
 						</CardHeader>
 						<CardContent>
 							{!sent ? (
-								<form
-									onSubmit={handleSubmit}
-									className='space-y-4'
-								>
+								<form onSubmit={handleSubmit} className="space-y-4">
 									{error && (
-										<div className='text-red-600 text-sm text-center bg-red-50 p-2 rounded'>
+										<div className="text-red-600 text-sm text-center bg-red-50 p-2 rounded">
 											{error}
 										</div>
 									)}
 
-									<div className='space-y-2'>
-										<label
-											htmlFor='email'
-											className='text-sm font-medium'
-										>
+									<div className="space-y-2">
+										<label htmlFor="email" className="text-sm font-medium">
 											{t("forgotPassword.emailLabel")}
 										</label>
 										<Input
-											id='email'
-											type='email'
+											id="email"
+											type="email"
 											placeholder={t("forgotPassword.emailPlaceholder")}
 											value={email}
 											onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -130,9 +124,9 @@ function ForgotPassword() {
 									</div>
 
 									<Button
-										type='submit'
-										variant='outline'
-										className='w-full'
+										type="submit"
+										variant="outline"
+										className="w-full"
 										disabled={requestPasswordResetMutation.isPending}
 									>
 										{requestPasswordResetMutation.isPending
@@ -140,26 +134,22 @@ function ForgotPassword() {
 											: t("forgotPassword.sendButton")}
 									</Button>
 
-									<div className='text-center'>
+									<div className="text-center">
 										<Link
-											to='/login'
-											className='text-sm text-blue-600 hover:underline'
+											to="/login"
+											className="text-sm text-blue-600 hover:underline"
 										>
 											{t("forgotPassword.backToLogin")}
 										</Link>
 									</div>
 								</form>
 							) : (
-								<div className='text-center space-y-4'>
-									<div className='text-green-600 text-sm'>
+								<div className="text-center space-y-4">
+									<div className="text-green-600 text-sm">
 										✓ {t("forgotPassword.successMessage")}
 									</div>
-									<Button
-										asChild
-										variant='outline'
-										className='w-full'
-									>
-										<Link to='/login'>{t("forgotPassword.backToLogin")}</Link>
+									<Button asChild variant="outline" className="w-full">
+										<Link to="/login">{t("forgotPassword.backToLogin")}</Link>
 									</Button>
 								</div>
 							)}

@@ -38,7 +38,10 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { usePartnerContext } from "@/hooks/usePartnerContext";
 
 import { LoadingMessage } from "@/components/ui/TableSkeleton";
-import { useRecurringExpensesColumns, useIsMobile } from "./components/RecurringExpensesColumns";
+import {
+	useRecurringExpensesColumns,
+	useIsMobile,
+} from "./components/RecurringExpensesColumns";
 
 export const ListarDespesasRecorrentes: React.FC = () => {
 	const { t } = useTranslation("common");
@@ -78,7 +81,7 @@ export const ListarDespesasRecorrentes: React.FC = () => {
 
 		const searchTerm = debouncedGlobalFilter.toLowerCase();
 		return despesasRecorrentes.filter(
-			(despesa) =>
+			despesa =>
 				despesa.descricao?.toLowerCase().includes(searchTerm) ||
 				despesa.fornecedor?.nome?.toLowerCase().includes(searchTerm) ||
 				despesa.subCategoria?.descricao?.toLowerCase().includes(searchTerm)
@@ -145,7 +148,7 @@ export const ListarDespesasRecorrentes: React.FC = () => {
 							<Input
 								placeholder={t("recurringExpenses.search")}
 								value={globalFilter}
-								onChange={(e) => setGlobalFilter(e.target.value)}
+								onChange={e => setGlobalFilter(e.target.value)}
 								className="pl-10"
 							/>
 						</div>
@@ -158,15 +161,13 @@ export const ListarDespesasRecorrentes: React.FC = () => {
 						<div className="relative">
 							<ScrollArea className="h-[500px] w-full rounded-md border">
 								<div
-									className={`${
-										!isMobile ? "min-w-[800px]" : "min-w-[600px]"
-									}`}
+									className={`${!isMobile ? "min-w-[800px]" : "min-w-[600px]"}`}
 								>
 									<Table className="text-sm">
 										<TableHeader className="sticky top-0 bg-background z-10">
-											{table.getHeaderGroups().map((headerGroup) => (
+											{table.getHeaderGroups().map(headerGroup => (
 												<TableRow key={headerGroup.id}>
-													{headerGroup.headers.map((header) => (
+													{headerGroup.headers.map(header => (
 														<TableHead
 															key={header.id}
 															className="h-8 py-2 bg-background"
@@ -194,13 +195,13 @@ export const ListarDespesasRecorrentes: React.FC = () => {
 													message={t("common.loadError")}
 												/>
 											) : table.getRowModel().rows?.length ? (
-												table.getRowModel().rows.map((row) => (
+												table.getRowModel().rows.map(row => (
 													<TableRow
 														key={row.id}
 														data-state={row.getIsSelected() && "selected"}
 														className="h-12 group"
 													>
-														{row.getVisibleCells().map((cell) => (
+														{row.getVisibleCells().map(cell => (
 															<TableCell key={cell.id}>
 																{flexRender(
 																	cell.column.columnDef.cell,

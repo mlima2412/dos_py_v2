@@ -343,10 +343,7 @@ export function CalendarDndProvider({
 			>
 				{children}
 
-				<DragOverlay
-					adjustScale={false}
-					dropAnimation={null}
-				>
+				<DragOverlay adjustScale={false} dropAnimation={null}>
 					{activeEvent && activeView && (
 						<div
 							style={{

@@ -1,7 +1,7 @@
 import {
   Injectable,
   NotFoundException,
-  ConflictException
+  ConflictException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCurrencyDto } from './dto/create-currency.dto';
@@ -57,10 +57,13 @@ export class CurrencyService {
       orderBy: { nome: 'asc' },
     });
 
-    return currencies.map((currency) => new Currency({
-      ...currency,
-      defaultRate: Number(currency.defaultRate),
-    }));
+    return currencies.map(
+      currency =>
+        new Currency({
+          ...currency,
+          defaultRate: Number(currency.defaultRate),
+        }),
+    );
   }
 
   async findAllActive(): Promise<Currency[]> {
@@ -73,9 +76,7 @@ export class CurrencyService {
     });
 
     if (!currency) {
-      throw new NotFoundException(
-        `Moeda com ID '${publicId}' não encontrada`,
-      );
+      throw new NotFoundException(`Moeda com ID '${publicId}' não encontrada`);
     }
 
     return new Currency({
@@ -89,10 +90,12 @@ export class CurrencyService {
       where: { isoCode },
     });
 
-    return currency ? new Currency({
-      ...currency,
-      defaultRate: Number(currency.defaultRate),
-    }) : null;
+    return currency
+      ? new Currency({
+          ...currency,
+          defaultRate: Number(currency.defaultRate),
+        })
+      : null;
   }
 
   async update(
@@ -105,9 +108,7 @@ export class CurrencyService {
     });
 
     if (!existingCurrency) {
-      throw new NotFoundException(
-        `Moeda com ID '${publicId}' não encontrada`,
-      );
+      throw new NotFoundException(`Moeda com ID '${publicId}' não encontrada`);
     }
 
     // Se está atualizando o código ISO, verificar se não existe outro com o mesmo código
@@ -164,9 +165,7 @@ export class CurrencyService {
     });
 
     if (!currency) {
-      throw new NotFoundException(
-        `Moeda com ID '${publicId}' não encontrada`,
-      );
+      throw new NotFoundException(`Moeda com ID '${publicId}' não encontrada`);
     }
 
     const updatedCurrency = await this.prisma.currency.update({
@@ -186,9 +185,7 @@ export class CurrencyService {
     });
 
     if (!currency) {
-      throw new NotFoundException(
-        `Moeda com ID '${publicId}' não encontrada`,
-      );
+      throw new NotFoundException(`Moeda com ID '${publicId}' não encontrada`);
     }
 
     const updatedCurrency = await this.prisma.currency.update({
@@ -209,9 +206,7 @@ export class CurrencyService {
     });
 
     if (!currency) {
-      throw new NotFoundException(
-        `Moeda com ID '${publicId}' não encontrada`,
-      );
+      throw new NotFoundException(`Moeda com ID '${publicId}' não encontrada`);
     }
 
     // Verificar se a moeda está sendo utilizada por algum parceiro

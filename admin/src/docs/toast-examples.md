@@ -17,48 +17,53 @@ O `ToastContainer` já está configurado no `App.tsx` com as seguintes configura
 ### 1. Usando o Hook `useToast`
 
 ```tsx
-import { useToast } from '@/hooks/useToast';
+import { useToast } from "@/hooks/useToast";
 
 const MeuComponente = () => {
-  const toast = useToast();
+	const toast = useToast();
 
-  const handleSuccess = () => {
-    toast.success('Operação realizada com sucesso!');
-  };
+	const handleSuccess = () => {
+		toast.success("Operação realizada com sucesso!");
+	};
 
-  const handleError = () => {
-    toast.error('Erro ao realizar operação!');
-  };
+	const handleError = () => {
+		toast.error("Erro ao realizar operação!");
+	};
 
-  const handleWarning = () => {
-    toast.warning('Atenção: Verifique os dados!');
-  };
+	const handleWarning = () => {
+		toast.warning("Atenção: Verifique os dados!");
+	};
 
-  const handleInfo = () => {
-    toast.info('Informação importante!');
-  };
+	const handleInfo = () => {
+		toast.info("Informação importante!");
+	};
 
-  return (
-    <div>
-      <button onClick={handleSuccess}>Sucesso</button>
-      <button onClick={handleError}>Erro</button>
-      <button onClick={handleWarning}>Aviso</button>
-      <button onClick={handleInfo}>Info</button>
-    </div>
-  );
+	return (
+		<div>
+			<button onClick={handleSuccess}>Sucesso</button>
+			<button onClick={handleError}>Erro</button>
+			<button onClick={handleWarning}>Aviso</button>
+			<button onClick={handleInfo}>Info</button>
+		</div>
+	);
 };
 ```
 
 ### 2. Usando as Funções Diretas
 
 ```tsx
-import { toastSuccess, toastError, toastWarning, toastInfo } from '@/hooks/useToast';
+import {
+	toastSuccess,
+	toastError,
+	toastWarning,
+	toastInfo,
+} from "@/hooks/useToast";
 
 // Em qualquer lugar do código
-toastSuccess('Usuário criado com sucesso!');
-toastError('Falha na autenticação!');
-toastWarning('Sessão expirando em 5 minutos!');
-toastInfo('Nova versão disponível!');
+toastSuccess("Usuário criado com sucesso!");
+toastError("Falha na autenticação!");
+toastWarning("Sessão expirando em 5 minutos!");
+toastInfo("Nova versão disponível!");
 ```
 
 ### 3. Configurações Personalizadas
@@ -67,15 +72,15 @@ toastInfo('Nova versão disponível!');
 const toast = useToast();
 
 // Toast com configuração personalizada
-toast.success('Mensagem', {
-  autoClose: 3000, // 3 segundos
-  position: 'bottom-right',
-  theme: 'dark'
+toast.success("Mensagem", {
+	autoClose: 3000, // 3 segundos
+	position: "bottom-right",
+	theme: "dark",
 });
 
 // Toast que não fecha automaticamente
-toast.info('Mensagem importante', {
-  autoClose: false
+toast.info("Mensagem importante", {
+	autoClose: false,
 });
 ```
 
@@ -85,7 +90,7 @@ toast.info('Mensagem importante', {
 const toast = useToast();
 
 // Fechar um toast específico
-const toastId = toast.success('Mensagem');
+const toastId = toast.success("Mensagem");
 toast.dismiss(toastId);
 
 // Fechar todos os toasts
@@ -97,55 +102,55 @@ toast.dismissAll();
 ### Formulários
 
 ```tsx
-const handleSubmit = async (data) => {
-  try {
-    await api.createUser(data);
-    toast.success('Usuário criado com sucesso!');
-    navigate('/usuarios');
-  } catch (error) {
-    toast.error('Erro ao criar usuário. Tente novamente.');
-  }
+const handleSubmit = async data => {
+	try {
+		await api.createUser(data);
+		toast.success("Usuário criado com sucesso!");
+		navigate("/usuarios");
+	} catch (error) {
+		toast.error("Erro ao criar usuário. Tente novamente.");
+	}
 };
 ```
 
 ### Operações de CRUD
 
 ```tsx
-const handleDelete = async (id) => {
-  try {
-    await api.deleteUser(id);
-    toast.success('Usuário excluído com sucesso!');
-    refetch(); // Atualizar lista
-  } catch (error) {
-    toast.error('Erro ao excluir usuário.');
-  }
+const handleDelete = async id => {
+	try {
+		await api.deleteUser(id);
+		toast.success("Usuário excluído com sucesso!");
+		refetch(); // Atualizar lista
+	} catch (error) {
+		toast.error("Erro ao excluir usuário.");
+	}
 };
 
 const handleUpdate = async (id, data) => {
-  try {
-    await api.updateUser(id, data);
-    toast.success('Usuário atualizado com sucesso!');
-  } catch (error) {
-    toast.error('Erro ao atualizar usuário.');
-  }
+	try {
+		await api.updateUser(id, data);
+		toast.success("Usuário atualizado com sucesso!");
+	} catch (error) {
+		toast.error("Erro ao atualizar usuário.");
+	}
 };
 ```
 
 ### Validações
 
 ```tsx
-const validateForm = (data) => {
-  if (!data.email) {
-    toast.warning('Email é obrigatório!');
-    return false;
-  }
-  
-  if (!data.password || data.password.length < 6) {
-    toast.warning('Senha deve ter pelo menos 6 caracteres!');
-    return false;
-  }
-  
-  return true;
+const validateForm = data => {
+	if (!data.email) {
+		toast.warning("Email é obrigatório!");
+		return false;
+	}
+
+	if (!data.password || data.password.length < 6) {
+		toast.warning("Senha deve ter pelo menos 6 caracteres!");
+		return false;
+	}
+
+	return true;
 };
 ```
 
@@ -153,9 +158,9 @@ const validateForm = (data) => {
 
 ```tsx
 // Notificações de sistema
-toast.info('Sistema será atualizado em 10 minutos.');
-toast.warning('Sessão expirando em 5 minutos.');
-toast.error('Conexão perdida. Tentando reconectar...');
+toast.info("Sistema será atualizado em 10 minutos.");
+toast.warning("Sessão expirando em 5 minutos.");
+toast.error("Conexão perdida. Tentando reconectar...");
 ```
 
 ## Tipos de Toast Disponíveis
