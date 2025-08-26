@@ -2,6 +2,31 @@
 
 ## Getting Started
 
+## Start Stop the containers
+
+```bash
+ docker compose up -d
+ docker compose -p api stop
+```
+
+## Start Stop individual services
+
+```bash
+docker compose -p api stop db
+docker compose -p api stop redis
+
+docker compose -p api start db
+docker compose -p api start redis
+
+```
+
+## See indivual logs
+
+```bash
+docker compose logs -f redis
+docker compose logs -f db
+```
+
 First, run the development server:
 
 ```bash
