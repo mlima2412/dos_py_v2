@@ -4,7 +4,7 @@ import { ContasPagarController } from './contas-pagar.controller';
 import { ContasPagarParcelasService } from './contas-pagar-parcelas.service';
 import { ContasPagarParcelasController } from './contas-pagar-parcelas.controller';
 import { PrismaService } from '../prisma/prisma.service';
-import { DespesaCacheModule } from '../despesa-cache/despesa-cache.module';
+import { DespesaCacheModule } from '../cash/despesas/despesa-cache/despesa-cache.module';
 
 @Module({
   imports: [DespesaCacheModule],

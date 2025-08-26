@@ -119,25 +119,28 @@ model CanalOrigem {
 }
 
 model Cliente {
-  id            Int          @id @default(autoincrement())
-  publicId      String       @unique @map("public_id")
-  nome          String
-  sobrenome     String?
-  email         String?
-  telefone      String?
-  ruccnpj       String?      @unique
-  endereco      String?
-  cidade        String?
-  cep           String?
-  observacoes   String?
-  linguagem     Linguagem    @default(Espanol)
-  ativo         Boolean      @default(true)
-  parceiroId    Int          @map("parceiro_id")
-  canalOrigemId Int?         @map("canal_origem_id")
-  createdAt     DateTime     @default(now()) @map("created_at")
-  updatedAt     DateTime     @updatedAt @map("updated_at")
-  CanalOrigem   CanalOrigem? @relation(fields: [canalOrigemId], references: [id])
-  Parceiro      Parceiro     @relation(fields: [parceiroId], references: [id])
+  id                Int          @id @default(autoincrement())
+  publicId          String       @unique @map("public_id")
+  nome              String
+  sobrenome         String?
+  email             String?
+  telefone          String?
+  ruccnpj           String?      @unique
+  ruccnpjSecundario String?      @map("ruccnpj_secundario")
+  nomeFatura        String?      @map("nome_fatura")
+  endereco          String?
+  cidade            String?
+  cep               String?
+  observacoes       String?
+  linguagem         Linguagem    @default(Espanol)
+  ativo             Boolean      @default(true)
+  qtdCompras        Int          @default(0) @map("qtd_compras")
+  parceiroId        Int          @map("parceiro_id")
+  canalOrigemId     Int?         @map("canal_origem_id")
+  createdAt         DateTime     @default(now()) @map("created_at")
+  updatedAt         DateTime     @updatedAt @map("updated_at")
+  CanalOrigem       CanalOrigem? @relation(fields: [canalOrigemId], references: [id])
+  Parceiro          Parceiro     @relation(fields: [parceiroId], references: [id])
 
   @@map("cliente")
 }

@@ -7,9 +7,9 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateDespesaDto, TipoPagamento } from './dto/create-despesa.dto';
 
 import { Despesa } from './entities/despesa.entity';
-import { DespesaCacheService } from '../despesa-cache/despesa-cache.service';
-import { RollupDespesasCacheService } from '../despesa-cache/rollup-despesas-cache.service';
-import { DespesaClassificacaoCacheService } from '../despesa-classificacao-cache/despesa-classiificacao-cache.service';
+import { DespesaCacheService } from '../cash/despesas/despesa-cache/despesa-cache.service';
+import { RollupDespesasCacheService } from '../cash/despesas/despesa-cache/rollup-despesas-cache.service';
+import { DespesaClassificacaoCacheService } from '../cash/despesas/despesa-classificacao-cache/despesa-classiificacao-cache.service';
 import { Decimal } from '@prisma/client/runtime/library';
 
 @Injectable()
@@ -113,7 +113,7 @@ export class DespesasService {
           subCategoria: {
             include: {
               categoria: true,
-            }
+            },
           },
         },
       });
@@ -197,7 +197,7 @@ export class DespesasService {
         });
         break;
 
-      case TipoPagamento.A_PRAZO_SEM_PARCELAS:
+      case TipoPagamento.A_PRAZO_SEM_PARCELAS: {
         // À prazo sem parcelas: 1 parcela para a data de vencimento
         const dataVencimento = createDespesaDto.dataVencimento
           ? new Date(createDespesaDto.dataVencimento)
@@ -214,8 +214,9 @@ export class DespesasService {
           },
         });
         break;
+      }
 
-      case TipoPagamento.PARCELADO:
+      case TipoPagamento.PARCELADO: {
         const valorEntrada = createDespesaDto.valorEntrada || 0;
         const valorRestante = createDespesaDto.valorTotal - valorEntrada;
         const numeroParcelas = createDespesaDto.numeroParcelas || 1;
@@ -273,6 +274,7 @@ export class DespesasService {
           });
         }
         break;
+      }
 
       default:
         throw new BadRequestException('Tipo de pagamento inválido');

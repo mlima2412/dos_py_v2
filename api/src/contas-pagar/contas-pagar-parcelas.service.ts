@@ -8,7 +8,7 @@ import { CreateContasPagarParcelasDto } from './dto/create-contas-pagar-parcelas
 import { UpdateContasPagarParcelasDto } from './dto/update-contas-pagar-parcelas.dto';
 import { ContasPagarParcelas } from './entities/contas-pagar-parcelas.entity';
 import { Currency } from '../currency/entities/currency.entity';
-import { DespesaCacheService } from '../despesa-cache/despesa-cache.service';
+import { DespesaCacheService } from '../cash/despesas/despesa-cache/despesa-cache.service';
 import { uuidv7 } from 'uuidv7';
 
 @Injectable()

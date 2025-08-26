@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type Redis from 'ioredis';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../../../prisma/prisma.service';
 
 type UpdateOpts = {
   pruneZeroMembers?: boolean; // remove do ZSET se score <= 0

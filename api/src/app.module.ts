@@ -13,8 +13,8 @@ import { CategoriaDespesasModule } from './categoria-despesas/categoria-despesas
 import { SubCategoriaDespesaModule } from './subcategoria-despesa/subcategoria-despesa.module';
 import { DespesasModule } from './despesas/despesas.module';
 import { DespesasRecorrentesModule } from './despesas-recorrentes/despesas-recorrentes.module';
-import { DespesaCacheModule } from './despesa-cache/despesa-cache.module';
-import { DespesaClassificacaoCacheModule } from './despesa-classificacao-cache/despesa-classificacao-cache.module';
+import { DespesaCacheModule } from './cash/despesas/despesa-cache/despesa-cache.module';
+import { DespesaClassificacaoCacheModule } from './cash/despesas/despesa-classificacao-cache/despesa-classificacao-cache.module';
 import { ContasPagarModule } from './contas-pagar/contas-pagar.module';
 import { CurrencyModule } from './currency/currency.module';
 import { PasswordResetModule } from './password-reset/password-reset.module';

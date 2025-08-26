@@ -1,7 +1,7 @@
 // src/rollup/rollup-despesas-cache.service.ts
 import { Inject, Injectable } from '@nestjs/common';
 import type Redis from 'ioredis';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../../../prisma/prisma.service';
 
 type RollupDTO = {
   parceiro_id: number;
