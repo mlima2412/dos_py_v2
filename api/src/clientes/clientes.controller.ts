@@ -5,9 +5,12 @@ import {
   Body,
   Patch,
   Param,
+<<<<<<< HEAD
   Delete,
   HttpCode,
   HttpStatus,
+=======
+>>>>>>> 33bd250 (Minhas alterações locais)
   Query,
 } from '@nestjs/common';
 import {
@@ -18,11 +21,20 @@ import {
   ApiQuery,
   ApiBearerAuth,
   ApiBody,
+<<<<<<< HEAD
+=======
+  ApiHeader,
+>>>>>>> 33bd250 (Minhas alterações locais)
 } from '@nestjs/swagger';
 import { ClientesService } from './clientes.service';
 import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
 import { Cliente } from './entities/cliente.entity';
+<<<<<<< HEAD
+=======
+import { PaginatedQueryDto } from './dto/paginated-query.dto';
+import { ParceiroId } from '../auth/decorators/parceiro-id.decorator';
+>>>>>>> 33bd250 (Minhas alterações locais)
 
 @ApiTags('Clientes')
 @Controller('clientes')
@@ -201,4 +213,60 @@ export class ClientesController {
   ): Promise<Cliente[]> {
     return this.clientesService.findByCanalOrigem(parseInt(canalOrigemId));
   }
+<<<<<<< HEAD
+=======
+
+  @Get('paginated')
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Listar clientes paginados' })
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro logado',
+    required: true,
+    schema: { type: 'integer', example: 1 },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista paginada de clientes',
+    schema: {
+      type: 'object',
+      properties: {
+        data: {
+          type: 'array',
+          items: { $ref: '#/components/schemas/Cliente' },
+        },
+        total: { type: 'number', example: 100 },
+        page: { type: 'number', example: 1 },
+        limit: { type: 'number', example: 20 },
+        totalPages: { type: 'number', example: 5 },
+      },
+    },
+  })
+  async findPaginated(
+    @Query() query: PaginatedQueryDto,
+    @ParceiroId() parceiroId: number,
+  ) {
+    const pageNum = parseInt(query.page || '1', 10);
+    const limitNum = parseInt(query.limit || '20', 10);
+    const canalOrigemIdNum =
+      query.canalOrigemId && query.canalOrigemId.trim() !== ''
+        ? parseInt(query.canalOrigemId, 10)
+        : undefined;
+    const ativoBoolean =
+      query.ativo && query.ativo.trim() !== ''
+        ? query.ativo === 'true'
+        : undefined;
+    const searchTerm =
+      query.search && query.search.trim() !== '' ? query.search : undefined;
+
+    return this.clientesService.findPaginated({
+      page: pageNum,
+      limit: limitNum,
+      search: searchTerm,
+      parceiroId,
+      canalOrigemId: canalOrigemIdNum,
+      ativo: ativoBoolean,
+    });
+  }
+>>>>>>> 33bd250 (Minhas alterações locais)
 }

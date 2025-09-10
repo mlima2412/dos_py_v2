@@ -1,7 +1,10 @@
 import {
   Injectable,
   NotFoundException,
+<<<<<<< HEAD
   BadRequestException,
+=======
+>>>>>>> 33bd250 (Minhas alterações locais)
   ConflictException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
@@ -109,6 +112,7 @@ export class ClientesService {
     return cliente;
   }
 
+<<<<<<< HEAD
   async remove(publicId: string): Promise<void> {
     // Cliente não pode ser removido, apenas desativado
     throw new BadRequestException(
@@ -116,6 +120,8 @@ export class ClientesService {
     );
   }
 
+=======
+>>>>>>> 33bd250 (Minhas alterações locais)
   async activate(publicId: string): Promise<any> {
     const existingCliente = await this.findOne(publicId);
     const clienteEntity = new Cliente(existingCliente);
@@ -171,4 +177,78 @@ export class ClientesService {
 
     return clientes;
   }
+<<<<<<< HEAD
+=======
+
+  async findPaginated(params: {
+    page: number;
+    limit: number;
+    search?: string;
+    parceiroId: number;
+    canalOrigemId?: number;
+    ativo?: boolean;
+  }) {
+    const { page, limit, search, parceiroId, canalOrigemId, ativo } = params;
+    const skip = (page - 1) * limit;
+
+    // Construir filtros
+    const where: any = {};
+    const andConditions: any[] = [];
+
+    // Filtro obrigatório por parceiro
+    andConditions.push({ parceiroId });
+
+    // Filtro de busca (nome, sobrenome ou email)
+    if (search) {
+      andConditions.push({
+        OR: [
+          { nome: { contains: search, mode: 'insensitive' } },
+          { sobrenome: { contains: search, mode: 'insensitive' } },
+          { email: { contains: search, mode: 'insensitive' } },
+        ],
+      });
+    }
+
+    // Filtro por canal de origem
+    if (canalOrigemId) {
+      andConditions.push({ canalOrigemId });
+    }
+
+    // Filtro por status ativo
+    if (ativo !== undefined) {
+      andConditions.push({ ativo });
+    }
+
+    if (andConditions.length > 0) {
+      where.AND = andConditions;
+    }
+
+    // Buscar dados paginados
+    const [clientes, total] = await Promise.all([
+      this.prisma.cliente.findMany({
+        where,
+        include: {
+          Parceiro: true,
+          CanalOrigem: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        skip,
+        take: limit,
+      }),
+      this.prisma.cliente.count({ where }),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data: clientes,
+      total,
+      page,
+      limit,
+      totalPages,
+    };
+  }
+>>>>>>> 33bd250 (Minhas alterações locais)
 }
