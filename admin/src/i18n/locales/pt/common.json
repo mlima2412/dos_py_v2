@@ -175,6 +175,33 @@
 		"originChannels": "Canais",
 		"deleteUser": "Excluir Usuário"
 	},
+	"clients": {
+		"title": "Clientes",
+		"subtitle": "Gerencie os clientes do sistema",
+		"newClient": "Novo Cliente",
+		"createClient": "Criar Cliente",
+		"editClient": "Editar Cliente",
+		"search": "Buscar clientes...",
+		"noResults": "Nenhum cliente encontrado",
+		"name": "Nome",
+		"surname": "Sobrenome",
+		"email": "e-Mail",
+		"columns": {
+			"fullName": "Nome Completo",
+			"cellphone": "Celular",
+			"lastPurchase": "Última Compra",
+			"registrationDate": "Data de Registro",
+			"socialMedia": "Rede Social"
+		},
+		"labels": {},
+		"placeholders": {},
+		"messages": {
+			"activateSuccess": "Cliente ativado com sucesso!",
+			"deactivateSuccess": "Cliente desativado com sucesso!",
+			"activateError": "Erro ao ativar cliente. Tente novamente.",
+			"deactivateError": "Erro ao desativar cliente. Tente novamente."
+		}
+	},
 	"users": {
 		"title": "Usuários",
 		"subtitle": "Gerencie os usuários do sistema",

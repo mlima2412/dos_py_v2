@@ -8,11 +8,15 @@ import type { ToZod } from "@kubb/plugin-zod/utils";
 import { z } from "zod";
 
 export const createClienteDtoSchema = z.object({
-      "nome": z.coerce.string().describe("Nome do cliente"),
+      "id": z.coerce.number().describe("ID do cliente"),
+  "publicId": z.coerce.string().describe("Public ID do cliente"),
+  "nome": z.coerce.string().describe("Nome do cliente"),
   "sobrenome": z.coerce.string().describe("Sobrenome do cliente").optional(),
   "email": z.coerce.string().describe("Email do cliente").optional(),
-  "telefone": z.coerce.string().describe("Telefone do cliente").optional(),
+  "redeSocial": z.coerce.string().describe("Rede social do cliente").optional(),
+  "celular": z.coerce.string().describe("Celular do cliente").optional(),
   "ruccnpj": z.coerce.string().describe("RUC/CNPJ do cliente").optional(),
+  "ruccnpjSecundario": z.coerce.string().describe("RUC/CNPJ secundario do cliente").optional(),
   "endereco": z.coerce.string().describe("Endereço do cliente").optional(),
   "cidade": z.coerce.string().describe("Cidade do cliente").optional(),
   "cep": z.coerce.string().describe("CEP do cliente").optional(),
@@ -20,5 +24,8 @@ export const createClienteDtoSchema = z.object({
   "linguagem": z.enum(["Espanol", "Portugues"]).default("Espanol").describe("Linguagem preferida do cliente"),
   "ativo": z.boolean().default(true).describe("Status ativo do cliente"),
   "parceiroId": z.coerce.number().describe("ID do parceiro associado"),
-  "canalOrigemId": z.coerce.number().describe("ID do canal de origem").optional()
+  "canalOrigemId": z.coerce.number().describe("ID do canal de origem").optional(),
+  "createdAt": z.string().datetime().describe("Data de criação do cliente").optional(),
+  "updatedAt": z.string().datetime().describe("Data de atualização do cliente").optional(),
+  "ultimaCompra": z.string().datetime().describe("Data da última compra do cliente").optional()
       }) as unknown as ToZod<CreateClienteDto>

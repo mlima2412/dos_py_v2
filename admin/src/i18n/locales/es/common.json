@@ -157,29 +157,30 @@
 		"paymentMethods": "Forma de Pago",
 		"originChannels": "Canales"
 	},
-	"originChannels": {
-		"title": "Canales",
-		"list": "Lista de Canales",
-		"create": "Nuevo Canal",
-		"createFirst": "Crear Primer Canal",
-		"edit": "Editar Canal de Origen",
+	"clients": {
+		"title": "Clientes",
+		"subtitle": "Gestiona tus clientes",
+		"newClient": "Nuevo Cliente",
+		"createClient": "Crear Cliente",
+		"editClient": "Editar Cliente",
+		"search": "Buscar clientes...",
+		"noResults": "Ningún cliente encontrado",
 		"name": "Nombre",
-		"namePlaceholder": "Ingrese el nombre del canal",
 		"description": "Descripción",
-		"descriptionPlaceholder": "Ingrese una descripción para el canal",
-		"status": "Estado",
-		"noChannels": "No se encontraron canales de origen",
-		"form": {
-			"name": {
-				"required": "El nombre es obligatorio"
-			},
-			"description": {
-				"label": "Descripción",
-				"placeholder": "Ingrese una descripción para el canal"
-			},
-			"active": {
-				"label": "Activo"
-			}
+		"columns": {
+			"fullName": "Nome Completo",
+			"cellphone": "Celular",
+			"lastPurchase": "Última Compra",
+			"registrationDate": "Data de Registro",
+			"socialMedia": "Rede Social"
+		},
+		"labels": {},
+		"placeholders": {},
+		"messages": {
+			"activateSuccess": "¡Cliente activado con éxito!",
+			"deactivateSuccess": "¡Cliente desactivado con éxito!",
+			"activateError": "Error al activar cliente. Inténtalo de nuevo.",
+			"deactivateError": "Error al desactivar cliente. Inténtalo de nuevo."
 		}
 	},
 	"sales": {
@@ -287,9 +288,6 @@
 		"confirmPasswordPlaceholder": "Confirma la contraseña",
 		"profilePlaceholder": "Selecciona un perfil",
 		"partnerPlaceholder": "Selecciona un socio",
-		"passwordEditHint": "Deja en blanco para mantener la contraseña actual",
-		"selectProfile": "Selecciona un perfil",
-		"selectPartner": "Selecciona un socio",
 		"optional": "Opcional",
 		"filterByProfile": "Filtrar por perfil",
 		"filterByStatus": "Filtrar por estado",

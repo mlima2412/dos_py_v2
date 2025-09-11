@@ -6,10 +6,25 @@ import {
   IsNumber,
   IsBoolean,
   IsEnum,
+  IsDateString,
 } from 'class-validator';
 import { Linguagem } from '@prisma/client';
 
 export class CreateClienteDto {
+  @ApiProperty({
+    description: 'ID do cliente',
+    example: 1,
+  })
+  @IsNumber()
+  id: number;
+
+  @ApiProperty({
+    description: 'Public ID do cliente',
+    example: 1,
+  })
+  @IsString()
+  publicId?: string;
+
   @ApiProperty({
     description: 'Nome do cliente',
     example: 'João',
@@ -35,14 +50,24 @@ export class CreateClienteDto {
   @IsEmail()
   email?: string;
 
+  // redesocial
   @ApiProperty({
-    description: 'Telefone do cliente',
+    description: 'Rede social do cliente',
+    example: '@joaosilva',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  redeSocial?: string;
+
+  @ApiProperty({
+    description: 'Celular do cliente',
     example: '+55 11 99999-9999',
     required: false,
   })
   @IsOptional()
   @IsString()
-  telefone?: string;
+  celular?: string;
 
   @ApiProperty({
     description: 'RUC/CNPJ do cliente',
@@ -52,6 +77,16 @@ export class CreateClienteDto {
   @IsOptional()
   @IsString()
   ruccnpj?: string;
+
+  //ruccnpjSecundario
+  @ApiProperty({
+    description: 'RUC/CNPJ secundario do cliente',
+    example: '12.345.678/0001-90',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  ruccnpjSecundario?: string;
 
   @ApiProperty({
     description: 'Endereço do cliente',
@@ -125,4 +160,31 @@ export class CreateClienteDto {
   @IsOptional()
   @IsNumber()
   canalOrigemId?: number;
+
+  @ApiProperty({
+    description: 'Data de criação do cliente',
+    example: '2023-01-01',
+    required: false,
+  })
+  @IsOptional()
+  @IsDateString()
+  createdAt?: Date;
+
+  @ApiProperty({
+    description: 'Data de atualização do cliente',
+    example: '2023-01-01',
+    required: false,
+  })
+  @IsOptional()
+  @IsDateString()
+  updatedAt?: Date;
+
+  @ApiProperty({
+    description: 'Data da última compra do cliente',
+    example: '2023-01-01',
+    required: false,
+  })
+  @IsOptional()
+  @IsDateString()
+  ultimaCompra?: Date;
 }

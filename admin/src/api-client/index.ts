@@ -34,6 +34,8 @@ export type { ClientesControllerFindByParceiroQueryKey } from "./hooks/useClient
 export type { ClientesControllerFindByParceiroSuspenseQueryKey } from "./hooks/useClientesControllerFindByParceiroSuspense.ts";
 export type { ClientesControllerFindOneQueryKey } from "./hooks/useClientesControllerFindOne.ts";
 export type { ClientesControllerFindOneSuspenseQueryKey } from "./hooks/useClientesControllerFindOneSuspense.ts";
+export type { ClientesControllerFindPaginatedQueryKey } from "./hooks/useClientesControllerFindPaginated.ts";
+export type { ClientesControllerFindPaginatedSuspenseQueryKey } from "./hooks/useClientesControllerFindPaginatedSuspense.ts";
 export type { ClientesControllerUpdateMutationKey } from "./hooks/useClientesControllerUpdate.ts";
 export type { ContasPagarControllerCreateMutationKey } from "./hooks/useContasPagarControllerCreate.ts";
 export type { ContasPagarControllerFindAllQueryKey } from "./hooks/useContasPagarControllerFindAll.ts";
@@ -200,6 +202,7 @@ export type { ClientesControllerFindAllQueryParams, ClientesControllerFindAll200
 export type { ClientesControllerFindByCanalOrigemPathParams, ClientesControllerFindByCanalOrigem200, ClientesControllerFindByCanalOrigemQueryResponse, ClientesControllerFindByCanalOrigemQuery } from "./types/ClientesControllerFindByCanalOrigem.ts";
 export type { ClientesControllerFindByParceiroPathParams, ClientesControllerFindByParceiro200, ClientesControllerFindByParceiroQueryResponse, ClientesControllerFindByParceiroQuery } from "./types/ClientesControllerFindByParceiro.ts";
 export type { ClientesControllerFindOnePathParams, ClientesControllerFindOne200, ClientesControllerFindOne404, ClientesControllerFindOneQueryResponse, ClientesControllerFindOneQuery } from "./types/ClientesControllerFindOne.ts";
+export type { ClientesControllerFindPaginatedQueryParams, ClientesControllerFindPaginatedHeaderParams, ClientesControllerFindPaginated200, ClientesControllerFindPaginatedQueryResponse, ClientesControllerFindPaginatedQuery } from "./types/ClientesControllerFindPaginated.ts";
 export type { ClientesControllerUpdatePathParams, ClientesControllerUpdate200, ClientesControllerUpdate400, ClientesControllerUpdate404, ClientesControllerUpdate409, ClientesControllerUpdateMutationRequest, ClientesControllerUpdateMutationResponse, ClientesControllerUpdateMutation } from "./types/ClientesControllerUpdate.ts";
 export type { ContasPagar } from "./types/ContasPagar.ts";
 export type { ContasPagarControllerCreate201, ContasPagarControllerCreate400, ContasPagarControllerCreateMutationRequest, ContasPagarControllerCreateMutationResponse, ContasPagarControllerCreateMutation } from "./types/ContasPagarControllerCreate.ts";
@@ -367,6 +370,8 @@ export { clientesControllerFindByParceiroQueryKey, clientesControllerFindByParce
 export { clientesControllerFindByParceiroSuspenseQueryKey, clientesControllerFindByParceiroSuspense, clientesControllerFindByParceiroSuspenseQueryOptions, useClientesControllerFindByParceiroSuspense } from "./hooks/useClientesControllerFindByParceiroSuspense.ts";
 export { clientesControllerFindOneQueryKey, clientesControllerFindOne, clientesControllerFindOneQueryOptions, useClientesControllerFindOne } from "./hooks/useClientesControllerFindOne.ts";
 export { clientesControllerFindOneSuspenseQueryKey, clientesControllerFindOneSuspense, clientesControllerFindOneSuspenseQueryOptions, useClientesControllerFindOneSuspense } from "./hooks/useClientesControllerFindOneSuspense.ts";
+export { clientesControllerFindPaginatedQueryKey, clientesControllerFindPaginated, clientesControllerFindPaginatedQueryOptions, useClientesControllerFindPaginated } from "./hooks/useClientesControllerFindPaginated.ts";
+export { clientesControllerFindPaginatedSuspenseQueryKey, clientesControllerFindPaginatedSuspense, clientesControllerFindPaginatedSuspenseQueryOptions, useClientesControllerFindPaginatedSuspense } from "./hooks/useClientesControllerFindPaginatedSuspense.ts";
 export { clientesControllerUpdateMutationKey, clientesControllerUpdate, useClientesControllerUpdate } from "./hooks/useClientesControllerUpdate.ts";
 export { contasPagarControllerCreateMutationKey, contasPagarControllerCreate, useContasPagarControllerCreate } from "./hooks/useContasPagarControllerCreate.ts";
 export { contasPagarControllerFindAllQueryKey, contasPagarControllerFindAll, contasPagarControllerFindAllQueryOptions, useContasPagarControllerFindAll } from "./hooks/useContasPagarControllerFindAll.ts";
@@ -533,6 +538,7 @@ export { clientesControllerFindAllQueryParamsSchema, clientesControllerFindAll20
 export { clientesControllerFindByCanalOrigemPathParamsSchema, clientesControllerFindByCanalOrigem200Schema, clientesControllerFindByCanalOrigemQueryResponseSchema } from "./schemas/clientesControllerFindByCanalOrigemSchema.ts";
 export { clientesControllerFindByParceiroPathParamsSchema, clientesControllerFindByParceiro200Schema, clientesControllerFindByParceiroQueryResponseSchema } from "./schemas/clientesControllerFindByParceiroSchema.ts";
 export { clientesControllerFindOnePathParamsSchema, clientesControllerFindOne200Schema, clientesControllerFindOne404Schema, clientesControllerFindOneQueryResponseSchema } from "./schemas/clientesControllerFindOneSchema.ts";
+export { clientesControllerFindPaginatedQueryParamsSchema, clientesControllerFindPaginatedHeaderParamsSchema, clientesControllerFindPaginated200Schema, clientesControllerFindPaginatedQueryResponseSchema } from "./schemas/clientesControllerFindPaginatedSchema.ts";
 export { clientesControllerUpdatePathParamsSchema, clientesControllerUpdate200Schema, clientesControllerUpdate400Schema, clientesControllerUpdate404Schema, clientesControllerUpdate409Schema, clientesControllerUpdateMutationRequestSchema, clientesControllerUpdateMutationResponseSchema } from "./schemas/clientesControllerUpdateSchema.ts";
 export { contasPagarControllerCreate201Schema, contasPagarControllerCreate400Schema, contasPagarControllerCreateMutationRequestSchema, contasPagarControllerCreateMutationResponseSchema } from "./schemas/contasPagarControllerCreateSchema.ts";
 export { contasPagarControllerFindAll200Schema, contasPagarControllerFindAllQueryResponseSchema } from "./schemas/contasPagarControllerFindAllSchema.ts";

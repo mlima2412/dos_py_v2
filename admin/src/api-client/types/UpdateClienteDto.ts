@@ -13,6 +13,16 @@ export type UpdateClienteDtoLinguagemEnum = (typeof updateClienteDtoLinguagemEnu
 
 export type UpdateClienteDto = {
     /**
+     * @description ID do cliente
+     * @type number | undefined
+    */
+    id?: number;
+    /**
+     * @description Public ID do cliente
+     * @type string | undefined
+    */
+    publicId?: string;
+    /**
      * @description Nome do cliente
      * @type string | undefined
     */
@@ -28,15 +38,25 @@ export type UpdateClienteDto = {
     */
     email?: string;
     /**
-     * @description Telefone do cliente
+     * @description Rede social do cliente
      * @type string | undefined
     */
-    telefone?: string;
+    redeSocial?: string;
+    /**
+     * @description Celular do cliente
+     * @type string | undefined
+    */
+    celular?: string;
     /**
      * @description RUC/CNPJ do cliente
      * @type string | undefined
     */
     ruccnpj?: string;
+    /**
+     * @description RUC/CNPJ secundario do cliente
+     * @type string | undefined
+    */
+    ruccnpjSecundario?: string;
     /**
      * @description Endereço do cliente
      * @type string | undefined
@@ -79,4 +99,19 @@ export type UpdateClienteDto = {
      * @type number | undefined
     */
     canalOrigemId?: number;
+    /**
+     * @description Data de criação do cliente
+     * @type string | undefined, date-time
+    */
+    createdAt?: string;
+    /**
+     * @description Data de atualização do cliente
+     * @type string | undefined, date-time
+    */
+    updatedAt?: string;
+    /**
+     * @description Data da última compra do cliente
+     * @type string | undefined, date-time
+    */
+    ultimaCompra?: string;
 };

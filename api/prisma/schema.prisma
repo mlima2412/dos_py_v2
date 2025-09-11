@@ -124,7 +124,8 @@ model Cliente {
   nome              String
   sobrenome         String?
   email             String?
-  telefone          String?
+  redeSocial        String?      @map("rede_social")
+  celular           String?
   ruccnpj           String?      @unique
   ruccnpjSecundario String?      @map("ruccnpj_secundario")
   nomeFatura        String?      @map("nome_fatura")
@@ -134,6 +135,7 @@ model Cliente {
   observacoes       String?
   linguagem         Linguagem    @default(Espanol)
   ativo             Boolean      @default(true)
+  ultimaCompra      DateTime?    @map("ultima_compra")
   qtdCompras        Int          @default(0) @map("qtd_compras")
   parceiroId        Int          @map("parceiro_id")
   canalOrigemId     Int?         @map("canal_origem_id")

@@ -23,6 +23,7 @@ import { SubCategoriaDespesas } from "./pages/subcategoria-despesas";
 import DespesasPage from "./pages/despesas";
 import { FornecedoresRoutes } from "./pages/fornecedores/fornecedores";
 import { NotFound } from "./pages/NotFound";
+import { ListarClientes } from "./pages/clientes/ListarClientes";
 
 import { ThemeProvider } from "./components/theme-provider";
 import "./i18n";
@@ -135,6 +136,30 @@ function App() {
 										element={
 											<ProtectedRoute>
 												<FornecedoresRoutes />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="/clientes"
+										element={
+											<ProtectedRoute>
+												<ListarClientes />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="/clientes/novo"
+										element={
+											<ProtectedRoute>
+												<div className="p-8 text-center">
+													<h1 className="text-2xl font-bold">
+														Página em Construção
+													</h1>
+													<p className="text-muted-foreground mt-2">
+														Formulário de novo cliente será implementado em
+														breve.
+													</p>
+												</div>
 											</ProtectedRoute>
 										}
 									/>

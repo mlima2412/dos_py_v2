@@ -37,12 +37,20 @@ export class Cliente {
   })
   email?: string;
 
+  // redesocial
   @ApiProperty({
-    description: 'Telefone do cliente',
+    description: 'Rede social do cliente',
+    example: '@joaosilva',
+    required: false,
+  })
+  redeSocial?: string;
+
+  @ApiProperty({
+    description: 'Celular do cliente',
     example: '+55 11 99999-9999',
     required: false,
   })
-  telefone?: string;
+  celular?: string;
 
   @ApiProperty({
     description: 'RUC/CNPJ do cliente',
@@ -50,6 +58,13 @@ export class Cliente {
     required: false,
   })
   ruccnpj?: string;
+
+  @ApiProperty({
+    description: 'RUC/CNPJ secundario do cliente',
+    example: '12.345.678/0001-90',
+    required: false,
+  })
+  ruccnpjSecundario?: string;
 
   @ApiProperty({
     description: 'Endereço do cliente',
@@ -116,6 +131,18 @@ export class Cliente {
     example: '2024-01-01T00:00:00Z',
   })
   updatedAt: Date;
+
+  @ApiProperty({
+    description: 'Data da última compra do cliente',
+    example: '2024-01-01T00:00:00Z',
+  })
+  ultimaCompra?: Date;
+
+  @ApiProperty({
+    description: 'Quantidade de compras do cliente',
+    example: 10,
+  })
+  qtdCompras: number;
 
   @ApiProperty({
     description: 'Parceiro associado ao cliente',

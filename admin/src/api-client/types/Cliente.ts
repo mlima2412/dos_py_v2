@@ -40,15 +40,25 @@ export type Cliente = {
     */
     email?: string;
     /**
-     * @description Telefone do cliente
+     * @description Rede social do cliente
      * @type string | undefined
     */
-    telefone?: string;
+    redeSocial?: string;
+    /**
+     * @description Celular do cliente
+     * @type string | undefined
+    */
+    celular?: string;
     /**
      * @description RUC/CNPJ do cliente
      * @type string | undefined
     */
     ruccnpj?: string;
+    /**
+     * @description RUC/CNPJ secundario do cliente
+     * @type string | undefined
+    */
+    ruccnpjSecundario?: string;
     /**
      * @description Endereço do cliente
      * @type string | undefined
@@ -99,6 +109,16 @@ export type Cliente = {
      * @type string, date-time
     */
     updatedAt: string;
+    /**
+     * @description Data da última compra do cliente
+     * @type string, date-time
+    */
+    ultimaCompra: string;
+    /**
+     * @description Quantidade de compras do cliente
+     * @type number
+    */
+    qtdCompras: number;
     /**
      * @description Parceiro associado ao cliente
     */

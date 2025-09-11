@@ -57,9 +57,9 @@ export function getMenuList(
 			groupLabel: t("menu.registrations"),
 			menus: [
 				{
-					href: "/customers",
+					href: "/clientes",
 					label: t("menu.clients"),
-					active: pathname.includes("/customers"),
+					active: pathname.includes("/clientes"),
 					icon: Handshake,
 					submenus: [],
 				},

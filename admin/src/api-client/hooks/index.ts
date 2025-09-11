@@ -34,6 +34,8 @@ export type { ClientesControllerFindByParceiroQueryKey } from "./useClientesCont
 export type { ClientesControllerFindByParceiroSuspenseQueryKey } from "./useClientesControllerFindByParceiroSuspense.ts";
 export type { ClientesControllerFindOneQueryKey } from "./useClientesControllerFindOne.ts";
 export type { ClientesControllerFindOneSuspenseQueryKey } from "./useClientesControllerFindOneSuspense.ts";
+export type { ClientesControllerFindPaginatedQueryKey } from "./useClientesControllerFindPaginated.ts";
+export type { ClientesControllerFindPaginatedSuspenseQueryKey } from "./useClientesControllerFindPaginatedSuspense.ts";
 export type { ClientesControllerUpdateMutationKey } from "./useClientesControllerUpdate.ts";
 export type { ContasPagarControllerCreateMutationKey } from "./useContasPagarControllerCreate.ts";
 export type { ContasPagarControllerFindAllQueryKey } from "./useContasPagarControllerFindAll.ts";
@@ -208,6 +210,8 @@ export { clientesControllerFindByParceiroQueryKey, clientesControllerFindByParce
 export { clientesControllerFindByParceiroSuspenseQueryKey, clientesControllerFindByParceiroSuspense, clientesControllerFindByParceiroSuspenseQueryOptions, useClientesControllerFindByParceiroSuspense } from "./useClientesControllerFindByParceiroSuspense.ts";
 export { clientesControllerFindOneQueryKey, clientesControllerFindOne, clientesControllerFindOneQueryOptions, useClientesControllerFindOne } from "./useClientesControllerFindOne.ts";
 export { clientesControllerFindOneSuspenseQueryKey, clientesControllerFindOneSuspense, clientesControllerFindOneSuspenseQueryOptions, useClientesControllerFindOneSuspense } from "./useClientesControllerFindOneSuspense.ts";
+export { clientesControllerFindPaginatedQueryKey, clientesControllerFindPaginated, clientesControllerFindPaginatedQueryOptions, useClientesControllerFindPaginated } from "./useClientesControllerFindPaginated.ts";
+export { clientesControllerFindPaginatedSuspenseQueryKey, clientesControllerFindPaginatedSuspense, clientesControllerFindPaginatedSuspenseQueryOptions, useClientesControllerFindPaginatedSuspense } from "./useClientesControllerFindPaginatedSuspense.ts";
 export { clientesControllerUpdateMutationKey, clientesControllerUpdate, useClientesControllerUpdate } from "./useClientesControllerUpdate.ts";
 export { contasPagarControllerCreateMutationKey, contasPagarControllerCreate, useContasPagarControllerCreate } from "./useContasPagarControllerCreate.ts";
 export { contasPagarControllerFindAllQueryKey, contasPagarControllerFindAll, contasPagarControllerFindAllQueryOptions, useContasPagarControllerFindAll } from "./useContasPagarControllerFindAll.ts";

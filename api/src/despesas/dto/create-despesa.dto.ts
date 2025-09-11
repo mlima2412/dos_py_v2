@@ -7,7 +7,7 @@ import {
   IsInt,
   IsEnum,
 } from 'class-validator';
-import { Type, Exclude } from 'class-transformer';
+import { Type } from 'class-transformer';
 
 export enum TipoPagamento {
   A_VISTA_IMEDIATA = 'A_VISTA_IMEDIATA',

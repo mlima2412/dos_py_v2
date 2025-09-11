@@ -1,10 +1,6 @@
 import {
   Injectable,
   NotFoundException,
-<<<<<<< HEAD
-  BadRequestException,
-=======
->>>>>>> 33bd250 (Minhas alterações locais)
   ConflictException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
@@ -27,12 +23,15 @@ export class ClientesService {
 
     const cliente = await this.prisma.cliente.create({
       data: {
+        id: clienteEntity.id,
         publicId: clienteEntity.publicId,
         nome: clienteEntity.nome,
         sobrenome: clienteEntity.sobrenome,
         email: clienteEntity.email,
-        telefone: clienteEntity.telefone,
+        redeSocial: clienteEntity.redeSocial,
+        celular: clienteEntity.celular,
         ruccnpj: clienteEntity.ruccnpj,
+        ruccnpjSecundario: clienteEntity.ruccnpjSecundario,
         endereco: clienteEntity.endereco,
         cidade: clienteEntity.cidade,
         cep: clienteEntity.cep,
@@ -41,6 +40,9 @@ export class ClientesService {
         ativo: clienteEntity.ativo,
         parceiroId: clienteEntity.parceiroId,
         canalOrigemId: clienteEntity.canalOrigemId,
+        createdAt: clienteEntity.createdAt,
+        updatedAt: clienteEntity.updatedAt,
+        ultimaCompra: clienteEntity.ultimaCompra,
       },
       include: {
         Parceiro: true,
@@ -112,16 +114,6 @@ export class ClientesService {
     return cliente;
   }
 
-<<<<<<< HEAD
-  async remove(publicId: string): Promise<void> {
-    // Cliente não pode ser removido, apenas desativado
-    throw new BadRequestException(
-      'Clientes não podem ser removidos. Use a funcionalidade de desativar.',
-    );
-  }
-
-=======
->>>>>>> 33bd250 (Minhas alterações locais)
   async activate(publicId: string): Promise<any> {
     const existingCliente = await this.findOne(publicId);
     const clienteEntity = new Cliente(existingCliente);
@@ -177,8 +169,6 @@ export class ClientesService {
 
     return clientes;
   }
-<<<<<<< HEAD
-=======
 
   async findPaginated(params: {
     page: number;
@@ -250,5 +240,4 @@ export class ClientesService {
       totalPages,
     };
   }
->>>>>>> 33bd250 (Minhas alterações locais)
 }

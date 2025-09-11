@@ -5,12 +5,6 @@ import {
   Body,
   Patch,
   Param,
-<<<<<<< HEAD
-  Delete,
-  HttpCode,
-  HttpStatus,
-=======
->>>>>>> 33bd250 (Minhas alterações locais)
   Query,
 } from '@nestjs/common';
 import {
@@ -21,20 +15,14 @@ import {
   ApiQuery,
   ApiBearerAuth,
   ApiBody,
-<<<<<<< HEAD
-=======
   ApiHeader,
->>>>>>> 33bd250 (Minhas alterações locais)
 } from '@nestjs/swagger';
 import { ClientesService } from './clientes.service';
 import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
 import { Cliente } from './entities/cliente.entity';
-<<<<<<< HEAD
-=======
 import { PaginatedQueryDto } from './dto/paginated-query.dto';
 import { ParceiroId } from '../auth/decorators/parceiro-id.decorator';
->>>>>>> 33bd250 (Minhas alterações locais)
 
 @ApiTags('Clientes')
 @Controller('clientes')
@@ -44,42 +32,11 @@ export class ClientesController {
   @Post()
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Criar novo cliente' })
-  @ApiBody({
-    type: CreateClienteDto,
-    examples: {
-      pessoaFisica: {
-        summary: 'Cliente Pessoa Física',
-        description: 'Exemplo de criação de cliente pessoa física',
-        value: {
-          nome: 'João Silva',
-          email: 'joao.silva@email.com',
-          telefone: '(11) 99999-9999',
-          cpfCnpj: '123.456.789-00',
-          endereco: 'Rua das Flores, 123',
-          cidade: 'São Paulo',
-          estado: 'SP',
-          cep: '01234-567',
-          parceiroId: 1,
-          canalOrigemId: 1,
-        },
-      },
-      pessoaJuridica: {
-        summary: 'Cliente Pessoa Jurídica',
-        description: 'Exemplo de criação de cliente pessoa jurídica',
-        value: {
-          nome: 'Empresa ABC Ltda',
-          email: 'contato@empresaabc.com',
-          telefone: '(11) 3333-4444',
-          cpfCnpj: '12.345.678/0001-90',
-          endereco: 'Av. Paulista, 1000',
-          cidade: 'São Paulo',
-          estado: 'SP',
-          cep: '01310-100',
-          parceiroId: 2,
-          canalOrigemId: 2,
-        },
-      },
-    },
+  @ApiBody({ type: CreateClienteDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Cliente criado com sucesso',
+    type: Cliente,
   })
   @ApiResponse({
     status: 201,
@@ -115,12 +72,95 @@ export class ClientesController {
     @Query('canalOrigemId') canalOrigemId?: string,
   ): Promise<Cliente[]> {
     if (parceiroId) {
-      return this.clientesService.findByParceiro(parseInt(parceiroId));
+      return this.clientesService.findByParceiro(parseInt(parceiroId, 10));
     }
     if (canalOrigemId) {
-      return this.clientesService.findByCanalOrigem(parseInt(canalOrigemId));
+      return this.clientesService.findByCanalOrigem(
+        parseInt(canalOrigemId, 10),
+      );
     }
     return this.clientesService.findAll();
+  }
+
+  @Get('paginated')
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Listar clientes paginados' })
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro logado',
+    required: true,
+    schema: { type: 'integer', example: 1 },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista paginada de clientes',
+    schema: {
+      type: 'object',
+      properties: {
+        data: {
+          type: 'array',
+          items: { $ref: '#/components/schemas/Cliente' },
+        },
+        total: { type: 'number', example: 100 },
+        page: { type: 'number', example: 1 },
+        limit: { type: 'number', example: 20 },
+        totalPages: { type: 'number', example: 5 },
+      },
+    },
+  })
+  async findPaginated(
+    @Query() query: PaginatedQueryDto,
+    @ParceiroId() parceiroId: number,
+  ) {
+    const pageNum = parseInt(query.page || '1', 10);
+    const limitNum = parseInt(query.limit || '20', 10);
+    const canalOrigemIdNum =
+      query.canalOrigemId && query.canalOrigemId.trim() !== ''
+        ? parseInt(query.canalOrigemId, 10)
+        : undefined;
+    const ativoBoolean =
+      query.ativo && query.ativo.trim() !== ''
+        ? query.ativo === 'true'
+        : undefined;
+    const searchTerm =
+      query.search && query.search.trim() !== '' ? query.search : undefined;
+
+    return this.clientesService.findPaginated({
+      page: pageNum,
+      limit: limitNum,
+      search: searchTerm,
+      parceiroId,
+      canalOrigemId: canalOrigemIdNum,
+      ativo: ativoBoolean,
+    });
+  }
+
+  @Get('parceiro/:parceiroId')
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Listar clientes por parceiro' })
+  @ApiParam({ name: 'parceiroId', description: 'ID do parceiro' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de clientes do parceiro',
+    type: [Cliente],
+  })
+  findByParceiro(@Param('parceiroId') parceiroId: string): Promise<Cliente[]> {
+    return this.clientesService.findByParceiro(parseInt(parceiroId, 10));
+  }
+
+  @Get('canal-origem/:canalOrigemId')
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Listar clientes por canal de origem' })
+  @ApiParam({ name: 'canalOrigemId', description: 'ID do canal de origem' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de clientes do canal de origem',
+    type: [Cliente],
+  })
+  findByCanalOrigem(
+    @Param('canalOrigemId') canalOrigemId: string,
+  ): Promise<Cliente[]> {
+    return this.clientesService.findByCanalOrigem(parseInt(canalOrigemId, 10));
   }
 
   @Get(':publicId')
@@ -185,88 +225,4 @@ export class ClientesController {
   deactivate(@Param('publicId') publicId: string): Promise<Cliente> {
     return this.clientesService.deactivate(publicId);
   }
-
-  @Get('parceiro/:parceiroId')
-  @ApiBearerAuth('JWT-auth')
-  @ApiOperation({ summary: 'Listar clientes por parceiro' })
-  @ApiParam({ name: 'parceiroId', description: 'ID do parceiro' })
-  @ApiResponse({
-    status: 200,
-    description: 'Lista de clientes do parceiro',
-    type: [Cliente],
-  })
-  findByParceiro(@Param('parceiroId') parceiroId: string): Promise<Cliente[]> {
-    return this.clientesService.findByParceiro(parseInt(parceiroId));
-  }
-
-  @Get('canal-origem/:canalOrigemId')
-  @ApiBearerAuth('JWT-auth')
-  @ApiOperation({ summary: 'Listar clientes por canal de origem' })
-  @ApiParam({ name: 'canalOrigemId', description: 'ID do canal de origem' })
-  @ApiResponse({
-    status: 200,
-    description: 'Lista de clientes do canal de origem',
-    type: [Cliente],
-  })
-  findByCanalOrigem(
-    @Param('canalOrigemId') canalOrigemId: string,
-  ): Promise<Cliente[]> {
-    return this.clientesService.findByCanalOrigem(parseInt(canalOrigemId));
-  }
-<<<<<<< HEAD
-=======
-
-  @Get('paginated')
-  @ApiBearerAuth('JWT-auth')
-  @ApiOperation({ summary: 'Listar clientes paginados' })
-  @ApiHeader({
-    name: 'x-parceiro-id',
-    description: 'ID do parceiro logado',
-    required: true,
-    schema: { type: 'integer', example: 1 },
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Lista paginada de clientes',
-    schema: {
-      type: 'object',
-      properties: {
-        data: {
-          type: 'array',
-          items: { $ref: '#/components/schemas/Cliente' },
-        },
-        total: { type: 'number', example: 100 },
-        page: { type: 'number', example: 1 },
-        limit: { type: 'number', example: 20 },
-        totalPages: { type: 'number', example: 5 },
-      },
-    },
-  })
-  async findPaginated(
-    @Query() query: PaginatedQueryDto,
-    @ParceiroId() parceiroId: number,
-  ) {
-    const pageNum = parseInt(query.page || '1', 10);
-    const limitNum = parseInt(query.limit || '20', 10);
-    const canalOrigemIdNum =
-      query.canalOrigemId && query.canalOrigemId.trim() !== ''
-        ? parseInt(query.canalOrigemId, 10)
-        : undefined;
-    const ativoBoolean =
-      query.ativo && query.ativo.trim() !== ''
-        ? query.ativo === 'true'
-        : undefined;
-    const searchTerm =
-      query.search && query.search.trim() !== '' ? query.search : undefined;
-
-    return this.clientesService.findPaginated({
-      page: pageNum,
-      limit: limitNum,
-      search: searchTerm,
-      parceiroId,
-      canalOrigemId: canalOrigemIdNum,
-      ativo: ativoBoolean,
-    });
-  }
->>>>>>> 33bd250 (Minhas alterações locais)
 }

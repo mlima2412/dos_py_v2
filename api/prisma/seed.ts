@@ -6,12 +6,16 @@ import { Client } from 'pg';
 import { DespesasService } from '../src/despesas/despesas.service';
 import { CategoriaDespesasService } from '../src/categoria-despesas/categoria-despesas.service';
 import { SubCategoriaDespesaService } from '../src/subcategoria-despesa/subcategoria-despesa.service';
+import { ClientesService } from '../src/clientes/clientes.service';
+
 import {
   CreateDespesaDto,
   TipoPagamento as TipoPagamentoEnum,
 } from '../src/despesas/dto/create-despesa.dto';
 import { CreateCategoriaDespesasDto } from '../src/categoria-despesas/dto/create-categoria-despesas.dto';
 import { CreateSubCategoriaDespesaDto } from '../src/subcategoria-despesa/dto/create-subcategoria-despesa.dto';
+import { CreateClienteDto } from '../src/clientes/dto/create-cliente.dto';
+import { uuidv7 } from 'uuidv7';
 
 async function fetchDespesaFromLegacy(legacyDb) {
   console.log('🌱 Migrando Categoria de Despesas');
@@ -37,8 +41,15 @@ async function fetchSubCategoriaFromLegacy(legacyDb) {
   return subcategorias.rows;
 }
 
+async function fetchClientesFromLegacy(legacyDb) {
+  console.log('🌱 Migrando Clientes');
+  const clientes = await legacyDb.query(
+    'SELECT * FROM public."Cliente" order by id asc',
+  );
+  return clientes.rows;
+}
+
 async function run() {
-  // Sobe o Nest sem HTTP/Express (só DI)
   const app = await NestFactory.createApplicationContext(SeedModule, {
     logger: ['error', 'warn'],
   });
@@ -47,9 +58,9 @@ async function run() {
   });
   await legacyDb.connect();
   try {
-    console.log('🌱 Iniciando migração DOSv1 para DOSv2 Módulo Despesas...');
+    console.log('🌱 Iniciando migração DOSv1 para DOSv2...');
     console.log('PATH:', process.env.LEGACY_DATABASE_URL);
-
+    /*
     const categoriaLegacy = await fetchCategoriaFromLegacy(legacyDb);
     const categoriaService = app.get(CategoriaDespesasService);
     for (const raw of categoriaLegacy) {
@@ -95,6 +106,37 @@ async function run() {
 
       await despesaService.create(dto, 1);
     }
+  */
+
+    const clientesLegacy = await fetchClientesFromLegacy(legacyDb);
+    const clienteService = app.get(ClientesService);
+    for (const raw of clientesLegacy) {
+      // mapeie do legado -> DTO do seu service
+      console.log(`Criando o cliente:${raw.nome}`);
+      const dto: CreateClienteDto = {
+        id: raw.id,
+        publicId: uuidv7(),
+        parceiroId: 1,
+        nome: raw.nome.split(' ')[0],
+        // o sobrenome precisa ser todo o resto do nome
+        sobrenome: raw.nome.split(' ').slice(1).join(' '),
+        email: raw.email,
+        // Se o número de celular começar com +595, ele já está no formato correto
+        // Se não, adiciona o +595 e remove o 0 inicial
+        celular: raw.celular?.startsWith('+595')
+          ? raw.celular
+          : '+595' + raw.celular?.replace('0', ''),
+        redeSocial: raw.redeSocial,
+        // cnpj em branco ou com lenght = 0 precisa ser null
+        ruccnpj: raw.ruc?.lenght > 0 ? raw.ruc : null,
+        createdAt: raw.dataCadastro,
+        updatedAt: raw.dataAtualizacao,
+        ultimaCompra: raw.dataUltimaCompra ? raw.dataUltimaCompra : null,
+        ativo: true,
+      };
+      await clienteService.create(dto);
+    }
+
     legacyDb.end();
     console.log('Seed concluído com sucesso.');
   } catch (err) {
