@@ -24,6 +24,7 @@ import { RedisModule } from './redis/redis.module';
 
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
+import { CategoriaProdutoModule } from './categoria-produto/categoria-produto.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { AppController } from './app.controller';
     CurrencyModule,
     PasswordResetModule,
     RedisModule,
+    CategoriaProdutoModule,
   ],
   controllers: [AppController],
   providers: [

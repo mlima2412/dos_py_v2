@@ -23,6 +23,13 @@ export type { CategoriaDespesasControllerFindOneQueryKey } from "./useCategoriaD
 export type { CategoriaDespesasControllerFindOneSuspenseQueryKey } from "./useCategoriaDespesasControllerFindOneSuspense.ts";
 export type { CategoriaDespesasControllerRemoveMutationKey } from "./useCategoriaDespesasControllerRemove.ts";
 export type { CategoriaDespesasControllerUpdateMutationKey } from "./useCategoriaDespesasControllerUpdate.ts";
+export type { CategoriaProdutoControllerCreateMutationKey } from "./useCategoriaProdutoControllerCreate.ts";
+export type { CategoriaProdutoControllerFindAllQueryKey } from "./useCategoriaProdutoControllerFindAll.ts";
+export type { CategoriaProdutoControllerFindAllSuspenseQueryKey } from "./useCategoriaProdutoControllerFindAllSuspense.ts";
+export type { CategoriaProdutoControllerFindOneQueryKey } from "./useCategoriaProdutoControllerFindOne.ts";
+export type { CategoriaProdutoControllerFindOneSuspenseQueryKey } from "./useCategoriaProdutoControllerFindOneSuspense.ts";
+export type { CategoriaProdutoControllerRemoveMutationKey } from "./useCategoriaProdutoControllerRemove.ts";
+export type { CategoriaProdutoControllerUpdateMutationKey } from "./useCategoriaProdutoControllerUpdate.ts";
 export type { ClientesControllerActivateMutationKey } from "./useClientesControllerActivate.ts";
 export type { ClientesControllerCreateMutationKey } from "./useClientesControllerCreate.ts";
 export type { ClientesControllerDeactivateMutationKey } from "./useClientesControllerDeactivate.ts";
@@ -199,6 +206,13 @@ export { categoriaDespesasControllerFindOneQueryKey, categoriaDespesasController
 export { categoriaDespesasControllerFindOneSuspenseQueryKey, categoriaDespesasControllerFindOneSuspense, categoriaDespesasControllerFindOneSuspenseQueryOptions, useCategoriaDespesasControllerFindOneSuspense } from "./useCategoriaDespesasControllerFindOneSuspense.ts";
 export { categoriaDespesasControllerRemoveMutationKey, categoriaDespesasControllerRemove, useCategoriaDespesasControllerRemove } from "./useCategoriaDespesasControllerRemove.ts";
 export { categoriaDespesasControllerUpdateMutationKey, categoriaDespesasControllerUpdate, useCategoriaDespesasControllerUpdate } from "./useCategoriaDespesasControllerUpdate.ts";
+export { categoriaProdutoControllerCreateMutationKey, categoriaProdutoControllerCreate, useCategoriaProdutoControllerCreate } from "./useCategoriaProdutoControllerCreate.ts";
+export { categoriaProdutoControllerFindAllQueryKey, categoriaProdutoControllerFindAll, categoriaProdutoControllerFindAllQueryOptions, useCategoriaProdutoControllerFindAll } from "./useCategoriaProdutoControllerFindAll.ts";
+export { categoriaProdutoControllerFindAllSuspenseQueryKey, categoriaProdutoControllerFindAllSuspense, categoriaProdutoControllerFindAllSuspenseQueryOptions, useCategoriaProdutoControllerFindAllSuspense } from "./useCategoriaProdutoControllerFindAllSuspense.ts";
+export { categoriaProdutoControllerFindOneQueryKey, categoriaProdutoControllerFindOne, categoriaProdutoControllerFindOneQueryOptions, useCategoriaProdutoControllerFindOne } from "./useCategoriaProdutoControllerFindOne.ts";
+export { categoriaProdutoControllerFindOneSuspenseQueryKey, categoriaProdutoControllerFindOneSuspense, categoriaProdutoControllerFindOneSuspenseQueryOptions, useCategoriaProdutoControllerFindOneSuspense } from "./useCategoriaProdutoControllerFindOneSuspense.ts";
+export { categoriaProdutoControllerRemoveMutationKey, categoriaProdutoControllerRemove, useCategoriaProdutoControllerRemove } from "./useCategoriaProdutoControllerRemove.ts";
+export { categoriaProdutoControllerUpdateMutationKey, categoriaProdutoControllerUpdate, useCategoriaProdutoControllerUpdate } from "./useCategoriaProdutoControllerUpdate.ts";
 export { clientesControllerActivateMutationKey, clientesControllerActivate, useClientesControllerActivate } from "./useClientesControllerActivate.ts";
 export { clientesControllerCreateMutationKey, clientesControllerCreate, useClientesControllerCreate } from "./useClientesControllerCreate.ts";
 export { clientesControllerDeactivateMutationKey, clientesControllerDeactivate, useClientesControllerDeactivate } from "./useClientesControllerDeactivate.ts";

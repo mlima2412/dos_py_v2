@@ -18,6 +18,11 @@ export { categoriaDespesasControllerFindOnePathParamsSchema, categoriaDespesasCo
 export { categoriaDespesasControllerRemovePathParamsSchema, categoriaDespesasControllerRemove200Schema, categoriaDespesasControllerRemove401Schema, categoriaDespesasControllerRemove404Schema, categoriaDespesasControllerRemoveMutationResponseSchema } from "./categoriaDespesasControllerRemoveSchema.ts";
 export { categoriaDespesasControllerUpdatePathParamsSchema, categoriaDespesasControllerUpdate200Schema, categoriaDespesasControllerUpdate401Schema, categoriaDespesasControllerUpdate404Schema, categoriaDespesasControllerUpdate409Schema, categoriaDespesasControllerUpdateMutationRequestSchema, categoriaDespesasControllerUpdateMutationResponseSchema } from "./categoriaDespesasControllerUpdateSchema.ts";
 export { categoriaDespesasSchema } from "./categoriaDespesasSchema.ts";
+export { categoriaProdutoControllerCreate201Schema, categoriaProdutoControllerCreate400Schema, categoriaProdutoControllerCreate409Schema, categoriaProdutoControllerCreateMutationRequestSchema, categoriaProdutoControllerCreateMutationResponseSchema } from "./categoriaProdutoControllerCreateSchema.ts";
+export { categoriaProdutoControllerFindAll200Schema, categoriaProdutoControllerFindAllQueryResponseSchema } from "./categoriaProdutoControllerFindAllSchema.ts";
+export { categoriaProdutoControllerFindOnePathParamsSchema, categoriaProdutoControllerFindOne200Schema, categoriaProdutoControllerFindOne404Schema, categoriaProdutoControllerFindOneQueryResponseSchema } from "./categoriaProdutoControllerFindOneSchema.ts";
+export { categoriaProdutoControllerRemovePathParamsSchema, categoriaProdutoControllerRemove200Schema, categoriaProdutoControllerRemove400Schema, categoriaProdutoControllerRemove404Schema, categoriaProdutoControllerRemoveMutationResponseSchema } from "./categoriaProdutoControllerRemoveSchema.ts";
+export { categoriaProdutoControllerUpdatePathParamsSchema, categoriaProdutoControllerUpdate200Schema, categoriaProdutoControllerUpdate400Schema, categoriaProdutoControllerUpdate404Schema, categoriaProdutoControllerUpdate409Schema, categoriaProdutoControllerUpdateMutationRequestSchema, categoriaProdutoControllerUpdateMutationResponseSchema } from "./categoriaProdutoControllerUpdateSchema.ts";
 export { clienteSchema } from "./clienteSchema.ts";
 export { clientesControllerActivatePathParamsSchema, clientesControllerActivate200Schema, clientesControllerActivate404Schema, clientesControllerActivateMutationResponseSchema } from "./clientesControllerActivateSchema.ts";
 export { clientesControllerCreate201Schema, clientesControllerCreate400Schema, clientesControllerCreate409Schema, clientesControllerCreateMutationRequestSchema, clientesControllerCreateMutationResponseSchema } from "./clientesControllerCreateSchema.ts";
@@ -46,6 +51,7 @@ export { contasPagarParcelasSchema } from "./contasPagarParcelasSchema.ts";
 export { contasPagarSchema } from "./contasPagarSchema.ts";
 export { createCanalOrigemDtoSchema } from "./createCanalOrigemDtoSchema.ts";
 export { createCategoriaDespesasDtoSchema } from "./createCategoriaDespesasDtoSchema.ts";
+export { createCategoriaProdutoDtoSchema } from "./createCategoriaProdutoDtoSchema.ts";
 export { createClienteDtoSchema } from "./createClienteDtoSchema.ts";
 export { createContasPagarDtoSchema } from "./createContasPagarDtoSchema.ts";
 export { createContasPagarParcelasDtoSchema } from "./createContasPagarParcelasDtoSchema.ts";
@@ -130,6 +136,7 @@ export { subCategoriaDespesaControllerUpdatePathParamsSchema, subCategoriaDespes
 export { subCategoriaDespesaSchema } from "./subCategoriaDespesaSchema.ts";
 export { updateCanalOrigemDtoSchema } from "./updateCanalOrigemDtoSchema.ts";
 export { updateCategoriaDespesasDtoSchema } from "./updateCategoriaDespesasDtoSchema.ts";
+export { updateCategoriaProdutoDtoSchema } from "./updateCategoriaProdutoDtoSchema.ts";
 export { updateClienteDtoSchema } from "./updateClienteDtoSchema.ts";
 export { updateContasPagarDtoSchema } from "./updateContasPagarDtoSchema.ts";
 export { updateContasPagarParcelasDtoSchema } from "./updateContasPagarParcelasDtoSchema.ts";

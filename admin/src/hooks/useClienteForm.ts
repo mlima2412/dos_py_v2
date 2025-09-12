@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/useToast";
 import {
 	createClienteFormSchema,
 	ClienteFormData,
-} from "@/schemas/clienteSchema";
+} from "@/pages/clientes/clienteSchema";
 import {
 	CLIENTE_FORM_DEFAULTS,
 	CLIENTE_FORM_TIMEOUTS,
@@ -17,7 +17,7 @@ import {
 	transformClienteToForm,
 	transformFormToCreateCliente,
 	transformFormToUpdateCliente,
-} from "@/utils/clienteTransformers";
+} from "@/pages/clientes/clienteTransformers";
 import {
 	useClientesControllerCreate,
 	useClientesControllerUpdate,

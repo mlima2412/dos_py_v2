@@ -24,6 +24,7 @@ import DespesasPage from "./pages/despesas";
 import { FornecedoresRoutes } from "./pages/fornecedores/fornecedores";
 import { NotFound } from "./pages/NotFound";
 import { ClientesRoutes } from "./pages/clientes/clientes";
+import { CategoriasProdutoRoutes } from "./pages/produtos/categorias/categorias";
 
 import { ThemeProvider } from "./components/theme-provider";
 import "./i18n";
@@ -144,6 +145,14 @@ function App() {
 										element={
 											<ProtectedRoute>
 												<ClientesRoutes />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="/produto/categorias/*"
+										element={
+											<ProtectedRoute>
+												<CategoriasProdutoRoutes />
 											</ProtectedRoute>
 										}
 									/>

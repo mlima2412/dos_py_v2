@@ -1,5 +1,5 @@
 import { Cliente } from "@/api-client";
-import { ClienteFormData } from "@/schemas/clienteSchema";
+import { ClienteFormData } from "@/pages/clientes/clienteSchema";
 import { CreateClienteDto, UpdateClienteDto } from "@/api-client";
 
 export const transformClienteToForm = (cliente: Cliente): ClienteFormData => ({

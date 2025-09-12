@@ -18,6 +18,11 @@ export type { CategoriaDespesasControllerFindAll200, CategoriaDespesasController
 export type { CategoriaDespesasControllerFindOnePathParams, CategoriaDespesasControllerFindOne200, CategoriaDespesasControllerFindOne401, CategoriaDespesasControllerFindOne404, CategoriaDespesasControllerFindOneQueryResponse, CategoriaDespesasControllerFindOneQuery } from "./CategoriaDespesasControllerFindOne.ts";
 export type { CategoriaDespesasControllerRemovePathParams, CategoriaDespesasControllerRemove200, CategoriaDespesasControllerRemove401, CategoriaDespesasControllerRemove404, CategoriaDespesasControllerRemoveMutationResponse, CategoriaDespesasControllerRemoveMutation } from "./CategoriaDespesasControllerRemove.ts";
 export type { CategoriaDespesasControllerUpdatePathParams, CategoriaDespesasControllerUpdate200, CategoriaDespesasControllerUpdate401, CategoriaDespesasControllerUpdate404, CategoriaDespesasControllerUpdate409, CategoriaDespesasControllerUpdateMutationRequest, CategoriaDespesasControllerUpdateMutationResponse, CategoriaDespesasControllerUpdateMutation } from "./CategoriaDespesasControllerUpdate.ts";
+export type { CategoriaProdutoControllerCreate201, CategoriaProdutoControllerCreate400, CategoriaProdutoControllerCreate409, CategoriaProdutoControllerCreateMutationRequest, CategoriaProdutoControllerCreateMutationResponse, CategoriaProdutoControllerCreateMutation } from "./CategoriaProdutoControllerCreate.ts";
+export type { CategoriaProdutoControllerFindAll200, CategoriaProdutoControllerFindAllQueryResponse, CategoriaProdutoControllerFindAllQuery } from "./CategoriaProdutoControllerFindAll.ts";
+export type { CategoriaProdutoControllerFindOnePathParams, CategoriaProdutoControllerFindOne200, CategoriaProdutoControllerFindOne404, CategoriaProdutoControllerFindOneQueryResponse, CategoriaProdutoControllerFindOneQuery } from "./CategoriaProdutoControllerFindOne.ts";
+export type { CategoriaProdutoControllerRemovePathParams, CategoriaProdutoControllerRemove200, CategoriaProdutoControllerRemove400, CategoriaProdutoControllerRemove404, CategoriaProdutoControllerRemoveMutationResponse, CategoriaProdutoControllerRemoveMutation } from "./CategoriaProdutoControllerRemove.ts";
+export type { CategoriaProdutoControllerUpdatePathParams, CategoriaProdutoControllerUpdate200, CategoriaProdutoControllerUpdate400, CategoriaProdutoControllerUpdate404, CategoriaProdutoControllerUpdate409, CategoriaProdutoControllerUpdateMutationRequest, CategoriaProdutoControllerUpdateMutationResponse, CategoriaProdutoControllerUpdateMutation } from "./CategoriaProdutoControllerUpdate.ts";
 export type { ClienteLinguagemEnum, Cliente } from "./Cliente.ts";
 export type { ClientesControllerActivatePathParams, ClientesControllerActivate200, ClientesControllerActivate404, ClientesControllerActivateMutationResponse, ClientesControllerActivateMutation } from "./ClientesControllerActivate.ts";
 export type { ClientesControllerCreate201, ClientesControllerCreate400, ClientesControllerCreate409, ClientesControllerCreateMutationRequest, ClientesControllerCreateMutationResponse, ClientesControllerCreateMutation } from "./ClientesControllerCreate.ts";
@@ -46,6 +51,7 @@ export type { ContasPagarParcelasControllerRemovePathParams, ContasPagarParcelas
 export type { ContasPagarParcelasControllerUpdatePathParams, ContasPagarParcelasControllerUpdateHeaderParams, ContasPagarParcelasControllerUpdate200, ContasPagarParcelasControllerUpdate404, ContasPagarParcelasControllerUpdateMutationRequest, ContasPagarParcelasControllerUpdateMutationResponse, ContasPagarParcelasControllerUpdateMutation } from "./ContasPagarParcelasControllerUpdate.ts";
 export type { CreateCanalOrigemDto } from "./CreateCanalOrigemDto.ts";
 export type { CreateCategoriaDespesasDto } from "./CreateCategoriaDespesasDto.ts";
+export type { CreateCategoriaProdutoDto } from "./CreateCategoriaProdutoDto.ts";
 export type { CreateClienteDtoLinguagemEnum, CreateClienteDto } from "./CreateClienteDto.ts";
 export type { CreateContasPagarDto } from "./CreateContasPagarDto.ts";
 export type { CreateContasPagarParcelasDto } from "./CreateContasPagarParcelasDto.ts";
@@ -130,6 +136,7 @@ export type { SubCategoriaDespesaControllerRemovePathParams, SubCategoriaDespesa
 export type { SubCategoriaDespesaControllerUpdatePathParams, SubCategoriaDespesaControllerUpdate200, SubCategoriaDespesaControllerUpdate401, SubCategoriaDespesaControllerUpdate404, SubCategoriaDespesaControllerUpdate409, SubCategoriaDespesaControllerUpdateMutationRequest, SubCategoriaDespesaControllerUpdateMutationResponse, SubCategoriaDespesaControllerUpdateMutation } from "./SubCategoriaDespesaControllerUpdate.ts";
 export type { UpdateCanalOrigemDto } from "./UpdateCanalOrigemDto.ts";
 export type { UpdateCategoriaDespesasDto } from "./UpdateCategoriaDespesasDto.ts";
+export type { UpdateCategoriaProdutoDto } from "./UpdateCategoriaProdutoDto.ts";
 export type { UpdateClienteDtoLinguagemEnum, UpdateClienteDto } from "./UpdateClienteDto.ts";
 export type { UpdateContasPagarDto } from "./UpdateContasPagarDto.ts";
 export type { UpdateContasPagarParcelasDto } from "./UpdateContasPagarParcelasDto.ts";

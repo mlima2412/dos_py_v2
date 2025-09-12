@@ -99,10 +99,21 @@ export function getMenuList(
 
 				{
 					href: "/produto",
-					label: t("menu.products"),
+					label: t("menu.products.main"),
 					active: pathname.includes("/produto"),
 					icon: Shirt,
-					submenus: [],
+					submenus: [
+						{
+							href: "/produto/listaprodutos",
+							label: t("menu.products.list"),
+							active: pathname.includes("/produto/listaprodutos"),
+						},
+						{
+							href: "/produto/categorias",
+							label: t("menu.products.categories"),
+							active: pathname.includes("/produto/categorias"),
+						},
+					],
 				},
 				{
 					href: "/estoque",

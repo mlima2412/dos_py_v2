@@ -315,3 +315,44 @@ model RollupDespesasMensaisCategoria {
   @@id([parceiro_id, ym, categoria_id, sub_categoria_id])
   @@map("rollup_despesas_mensais_categoria")
 }
+
+// Categoria agrupam produtos para uma melhor pesquisa e estatística
+model CategoriaProduto {
+  id        Int       @id @default(autoincrement())
+  descricao String
+  Produto   Produto[]
+
+  @@map("categoria_produto")
+}
+
+model Produto {
+  id             Int               @id @default(autoincrement())
+  publicId       String            @unique @map("public_id")
+  nome           String
+  dataCadastro   DateTime          @default(now()) @map("data_cadastro")
+  ativo          Boolean           @default(true)
+  consignado     Boolean           @default(false)
+  categoriaId    Int?              @map("categoria_id")
+  descricao      String?
+  imgURL         String?           @map("img_url")
+  precoCompra    Decimal           @map("preco_compra") @db.Decimal(12, 3)
+  precoVenda     Decimal           @map("preco_venda") @db.Decimal(12, 3)
+  categoria      CategoriaProduto? @relation(fields: [categoriaId], references: [id])
+  ProdutoDetalhe ProdutoSKU[]
+
+  @@map("produto")
+}
+
+model ProdutoSKU {
+  id               Int       @id @default(autoincrement())
+  publicId         String    @unique @map("public_id")
+  produtoId        Int       @map("produto_id")
+  cor              String?   @map("cor")
+  codCor           Int?      @map("cod_cor") // hexadecimal da cor para usar em sites apps e catalogos
+  tamanho          String?   @map("tamanho")
+  qtdMinima        Int       @default(0) @map("qtd_minima")
+  dataUltimaCompra DateTime? @map("data_ultima_compra")
+  produto          Produto   @relation(fields: [produtoId], references: [id])
+
+  @@map("produto_sku")
+}

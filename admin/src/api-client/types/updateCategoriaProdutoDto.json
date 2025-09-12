@@ -1,0 +1,1 @@
+{"type":"object","properties":{"descricao":{"type":"string","description":"Descrição da categoria do produto","example":"Conjuntos, Camisas, Calças, Acessórios","maxLength":255}},"x-readme-ref-name":"UpdateCategoriaProdutoDto"}

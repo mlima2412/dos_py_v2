@@ -146,7 +146,11 @@
 		"registrations": "Registros",
 		"clients": "Clientes",
 		"suppliers": "Proveedores",
-		"products": "Productos",
+		"products": {
+			"main": "Productos",
+			"list": "Lista de Productos",
+			"categories": "Categorías"
+		},
 		"inventory": "Inventario",
 		"purchaseOrders": "Órdenes de Compra",
 		"expenses": {
@@ -712,6 +716,57 @@
 		"messages": {
 			"eventDeleted": "Gasto \"{{title}}\" eliminado",
 			"eventMoved": "Gasto \"{{title}}\" movido"
+		}
+	},
+	"products": {
+		"list": "Lista de Produtos",
+		"categories": "Categorias"
+	},
+	"productCategories": {
+		"title": "Categorías de Productos",
+		"list": "Lista de Categorías",
+		"create": "Nueva Categoría",
+		"edit": "Editar Categoría",
+		"newCategory": "Nueva Categoría",
+		"createCategory": "Crear Categoría",
+		"editCategory": "Editar Categoría",
+		"search": "Buscar categorías...",
+		"noResults": "Ninguna categoría encontrada",
+		"name": "Nombre",
+		"description": "Descripción",
+		"columns": {
+			"name": "Nombre",
+			"description": "Descripción",
+			"status": "Estado",
+			"createdAt": "Fecha de Creación"
+		},
+		"placeholders": {
+			"name": "Ingresa el nombre de la categoría",
+			"description": "Ingresa una descripción para la categoría (opcional)"
+		},
+		"validations": {
+			"nameRequired": "Nombre es obligatorio",
+			"nameMinLength": "Nombre debe tener al menos 2 caracteres",
+			"nameMaxLength": "Nombre debe tener máximo 255 caracteres"
+		},
+		"actions": {
+			"create": "Crear Categoría",
+			"edit": "Editar",
+			"delete": "Eliminar",
+			"view": "Visualizar"
+		},
+		"messages": {
+			"createSuccess": "¡Categoría creada con éxito!",
+			"updateSuccess": "¡Categoría actualizada con éxito!",
+			"deleteSuccess": "¡Categoría eliminada con éxito!",
+			"createError": "Error al crear categoría. Inténtalo de nuevo.",
+			"updateError": "Error al actualizar categoría. Inténtalo de nuevo.",
+			"deleteError": "Error al eliminar categoría. Inténtalo de nuevo.",
+			"loadError": "Error al cargar datos de la categoría.",
+			"deleteConfirmTitle": "Eliminar categoría",
+			"deleteConfirmDescription": "¿Estás seguro de que deseas eliminar esta categoría? Esta acción no se puede deshacer.",
+			"deleteConfirmCancel": "Cancelar",
+			"deleteConfirmConfirm": "Eliminar"
 		}
 	}
 }
