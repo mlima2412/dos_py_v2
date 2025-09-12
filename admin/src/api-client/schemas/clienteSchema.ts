@@ -19,6 +19,7 @@ export const clienteSchema = z.object({
   "celular": z.coerce.string().describe("Celular do cliente").optional(),
   "ruccnpj": z.coerce.string().describe("RUC/CNPJ do cliente").optional(),
   "ruccnpjSecundario": z.coerce.string().describe("RUC/CNPJ secundario do cliente").optional(),
+  "nomeFatura": z.coerce.string().describe("Nome da fatura do cliente (caso não seja o mesmo nome do cliente)").optional(),
   "endereco": z.coerce.string().describe("Endereço do cliente").optional(),
   "cidade": z.coerce.string().describe("Cidade do cliente").optional(),
   "cep": z.coerce.string().describe("CEP do cliente").optional(),

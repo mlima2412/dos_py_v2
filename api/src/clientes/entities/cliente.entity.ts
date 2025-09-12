@@ -67,6 +67,14 @@ export class Cliente {
   ruccnpjSecundario?: string;
 
   @ApiProperty({
+    description:
+      'Nome da fatura do cliente (caso não seja o mesmo nome do cliente)',
+    example: 'João Silva',
+    required: false,
+  })
+  nomeFatura?: string;
+
+  @ApiProperty({
     description: 'Endereço do cliente',
     example: 'Rua das Flores, 123',
     required: false,

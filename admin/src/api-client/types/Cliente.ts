@@ -60,6 +60,11 @@ export type Cliente = {
     */
     ruccnpjSecundario?: string;
     /**
+     * @description Nome da fatura do cliente (caso não seja o mesmo nome do cliente)
+     * @type string | undefined
+    */
+    nomeFatura?: string;
+    /**
      * @description Endereço do cliente
      * @type string | undefined
     */

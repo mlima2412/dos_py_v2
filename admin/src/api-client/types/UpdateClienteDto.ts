@@ -58,6 +58,11 @@ export type UpdateClienteDto = {
     */
     ruccnpjSecundario?: string;
     /**
+     * @description Nome da fatura do cliente
+     * @type string | undefined
+    */
+    nomeFatura?: string;
+    /**
      * @description Endereço do cliente
      * @type string | undefined
     */

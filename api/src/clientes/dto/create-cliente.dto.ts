@@ -89,6 +89,15 @@ export class CreateClienteDto {
   ruccnpjSecundario?: string;
 
   @ApiProperty({
+    description: 'Nome da fatura do cliente',
+    example: 'João Silva',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  nomeFatura?: string;
+
+  @ApiProperty({
     description: 'Endereço do cliente',
     example: 'Rua das Flores, 123',
     required: false,

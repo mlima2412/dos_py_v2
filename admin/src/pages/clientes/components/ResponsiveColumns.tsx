@@ -7,7 +7,10 @@ import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Edit, Power, PowerOff } from "lucide-react";
 import { HoverActions } from "@/components/ui/HoverActions";
-import { useActivateCliente, useDeactivateCliente } from "@/hooks/useClienteMutations";
+import {
+	useActivateCliente,
+	useDeactivateCliente,
+} from "@/hooks/useClienteMutations";
 import { useToast } from "@/hooks/useToast";
 import { type HoverAction } from "@/hooks/useStandardActions";
 
@@ -122,7 +125,7 @@ export function useResponsiveColumns(
 							type: "edit" as const,
 							label: t("common.edit"),
 							icon: <Edit className="h-4 w-4" />,
-							href: `/clientes/novo`,
+							href: `/clientes/editar/${cliente.publicId}`,
 						},
 						{
 							type: "toggle" as const,
@@ -135,7 +138,9 @@ export function useResponsiveColumns(
 								<Power className="h-4 w-4" />
 							),
 							onClick: handleToggleStatus,
-							variant: cliente.ativo ? ("destructive" as const) : ("default" as const),
+							variant: cliente.ativo
+								? ("destructive" as const)
+								: ("default" as const),
 						},
 					];
 
@@ -222,7 +227,7 @@ export function useResponsiveColumns(
 						type: "edit" as const,
 						label: t("common.edit"),
 						icon: <Edit className="h-4 w-4" />,
-						href: `/clientes/novo`,
+						href: `/clientes/editar/${cliente.publicId}`,
 					},
 					{
 						type: "toggle" as const,
@@ -235,7 +240,9 @@ export function useResponsiveColumns(
 							<Power className="h-4 w-4" />
 						),
 						onClick: handleToggleStatus,
-						variant: cliente.ativo ? ("destructive" as const) : ("default" as const),
+						variant: cliente.ativo
+							? ("destructive" as const)
+							: ("default" as const),
 					},
 				];
 
