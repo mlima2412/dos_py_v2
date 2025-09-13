@@ -25,6 +25,8 @@ import { RedisModule } from './redis/redis.module';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
 import { CategoriaProdutoModule } from './categoria-produto/categoria-produto.module';
+import { ProdutoModule } from './produto/produto.module';
+import { ProdutoSkuModule } from './produto-sku/produto-sku.module';
 
 @Module({
   imports: [
@@ -47,6 +49,8 @@ import { CategoriaProdutoModule } from './categoria-produto/categoria-produto.mo
     PasswordResetModule,
     RedisModule,
     CategoriaProdutoModule,
+    ProdutoModule,
+    ProdutoSkuModule,
   ],
   controllers: [AppController],
   providers: [

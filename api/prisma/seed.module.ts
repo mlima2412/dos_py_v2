@@ -6,6 +6,8 @@ import { DespesasModule } from '../src/despesas/despesas.module';
 import { CategoriaDespesasModule } from '../src/categoria-despesas/categoria-despesas.module';
 import { SubCategoriaDespesaModule } from '../src/subcategoria-despesa/subcategoria-despesa.module';
 import { ClientesModule } from '../src/clientes/clientes.module';
+import { ProdutoModule } from '../src/produto/produto.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -14,6 +16,7 @@ import { ClientesModule } from '../src/clientes/clientes.module';
     CategoriaDespesasModule,
     SubCategoriaDespesaModule,
     ClientesModule,
+    ProdutoModule,
   ],
 })
 export class SeedModule {}

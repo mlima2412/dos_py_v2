@@ -102,6 +102,7 @@ model Parceiro {
   RollupDespesasMensais          RollupDespesasMensais[]
   RollupDespesasMensaisCategoria RollupDespesasMensaisCategoria[]
   Fornecedor                     Fornecedor[]
+  Produto                        Produto[]
 
   @@map("parceiro")
 }
@@ -326,19 +327,21 @@ model CategoriaProduto {
 }
 
 model Produto {
-  id             Int               @id @default(autoincrement())
-  publicId       String            @unique @map("public_id")
-  nome           String
-  dataCadastro   DateTime          @default(now()) @map("data_cadastro")
-  ativo          Boolean           @default(true)
-  consignado     Boolean           @default(false)
-  categoriaId    Int?              @map("categoria_id")
-  descricao      String?
-  imgURL         String?           @map("img_url")
-  precoCompra    Decimal           @map("preco_compra") @db.Decimal(12, 3)
-  precoVenda     Decimal           @map("preco_venda") @db.Decimal(12, 3)
-  categoria      CategoriaProduto? @relation(fields: [categoriaId], references: [id])
-  ProdutoDetalhe ProdutoSKU[]
+  id           Int               @id @default(autoincrement())
+  publicId     String            @unique @map("public_id")
+  nome         String
+  dataCadastro DateTime          @default(now()) @map("data_cadastro")
+  ativo        Boolean           @default(true)
+  consignado   Boolean           @default(false)
+  categoriaId  Int?              @map("categoria_id")
+  descricao    String?
+  imgURL       String?           @map("img_url")
+  precoCompra  Decimal           @map("preco_compra") @db.Decimal(12, 3)
+  precoVenda   Decimal           @map("preco_venda") @db.Decimal(12, 3)
+  parceiroId   Int               @map("parceiro_id")
+  Parceiro     Parceiro          @relation(fields: [parceiroId], references: [id])
+  categoria    CategoriaProduto? @relation(fields: [categoriaId], references: [id])
+  ProdutoSKU   ProdutoSKU[]
 
   @@map("produto")
 }
@@ -352,7 +355,8 @@ model ProdutoSKU {
   tamanho          String?   @map("tamanho")
   qtdMinima        Int       @default(0) @map("qtd_minima")
   dataUltimaCompra DateTime? @map("data_ultima_compra")
-  produto          Produto   @relation(fields: [produtoId], references: [id])
+  // ondelete cascade para quando um produto for deletado, os skus também sejam deletados
+  produto          Produto   @relation(fields: [produtoId], references: [id], onDelete: Cascade)
 
   @@map("produto_sku")
 }

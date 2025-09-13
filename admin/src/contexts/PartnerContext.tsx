@@ -6,6 +6,31 @@ import { PartnerContext, type PartnerContextType } from "./PartnerContextType";
 
 type ParceiroItem = AuthControllerGetUserParceiros200[0];
 
+// Função auxiliar para extrair locale e isoCode do parceiro
+const getPartnerCurrencyInfo = (
+	partnerId: string | null,
+	parceiros: ParceiroItem[] | undefined
+) => {
+	if (!partnerId || !parceiros) return { locale: null, isoCode: null };
+
+	const partner = parceiros.find(
+		(p: ParceiroItem) => p.parceiroId?.toString() === partnerId
+	);
+
+	if (partner?.Parceiro?.currency) {
+		return {
+			locale: partner.Parceiro.currency.locale || "pt-BR",
+			isoCode: partner.Parceiro.currency.isoCode || "BRL",
+		};
+	}
+
+	// Fallback para valores padrão brasileiros
+	return {
+		locale: "pt-BR",
+		isoCode: "BRL",
+	};
+};
+
 interface PartnerProviderProps {
 	children: ReactNode;
 }
@@ -90,7 +115,10 @@ export const PartnerProvider: React.FC<PartnerProviderProps> = ({
 			if (firstPartner?.parceiroId && firstPartner?.Parceiro?.nome) {
 				const partnerId = firstPartner.parceiroId.toString();
 				const partnerName = firstPartner.Parceiro.nome;
-				const { locale, isoCode } = getPartnerCurrencyInfo(partnerId);
+				const { locale, isoCode } = getPartnerCurrencyInfo(
+					partnerId,
+					parceiros
+				);
 
 				setSelectedPartnerId(partnerId);
 				setSelectedPartnerName(partnerName);
@@ -115,7 +143,10 @@ export const PartnerProvider: React.FC<PartnerProviderProps> = ({
 			if (singlePartner?.parceiroId && singlePartner?.Parceiro?.nome) {
 				const partnerId = singlePartner.parceiroId.toString();
 				const partnerName = singlePartner.Parceiro.nome;
-				const { locale, isoCode } = getPartnerCurrencyInfo(partnerId);
+				const { locale, isoCode } = getPartnerCurrencyInfo(
+					partnerId,
+					parceiros
+				);
 
 				setSelectedPartnerId(partnerId);
 				setSelectedPartnerName(partnerName);
@@ -136,28 +167,6 @@ export const PartnerProvider: React.FC<PartnerProviderProps> = ({
 		}
 	}, [isAuthenticated, parceiros, isLoading, updateSelectedPartner]);
 
-	// Função auxiliar para extrair locale e isoCode do parceiro
-	const getPartnerCurrencyInfo = (partnerId: string | null) => {
-		if (!partnerId || !parceiros) return { locale: null, isoCode: null };
-
-		const partner = parceiros.find(
-			(p: ParceiroItem) => p.parceiroId?.toString() === partnerId
-		);
-
-		if (partner?.Parceiro?.currency) {
-			return {
-				locale: partner.Parceiro.currency.locale || "pt-BR",
-				isoCode: partner.Parceiro.currency.isoCode || "BRL",
-			};
-		}
-
-		// Fallback para valores padrão brasileiros
-		return {
-			locale: "pt-BR",
-			isoCode: "BRL",
-		};
-	};
-
 	const setSelectedPartner = (
 		partnerId: string | null,
 		partnerName: string
@@ -166,7 +175,7 @@ export const PartnerProvider: React.FC<PartnerProviderProps> = ({
 		setSelectedPartnerName(partnerName);
 
 		// Obter informações de currency do parceiro
-		const { locale, isoCode } = getPartnerCurrencyInfo(partnerId);
+		const { locale, isoCode } = getPartnerCurrencyInfo(partnerId, parceiros);
 		setSelectedPartnerLocale(locale);
 		setSelectedPartnerIsoCode(isoCode);
 
@@ -207,7 +216,10 @@ export const PartnerProvider: React.FC<PartnerProviderProps> = ({
 			if (firstPartner?.parceiroId && firstPartner?.Parceiro?.nome) {
 				const partnerId = firstPartner.parceiroId.toString();
 				const partnerName = firstPartner.Parceiro.nome;
-				const { locale, isoCode } = getPartnerCurrencyInfo(partnerId);
+				const { locale, isoCode } = getPartnerCurrencyInfo(
+					partnerId,
+					parceiros
+				);
 
 				setSelectedPartnerId(partnerId);
 				setSelectedPartnerName(partnerName);

@@ -1,0 +1,1 @@
+{"type":"object","properties":{"id":{"type":"number","description":"ID interno da categoria do produto","example":1},"descricao":{"type":"string","description":"Descrição da categoria do produto","example":"Eletrônicos"}},"required":["id","descricao"],"x-readme-ref-name":"CategoriaProduto"}

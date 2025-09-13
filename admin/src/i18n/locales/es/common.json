@@ -719,8 +719,46 @@
 		}
 	},
 	"products": {
-		"list": "Lista de Produtos",
-		"categories": "Categorias"
+		"title": "Productos",
+		"list": "Lista de Productos",
+		"categories": "Categorías",
+		"new": "Nuevo Producto",
+		"create": "Crear Producto",
+		"edit": "Editar Producto",
+		"search": "Buscar productos...",
+		"noResults": "Ningún producto encontrado",
+		"name": "Nombre",
+		"code": "Código",
+		"category": "Categoría",
+		"active": "Activo",
+		"inactive": "Inactivo",
+		"columns": {
+			"code": "Código",
+			"name": "Nombre",
+			"category": "Categoría",
+			"status": "Estado"
+		},
+		"placeholders": {
+			"search": "Buscar por nombre...",
+			"categoryFilter": "Filtrar por categoría"
+		},
+		"filters": {
+			"allCategories": "Todas las categorías"
+		},
+		"actions": {
+			"create": "Crear Producto",
+			"edit": "Editar",
+			"activate": "Activar",
+			"deactivate": "Desactivar"
+		},
+		"messages": {
+			"activateSuccess": "¡Producto activado con éxito!",
+			"deactivateSuccess": "¡Producto desactivado con éxito!",
+			"activateError": "Error al activar producto. Inténtalo de nuevo.",
+			"deactivateError": "Error al desactivar producto. Inténtalo de nuevo.",
+			"loadError": "Error al cargar productos. Inténtalo de nuevo.",
+			"noCategory": "Sin categoría"
+		}
 	},
 	"productCategories": {
 		"title": "Categorías de Productos",

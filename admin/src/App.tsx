@@ -25,6 +25,7 @@ import { FornecedoresRoutes } from "./pages/fornecedores/fornecedores";
 import { NotFound } from "./pages/NotFound";
 import { ClientesRoutes } from "./pages/clientes/clientes";
 import { CategoriasProdutoRoutes } from "./pages/produtos/categorias/categorias";
+import { ProdutosRoutes } from "./pages/produtos/produtos";
 
 import { ThemeProvider } from "./components/theme-provider";
 import "./i18n";
@@ -153,6 +154,14 @@ function App() {
 										element={
 											<ProtectedRoute>
 												<CategoriasProdutoRoutes />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="/produto/listaprodutos/*"
+										element={
+											<ProtectedRoute>
+												<ProdutosRoutes />
 											</ProtectedRoute>
 										}
 									/>
