@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import {
 	Breadcrumb,
@@ -15,10 +16,10 @@ import { ListarProdutosTable } from "./components/ListarProdutosTable";
 
 export const ListarProdutos: React.FC = () => {
 	const { t } = useTranslation("common");
+	const navigate = useNavigate();
 
 	const handleCreateProduct = () => {
-		// Por enquanto, apenas mostra um alerta
-		alert("Página em construção!");
+		navigate("/produtos/novo");
 	};
 
 	return (

@@ -8,12 +8,16 @@ import type { ToZod } from "@kubb/plugin-zod/utils";
 import { z } from "zod";
 
 export const updateProdutoDtoSchema = z.object({
-      "nome": z.coerce.string().max(255).describe("Nome do produto").optional(),
+      "id": z.coerce.number().describe("ID do produto").optional(),
+  "publicId": z.coerce.string().describe("Public ID do produto").optional(),
+  "parceiroId": z.coerce.number().describe("ID do parceiro").optional(),
+  "nome": z.coerce.string().max(255).describe("Nome do produto").optional(),
   "descricao": z.coerce.string().describe("Descrição do produto").optional(),
   "imgURL": z.coerce.string().describe("URL da imagem do produto").optional(),
   "precoCompra": z.coerce.number().describe("Preço de compra do produto").optional(),
   "precoVenda": z.coerce.number().describe("Preço de venda do produto").optional(),
   "consignado": z.boolean().default(false).describe("Se o produto é consignado"),
   "categoriaId": z.coerce.number().describe("ID da categoria do produto").optional(),
-  "ativo": z.boolean().default(true).describe("Status ativo do produto")
+  "ativo": z.boolean().default(true).describe("Status ativo do produto"),
+  "dataCadastro": z.string().datetime().describe("Data de cadastro do produto").optional()
       }) as unknown as ToZod<UpdateProdutoDto>

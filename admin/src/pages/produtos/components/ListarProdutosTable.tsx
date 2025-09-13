@@ -18,6 +18,7 @@ import {
 	ArrowUpDown,
 	ArrowUp,
 	ArrowDown,
+	Eye,
 } from "lucide-react";
 import {
 	useProdutos,
@@ -34,10 +35,12 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { useNavigate } from "react-router-dom";
 
 export const ListarProdutosTable: React.FC = () => {
 	const { t } = useTranslation("common");
 	const { selectedPartnerId } = usePartnerContext();
+	const navigate = useNavigate();
 	const [search, setSearch] = useState("");
 	const [categoriaFilter, setCategoriaFilter] = useState<string>("all");
 	const [sortField, setSortField] = useState<"nome" | null>(null);
@@ -235,6 +238,20 @@ export const ListarProdutosTable: React.FC = () => {
 												variant="ghost"
 												size="sm"
 												className="h-8 w-8 p-0"
+												onClick={() =>
+													navigate(`/produtos/visualizar/${produto.publicId}`)
+												}
+												title={t("products.actions.view")}
+											>
+												<Eye className="h-4 w-4" />
+											</Button>
+											<Button
+												variant="ghost"
+												size="sm"
+												className="h-8 w-8 p-0"
+												onClick={() =>
+													navigate(`/produtos/editar/${produto.publicId}`)
+												}
 												title={t("products.actions.edit")}
 											>
 												<Edit className="h-4 w-4" />

@@ -98,15 +98,15 @@ export function getMenuList(
 				*/
 
 				{
-					href: "/produto",
+					href: "/produtos",
 					label: t("menu.products.main"),
-					active: pathname.includes("/produto"),
+					active: pathname.includes("/produtos"),
 					icon: Shirt,
 					submenus: [
 						{
-							href: "/produto/listaprodutos",
+							href: "/produtos",
 							label: t("menu.products.list"),
-							active: pathname.includes("/produto/listaprodutos"),
+							active: pathname === "/produtos",
 						},
 						{
 							href: "/produto/categorias",

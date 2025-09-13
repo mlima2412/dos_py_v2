@@ -718,48 +718,7 @@
 			"eventMoved": "Gasto \"{{title}}\" movido"
 		}
 	},
-	"products": {
-		"title": "Productos",
-		"list": "Lista de Productos",
-		"categories": "Categorías",
-		"new": "Nuevo Producto",
-		"create": "Crear Producto",
-		"edit": "Editar Producto",
-		"search": "Buscar productos...",
-		"noResults": "Ningún producto encontrado",
-		"name": "Nombre",
-		"code": "Código",
-		"category": "Categoría",
-		"active": "Activo",
-		"inactive": "Inactivo",
-		"columns": {
-			"code": "Código",
-			"name": "Nombre",
-			"category": "Categoría",
-			"status": "Estado"
-		},
-		"placeholders": {
-			"search": "Buscar por nombre...",
-			"categoryFilter": "Filtrar por categoría"
-		},
-		"filters": {
-			"allCategories": "Todas las categorías"
-		},
-		"actions": {
-			"create": "Crear Producto",
-			"edit": "Editar",
-			"activate": "Activar",
-			"deactivate": "Desactivar"
-		},
-		"messages": {
-			"activateSuccess": "¡Producto activado con éxito!",
-			"deactivateSuccess": "¡Producto desactivado con éxito!",
-			"activateError": "Error al activar producto. Inténtalo de nuevo.",
-			"deactivateError": "Error al desactivar producto. Inténtalo de nuevo.",
-			"loadError": "Error al cargar productos. Inténtalo de nuevo.",
-			"noCategory": "Sin categoría"
-		}
-	},
+
 	"productCategories": {
 		"title": "Categorías de Productos",
 		"list": "Lista de Categorías",
@@ -805,6 +764,119 @@
 			"deleteConfirmDescription": "¿Estás seguro de que deseas eliminar esta categoría? Esta acción no se puede deshacer.",
 			"deleteConfirmCancel": "Cancelar",
 			"deleteConfirmConfirm": "Eliminar"
+		}
+	},
+	"products": {
+		"title": "Productos",
+		"subtitle": "Gestiona tus productos",
+		"list": "Lista de Productos",
+		"create": "Nuevo Producto",
+		"edit": "Editar Producto",
+		"view": "Visualizar Producto",
+		"new": "Nuevo Producto",
+		"search": "Buscar productos...",
+		"noResults": "Ningún producto encontrado",
+		"name": "Nombre",
+		"description": "Descripción",
+		"category": "Categoría",
+		"purchasePrice": "Precio de Compra",
+		"salePrice": "Precio de Venta",
+		"active": "Activo",
+		"consigned": "Consignado",
+		"imageUrl": "URL de la Imagen",
+		"columns": {
+			"code": "Código",
+			"name": "Nombre",
+			"category": "Categoría",
+			"purchasePrice": "Precio Compra",
+			"salePrice": "Precio Venta",
+			"status": "Estado",
+			"actions": "Acciones"
+		},
+		"placeholders": {
+			"name": "Ingresa el nombre del producto",
+			"description": "Ingresa una descripción para el producto (opcional)",
+			"imageUrl": "Ingresa la URL de la imagen (opcional)",
+			"purchasePrice": "0,00",
+			"salePrice": "0,00",
+			"search": "Buscar por nombre...",
+			"categoryFilter": "Seleccione una categoría"
+		},
+		"validations": {
+			"nameRequired": "Nombre es obligatorio",
+			"nameMinLength": "Nombre debe tener al menos 2 caracteres",
+			"nameMaxLength": "Nombre debe tener máximo 255 caracteres",
+			"purchasePriceRequired": "Precio de compra es obligatorio",
+			"purchasePriceMin": "Precio de compra debe ser mayor que cero",
+			"salePriceRequired": "Precio de venta es obligatorio",
+			"salePriceMin": "Precio de venta debe ser mayor que cero",
+			"imageUrlInvalid": "URL de la imagen debe ser válida"
+		},
+		"actions": {
+			"create": "Crear Producto",
+			"edit": "Editar",
+			"view": "Visualizar",
+			"activate": "Activar",
+			"deactivate": "Desactivar",
+			"newSku": "Nuevo SKU"
+		},
+		"messages": {
+			"createSuccess": "¡Producto creado con éxito!",
+			"updateSuccess": "¡Producto actualizado con éxito!",
+			"deleteSuccess": "¡Producto eliminado con éxito!",
+			"activateSuccess": "¡Producto activado con éxito!",
+			"deactivateSuccess": "¡Producto desactivado con éxito!",
+			"createError": "Error al crear producto. Inténtalo de nuevo.",
+			"updateError": "Error al actualizar producto. Inténtalo de nuevo.",
+			"deleteError": "Error al eliminar producto. Inténtalo de nuevo.",
+			"activateError": "Error al activar producto. Inténtalo de nuevo.",
+			"deactivateError": "Error al desactivar producto. Inténtalo de nuevo.",
+			"loadError": "Error al cargar datos del producto.",
+			"noPartnerSelected": "Ningún socio seleccionado",
+			"noCategory": "Sin categoría"
+		},
+		"skus": {
+			"title": "SKUs del Producto",
+			"newSku": "Nuevo SKU",
+			"editSku": "Editar SKU",
+			"color": "Color",
+			"size": "Tamaño",
+			"minQuantity": "Cantidad Mínima",
+			"lastPurchase": "Última Compra",
+			"noResults": "Ninguno SKU encontrado",
+			"columns": {
+				"color": "Color",
+				"size": "Tamaño",
+				"minQuantity": "Cant. Mín.",
+				"lastPurchase": "Última Compra",
+				"actions": "Acciones"
+			},
+			"placeholders": {
+				"color": "Ingresa el color",
+				"size": "Ingresa el tamaño",
+				"minQuantity": "0"
+			},
+			"validations": {
+				"minQuantityMin": "Cantidad mínima debe ser mayor o igual a cero"
+			},
+			"actions": {
+				"create": "Crear SKU",
+				"edit": "Editar",
+				"delete": "Eliminar"
+			},
+			"messages": {
+				"createSuccess": "¡SKU creado con éxito!",
+				"updateSuccess": "¡SKU actualizado con éxito!",
+				"deleteSuccess": "¡SKU eliminado con éxito!",
+				"createError": "Error al crear SKU. Inténtalo de nuevo.",
+				"updateError": "Error al actualizar SKU. Inténtalo de nuevo.",
+				"deleteError": "Error al eliminar SKU. Inténtalo de nuevo.",
+				"loadError": "Error al cargar datos del SKU.",
+				"deleteConfirmTitle": "Eliminar SKU",
+				"deleteConfirmDescription": "¿Estás seguro de que deseas eliminar este SKU? Esta acción no se puede deshacer.",
+				"deleteConfirmCancel": "Cancelar",
+				"deleteConfirmConfirm": "Eliminar"
+			}
 		}
 	}
 }

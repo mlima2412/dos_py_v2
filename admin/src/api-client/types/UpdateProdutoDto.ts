@@ -6,6 +6,21 @@
 
 export type UpdateProdutoDto = {
     /**
+     * @description ID do produto
+     * @type number | undefined
+    */
+    id?: number;
+    /**
+     * @description Public ID do produto
+     * @type string | undefined
+    */
+    publicId?: string;
+    /**
+     * @description ID do parceiro
+     * @type number | undefined
+    */
+    parceiroId?: number;
+    /**
      * @description Nome do produto
      * @maxLength 255
      * @type string | undefined
@@ -48,4 +63,9 @@ export type UpdateProdutoDto = {
      * @type boolean | undefined
     */
     ativo?: boolean;
+    /**
+     * @description Data de cadastro do produto
+     * @type string | undefined, date-time
+    */
+    dataCadastro?: string;
 };

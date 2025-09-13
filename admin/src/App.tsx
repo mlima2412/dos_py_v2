@@ -158,7 +158,7 @@ function App() {
 										}
 									/>
 									<Route
-										path="/produto/listaprodutos/*"
+										path="/produtos/*"
 										element={
 											<ProtectedRoute>
 												<ProdutosRoutes />
