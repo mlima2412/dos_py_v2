@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useQueryClient } from "@tanstack/react-query";
 import {
 	Table,
 	TableBody,
@@ -19,6 +20,7 @@ import {
 	ArrowUp,
 	ArrowDown,
 	Eye,
+	Shirt,
 } from "lucide-react";
 import {
 	useProdutos,
@@ -35,19 +37,39 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/useToast";
+import {
+	useProdutoSkuControllerCreate,
+	type CreateProdutoSkuDto,
+} from "@/api-client";
+import { DialogSku } from "./DialogSku";
 
 export const ListarProdutosTable: React.FC = () => {
 	const { t } = useTranslation("common");
 	const { selectedPartnerId } = usePartnerContext();
 	const navigate = useNavigate();
+	const queryClient = useQueryClient();
+	const toast = useToast();
 	const [search, setSearch] = useState("");
 	const [categoriaFilter, setCategoriaFilter] = useState<string>("all");
 	const [sortField, setSortField] = useState<"nome" | null>(null);
 	const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+	const [isSkuDialogOpen, setIsSkuDialogOpen] = useState(false);
+	const [selectedProduto, setSelectedProduto] = useState<any>(null);
 
 	// Debounce para busca
 	const debouncedSearch = useDebounce(search, 500);
+
+	// Mutation para criar SKU
+	const createSkuMutation = useProdutoSkuControllerCreate();
 
 	// Buscar produtos com scroll infinito
 	const {
@@ -124,6 +146,38 @@ export const ListarProdutosTable: React.FC = () => {
 				headers,
 			});
 		}
+	};
+
+	const handleCreateSku = async (skuData: any) => {
+		if (!selectedPartnerId || !selectedProduto) return;
+
+		try {
+			const payload: CreateProdutoSkuDto = {
+				produtoId: selectedProduto.id,
+				cor: skuData.cor || undefined,
+				tamanho: skuData.tamanho || undefined,
+				qtdMinima: skuData.qtdMinima || 0,
+			};
+
+			await createSkuMutation.mutateAsync({
+				data: payload,
+				headers: { "x-parceiro-id": Number(selectedPartnerId) },
+			});
+
+			// Invalidar queries de SKUs para atualizar a lista
+			queryClient.invalidateQueries({
+				queryKey: [{ url: "/produto-sku/produto/:produtoPublicId" }],
+			});
+
+			toast.success(t("products.skus.messages.createSuccess"));
+		} catch {
+			toast.error(t("products.skus.messages.createError"));
+		}
+	};
+
+	const handleOpenSkuDialog = (produto: any) => {
+		setSelectedProduto(produto);
+		setIsSkuDialogOpen(true);
 	};
 
 	// Função para carregar mais dados
@@ -260,6 +314,15 @@ export const ListarProdutosTable: React.FC = () => {
 												variant="ghost"
 												size="sm"
 												className="h-8 w-8 p-0"
+												onClick={() => handleOpenSkuDialog(produto)}
+												title={t("products.actions.createSku")}
+											>
+												<Shirt className="h-4 w-4" />
+											</Button>
+											<Button
+												variant="ghost"
+												size="sm"
+												className="h-8 w-8 p-0"
 												onClick={() => handleAtivarDesativar(produto)}
 												disabled={
 													ativarProduto.isPending || desativarProduto.isPending
@@ -304,6 +367,24 @@ export const ListarProdutosTable: React.FC = () => {
 					</Button>
 				)}
 			</div>
+
+			{/* Dialog para criar SKU */}
+			<Dialog open={isSkuDialogOpen} onOpenChange={setIsSkuDialogOpen}>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>
+							{t("products.skus.newSku")} - {selectedProduto?.nome}
+						</DialogTitle>
+					</DialogHeader>
+					<DialogSku
+						onSubmit={handleCreateSku}
+						onClose={() => {
+							setIsSkuDialogOpen(false);
+							setSelectedProduto(null);
+						}}
+					/>
+				</DialogContent>
+			</Dialog>
 		</div>
 	);
 };

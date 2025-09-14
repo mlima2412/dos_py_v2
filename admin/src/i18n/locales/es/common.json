@@ -840,11 +840,13 @@
 			"newSku": "Nuevo SKU",
 			"editSku": "Editar SKU",
 			"color": "Color",
+			"codCor": "Código del Color",
 			"size": "Tamaño",
 			"minQuantity": "Cantidad Mínima",
 			"lastPurchase": "Última Compra",
 			"noResults": "Ninguno SKU encontrado",
 			"columns": {
+				"code": "Código",
 				"color": "Color",
 				"size": "Tamaño",
 				"minQuantity": "Cant. Mín.",
@@ -854,10 +856,12 @@
 			"placeholders": {
 				"color": "Ingresa el color",
 				"size": "Ingresa el tamaño",
-				"minQuantity": "0"
+				"minQuantity": "0",
+				"codCor": "Ingresa el código hexadecimal del color (ej: FF0000)"
 			},
 			"validations": {
-				"minQuantityMin": "Cantidad mínima debe ser mayor o igual a cero"
+				"minQuantityMin": "Cantidad mínima debe ser mayor o igual a cero",
+				"codCorFormat": "Código del color debe ser hexadecimal (ej: FF0000)"
 			},
 			"actions": {
 				"create": "Crear SKU",

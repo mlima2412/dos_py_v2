@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -20,24 +20,31 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
 
 // Função para criar schema com traduções
 const createFormSchema = (t: (key: string) => string) =>
 	z.object({
 		cor: z.string().min(1, t("products.skus.validations.colorRequired")),
 		tamanho: z.string().min(1, t("products.skus.validations.sizeRequired")),
-		qtdMinima: z
-			.number()
-			.min(0, t("products.skus.validations.minQuantityMin"))
-			.default(0),
+		qtdMinima: z.number().min(0, t("products.skus.validations.minQuantityMin")),
+		codCor: z
+			.string()
+			.regex(/^[0-9A-Fa-f]{0,6}$/, t("products.skus.validations.codCorFormat"))
+			.optional(),
 	});
 
+interface SkuFormData {
+	cor: string;
+	tamanho: string;
+	qtdMinima: number;
+	codCor?: string;
+}
+
 interface DialogSkuProps {
-	onSubmit: (data: any) => void;
+	onSubmit: (data: SkuFormData) => void;
 	onClose: () => void;
-	editingSku?: any;
-	onUpdate?: (data: any) => void;
+	editingSku?: SkuFormData;
+	onUpdate?: (data: SkuFormData) => void;
 }
 
 export function DialogSku({
@@ -51,14 +58,14 @@ export function DialogSku({
 
 	// Criar schema com traduções
 	const formSchema = createFormSchema(t);
-	type FormData = z.infer<typeof formSchema>;
 
-	const form = useForm<FormData>({
+	const form = useForm<SkuFormData>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			cor: "",
 			tamanho: "",
 			qtdMinima: 0,
+			codCor: "",
 		},
 	});
 
@@ -69,15 +76,23 @@ export function DialogSku({
 				cor: editingSku.cor || "",
 				tamanho: editingSku.tamanho || "",
 				qtdMinima: editingSku.qtdMinima || 0,
+				codCor: editingSku.codCor || "",
 			});
 		}
 	}, [editingSku, form]);
 
-	const handleSubmit = (data: FormData) => {
+	const handleSubmit = (data: SkuFormData) => {
 		if (isEditing && onUpdate) {
 			onUpdate(data);
 		} else {
 			onSubmit(data);
+			// Limpar o formulário após criar um SKU
+			form.reset({
+				cor: "",
+				tamanho: "",
+				qtdMinima: 0,
+				codCor: "",
+			});
 		}
 	};
 
@@ -121,6 +136,33 @@ export function DialogSku({
 									<Input
 										placeholder={t("products.skus.placeholders.size")}
 										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					<FormField
+						control={form.control}
+						name="codCor"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>
+									{t("products.skus.codCor")} ({t("common.optional")})
+								</FormLabel>
+								<FormControl>
+									<Input
+										type="text"
+										placeholder={t("products.skus.placeholders.codCor")}
+										{...field}
+										onChange={e => {
+											const value = e.target.value;
+											// Permitir apenas caracteres hexadecimais
+											if (value === "" || /^[0-9A-Fa-f]{0,6}$/.test(value)) {
+												field.onChange(value);
+											}
+										}}
 									/>
 								</FormControl>
 								<FormMessage />

@@ -10,7 +10,14 @@ import {
 
 export class CreateProdutoSkuDto {
   @ApiProperty({
-    description: 'ID do produto pai',
+    description: 'ID do produto SKU',
+    example: 1,
+  })
+  @IsOptional()
+  id: number;
+
+  @ApiProperty({
+    description: 'ID do produto SKU',
     example: 1,
   })
   @IsInt()

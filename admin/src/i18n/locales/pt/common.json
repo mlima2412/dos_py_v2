@@ -949,7 +949,8 @@
 			"view": "Visualizar",
 			"activate": "Ativar",
 			"deactivate": "Desativar",
-			"newSku": "Novo SKU"
+			"newSku": "Novo SKU",
+			"createSku": "Criar SKU"
 		},
 		"messages": {
 			"createSuccess": "Produto criado com sucesso!",
@@ -973,12 +974,15 @@
 			"searchPlaceholder": "Buscar por cor ou tamanho...",
 			"noSearchResults": "Nenhum SKU encontrado para a busca",
 			"color": "Cor",
+			"codCor": "Código da Cor",
 			"size": "Tamanho",
 			"minQuantity": "Quantidade Mínima",
 			"lastPurchase": "Última Compra",
 			"noResults": "Nenhum SKU encontrado",
 			"columns": {
+				"code": "Código",
 				"color": "Cor",
+				"colorVisual": "Cor Visual",
 				"size": "Tamanho",
 				"minQuantity": "Qtd. Mín.",
 				"lastPurchase": "Última Compra",
@@ -987,18 +991,22 @@
 			"placeholders": {
 				"color": "Digite a cor",
 				"size": "Digite o tamanho",
-				"minQuantity": "0"
+				"minQuantity": "0",
+				"codCor": "Digite o código hexadecimal da cor (ex: FF0000)"
 			},
 			"validations": {
 				"colorRequired": "Cor é obrigatória",
 				"sizeRequired": "Tamanho é obrigatório",
-				"minQuantityMin": "Quantidade mínima deve ser maior ou igual a zero"
+				"minQuantityMin": "Quantidade mínima deve ser maior ou igual a zero",
+				"codCorFormat": "Código da cor deve ser hexadecimal (ex: FF0000)"
 			},
 			"actions": {
 				"create": "Criar SKU",
 				"edit": "Editar",
-				"delete": "Excluir"
+				"delete": "Excluir",
+				"selectColor": "Selecionar Cor"
 			},
+			"selectColor": "Selecionar Cor",
 			"messages": {
 				"createSuccess": "SKU criado com sucesso!",
 				"updateSuccess": "SKU atualizado com sucesso!",
@@ -1006,6 +1014,8 @@
 				"createError": "Erro ao criar SKU. Tente novamente.",
 				"updateError": "Erro ao atualizar SKU. Tente novamente.",
 				"deleteError": "Erro ao excluir SKU. Tente novamente.",
+				"colorUpdated": "Cor do SKU atualizada com sucesso!",
+				"colorUpdateError": "Erro ao atualizar cor do SKU. Tente novamente.",
 				"loadError": "Erro ao carregar dados do SKU.",
 				"deleteConfirmTitle": "Excluir SKU",
 				"deleteConfirmDescription": "Tem certeza de que deseja excluir este SKU? Esta ação não pode ser desfeita.",

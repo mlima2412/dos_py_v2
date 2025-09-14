@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import CurrencyInput from "react-currency-input-field";
-import { Save, X, Plus } from "lucide-react";
+import { Save, X, Plus, Edit } from "lucide-react";
 
 import { useToast } from "@/hooks/useToast";
 import { usePartnerContext } from "@/hooks/usePartnerContext";
@@ -264,7 +264,8 @@ export function FormularioProduto() {
 			});
 
 			toast.success(t("products.skus.messages.createSuccess"));
-			setIsSkuDialogOpen(false);
+			// Limpar o formulário para permitir criar outro SKU
+			// O dialog permanece aberto
 		} catch {
 			toast.error(t("products.skus.messages.createError"));
 		}
@@ -292,7 +293,7 @@ export function FormularioProduto() {
 			});
 
 			toast.success(t("products.skus.messages.updateSuccess"));
-			setIsSkuDialogOpen(false);
+			// Não fechar o dialog - manter aberto para editar mais SKUs
 			setEditingSku(null);
 		} catch {
 			toast.error(t("products.skus.messages.updateError"));
@@ -325,6 +326,27 @@ export function FormularioProduto() {
 		setIsSkuDialogOpen(true);
 	};
 
+	const handleColorChange = async (skuId: string, codCor: string) => {
+		if (!selectedPartnerId) return;
+
+		try {
+			await updateSkuMutation.mutateAsync({
+				publicId: skuId,
+				headers: { "x-parceiro-id": Number(selectedPartnerId) },
+				data: { codCor },
+			});
+
+			// Invalidar todas as queries de SKUs para atualizar a lista
+			queryClient.invalidateQueries({
+				queryKey: [{ url: "/produto-sku/produto/:produtoPublicId" }],
+			});
+
+			toast.success(t("products.skus.messages.colorUpdated"));
+		} catch {
+			toast.error(t("products.skus.messages.colorUpdateError"));
+		}
+	};
+
 	const handleDeleteSkuClick = (skuId: string) => {
 		setDeleteSkuId(skuId);
 	};
@@ -347,7 +369,7 @@ export function FormularioProduto() {
 
 	return (
 		<DashboardLayout>
-			<div className="space-y-6">
+			<div className="space-y-6 h-full flex flex-col">
 				<Breadcrumb>
 					<BreadcrumbList>
 						<BreadcrumbItem>
@@ -390,26 +412,20 @@ export function FormularioProduto() {
 										)}
 									</p>
 								</div>
-								<Dialog
-									open={isSkuDialogOpen}
-									onOpenChange={setIsSkuDialogOpen}
-								>
-									<DialogTrigger asChild>
-										<Button>
-											<Plus className="mr-2 h-4 w-4" />
-											{t("products.actions.newSku")}
-										</Button>
-									</DialogTrigger>
-									<DialogSku
-										onSubmit={handleCreateSku}
-										onClose={() => {
-											setIsSkuDialogOpen(false);
-											setEditingSku(null);
-										}}
-										editingSku={editingSku}
-										onUpdate={handleUpdateSku}
-									/>
-								</Dialog>
+								<div className="flex items-center space-x-4">
+									{/* Imagem do produto */}
+									<div className="w-16 h-16 rounded-lg border-2 border-gray-200 flex items-center justify-center overflow-hidden">
+										{produto.imgURL ? (
+											<img
+												src={produto.imgURL}
+												alt={produto.nome}
+												className="w-full h-full object-cover"
+											/>
+										) : (
+											<Edit className="h-8 w-8 text-gray-400" />
+										)}
+									</div>
+								</div>
 							</CardTitle>
 						</CardHeader>
 					</Card>
@@ -655,12 +671,15 @@ export function FormularioProduto() {
 
 				{/* Tabela de SKUs - apenas para visualização */}
 				{isViewing && (
-					<div className="mt-6">
+					<div className="mt-6 flex-1 flex flex-col min-h-0">
 						<TabelaSkus
 							skus={skus}
 							isLoading={isLoadingSkus}
 							onEdit={handleEditSku}
 							onDelete={handleDeleteSkuClick}
+							onColorChange={handleColorChange}
+							onCreateSku={handleCreateSku}
+							produto={produto}
 						/>
 					</div>
 				)}

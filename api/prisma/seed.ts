@@ -8,6 +8,7 @@ import { CategoriaDespesasService } from '../src/categoria-despesas/categoria-de
 import { SubCategoriaDespesaService } from '../src/subcategoria-despesa/subcategoria-despesa.service';
 import { ClientesService } from '../src/clientes/clientes.service';
 import { ProdutoService } from '../src/produto/produto.service';
+import { ProdutoSkuService } from '../src/produto-sku/produto-sku.service';
 
 import {
   CreateDespesaDto,
@@ -17,6 +18,7 @@ import { CreateCategoriaDespesasDto } from '../src/categoria-despesas/dto/create
 import { CreateSubCategoriaDespesaDto } from '../src/subcategoria-despesa/dto/create-subcategoria-despesa.dto';
 import { CreateClienteDto } from '../src/clientes/dto/create-cliente.dto';
 import { CreateProdutoDto } from '../src/produto/dto/create-produto.dto';
+import { CreateProdutoSkuDto } from '../src/produto-sku/dto/create-produto-sku.dto';
 import { uuidv7 } from 'uuidv7';
 
 async function fetchDespesaFromLegacy(app, legacyDb) {
@@ -148,7 +150,26 @@ async function fetchProdutosFromLegacy(app, legacyDb) {
       precoCompra: precos.rows[0].maior_preco_compra,
       precoVenda: precos.rows[0].maior_preco_venda,
     };
-    await produtoService.create(dto, 1);
+    const produto = await produtoService.create(dto, 1);
+
+    let produtosSku = await legacyDb.query(
+      'SELECT * FROM public."ProdutoVariante" where "produtoId" = $1 order by id asc',
+      [raw.id],
+    );
+    const skuService = app.get(ProdutoSkuService);
+    for (const sku of produtosSku.rows) {
+      console.log(`Criando o sku:${sku.cor}`);
+      const dtoSku: CreateProdutoSkuDto = {
+        id: sku.id,
+        produtoId: produto.id,
+        cor: sku.cor,
+        tamanho: sku.tamanho,
+        codCor: sku.codCor,
+        qtdMinima: sku.qtdMinima,
+        dataUltimaCompra: sku.dataUltimaCompra,
+      };
+      await skuService.create(dtoSku, 1);
+    }
   }
 }
 
