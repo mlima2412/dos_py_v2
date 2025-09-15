@@ -1,0 +1,1 @@
+{"type":"object","properties":{"skuId":{"type":"number","description":"ID do SKU do produto","example":1},"localId":{"type":"number","description":"ID do local de estoque","example":1},"qtd":{"type":"number","description":"Quantidade em estoque","example":50,"minimum":0}},"required":["skuId","localId","qtd"],"x-readme-ref-name":"CreateEstoqueSkuDto"}

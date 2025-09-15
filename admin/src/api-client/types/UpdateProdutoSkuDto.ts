@@ -6,6 +6,11 @@
 
 export type UpdateProdutoSkuDto = {
     /**
+     * @description ID do produto SKU
+     * @type number | undefined
+    */
+    id?: number;
+    /**
      * @description Cor do produto
      * @maxLength 50
      * @type string | undefined

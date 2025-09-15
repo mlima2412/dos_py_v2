@@ -6,7 +6,12 @@
 
 export type CreateProdutoSkuDto = {
     /**
-     * @description ID do produto pai
+     * @description ID do produto SKU
+     * @type number
+    */
+    id: number;
+    /**
+     * @description ID do produto SKU
      * @type number
     */
     produtoId: number;

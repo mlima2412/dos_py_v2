@@ -103,6 +103,7 @@ model Parceiro {
   RollupDespesasMensaisCategoria RollupDespesasMensaisCategoria[]
   Fornecedor                     Fornecedor[]
   Produto                        Produto[]
+  LocalEstoque                   LocalEstoque[]
 
   @@map("parceiro")
 }
@@ -347,16 +348,42 @@ model Produto {
 }
 
 model ProdutoSKU {
-  id               Int       @id @default(autoincrement())
-  publicId         String    @unique @map("public_id")
-  produtoId        Int       @map("produto_id")
-  cor              String?   @map("cor")
-  codCor           Int?      @map("cod_cor") // hexadecimal da cor para usar em sites apps e catalogos
-  tamanho          String?   @map("tamanho")
-  qtdMinima        Int       @default(0) @map("qtd_minima")
-  dataUltimaCompra DateTime? @map("data_ultima_compra")
+  id               Int          @id @default(autoincrement())
+  publicId         String       @unique @map("public_id")
+  produtoId        Int          @map("produto_id")
+  cor              String?      @map("cor")
+  codCor           Int?         @map("cod_cor") // hexadecimal da cor para usar em sites apps e catalogos
+  tamanho          String?      @map("tamanho")
+  qtdMinima        Int          @default(0) @map("qtd_minima")
+  dataUltimaCompra DateTime?    @map("data_ultima_compra")
   // ondelete cascade para quando um produto for deletado, os skus também sejam deletados
-  produto          Produto   @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+  produto          Produto      @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+  EstoqueSKU       EstoqueSKU[]
 
   @@map("produto_sku")
+}
+
+model LocalEstoque {
+  id         Int          @id @default(autoincrement())
+  publicId   String       @unique @map("public_id")
+  parceiroId Int          @map("parceiro_id")
+  nome       String       @map("nome")
+  descricao  String       @map("descricao")
+  endereco   String       @map("endereco")
+  Parceiro   Parceiro     @relation(fields: [parceiroId], references: [id])
+  EstoqueSKU EstoqueSKU[]
+
+  @@index([parceiroId])
+  @@map("local_estoque")
+}
+
+model EstoqueSKU {
+  skuId   Int          @map("sku_id")
+  localId Int          @map("local_id")
+  qtd     Int          @default(0) @map("qtd")
+  sku     ProdutoSKU   @relation(fields: [skuId], references: [id])
+  local   LocalEstoque @relation(fields: [localId], references: [id])
+
+  @@id([localId, skuId])
+  @@map("estoque_sku")
 }

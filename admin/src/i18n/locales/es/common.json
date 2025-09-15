@@ -882,5 +882,59 @@
 				"deleteConfirmConfirm": "Eliminar"
 			}
 		}
+	},
+	"inventory": {
+		"title": "Inventario",
+		"list": "Lista de Inventario",
+		"create": "Nuevo Estoque",
+		"edit": "Editar Inventario",
+		"view": "Visualizar Inventario",
+		"new": "Nuevo Inventario",
+		"search": "Buscar inventario...",
+		"noResults": "Ningún inventario encontrado",
+		"columns": {
+			"name": "Nombre",
+			"description": "Descripción",
+			"partner": "Socio",
+			"actions": "Acciones"
+		},
+		"placeholders": {
+			"search": "Buscar por producto, SKU, local o socio...",
+			"name": "Ingresa el nombre del local de inventario",
+			"description": "Ingresa una descripción para el local de inventario",
+			"address": "Ingresa la dirección del local de inventario",
+			"partner": "Selecciona un socio"
+		},
+		"labels": {
+			"name": "Nombre",
+			"description": "Descripción",
+			"partner": "Socio",
+			"address": "Dirección"
+		},
+		"validations": {
+			"nameRequired": "Nombre es obligatorio",
+			"nameMinLength": "Nombre debe tener al menos 2 caracteres",
+			"nameMaxLength": "Nombre debe tener máximo 255 caracteres",
+			"descriptionMaxLength": "Descripción debe tener máximo 500 caracteres",
+			"addressRequired": "Dirección es obligatoria",
+			"addressMinLength": "Dirección debe tener al menos 5 caracteres",
+			"addressMaxLength": "Dirección debe tener máximo 500 caracteres",
+			"partnerRequired": "Socio es obligatorio"
+		},
+		"actions": {
+			"view": "Visualizar",
+			"edit": "Editar",
+			"update": "Actualizar",
+			"create": "Crear Local",
+			"save": "Guardar",
+			"cancel": "Cancelar"
+		},
+		"messages": {
+			"loadError": "Error al cargar datos del inventario.",
+			"createSuccess": "¡Local de inventario creado con éxito!",
+			"updateSuccess": "¡Local de inventario actualizado con éxito!",
+			"createError": "Error al crear local de inventario. Inténtalo de nuevo.",
+			"updateError": "Error al actualizar local de inventario. Inténtalo de nuevo."
+		}
 	}
 }

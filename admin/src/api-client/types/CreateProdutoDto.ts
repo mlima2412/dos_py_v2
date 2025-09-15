@@ -38,9 +38,9 @@ export type CreateProdutoDto = {
     imgURL?: string;
     /**
      * @description Preço de compra do produto
-     * @type number
+     * @type number | undefined
     */
-    precoCompra: number;
+    precoCompra?: number;
     /**
      * @description Preço de venda do produto
      * @type number

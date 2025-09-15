@@ -8,7 +8,8 @@ import type { ToZod } from "@kubb/plugin-zod/utils";
 import { z } from "zod";
 
 export const updateProdutoSkuDtoSchema = z.object({
-      "cor": z.coerce.string().max(50).describe("Cor do produto").optional(),
+      "id": z.coerce.number().describe("ID do produto SKU").optional(),
+  "cor": z.coerce.string().max(50).describe("Cor do produto").optional(),
   "codCor": z.coerce.number().describe("Código hexadecimal da cor").optional(),
   "tamanho": z.coerce.string().max(10).describe("Tamanho do produto").optional(),
   "qtdMinima": z.coerce.number().default(0).describe("Quantidade mínima em estoque"),

@@ -14,7 +14,7 @@ export const createProdutoDtoSchema = z.object({
   "nome": z.coerce.string().max(255).describe("Nome do produto"),
   "descricao": z.coerce.string().describe("Descrição do produto").optional(),
   "imgURL": z.coerce.string().describe("URL da imagem do produto").optional(),
-  "precoCompra": z.coerce.number().describe("Preço de compra do produto"),
+  "precoCompra": z.coerce.number().describe("Preço de compra do produto").optional(),
   "precoVenda": z.coerce.number().describe("Preço de venda do produto"),
   "consignado": z.boolean().default(false).describe("Se o produto é consignado"),
   "categoriaId": z.coerce.number().describe("ID da categoria do produto").optional(),

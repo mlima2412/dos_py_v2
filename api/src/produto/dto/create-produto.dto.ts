@@ -75,11 +75,13 @@ export class CreateProdutoDto {
     description: 'Preço de compra do produto',
     example: 25.5,
     type: 'number',
+    required: false,
   })
+  @IsOptional()
   @IsNumber({ maxDecimalPlaces: 3 })
   @IsPositive()
   @Type(() => Number)
-  precoCompra: number;
+  precoCompra?: number;
 
   @ApiProperty({
     description: 'Preço de venda do produto',

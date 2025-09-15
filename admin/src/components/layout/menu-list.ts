@@ -217,6 +217,13 @@ export function getMenuList(
 								submenus: [],
 							},
 							{
+								href: "/estoques",
+								label: t("menu.inventory"),
+								active: pathname.includes("/estoques"),
+								icon: Blinds,
+								submenus: [],
+							},
+							{
 								href: "/formPagamento",
 								label: t("menu.paymentMethods"),
 								active: pathname.includes("/formPagamento"),

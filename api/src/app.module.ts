@@ -27,6 +27,8 @@ import { AppController } from './app.controller';
 import { CategoriaProdutoModule } from './categoria-produto/categoria-produto.module';
 import { ProdutoModule } from './produto/produto.module';
 import { ProdutoSkuModule } from './produto-sku/produto-sku.module';
+import { LocalEstoqueModule } from './local-estoque/local-estoque.module';
+import { EstoqueSkuModule } from './estoque-sku/estoque-sku.module';
 
 @Module({
   imports: [
@@ -51,6 +53,8 @@ import { ProdutoSkuModule } from './produto-sku/produto-sku.module';
     CategoriaProdutoModule,
     ProdutoModule,
     ProdutoSkuModule,
+    LocalEstoqueModule,
+    EstoqueSkuModule,
   ],
   controllers: [AppController],
   providers: [

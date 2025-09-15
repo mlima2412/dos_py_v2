@@ -1023,5 +1023,62 @@
 				"deleteConfirmConfirm": "Excluir"
 			}
 		}
+	},
+	"inventory": {
+		"title": "Estoque",
+		"list": "Lista de Estoque",
+		"create": "Novo Estoque",
+		"edit": "Editar Estoque",
+		"view": "Visualizar Estoque",
+		"new": "Novo Estoque",
+		"search": "Buscar estoque...",
+		"noResults": "Nenhum estoque encontrado",
+		"filterByPartner": "Filtrar por parceiro",
+		"allPartners": "Todos os parceiros",
+		"results": "resultados",
+		"columns": {
+			"name": "Nome",
+			"description": "Descrição",
+			"partner": "Parceiro",
+			"actions": "Ações"
+		},
+		"placeholders": {
+			"search": "Buscar por produto, SKU, local ou parceiro...",
+			"name": "Digite o nome do local de estoque",
+			"description": "Digite uma descrição para o local de estoque",
+			"address": "Digite o endereço do local de estoque",
+			"partner": "Selecione um parceiro"
+		},
+		"labels": {
+			"name": "Nome",
+			"description": "Descrição",
+			"partner": "Parceiro",
+			"address": "Endereço"
+		},
+		"validations": {
+			"nameRequired": "Nome é obrigatório",
+			"nameMinLength": "Nome deve ter pelo menos 2 caracteres",
+			"nameMaxLength": "Nome deve ter no máximo 255 caracteres",
+			"descriptionMaxLength": "Descrição deve ter no máximo 500 caracteres",
+			"addressRequired": "Endereço é obrigatório",
+			"addressMinLength": "Endereço deve ter pelo menos 5 caracteres",
+			"addressMaxLength": "Endereço deve ter no máximo 500 caracteres",
+			"partnerRequired": "Parceiro é obrigatório"
+		},
+		"actions": {
+			"view": "Visualizar",
+			"edit": "Editar",
+			"update": "Atualizar",
+			"create": "Criar Local",
+			"save": "Salvar",
+			"cancel": "Cancelar"
+		},
+		"messages": {
+			"loadError": "Erro ao carregar dados do estoque.",
+			"createSuccess": "Local de estoque criado com sucesso!",
+			"updateSuccess": "Local de estoque atualizado com sucesso!",
+			"createError": "Erro ao criar local de estoque. Tente novamente.",
+			"updateError": "Erro ao atualizar local de estoque. Tente novamente."
+		}
 	}
 }
