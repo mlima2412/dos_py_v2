@@ -24,6 +24,8 @@ import { UpdateProdutoDto } from './dto/update-produto.dto';
 import { Produto } from './entities/produto.entity';
 import { ParceiroId } from '../auth/decorators/parceiro-id.decorator';
 import { PaginatedQueryDto } from './dto/paginated-query.dto';
+import { ProdutosPorLocalQueryDto } from './dto/produtos-por-local-query.dto';
+import { ProdutosPorLocalResponseDto } from './dto/produtos-por-local-response.dto';
 
 @ApiTags('Produtos')
 @Controller('produto')
@@ -252,5 +254,41 @@ export class ProdutoController {
     @ParceiroId() parceiroId: number,
   ): Promise<Produto> {
     return this.produtoService.deactivate(publicId, parceiroId);
+  }
+
+  @Get('local/:localId')
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({
+    summary: 'Listar produtos por local de estoque',
+    description:
+      'Lista todos os produtos que possuem SKUs com estoque em um local específico',
+  })
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro logado',
+    required: true,
+    schema: { type: 'integer', example: 1 },
+  })
+  @ApiParam({
+    name: 'localId',
+    description: 'ID público do local de estoque',
+    example: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de produtos com estoque no local especificado',
+    type: [ProdutosPorLocalResponseDto],
+  })
+  @ApiResponse({ status: 404, description: 'Local de estoque não encontrado' })
+  findByLocal(
+    @Param('localId') localId: string,
+    @Query() query: ProdutosPorLocalQueryDto,
+    @ParceiroId() parceiroId: number,
+  ): Promise<ProdutosPorLocalResponseDto[]> {
+    return this.produtoService.findByLocal(
+      localId,
+      parceiroId,
+      query.apenasComEstoque,
+    );
   }
 }

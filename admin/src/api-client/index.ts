@@ -162,6 +162,8 @@ export type { ProdutoControllerFindAllQueryKey } from "./hooks/useProdutoControl
 export type { ProdutoControllerFindAllSuspenseQueryKey } from "./hooks/useProdutoControllerFindAllSuspense.ts";
 export type { ProdutoControllerFindByCategoriaQueryKey } from "./hooks/useProdutoControllerFindByCategoria.ts";
 export type { ProdutoControllerFindByCategoriaSuspenseQueryKey } from "./hooks/useProdutoControllerFindByCategoriaSuspense.ts";
+export type { ProdutoControllerFindByLocalQueryKey } from "./hooks/useProdutoControllerFindByLocal.ts";
+export type { ProdutoControllerFindByLocalSuspenseQueryKey } from "./hooks/useProdutoControllerFindByLocalSuspense.ts";
 export type { ProdutoControllerFindOneQueryKey } from "./hooks/useProdutoControllerFindOne.ts";
 export type { ProdutoControllerFindOneSuspenseQueryKey } from "./hooks/useProdutoControllerFindOneSuspense.ts";
 export type { ProdutoControllerFindPaginatedQueryKey } from "./hooks/useProdutoControllerFindPaginated.ts";
@@ -249,6 +251,7 @@ export type { CategoriaProdutoControllerFindAll200, CategoriaProdutoControllerFi
 export type { CategoriaProdutoControllerFindOnePathParams, CategoriaProdutoControllerFindOne200, CategoriaProdutoControllerFindOne404, CategoriaProdutoControllerFindOneQueryResponse, CategoriaProdutoControllerFindOneQuery } from "./types/CategoriaProdutoControllerFindOne.ts";
 export type { CategoriaProdutoControllerRemovePathParams, CategoriaProdutoControllerRemove200, CategoriaProdutoControllerRemove400, CategoriaProdutoControllerRemove404, CategoriaProdutoControllerRemoveMutationResponse, CategoriaProdutoControllerRemoveMutation } from "./types/CategoriaProdutoControllerRemove.ts";
 export type { CategoriaProdutoControllerUpdatePathParams, CategoriaProdutoControllerUpdate200, CategoriaProdutoControllerUpdate400, CategoriaProdutoControllerUpdate404, CategoriaProdutoControllerUpdate409, CategoriaProdutoControllerUpdateMutationRequest, CategoriaProdutoControllerUpdateMutationResponse, CategoriaProdutoControllerUpdateMutation } from "./types/CategoriaProdutoControllerUpdate.ts";
+export type { CategoriaResponseDto } from "./types/CategoriaResponseDto.ts";
 export type { ClienteLinguagemEnum, Cliente } from "./types/Cliente.ts";
 export type { ClientesControllerActivatePathParams, ClientesControllerActivate200, ClientesControllerActivate404, ClientesControllerActivateMutationResponse, ClientesControllerActivateMutation } from "./types/ClientesControllerActivate.ts";
 export type { ClientesControllerCreate201, ClientesControllerCreate400, ClientesControllerCreate409, ClientesControllerCreateMutationRequest, ClientesControllerCreateMutationResponse, ClientesControllerCreateMutation } from "./types/ClientesControllerCreate.ts";
@@ -369,6 +372,7 @@ export type { ProdutoControllerCreateHeaderParams, ProdutoControllerCreate201, P
 export type { ProdutoControllerDeactivatePathParams, ProdutoControllerDeactivateHeaderParams, ProdutoControllerDeactivate200, ProdutoControllerDeactivate404, ProdutoControllerDeactivateMutationResponse, ProdutoControllerDeactivateMutation } from "./types/ProdutoControllerDeactivate.ts";
 export type { ProdutoControllerFindAllHeaderParams, ProdutoControllerFindAll200, ProdutoControllerFindAllQueryResponse, ProdutoControllerFindAllQuery } from "./types/ProdutoControllerFindAll.ts";
 export type { ProdutoControllerFindByCategoriaPathParams, ProdutoControllerFindByCategoriaHeaderParams, ProdutoControllerFindByCategoria200, ProdutoControllerFindByCategoriaQueryResponse, ProdutoControllerFindByCategoriaQuery } from "./types/ProdutoControllerFindByCategoria.ts";
+export type { ProdutoControllerFindByLocalPathParams, ProdutoControllerFindByLocalQueryParams, ProdutoControllerFindByLocalHeaderParams, ProdutoControllerFindByLocal200, ProdutoControllerFindByLocal404, ProdutoControllerFindByLocalQueryResponse, ProdutoControllerFindByLocalQuery } from "./types/ProdutoControllerFindByLocal.ts";
 export type { ProdutoControllerFindOnePathParams, ProdutoControllerFindOneHeaderParams, ProdutoControllerFindOne200, ProdutoControllerFindOne404, ProdutoControllerFindOneQueryResponse, ProdutoControllerFindOneQuery } from "./types/ProdutoControllerFindOne.ts";
 export type { ProdutoControllerFindPaginatedQueryParams, ProdutoControllerFindPaginatedHeaderParams, ProdutoControllerFindPaginated200, ProdutoControllerFindPaginatedQueryResponse, ProdutoControllerFindPaginatedQuery } from "./types/ProdutoControllerFindPaginated.ts";
 export type { ProdutoControllerUpdatePathParams, ProdutoControllerUpdateHeaderParams, ProdutoControllerUpdate200, ProdutoControllerUpdate400, ProdutoControllerUpdate404, ProdutoControllerUpdate409, ProdutoControllerUpdateMutationRequest, ProdutoControllerUpdateMutationResponse, ProdutoControllerUpdateMutation } from "./types/ProdutoControllerUpdate.ts";
@@ -380,6 +384,8 @@ export type { ProdutoSkuControllerFindOnePathParams, ProdutoSkuControllerFindOne
 export type { ProdutoSkuControllerFindPaginatedQueryParams, ProdutoSkuControllerFindPaginatedHeaderParams, ProdutoSkuControllerFindPaginated200, ProdutoSkuControllerFindPaginatedQueryResponse, ProdutoSkuControllerFindPaginatedQuery } from "./types/ProdutoSkuControllerFindPaginated.ts";
 export type { ProdutoSkuControllerRemovePathParams, ProdutoSkuControllerRemoveHeaderParams, ProdutoSkuControllerRemove204, ProdutoSkuControllerRemove404, ProdutoSkuControllerRemoveMutationResponse, ProdutoSkuControllerRemoveMutation } from "./types/ProdutoSkuControllerRemove.ts";
 export type { ProdutoSkuControllerUpdatePathParams, ProdutoSkuControllerUpdateHeaderParams, ProdutoSkuControllerUpdate200, ProdutoSkuControllerUpdate400, ProdutoSkuControllerUpdate404, ProdutoSkuControllerUpdateMutationRequest, ProdutoSkuControllerUpdateMutationResponse, ProdutoSkuControllerUpdateMutation } from "./types/ProdutoSkuControllerUpdate.ts";
+export type { ProdutoSKUEstoqueResponseDto } from "./types/ProdutoSKUEstoqueResponseDto.ts";
+export type { ProdutosPorLocalResponseDto } from "./types/ProdutosPorLocalResponseDto.ts";
 export type { RefreshTokenDto } from "./types/RefreshTokenDto.ts";
 export type { RequestPasswordResetDto } from "./types/RequestPasswordResetDto.ts";
 export type { ResetPasswordDto } from "./types/ResetPasswordDto.ts";
@@ -595,6 +601,8 @@ export { produtoControllerFindAllQueryKey, produtoControllerFindAll, produtoCont
 export { produtoControllerFindAllSuspenseQueryKey, produtoControllerFindAllSuspense, produtoControllerFindAllSuspenseQueryOptions, useProdutoControllerFindAllSuspense } from "./hooks/useProdutoControllerFindAllSuspense.ts";
 export { produtoControllerFindByCategoriaQueryKey, produtoControllerFindByCategoria, produtoControllerFindByCategoriaQueryOptions, useProdutoControllerFindByCategoria } from "./hooks/useProdutoControllerFindByCategoria.ts";
 export { produtoControllerFindByCategoriaSuspenseQueryKey, produtoControllerFindByCategoriaSuspense, produtoControllerFindByCategoriaSuspenseQueryOptions, useProdutoControllerFindByCategoriaSuspense } from "./hooks/useProdutoControllerFindByCategoriaSuspense.ts";
+export { produtoControllerFindByLocalQueryKey, produtoControllerFindByLocal, produtoControllerFindByLocalQueryOptions, useProdutoControllerFindByLocal } from "./hooks/useProdutoControllerFindByLocal.ts";
+export { produtoControllerFindByLocalSuspenseQueryKey, produtoControllerFindByLocalSuspense, produtoControllerFindByLocalSuspenseQueryOptions, useProdutoControllerFindByLocalSuspense } from "./hooks/useProdutoControllerFindByLocalSuspense.ts";
 export { produtoControllerFindOneQueryKey, produtoControllerFindOne, produtoControllerFindOneQueryOptions, useProdutoControllerFindOne } from "./hooks/useProdutoControllerFindOne.ts";
 export { produtoControllerFindOneSuspenseQueryKey, produtoControllerFindOneSuspense, produtoControllerFindOneSuspenseQueryOptions, useProdutoControllerFindOneSuspense } from "./hooks/useProdutoControllerFindOneSuspense.ts";
 export { produtoControllerFindPaginatedQueryKey, produtoControllerFindPaginated, produtoControllerFindPaginatedQueryOptions, useProdutoControllerFindPaginated } from "./hooks/useProdutoControllerFindPaginated.ts";
@@ -682,6 +690,7 @@ export { categoriaProdutoControllerFindOnePathParamsSchema, categoriaProdutoCont
 export { categoriaProdutoControllerRemovePathParamsSchema, categoriaProdutoControllerRemove200Schema, categoriaProdutoControllerRemove400Schema, categoriaProdutoControllerRemove404Schema, categoriaProdutoControllerRemoveMutationResponseSchema } from "./schemas/categoriaProdutoControllerRemoveSchema.ts";
 export { categoriaProdutoControllerUpdatePathParamsSchema, categoriaProdutoControllerUpdate200Schema, categoriaProdutoControllerUpdate400Schema, categoriaProdutoControllerUpdate404Schema, categoriaProdutoControllerUpdate409Schema, categoriaProdutoControllerUpdateMutationRequestSchema, categoriaProdutoControllerUpdateMutationResponseSchema } from "./schemas/categoriaProdutoControllerUpdateSchema.ts";
 export { categoriaProdutoSchema } from "./schemas/categoriaProdutoSchema.ts";
+export { categoriaResponseDtoSchema } from "./schemas/categoriaResponseDtoSchema.ts";
 export { clienteSchema } from "./schemas/clienteSchema.ts";
 export { clientesControllerActivatePathParamsSchema, clientesControllerActivate200Schema, clientesControllerActivate404Schema, clientesControllerActivateMutationResponseSchema } from "./schemas/clientesControllerActivateSchema.ts";
 export { clientesControllerCreate201Schema, clientesControllerCreate400Schema, clientesControllerCreate409Schema, clientesControllerCreateMutationRequestSchema, clientesControllerCreateMutationResponseSchema } from "./schemas/clientesControllerCreateSchema.ts";
@@ -801,6 +810,7 @@ export { produtoControllerCreateHeaderParamsSchema, produtoControllerCreate201Sc
 export { produtoControllerDeactivatePathParamsSchema, produtoControllerDeactivateHeaderParamsSchema, produtoControllerDeactivate200Schema, produtoControllerDeactivate404Schema, produtoControllerDeactivateMutationResponseSchema } from "./schemas/produtoControllerDeactivateSchema.ts";
 export { produtoControllerFindAllHeaderParamsSchema, produtoControllerFindAll200Schema, produtoControllerFindAllQueryResponseSchema } from "./schemas/produtoControllerFindAllSchema.ts";
 export { produtoControllerFindByCategoriaPathParamsSchema, produtoControllerFindByCategoriaHeaderParamsSchema, produtoControllerFindByCategoria200Schema, produtoControllerFindByCategoriaQueryResponseSchema } from "./schemas/produtoControllerFindByCategoriaSchema.ts";
+export { produtoControllerFindByLocalPathParamsSchema, produtoControllerFindByLocalQueryParamsSchema, produtoControllerFindByLocalHeaderParamsSchema, produtoControllerFindByLocal200Schema, produtoControllerFindByLocal404Schema, produtoControllerFindByLocalQueryResponseSchema } from "./schemas/produtoControllerFindByLocalSchema.ts";
 export { produtoControllerFindOnePathParamsSchema, produtoControllerFindOneHeaderParamsSchema, produtoControllerFindOne200Schema, produtoControllerFindOne404Schema, produtoControllerFindOneQueryResponseSchema } from "./schemas/produtoControllerFindOneSchema.ts";
 export { produtoControllerFindPaginatedQueryParamsSchema, produtoControllerFindPaginatedHeaderParamsSchema, produtoControllerFindPaginated200Schema, produtoControllerFindPaginatedQueryResponseSchema } from "./schemas/produtoControllerFindPaginatedSchema.ts";
 export { produtoControllerUpdatePathParamsSchema, produtoControllerUpdateHeaderParamsSchema, produtoControllerUpdate200Schema, produtoControllerUpdate400Schema, produtoControllerUpdate404Schema, produtoControllerUpdate409Schema, produtoControllerUpdateMutationRequestSchema, produtoControllerUpdateMutationResponseSchema } from "./schemas/produtoControllerUpdateSchema.ts";
@@ -812,7 +822,9 @@ export { produtoSkuControllerFindOnePathParamsSchema, produtoSkuControllerFindOn
 export { produtoSkuControllerFindPaginatedQueryParamsSchema, produtoSkuControllerFindPaginatedHeaderParamsSchema, produtoSkuControllerFindPaginated200Schema, produtoSkuControllerFindPaginatedQueryResponseSchema } from "./schemas/produtoSkuControllerFindPaginatedSchema.ts";
 export { produtoSkuControllerRemovePathParamsSchema, produtoSkuControllerRemoveHeaderParamsSchema, produtoSkuControllerRemove204Schema, produtoSkuControllerRemove404Schema, produtoSkuControllerRemoveMutationResponseSchema } from "./schemas/produtoSkuControllerRemoveSchema.ts";
 export { produtoSkuControllerUpdatePathParamsSchema, produtoSkuControllerUpdateHeaderParamsSchema, produtoSkuControllerUpdate200Schema, produtoSkuControllerUpdate400Schema, produtoSkuControllerUpdate404Schema, produtoSkuControllerUpdateMutationRequestSchema, produtoSkuControllerUpdateMutationResponseSchema } from "./schemas/produtoSkuControllerUpdateSchema.ts";
+export { produtoSKUEstoqueResponseDtoSchema } from "./schemas/produtoSKUEstoqueResponseDtoSchema.ts";
 export { produtoSKUSchema } from "./schemas/produtoSKUSchema.ts";
+export { produtosPorLocalResponseDtoSchema } from "./schemas/produtosPorLocalResponseDtoSchema.ts";
 export { refreshTokenDtoSchema } from "./schemas/refreshTokenDtoSchema.ts";
 export { requestPasswordResetDtoSchema } from "./schemas/requestPasswordResetDtoSchema.ts";
 export { resetPasswordDtoSchema } from "./schemas/resetPasswordDtoSchema.ts";

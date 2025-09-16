@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { ListarEstoques } from "./ListarEstoques";
 import { CriarEditarLocalEstoque } from "./CriarEditarLocalEstoque";
+import { VisualizarEstoque } from "./VisualizarEstoque";
 
 export function EstoquesRoutes() {
 	return (
@@ -15,6 +16,7 @@ export function EstoquesRoutes() {
 				path=":id/visualizar"
 				element={<CriarEditarLocalEstoque mode="view" />}
 			/>
+			<Route path="visualizar" element={<VisualizarEstoque />} />
 		</Routes>
 	);
 }

@@ -158,6 +158,7 @@
 		"products": {
 			"main": "Produtos",
 			"list": "Lista de Produtos",
+			"stocks": "Estoques",
 			"categories": "Categorias"
 		},
 		"inventory": "Estoque",
@@ -1029,7 +1030,6 @@
 		"list": "Lista de Estoque",
 		"create": "Novo Estoque",
 		"edit": "Editar Estoque",
-		"view": "Visualizar Estoque",
 		"new": "Novo Estoque",
 		"search": "Buscar estoque...",
 		"noResults": "Nenhum estoque encontrado",
@@ -1066,7 +1066,6 @@
 			"partnerRequired": "Parceiro é obrigatório"
 		},
 		"actions": {
-			"view": "Visualizar",
 			"edit": "Editar",
 			"update": "Atualizar",
 			"create": "Criar Local",
@@ -1079,6 +1078,32 @@
 			"updateSuccess": "Local de estoque atualizado com sucesso!",
 			"createError": "Erro ao criar local de estoque. Tente novamente.",
 			"updateError": "Erro ao atualizar local de estoque. Tente novamente."
+		},
+		"view": {
+			"selectLocation": "Selecione um local de estoque",
+			"noLocations": "Nenhum local de estoque encontrado",
+			"noProducts": "Nenhum produto encontrado neste local",
+			"noSkus": "Nenhum SKU encontrado para este produto",
+			"location": "Local",
+			"products": "Produtos",
+			"skus": "SKUs",
+			"productName": "Nome do Produto",
+			"skuCode": "Código SKU",
+			"color": "Cor",
+			"size": "Tamanho",
+			"quantity": "Quantidade",
+			"minQuantity": "Qtd. Mínima",
+			"lastPurchase": "Última Compra",
+			"searchProducts": "Buscar produtos...",
+			"filterByCategory": "Filtrar por categoria",
+			"allCategories": "Todas as categorias",
+			"selectProduct": "Selecione um produto para ver os SKUs",
+			"loadingLocations": "Carregando locais...",
+			"loadingProducts": "Carregando produtos...",
+			"loadingSkus": "Carregando SKUs...",
+			"errorLoadingLocations": "Erro ao carregar locais de estoque",
+			"errorLoadingProducts": "Erro ao carregar produtos",
+			"errorLoadingSkus": "Erro ao carregar SKUs"
 		}
 	}
 }

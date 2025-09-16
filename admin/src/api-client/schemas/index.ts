@@ -24,6 +24,7 @@ export { categoriaProdutoControllerFindOnePathParamsSchema, categoriaProdutoCont
 export { categoriaProdutoControllerRemovePathParamsSchema, categoriaProdutoControllerRemove200Schema, categoriaProdutoControllerRemove400Schema, categoriaProdutoControllerRemove404Schema, categoriaProdutoControllerRemoveMutationResponseSchema } from "./categoriaProdutoControllerRemoveSchema.ts";
 export { categoriaProdutoControllerUpdatePathParamsSchema, categoriaProdutoControllerUpdate200Schema, categoriaProdutoControllerUpdate400Schema, categoriaProdutoControllerUpdate404Schema, categoriaProdutoControllerUpdate409Schema, categoriaProdutoControllerUpdateMutationRequestSchema, categoriaProdutoControllerUpdateMutationResponseSchema } from "./categoriaProdutoControllerUpdateSchema.ts";
 export { categoriaProdutoSchema } from "./categoriaProdutoSchema.ts";
+export { categoriaResponseDtoSchema } from "./categoriaResponseDtoSchema.ts";
 export { clienteSchema } from "./clienteSchema.ts";
 export { clientesControllerActivatePathParamsSchema, clientesControllerActivate200Schema, clientesControllerActivate404Schema, clientesControllerActivateMutationResponseSchema } from "./clientesControllerActivateSchema.ts";
 export { clientesControllerCreate201Schema, clientesControllerCreate400Schema, clientesControllerCreate409Schema, clientesControllerCreateMutationRequestSchema, clientesControllerCreateMutationResponseSchema } from "./clientesControllerCreateSchema.ts";
@@ -143,6 +144,7 @@ export { produtoControllerCreateHeaderParamsSchema, produtoControllerCreate201Sc
 export { produtoControllerDeactivatePathParamsSchema, produtoControllerDeactivateHeaderParamsSchema, produtoControllerDeactivate200Schema, produtoControllerDeactivate404Schema, produtoControllerDeactivateMutationResponseSchema } from "./produtoControllerDeactivateSchema.ts";
 export { produtoControllerFindAllHeaderParamsSchema, produtoControllerFindAll200Schema, produtoControllerFindAllQueryResponseSchema } from "./produtoControllerFindAllSchema.ts";
 export { produtoControllerFindByCategoriaPathParamsSchema, produtoControllerFindByCategoriaHeaderParamsSchema, produtoControllerFindByCategoria200Schema, produtoControllerFindByCategoriaQueryResponseSchema } from "./produtoControllerFindByCategoriaSchema.ts";
+export { produtoControllerFindByLocalPathParamsSchema, produtoControllerFindByLocalQueryParamsSchema, produtoControllerFindByLocalHeaderParamsSchema, produtoControllerFindByLocal200Schema, produtoControllerFindByLocal404Schema, produtoControllerFindByLocalQueryResponseSchema } from "./produtoControllerFindByLocalSchema.ts";
 export { produtoControllerFindOnePathParamsSchema, produtoControllerFindOneHeaderParamsSchema, produtoControllerFindOne200Schema, produtoControllerFindOne404Schema, produtoControllerFindOneQueryResponseSchema } from "./produtoControllerFindOneSchema.ts";
 export { produtoControllerFindPaginatedQueryParamsSchema, produtoControllerFindPaginatedHeaderParamsSchema, produtoControllerFindPaginated200Schema, produtoControllerFindPaginatedQueryResponseSchema } from "./produtoControllerFindPaginatedSchema.ts";
 export { produtoControllerUpdatePathParamsSchema, produtoControllerUpdateHeaderParamsSchema, produtoControllerUpdate200Schema, produtoControllerUpdate400Schema, produtoControllerUpdate404Schema, produtoControllerUpdate409Schema, produtoControllerUpdateMutationRequestSchema, produtoControllerUpdateMutationResponseSchema } from "./produtoControllerUpdateSchema.ts";
@@ -154,7 +156,9 @@ export { produtoSkuControllerFindOnePathParamsSchema, produtoSkuControllerFindOn
 export { produtoSkuControllerFindPaginatedQueryParamsSchema, produtoSkuControllerFindPaginatedHeaderParamsSchema, produtoSkuControllerFindPaginated200Schema, produtoSkuControllerFindPaginatedQueryResponseSchema } from "./produtoSkuControllerFindPaginatedSchema.ts";
 export { produtoSkuControllerRemovePathParamsSchema, produtoSkuControllerRemoveHeaderParamsSchema, produtoSkuControllerRemove204Schema, produtoSkuControllerRemove404Schema, produtoSkuControllerRemoveMutationResponseSchema } from "./produtoSkuControllerRemoveSchema.ts";
 export { produtoSkuControllerUpdatePathParamsSchema, produtoSkuControllerUpdateHeaderParamsSchema, produtoSkuControllerUpdate200Schema, produtoSkuControllerUpdate400Schema, produtoSkuControllerUpdate404Schema, produtoSkuControllerUpdateMutationRequestSchema, produtoSkuControllerUpdateMutationResponseSchema } from "./produtoSkuControllerUpdateSchema.ts";
+export { produtoSKUEstoqueResponseDtoSchema } from "./produtoSKUEstoqueResponseDtoSchema.ts";
 export { produtoSKUSchema } from "./produtoSKUSchema.ts";
+export { produtosPorLocalResponseDtoSchema } from "./produtosPorLocalResponseDtoSchema.ts";
 export { refreshTokenDtoSchema } from "./refreshTokenDtoSchema.ts";
 export { requestPasswordResetDtoSchema } from "./requestPasswordResetDtoSchema.ts";
 export { resetPasswordDtoSchema } from "./resetPasswordDtoSchema.ts";

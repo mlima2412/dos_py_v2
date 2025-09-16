@@ -109,18 +109,16 @@ export function getMenuList(
 							active: pathname === "/produtos",
 						},
 						{
+							href: "/estoques/visualizar",
+							label: t("menu.products.stocks"),
+							active: pathname.includes("/estoques/visualizar"),
+						},
+						{
 							href: "/produto/categorias",
 							label: t("menu.products.categories"),
 							active: pathname.includes("/produto/categorias"),
 						},
 					],
-				},
-				{
-					href: "/estoque",
-					label: t("menu.inventory"),
-					active: pathname.includes("/estoque"),
-					icon: Blinds,
-					submenus: [],
 				},
 				{
 					href: "/pedidoCompra",

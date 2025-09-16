@@ -303,4 +303,95 @@ export class ProdutoService {
       ProdutoSKU: data.ProdutoSKU,
     });
   }
+
+  async findByLocal(
+    localPublicId: string,
+    parceiroId: number,
+    apenasComEstoque: boolean = true,
+  ): Promise<any[]> {
+    // Primeiro, buscar o local pelo publicId para obter o ID interno
+    const local = await this.prisma.localEstoque.findFirst({
+      where: {
+        publicId: localPublicId,
+        parceiroId, // Garantir que o local pertence ao parceiro
+      },
+    });
+
+    if (!local) {
+      throw new NotFoundException('Local de estoque não encontrado');
+    }
+
+    const whereCondition: any = {
+      parceiroId,
+      ProdutoSKU: {
+        some: {
+          EstoqueSKU: {
+            some: {
+              localId: local.id,
+              ...(apenasComEstoque && { qtd: { gt: 0 } }),
+            },
+          },
+        },
+      },
+    };
+
+    const produtos = await this.prisma.produto.findMany({
+      where: whereCondition,
+      select: {
+        id: true,
+        publicId: true,
+        nome: true,
+        descricao: true,
+        imgURL: true,
+        precoVenda: true,
+        precoCompra: true,
+        ativo: true,
+        consignado: true,
+        categoria: {
+          select: {
+            id: true,
+            descricao: true,
+          },
+        },
+        ProdutoSKU: {
+          where: {
+            EstoqueSKU: {
+              some: {
+                localId: local.id,
+              },
+            },
+          },
+          select: {
+            id: true,
+            publicId: true,
+            cor: true,
+            tamanho: true,
+            codCor: true,
+            qtdMinima: true,
+            EstoqueSKU: {
+              where: {
+                localId: local.id,
+              },
+              select: {
+                qtd: true,
+              },
+            },
+          },
+          orderBy: { cor: 'asc' },
+        },
+      },
+      orderBy: { nome: 'asc' },
+    });
+
+    // Transformar os dados para incluir informações de estoque de forma mais clara
+    return produtos.map(produto => ({
+      ...produto,
+      precoVenda: Number(produto.precoVenda),
+      precoCompra: Number(produto.precoCompra),
+      ProdutoSKU: produto.ProdutoSKU.map(sku => ({
+        ...sku,
+        estoque: sku.EstoqueSKU[0]?.qtd || 0,
+      })).map(({ ...rest }) => rest),
+    }));
+  }
 }

@@ -162,6 +162,8 @@ export type { ProdutoControllerFindAllQueryKey } from "./useProdutoControllerFin
 export type { ProdutoControllerFindAllSuspenseQueryKey } from "./useProdutoControllerFindAllSuspense.ts";
 export type { ProdutoControllerFindByCategoriaQueryKey } from "./useProdutoControllerFindByCategoria.ts";
 export type { ProdutoControllerFindByCategoriaSuspenseQueryKey } from "./useProdutoControllerFindByCategoriaSuspense.ts";
+export type { ProdutoControllerFindByLocalQueryKey } from "./useProdutoControllerFindByLocal.ts";
+export type { ProdutoControllerFindByLocalSuspenseQueryKey } from "./useProdutoControllerFindByLocalSuspense.ts";
 export type { ProdutoControllerFindOneQueryKey } from "./useProdutoControllerFindOne.ts";
 export type { ProdutoControllerFindOneSuspenseQueryKey } from "./useProdutoControllerFindOneSuspense.ts";
 export type { ProdutoControllerFindPaginatedQueryKey } from "./useProdutoControllerFindPaginated.ts";
@@ -387,6 +389,8 @@ export { produtoControllerFindAllQueryKey, produtoControllerFindAll, produtoCont
 export { produtoControllerFindAllSuspenseQueryKey, produtoControllerFindAllSuspense, produtoControllerFindAllSuspenseQueryOptions, useProdutoControllerFindAllSuspense } from "./useProdutoControllerFindAllSuspense.ts";
 export { produtoControllerFindByCategoriaQueryKey, produtoControllerFindByCategoria, produtoControllerFindByCategoriaQueryOptions, useProdutoControllerFindByCategoria } from "./useProdutoControllerFindByCategoria.ts";
 export { produtoControllerFindByCategoriaSuspenseQueryKey, produtoControllerFindByCategoriaSuspense, produtoControllerFindByCategoriaSuspenseQueryOptions, useProdutoControllerFindByCategoriaSuspense } from "./useProdutoControllerFindByCategoriaSuspense.ts";
+export { produtoControllerFindByLocalQueryKey, produtoControllerFindByLocal, produtoControllerFindByLocalQueryOptions, useProdutoControllerFindByLocal } from "./useProdutoControllerFindByLocal.ts";
+export { produtoControllerFindByLocalSuspenseQueryKey, produtoControllerFindByLocalSuspense, produtoControllerFindByLocalSuspenseQueryOptions, useProdutoControllerFindByLocalSuspense } from "./useProdutoControllerFindByLocalSuspense.ts";
 export { produtoControllerFindOneQueryKey, produtoControllerFindOne, produtoControllerFindOneQueryOptions, useProdutoControllerFindOne } from "./useProdutoControllerFindOne.ts";
 export { produtoControllerFindOneSuspenseQueryKey, produtoControllerFindOneSuspense, produtoControllerFindOneSuspenseQueryOptions, useProdutoControllerFindOneSuspense } from "./useProdutoControllerFindOneSuspense.ts";
 export { produtoControllerFindPaginatedQueryKey, produtoControllerFindPaginated, produtoControllerFindPaginatedQueryOptions, useProdutoControllerFindPaginated } from "./useProdutoControllerFindPaginated.ts";

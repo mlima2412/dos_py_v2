@@ -41,6 +41,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { useLocaisEstoque } from "@/hooks/useEstoques";
 import { useParceirosAll } from "@/hooks/useParceiros";
+import type { LocalEstoque } from "@/api-client/types";
 import { useDebounce } from "@/hooks/useDebounce";
 import { Link } from "react-router-dom";
 
@@ -83,7 +84,7 @@ export const ListarEstoques: React.FC = () => {
 
 		// Filtrar por parceiro no frontend se necessário
 		if (parceiroFilter !== "all") {
-			allLocais = allLocais.filter((local: any) => {
+			allLocais = allLocais.filter((local: LocalEstoque) => {
 				return local?.parceiroId?.toString() === parceiroFilter;
 			});
 		}
@@ -134,7 +135,7 @@ export const ListarEstoques: React.FC = () => {
 							</BreadcrumbItem>
 							<BreadcrumbSeparator />
 							<BreadcrumbItem>
-								<BreadcrumbPage>{t("menu.inventory")}</BreadcrumbPage>
+								<BreadcrumbPage>{t("menu.produtc.stocks")}</BreadcrumbPage>
 							</BreadcrumbItem>
 						</BreadcrumbList>
 					</Breadcrumb>

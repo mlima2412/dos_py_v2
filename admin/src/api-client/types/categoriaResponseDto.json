@@ -1,0 +1,1 @@
+{"type":"object","properties":{"id":{"type":"number","example":1,"description":"ID da categoria"},"descricao":{"type":"string","example":"Roupas","description":"Descrição da categoria"}},"required":["id","descricao"],"x-readme-ref-name":"CategoriaResponseDto"}

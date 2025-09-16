@@ -9,6 +9,7 @@ import { SubCategoriaDespesaService } from '../src/subcategoria-despesa/subcateg
 import { ClientesService } from '../src/clientes/clientes.service';
 import { ProdutoService } from '../src/produto/produto.service';
 import { ProdutoSkuService } from '../src/produto-sku/produto-sku.service';
+import { EstoqueSkuService } from '../src/estoque-sku/estoque-sku.service';
 
 import {
   CreateDespesaDto,
@@ -19,6 +20,7 @@ import { CreateSubCategoriaDespesaDto } from '../src/subcategoria-despesa/dto/cr
 import { CreateClienteDto } from '../src/clientes/dto/create-cliente.dto';
 import { CreateProdutoDto } from '../src/produto/dto/create-produto.dto';
 import { CreateProdutoSkuDto } from '../src/produto-sku/dto/create-produto-sku.dto';
+import { CreateEstoqueSkuDto } from '../src/estoque-sku/dto/create-estoque-sku.dto';
 import { uuidv7 } from 'uuidv7';
 
 async function fetchDespesaFromLegacy(app, legacyDb) {
@@ -157,6 +159,7 @@ async function fetchProdutosFromLegacy(app, legacyDb) {
       [raw.id],
     );
     const skuService = app.get(ProdutoSkuService);
+    const estoqueService = app.get(EstoqueSkuService);
     for (const sku of produtosSku.rows) {
       console.log(`Criando o sku:${sku.cor}`);
       const dtoSku: CreateProdutoSkuDto = {
@@ -168,7 +171,13 @@ async function fetchProdutosFromLegacy(app, legacyDb) {
         qtdMinima: sku.qtdMinima,
         dataUltimaCompra: sku.dataUltimaCompra,
       };
-      await skuService.create(dtoSku, 1);
+      const skuCreated = await skuService.create(dtoSku, 1);
+      const dtoEstoque: CreateEstoqueSkuDto = {
+        localId: 1, // Estoque principal da migração
+        skuId: skuCreated.id,
+        qtd: sku.qtd,
+      };
+      await estoqueService.create(dtoEstoque);
     }
   }
 }

@@ -8,6 +8,7 @@ import { SubCategoriaDespesaModule } from '../src/subcategoria-despesa/subcatego
 import { ClientesModule } from '../src/clientes/clientes.module';
 import { ProdutoModule } from '../src/produto/produto.module';
 import { ProdutoSkuModule } from '../src/produto-sku/produto-sku.module';
+import { EstoqueSkuModule } from '../src/estoque-sku/estoque-sku.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ProdutoSkuModule } from '../src/produto-sku/produto-sku.module';
     ClientesModule,
     ProdutoModule,
     ProdutoSkuModule,
+    EstoqueSkuModule,
   ],
 })
 export class SeedModule {}

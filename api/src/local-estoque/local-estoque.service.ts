@@ -49,7 +49,7 @@ export class LocalEstoqueService {
 
   async findAll(): Promise<LocalEstoque[]> {
     const locaisEstoque = await this.prisma.localEstoque.findMany({
-      orderBy: { nome: 'asc' },
+      orderBy: { id: 'asc' },
     });
 
     return locaisEstoque.map(local => this.mapToLocalEstoqueEntity(local));
@@ -58,7 +58,7 @@ export class LocalEstoqueService {
   async findByParceiro(parceiroId: number): Promise<LocalEstoque[]> {
     const locaisEstoque = await this.prisma.localEstoque.findMany({
       where: { parceiroId },
-      orderBy: { nome: 'asc' },
+      orderBy: { id: 'asc' },
     });
 
     return locaisEstoque.map(local => this.mapToLocalEstoqueEntity(local));

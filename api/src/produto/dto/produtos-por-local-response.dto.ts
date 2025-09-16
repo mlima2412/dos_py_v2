@@ -1,0 +1,88 @@
+import { ApiProperty } from '@nestjs/swagger';
+
+export class CategoriaResponseDto {
+  @ApiProperty({ example: 1, description: 'ID da categoria' })
+  id: number;
+
+  @ApiProperty({ example: 'Roupas', description: 'Descrição da categoria' })
+  descricao: string;
+}
+
+export class ProdutoSKUEstoqueResponseDto {
+  @ApiProperty({ example: 1, description: 'ID do SKU' })
+  id: number;
+
+  @ApiProperty({ 
+    example: 'f47ac10b-58cc-4372-a567-0e02b2c3d479', 
+    description: 'ID público do SKU' 
+  })
+  publicId: string;
+
+  @ApiProperty({ example: 'Azul', description: 'Cor do produto' })
+  cor: string;
+
+  @ApiProperty({ example: 'M', description: 'Tamanho do produto' })
+  tamanho: string;
+
+  @ApiProperty({ example: 255, description: 'Código da cor' })
+  codCor: number;
+
+  @ApiProperty({ example: 5, description: 'Quantidade mínima em estoque' })
+  qtdMinima: number;
+
+  @ApiProperty({ example: 10, description: 'Quantidade atual em estoque' })
+  estoque: number;
+}
+
+export class ProdutosPorLocalResponseDto {
+  @ApiProperty({ example: 1, description: 'ID do produto' })
+  id: number;
+
+  @ApiProperty({ 
+    example: 'f47ac10b-58cc-4372-a567-0e02b2c3d479', 
+    description: 'ID público do produto' 
+  })
+  publicId: string;
+
+  @ApiProperty({ example: 'Camiseta Básica', description: 'Nome do produto' })
+  nome: string;
+
+  @ApiProperty({ 
+    example: 'Camiseta básica de algodão', 
+    description: 'Descrição do produto',
+    required: false 
+  })
+  descricao?: string;
+
+  @ApiProperty({ 
+    example: 'https://exemplo.com/imagem.jpg', 
+    description: 'URL da imagem do produto',
+    required: false 
+  })
+  imgURL?: string;
+
+  @ApiProperty({ example: 45.90, description: 'Preço de venda' })
+  precoVenda: number;
+
+  @ApiProperty({ example: 25.50, description: 'Preço de compra' })
+  precoCompra: number;
+
+  @ApiProperty({ example: true, description: 'Status ativo do produto' })
+  ativo: boolean;
+
+  @ApiProperty({ example: false, description: 'Produto consignado' })
+  consignado: boolean;
+
+  @ApiProperty({ 
+    type: CategoriaResponseDto, 
+    description: 'Categoria do produto',
+    required: false 
+  })
+  categoria?: CategoriaResponseDto;
+
+  @ApiProperty({ 
+    type: [ProdutoSKUEstoqueResponseDto], 
+    description: 'SKUs do produto com informações de estoque' 
+  })
+  ProdutoSKU: ProdutoSKUEstoqueResponseDto[];
+}
