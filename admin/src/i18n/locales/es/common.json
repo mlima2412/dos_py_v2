@@ -946,8 +946,8 @@
 			"productName": "Nombre del Producto",
 			"skuCode": "Código SKU",
 			"color": "Color",
-			"size": "Tamaño",
-			"quantity": "Cantidad",
+			"size": "Tam",
+			"quantity": "Cntda",
 			"minQuantity": "Cant. Mínima",
 			"lastPurchase": "Última Compra",
 			"searchProducts": "Buscar productos...",
@@ -960,6 +960,27 @@
 			"errorLoadingLocations": "Error al cargar locales de inventario",
 			"errorLoadingProducts": "Error al cargar productos",
 			"errorLoadingSkus": "Error al cargar SKUs"
+		},
+		"adjust": {
+			"title": "Ajuste de Inventario",
+			"currentStock": "Inventario Actual",
+			"adjustmentAmount": "Cantidad de Ajuste",
+			"newStock": "Nuevo Inventario",
+			"increment": "Incrementar",
+			"decrement": "Decrementar",
+			"adjust": "Ajustar",
+			"cancel": "Cancelar",
+			"success": "¡Inventario ajustado con éxito!",
+			"error": "Error al ajustar inventario",
+			"validation": {
+				"amountRequired": "La cantidad de ajuste es obligatoria",
+				"amountPositive": "La cantidad debe ser mayor que cero",
+				"insufficientStock": "Inventario insuficiente para decrementar"
+			},
+			"tooltip": {
+				"title": "Alteración manual del inventario",
+				"description": "En esta acción podrás ajustar manualmente el inventario de cada producto que desees. Ingresa un valor positivo para aumentar el inventario o negativo para disminuir."
+			}
 		}
 	}
 }

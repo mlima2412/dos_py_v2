@@ -29,6 +29,7 @@ import { ProdutoModule } from './produto/produto.module';
 import { ProdutoSkuModule } from './produto-sku/produto-sku.module';
 import { LocalEstoqueModule } from './local-estoque/local-estoque.module';
 import { EstoqueSkuModule } from './estoque-sku/estoque-sku.module';
+import { MovimentoEstoqueModule } from './movimento-estoque/movimento-estoque.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { EstoqueSkuModule } from './estoque-sku/estoque-sku.module';
     ProdutoSkuModule,
     LocalEstoqueModule,
     EstoqueSkuModule,
+    MovimentoEstoqueModule,
   ],
   controllers: [AppController],
   providers: [

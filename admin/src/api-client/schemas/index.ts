@@ -1,3 +1,4 @@
+export { ajusteEstoqueDtoSchema } from "./ajusteEstoqueDtoSchema.ts";
 export { appControllerGetHello200Schema, appControllerGetHelloQueryResponseSchema } from "./appControllerGetHelloSchema.ts";
 export { authControllerGetProfile200Schema, authControllerGetProfileQueryResponseSchema } from "./authControllerGetProfileSchema.ts";
 export { authControllerGetUserParceiros200Schema, authControllerGetUserParceirosQueryResponseSchema } from "./authControllerGetUserParceirosSchema.ts";
@@ -63,6 +64,7 @@ export { createDespesaRecorrenteDtoSchema } from "./createDespesaRecorrenteDtoSc
 export { createEstoqueSkuDtoSchema } from "./createEstoqueSkuDtoSchema.ts";
 export { createFornecedorDtoSchema } from "./createFornecedorDtoSchema.ts";
 export { createLocalEstoqueDtoSchema } from "./createLocalEstoqueDtoSchema.ts";
+export { createMovimentoEstoqueDtoSchema } from "./createMovimentoEstoqueDtoSchema.ts";
 export { createParceiroDtoSchema } from "./createParceiroDtoSchema.ts";
 export { createPerfilDtoSchema } from "./createPerfilDtoSchema.ts";
 export { createProdutoDtoSchema } from "./createProdutoDtoSchema.ts";
@@ -119,8 +121,15 @@ export { localEstoqueControllerFindAll200Schema, localEstoqueControllerFindAllQu
 export { localEstoqueControllerFindOnePathParamsSchema, localEstoqueControllerFindOne200Schema, localEstoqueControllerFindOne404Schema, localEstoqueControllerFindOneQueryResponseSchema } from "./localEstoqueControllerFindOneSchema.ts";
 export { localEstoqueControllerRemovePathParamsSchema, localEstoqueControllerRemove204Schema, localEstoqueControllerRemove404Schema, localEstoqueControllerRemove409Schema, localEstoqueControllerRemoveMutationResponseSchema } from "./localEstoqueControllerRemoveSchema.ts";
 export { localEstoqueControllerUpdatePathParamsSchema, localEstoqueControllerUpdate200Schema, localEstoqueControllerUpdate404Schema, localEstoqueControllerUpdate409Schema, localEstoqueControllerUpdateMutationRequestSchema, localEstoqueControllerUpdateMutationResponseSchema } from "./localEstoqueControllerUpdateSchema.ts";
+export { localEstoqueResponseDtoSchema } from "./localEstoqueResponseDtoSchema.ts";
 export { localEstoqueSchema } from "./localEstoqueSchema.ts";
 export { loginDtoSchema } from "./loginDtoSchema.ts";
+export { movimentoEstoqueControllerAjusteEstoque201Schema, movimentoEstoqueControllerAjusteEstoque400Schema, movimentoEstoqueControllerAjusteEstoque404Schema, movimentoEstoqueControllerAjusteEstoqueMutationRequestSchema, movimentoEstoqueControllerAjusteEstoqueMutationResponseSchema } from "./movimentoEstoqueControllerAjusteEstoqueSchema.ts";
+export { movimentoEstoqueControllerCreate201Schema, movimentoEstoqueControllerCreate400Schema, movimentoEstoqueControllerCreate404Schema, movimentoEstoqueControllerCreateMutationRequestSchema, movimentoEstoqueControllerCreateMutationResponseSchema } from "./movimentoEstoqueControllerCreateSchema.ts";
+export { movimentoEstoqueControllerFindAll200Schema, movimentoEstoqueControllerFindAllQueryResponseSchema } from "./movimentoEstoqueControllerFindAllSchema.ts";
+export { movimentoEstoqueControllerFindHistoricoSkuPathParamsSchema, movimentoEstoqueControllerFindHistoricoSkuQueryParamsSchema, movimentoEstoqueControllerFindHistoricoSku200Schema, movimentoEstoqueControllerFindHistoricoSku404Schema, movimentoEstoqueControllerFindHistoricoSkuQueryResponseSchema } from "./movimentoEstoqueControllerFindHistoricoSkuSchema.ts";
+export { movimentoEstoqueControllerFindOnePathParamsSchema, movimentoEstoqueControllerFindOne200Schema, movimentoEstoqueControllerFindOne404Schema, movimentoEstoqueControllerFindOneQueryResponseSchema } from "./movimentoEstoqueControllerFindOneSchema.ts";
+export { movimentoEstoqueResponseDtoSchema } from "./movimentoEstoqueResponseDtoSchema.ts";
 export { parceiroSchema } from "./parceiroSchema.ts";
 export { parceirosControllerActivateParceiroPathParamsSchema, parceirosControllerActivateParceiro200Schema, parceirosControllerActivateParceiro404Schema, parceirosControllerActivateParceiroMutationResponseSchema } from "./parceirosControllerActivateParceiroSchema.ts";
 export { parceirosControllerCreate201Schema, parceirosControllerCreate400Schema, parceirosControllerCreate409Schema, parceirosControllerCreateMutationRequestSchema, parceirosControllerCreateMutationResponseSchema } from "./parceirosControllerCreateSchema.ts";
@@ -157,6 +166,7 @@ export { produtoSkuControllerFindPaginatedQueryParamsSchema, produtoSkuControlle
 export { produtoSkuControllerRemovePathParamsSchema, produtoSkuControllerRemoveHeaderParamsSchema, produtoSkuControllerRemove204Schema, produtoSkuControllerRemove404Schema, produtoSkuControllerRemoveMutationResponseSchema } from "./produtoSkuControllerRemoveSchema.ts";
 export { produtoSkuControllerUpdatePathParamsSchema, produtoSkuControllerUpdateHeaderParamsSchema, produtoSkuControllerUpdate200Schema, produtoSkuControllerUpdate400Schema, produtoSkuControllerUpdate404Schema, produtoSkuControllerUpdateMutationRequestSchema, produtoSkuControllerUpdateMutationResponseSchema } from "./produtoSkuControllerUpdateSchema.ts";
 export { produtoSKUEstoqueResponseDtoSchema } from "./produtoSKUEstoqueResponseDtoSchema.ts";
+export { produtoSKUResponseDtoSchema } from "./produtoSKUResponseDtoSchema.ts";
 export { produtoSKUSchema } from "./produtoSKUSchema.ts";
 export { produtosPorLocalResponseDtoSchema } from "./produtosPorLocalResponseDtoSchema.ts";
 export { refreshTokenDtoSchema } from "./refreshTokenDtoSchema.ts";
@@ -200,6 +210,7 @@ export { usuarioParceiroControllerFindOnePathParamsSchema, usuarioParceiroContro
 export { usuarioParceiroControllerRemoveByUsuarioAndParceiroPathParamsSchema, usuarioParceiroControllerRemoveByUsuarioAndParceiro204Schema, usuarioParceiroControllerRemoveByUsuarioAndParceiro404Schema, usuarioParceiroControllerRemoveByUsuarioAndParceiroMutationResponseSchema } from "./usuarioParceiroControllerRemoveByUsuarioAndParceiroSchema.ts";
 export { usuarioParceiroControllerRemovePathParamsSchema, usuarioParceiroControllerRemove204Schema, usuarioParceiroControllerRemove404Schema, usuarioParceiroControllerRemoveMutationResponseSchema } from "./usuarioParceiroControllerRemoveSchema.ts";
 export { usuarioParceiroSchema } from "./usuarioParceiroSchema.ts";
+export { usuarioResponseDtoSchema } from "./usuarioResponseDtoSchema.ts";
 export { usuarioSchema } from "./usuarioSchema.ts";
 export { usuariosControllerActivateUserPathParamsSchema, usuariosControllerActivateUser200Schema, usuariosControllerActivateUser404Schema, usuariosControllerActivateUserMutationResponseSchema } from "./usuariosControllerActivateUserSchema.ts";
 export { usuariosControllerCreate201Schema, usuariosControllerCreate400Schema, usuariosControllerCreate409Schema, usuariosControllerCreateMutationRequestSchema, usuariosControllerCreateMutationResponseSchema } from "./usuariosControllerCreateSchema.ts";

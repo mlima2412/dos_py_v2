@@ -1,3 +1,4 @@
+export type { AjusteEstoqueDto } from "./AjusteEstoqueDto.ts";
 export type { AppControllerGetHello200, AppControllerGetHelloQueryResponse, AppControllerGetHelloQuery } from "./AppControllerGetHello.ts";
 export type { AuthControllerGetProfile200, AuthControllerGetProfileQueryResponse, AuthControllerGetProfileQuery } from "./AuthControllerGetProfile.ts";
 export type { AuthControllerGetUserParceiros200, AuthControllerGetUserParceirosQueryResponse, AuthControllerGetUserParceirosQuery } from "./AuthControllerGetUserParceiros.ts";
@@ -63,6 +64,7 @@ export type { CreateDespesaRecorrenteDtoFrequenciaEnum, CreateDespesaRecorrenteD
 export type { CreateEstoqueSkuDto } from "./CreateEstoqueSkuDto.ts";
 export type { CreateFornecedorDto } from "./CreateFornecedorDto.ts";
 export type { CreateLocalEstoqueDto } from "./CreateLocalEstoqueDto.ts";
+export type { CreateMovimentoEstoqueDtoTipoEnum, CreateMovimentoEstoqueDto } from "./CreateMovimentoEstoqueDto.ts";
 export type { CreateParceiroDto } from "./CreateParceiroDto.ts";
 export type { CreatePerfilDto } from "./CreatePerfilDto.ts";
 export type { CreateProdutoDto } from "./CreateProdutoDto.ts";
@@ -120,7 +122,14 @@ export type { LocalEstoqueControllerFindAll200, LocalEstoqueControllerFindAllQue
 export type { LocalEstoqueControllerFindOnePathParams, LocalEstoqueControllerFindOne200, LocalEstoqueControllerFindOne404, LocalEstoqueControllerFindOneQueryResponse, LocalEstoqueControllerFindOneQuery } from "./LocalEstoqueControllerFindOne.ts";
 export type { LocalEstoqueControllerRemovePathParams, LocalEstoqueControllerRemove204, LocalEstoqueControllerRemove404, LocalEstoqueControllerRemove409, LocalEstoqueControllerRemoveMutationResponse, LocalEstoqueControllerRemoveMutation } from "./LocalEstoqueControllerRemove.ts";
 export type { LocalEstoqueControllerUpdatePathParams, LocalEstoqueControllerUpdate200, LocalEstoqueControllerUpdate404, LocalEstoqueControllerUpdate409, LocalEstoqueControllerUpdateMutationRequest, LocalEstoqueControllerUpdateMutationResponse, LocalEstoqueControllerUpdateMutation } from "./LocalEstoqueControllerUpdate.ts";
+export type { LocalEstoqueResponseDto } from "./LocalEstoqueResponseDto.ts";
 export type { LoginDto } from "./LoginDto.ts";
+export type { MovimentoEstoqueControllerAjusteEstoque201, MovimentoEstoqueControllerAjusteEstoque400, MovimentoEstoqueControllerAjusteEstoque404, MovimentoEstoqueControllerAjusteEstoqueMutationRequest, MovimentoEstoqueControllerAjusteEstoqueMutationResponse, MovimentoEstoqueControllerAjusteEstoqueMutation } from "./MovimentoEstoqueControllerAjusteEstoque.ts";
+export type { MovimentoEstoqueControllerCreate201, MovimentoEstoqueControllerCreate400, MovimentoEstoqueControllerCreate404, MovimentoEstoqueControllerCreateMutationRequest, MovimentoEstoqueControllerCreateMutationResponse, MovimentoEstoqueControllerCreateMutation } from "./MovimentoEstoqueControllerCreate.ts";
+export type { MovimentoEstoqueControllerFindAll200, MovimentoEstoqueControllerFindAllQueryResponse, MovimentoEstoqueControllerFindAllQuery } from "./MovimentoEstoqueControllerFindAll.ts";
+export type { MovimentoEstoqueControllerFindHistoricoSkuPathParams, MovimentoEstoqueControllerFindHistoricoSkuQueryParams, MovimentoEstoqueControllerFindHistoricoSku200, MovimentoEstoqueControllerFindHistoricoSku404, MovimentoEstoqueControllerFindHistoricoSkuQueryResponse, MovimentoEstoqueControllerFindHistoricoSkuQuery } from "./MovimentoEstoqueControllerFindHistoricoSku.ts";
+export type { MovimentoEstoqueControllerFindOnePathParams, MovimentoEstoqueControllerFindOne200, MovimentoEstoqueControllerFindOne404, MovimentoEstoqueControllerFindOneQueryResponse, MovimentoEstoqueControllerFindOneQuery } from "./MovimentoEstoqueControllerFindOne.ts";
+export type { MovimentoEstoqueResponseDtoTipoEnum, MovimentoEstoqueResponseDto } from "./MovimentoEstoqueResponseDto.ts";
 export type { Parceiro } from "./Parceiro.ts";
 export type { ParceirosControllerActivateParceiroPathParams, ParceirosControllerActivateParceiro200, ParceirosControllerActivateParceiro404, ParceirosControllerActivateParceiroMutationResponse, ParceirosControllerActivateParceiroMutation } from "./ParceirosControllerActivateParceiro.ts";
 export type { ParceirosControllerCreate201, ParceirosControllerCreate400, ParceirosControllerCreate409, ParceirosControllerCreateMutationRequest, ParceirosControllerCreateMutationResponse, ParceirosControllerCreateMutation } from "./ParceirosControllerCreate.ts";
@@ -158,6 +167,7 @@ export type { ProdutoSkuControllerFindPaginatedQueryParams, ProdutoSkuController
 export type { ProdutoSkuControllerRemovePathParams, ProdutoSkuControllerRemoveHeaderParams, ProdutoSkuControllerRemove204, ProdutoSkuControllerRemove404, ProdutoSkuControllerRemoveMutationResponse, ProdutoSkuControllerRemoveMutation } from "./ProdutoSkuControllerRemove.ts";
 export type { ProdutoSkuControllerUpdatePathParams, ProdutoSkuControllerUpdateHeaderParams, ProdutoSkuControllerUpdate200, ProdutoSkuControllerUpdate400, ProdutoSkuControllerUpdate404, ProdutoSkuControllerUpdateMutationRequest, ProdutoSkuControllerUpdateMutationResponse, ProdutoSkuControllerUpdateMutation } from "./ProdutoSkuControllerUpdate.ts";
 export type { ProdutoSKUEstoqueResponseDto } from "./ProdutoSKUEstoqueResponseDto.ts";
+export type { ProdutoSKUResponseDto } from "./ProdutoSKUResponseDto.ts";
 export type { ProdutosPorLocalResponseDto } from "./ProdutosPorLocalResponseDto.ts";
 export type { RefreshTokenDto } from "./RefreshTokenDto.ts";
 export type { RequestPasswordResetDto } from "./RequestPasswordResetDto.ts";
@@ -201,6 +211,7 @@ export type { UsuarioParceiroControllerFindByUsuarioPathParams, UsuarioParceiroC
 export type { UsuarioParceiroControllerFindOnePathParams, UsuarioParceiroControllerFindOne200, UsuarioParceiroControllerFindOne404, UsuarioParceiroControllerFindOneQueryResponse, UsuarioParceiroControllerFindOneQuery } from "./UsuarioParceiroControllerFindOne.ts";
 export type { UsuarioParceiroControllerRemovePathParams, UsuarioParceiroControllerRemove204, UsuarioParceiroControllerRemove404, UsuarioParceiroControllerRemoveMutationResponse, UsuarioParceiroControllerRemoveMutation } from "./UsuarioParceiroControllerRemove.ts";
 export type { UsuarioParceiroControllerRemoveByUsuarioAndParceiroPathParams, UsuarioParceiroControllerRemoveByUsuarioAndParceiro204, UsuarioParceiroControllerRemoveByUsuarioAndParceiro404, UsuarioParceiroControllerRemoveByUsuarioAndParceiroMutationResponse, UsuarioParceiroControllerRemoveByUsuarioAndParceiroMutation } from "./UsuarioParceiroControllerRemoveByUsuarioAndParceiro.ts";
+export type { UsuarioResponseDto } from "./UsuarioResponseDto.ts";
 export type { UsuariosControllerActivateUserPathParams, UsuariosControllerActivateUser200, UsuariosControllerActivateUser404, UsuariosControllerActivateUserMutationResponse, UsuariosControllerActivateUserMutation } from "./UsuariosControllerActivateUser.ts";
 export type { UsuariosControllerCreate201, UsuariosControllerCreate400, UsuariosControllerCreate409, UsuariosControllerCreateMutationRequest, UsuariosControllerCreateMutationResponse, UsuariosControllerCreateMutation } from "./UsuariosControllerCreate.ts";
 export type { UsuariosControllerDeactivateUserPathParams, UsuariosControllerDeactivateUser200, UsuariosControllerDeactivateUser404, UsuariosControllerDeactivateUserMutationResponse, UsuariosControllerDeactivateUserMutation } from "./UsuariosControllerDeactivateUser.ts";
@@ -214,6 +225,8 @@ export { clienteLinguagemEnum } from "./Cliente.ts";
 export { createClienteDtoLinguagemEnum } from "./CreateClienteDto.ts";
 export { createDespesaDtoTipoPagamentoEnum } from "./CreateDespesaDto.ts";
 export { createDespesaRecorrenteDtoFrequenciaEnum } from "./CreateDespesaRecorrenteDto.ts";
+export { createMovimentoEstoqueDtoTipoEnum } from "./CreateMovimentoEstoqueDto.ts";
 export { despesaRecorrenteFrequenciaEnum } from "./DespesaRecorrente.ts";
+export { movimentoEstoqueResponseDtoTipoEnum } from "./MovimentoEstoqueResponseDto.ts";
 export { updateClienteDtoLinguagemEnum } from "./UpdateClienteDto.ts";
 export { updateDespesaRecorrenteDtoFrequenciaEnum } from "./UpdateDespesaRecorrenteDto.ts";

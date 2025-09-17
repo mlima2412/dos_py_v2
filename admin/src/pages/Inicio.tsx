@@ -43,7 +43,7 @@ export const Inicio: React.FC = () => {
 								{t("dashboard.manageClients")}
 							</p>
 							<Button size="sm" variant="outline" asChild>
-								<Link to="/customers">
+								<Link to="/clientes">
 									{t("common.access")} <ArrowRight className="ml-1 h-3 w-3" />
 								</Link>
 							</Button>
@@ -56,7 +56,9 @@ export const Inicio: React.FC = () => {
 								<div className="p-2 bg-green-100 rounded-lg dark:bg-green-900">
 									<Package className="h-4 w-4 text-green-600 dark:text-green-400" />
 								</div>
-								<CardTitle className="text-sm">{t("menu.products")}</CardTitle>
+								<CardTitle className="text-sm">
+									{t("menu.products.main")}
+								</CardTitle>
 							</div>
 						</CardHeader>
 						<CardContent>
@@ -64,7 +66,7 @@ export const Inicio: React.FC = () => {
 								Catálogo de produtos
 							</p>
 							<Button size="sm" variant="outline" asChild>
-								<Link to="/produto">
+								<Link to="/produtos">
 									Acessar <ArrowRight className="ml-1 h-3 w-3" />
 								</Link>
 							</Button>

@@ -30,6 +30,7 @@ model Usuario {
   createdAt          DateTime             @default(now()) @map("created_at")
   UsuarioParceiro    UsuarioParceiro[]
   PasswordResetToken PasswordResetToken[]
+  MovimentoEstoque   MovimentoEstoque[]
 
   @@map("usuario")
 }
@@ -348,30 +349,36 @@ model Produto {
 }
 
 model ProdutoSKU {
-  id               Int          @id @default(autoincrement())
-  publicId         String       @unique @map("public_id")
-  produtoId        Int          @map("produto_id")
-  cor              String?      @map("cor")
-  codCor           Int?         @map("cod_cor") // hexadecimal da cor para usar em sites apps e catalogos
-  tamanho          String?      @map("tamanho")
-  qtdMinima        Int          @default(0) @map("qtd_minima")
-  dataUltimaCompra DateTime?    @map("data_ultima_compra")
+  id               Int                @id @default(autoincrement())
+  publicId         String             @unique @map("public_id")
+  produtoId        Int                @map("produto_id")
+  cor              String?            @map("cor")
+  codCor           Int?               @map("cod_cor") // hexadecimal da cor para usar em sites apps e catalogos
+  tamanho          String?            @map("tamanho")
+  qtdMinima        Int                @default(0) @map("qtd_minima")
+  dataUltimaCompra DateTime?          @map("data_ultima_compra")
   // ondelete cascade para quando um produto for deletado, os skus também sejam deletados
-  produto          Produto      @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+  produto          Produto            @relation(fields: [produtoId], references: [id], onDelete: Cascade)
   EstoqueSKU       EstoqueSKU[]
+  MovimentoEstoque MovimentoEstoque[]
 
   @@map("produto_sku")
 }
 
 model LocalEstoque {
-  id         Int          @id @default(autoincrement())
-  publicId   String       @unique @map("public_id")
-  parceiroId Int          @map("parceiro_id")
-  nome       String       @map("nome")
-  descricao  String       @map("descricao")
-  endereco   String       @map("endereco")
+  id         Int    @id @default(autoincrement())
+  publicId   String @unique @map("public_id")
+  parceiroId Int    @map("parceiro_id")
+  nome       String @map("nome")
+  descricao  String @map("descricao")
+  endereco   String @map("endereco")
+
   Parceiro   Parceiro     @relation(fields: [parceiroId], references: [id])
   EstoqueSKU EstoqueSKU[]
+
+  // Inversos nomeados das duas relações:
+  MovimentoEstoqueOrigem  MovimentoEstoque[] @relation("Movimento_Origem")
+  MovimentoEstoqueDestino MovimentoEstoque[] @relation("Movimento_Destino")
 
   @@index([parceiroId])
   @@map("local_estoque")
@@ -386,4 +393,35 @@ model EstoqueSKU {
 
   @@id([localId, skuId])
   @@map("estoque_sku")
+}
+
+enum TipoMovimento {
+  ENTRADA
+  SAIDA
+  TRANSFERENCIA
+  CONDICIONAL
+  DEVOLUCAO
+  AJUSTE
+}
+
+// TODO: Falta agregar o id do pedido de compra e venda
+model MovimentoEstoque {
+  id             Int           @id @default(autoincrement())
+  skuId          Int           @map("sku_id")
+  tipo           TipoMovimento @default(ENTRADA)
+  qtd            Int           @default(1)
+  idUsuario      Int           @map("id_usuario")
+  dataMovimento  DateTime      @default(now()) @map("data_movimento")
+  localOrigemId  Int?          @map("local_origem_id")
+  localDestinoId Int?          @map("local_destino_id")
+  observacao     String?       @map("observacao")
+  Usuario        Usuario?      @relation(fields: [idUsuario], references: [id])
+  sku            ProdutoSKU    @relation(fields: [skuId], references: [id])
+  localOrigem    LocalEstoque? @relation("Movimento_Origem", fields: [localOrigemId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  localDestino   LocalEstoque? @relation("Movimento_Destino", fields: [localDestinoId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  @@index([skuId])
+  @@index([localOrigemId])
+  @@index([localDestinoId])
+  @@map("movimento_estoque")
 }

@@ -29,6 +29,12 @@ import {
 import { Search, Package, MapPin, ShoppingCart } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { AdjustStockDialog } from "@/pages/estoques/components/AdjustStockDialog";
 
 import { useLocaisEstoque } from "@/hooks/useEstoques";
 import { useProdutoControllerFindByLocal } from "@/api-client";
@@ -54,6 +60,19 @@ export const VisualizarEstoque: React.FC = () => {
 	);
 	const [productSearch, setProductSearch] = useState("");
 	const [categoryFilter, setCategoryFilter] = useState<string>("all");
+
+	// Estado para o dialog de ajuste de estoque
+	const [adjustDialogOpen, setAdjustDialogOpen] = useState(false);
+	const [selectedSkuForAdjust, setSelectedSkuForAdjust] = useState<{
+		skuId: number;
+		currentStock: number;
+		localId: number;
+		skuInfo: {
+			productName: string;
+			color?: string;
+			size?: string;
+		};
+	} | null>(null);
 
 	const debouncedProductSearch = useDebounce(productSearch, 500);
 
@@ -174,6 +193,35 @@ export const VisualizarEstoque: React.FC = () => {
 	// Estados de loading e error para SKUs (agora baseados nos produtos)
 	const isLoadingSkus = isLoadingProducts;
 	const errorSkus = errorProducts;
+
+	// Função para abrir o dialog de ajuste de estoque
+	const handleAdjustStock = (sku: ProdutoSKUEstoqueResponseDto) => {
+		if (!selectedProduct || !selectedLocationId) return;
+
+		setSelectedSkuForAdjust({
+			skuId: sku.id,
+			currentStock: sku.estoque,
+			localId: selectedLocationId,
+			skuInfo: {
+				productName: selectedProduct.nome,
+				color: sku.cor || undefined,
+				size: sku.tamanho || undefined,
+			},
+		});
+		setAdjustDialogOpen(true);
+	};
+
+	// Função para fechar o dialog de ajuste
+	const handleCloseAdjustDialog = () => {
+		setAdjustDialogOpen(false);
+		setSelectedSkuForAdjust(null);
+	};
+
+	// Função chamada quando o ajuste é bem-sucedido
+	const handleAdjustSuccess = () => {
+		// Aqui você pode invalidar queries ou recarregar dados se necessário
+		// Por exemplo, invalidar a query dos produtos para atualizar os dados
+	};
 
 	return (
 		<DashboardLayout>
@@ -457,17 +505,38 @@ export const VisualizarEstoque: React.FC = () => {
 																	{sku.tamanho || "-"}
 																</TableCell>
 																<TableCell className="text-center">
-																	<Badge
-																		variant={
-																			sku.estoque <= sku.qtdMinima
-																				? "destructive"
-																				: sku.estoque <= sku.qtdMinima * 2
-																					? "secondary"
-																					: "default"
-																		}
-																	>
-																		{sku.estoque}
-																	</Badge>
+																	<Tooltip>
+																		<TooltipTrigger asChild>
+																			<Badge
+																				variant={
+																					sku.estoque <= sku.qtdMinima
+																						? "destructive"
+																						: sku.estoque <= sku.qtdMinima * 2
+																							? "secondary"
+																							: "default"
+																				}
+																				className="cursor-pointer hover:opacity-80 transition-opacity"
+																				onClick={() => handleAdjustStock(sku)}
+																			>
+																				{sku.estoque}
+																			</Badge>
+																		</TooltipTrigger>
+																		<TooltipContent
+																			side="top"
+																			className="max-w-xs"
+																		>
+																			<div className="space-y-1">
+																				<div className="font-semibold">
+																					{t("inventory.adjust.tooltip.title")}
+																				</div>
+																				<div className="text-xs text-muted-foreground">
+																					{t(
+																						"inventory.adjust.tooltip.description"
+																					)}
+																				</div>
+																			</div>
+																		</TooltipContent>
+																	</Tooltip>
 																</TableCell>
 															</TableRow>
 														)
@@ -482,6 +551,19 @@ export const VisualizarEstoque: React.FC = () => {
 					</div>
 				)}
 			</div>
+
+			{/* Dialog de Ajuste de Estoque */}
+			{selectedSkuForAdjust && (
+				<AdjustStockDialog
+					isOpen={adjustDialogOpen}
+					onClose={handleCloseAdjustDialog}
+					skuId={selectedSkuForAdjust.skuId}
+					currentStock={selectedSkuForAdjust.currentStock}
+					localId={selectedSkuForAdjust.localId}
+					skuInfo={selectedSkuForAdjust.skuInfo}
+					onSuccess={handleAdjustSuccess}
+				/>
+			)}
 		</DashboardLayout>
 	);
 };

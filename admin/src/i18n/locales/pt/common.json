@@ -1090,8 +1090,8 @@
 			"productName": "Nome do Produto",
 			"skuCode": "Código SKU",
 			"color": "Cor",
-			"size": "Tamanho",
-			"quantity": "Quantidade",
+			"size": "Tam",
+			"quantity": "Qtd",
 			"minQuantity": "Qtd. Mínima",
 			"lastPurchase": "Última Compra",
 			"searchProducts": "Buscar produtos...",
@@ -1104,6 +1104,27 @@
 			"errorLoadingLocations": "Erro ao carregar locais de estoque",
 			"errorLoadingProducts": "Erro ao carregar produtos",
 			"errorLoadingSkus": "Erro ao carregar SKUs"
+		},
+		"adjust": {
+			"title": "Ajuste de Estoque",
+			"currentStock": "Estoque Atual",
+			"adjustmentAmount": "Quantidade de Ajuste",
+			"newStock": "Novo Estoque",
+			"increment": "Incrementar",
+			"decrement": "Decrementar",
+			"adjust": "Ajustar",
+			"cancel": "Cancelar",
+			"success": "Estoque ajustado com sucesso!",
+			"error": "Erro ao ajustar estoque",
+			"validation": {
+				"amountRequired": "Quantidade de ajuste é obrigatória",
+				"amountPositive": "Quantidade deve ser maior que zero",
+				"insufficientStock": "Estoque insuficiente para decrementar"
+			},
+			"tooltip": {
+				"title": "Alteração manual do estoque",
+				"description": "Nesta ação você poderá ajustar manualmente o estoque de cada produto que desejar. Digite um valor positivo para aumentar o estoque ou negativo para diminuir."
+			}
 		}
 	}
 }
