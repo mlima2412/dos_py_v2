@@ -40,6 +40,7 @@ interface SkuListingProps {
 	error: any;
 	enableStockAdjustment?: boolean;
 	onStockAdjust?: (sku: ProdutoSKUEstoqueResponseDto) => void;
+	onDoubleClick?: (sku: ProdutoSKUEstoqueResponseDto) => void;
 }
 
 export const SkuListing: React.FC<SkuListingProps> = ({
@@ -50,6 +51,7 @@ export const SkuListing: React.FC<SkuListingProps> = ({
 	error,
 	enableStockAdjustment = false,
 	onStockAdjust,
+	onDoubleClick,
 }) => {
 	const { t } = useTranslation("common");
 	const [skuSearch, setSkuSearch] = React.useState("");
@@ -201,7 +203,13 @@ export const SkuListing: React.FC<SkuListingProps> = ({
 								</TableHeader>
 								<TableBody>
 									{filteredSkus.map((sku: ProdutoSKUEstoqueResponseDto) => (
-										<TableRow key={`${sku.id}-${sku.publicId}`}>
+										<TableRow
+											key={`${sku.id}-${sku.publicId}`}
+											onDoubleClick={() => onDoubleClick?.(sku)}
+											className={
+												onDoubleClick ? "cursor-pointer hover:bg-muted/50" : ""
+											}
+										>
 											<TableCell className="font-mono text-sm text-center">
 												{selectedProduct?.id.toString().padStart(3, "0")}-
 												{sku.id.toString().padStart(3, "0")}

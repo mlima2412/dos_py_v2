@@ -1,5 +1,4 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { Edit, Trash2 } from "lucide-react";
 import { HoverActions } from "@/components/ui/HoverActions";
@@ -79,7 +78,7 @@ export function useResponsiveColumns(
 							href: `/produto/categorias/editar/${categoria.id}`,
 						},
 						{
-							type: "delete" as const,
+							type: "custom" as const,
 							label: t("common.delete"),
 							icon: <Trash2 className="h-4 w-4" />,
 							onClick: () => handleDelete(categoria.id!),
@@ -115,7 +114,7 @@ export function useResponsiveColumns(
 						href: `/produto/categorias/editar/${categoria.id}`,
 					},
 					{
-						type: "delete" as const,
+						type: "custom" as const,
 						label: t("common.delete"),
 						icon: <Trash2 className="h-4 w-4" />,
 						onClick: () => handleDelete(categoria.id!),

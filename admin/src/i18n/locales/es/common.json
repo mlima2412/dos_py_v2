@@ -985,6 +985,25 @@
 				"title": "Alteración manual del inventario",
 				"description": "En esta acción podrás ajustar manualmente el inventario de cada producto que desees. Ingresa un valor positivo para aumentar el inventario o negativo para disminuir."
 			}
+		},
+		"transfer": {
+			"title": "Transferencia de Inventario",
+			"locations": "Locales",
+			"sourceLocation": "Local de Salida",
+			"destinationLocation": "Local de Destino",
+			"products": "Productos",
+			"productSkus": "SKUs del Producto",
+			"selectedSkus": "SKUs Seleccionados",
+			"skuCode": "Código SKU",
+			"skuCodePlaceholder": "Ingresa el código del SKU",
+			"selectSourceLocation": "Selecciona el local de salida",
+			"selectProduct": "Selecciona un producto",
+			"doubleClickToAdd": "Haz doble clic para agregar a la transferencia",
+			"noSkusSelected": "Ningún SKU seleccionado",
+			"cancel": "Cancelar",
+			"transfer": "Transferir",
+			"quantity": "Cantidad",
+			"remove": "Eliminar"
 		}
 	}
 }

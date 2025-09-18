@@ -1129,6 +1129,25 @@
 				"title": "Alteração manual do estoque",
 				"description": "Nesta ação você poderá ajustar manualmente o estoque de cada produto que desejar. Digite um valor positivo para aumentar o estoque ou negativo para diminuir."
 			}
+		},
+		"transfer": {
+			"title": "Transferência de Estoque",
+			"locations": "Locais",
+			"sourceLocation": "Local de Saída",
+			"destinationLocation": "Local de Destino",
+			"products": "Produtos",
+			"productSkus": "SKUs do Produto",
+			"selectedSkus": "SKUs Selecionados",
+			"skuCode": "Código SKU",
+			"skuCodePlaceholder": "Digite o código do SKU",
+			"selectSourceLocation": "Selecione o local de saída",
+			"selectProduct": "Selecione um produto",
+			"doubleClickToAdd": "Clique duas vezes para adicionar à transferência",
+			"noSkusSelected": "Nenhum SKU selecionado",
+			"cancel": "Cancelar",
+			"transfer": "Transferir",
+			"quantity": "Quantidade",
+			"remove": "Remover"
 		}
 	}
 }

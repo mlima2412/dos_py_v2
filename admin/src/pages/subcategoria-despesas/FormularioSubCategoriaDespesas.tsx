@@ -127,6 +127,7 @@ const FormularioSubCategoriaDespesas: React.FC = () => {
 			createMutation.mutate(
 				{
 					data: {
+						idSubCategoria: Date.now(), // Gerar ID único temporário
 						descricao: data.descricao,
 						categoriaId: data.categoriaId,
 						ativo: true,

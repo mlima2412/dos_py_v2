@@ -24,6 +24,7 @@ import {
 	type ContasPagarParcelas,
 } from "@/api-client";
 import { useToast } from "@/hooks/useToast";
+import { usePartnerContext } from "@/hooks/usePartnerContext";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface TabelaParcelasProps {
@@ -43,6 +44,7 @@ export function TabelaParcelas({
 	const { t } = useTranslation();
 	const toast = useToast();
 	const queryClient = useQueryClient();
+	const { selectedPartnerId } = usePartnerContext();
 
 	const { data: parcelasData = [], isLoading } =
 		useContasPagarParcelasControllerFindByContasPagar(contasPagarId, {
@@ -65,6 +67,9 @@ export function TabelaParcelas({
 			setLoadingParcela(parcela.publicId);
 			await updateMutation.mutateAsync({
 				publicId: parcela.publicId,
+				headers: {
+					"x-parceiro-id": selectedPartnerId?.toString() || "0",
+				},
 				data: {
 					pago: true,
 					dataPagamento: new Date().toISOString(),

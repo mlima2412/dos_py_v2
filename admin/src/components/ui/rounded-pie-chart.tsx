@@ -8,14 +8,14 @@ import {
 	CardDescription,
 	CardHeader,
 	CardTitle,
-} from "src/components/ui/card";
+} from "@/components/ui/card";
 import {
 	ChartConfig,
 	ChartContainer,
 	ChartTooltip,
 	ChartTooltipContent,
-} from "src/components/ui/chart";
-import { Badge } from "src/components/ui/badge";
+} from "@/components/ui/chart";
+import { Badge } from "@/components/ui/badge";
 import { TrendingUp } from "lucide-react";
 
 export const description = "A pie chart with a label list";

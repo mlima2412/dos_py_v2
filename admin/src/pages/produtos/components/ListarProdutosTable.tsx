@@ -42,7 +42,6 @@ import {
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
-	DialogTrigger,
 } from "@/components/ui/dialog";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/useToast";
@@ -153,6 +152,7 @@ export const ListarProdutosTable: React.FC = () => {
 
 		try {
 			const payload: CreateProdutoSkuDto = {
+				id: Date.now(), // Gerar ID único temporário
 				produtoId: selectedProduto.id,
 				cor: skuData.cor || undefined,
 				tamanho: skuData.tamanho || undefined,

@@ -92,6 +92,9 @@ export const useResponsiveColumns = (
 				for (const parcela of parcelasNaoPagas) {
 					await updateContasPagarParcelasMutation.mutateAsync({
 						publicId: parcela.publicId,
+						headers: {
+							"x-parceiro-id": selectedPartnerId?.toString() || "0",
+						},
 						data: {
 							pago: true,
 							dataPagamento: new Date().toISOString(),
