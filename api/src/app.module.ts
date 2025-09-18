@@ -30,6 +30,8 @@ import { ProdutoSkuModule } from './produto-sku/produto-sku.module';
 import { LocalEstoqueModule } from './local-estoque/local-estoque.module';
 import { EstoqueSkuModule } from './estoque-sku/estoque-sku.module';
 import { MovimentoEstoqueModule } from './movimento-estoque/movimento-estoque.module';
+import { TransferenciaEstoqueModule } from './transferencia-estoque/transferencia-estoque.module';
+import { TransferenciaEstoqueSkuModule } from './transferencia-estoque-sku/transferencia-estoque-sku.module';
 
 @Module({
   imports: [
@@ -57,6 +59,8 @@ import { MovimentoEstoqueModule } from './movimento-estoque/movimento-estoque.mo
     LocalEstoqueModule,
     EstoqueSkuModule,
     MovimentoEstoqueModule,
+    TransferenciaEstoqueModule,
+    TransferenciaEstoqueSkuModule,
   ],
   controllers: [AppController],
   providers: [

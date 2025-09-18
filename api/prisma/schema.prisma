@@ -17,20 +17,22 @@ model Perfil {
 }
 
 model Usuario {
-  id                 Int                  @id @default(autoincrement())
-  publicId           String               @unique @map("public_id")
-  nome               String
-  email              String               @unique
-  telefone           String?              @map("telefone")
-  provider           String               @default("LOCAL") // LOCAL, GOOGLE, FACEBOOK
-  googleId           String?              @map("google_id")
-  senha              String?
-  ativo              Boolean              @default(true)
-  avatar             String?              @default("")
-  createdAt          DateTime             @default(now()) @map("created_at")
-  UsuarioParceiro    UsuarioParceiro[]
-  PasswordResetToken PasswordResetToken[]
-  MovimentoEstoque   MovimentoEstoque[]
+  id                            Int                    @id @default(autoincrement())
+  publicId                      String                 @unique @map("public_id")
+  nome                          String
+  email                         String                 @unique
+  telefone                      String?                @map("telefone")
+  provider                      String                 @default("LOCAL") // LOCAL, GOOGLE, FACEBOOK
+  googleId                      String?                @map("google_id")
+  senha                         String?
+  ativo                         Boolean                @default(true)
+  avatar                        String?                @default("")
+  createdAt                     DateTime               @default(now()) @map("created_at")
+  UsuarioParceiro               UsuarioParceiro[]
+  PasswordResetToken            PasswordResetToken[]
+  MovimentoEstoque              MovimentoEstoque[]
+  TransferenciaEstoqueEnviadas  TransferenciaEstoque[] @relation("UsuarioEnviou")
+  TransferenciaEstoqueRecebidas TransferenciaEstoque[] @relation("UsuarioRecebeu")
 
   @@map("usuario")
 }
@@ -376,9 +378,13 @@ model LocalEstoque {
   Parceiro   Parceiro     @relation(fields: [parceiroId], references: [id])
   EstoqueSKU EstoqueSKU[]
 
-  // Inversos nomeados das duas relações:
+  // Relações com MovimentoEstoque
   MovimentoEstoqueOrigem  MovimentoEstoque[] @relation("Movimento_Origem")
   MovimentoEstoqueDestino MovimentoEstoque[] @relation("Movimento_Destino")
+
+  // Relações com TransferenciaEstoque
+  TransferenciaEstoqueOrigem  TransferenciaEstoque[] @relation("Transferencia_Origem")
+  TransferenciaEstoqueDestino TransferenciaEstoque[] @relation("Transferencia_Destino")
 
   @@index([parceiroId])
   @@map("local_estoque")
@@ -406,22 +412,63 @@ enum TipoMovimento {
 
 // TODO: Falta agregar o id do pedido de compra e venda
 model MovimentoEstoque {
-  id             Int           @id @default(autoincrement())
-  skuId          Int           @map("sku_id")
-  tipo           TipoMovimento @default(ENTRADA)
-  qtd            Int           @default(1)
-  idUsuario      Int           @map("id_usuario")
-  dataMovimento  DateTime      @default(now()) @map("data_movimento")
-  localOrigemId  Int?          @map("local_origem_id")
-  localDestinoId Int?          @map("local_destino_id")
-  observacao     String?       @map("observacao")
-  Usuario        Usuario?      @relation(fields: [idUsuario], references: [id])
-  sku            ProdutoSKU    @relation(fields: [skuId], references: [id])
-  localOrigem    LocalEstoque? @relation("Movimento_Origem", fields: [localOrigemId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  localDestino   LocalEstoque? @relation("Movimento_Destino", fields: [localDestinoId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  id                       Int                        @id @default(autoincrement())
+  skuId                    Int                        @map("sku_id")
+  tipo                     TipoMovimento              @default(ENTRADA)
+  qtd                      Int                        @default(1)
+  idUsuario                Int                        @map("id_usuario")
+  dataMovimento            DateTime                   @default(now()) @map("data_movimento")
+  localOrigemId            Int?                       @map("local_origem_id")
+  localDestinoId           Int?                       @map("local_destino_id")
+  observacao               String?                    @map("observacao")
+  Usuario                  Usuario?                   @relation(fields: [idUsuario], references: [id])
+  sku                      ProdutoSKU                 @relation(fields: [skuId], references: [id])
+  localOrigem              LocalEstoque?              @relation("Movimento_Origem", fields: [localOrigemId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  localDestino             LocalEstoque?              @relation("Movimento_Destino", fields: [localDestinoId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  TransferenciaEstoqueItem TransferenciaEstoqueItem[] @relation("Movimento_Estoque")
 
   @@index([skuId])
   @@index([localOrigemId])
   @@index([localDestinoId])
   @@map("movimento_estoque")
+}
+
+model TransferenciaEstoque {
+  id                   Int       @id @default(autoincrement())
+  publicId             String    @unique @map("public_id")
+  localOrigemId        Int       @map("local_origem_id")
+  localDestinoId       Int       @map("local_destino_id")
+  enviadoPorUsuarioId  Int       @map("enviado_por_usuario_id")
+  recebidoPorUsuarioId Int?      @map("recebido_por_usuario_id")
+  qtd                  Int       @default(1) // quantidade de itens
+  valorTotal           Decimal   @default(0.0) @map("valor_total") @db.Decimal(12, 3)
+  dataTransferencia    DateTime  @default(now()) @map("data_transferencia")
+  dataRecebimento      DateTime? @map("data_recebimento")
+
+  // Relações com Usuario
+  enviadoPorUsuario  Usuario  @relation("UsuarioEnviou", fields: [enviadoPorUsuarioId], references: [id])
+  recebidoPorUsuario Usuario? @relation("UsuarioRecebeu", fields: [recebidoPorUsuarioId], references: [id])
+
+  // Relações com LocalEstoque
+  localOrigem              LocalEstoque               @relation("Transferencia_Origem", fields: [localOrigemId], references: [id])
+  localDestino             LocalEstoque               @relation("Transferencia_Destino", fields: [localDestinoId], references: [id])
+  TransferenciaEstoqueItem TransferenciaEstoqueItem[] @relation("Transferencia_Estoque")
+
+  @@index([localOrigemId])
+  @@index([localDestinoId])
+  @@index([enviadoPorUsuarioId])
+  @@index([recebidoPorUsuarioId])
+  @@map("transferencia_estoque")
+}
+
+model TransferenciaEstoqueItem {
+  id                 Int @id @default(autoincrement())
+  transferenciaId    Int @map("transferencia_id")
+  movimentoEstoqueId Int @map("movimento_estoque_id")
+
+  TransferenciaEstoque TransferenciaEstoque @relation("Transferencia_Estoque", fields: [transferenciaId], references: [id])
+  MovimentoEstoque     MovimentoEstoque     @relation("Movimento_Estoque", fields: [movimentoEstoqueId], references: [id])
+
+  @@index([transferenciaId])
+  @@map("transferencia_estoque_item")
 }

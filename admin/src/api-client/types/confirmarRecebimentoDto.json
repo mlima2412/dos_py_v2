@@ -1,0 +1,1 @@
+{"type":"object","properties":{"observacao":{"type":"string","description":"Observação sobre o recebimento","example":"Mercadoria recebida em perfeito estado"}},"x-readme-ref-name":"ConfirmarRecebimentoDto"}

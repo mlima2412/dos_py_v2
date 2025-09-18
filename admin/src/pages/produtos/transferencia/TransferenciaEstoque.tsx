@@ -32,8 +32,12 @@ import {
 } from "lucide-react";
 import { SkuListing } from "../components/SkuListing";
 import { useLocaisEstoque } from "@/hooks/useEstoques";
-import { useProdutoControllerFindByLocal } from "@/api-client";
+import {
+	useProdutoControllerFindByLocal,
+	useTransferenciaEstoqueControllerCreate,
+} from "@/api-client";
 import { usePartnerContext } from "@/hooks/usePartnerContext";
+import { useToast } from "@/hooks/useToast";
 import { cn } from "@/lib/utils";
 import {
 	Command,
@@ -54,6 +58,7 @@ import type { LocalEstoque } from "@/api-client/types";
 import type {
 	ProdutosPorLocalResponseDto,
 	ProdutoSKUEstoqueResponseDto,
+	CreateTransferenciaEstoqueDto,
 } from "@/api-client/types";
 
 // Componente para seleção de produtos com busca (baseado no comp-229)
@@ -62,7 +67,7 @@ const ProductSelector: React.FC<{
 	selectedProductId: number | null;
 	onProductSelect: (productId: number) => void;
 	isLoading: boolean;
-	error: any;
+	error: unknown;
 	disabled?: boolean;
 }> = ({
 	products,
@@ -313,6 +318,7 @@ const SelectedSkusList: React.FC<{
 export const TransferenciaEstoque: React.FC = () => {
 	const { t } = useTranslation("common");
 	const { selectedPartnerId } = usePartnerContext();
+	const { success: showSuccess, error: showError } = useToast();
 
 	// Estados para seleção de locais
 	const [localSaidaId, setLocalSaidaId] = useState<number | null>(null);
@@ -332,6 +338,22 @@ export const TransferenciaEstoque: React.FC = () => {
 			quantity: number;
 		}>
 	>([]);
+
+	// Hook para criar transferência de estoque
+	const transferenciaMutation = useTransferenciaEstoqueControllerCreate({
+		mutation: {
+			onSuccess: data => {
+				showSuccess(`Transferência criada com sucesso! ID: ${data.publicId}`);
+				handleCancel(); // Limpar todos os campos após sucesso
+			},
+			onError: error => {
+				const errorMessage =
+					error?.data?.message ||
+					"Erro ao criar transferência. Tente novamente.";
+				showError(errorMessage);
+			},
+		},
+	});
 
 	// Buscar locais de estoque do parceiro selecionado
 	const {
@@ -456,6 +478,39 @@ export const TransferenciaEstoque: React.FC = () => {
 		setSkuSearchCode("");
 	};
 
+	// Função para executar a transferência
+	const handleTransfer = async () => {
+		if (!localSaidaId || !localDestinoId || selectedSkus.length === 0) {
+			showError(
+				"Por favor, selecione os locais e pelo menos um SKU para transferir."
+			);
+			return;
+		}
+
+		try {
+			const transferenciaData: CreateTransferenciaEstoqueDto = {
+				localOrigemId: localSaidaId,
+				localDestinoId: localDestinoId,
+				skus: selectedSkus.map(item => ({
+					skuId: item.sku.id,
+					qtd: item.quantity,
+					tipo: "TRANSFERENCIA" as const,
+					localOrigemId: localSaidaId,
+					localDestinoId: localDestinoId,
+					observacao: `Transferência automática - ${item.product.nome}`,
+				})),
+				observacao: `Transferência criada via interface - ${selectedSkus.length} item(s)`,
+			};
+
+			await transferenciaMutation.mutateAsync({
+				data: transferenciaData,
+			});
+		} catch (error) {
+			// O erro já é tratado no onError do hook
+			console.error("Erro na transferência:", error);
+		}
+	};
+
 	// Verificar se pode selecionar produtos (origem e destino definidos)
 	const canSelectProducts = localSaidaId && localDestinoId;
 
@@ -517,59 +572,81 @@ export const TransferenciaEstoque: React.FC = () => {
 							</CardTitle>
 						</CardHeader>
 						<CardContent className="space-y-4">
-							{/* Local de Saída */}
-							<div className="space-y-2">
-								<label className="text-sm font-medium">
-									{t("inventory.transfer.sourceLocation")}
-								</label>
-								<Select
-									value={localSaidaId?.toString() || ""}
-									onValueChange={value => setLocalSaidaId(Number(value))}
-									disabled={isLoadingLocations || !canChangeLocations}
-								>
-									<SelectTrigger>
-										<SelectValue
-											placeholder={t("inventory.transfer.selectSourceLocation")}
-										/>
-									</SelectTrigger>
-									<SelectContent>
-										{locais.map((local: LocalEstoque) => (
-											<SelectItem key={local.id} value={local.id.toString()}>
-												{local.nome}
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
-							</div>
+							{errorLocations ? (
+								<div className="flex items-center justify-center py-8">
+									<div className="text-destructive">
+										{t("inventory.transfer.errorLoadingLocations")}
+									</div>
+								</div>
+							) : (
+								<>
+									{/* Local de Saída */}
+									<div className="space-y-2">
+										<label className="text-sm font-medium">
+											{t("inventory.transfer.sourceLocation")}
+										</label>
+										<Select
+											value={localSaidaId?.toString() || ""}
+											onValueChange={value => setLocalSaidaId(Number(value))}
+											disabled={isLoadingLocations || !canChangeLocations}
+										>
+											<SelectTrigger>
+												<SelectValue
+													placeholder={t(
+														"inventory.transfer.selectSourceLocation"
+													)}
+												/>
+											</SelectTrigger>
+											<SelectContent>
+												{locais.map((local: LocalEstoque) => (
+													<SelectItem
+														key={local.id}
+														value={local.id.toString()}
+													>
+														{local.nome}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+									</div>
 
-							{/* Local de Destino */}
-							<div className="space-y-2">
-								<label className="text-sm font-medium">
-									{t("inventory.transfer.destinationLocation")}
-								</label>
-								<Select
-									value={localDestinoId?.toString() || ""}
-									onValueChange={value => setLocalDestinoId(Number(value))}
-									disabled={
-										isLoadingLocations || !localSaidaId || !canChangeLocations
-									}
-								>
-									<SelectTrigger>
-										<SelectValue
-											placeholder={t("inventory.transfer.destinationLocation")}
-										/>
-									</SelectTrigger>
-									<SelectContent>
-										{locais
-											.filter(loc => loc.id !== localSaidaId)
-											.map((local: LocalEstoque) => (
-												<SelectItem key={local.id} value={local.id.toString()}>
-													{local.nome}
-												</SelectItem>
-											))}
-									</SelectContent>
-								</Select>
-							</div>
+									{/* Local de Destino */}
+									<div className="space-y-2">
+										<label className="text-sm font-medium">
+											{t("inventory.transfer.destinationLocation")}
+										</label>
+										<Select
+											value={localDestinoId?.toString() || ""}
+											onValueChange={value => setLocalDestinoId(Number(value))}
+											disabled={
+												isLoadingLocations ||
+												!localSaidaId ||
+												!canChangeLocations
+											}
+										>
+											<SelectTrigger>
+												<SelectValue
+													placeholder={t(
+														"inventory.transfer.destinationLocation"
+													)}
+												/>
+											</SelectTrigger>
+											<SelectContent>
+												{locais
+													.filter(loc => loc.id !== localSaidaId)
+													.map((local: LocalEstoque) => (
+														<SelectItem
+															key={local.id}
+															value={local.id.toString()}
+														>
+															{local.nome}
+														</SelectItem>
+													))}
+											</SelectContent>
+										</Select>
+									</div>
+								</>
+							)}
 						</CardContent>
 					</Card>
 
@@ -670,11 +747,29 @@ export const TransferenciaEstoque: React.FC = () => {
 
 				{/* Botões de Ação */}
 				<div className="flex justify-end gap-4">
-					<Button variant="outline" onClick={handleCancel}>
+					<Button
+						variant="outline"
+						onClick={handleCancel}
+						disabled={transferenciaMutation.isPending}
+					>
 						{t("inventory.transfer.cancel")}
 					</Button>
-					<Button disabled={selectedSkus.length === 0 || !localDestinoId}>
-						{t("inventory.transfer.transfer")}
+					<Button
+						onClick={handleTransfer}
+						disabled={
+							selectedSkus.length === 0 ||
+							!localDestinoId ||
+							transferenciaMutation.isPending
+						}
+					>
+						{transferenciaMutation.isPending ? (
+							<>
+								<div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+								{t("inventory.transfer.transferring")}
+							</>
+						) : (
+							t("inventory.transfer.transfer")
+						)}
 					</Button>
 				</div>
 			</div>
