@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import CurrencyInput from "react-currency-input-field";
-import { Save, X, Plus, Edit } from "lucide-react";
+import { Save, X, Edit } from "lucide-react";
 
 import { useToast } from "@/hooks/useToast";
 import { usePartnerContext } from "@/hooks/usePartnerContext";
@@ -33,7 +33,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import {
 	Select,
 	SelectContent,
@@ -42,21 +41,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "@/components/ui/table";
-import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog } from "@/components/ui/dialog";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -100,8 +85,8 @@ const createFormSchema = (t: (key: string) => string) =>
 			.number()
 			.min(0.01, t("products.validations.purchasePriceMin")),
 		precoVenda: z.number().min(0.01, t("products.validations.salePriceMin")),
-		ativo: z.boolean().default(true),
-		consignado: z.boolean().default(false),
+		ativo: z.boolean(),
+		consignado: z.boolean(),
 		imgURL: z
 			.string()
 			.url(t("products.validations.imageUrlInvalid"))
@@ -115,15 +100,21 @@ export function FormularioProduto() {
 	const location = useLocation();
 	const { id } = useParams<{ id: string }>();
 	const queryClient = useQueryClient();
-	const { selectedPartnerId, selectedPartnerLocale, selectedPartnerIsoCode } =
-		usePartnerContext();
+	const { selectedPartnerId, selectedPartnerLocale } = usePartnerContext();
 	const isEditing = Boolean(id);
 	const isViewing = location.pathname.includes("/visualizar/");
 
 	const [precoCompraInput, setPrecoCompraInput] = useState<string>("");
 	const [precoVendaInput, setPrecoVendaInput] = useState<string>("");
 	const [isSkuDialogOpen, setIsSkuDialogOpen] = useState(false);
-	const [editingSku, setEditingSku] = useState<any>(null);
+	const [editingSku, setEditingSku] = useState<{
+		id: number;
+		publicId: string;
+		cor?: string;
+		tamanho?: string;
+		qtdMinima: number;
+		codCor?: string;
+	} | null>(null);
 	const [deleteSkuId, setDeleteSkuId] = useState<string | null>(null);
 
 	// Criar schema com traduções
@@ -242,11 +233,17 @@ export function FormularioProduto() {
 		}
 	};
 
-	const handleCreateSku = async (skuData: any) => {
+	const handleCreateSku = async (skuData: {
+		cor: string;
+		tamanho: string;
+		qtdMinima: number;
+		codCor?: string;
+	}) => {
 		if (!selectedPartnerId || !produto?.publicId) return;
 
 		try {
 			const payload: CreateProdutoSkuDto = {
+				id: produto.id,
 				produtoId: produto.id,
 				cor: skuData.cor || undefined,
 				tamanho: skuData.tamanho || undefined,
@@ -271,7 +268,12 @@ export function FormularioProduto() {
 		}
 	};
 
-	const handleUpdateSku = async (skuData: any) => {
+	const handleUpdateSku = async (skuData: {
+		cor: string;
+		tamanho: string;
+		qtdMinima: number;
+		codCor?: string;
+	}) => {
 		if (!selectedPartnerId || !editingSku) return;
 
 		try {
@@ -293,8 +295,9 @@ export function FormularioProduto() {
 			});
 
 			toast.success(t("products.skus.messages.updateSuccess"));
-			// Não fechar o dialog - manter aberto para editar mais SKUs
+			// Fechar o dialog após editar
 			setEditingSku(null);
+			setIsSkuDialogOpen(false);
 		} catch {
 			toast.error(t("products.skus.messages.updateError"));
 		}
@@ -321,7 +324,14 @@ export function FormularioProduto() {
 		}
 	};
 
-	const handleEditSku = (sku: any) => {
+	const handleEditSku = (sku: {
+		id: number;
+		publicId: string;
+		cor?: string;
+		tamanho?: string;
+		qtdMinima: number;
+		codCor?: string;
+	}) => {
 		setEditingSku(sku);
 		setIsSkuDialogOpen(true);
 	};
@@ -353,7 +363,7 @@ export function FormularioProduto() {
 
 	// Prepare options for selects
 	const categoriaOptions = categorias.map(categoria => ({
-		value: categoria.id.toString(),
+		value: categoria.id?.toString() || "",
 		label: categoria.descricao,
 	}));
 
@@ -670,7 +680,7 @@ export function FormularioProduto() {
 				)}
 
 				{/* Tabela de SKUs - apenas para visualização */}
-				{isViewing && (
+				{isViewing && produto && (
 					<div className="mt-6 flex-1 flex flex-col min-h-0">
 						<TabelaSkus
 							skus={skus}
@@ -683,6 +693,28 @@ export function FormularioProduto() {
 						/>
 					</div>
 				)}
+
+				{/* Dialog para editar SKU */}
+				<Dialog open={isSkuDialogOpen} onOpenChange={setIsSkuDialogOpen}>
+					<DialogSku
+						onSubmit={handleCreateSku}
+						onClose={() => {
+							setIsSkuDialogOpen(false);
+							setEditingSku(null);
+						}}
+						editingSku={
+							editingSku
+								? {
+										cor: editingSku.cor || "",
+										tamanho: editingSku.tamanho || "",
+										qtdMinima: editingSku.qtdMinima,
+										codCor: editingSku.codCor,
+									}
+								: undefined
+						}
+						onUpdate={handleUpdateSku}
+					/>
+				</Dialog>
 
 				{/* Dialog de confirmação para excluir SKU */}
 				<AlertDialog

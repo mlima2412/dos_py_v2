@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { z } from "zod";
 import { Save, X, Loader2 } from "lucide-react";
 
-import { DashboardLayout } from "../../components/layout/DashboardLayout";
+import { DashboardLayout } from "../../../components/layout/DashboardLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

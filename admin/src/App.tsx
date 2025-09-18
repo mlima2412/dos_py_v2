@@ -26,7 +26,7 @@ import { NotFound } from "./pages/NotFound";
 import { ClientesRoutes } from "./pages/clientes/clientes";
 import { CategoriasProdutoRoutes } from "./pages/produtos/categorias/categorias";
 import { ProdutosRoutes } from "./pages/produtos/produtos";
-import { EstoquesRoutes } from "./pages/estoques";
+import { EstoquesRoutes } from "./pages/produtos/estoques";
 
 import { ThemeProvider } from "./components/theme-provider";
 import "./i18n";

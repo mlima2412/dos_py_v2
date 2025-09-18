@@ -1,0 +1,282 @@
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
+import { Search, Package, ShoppingCart } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useDebounce } from "@/hooks/useDebounce";
+
+import type {
+	ProdutosPorLocalResponseDto,
+	ProdutoSKUEstoqueResponseDto,
+} from "@/api-client/types";
+
+interface SkuListingProps {
+	selectedProduct: ProdutosPorLocalResponseDto | null;
+	selectedProductId: number | null;
+	skus: ProdutoSKUEstoqueResponseDto[];
+	isLoading: boolean;
+	error: any;
+	enableStockAdjustment?: boolean;
+	onStockAdjust?: (sku: ProdutoSKUEstoqueResponseDto) => void;
+}
+
+export const SkuListing: React.FC<SkuListingProps> = ({
+	selectedProduct,
+	selectedProductId,
+	skus,
+	isLoading,
+	error,
+	enableStockAdjustment = false,
+	onStockAdjust,
+}) => {
+	const { t } = useTranslation("common");
+	const [skuSearch, setSkuSearch] = React.useState("");
+	const [sizeFilter, setSizeFilter] = React.useState<string>("all");
+
+	const debouncedSkuSearch = useDebounce(skuSearch, 500);
+
+	// Filtrar SKUs por busca e tamanho
+	const filteredSkus = React.useMemo(() => {
+		if (!selectedProductId || !skus) return [];
+
+		let filtered = skus;
+
+		// Filtrar por busca (código ou cor)
+		if (debouncedSkuSearch) {
+			filtered = filtered.filter((sku: ProdutoSKUEstoqueResponseDto) => {
+				const searchTerm = debouncedSkuSearch.toLowerCase();
+				const skuCode =
+					`${selectedProduct?.id?.toString().padStart(3, "0")}-${sku.id.toString().padStart(3, "0")}`.toLowerCase();
+				const color = sku.cor?.toLowerCase() || "";
+
+				return skuCode.includes(searchTerm) || color.includes(searchTerm);
+			});
+		}
+
+		// Filtrar por tamanho
+		if (sizeFilter !== "all") {
+			filtered = filtered.filter(
+				(sku: ProdutoSKUEstoqueResponseDto) => sku.tamanho === sizeFilter
+			);
+		}
+
+		return filtered;
+	}, [
+		selectedProductId,
+		skus,
+		debouncedSkuSearch,
+		sizeFilter,
+		selectedProduct?.id,
+	]);
+
+	// Obter tamanhos únicos dos SKUs
+	const availableSizes = React.useMemo(() => {
+		if (!skus) return [];
+		return skus
+			.map((sku: ProdutoSKUEstoqueResponseDto) => sku.tamanho)
+			.filter((size, index, self) => size && self.indexOf(size) === index)
+			.sort();
+	}, [skus]);
+
+	// Limpar filtros quando mudar o produto
+	React.useEffect(() => {
+		setSkuSearch("");
+		setSizeFilter("all");
+	}, [selectedProductId]);
+
+	const handleStockClick = (sku: ProdutoSKUEstoqueResponseDto) => {
+		if (enableStockAdjustment && onStockAdjust) {
+			onStockAdjust(sku);
+		}
+	};
+
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle className="flex items-center gap-2">
+					<Package className="h-5 w-5" />
+					{t("inventory.view.skus")}
+					{selectedProduct && ` - ${selectedProduct.nome}`}
+				</CardTitle>
+			</CardHeader>
+			<CardContent>
+				{/* Filtros para SKUs */}
+				{selectedProductId && (
+					<div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-4 mb-4">
+						<div className="relative flex-1">
+							<Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+							<Input
+								placeholder={t("inventory.view.searchSkus")}
+								value={skuSearch}
+								onChange={e => setSkuSearch(e.target.value)}
+								className="pl-8"
+							/>
+						</div>
+						<Select value={sizeFilter} onValueChange={setSizeFilter}>
+							<SelectTrigger className="w-full md:w-[200px]">
+								<SelectValue placeholder={t("inventory.view.filterBySize")} />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem value="all">
+									{t("inventory.view.allSizes")}
+								</SelectItem>
+								{availableSizes.map(size => (
+									<SelectItem key={size} value={size!}>
+										{size}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					</div>
+				)}
+
+				{!selectedProductId ? (
+					<div className="flex items-center justify-center py-8">
+						<div className="text-center">
+							<ShoppingCart className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+							<p className="text-muted-foreground">
+								{t("inventory.view.selectProduct")}
+							</p>
+						</div>
+					</div>
+				) : isLoading ? (
+					<div className="flex items-center justify-center py-8">
+						<div className="text-muted-foreground">
+							{t("inventory.view.loadingSkus")}
+						</div>
+					</div>
+				) : error ? (
+					<div className="flex items-center justify-center py-8">
+						<div className="text-destructive">
+							{t("inventory.view.errorLoadingSkus")}
+						</div>
+					</div>
+				) : filteredSkus.length === 0 ? (
+					<div className="flex items-center justify-center py-8">
+						<div className="text-muted-foreground">
+							{t("inventory.view.noSkus")}
+						</div>
+					</div>
+				) : (
+					<ScrollArea className="h-[450px] w-full rounded-md border">
+						<div className="min-w-[400px]">
+							<Table>
+								<TableHeader className="sticky top-0 bg-background z-10">
+									<TableRow>
+										<TableHead className="h-8 py-2 bg-background text-center">
+											{t("inventory.view.skuCode")}
+										</TableHead>
+										<TableHead className="h-8 py-2 bg-background text-left">
+											{t("inventory.view.color")}
+										</TableHead>
+										<TableHead className="h-8 py-2 bg-background text-center">
+											{t("inventory.view.size")}
+										</TableHead>
+										<TableHead className="h-8 py-2 bg-background text-center">
+											{t("inventory.view.quantity")}
+										</TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody>
+									{filteredSkus.map((sku: ProdutoSKUEstoqueResponseDto) => (
+										<TableRow key={`${sku.id}-${sku.publicId}`}>
+											<TableCell className="font-mono text-sm text-center">
+												{selectedProduct?.id.toString().padStart(3, "0")}-
+												{sku.id.toString().padStart(3, "0")}
+											</TableCell>
+											<TableCell className="text-left">
+												{sku.cor ? (
+													<div className="flex items-center gap-2">
+														{sku.codCor && (
+															<div
+																className="w-4 h-4 rounded-full border"
+																style={{
+																	backgroundColor: `#${sku.codCor.toString(16).padStart(6, "0")}`,
+																}}
+															/>
+														)}
+														{sku.cor}
+													</div>
+												) : (
+													"-"
+												)}
+											</TableCell>
+											<TableCell className="text-center">
+												{sku.tamanho || "-"}
+											</TableCell>
+											<TableCell className="text-center">
+												{enableStockAdjustment ? (
+													<Tooltip>
+														<TooltipTrigger asChild>
+															<Badge
+																variant={
+																	sku.estoque <= sku.qtdMinima
+																		? "destructive"
+																		: sku.estoque <= sku.qtdMinima * 2
+																			? "secondary"
+																			: "default"
+																}
+																className="cursor-pointer hover:opacity-80 transition-opacity"
+																onClick={() => handleStockClick(sku)}
+															>
+																{sku.estoque}
+															</Badge>
+														</TooltipTrigger>
+														<TooltipContent side="top" className="max-w-xs">
+															<div className="space-y-1">
+																<div className="font-semibold">
+																	{t("inventory.adjust.tooltip.title")}
+																</div>
+																<div className="text-xs text-muted-foreground">
+																	{t("inventory.adjust.tooltip.description")}
+																</div>
+															</div>
+														</TooltipContent>
+													</Tooltip>
+												) : (
+													<Badge
+														variant={
+															sku.estoque <= sku.qtdMinima
+																? "destructive"
+																: sku.estoque <= sku.qtdMinima * 2
+																	? "secondary"
+																	: "default"
+														}
+													>
+														{sku.estoque}
+													</Badge>
+												)}
+											</TableCell>
+										</TableRow>
+									))}
+								</TableBody>
+							</Table>
+						</div>
+					</ScrollArea>
+				)}
+			</CardContent>
+		</Card>
+	);
+};

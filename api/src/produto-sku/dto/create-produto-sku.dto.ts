@@ -37,13 +37,13 @@ export class CreateProdutoSkuDto {
 
   @ApiProperty({
     description: 'Código hexadecimal da cor',
-    example: 255,
+    example: '0000FF',
     required: false,
   })
   @IsOptional()
-  @IsInt()
-  @Min(0)
-  codCor?: number;
+  @IsString()
+  @MaxLength(6)
+  codCor?: string;
 
   @ApiProperty({
     description: 'Tamanho do produto',

@@ -30,10 +30,10 @@ export class ProdutoSKU {
 
   @ApiProperty({
     description: 'Código hexadecimal da cor',
-    example: 255,
+    example: '0000FF',
     required: false,
   })
-  codCor: number | null;
+  codCor: string | null;
 
   @ApiProperty({
     description: 'Tamanho do produto',

@@ -23,9 +23,9 @@ export type CreateProdutoSkuDto = {
     cor?: string;
     /**
      * @description Código hexadecimal da cor
-     * @type number | undefined
+     * @type string | undefined
     */
-    codCor?: number;
+    codCor?: string;
     /**
      * @description Tamanho do produto
      * @maxLength 10

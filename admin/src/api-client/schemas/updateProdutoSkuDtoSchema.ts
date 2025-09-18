@@ -10,7 +10,7 @@ import { z } from "zod";
 export const updateProdutoSkuDtoSchema = z.object({
       "id": z.coerce.number().describe("ID do produto SKU").optional(),
   "cor": z.coerce.string().max(50).describe("Cor do produto").optional(),
-  "codCor": z.coerce.number().describe("Código hexadecimal da cor").optional(),
+  "codCor": z.coerce.string().describe("Código hexadecimal da cor").optional(),
   "tamanho": z.coerce.string().max(10).describe("Tamanho do produto").optional(),
   "qtdMinima": z.coerce.number().default(0).describe("Quantidade mínima em estoque"),
   "dataUltimaCompra": z.string().datetime().describe("Data da última compra").optional()

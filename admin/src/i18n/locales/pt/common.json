@@ -159,6 +159,7 @@
 			"main": "Produtos",
 			"list": "Lista de Produtos",
 			"stocks": "Estoques",
+			"transfers": "Transferências",
 			"categories": "Categorias"
 		},
 		"inventory": "Estoque",
@@ -1097,6 +1098,9 @@
 			"searchProducts": "Buscar produtos...",
 			"filterByCategory": "Filtrar por categoria",
 			"allCategories": "Todas as categorias",
+			"searchSkus": "Buscar SKUs...",
+			"filterBySize": "Filtrar por tamanho",
+			"allSizes": "Todos os tamanhos",
 			"selectProduct": "Selecione um produto para ver os SKUs",
 			"loadingLocations": "Carregando locais...",
 			"loadingProducts": "Carregando produtos...",

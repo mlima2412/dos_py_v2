@@ -353,7 +353,7 @@ model ProdutoSKU {
   publicId         String             @unique @map("public_id")
   produtoId        Int                @map("produto_id")
   cor              String?            @map("cor")
-  codCor           Int?               @map("cod_cor") // hexadecimal da cor para usar em sites apps e catalogos
+  codCor           String?            @map("cod_cor") // hexadecimal da cor para usar em sites apps e catalogos
   tamanho          String?            @map("tamanho")
   qtdMinima        Int                @default(0) @map("qtd_minima")
   dataUltimaCompra DateTime?          @map("data_ultima_compra")

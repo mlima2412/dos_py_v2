@@ -114,6 +114,11 @@ export function getMenuList(
 							active: pathname.includes("/estoques/visualizar"),
 						},
 						{
+							href: "/produto/transferencia",
+							label: t("menu.products.transfers"),
+							active: pathname.includes("/produto/categorias"),
+						},
+						{
 							href: "/produto/categorias",
 							label: t("menu.products.categories"),
 							active: pathname.includes("/produto/categorias"),

@@ -13,7 +13,7 @@ export const produtoSKUSchema = z.object({
   "publicId": z.coerce.string().describe("ID público do SKU"),
   "produtoId": z.coerce.number().describe("ID do produto pai"),
   "cor": z.coerce.string().describe("Cor do produto").optional(),
-  "codCor": z.coerce.number().describe("Código hexadecimal da cor").optional(),
+  "codCor": z.coerce.string().describe("Código hexadecimal da cor").optional(),
   "tamanho": z.coerce.string().describe("Tamanho do produto").optional(),
   "qtdMinima": z.coerce.number().describe("Quantidade mínima em estoque"),
   "dataUltimaCompra": z.string().datetime().describe("Data da última compra").optional(),
