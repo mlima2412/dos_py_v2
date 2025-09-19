@@ -4,48 +4,48 @@
 */
 
 import fetch from "@/lib/fetch-client";
-import type { TransferenciaEstoqueControllerFindOneQueryResponse, TransferenciaEstoqueControllerFindOnePathParams, TransferenciaEstoqueControllerFindOne404 } from "../types/TransferenciaEstoqueControllerFindOne.ts";
+import type { TransferenciaEstoqueControllerFindOneQueryResponse, TransferenciaEstoqueControllerFindOnePathParams, TransferenciaEstoqueControllerFindOneHeaderParams, TransferenciaEstoqueControllerFindOne404 } from "../types/TransferenciaEstoqueControllerFindOne.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const transferenciaEstoqueControllerFindOneSuspenseQueryKey = (id: TransferenciaEstoqueControllerFindOnePathParams["id"]) =>   [{ url: '/transferencia-estoque/:id', params: {id:id} }] as const
+export const transferenciaEstoqueControllerFindOneSuspenseQueryKey = (publicId: TransferenciaEstoqueControllerFindOnePathParams["publicId"]) =>   [{ url: '/transferencia-estoque/:publicId', params: {publicId:publicId} }] as const
 
 export type TransferenciaEstoqueControllerFindOneSuspenseQueryKey = ReturnType<typeof transferenciaEstoqueControllerFindOneSuspenseQueryKey>
 
 /**
- * @description Retorna uma transferência de estoque específica pelo seu ID, incluindo todos os itens e movimentos relacionados
- * @summary Buscar transferência por ID
- * {@link /transferencia-estoque/:id}
+ * @description Retorna uma transferência de estoque específica pelo seu publicId, incluindo todos os itens e movimentos relacionados. Filtra pelo parceiro especificado no header.
+ * @summary Buscar transferência por Public ID
+ * {@link /transferencia-estoque/:publicId}
  */
-export async function transferenciaEstoqueControllerFindOneSuspense(id: TransferenciaEstoqueControllerFindOnePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+export async function transferenciaEstoqueControllerFindOneSuspense(publicId: TransferenciaEstoqueControllerFindOnePathParams["publicId"], headers: TransferenciaEstoqueControllerFindOneHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
   const { client:request = fetch, ...requestConfig } = config
 
 
-const res = await request<TransferenciaEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<TransferenciaEstoqueControllerFindOne404>, unknown>({ method : "GET", url : `/transferencia-estoque/${id}`, ... requestConfig })
+const res = await request<TransferenciaEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<TransferenciaEstoqueControllerFindOne404>, unknown>({ method : "GET", url : `/transferencia-estoque/${publicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
 return res.data
 }
 
-export function transferenciaEstoqueControllerFindOneSuspenseQueryOptions(id: TransferenciaEstoqueControllerFindOnePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+export function transferenciaEstoqueControllerFindOneSuspenseQueryOptions(publicId: TransferenciaEstoqueControllerFindOnePathParams["publicId"], headers: TransferenciaEstoqueControllerFindOneHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
   
-        const queryKey = transferenciaEstoqueControllerFindOneSuspenseQueryKey(id)
+        const queryKey = transferenciaEstoqueControllerFindOneSuspenseQueryKey(publicId)
         return queryOptions<TransferenciaEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<TransferenciaEstoqueControllerFindOne404>, TransferenciaEstoqueControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(id),
+         enabled: !!(publicId),
          queryKey,
          queryFn: async ({ signal }) => {
             config.signal = signal
-            return transferenciaEstoqueControllerFindOneSuspense(id, config)
+            return transferenciaEstoqueControllerFindOneSuspense(publicId, headers, config)
          },
         })
   
 }
 
 /**
- * @description Retorna uma transferência de estoque específica pelo seu ID, incluindo todos os itens e movimentos relacionados
- * @summary Buscar transferência por ID
- * {@link /transferencia-estoque/:id}
+ * @description Retorna uma transferência de estoque específica pelo seu publicId, incluindo todos os itens e movimentos relacionados. Filtra pelo parceiro especificado no header.
+ * @summary Buscar transferência por Public ID
+ * {@link /transferencia-estoque/:publicId}
  */
-export function useTransferenciaEstoqueControllerFindOneSuspense<TData = TransferenciaEstoqueControllerFindOneQueryResponse, TQueryKey extends QueryKey = TransferenciaEstoqueControllerFindOneSuspenseQueryKey>(id: TransferenciaEstoqueControllerFindOnePathParams["id"], options: 
+export function useTransferenciaEstoqueControllerFindOneSuspense<TData = TransferenciaEstoqueControllerFindOneQueryResponse, TQueryKey extends QueryKey = TransferenciaEstoqueControllerFindOneSuspenseQueryKey>(publicId: TransferenciaEstoqueControllerFindOnePathParams["publicId"], headers: TransferenciaEstoqueControllerFindOneHeaderParams, options: 
   {
     query?: Partial<UseSuspenseQueryOptions<TransferenciaEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<TransferenciaEstoqueControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
     client?: Partial<RequestConfig> & { client?: typeof fetch }
@@ -53,10 +53,10 @@ export function useTransferenciaEstoqueControllerFindOneSuspense<TData = Transfe
    = {}) {
   
          const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? transferenciaEstoqueControllerFindOneSuspenseQueryKey(id)
+         const queryKey = queryOptions?.queryKey ?? transferenciaEstoqueControllerFindOneSuspenseQueryKey(publicId)
   
          const query = useSuspenseQuery({
-          ...transferenciaEstoqueControllerFindOneSuspenseQueryOptions(id, config),
+          ...transferenciaEstoqueControllerFindOneSuspenseQueryOptions(publicId, headers, config),
           queryKey,
           ...queryOptions
          } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<TransferenciaEstoqueControllerFindOne404>> & { queryKey: TQueryKey }

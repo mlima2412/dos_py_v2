@@ -988,6 +988,7 @@
 		},
 		"transfer": {
 			"title": "Transferencia de Inventario",
+			"create": "Nueva Transferencia",
 			"locations": "Locales",
 			"sourceLocation": "Local de Salida",
 			"destinationLocation": "Local de Destino",
@@ -1002,8 +1003,41 @@
 			"noSkusSelected": "Ningún SKU seleccionado",
 			"cancel": "Cancelar",
 			"transfer": "Transferir",
+			"transferring": "Transferiendo...",
 			"quantity": "Cantidad",
-			"remove": "Eliminar"
-		}
+			"remove": "Eliminar",
+			"search": "Buscar transferencias...",
+			"noResults": "Ninguna transferencia encontrada",
+			"enviadoPor": "Enviado por",
+			"recebidoPor": "Recibido por",
+			"totalItems": "Total de Artículos",
+			"items": "artículos",
+			"columns": {
+				"counter": "#",
+				"date": "Fecha",
+				"source": "Origen",
+				"destination": "Destino",
+				"status": "Estado"
+			},
+			"status": {
+				"received": "Recibido",
+				"pending": "Pendiente"
+			},
+			"actions": {
+				"view": "Visualizar",
+				"confirmReceipt": "Confirmar Recepción"
+			},
+			"messages": {
+				"confirmReceiptSuccess": "¡Transferencia confirmada como recibida con éxito!",
+				"confirmReceiptError": "Error al confirmar recepción. Inténtalo de nuevo."
+			}
+		},
+		"columns": {},
+		"placeholders": {},
+		"labels": {},
+		"validations": {},
+		"actions": {},
+		"messages": {},
+		"view": {}
 	}
 }

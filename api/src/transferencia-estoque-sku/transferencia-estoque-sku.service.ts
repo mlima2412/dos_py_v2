@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateTransferenciaEstoqueSkuDto } from './dto/create-transferencia-estoque-sku.dto';
 import { UpdateTransferenciaEstoqueSkuDto } from './dto/update-transferencia-estoque-sku.dto';
 import { TransferenciaEstoqueSkuResponseDto } from './dto/transferencia-estoque-sku-response.dto';
+import { TransferenciaSkuSimplesDto } from './dto/transferencia-sku-simples.dto';
 
 @Injectable()
 export class TransferenciaEstoqueSkuService {
@@ -56,8 +57,19 @@ export class TransferenciaEstoqueSkuService {
     return this.mapToResponseDto(item);
   }
 
-  async findAll(): Promise<TransferenciaEstoqueSkuResponseDto[]> {
+  async findAll(
+    transferenciaPublicId?: string,
+  ): Promise<TransferenciaEstoqueSkuResponseDto[]> {
+    const whereClause: any = {};
+
+    if (transferenciaPublicId) {
+      whereClause.TransferenciaEstoque = {
+        publicId: transferenciaPublicId,
+      };
+    }
+
     const itens = await this.prisma.transferenciaEstoqueItem.findMany({
+      where: whereClause,
       include: {
         TransferenciaEstoque: {
           select: {
@@ -130,31 +142,22 @@ export class TransferenciaEstoqueSkuService {
     return this.mapToResponseDto(item);
   }
 
-  async findByTransferencia(
-    transferenciaId: number,
-  ): Promise<TransferenciaEstoqueSkuResponseDto[]> {
-    // Validar se transferência existe
-    await this.validateTransferenciaExists(transferenciaId);
-
+  async findByTransferenciaPublicId(
+    transferenciaPublicId: string,
+  ): Promise<TransferenciaSkuSimplesDto[]> {
     const itens = await this.prisma.transferenciaEstoqueItem.findMany({
-      where: { transferenciaId },
-      include: {
+      where: { 
         TransferenciaEstoque: {
-          select: {
-            id: true,
-            publicId: true,
-            qtd: true,
-            dataTransferencia: true,
-          },
-        },
+          publicId: transferenciaPublicId,
+        }
+      },
+      include: {
         MovimentoEstoque: {
           include: {
             sku: {
               include: {
                 produto: {
                   select: {
-                    id: true,
-                    publicId: true,
                     nome: true,
                   },
                 },
@@ -168,7 +171,19 @@ export class TransferenciaEstoqueSkuService {
       },
     });
 
-    return itens.map(this.mapToResponseDto);
+    if (itens.length === 0) {
+      throw new NotFoundException(
+        `Nenhum item encontrado para a transferência ${transferenciaPublicId}`,
+      );
+    }
+
+    return itens.map(item => ({
+      id: item.id,
+      produto: item.MovimentoEstoque.sku.produto.nome,
+      cor: item.MovimentoEstoque.sku.cor || 'N/A',
+      tamanho: item.MovimentoEstoque.sku.tamanho || 'N/A',
+      quantidade: item.MovimentoEstoque.qtd,
+    }));
   }
 
   async update(

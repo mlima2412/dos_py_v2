@@ -504,6 +504,9 @@ export const TransferenciaEstoque: React.FC = () => {
 
 			await transferenciaMutation.mutateAsync({
 				data: transferenciaData,
+				headers: {
+					"x-parceiro-id": selectedPartnerId ? Number(selectedPartnerId) : 0,
+				},
 			});
 		} catch (error) {
 			// O erro já é tratado no onError do hook

@@ -5,6 +5,14 @@
 
 import type { TransferenciaEstoqueResponseDto } from "./TransferenciaEstoqueResponseDto.ts";
 
+export type TransferenciaEstoqueControllerFindAllHeaderParams = {
+    /**
+     * @description ID do parceiro
+     * @type integer
+    */
+    "x-parceiro-id": number;
+};
+
 /**
  * @description Lista de transferências retornada com sucesso
 */
@@ -14,5 +22,6 @@ export type TransferenciaEstoqueControllerFindAllQueryResponse = TransferenciaEs
 
 export type TransferenciaEstoqueControllerFindAllQuery = {
     Response: TransferenciaEstoqueControllerFindAll200;
+    HeaderParams: TransferenciaEstoqueControllerFindAllHeaderParams;
     Errors: any;
 };

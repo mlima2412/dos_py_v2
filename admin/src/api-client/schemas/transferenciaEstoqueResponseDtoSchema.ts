@@ -6,6 +6,7 @@
 import type { TransferenciaEstoqueResponseDto } from "../types/TransferenciaEstoqueResponseDto.ts";
 import type { ToZod } from "@kubb/plugin-zod/utils";
 import { localEstoqueResponseDtoSchema } from "./localEstoqueResponseDtoSchema.ts";
+import { parceiroResponseDtoSchema } from "./parceiroResponseDtoSchema.ts";
 import { transferenciaEstoqueItemResponseDtoSchema } from "./transferenciaEstoqueItemResponseDtoSchema.ts";
 import { usuarioResponseDtoSchema } from "./usuarioResponseDtoSchema.ts";
 import { z } from "zod";
@@ -17,6 +18,7 @@ export const transferenciaEstoqueResponseDtoSchema = z.object({
   "valorTotal": z.coerce.number().describe("Valor total da transferência"),
   "dataTransferencia": z.string().datetime().describe("Data da transferência"),
   "dataRecebimento": z.string().datetime().describe("Data do recebimento").optional(),
+  "parceiro": z.lazy(() => parceiroResponseDtoSchema).describe("Parceiro responsável pela transferência"),
   "localOrigem": z.lazy(() => localEstoqueResponseDtoSchema).describe("Local de origem"),
   "localDestino": z.lazy(() => localEstoqueResponseDtoSchema).describe("Local de destino"),
   "enviadoPorUsuario": z.lazy(() => usuarioResponseDtoSchema).describe("Usuário que enviou"),

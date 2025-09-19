@@ -12,6 +12,14 @@ export type TransferenciaEstoqueControllerRemovePathParams = {
     id: string;
 };
 
+export type TransferenciaEstoqueControllerRemoveHeaderParams = {
+    /**
+     * @description ID do parceiro
+     * @type integer
+    */
+    "x-parceiro-id": number;
+};
+
 /**
  * @description Transferência excluída com sucesso
 */
@@ -32,5 +40,6 @@ export type TransferenciaEstoqueControllerRemoveMutationResponse = Transferencia
 export type TransferenciaEstoqueControllerRemoveMutation = {
     Response: TransferenciaEstoqueControllerRemove200;
     PathParams: TransferenciaEstoqueControllerRemovePathParams;
+    HeaderParams: TransferenciaEstoqueControllerRemoveHeaderParams;
     Errors: TransferenciaEstoqueControllerRemove404 | TransferenciaEstoqueControllerRemove409;
 };

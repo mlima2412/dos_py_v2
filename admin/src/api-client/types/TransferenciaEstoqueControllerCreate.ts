@@ -6,6 +6,14 @@
 import type { CreateTransferenciaEstoqueDto } from "./CreateTransferenciaEstoqueDto.ts";
 import type { CreateTransferenciaResponseDto } from "./CreateTransferenciaResponseDto.ts";
 
+export type TransferenciaEstoqueControllerCreateHeaderParams = {
+    /**
+     * @description ID do parceiro
+     * @type integer
+    */
+    "x-parceiro-id": number;
+};
+
 /**
  * @description Transferência criada com sucesso
 */
@@ -28,5 +36,6 @@ export type TransferenciaEstoqueControllerCreateMutationResponse = Transferencia
 export type TransferenciaEstoqueControllerCreateMutation = {
     Response: TransferenciaEstoqueControllerCreate201;
     Request: TransferenciaEstoqueControllerCreateMutationRequest;
+    HeaderParams: TransferenciaEstoqueControllerCreateHeaderParams;
     Errors: TransferenciaEstoqueControllerCreate400 | TransferenciaEstoqueControllerCreate404;
 };

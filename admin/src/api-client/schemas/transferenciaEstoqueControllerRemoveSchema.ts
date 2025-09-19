@@ -3,13 +3,17 @@
 * Do not edit manually.
 */
 
-import type { TransferenciaEstoqueControllerRemovePathParams, TransferenciaEstoqueControllerRemove200, TransferenciaEstoqueControllerRemove404, TransferenciaEstoqueControllerRemove409, TransferenciaEstoqueControllerRemoveMutationResponse } from "../types/TransferenciaEstoqueControllerRemove.ts";
+import type { TransferenciaEstoqueControllerRemovePathParams, TransferenciaEstoqueControllerRemoveHeaderParams, TransferenciaEstoqueControllerRemove200, TransferenciaEstoqueControllerRemove404, TransferenciaEstoqueControllerRemove409, TransferenciaEstoqueControllerRemoveMutationResponse } from "../types/TransferenciaEstoqueControllerRemove.ts";
 import type { ToZod } from "@kubb/plugin-zod/utils";
 import { z } from "zod";
 
 export const transferenciaEstoqueControllerRemovePathParamsSchema = z.object({
       "id": z.string().describe("ID da transferência")
       }) as unknown as ToZod<TransferenciaEstoqueControllerRemovePathParams>
+
+export const transferenciaEstoqueControllerRemoveHeaderParamsSchema = z.object({
+      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+      }) as unknown as ToZod<TransferenciaEstoqueControllerRemoveHeaderParams>
 
 /**
  * @description Transferência excluída com sucesso

@@ -4,6 +4,7 @@
 */
 
 import type { LocalEstoqueResponseDto } from "./LocalEstoqueResponseDto.ts";
+import type { ParceiroResponseDto } from "./ParceiroResponseDto.ts";
 import type { TransferenciaEstoqueItemResponseDto } from "./TransferenciaEstoqueItemResponseDto.ts";
 import type { UsuarioResponseDto } from "./UsuarioResponseDto.ts";
 
@@ -38,6 +39,10 @@ export type TransferenciaEstoqueResponseDto = {
      * @type string | undefined, date-time
     */
     dataRecebimento?: string;
+    /**
+     * @description Parceiro responsável pela transferência
+    */
+    parceiro: ParceiroResponseDto;
     /**
      * @description Local de origem
     */

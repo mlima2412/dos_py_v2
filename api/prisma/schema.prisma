@@ -107,6 +107,7 @@ model Parceiro {
   Fornecedor                     Fornecedor[]
   Produto                        Produto[]
   LocalEstoque                   LocalEstoque[]
+  TransferenciaEstoque           TransferenciaEstoque[]
 
   @@map("parceiro")
 }
@@ -436,6 +437,7 @@ model MovimentoEstoque {
 model TransferenciaEstoque {
   id                   Int       @id @default(autoincrement())
   publicId             String    @unique @map("public_id")
+  parceiroId           Int       @map("parceiro_id")
   localOrigemId        Int       @map("local_origem_id")
   localDestinoId       Int       @map("local_destino_id")
   enviadoPorUsuarioId  Int       @map("enviado_por_usuario_id")
@@ -453,6 +455,8 @@ model TransferenciaEstoque {
   localOrigem              LocalEstoque               @relation("Transferencia_Origem", fields: [localOrigemId], references: [id])
   localDestino             LocalEstoque               @relation("Transferencia_Destino", fields: [localDestinoId], references: [id])
   TransferenciaEstoqueItem TransferenciaEstoqueItem[] @relation("Transferencia_Estoque")
+  // Relação com Parceiro
+  Parceiro                 Parceiro                   @relation(fields: [parceiroId], references: [id])
 
   @@index([localOrigemId])
   @@index([localDestinoId])

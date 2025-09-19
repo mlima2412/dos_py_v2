@@ -3,10 +3,14 @@
 * Do not edit manually.
 */
 
-import type { TransferenciaEstoqueControllerFindAll200, TransferenciaEstoqueControllerFindAllQueryResponse } from "../types/TransferenciaEstoqueControllerFindAll.ts";
+import type { TransferenciaEstoqueControllerFindAllHeaderParams, TransferenciaEstoqueControllerFindAll200, TransferenciaEstoqueControllerFindAllQueryResponse } from "../types/TransferenciaEstoqueControllerFindAll.ts";
 import type { ToZod } from "@kubb/plugin-zod/utils";
 import { transferenciaEstoqueResponseDtoSchema } from "./transferenciaEstoqueResponseDtoSchema.ts";
 import { z } from "zod";
+
+export const transferenciaEstoqueControllerFindAllHeaderParamsSchema = z.object({
+      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+      }) as unknown as ToZod<TransferenciaEstoqueControllerFindAllHeaderParams>
 
 /**
  * @description Lista de transferências retornada com sucesso

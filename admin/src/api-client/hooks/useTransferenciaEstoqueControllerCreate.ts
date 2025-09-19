@@ -4,7 +4,7 @@
 */
 
 import fetch from "@/lib/fetch-client";
-import type { TransferenciaEstoqueControllerCreateMutationRequest, TransferenciaEstoqueControllerCreateMutationResponse, TransferenciaEstoqueControllerCreate400, TransferenciaEstoqueControllerCreate404 } from "../types/TransferenciaEstoqueControllerCreate.ts";
+import type { TransferenciaEstoqueControllerCreateMutationRequest, TransferenciaEstoqueControllerCreateMutationResponse, TransferenciaEstoqueControllerCreateHeaderParams, TransferenciaEstoqueControllerCreate400, TransferenciaEstoqueControllerCreate404 } from "../types/TransferenciaEstoqueControllerCreate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
@@ -14,26 +14,26 @@ export const transferenciaEstoqueControllerCreateMutationKey = () =>   [{"url":"
 export type TransferenciaEstoqueControllerCreateMutationKey = ReturnType<typeof transferenciaEstoqueControllerCreateMutationKey>
 
 /**
- * @description Cria uma nova transferência de estoque entre locais. O usuário que cria a transferência é obtido automaticamente do token de autenticação.
+ * @description Cria uma nova transferência de estoque entre locais. O usuário que cria a transferência é obtido automaticamente do token de autenticação e o parceiro do header x-parceiro-id.
  * @summary Criar transferência de estoque
  * {@link /transferencia-estoque}
  */
-export async function transferenciaEstoqueControllerCreate(data: TransferenciaEstoqueControllerCreateMutationRequest, config: Partial<RequestConfig<TransferenciaEstoqueControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
+export async function transferenciaEstoqueControllerCreate(data: TransferenciaEstoqueControllerCreateMutationRequest, headers: TransferenciaEstoqueControllerCreateHeaderParams, config: Partial<RequestConfig<TransferenciaEstoqueControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
   const { client:request = fetch, ...requestConfig } = config
 
 const requestData = data
-const res = await request<TransferenciaEstoqueControllerCreateMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerCreate400 | TransferenciaEstoqueControllerCreate404>, TransferenciaEstoqueControllerCreateMutationRequest>({ method : "POST", url : `/transferencia-estoque`, data : requestData, ... requestConfig })
+const res = await request<TransferenciaEstoqueControllerCreateMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerCreate400 | TransferenciaEstoqueControllerCreate404>, TransferenciaEstoqueControllerCreateMutationRequest>({ method : "POST", url : `/transferencia-estoque`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
 return res.data
 }
 
 /**
- * @description Cria uma nova transferência de estoque entre locais. O usuário que cria a transferência é obtido automaticamente do token de autenticação.
+ * @description Cria uma nova transferência de estoque entre locais. O usuário que cria a transferência é obtido automaticamente do token de autenticação e o parceiro do header x-parceiro-id.
  * @summary Criar transferência de estoque
  * {@link /transferencia-estoque}
  */
 export function useTransferenciaEstoqueControllerCreate<TContext>(options: 
   {
-    mutation?: UseMutationOptions<TransferenciaEstoqueControllerCreateMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerCreate400 | TransferenciaEstoqueControllerCreate404>, {data: TransferenciaEstoqueControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
+    mutation?: UseMutationOptions<TransferenciaEstoqueControllerCreateMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerCreate400 | TransferenciaEstoqueControllerCreate404>, {data: TransferenciaEstoqueControllerCreateMutationRequest, headers: TransferenciaEstoqueControllerCreateHeaderParams}, TContext> & { client?: QueryClient },
     client?: Partial<RequestConfig<TransferenciaEstoqueControllerCreateMutationRequest>> & { client?: typeof fetch },
   }
    = {}) {
@@ -42,9 +42,9 @@ export function useTransferenciaEstoqueControllerCreate<TContext>(options:
           const { client: queryClient, ...mutationOptions } = mutation;
           const mutationKey = mutationOptions.mutationKey ?? transferenciaEstoqueControllerCreateMutationKey()
   
-          return useMutation<TransferenciaEstoqueControllerCreateMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerCreate400 | TransferenciaEstoqueControllerCreate404>, {data: TransferenciaEstoqueControllerCreateMutationRequest}, TContext>({
-            mutationFn: async({ data }) => {
-              return transferenciaEstoqueControllerCreate(data, config)
+          return useMutation<TransferenciaEstoqueControllerCreateMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerCreate400 | TransferenciaEstoqueControllerCreate404>, {data: TransferenciaEstoqueControllerCreateMutationRequest, headers: TransferenciaEstoqueControllerCreateHeaderParams}, TContext>({
+            mutationFn: async({ data, headers }) => {
+              return transferenciaEstoqueControllerCreate(data, headers, config)
             },
             mutationKey,
             ...mutationOptions

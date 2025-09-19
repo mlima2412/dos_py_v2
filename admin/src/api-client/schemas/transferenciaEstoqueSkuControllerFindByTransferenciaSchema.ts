@@ -5,17 +5,17 @@
 
 import type { TransferenciaEstoqueSkuControllerFindByTransferenciaPathParams, TransferenciaEstoqueSkuControllerFindByTransferencia200, TransferenciaEstoqueSkuControllerFindByTransferencia404, TransferenciaEstoqueSkuControllerFindByTransferenciaQueryResponse } from "../types/TransferenciaEstoqueSkuControllerFindByTransferencia.ts";
 import type { ToZod } from "@kubb/plugin-zod/utils";
-import { transferenciaEstoqueSkuResponseDtoSchema } from "./transferenciaEstoqueSkuResponseDtoSchema.ts";
+import { transferenciaSkuSimplesDtoSchema } from "./transferenciaSkuSimplesDtoSchema.ts";
 import { z } from "zod";
 
 export const transferenciaEstoqueSkuControllerFindByTransferenciaPathParamsSchema = z.object({
-      "transferenciaId": z.string().describe("ID da transferência")
+      "transferenciaPublicId": z.string().describe("Public ID da transferência")
       }) as unknown as ToZod<TransferenciaEstoqueSkuControllerFindByTransferenciaPathParams>
 
 /**
- * @description Lista de itens da transferência retornada com sucesso
+ * @description Lista de SKUs da transferência retornada com sucesso
  */
-export const transferenciaEstoqueSkuControllerFindByTransferencia200Schema = z.array(z.lazy(() => transferenciaEstoqueSkuResponseDtoSchema)) as unknown as ToZod<TransferenciaEstoqueSkuControllerFindByTransferencia200>
+export const transferenciaEstoqueSkuControllerFindByTransferencia200Schema = z.array(z.lazy(() => transferenciaSkuSimplesDtoSchema)) as unknown as ToZod<TransferenciaEstoqueSkuControllerFindByTransferencia200>
 
 /**
  * @description Transferência não encontrada

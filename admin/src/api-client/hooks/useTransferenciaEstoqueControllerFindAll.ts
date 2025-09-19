@@ -4,7 +4,7 @@
 */
 
 import fetch from "@/lib/fetch-client";
-import type { TransferenciaEstoqueControllerFindAllQueryResponse } from "../types/TransferenciaEstoqueControllerFindAll.ts";
+import type { TransferenciaEstoqueControllerFindAllQueryResponse, TransferenciaEstoqueControllerFindAllHeaderParams } from "../types/TransferenciaEstoqueControllerFindAll.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
@@ -14,19 +14,19 @@ export const transferenciaEstoqueControllerFindAllQueryKey = () =>   [{ url: '/t
 export type TransferenciaEstoqueControllerFindAllQueryKey = ReturnType<typeof transferenciaEstoqueControllerFindAllQueryKey>
 
 /**
- * @description Retorna todas as transferências de estoque ordenadas por data (mais recentes primeiro)
+ * @description Retorna todas as transferências de estoque do parceiro especificado no header, ordenadas por data (mais recentes primeiro)
  * @summary Listar todas as transferências
  * {@link /transferencia-estoque}
  */
-export async function transferenciaEstoqueControllerFindAll(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+export async function transferenciaEstoqueControllerFindAll(headers: TransferenciaEstoqueControllerFindAllHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
   const { client:request = fetch, ...requestConfig } = config
 
 
-const res = await request<TransferenciaEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/transferencia-estoque`, ... requestConfig })
+const res = await request<TransferenciaEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/transferencia-estoque`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
 return res.data
 }
 
-export function transferenciaEstoqueControllerFindAllQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+export function transferenciaEstoqueControllerFindAllQueryOptions(headers: TransferenciaEstoqueControllerFindAllHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
   
         const queryKey = transferenciaEstoqueControllerFindAllQueryKey()
         return queryOptions<TransferenciaEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TransferenciaEstoqueControllerFindAllQueryResponse, typeof queryKey>({
@@ -34,18 +34,18 @@ export function transferenciaEstoqueControllerFindAllQueryOptions(config: Partia
          queryKey,
          queryFn: async ({ signal }) => {
             config.signal = signal
-            return transferenciaEstoqueControllerFindAll(config)
+            return transferenciaEstoqueControllerFindAll(headers, config)
          },
         })
   
 }
 
 /**
- * @description Retorna todas as transferências de estoque ordenadas por data (mais recentes primeiro)
+ * @description Retorna todas as transferências de estoque do parceiro especificado no header, ordenadas por data (mais recentes primeiro)
  * @summary Listar todas as transferências
  * {@link /transferencia-estoque}
  */
-export function useTransferenciaEstoqueControllerFindAll<TData = TransferenciaEstoqueControllerFindAllQueryResponse, TQueryData = TransferenciaEstoqueControllerFindAllQueryResponse, TQueryKey extends QueryKey = TransferenciaEstoqueControllerFindAllQueryKey>(options: 
+export function useTransferenciaEstoqueControllerFindAll<TData = TransferenciaEstoqueControllerFindAllQueryResponse, TQueryData = TransferenciaEstoqueControllerFindAllQueryResponse, TQueryKey extends QueryKey = TransferenciaEstoqueControllerFindAllQueryKey>(headers: TransferenciaEstoqueControllerFindAllHeaderParams, options: 
   {
     query?: Partial<QueryObserverOptions<TransferenciaEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
     client?: Partial<RequestConfig> & { client?: typeof fetch }
@@ -56,7 +56,7 @@ export function useTransferenciaEstoqueControllerFindAll<TData = TransferenciaEs
          const queryKey = queryOptions?.queryKey ?? transferenciaEstoqueControllerFindAllQueryKey()
   
          const query = useQuery({
-          ...transferenciaEstoqueControllerFindAllQueryOptions(config),
+          ...transferenciaEstoqueControllerFindAllQueryOptions(headers, config),
           queryKey,
           ...queryOptions
          } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }

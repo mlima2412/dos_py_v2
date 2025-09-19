@@ -11,6 +11,20 @@ export class UsuarioResponseDto {
   nome: string;
 }
 
+export class ParceiroResponseDto {
+  @ApiProperty({ description: 'ID do parceiro', example: 1 })
+  id: number;
+
+  @ApiProperty({ description: 'Public ID do parceiro', example: 'parceiro_123456789' })
+  publicId: string;
+
+  @ApiProperty({ description: 'Nome do parceiro', example: 'Empresa ABC Ltda' })
+  nome: string;
+
+  @ApiProperty({ description: 'Email do parceiro', example: 'contato@empresa.com' })
+  email: string;
+}
+
 export class LocalEstoqueResponseDto {
   @ApiProperty({ description: 'ID do local', example: 1 })
   id: number;
@@ -62,6 +76,9 @@ export class TransferenciaEstoqueResponseDto {
 
   @ApiPropertyOptional({ description: 'Data do recebimento', example: '2024-01-15T14:30:00Z' })
   dataRecebimento?: Date;
+
+  @ApiProperty({ description: 'Parceiro responsável pela transferência', type: ParceiroResponseDto })
+  parceiro: ParceiroResponseDto;
 
   @ApiProperty({ description: 'Local de origem', type: LocalEstoqueResponseDto })
   localOrigem: LocalEstoqueResponseDto;

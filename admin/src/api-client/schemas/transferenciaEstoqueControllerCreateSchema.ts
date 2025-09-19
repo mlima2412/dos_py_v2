@@ -3,11 +3,15 @@
 * Do not edit manually.
 */
 
-import type { TransferenciaEstoqueControllerCreate201, TransferenciaEstoqueControllerCreate400, TransferenciaEstoqueControllerCreate404, TransferenciaEstoqueControllerCreateMutationRequest, TransferenciaEstoqueControllerCreateMutationResponse } from "../types/TransferenciaEstoqueControllerCreate.ts";
+import type { TransferenciaEstoqueControllerCreateHeaderParams, TransferenciaEstoqueControllerCreate201, TransferenciaEstoqueControllerCreate400, TransferenciaEstoqueControllerCreate404, TransferenciaEstoqueControllerCreateMutationRequest, TransferenciaEstoqueControllerCreateMutationResponse } from "../types/TransferenciaEstoqueControllerCreate.ts";
 import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createTransferenciaEstoqueDtoSchema } from "./createTransferenciaEstoqueDtoSchema.ts";
 import { createTransferenciaResponseDtoSchema } from "./createTransferenciaResponseDtoSchema.ts";
 import { z } from "zod";
+
+export const transferenciaEstoqueControllerCreateHeaderParamsSchema = z.object({
+      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+      }) as unknown as ToZod<TransferenciaEstoqueControllerCreateHeaderParams>
 
 /**
  * @description Transferência criada com sucesso

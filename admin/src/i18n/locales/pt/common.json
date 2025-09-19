@@ -1132,6 +1132,7 @@
 		},
 		"transfer": {
 			"title": "Transferência de Estoque",
+			"create": "Nova Transferência",
 			"locations": "Locais",
 			"sourceLocation": "Local de Saída",
 			"destinationLocation": "Local de Destino",
@@ -1146,8 +1147,41 @@
 			"noSkusSelected": "Nenhum SKU selecionado",
 			"cancel": "Cancelar",
 			"transfer": "Transferir",
+			"transferring": "Transferindo...",
 			"quantity": "Quantidade",
-			"remove": "Remover"
-		}
+			"remove": "Remover",
+			"search": "Buscar transferências...",
+			"noResults": "Nenhuma transferência encontrada",
+			"enviadoPor": "Enviado por",
+			"recebidoPor": "Recebido por",
+			"totalItems": "Total de Itens",
+			"items": "itens",
+			"columns": {
+				"counter": "#",
+				"date": "Data",
+				"source": "Origem",
+				"destination": "Destino",
+				"status": "Status"
+			},
+			"status": {
+				"received": "Recebido",
+				"pending": "Pendente"
+			},
+			"actions": {
+				"view": "Visualizar",
+				"confirmReceipt": "Confirmar Recebimento"
+			},
+			"messages": {
+				"confirmReceiptSuccess": "Transferência confirmada como recebida com sucesso!",
+				"confirmReceiptError": "Erro ao confirmar recebimento. Tente novamente."
+			}
+		},
+		"columns": {},
+		"placeholders": {},
+		"labels": {},
+		"validations": {},
+		"actions": {},
+		"messages": {},
+		"view": {}
 	}
 }

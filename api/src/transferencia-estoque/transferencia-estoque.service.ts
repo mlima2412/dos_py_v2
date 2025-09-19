@@ -22,16 +22,28 @@ export class TransferenciaEstoqueService {
   async create(
     createTransferenciaEstoqueDto: CreateTransferenciaEstoqueDto,
     enviadoPorUsuarioId: number,
+    parceiroId: number,
   ): Promise<{ publicId: string }> {
     const { localOrigemId, localDestinoId, skus } =
       createTransferenciaEstoqueDto;
 
-    // Validar se os locais existem
+    // Validar se o parceiro existe
+    const parceiro = await this.prisma.parceiro.findUnique({
+      where: { id: parceiroId },
+    });
+    if (!parceiro) {
+      throw new NotFoundException('Parceiro não encontrado');
+    }
+
+    // Validar se os locais existem e pertencem ao parceiro
     const localOrigem = await this.prisma.localEstoque.findUnique({
       where: { id: localOrigemId },
     });
     if (!localOrigem) {
       throw new NotFoundException('Local de origem não encontrado');
+    }
+    if (localOrigem.parceiroId !== parceiroId) {
+      throw new BadRequestException('Local de origem não pertence ao parceiro informado');
     }
 
     const localDestino = await this.prisma.localEstoque.findUnique({
@@ -39,6 +51,9 @@ export class TransferenciaEstoqueService {
     });
     if (!localDestino) {
       throw new NotFoundException('Local de destino não encontrado');
+    }
+    if (localDestino.parceiroId !== parceiroId) {
+      throw new BadRequestException('Local de destino não pertence ao parceiro informado');
     }
 
     if (localOrigemId === localDestinoId) {
@@ -77,6 +92,7 @@ export class TransferenciaEstoqueService {
       const transferencia = await tx.transferenciaEstoque.create({
         data: {
           publicId: uuidv7(),
+          parceiroId,
           localOrigemId,
           localDestinoId,
           enviadoPorUsuarioId,
@@ -157,9 +173,13 @@ export class TransferenciaEstoqueService {
     });
   }
 
-  async findAll(): Promise<TransferenciaEstoqueResponseDto[]> {
+  async findAll(parceiroId?: number): Promise<TransferenciaEstoqueResponseDto[]> {
+    const whereClause = parceiroId ? { parceiroId } : {};
+
     const transferencias = await this.prisma.transferenciaEstoque.findMany({
+      where: whereClause,
       include: {
+        Parceiro: true,
         localOrigem: true,
         localDestino: true,
         enviadoPorUsuario: true,
@@ -188,10 +208,16 @@ export class TransferenciaEstoqueService {
     );
   }
 
-  async findOne(id: number): Promise<TransferenciaEstoqueResponseDto> {
+  async findOne(publicId: string, parceiroId?: number): Promise<TransferenciaEstoqueResponseDto> {
+    const whereClause: any = { publicId };
+    if (parceiroId) {
+      whereClause.parceiroId = parceiroId;
+    }
+  
     const transferencia = await this.prisma.transferenciaEstoque.findUnique({
-      where: { id },
+      where: whereClause,
       include: {
+        Parceiro: true,
         localOrigem: true,
         localDestino: true,
         enviadoPorUsuario: true,
@@ -211,11 +237,11 @@ export class TransferenciaEstoqueService {
         },
       },
     });
-
+  
     if (!transferencia) {
-      throw new NotFoundException(`Transferência com ID ${id} não encontrada`);
+      throw new NotFoundException(`Transferência com publicId ${publicId} não encontrada`);
     }
-
+  
     return this.mapToResponseDto(transferencia);
   }
 
@@ -223,9 +249,15 @@ export class TransferenciaEstoqueService {
     id: number,
     confirmarRecebimentoDto: ConfirmarRecebimentoDto,
     usuarioId: number,
+    parceiroId?: number,
   ): Promise<TransferenciaEstoqueResponseDto> {
+    const whereClause: any = { id };
+    if (parceiroId) {
+      whereClause.parceiroId = parceiroId;
+    }
+
     const transferencia = await this.prisma.transferenciaEstoque.findUnique({
-      where: { id },
+      where: whereClause,
     });
 
     if (!transferencia) {
@@ -244,6 +276,7 @@ export class TransferenciaEstoqueService {
           recebidoPorUsuarioId: usuarioId,
         },
         include: {
+          Parceiro: true,
           localOrigem: true,
           localDestino: true,
           enviadoPorUsuario: true,
@@ -267,9 +300,47 @@ export class TransferenciaEstoqueService {
     return this.mapToResponseDto(transferenciaAtualizada);
   }
 
-  async remove(id: number): Promise<void> {
+  async marcarComoRecebida(
+    publicId: string,
+    usuarioId: number,
+    parceiroId: number,
+  ): Promise<{ publicId: string }> {
+    const whereClause: any = { publicId };
+    if (parceiroId) {
+      whereClause.parceiroId = parceiroId;
+    }
+
     const transferencia = await this.prisma.transferenciaEstoque.findUnique({
-      where: { id },
+      where: whereClause,
+    });
+
+    if (!transferencia) {
+      throw new NotFoundException(`Transferência com publicId ${publicId} não encontrada`);
+    }
+
+    if (transferencia.dataRecebimento) {
+      throw new ConflictException('Esta transferência já foi confirmada');
+    }
+
+    await this.prisma.transferenciaEstoque.update({
+      where: { publicId },
+      data: {
+        dataRecebimento: new Date(),
+        recebidoPorUsuarioId: usuarioId,
+      },
+    });
+
+    return { publicId };
+  }
+
+  async remove(id: number, parceiroId?: number): Promise<void> {
+    const whereClause: any = { id };
+    if (parceiroId) {
+      whereClause.parceiroId = parceiroId;
+    }
+
+    const transferencia = await this.prisma.transferenciaEstoque.findUnique({
+      where: whereClause,
       include: {
         TransferenciaEstoqueItem: {
           include: {
@@ -343,6 +414,7 @@ export class TransferenciaEstoqueService {
 
   private async validateTransferenciaData(
     dto: CreateTransferenciaEstoqueDto,
+    parceiroId: number,
   ): Promise<void> {
     const { localOrigemId, localDestinoId, skus } = dto;
 
@@ -356,9 +428,22 @@ export class TransferenciaEstoqueService {
       throw new BadRequestException('É necessário informar pelo menos um SKU');
     }
 
+    // Validar se o parceiro existe
+    await this.validateParceiroExists(parceiroId);
+
     // Validar se todos os SKUs existem
     for (const sku of skus) {
       await this.validateEstoqueDisponivel(sku.skuId, localOrigemId, sku.qtd);
+    }
+  }
+
+  private async validateParceiroExists(parceiroId: number): Promise<void> {
+    const parceiro = await this.prisma.parceiro.findUnique({
+      where: { id: parceiroId },
+    });
+
+    if (!parceiro) {
+      throw new NotFoundException(`Parceiro com ID ${parceiroId} não encontrado`);
     }
   }
 
@@ -477,6 +562,12 @@ export class TransferenciaEstoqueService {
       valorTotal: Number(transferencia.valorTotal),
       dataTransferencia: transferencia.dataTransferencia,
       dataRecebimento: transferencia.dataRecebimento,
+      parceiro: {
+        id: transferencia.Parceiro.id,
+        publicId: transferencia.Parceiro.publicId,
+        nome: transferencia.Parceiro.nome,
+        email: transferencia.Parceiro.email,
+      },
       localOrigem: {
         id: transferencia.localOrigem.id,
         publicId: transferencia.localOrigem.publicId,

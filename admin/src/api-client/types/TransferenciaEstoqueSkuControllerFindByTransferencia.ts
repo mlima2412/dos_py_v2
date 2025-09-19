@@ -3,20 +3,20 @@
 * Do not edit manually.
 */
 
-import type { TransferenciaEstoqueSkuResponseDto } from "./TransferenciaEstoqueSkuResponseDto.ts";
+import type { TransferenciaSkuSimplesDto } from "./TransferenciaSkuSimplesDto.ts";
 
 export type TransferenciaEstoqueSkuControllerFindByTransferenciaPathParams = {
     /**
-     * @description ID da transferência
+     * @description Public ID da transferência
      * @type string
     */
-    transferenciaId: string;
+    transferenciaPublicId: string;
 };
 
 /**
- * @description Lista de itens da transferência retornada com sucesso
+ * @description Lista de SKUs da transferência retornada com sucesso
 */
-export type TransferenciaEstoqueSkuControllerFindByTransferencia200 = TransferenciaEstoqueSkuResponseDto[];
+export type TransferenciaEstoqueSkuControllerFindByTransferencia200 = TransferenciaSkuSimplesDto[];
 
 /**
  * @description Transferência não encontrada

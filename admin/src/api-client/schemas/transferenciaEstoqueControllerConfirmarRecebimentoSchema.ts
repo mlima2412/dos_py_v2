@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { TransferenciaEstoqueControllerConfirmarRecebimentoPathParams, TransferenciaEstoqueControllerConfirmarRecebimento200, TransferenciaEstoqueControllerConfirmarRecebimento404, TransferenciaEstoqueControllerConfirmarRecebimento409, TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest, TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse } from "../types/TransferenciaEstoqueControllerConfirmarRecebimento.ts";
+import type { TransferenciaEstoqueControllerConfirmarRecebimentoPathParams, TransferenciaEstoqueControllerConfirmarRecebimentoHeaderParams, TransferenciaEstoqueControllerConfirmarRecebimento200, TransferenciaEstoqueControllerConfirmarRecebimento404, TransferenciaEstoqueControllerConfirmarRecebimento409, TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest, TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse } from "../types/TransferenciaEstoqueControllerConfirmarRecebimento.ts";
 import type { ToZod } from "@kubb/plugin-zod/utils";
 import { confirmarRecebimentoDtoSchema } from "./confirmarRecebimentoDtoSchema.ts";
 import { transferenciaEstoqueResponseDtoSchema } from "./transferenciaEstoqueResponseDtoSchema.ts";
@@ -12,6 +12,10 @@ import { z } from "zod";
 export const transferenciaEstoqueControllerConfirmarRecebimentoPathParamsSchema = z.object({
       "id": z.string().describe("ID da transferência")
       }) as unknown as ToZod<TransferenciaEstoqueControllerConfirmarRecebimentoPathParams>
+
+export const transferenciaEstoqueControllerConfirmarRecebimentoHeaderParamsSchema = z.object({
+      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+      }) as unknown as ToZod<TransferenciaEstoqueControllerConfirmarRecebimentoHeaderParams>
 
 /**
  * @description Recebimento confirmado com sucesso

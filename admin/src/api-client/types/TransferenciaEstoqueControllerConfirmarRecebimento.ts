@@ -14,6 +14,14 @@ export type TransferenciaEstoqueControllerConfirmarRecebimentoPathParams = {
     id: string;
 };
 
+export type TransferenciaEstoqueControllerConfirmarRecebimentoHeaderParams = {
+    /**
+     * @description ID do parceiro
+     * @type integer
+    */
+    "x-parceiro-id": number;
+};
+
 /**
  * @description Recebimento confirmado com sucesso
 */
@@ -37,5 +45,6 @@ export type TransferenciaEstoqueControllerConfirmarRecebimentoMutation = {
     Response: TransferenciaEstoqueControllerConfirmarRecebimento200;
     Request: TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest;
     PathParams: TransferenciaEstoqueControllerConfirmarRecebimentoPathParams;
+    HeaderParams: TransferenciaEstoqueControllerConfirmarRecebimentoHeaderParams;
     Errors: TransferenciaEstoqueControllerConfirmarRecebimento404 | TransferenciaEstoqueControllerConfirmarRecebimento409;
 };

@@ -3,14 +3,18 @@
 * Do not edit manually.
 */
 
-import type { TransferenciaEstoqueControllerFindOnePathParams, TransferenciaEstoqueControllerFindOne200, TransferenciaEstoqueControllerFindOne404, TransferenciaEstoqueControllerFindOneQueryResponse } from "../types/TransferenciaEstoqueControllerFindOne.ts";
+import type { TransferenciaEstoqueControllerFindOnePathParams, TransferenciaEstoqueControllerFindOneHeaderParams, TransferenciaEstoqueControllerFindOne200, TransferenciaEstoqueControllerFindOne404, TransferenciaEstoqueControllerFindOneQueryResponse } from "../types/TransferenciaEstoqueControllerFindOne.ts";
 import type { ToZod } from "@kubb/plugin-zod/utils";
 import { transferenciaEstoqueResponseDtoSchema } from "./transferenciaEstoqueResponseDtoSchema.ts";
 import { z } from "zod";
 
 export const transferenciaEstoqueControllerFindOnePathParamsSchema = z.object({
-      "id": z.string().describe("ID da transferência")
+      "publicId": z.string().describe("Public ID da transferência")
       }) as unknown as ToZod<TransferenciaEstoqueControllerFindOnePathParams>
+
+export const transferenciaEstoqueControllerFindOneHeaderParamsSchema = z.object({
+      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+      }) as unknown as ToZod<TransferenciaEstoqueControllerFindOneHeaderParams>
 
 /**
  * @description Transferência encontrada com sucesso

@@ -114,9 +114,11 @@ export function getMenuList(
 							active: pathname.includes("/estoques/visualizar"),
 						},
 						{
-							href: "/produtos/transferencia",
+							href: "/produtos/listar-transferencia",
 							label: t("menu.products.transfers"),
-							active: pathname.includes("/produtos/transferencia"),
+							active:
+								pathname.includes("/produtos/listar-transferencia") ||
+								pathname.includes("/produtos/transferencia"),
 						},
 						{
 							href: "/produto/categorias",

@@ -7,10 +7,18 @@ import type { TransferenciaEstoqueResponseDto } from "./TransferenciaEstoqueResp
 
 export type TransferenciaEstoqueControllerFindOnePathParams = {
     /**
-     * @description ID da transferência
+     * @description Public ID da transferência
      * @type string
     */
-    id: string;
+    publicId: string;
+};
+
+export type TransferenciaEstoqueControllerFindOneHeaderParams = {
+    /**
+     * @description ID do parceiro
+     * @type integer
+    */
+    "x-parceiro-id": number;
 };
 
 /**
@@ -28,5 +36,6 @@ export type TransferenciaEstoqueControllerFindOneQueryResponse = TransferenciaEs
 export type TransferenciaEstoqueControllerFindOneQuery = {
     Response: TransferenciaEstoqueControllerFindOne200;
     PathParams: TransferenciaEstoqueControllerFindOnePathParams;
+    HeaderParams: TransferenciaEstoqueControllerFindOneHeaderParams;
     Errors: TransferenciaEstoqueControllerFindOne404;
 };

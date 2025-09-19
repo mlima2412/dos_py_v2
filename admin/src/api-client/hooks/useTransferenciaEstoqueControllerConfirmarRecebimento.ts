@@ -4,7 +4,7 @@
 */
 
 import fetch from "@/lib/fetch-client";
-import type { TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest, TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse, TransferenciaEstoqueControllerConfirmarRecebimentoPathParams, TransferenciaEstoqueControllerConfirmarRecebimento404, TransferenciaEstoqueControllerConfirmarRecebimento409 } from "../types/TransferenciaEstoqueControllerConfirmarRecebimento.ts";
+import type { TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest, TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse, TransferenciaEstoqueControllerConfirmarRecebimentoPathParams, TransferenciaEstoqueControllerConfirmarRecebimentoHeaderParams, TransferenciaEstoqueControllerConfirmarRecebimento404, TransferenciaEstoqueControllerConfirmarRecebimento409 } from "../types/TransferenciaEstoqueControllerConfirmarRecebimento.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
@@ -14,26 +14,26 @@ export const transferenciaEstoqueControllerConfirmarRecebimentoMutationKey = () 
 export type TransferenciaEstoqueControllerConfirmarRecebimentoMutationKey = ReturnType<typeof transferenciaEstoqueControllerConfirmarRecebimentoMutationKey>
 
 /**
- * @description Confirma o recebimento de uma transferência de estoque. O usuário que confirma é obtido automaticamente do token de autenticação.
+ * @description Confirma o recebimento de uma transferência de estoque. O usuário que confirma é obtido automaticamente do token de autenticação e a transferência deve pertencer ao parceiro especificado no header.
  * @summary Confirmar recebimento da transferência
  * {@link /transferencia-estoque/:id/confirmar-recebimento}
  */
-export async function transferenciaEstoqueControllerConfirmarRecebimento(id: TransferenciaEstoqueControllerConfirmarRecebimentoPathParams["id"], data?: TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest, config: Partial<RequestConfig<TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest>> & { client?: typeof fetch } = {}) {
+export async function transferenciaEstoqueControllerConfirmarRecebimento(id: TransferenciaEstoqueControllerConfirmarRecebimentoPathParams["id"], headers: TransferenciaEstoqueControllerConfirmarRecebimentoHeaderParams, data?: TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest, config: Partial<RequestConfig<TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest>> & { client?: typeof fetch } = {}) {
   const { client:request = fetch, ...requestConfig } = config
 
 const requestData = data
-const res = await request<TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerConfirmarRecebimento404 | TransferenciaEstoqueControllerConfirmarRecebimento409>, TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest>({ method : "PATCH", url : `/transferencia-estoque/${id}/confirmar-recebimento`, data : requestData, ... requestConfig })
+const res = await request<TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerConfirmarRecebimento404 | TransferenciaEstoqueControllerConfirmarRecebimento409>, TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest>({ method : "PATCH", url : `/transferencia-estoque/${id}/confirmar-recebimento`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
 return res.data
 }
 
 /**
- * @description Confirma o recebimento de uma transferência de estoque. O usuário que confirma é obtido automaticamente do token de autenticação.
+ * @description Confirma o recebimento de uma transferência de estoque. O usuário que confirma é obtido automaticamente do token de autenticação e a transferência deve pertencer ao parceiro especificado no header.
  * @summary Confirmar recebimento da transferência
  * {@link /transferencia-estoque/:id/confirmar-recebimento}
  */
 export function useTransferenciaEstoqueControllerConfirmarRecebimento<TContext>(options: 
   {
-    mutation?: UseMutationOptions<TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerConfirmarRecebimento404 | TransferenciaEstoqueControllerConfirmarRecebimento409>, {id: TransferenciaEstoqueControllerConfirmarRecebimentoPathParams["id"], data?: TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest}, TContext> & { client?: QueryClient },
+    mutation?: UseMutationOptions<TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerConfirmarRecebimento404 | TransferenciaEstoqueControllerConfirmarRecebimento409>, {id: TransferenciaEstoqueControllerConfirmarRecebimentoPathParams["id"], headers: TransferenciaEstoqueControllerConfirmarRecebimentoHeaderParams, data?: TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest}, TContext> & { client?: QueryClient },
     client?: Partial<RequestConfig<TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest>> & { client?: typeof fetch },
   }
    = {}) {
@@ -42,9 +42,9 @@ export function useTransferenciaEstoqueControllerConfirmarRecebimento<TContext>(
           const { client: queryClient, ...mutationOptions } = mutation;
           const mutationKey = mutationOptions.mutationKey ?? transferenciaEstoqueControllerConfirmarRecebimentoMutationKey()
   
-          return useMutation<TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerConfirmarRecebimento404 | TransferenciaEstoqueControllerConfirmarRecebimento409>, {id: TransferenciaEstoqueControllerConfirmarRecebimentoPathParams["id"], data?: TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest}, TContext>({
-            mutationFn: async({ id, data }) => {
-              return transferenciaEstoqueControllerConfirmarRecebimento(id, data, config)
+          return useMutation<TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerConfirmarRecebimento404 | TransferenciaEstoqueControllerConfirmarRecebimento409>, {id: TransferenciaEstoqueControllerConfirmarRecebimentoPathParams["id"], headers: TransferenciaEstoqueControllerConfirmarRecebimentoHeaderParams, data?: TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest}, TContext>({
+            mutationFn: async({ id, headers, data }) => {
+              return transferenciaEstoqueControllerConfirmarRecebimento(id, headers, data, config)
             },
             mutationKey,
             ...mutationOptions

@@ -48,6 +48,7 @@ export class CreateTransferenciaEstoqueDto {
   @IsString()
   observacao?: string;
 
+  // Nota: parceiroId será obtido automaticamente do header x-parceiro-id
   // Nota: enviadoPorUsuarioId será obtido automaticamente do usuário autenticado
   // dataRecebimento é opcional e só será preenchida na confirmação de recebimento
 }
