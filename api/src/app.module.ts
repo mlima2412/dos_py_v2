@@ -32,6 +32,8 @@ import { EstoqueSkuModule } from './estoque-sku/estoque-sku.module';
 import { MovimentoEstoqueModule } from './movimento-estoque/movimento-estoque.module';
 import { TransferenciaEstoqueModule } from './transferencia-estoque/transferencia-estoque.module';
 import { TransferenciaEstoqueSkuModule } from './transferencia-estoque-sku/transferencia-estoque-sku.module';
+import { ConferenciaEstoqueModule } from './conferencia-estoque/conferencia-estoque.module';
+import { ConferenciaItemModule } from './conferencia-item/conferencia-item.module';
 
 @Module({
   imports: [
@@ -61,6 +63,8 @@ import { TransferenciaEstoqueSkuModule } from './transferencia-estoque-sku/trans
     MovimentoEstoqueModule,
     TransferenciaEstoqueModule,
     TransferenciaEstoqueSkuModule,
+    ConferenciaEstoqueModule,
+    ConferenciaItemModule,
   ],
   controllers: [AppController],
   providers: [

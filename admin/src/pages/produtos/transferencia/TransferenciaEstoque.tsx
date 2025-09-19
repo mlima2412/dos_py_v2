@@ -212,11 +212,13 @@ const SelectedSkusList: React.FC<{
 						<ShoppingCart className="h-5 w-5" />
 						{t("inventory.transfer.selectedSkus")}
 					</div>
-					{selectedSkus.length > 0 && (
-						<span className="text-sm font-normal text-muted-foreground">
-							{totalItems} {totalItems === 1 ? "item" : "itens"}
-						</span>
-					)}
+					<div>
+						{selectedSkus.length > 0 && (
+							<span className="text-base font-normal text-muted-foreground">
+								{totalItems} {totalItems === 1 ? "item" : "itens"}
+							</span>
+						)}
+					</div>
 				</CardTitle>
 			</CardHeader>
 			<CardContent>
@@ -230,7 +232,7 @@ const SelectedSkusList: React.FC<{
 						</div>
 					</div>
 				) : (
-					<ScrollArea className="h-[450px] w-full rounded-md">
+					<ScrollArea className="h-[680px] w-full rounded-md">
 						<div className="space-y-2 pr-2">
 							{selectedSkus.map(({ sku, product, quantity }) => (
 								<div

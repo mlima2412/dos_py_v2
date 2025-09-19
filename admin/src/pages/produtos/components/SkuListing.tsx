@@ -205,9 +205,17 @@ export const SkuListing: React.FC<SkuListingProps> = ({
 									{filteredSkus.map((sku: ProdutoSKUEstoqueResponseDto) => (
 										<TableRow
 											key={`${sku.id}-${sku.publicId}`}
-											onDoubleClick={() => onDoubleClick?.(sku)}
+											onDoubleClick={() => {
+												if (sku.estoque > 0) {
+													onDoubleClick?.(sku);
+												}
+											}}
 											className={
-												onDoubleClick ? "cursor-pointer hover:bg-muted/50" : ""
+												onDoubleClick && sku.estoque > 0
+													? "cursor-pointer hover:bg-muted/50"
+													: onDoubleClick && sku.estoque <= 0
+														? "cursor-not-allowed opacity-50"
+														: ""
 											}
 										>
 											<TableCell className="font-mono text-sm text-center">

@@ -16,6 +16,11 @@ export type TransferenciaSkuSimplesDto = {
     */
     produto: string;
     /**
+     * @description Preço de venda do produto
+     * @type number
+    */
+    precoVenda: number;
+    /**
      * @description Cor do SKU
      * @type string
     */

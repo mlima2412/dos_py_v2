@@ -10,6 +10,7 @@ import { z } from "zod";
 export const transferenciaSkuSimplesDtoSchema = z.object({
       "id": z.coerce.number().describe("ID do item da transferência"),
   "produto": z.coerce.string().describe("Nome do produto"),
+  "precoVenda": z.coerce.number().describe("Preço de venda do produto"),
   "cor": z.coerce.string().describe("Cor do SKU"),
   "tamanho": z.coerce.string().describe("Tamanho do SKU"),
   "quantidade": z.coerce.number().describe("Quantidade transferida")

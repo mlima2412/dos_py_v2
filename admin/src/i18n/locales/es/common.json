@@ -1025,19 +1025,15 @@
 			},
 			"actions": {
 				"view": "Visualizar",
+				"print": "Imprimir",
 				"confirmReceipt": "Confirmar Recepción"
 			},
 			"messages": {
 				"confirmReceiptSuccess": "¡Transferencia confirmada como recibida con éxito!",
-				"confirmReceiptError": "Error al confirmar recepción. Inténtalo de nuevo."
+				"confirmReceiptError": "Error al confirmar recepción. Inténtalo de nuevo.",
+				"loadError": "Error al cargar datos de la transferencia",
+				"notFound": "Transferencia no encontrada"
 			}
-		},
-		"columns": {},
-		"placeholders": {},
-		"labels": {},
-		"validations": {},
-		"actions": {},
-		"messages": {},
-		"view": {}
+		}
 	}
 }

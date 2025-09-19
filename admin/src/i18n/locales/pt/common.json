@@ -1169,19 +1169,15 @@
 			},
 			"actions": {
 				"view": "Visualizar",
+				"print": "Imprimir",
 				"confirmReceipt": "Confirmar Recebimento"
 			},
 			"messages": {
 				"confirmReceiptSuccess": "Transferência confirmada como recebida com sucesso!",
-				"confirmReceiptError": "Erro ao confirmar recebimento. Tente novamente."
+				"confirmReceiptError": "Erro ao confirmar recebimento. Tente novamente.",
+				"loadError": "Erro ao carregar dados da transferência",
+				"notFound": "Transferência não encontrada"
 			}
-		},
-		"columns": {},
-		"placeholders": {},
-		"labels": {},
-		"validations": {},
-		"actions": {},
-		"messages": {},
-		"view": {}
+		}
 	}
 }

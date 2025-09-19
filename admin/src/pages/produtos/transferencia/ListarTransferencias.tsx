@@ -23,11 +23,11 @@ import {
 } from "@/components/ui/table";
 import {
 	ArrowLeftRight,
-	Plus,
 	Search,
 	Eye,
 	Package,
 	ListChecks,
+	Printer,
 } from "lucide-react";
 import { useTransferenciasEstoque } from "@/hooks/useTransferenciasEstoque";
 import { usePartnerContext } from "@/hooks/usePartnerContext";
@@ -89,13 +89,20 @@ export const ListarTransferencias: React.FC = () => {
 		navigate(`/produtos/transferencia/visualizar/${publicId}`);
 	};
 
+	const handlePrintTransferencia = (publicId: string) => {
+		// Abrir página de impressão em nova aba
+		window.open(`/produtos/transferencia/print/${publicId}`, "_blank");
+	};
+
 	const formatDate = (dateString: string) => {
 		const date = new Date(dateString);
 		const locale = i18n.language === "es" ? es : ptBR;
 		return format(date, "dd/MM/yyyy HH:mm", { locale });
 	};
 
-	const getStatusBadge = (transferencia: any) => {
+	const getStatusBadge = (transferencia: {
+		dataRecebimento?: string | null;
+	}) => {
 		if (transferencia.dataRecebimento) {
 			return (
 				<Badge
@@ -224,7 +231,7 @@ export const ListarTransferencias: React.FC = () => {
 														{transferencia.localOrigem.nome}
 													</div>
 													<div className="text-sm text-muted-foreground">
-														{transferencia.localOrigem.endereco}
+														{transferencia.localOrigem.descricao}
 													</div>
 												</div>
 											</TableCell>
@@ -234,7 +241,7 @@ export const ListarTransferencias: React.FC = () => {
 														{transferencia.localDestino.nome}
 													</div>
 													<div className="text-sm text-muted-foreground">
-														{transferencia.localDestino.endereco}
+														{transferencia.localDestino.descricao}
 													</div>
 												</div>
 											</TableCell>
@@ -248,8 +255,20 @@ export const ListarTransferencias: React.FC = () => {
 															handleViewTransferencia(transferencia.publicId)
 														}
 														className="h-8 w-8 p-0"
+														title={t("inventory.transfer.actions.view")}
 													>
 														<Eye className="h-4 w-4" />
+													</Button>
+													<Button
+														variant="ghost"
+														size="sm"
+														onClick={() =>
+															handlePrintTransferencia(transferencia.publicId)
+														}
+														className="h-8 w-8 p-0"
+														title={t("inventory.transfer.actions.print")}
+													>
+														<Printer className="h-4 w-4" />
 													</Button>
 													{!transferencia.dataRecebimento && (
 														<Button
@@ -260,6 +279,9 @@ export const ListarTransferencias: React.FC = () => {
 															}
 															disabled={confirmReceiptMutation.isPending}
 															className="h-8 w-8 p-0"
+															title={t(
+																"inventory.transfer.actions.confirmReceipt"
+															)}
 														>
 															<ListChecks className="h-4 w-4" />
 														</Button>
