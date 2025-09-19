@@ -1,0 +1,1 @@
+{"type":"object","properties":{"ajustar":{"type":"boolean","description":"Se deve ajustar o estoque com base na conferência","example":true}},"required":["ajustar"],"x-readme-ref-name":"AjustarItemDto"}

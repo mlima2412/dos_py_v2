@@ -151,6 +151,7 @@
 			"list": "Lista de Productos",
 			"stocks": "Inventarios",
 			"transfers": "Transferencias",
+			"conferences": "Conferências",
 			"categories": "Categorías"
 		},
 		"inventory": "Inventario",
@@ -1035,5 +1036,44 @@
 				"notFound": "Transferencia no encontrada"
 			}
 		}
-	}
+	},
+	"conference": {
+		"title": "Conferencia de Inventario",
+		"list": {
+			"title": "Lista de Conferencias",
+			"noResults": "No se encontraron conferencias",
+			"search": "Buscar por ubicación...",
+			"filterByPartner": "Filtrar por socio",
+			"allPartners": "Todos los socios",
+			"results": "conferencias",
+			"showing": "Mostrando",
+			"of": "de",
+			"loadMore": "Cargar más"
+		},
+		"columns": {
+			"date": "Fecha",
+			"location": "Ubicación",
+			"user": "Conferido por",
+			"endDate": "Fecha fin",
+			"status": "Estado",
+			"actions": "Acciones"
+		},
+		"status": {
+			"PENDENTE": "Pendiente",
+			"EM_ANDAMENTO": "En progreso",
+			"FINALIZADA": "Finalizada",
+			"CANCELADA": "Cancelada"
+		},
+		"actions": {
+			"create": "Nueva Conferencia",
+			"view": "Visualizar",
+			"complete": "Marcar como concluida"
+		},
+		"messages": {
+			"loadError": "Error al cargar conferencias",
+			"completeSuccess": "¡Conferencia marcada como concluida con éxito!",
+			"completeError": "Error al marcar conferencia como concluida. Inténtalo de nuevo."
+		}
+	},
+	"conferenceDetails": {}
 }

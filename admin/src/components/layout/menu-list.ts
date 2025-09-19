@@ -121,6 +121,11 @@ export function getMenuList(
 								pathname.includes("/produtos/transferencia"),
 						},
 						{
+							href: "/produtos/conferencia",
+							label: t("menu.products.conferences"),
+							active: pathname.includes("/produtos/conference"),
+						},
+						{
 							href: "/produto/categorias",
 							label: t("menu.products.categories"),
 							active: pathname.includes("/produto/categorias"),

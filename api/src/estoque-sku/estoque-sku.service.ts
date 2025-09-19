@@ -87,11 +87,24 @@ export class EstoqueSkuService {
       where: { localId },
       include: {
         sku: {
-          include: {
-            produto: true,
+          select: {
+            id: true,
+            cor: true,
+            tamanho: true,
+            produto: {
+              select: {
+                id: true,
+                nome: true,
+              },
+            },
           },
         },
-        local: true,
+        local: {
+          select: {
+            id: true,
+            nome: true,
+          },
+        },
       },
       orderBy: { sku: { produto: { nome: 'asc' } } },
     });
@@ -226,9 +239,7 @@ export class EstoqueSkuService {
     const newQuantity = existingEstoque.qtd + adjustment;
 
     if (newQuantity < 0) {
-      throw new BadRequestException(
-        'Ajuste resultaria em quantidade negativa',
-      );
+      throw new BadRequestException('Ajuste resultaria em quantidade negativa');
     }
 
     const estoqueSku = await this.prisma.estoqueSKU.update({

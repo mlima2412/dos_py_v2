@@ -160,6 +160,7 @@
 			"list": "Lista de Produtos",
 			"stocks": "Estoques",
 			"transfers": "Transferências",
+			"conferences": "Conferências",
 			"categories": "Categorias"
 		},
 		"inventory": "Estoque",
@@ -1179,5 +1180,44 @@
 				"notFound": "Transferência não encontrada"
 			}
 		}
-	}
+	},
+	"conference": {
+		"title": "Conferência de Estoque",
+		"list": {
+			"title": "Lista de Conferências",
+			"noResults": "Nenhuma conferência encontrada",
+			"search": "Buscar por local...",
+			"filterByPartner": "Filtrar por parceiro",
+			"allPartners": "Todos os parceiros",
+			"results": "conferências",
+			"showing": "Mostrando",
+			"of": "de",
+			"loadMore": "Carregar mais"
+		},
+		"columns": {
+			"date": "Data",
+			"location": "Local",
+			"user": "Responsável",
+			"endDate": "Data fim",
+			"status": "Status",
+			"actions": "Ações"
+		},
+		"status": {
+			"PENDENTE": "Pendente",
+			"EM_ANDAMENTO": "Em andamento",
+			"FINALIZADA": "Finalizada",
+			"CANCELADA": "Cancelada"
+		},
+		"actions": {
+			"create": "Nova Conferência",
+			"view": "Visualizar",
+			"complete": "Marcar como concluída"
+		},
+		"messages": {
+			"loadError": "Erro ao carregar conferências",
+			"completeSuccess": "Conferência marcada como concluída com sucesso!",
+			"completeError": "Erro ao marcar conferência como concluída. Tente novamente."
+		}
+	},
+	"conferenceDetails": {}
 }

@@ -5,6 +5,7 @@ import { TransferenciaEstoque } from "./transferencia";
 import { ListarTransferencias } from "./transferencia/ListarTransferencias";
 import { VisualizarTransferencia } from "./transferencia/VisualizarTransferencia";
 import { TransferenciaPrintPage } from "./transferencia/print/TransferenciaPrintPage";
+import { ConferenciaRoutes } from "./conferencia/conferencia";
 
 export function ProdutosRoutes() {
 	return (
@@ -23,6 +24,7 @@ export function ProdutosRoutes() {
 				path="transferencia/print/:publicId"
 				element={<TransferenciaPrintPage />}
 			/>
+			<Route path="conferencia/*" element={<ConferenciaRoutes />} />
 		</Routes>
 	);
 }

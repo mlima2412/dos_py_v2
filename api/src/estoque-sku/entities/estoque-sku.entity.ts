@@ -23,13 +23,24 @@ export class EstoqueSku {
     description: 'Informações do SKU',
     required: false,
   })
-  sku?: any;
+  sku?: {
+    id: number;
+    cor: string;
+    tamanho: string;
+    produto: {
+      id: number;
+      nome: string;
+    };
+  };
 
   @ApiProperty({
     description: 'Informações do local de estoque',
     required: false,
   })
-  local?: any;
+  local?: {
+    id: number;
+    nome: string;
+  };
 
   constructor(data?: Partial<EstoqueSku>) {
     if (data) {

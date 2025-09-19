@@ -45,6 +45,7 @@ export class TransferenciaEstoqueSkuService {
                     id: true,
                     publicId: true,
                     nome: true,
+                    precoVenda: true,
                   },
                 },
               },
@@ -146,10 +147,10 @@ export class TransferenciaEstoqueSkuService {
     transferenciaPublicId: string,
   ): Promise<TransferenciaSkuSimplesDto[]> {
     const itens = await this.prisma.transferenciaEstoqueItem.findMany({
-      where: { 
+      where: {
         TransferenciaEstoque: {
           publicId: transferenciaPublicId,
-        }
+        },
       },
       include: {
         MovimentoEstoque: {
@@ -159,6 +160,7 @@ export class TransferenciaEstoqueSkuService {
                 produto: {
                   select: {
                     nome: true,
+                    precoVenda: true,
                   },
                 },
               },
@@ -180,6 +182,7 @@ export class TransferenciaEstoqueSkuService {
     return itens.map(item => ({
       id: item.id,
       produto: item.MovimentoEstoque.sku.produto.nome,
+      precoVenda: item.MovimentoEstoque.sku.produto.precoVenda.toNumber(),
       cor: item.MovimentoEstoque.sku.cor || 'N/A',
       tamanho: item.MovimentoEstoque.sku.tamanho || 'N/A',
       quantidade: item.MovimentoEstoque.qtd,

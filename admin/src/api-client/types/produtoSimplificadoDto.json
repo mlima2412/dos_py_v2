@@ -1,0 +1,1 @@
+{"type":"object","properties":{"id":{"type":"number","description":"ID do produto","example":1},"nome":{"type":"string","description":"Nome do produto","example":"Camiseta Básica"}},"required":["id","nome"],"x-readme-ref-name":"ProdutoSimplificadoDto"}

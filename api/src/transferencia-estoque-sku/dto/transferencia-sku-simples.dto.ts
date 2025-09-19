@@ -7,6 +7,9 @@ export class TransferenciaSkuSimplesDto {
   @ApiProperty({ description: 'Nome do produto', example: 'Camiseta Polo' })
   produto: string;
 
+  @ApiProperty({ description: 'Preço de venda do produto', example: 29.99 })
+  precoVenda: number;
+
   @ApiProperty({ description: 'Cor do SKU', example: 'Azul' })
   cor: string;
 
