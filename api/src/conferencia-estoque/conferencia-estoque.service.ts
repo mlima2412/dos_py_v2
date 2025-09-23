@@ -199,9 +199,9 @@ export class ConferenciaEstoqueService {
     }
 
     // Verificar se a conferência pode ser removida
-    if (conferencia.status === 'EM_ANDAMENTO') {
+    if (conferencia.status === 'FINALIZADA') {
       throw new BadRequestException(
-        'Não é possível remover uma conferência em andamento',
+        'Não é possível remover uma conferência finalizada',
       );
     }
 
@@ -287,6 +287,36 @@ export class ConferenciaEstoqueService {
     };
   }
 
+  async isLocalEstoqueEmConferencia(
+    localEstoquePublicId: string,
+    parceiroId: number,
+  ): Promise<boolean> {
+    // Primeiro, buscar o local de estoque pelo publicId
+    const localEstoque = await this.prisma.localEstoque.findFirst({
+      where: {
+        publicId: localEstoquePublicId,
+        parceiroId,
+      },
+    });
+
+    if (!localEstoque) {
+      throw new NotFoundException('Local de estoque não encontrado');
+    }
+
+    // Verificar se existe alguma conferência com status PENDENTE para este local
+    const conferenciaEmAndamento =
+      await this.prisma.conferenciaEstoque.findFirst({
+        where: {
+          localEstoqueId: localEstoque.id,
+          status: {
+            in: ['PENDENTE', 'EM_ANDAMENTO', 'CONCLUIDA'],
+          },
+        },
+      });
+
+    return !!conferenciaEmAndamento;
+  }
+
   private async validateLocalEstoque(
     localEstoqueId: number,
     parceiroId: number,
@@ -321,7 +351,7 @@ export class ConferenciaEstoqueService {
         where: {
           localEstoqueId,
           status: {
-            in: ['PENDENTE', 'EM_ANDAMENTO'],
+            in: ['PENDENTE', 'EM_ANDAMENTO', 'CONCLUIDA'],
           },
         },
       });

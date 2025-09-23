@@ -19,6 +19,16 @@ import type {
 	EstoqueSku,
 } from "@/api-client/types";
 
+// Tipos auxiliares para evitar uso de 'any'
+interface SkuWithProduto {
+	produto?: {
+		id: number;
+		nome: string;
+	};
+	cor?: string;
+	tamanho?: string;
+}
+
 interface ConferenciaSkuListingProps {
 	localId: number;
 	estoqueLocal?: EstoqueSku[];
@@ -26,7 +36,7 @@ interface ConferenciaSkuListingProps {
 	itensConferidos: Map<number, number>;
 	itensConferencia?: ConferenciaItemResponseDto[];
 	isLoading: boolean;
-	error: any;
+	error: Error | null;
 }
 
 export const ConferenciaSkuListing: React.FC<ConferenciaSkuListingProps> = ({
@@ -65,14 +75,15 @@ export const ConferenciaSkuListing: React.FC<ConferenciaSkuListingProps> = ({
 
 			estoqueLocal.forEach(estoque => {
 				const itemConferido = itensConferidosMap.get(estoque.skuId);
+				const skuWithProduto = estoque.sku as SkuWithProduto;
 
 				skus.push({
 					skuId: estoque.skuId,
-					produtoId: (estoque.sku as any)?.produto?.id || 0,
+					produtoId: skuWithProduto?.produto?.id || 0,
 					produtoNome:
-						(estoque.sku as any)?.produto?.nome || "Produto não encontrado",
-					cor: (estoque.sku as any)?.cor || "",
-					tamanho: (estoque.sku as any)?.tamanho || "",
+						skuWithProduto?.produto?.nome || "Produto não encontrado",
+					cor: skuWithProduto?.cor || "",
+					tamanho: skuWithProduto?.tamanho || "",
 					qtd: estoque.qtd,
 					qtdConferida: itemConferido?.qtdConferencia || 0,
 					diferenca: itemConferido?.diferenca || 0,
@@ -143,7 +154,7 @@ export const ConferenciaSkuListing: React.FC<ConferenciaSkuListingProps> = ({
 			return (
 				<Badge
 					variant="default"
-					className="bg-green-100 text-green-800 border-green-200"
+					className="bg-green-100 text-green-800 border-green-200 text-xs"
 				>
 					Correto
 				</Badge>
@@ -152,13 +163,17 @@ export const ConferenciaSkuListing: React.FC<ConferenciaSkuListingProps> = ({
 			return (
 				<Badge
 					variant="secondary"
-					className="bg-blue-100 text-blue-800 border-blue-200"
+					className="bg-blue-100 text-blue-800 border-blue-200 text-xs"
 				>
 					Excesso (+{diferenca})
 				</Badge>
 			);
 		} else {
-			return <Badge variant="destructive">Falta ({diferenca})</Badge>;
+			return (
+				<Badge variant="destructive" className="text-xs">
+					Falta ({diferenca})
+				</Badge>
+			);
 		}
 	};
 
@@ -185,26 +200,26 @@ export const ConferenciaSkuListing: React.FC<ConferenciaSkuListingProps> = ({
 					</div>
 				) : (
 					<ScrollArea className="h-[450px] w-full rounded-md border">
-						<div className="min-w-[800px]">
+						<div className="min-w-[700px]">
 							<Table>
 								<TableHeader className="sticky top-0 bg-background z-10">
 									<TableRow>
-										<TableHead className="h-8 py-2 bg-background text-center">
+										<TableHead className="h-8 py-1 px-2 bg-background text-center w-[200px]">
 											Código / Produto
 										</TableHead>
-										<TableHead className="h-8 py-2 bg-background text-center">
+										<TableHead className="h-8 py-1 px-2 bg-background text-center w-[120px]">
 											SKU
 										</TableHead>
-										<TableHead className="h-8 py-2 bg-background text-center">
+										<TableHead className="h-8 py-1 px-2 bg-background text-center w-[100px]">
 											Estoque Sistema
 										</TableHead>
-										<TableHead className="h-8 py-2 bg-background text-center">
+										<TableHead className="h-8 py-1 px-2 bg-background text-center w-[100px]">
 											Estoque Físico
 										</TableHead>
-										<TableHead className="h-8 py-2 bg-background text-center">
+										<TableHead className="h-8 py-1 px-2 bg-background text-center w-[80px]">
 											Diferença
 										</TableHead>
-										<TableHead className="h-8 py-2 bg-background text-center">
+										<TableHead className="h-8 py-1 px-2 bg-background text-center w-[100px]">
 											Status
 										</TableHead>
 									</TableRow>
@@ -224,71 +239,75 @@ export const ConferenciaSkuListing: React.FC<ConferenciaSkuListingProps> = ({
 												key={`${item.produtoId}-${item.skuId}`}
 												className={conferidoQtd > 0 ? "bg-muted/30" : ""}
 											>
-												<TableCell className="text-left">
+												<TableCell className="text-left py-1 px-2">
 													<div>
 														<p className="font-mono text-xs font-medium">
 															{item.produtoId > 0
 																? `${item.produtoId.toString().padStart(3, "0")}-${item.skuId.toString().padStart(3, "0")}`
 																: item.skuId.toString().padStart(3, "0")}
 														</p>
-														<p className="text-xs font-medium">
+														<p className="text-xs font-medium truncate">
 															{item.produtoNome}
 														</p>
 													</div>
 												</TableCell>
-												<TableCell className="text-center">
+												<TableCell className="text-center py-1 px-2">
 													<div className="text-sm">
 														{item.cor && (
-															<p className="text-xs text-muted-foreground">
+															<p className="text-xs text-muted-foreground truncate">
 																Cor: {item.cor}
 															</p>
 														)}
 														{item.tamanho && (
-															<p className="text-xs text-muted-foreground">
+															<p className="text-xs text-muted-foreground truncate">
 																Tamanho: {item.tamanho}
 															</p>
 														)}
 													</div>
 												</TableCell>
-												<TableCell className="text-center">
-													<Badge variant="outline">{item.qtd}</Badge>
+												<TableCell className="text-center py-1 px-2">
+													<Badge variant="outline" className="text-xs">
+														{item.qtd}
+													</Badge>
 												</TableCell>
-												<TableCell className="text-center">
+												<TableCell className="text-center py-1 px-2">
 													<Badge
 														variant={conferidoQtd > 0 ? "default" : "secondary"}
-														className={
+														className={`text-xs ${
 															conferidoQtd > 0
 																? "bg-blue-100 text-blue-800"
 																: ""
-														}
+														}`}
 													>
 														{conferidoQtd}
 													</Badge>
 												</TableCell>
-												<TableCell className="text-center">
+												<TableCell className="text-center py-1 px-2">
 													{conferidoQtd > 0 ? (
 														<span
-															className={
+															className={`text-xs ${
 																diferenca === 0
 																	? "text-green-600 font-medium"
 																	: diferenca > 0
 																		? "text-blue-600 font-medium"
 																		: "text-red-600 font-medium"
-															}
+															}`}
 														>
 															{diferenca > 0 ? `+${diferenca}` : diferenca}
 														</span>
 													) : (
-														<span className="text-muted-foreground">-</span>
+														<span className="text-muted-foreground text-xs">
+															-
+														</span>
 													)}
 												</TableCell>
-												<TableCell className="text-center">
+												<TableCell className="text-center py-1 px-2">
 													{conferidoQtd > 0 ? (
 														getStatusBadge(item.qtd, conferidoQtd)
 													) : (
 														<Badge
 															variant="outline"
-															className="text-muted-foreground"
+															className="text-muted-foreground text-xs"
 														>
 															Pendente
 														</Badge>

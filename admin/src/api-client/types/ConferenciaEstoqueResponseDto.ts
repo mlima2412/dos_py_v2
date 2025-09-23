@@ -9,7 +9,8 @@ export const conferenciaEstoqueResponseDtoStatusEnum = {
     "PENDENTE": "PENDENTE",
     "EM_ANDAMENTO": "EM_ANDAMENTO",
     "FINALIZADA": "FINALIZADA",
-    "CANCELADA": "CANCELADA"
+    "CANCELADA": "CANCELADA",
+    "CONCLUIDA": "CONCLUIDA"
 } as const;
 
 export type ConferenciaEstoqueResponseDtoStatusEnum = (typeof conferenciaEstoqueResponseDtoStatusEnum)[keyof typeof conferenciaEstoqueResponseDtoStatusEnum];

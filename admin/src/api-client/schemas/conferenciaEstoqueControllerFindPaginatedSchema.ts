@@ -12,7 +12,7 @@ export const conferenciaEstoqueControllerFindPaginatedQueryParamsSchema = z.obje
       "page": z.coerce.number().default(1).describe("Número da página"),
   "limit": z.coerce.number().default(20).describe("Número de itens por página"),
   "search": z.string().describe("Termo de busca").optional(),
-  "status": z.enum(["PENDENTE", "EM_ANDAMENTO", "FINALIZADA", "CANCELADA"]).describe("Filtrar por status").optional(),
+  "status": z.enum(["PENDENTE", "EM_ANDAMENTO", "CONCLUIDA", "FINALIZADA", "CANCELADA"]).describe("Filtrar por status").optional(),
   "localEstoqueId": z.coerce.number().describe("ID do local de estoque").optional()
       }) as unknown as ToZod<ConferenciaEstoqueControllerFindPaginatedQueryParams>
 

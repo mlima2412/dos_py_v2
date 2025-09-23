@@ -73,7 +73,7 @@ export const AdjustStockDialog: React.FC<AdjustStockDialogProps> = ({
 				onClose();
 				onSuccess?.();
 			},
-			onError: (error: any) => {
+			onError: error => {
 				console.error("Erro ao ajustar estoque:", error);
 				toastError(t("inventory.adjust.error"));
 			},

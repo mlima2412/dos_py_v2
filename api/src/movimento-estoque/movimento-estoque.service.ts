@@ -11,6 +11,7 @@ import {
 } from './dto/create-movimento-estoque.dto';
 import { MovimentoEstoqueResponseDto } from './dto/movimento-estoque-response.dto';
 import { HistoricoSkuQueryDto } from './dto/historico-sku-query.dto';
+import { AjusteConferenciaLoteDto } from './dto/ajuste-conferencia-lote.dto';
 
 @Injectable()
 export class MovimentoEstoqueService {
@@ -235,6 +236,68 @@ export class MovimentoEstoqueService {
     };
   }
 
+  async processarAjustesConferenciaLote(
+    ajusteConferenciaLoteDto: AjusteConferenciaLoteDto,
+    usuarioId: number,
+  ): Promise<{
+    totalProcessados: number;
+    totalIgnorados: number;
+  }> {
+    const { itens, observacao } = ajusteConferenciaLoteDto;
+
+    // Validar se há itens para processar
+    if (!itens || itens.length === 0) {
+      throw new BadRequestException('Lista de itens não pode estar vazia');
+    }
+
+    // Filtrar apenas itens com diferença diferente de zero
+    const itensParaAjuste = itens.filter(item => item.diferenca !== 0);
+
+    if (itensParaAjuste.length === 0) {
+      return {
+        totalProcessados: 0,
+        totalIgnorados: itens.length,
+      };
+    }
+
+    // Validar todos os SKUs e locais antes de processar
+    await this.validateAjustesConferenciaData(itensParaAjuste);
+
+    // Executar transação para criar todos os movimentos
+    return await this.prisma.$transaction(async tx => {
+      for (const item of itensParaAjuste) {
+        // Criar movimento de ajuste
+        await tx.movimentoEstoque.create({
+          data: {
+            skuId: item.skuId,
+            tipo: TipoMovimento.AJUSTE,
+            qtd: item.diferenca,
+            idUsuario: usuarioId,
+            localDestinoId: item.localId,
+            observacao:
+              observacao ||
+              `Ajuste de conferência - Diferença: ${item.diferenca}`,
+          },
+        });
+
+        // Atualizar estoque baseado na diferença
+        await this.updateEstoque(
+          tx,
+          TipoMovimento.AJUSTE,
+          item.skuId,
+          item.diferenca,
+          null,
+          item.localId,
+        );
+      }
+
+      return {
+        totalProcessados: itensParaAjuste.length,
+        totalIgnorados: itens.length - itensParaAjuste.length,
+      };
+    });
+  }
+
   // Validações privadas
   private async validateMovimentoData(
     dto: CreateMovimentoEstoqueDto,
@@ -312,6 +375,57 @@ export class MovimentoEstoqueService {
 
     if (!local) {
       throw new NotFoundException(`Local com ID ${localId} não encontrado`);
+    }
+  }
+
+  private async validateAjustesConferenciaData(
+    itens: Array<{ skuId: number; localId: number; diferenca: number }>,
+  ): Promise<void> {
+    // Validar SKUs únicos
+    const skuIds = [...new Set(itens.map(item => item.skuId))];
+    const skusExistentes = await this.prisma.produtoSKU.findMany({
+      where: { id: { in: skuIds } },
+      select: { id: true },
+    });
+
+    const skusExistentesIds = skusExistentes.map(sku => sku.id);
+    const skusNaoEncontrados = skuIds.filter(
+      id => !skusExistentesIds.includes(id),
+    );
+
+    if (skusNaoEncontrados.length > 0) {
+      throw new NotFoundException(
+        `SKUs não encontrados: ${skusNaoEncontrados.join(', ')}`,
+      );
+    }
+
+    // Validar locais únicos
+    const localIds = [...new Set(itens.map(item => item.localId))];
+    const locaisExistentes = await this.prisma.localEstoque.findMany({
+      where: { id: { in: localIds } },
+      select: { id: true },
+    });
+
+    const locaisExistentesIds = locaisExistentes.map(local => local.id);
+    const locaisNaoEncontrados = localIds.filter(
+      id => !locaisExistentesIds.includes(id),
+    );
+
+    if (locaisNaoEncontrados.length > 0) {
+      throw new NotFoundException(
+        `Locais não encontrados: ${locaisNaoEncontrados.join(', ')}`,
+      );
+    }
+
+    // Validar estoque disponível para ajustes negativos
+    for (const item of itens) {
+      if (item.diferenca < 0) {
+        await this.validateEstoqueDisponivel(
+          item.skuId,
+          item.localId,
+          Math.abs(item.diferenca),
+        );
+      }
     }
   }
 

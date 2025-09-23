@@ -30,7 +30,9 @@ import { PaginatedQueryDto } from './dto/paginated-query.dto';
 @ApiTags('Conferência de Estoque')
 @Controller('conferencia-estoque')
 export class ConferenciaEstoqueController {
-  constructor(private readonly conferenciaEstoqueService: ConferenciaEstoqueService) {}
+  constructor(
+    private readonly conferenciaEstoqueService: ConferenciaEstoqueService,
+  ) {}
 
   @Post()
   @ApiBearerAuth('JWT-auth')
@@ -48,13 +50,22 @@ export class ConferenciaEstoqueController {
     type: ConferenciaEstoqueResponseDto,
   })
   @ApiResponse({ status: 400, description: 'Dados inválidos' })
-  @ApiResponse({ status: 404, description: 'Local de estoque ou usuário não encontrado' })
-  @ApiResponse({ status: 409, description: 'Já existe uma conferência em andamento para este local' })
+  @ApiResponse({
+    status: 404,
+    description: 'Local de estoque ou usuário não encontrado',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Já existe uma conferência em andamento para este local',
+  })
   create(
     @Body() createConferenciaEstoqueDto: CreateConferenciaEstoqueDto,
     @ParceiroId() parceiroId: number,
   ): Promise<ConferenciaEstoque> {
-    return this.conferenciaEstoqueService.create(createConferenciaEstoqueDto, parceiroId);
+    return this.conferenciaEstoqueService.create(
+      createConferenciaEstoqueDto,
+      parceiroId,
+    );
   }
 
   @Get()
@@ -124,13 +135,19 @@ export class ConferenciaEstoqueController {
     required: true,
     schema: { type: 'integer', example: 1 },
   })
-  @ApiParam({ name: 'publicId', description: 'ID público da conferência de estoque' })
+  @ApiParam({
+    name: 'publicId',
+    description: 'ID público da conferência de estoque',
+  })
   @ApiResponse({
     status: 200,
     description: 'Conferência de estoque encontrada',
     type: ConferenciaEstoqueResponseDto,
   })
-  @ApiResponse({ status: 404, description: 'Conferência de estoque não encontrada' })
+  @ApiResponse({
+    status: 404,
+    description: 'Conferência de estoque não encontrada',
+  })
   findOne(
     @Param('publicId') publicId: string,
     @ParceiroId() parceiroId: number,
@@ -147,21 +164,78 @@ export class ConferenciaEstoqueController {
     required: true,
     schema: { type: 'integer', example: 1 },
   })
-  @ApiParam({ name: 'publicId', description: 'ID público da conferência de estoque' })
+  @ApiParam({
+    name: 'publicId',
+    description: 'ID público da conferência de estoque',
+  })
   @ApiBody({ type: UpdateConferenciaEstoqueDto })
   @ApiResponse({
     status: 200,
     description: 'Conferência de estoque atualizada com sucesso',
     type: ConferenciaEstoqueResponseDto,
   })
-  @ApiResponse({ status: 404, description: 'Conferência de estoque não encontrada' })
-  @ApiResponse({ status: 400, description: 'Dados inválidos ou conferência finalizada' })
+  @ApiResponse({
+    status: 404,
+    description: 'Conferência de estoque não encontrada',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Dados inválidos ou conferência finalizada',
+  })
   update(
     @Param('publicId') publicId: string,
     @Body() updateConferenciaEstoqueDto: UpdateConferenciaEstoqueDto,
     @ParceiroId() parceiroId: number,
   ): Promise<ConferenciaEstoque> {
-    return this.conferenciaEstoqueService.update(publicId, updateConferenciaEstoqueDto, parceiroId);
+    return this.conferenciaEstoqueService.update(
+      publicId,
+      updateConferenciaEstoqueDto,
+      parceiroId,
+    );
+  }
+
+  @Get('local/:localPublicId/em-conferencia')
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({
+    summary: 'Verificar se local de estoque está em processo de conferência',
+  })
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro logado',
+    required: true,
+    schema: { type: 'integer', example: 1 },
+  })
+  @ApiParam({
+    name: 'localPublicId',
+    description: 'ID público do local de estoque',
+    example: 'local-123-abc',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Status da conferência do local de estoque',
+    schema: {
+      type: 'object',
+      properties: {
+        emConferencia: {
+          type: 'boolean',
+          description:
+            'True se existe conferência pendente, false caso contrário',
+          example: true,
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 404, description: 'Local de estoque não encontrado' })
+  async checkLocalEmConferencia(
+    @Param('localPublicId') localPublicId: string,
+    @ParceiroId() parceiroId: number,
+  ): Promise<{ emConferencia: boolean }> {
+    const emConferencia =
+      await this.conferenciaEstoqueService.isLocalEstoqueEmConferencia(
+        localPublicId,
+        parceiroId,
+      );
+    return { emConferencia };
   }
 
   @Delete(':publicId')
@@ -174,13 +248,22 @@ export class ConferenciaEstoqueController {
     required: true,
     schema: { type: 'integer', example: 1 },
   })
-  @ApiParam({ name: 'publicId', description: 'ID público da conferência de estoque' })
+  @ApiParam({
+    name: 'publicId',
+    description: 'ID público da conferência de estoque',
+  })
   @ApiResponse({
     status: 204,
     description: 'Conferência de estoque removida com sucesso',
   })
-  @ApiResponse({ status: 404, description: 'Conferência de estoque não encontrada' })
-  @ApiResponse({ status: 400, description: 'Não é possível remover conferência em andamento' })
+  @ApiResponse({
+    status: 404,
+    description: 'Conferência de estoque não encontrada',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Não é possível remover conferência em andamento',
+  })
   remove(
     @Param('publicId') publicId: string,
     @ParceiroId() parceiroId: number,

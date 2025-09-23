@@ -18,6 +18,8 @@ import { SkuListing } from "../components/SkuListing";
 import { useLocaisEstoque } from "@/hooks/useEstoques";
 import { useProdutoControllerFindByLocal } from "@/api-client";
 import { usePartnerContext } from "@/hooks/usePartnerContext";
+import { useConferenciaEstoqueControllerCheckLocalEmConferencia } from "@/api-client/hooks/useConferenciaEstoqueControllerCheckLocalEmConferencia";
+import { useToast } from "@/hooks/useToast";
 
 import type { LocalEstoque } from "@/api-client/types";
 import type {
@@ -28,6 +30,7 @@ import type {
 export const VisualizarEstoque: React.FC = () => {
 	const { t } = useTranslation("common");
 	const { selectedPartnerId } = usePartnerContext();
+	const { error: toastError } = useToast();
 
 	const [selectedLocationId, setSelectedLocationId] = useState<number | null>(
 		null
@@ -69,6 +72,20 @@ export const VisualizarEstoque: React.FC = () => {
 	const selectedLocation = locais.find(
 		(local: LocalEstoque) => local.id === selectedLocationId
 	);
+
+	// Verificar se o local está em conferência
+	const { data: localEmConferencia } =
+		useConferenciaEstoqueControllerCheckLocalEmConferencia(
+			selectedLocation?.publicId || "",
+			{
+				"x-parceiro-id": selectedPartnerId ? Number(selectedPartnerId) : 0,
+			},
+			{
+				query: {
+					enabled: !!selectedLocation?.publicId && !!selectedPartnerId,
+				},
+			}
+		);
 
 	// Buscar produtos do local selecionado
 	const {
@@ -122,6 +139,12 @@ export const VisualizarEstoque: React.FC = () => {
 	// Função para abrir o dialog de ajuste de estoque
 	const handleAdjustStock = (sku: ProdutoSKUEstoqueResponseDto) => {
 		if (!selectedProduct || !selectedLocationId) return;
+
+		// Verificar se o local está em conferência
+		if (localEmConferencia?.emConferencia) {
+			toastError(t("inventory.adjust.conference.message"));
+			return;
+		}
 
 		setSelectedSkuForAdjust({
 			skuId: sku.id,

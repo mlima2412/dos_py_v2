@@ -17,6 +17,6 @@ export const conferenciaEstoqueResponseDtoSchema = z.object({
   "dataFim": z.string().datetime().describe("Data de fim da conferência").optional(),
   "usuarioResponsavel": z.coerce.number().describe("ID do usuário responsável pela conferência"),
   "Usuario": z.coerce.string().describe("Nome do usuário responsável pela conferência"),
-  "status": z.enum(["PENDENTE", "EM_ANDAMENTO", "FINALIZADA", "CANCELADA"]).describe("Status da conferência"),
+  "status": z.enum(["PENDENTE", "EM_ANDAMENTO", "FINALIZADA", "CANCELADA", "CONCLUIDA"]).describe("Status da conferência"),
   "itens": z.array(z.lazy(() => conferenciaItemSimplificadoDtoSchema)).describe("Itens da conferência com dados simplificados").optional()
       }) as unknown as ToZod<ConferenciaEstoqueResponseDto>

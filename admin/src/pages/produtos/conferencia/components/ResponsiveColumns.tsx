@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Eye, CheckCircle } from "lucide-react";
+import { Eye, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { ConferenciaEstoque } from "@/api-client/types";
@@ -10,7 +10,7 @@ interface UseResponsiveColumnsProps {
 	t: (key: string) => string;
 	isMobile: boolean;
 	onView: (conferencia: ConferenciaEstoque) => void;
-	onComplete: (conferencia: ConferenciaEstoque) => void;
+	onDelete: (conferencia: ConferenciaEstoque) => void;
 	locale: string;
 }
 
@@ -18,7 +18,7 @@ export function useResponsiveColumns({
 	t,
 	isMobile,
 	onView,
-	onComplete,
+	onDelete,
 	locale,
 }: UseResponsiveColumnsProps): ColumnDef<ConferenciaEstoque>[] {
 	const dateLocale = locale === "es" ? es : ptBR;
@@ -133,12 +133,12 @@ export function useResponsiveColumns({
 								<Button
 									variant="ghost"
 									size="sm"
-									onClick={() => onComplete(conferencia)}
-									className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+									onClick={() => onDelete(conferencia)}
+									className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-red-600 hover:text-red-700"
 								>
-									<CheckCircle className="h-4 w-4" />
+									<Trash2 className="h-4 w-4" />
 									<span className="sr-only">
-										{t("conference.actions.complete")}
+										{t("conference.actions.delete")}
 									</span>
 								</Button>
 							)}
@@ -172,12 +172,12 @@ export function useResponsiveColumns({
 							<Button
 								variant="ghost"
 								size="sm"
-								onClick={() => onComplete(conferencia)}
-								className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+								onClick={() => onDelete(conferencia)}
+								className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-red-600 hover:text-red-700"
 							>
-								<CheckCircle className="h-4 w-4" />
+								<Trash2 className="h-4 w-4" />
 								<span className="sr-only">
-									{t("conference.actions.complete")}
+									{t("conference.actions.delete")}
 								</span>
 							</Button>
 						)}

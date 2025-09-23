@@ -509,7 +509,7 @@ model ConferenciaItem {
 
   //skuId precisa ser relacionado com EstoqueSKU
   ProdutoSKU         ProdutoSKU         @relation(fields: [skuId], references: [id])
-  ConferenciaEstoque ConferenciaEstoque @relation(fields: [conferenciaId], references: [id])
+  ConferenciaEstoque ConferenciaEstoque @relation(fields: [conferenciaId], references: [id], onDelete: Cascade)
 
   @@map("conferencia_item")
 }

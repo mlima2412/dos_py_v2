@@ -7,6 +7,7 @@
 export const updateConferenciaEstoqueDtoStatusEnum = {
     "PENDENTE": "PENDENTE",
     "EM_ANDAMENTO": "EM_ANDAMENTO",
+    "CONCLUIDA": "CONCLUIDA",
     "FINALIZADA": "FINALIZADA",
     "CANCELADA": "CANCELADA"
 } as const;

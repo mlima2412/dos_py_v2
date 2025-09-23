@@ -44,6 +44,8 @@ export type { ClientesControllerFindOneSuspenseQueryKey } from "./hooks/useClien
 export type { ClientesControllerFindPaginatedQueryKey } from "./hooks/useClientesControllerFindPaginated.ts";
 export type { ClientesControllerFindPaginatedSuspenseQueryKey } from "./hooks/useClientesControllerFindPaginatedSuspense.ts";
 export type { ClientesControllerUpdateMutationKey } from "./hooks/useClientesControllerUpdate.ts";
+export type { ConferenciaEstoqueControllerCheckLocalEmConferenciaQueryKey } from "./hooks/useConferenciaEstoqueControllerCheckLocalEmConferencia.ts";
+export type { ConferenciaEstoqueControllerCheckLocalEmConferenciaSuspenseQueryKey } from "./hooks/useConferenciaEstoqueControllerCheckLocalEmConferenciaSuspense.ts";
 export type { ConferenciaEstoqueControllerCreateMutationKey } from "./hooks/useConferenciaEstoqueControllerCreate.ts";
 export type { ConferenciaEstoqueControllerFindAllQueryKey } from "./hooks/useConferenciaEstoqueControllerFindAll.ts";
 export type { ConferenciaEstoqueControllerFindAllSuspenseQueryKey } from "./hooks/useConferenciaEstoqueControllerFindAllSuspense.ts";
@@ -159,6 +161,7 @@ export type { MovimentoEstoqueControllerFindHistoricoSkuQueryKey } from "./hooks
 export type { MovimentoEstoqueControllerFindHistoricoSkuSuspenseQueryKey } from "./hooks/useMovimentoEstoqueControllerFindHistoricoSkuSuspense.ts";
 export type { MovimentoEstoqueControllerFindOneQueryKey } from "./hooks/useMovimentoEstoqueControllerFindOne.ts";
 export type { MovimentoEstoqueControllerFindOneSuspenseQueryKey } from "./hooks/useMovimentoEstoqueControllerFindOneSuspense.ts";
+export type { MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationKey } from "./hooks/useMovimentoEstoqueControllerProcessarAjustesConferenciaLote.ts";
 export type { ParceirosControllerActivateParceiroMutationKey } from "./hooks/useParceirosControllerActivateParceiro.ts";
 export type { ParceirosControllerCreateMutationKey } from "./hooks/useParceirosControllerCreate.ts";
 export type { ParceirosControllerDeactivateParceiroMutationKey } from "./hooks/useParceirosControllerDeactivateParceiro.ts";
@@ -263,6 +266,8 @@ export type { UsuariosControllerFindPaginatedSuspenseQueryKey } from "./hooks/us
 export type { UsuariosControllerInitializeSystemMutationKey } from "./hooks/useUsuariosControllerInitializeSystem.ts";
 export type { UsuariosControllerUpdateMutationKey } from "./hooks/useUsuariosControllerUpdate.ts";
 export type { AjustarItemDto } from "./types/AjustarItemDto.ts";
+export type { AjusteConferenciaItemDto } from "./types/AjusteConferenciaItemDto.ts";
+export type { AjusteConferenciaLoteDto } from "./types/AjusteConferenciaLoteDto.ts";
 export type { AjusteEstoqueDto } from "./types/AjusteEstoqueDto.ts";
 export type { AppControllerGetHello200, AppControllerGetHelloQueryResponse, AppControllerGetHelloQuery } from "./types/AppControllerGetHello.ts";
 export type { AuthControllerGetProfile200, AuthControllerGetProfileQueryResponse, AuthControllerGetProfileQuery } from "./types/AuthControllerGetProfile.ts";
@@ -301,6 +306,7 @@ export type { ClientesControllerFindByParceiroPathParams, ClientesControllerFind
 export type { ClientesControllerFindOnePathParams, ClientesControllerFindOne200, ClientesControllerFindOne404, ClientesControllerFindOneQueryResponse, ClientesControllerFindOneQuery } from "./types/ClientesControllerFindOne.ts";
 export type { ClientesControllerFindPaginatedQueryParams, ClientesControllerFindPaginatedHeaderParams, ClientesControllerFindPaginated200, ClientesControllerFindPaginatedQueryResponse, ClientesControllerFindPaginatedQuery } from "./types/ClientesControllerFindPaginated.ts";
 export type { ClientesControllerUpdatePathParams, ClientesControllerUpdate200, ClientesControllerUpdate400, ClientesControllerUpdate404, ClientesControllerUpdate409, ClientesControllerUpdateMutationRequest, ClientesControllerUpdateMutationResponse, ClientesControllerUpdateMutation } from "./types/ClientesControllerUpdate.ts";
+export type { ConferenciaEstoqueControllerCheckLocalEmConferenciaPathParams, ConferenciaEstoqueControllerCheckLocalEmConferenciaHeaderParams, ConferenciaEstoqueControllerCheckLocalEmConferencia200, ConferenciaEstoqueControllerCheckLocalEmConferencia404, ConferenciaEstoqueControllerCheckLocalEmConferenciaQueryResponse, ConferenciaEstoqueControllerCheckLocalEmConferenciaQuery } from "./types/ConferenciaEstoqueControllerCheckLocalEmConferencia.ts";
 export type { ConferenciaEstoqueControllerCreateHeaderParams, ConferenciaEstoqueControllerCreate201, ConferenciaEstoqueControllerCreate400, ConferenciaEstoqueControllerCreate404, ConferenciaEstoqueControllerCreate409, ConferenciaEstoqueControllerCreateMutationRequest, ConferenciaEstoqueControllerCreateMutationResponse, ConferenciaEstoqueControllerCreateMutation } from "./types/ConferenciaEstoqueControllerCreate.ts";
 export type { ConferenciaEstoqueControllerFindAllHeaderParams, ConferenciaEstoqueControllerFindAll200, ConferenciaEstoqueControllerFindAllQueryResponse, ConferenciaEstoqueControllerFindAllQuery } from "./types/ConferenciaEstoqueControllerFindAll.ts";
 export type { ConferenciaEstoqueControllerFindOnePathParams, ConferenciaEstoqueControllerFindOneHeaderParams, ConferenciaEstoqueControllerFindOne200, ConferenciaEstoqueControllerFindOne404, ConferenciaEstoqueControllerFindOneQueryResponse, ConferenciaEstoqueControllerFindOneQuery } from "./types/ConferenciaEstoqueControllerFindOne.ts";
@@ -415,6 +421,7 @@ export type { MovimentoEstoqueControllerCreate201, MovimentoEstoqueControllerCre
 export type { MovimentoEstoqueControllerFindAll200, MovimentoEstoqueControllerFindAllQueryResponse, MovimentoEstoqueControllerFindAllQuery } from "./types/MovimentoEstoqueControllerFindAll.ts";
 export type { MovimentoEstoqueControllerFindHistoricoSkuPathParams, MovimentoEstoqueControllerFindHistoricoSkuQueryParams, MovimentoEstoqueControllerFindHistoricoSku200, MovimentoEstoqueControllerFindHistoricoSku404, MovimentoEstoqueControllerFindHistoricoSkuQueryResponse, MovimentoEstoqueControllerFindHistoricoSkuQuery } from "./types/MovimentoEstoqueControllerFindHistoricoSku.ts";
 export type { MovimentoEstoqueControllerFindOnePathParams, MovimentoEstoqueControllerFindOne200, MovimentoEstoqueControllerFindOne404, MovimentoEstoqueControllerFindOneQueryResponse, MovimentoEstoqueControllerFindOneQuery } from "./types/MovimentoEstoqueControllerFindOne.ts";
+export type { MovimentoEstoqueControllerProcessarAjustesConferenciaLote201, MovimentoEstoqueControllerProcessarAjustesConferenciaLote400, MovimentoEstoqueControllerProcessarAjustesConferenciaLote404, MovimentoEstoqueControllerProcessarAjustesConferenciaLote409, MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationRequest, MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationResponse, MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutation } from "./types/MovimentoEstoqueControllerProcessarAjustesConferenciaLote.ts";
 export type { MovimentoEstoqueResponseDtoTipoEnum, MovimentoEstoqueResponseDto } from "./types/MovimentoEstoqueResponseDto.ts";
 export type { Parceiro } from "./types/Parceiro.ts";
 export type { ParceiroResponseDto } from "./types/ParceiroResponseDto.ts";
@@ -568,6 +575,8 @@ export { clientesControllerFindOneSuspenseQueryKey, clientesControllerFindOneSus
 export { clientesControllerFindPaginatedQueryKey, clientesControllerFindPaginated, clientesControllerFindPaginatedQueryOptions, useClientesControllerFindPaginated } from "./hooks/useClientesControllerFindPaginated.ts";
 export { clientesControllerFindPaginatedSuspenseQueryKey, clientesControllerFindPaginatedSuspense, clientesControllerFindPaginatedSuspenseQueryOptions, useClientesControllerFindPaginatedSuspense } from "./hooks/useClientesControllerFindPaginatedSuspense.ts";
 export { clientesControllerUpdateMutationKey, clientesControllerUpdate, useClientesControllerUpdate } from "./hooks/useClientesControllerUpdate.ts";
+export { conferenciaEstoqueControllerCheckLocalEmConferenciaQueryKey, conferenciaEstoqueControllerCheckLocalEmConferencia, conferenciaEstoqueControllerCheckLocalEmConferenciaQueryOptions, useConferenciaEstoqueControllerCheckLocalEmConferencia } from "./hooks/useConferenciaEstoqueControllerCheckLocalEmConferencia.ts";
+export { conferenciaEstoqueControllerCheckLocalEmConferenciaSuspenseQueryKey, conferenciaEstoqueControllerCheckLocalEmConferenciaSuspense, conferenciaEstoqueControllerCheckLocalEmConferenciaSuspenseQueryOptions, useConferenciaEstoqueControllerCheckLocalEmConferenciaSuspense } from "./hooks/useConferenciaEstoqueControllerCheckLocalEmConferenciaSuspense.ts";
 export { conferenciaEstoqueControllerCreateMutationKey, conferenciaEstoqueControllerCreate, useConferenciaEstoqueControllerCreate } from "./hooks/useConferenciaEstoqueControllerCreate.ts";
 export { conferenciaEstoqueControllerFindAllQueryKey, conferenciaEstoqueControllerFindAll, conferenciaEstoqueControllerFindAllQueryOptions, useConferenciaEstoqueControllerFindAll } from "./hooks/useConferenciaEstoqueControllerFindAll.ts";
 export { conferenciaEstoqueControllerFindAllSuspenseQueryKey, conferenciaEstoqueControllerFindAllSuspense, conferenciaEstoqueControllerFindAllSuspenseQueryOptions, useConferenciaEstoqueControllerFindAllSuspense } from "./hooks/useConferenciaEstoqueControllerFindAllSuspense.ts";
@@ -683,6 +692,7 @@ export { movimentoEstoqueControllerFindHistoricoSkuQueryKey, movimentoEstoqueCon
 export { movimentoEstoqueControllerFindHistoricoSkuSuspenseQueryKey, movimentoEstoqueControllerFindHistoricoSkuSuspense, movimentoEstoqueControllerFindHistoricoSkuSuspenseQueryOptions, useMovimentoEstoqueControllerFindHistoricoSkuSuspense } from "./hooks/useMovimentoEstoqueControllerFindHistoricoSkuSuspense.ts";
 export { movimentoEstoqueControllerFindOneQueryKey, movimentoEstoqueControllerFindOne, movimentoEstoqueControllerFindOneQueryOptions, useMovimentoEstoqueControllerFindOne } from "./hooks/useMovimentoEstoqueControllerFindOne.ts";
 export { movimentoEstoqueControllerFindOneSuspenseQueryKey, movimentoEstoqueControllerFindOneSuspense, movimentoEstoqueControllerFindOneSuspenseQueryOptions, useMovimentoEstoqueControllerFindOneSuspense } from "./hooks/useMovimentoEstoqueControllerFindOneSuspense.ts";
+export { movimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationKey, movimentoEstoqueControllerProcessarAjustesConferenciaLote, useMovimentoEstoqueControllerProcessarAjustesConferenciaLote } from "./hooks/useMovimentoEstoqueControllerProcessarAjustesConferenciaLote.ts";
 export { parceirosControllerActivateParceiroMutationKey, parceirosControllerActivateParceiro, useParceirosControllerActivateParceiro } from "./hooks/useParceirosControllerActivateParceiro.ts";
 export { parceirosControllerCreateMutationKey, parceirosControllerCreate, useParceirosControllerCreate } from "./hooks/useParceirosControllerCreate.ts";
 export { parceirosControllerDeactivateParceiroMutationKey, parceirosControllerDeactivateParceiro, useParceirosControllerDeactivateParceiro } from "./hooks/useParceirosControllerDeactivateParceiro.ts";
@@ -787,6 +797,8 @@ export { usuariosControllerFindPaginatedSuspenseQueryKey, usuariosControllerFind
 export { usuariosControllerInitializeSystemMutationKey, usuariosControllerInitializeSystem, useUsuariosControllerInitializeSystem } from "./hooks/useUsuariosControllerInitializeSystem.ts";
 export { usuariosControllerUpdateMutationKey, usuariosControllerUpdate, useUsuariosControllerUpdate } from "./hooks/useUsuariosControllerUpdate.ts";
 export { ajustarItemDtoSchema } from "./schemas/ajustarItemDtoSchema.ts";
+export { ajusteConferenciaItemDtoSchema } from "./schemas/ajusteConferenciaItemDtoSchema.ts";
+export { ajusteConferenciaLoteDtoSchema } from "./schemas/ajusteConferenciaLoteDtoSchema.ts";
 export { ajusteEstoqueDtoSchema } from "./schemas/ajusteEstoqueDtoSchema.ts";
 export { appControllerGetHello200Schema, appControllerGetHelloQueryResponseSchema } from "./schemas/appControllerGetHelloSchema.ts";
 export { authControllerGetProfile200Schema, authControllerGetProfileQueryResponseSchema } from "./schemas/authControllerGetProfileSchema.ts";
@@ -825,6 +837,7 @@ export { clientesControllerFindByParceiroPathParamsSchema, clientesControllerFin
 export { clientesControllerFindOnePathParamsSchema, clientesControllerFindOne200Schema, clientesControllerFindOne404Schema, clientesControllerFindOneQueryResponseSchema } from "./schemas/clientesControllerFindOneSchema.ts";
 export { clientesControllerFindPaginatedQueryParamsSchema, clientesControllerFindPaginatedHeaderParamsSchema, clientesControllerFindPaginated200Schema, clientesControllerFindPaginatedQueryResponseSchema } from "./schemas/clientesControllerFindPaginatedSchema.ts";
 export { clientesControllerUpdatePathParamsSchema, clientesControllerUpdate200Schema, clientesControllerUpdate400Schema, clientesControllerUpdate404Schema, clientesControllerUpdate409Schema, clientesControllerUpdateMutationRequestSchema, clientesControllerUpdateMutationResponseSchema } from "./schemas/clientesControllerUpdateSchema.ts";
+export { conferenciaEstoqueControllerCheckLocalEmConferenciaPathParamsSchema, conferenciaEstoqueControllerCheckLocalEmConferenciaHeaderParamsSchema, conferenciaEstoqueControllerCheckLocalEmConferencia200Schema, conferenciaEstoqueControllerCheckLocalEmConferencia404Schema, conferenciaEstoqueControllerCheckLocalEmConferenciaQueryResponseSchema } from "./schemas/conferenciaEstoqueControllerCheckLocalEmConferenciaSchema.ts";
 export { conferenciaEstoqueControllerCreateHeaderParamsSchema, conferenciaEstoqueControllerCreate201Schema, conferenciaEstoqueControllerCreate400Schema, conferenciaEstoqueControllerCreate404Schema, conferenciaEstoqueControllerCreate409Schema, conferenciaEstoqueControllerCreateMutationRequestSchema, conferenciaEstoqueControllerCreateMutationResponseSchema } from "./schemas/conferenciaEstoqueControllerCreateSchema.ts";
 export { conferenciaEstoqueControllerFindAllHeaderParamsSchema, conferenciaEstoqueControllerFindAll200Schema, conferenciaEstoqueControllerFindAllQueryResponseSchema } from "./schemas/conferenciaEstoqueControllerFindAllSchema.ts";
 export { conferenciaEstoqueControllerFindOnePathParamsSchema, conferenciaEstoqueControllerFindOneHeaderParamsSchema, conferenciaEstoqueControllerFindOne200Schema, conferenciaEstoqueControllerFindOne404Schema, conferenciaEstoqueControllerFindOneQueryResponseSchema } from "./schemas/conferenciaEstoqueControllerFindOneSchema.ts";
@@ -939,6 +952,7 @@ export { movimentoEstoqueControllerCreate201Schema, movimentoEstoqueControllerCr
 export { movimentoEstoqueControllerFindAll200Schema, movimentoEstoqueControllerFindAllQueryResponseSchema } from "./schemas/movimentoEstoqueControllerFindAllSchema.ts";
 export { movimentoEstoqueControllerFindHistoricoSkuPathParamsSchema, movimentoEstoqueControllerFindHistoricoSkuQueryParamsSchema, movimentoEstoqueControllerFindHistoricoSku200Schema, movimentoEstoqueControllerFindHistoricoSku404Schema, movimentoEstoqueControllerFindHistoricoSkuQueryResponseSchema } from "./schemas/movimentoEstoqueControllerFindHistoricoSkuSchema.ts";
 export { movimentoEstoqueControllerFindOnePathParamsSchema, movimentoEstoqueControllerFindOne200Schema, movimentoEstoqueControllerFindOne404Schema, movimentoEstoqueControllerFindOneQueryResponseSchema } from "./schemas/movimentoEstoqueControllerFindOneSchema.ts";
+export { movimentoEstoqueControllerProcessarAjustesConferenciaLote201Schema, movimentoEstoqueControllerProcessarAjustesConferenciaLote400Schema, movimentoEstoqueControllerProcessarAjustesConferenciaLote404Schema, movimentoEstoqueControllerProcessarAjustesConferenciaLote409Schema, movimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationRequestSchema, movimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationResponseSchema } from "./schemas/movimentoEstoqueControllerProcessarAjustesConferenciaLoteSchema.ts";
 export { movimentoEstoqueResponseDtoSchema } from "./schemas/movimentoEstoqueResponseDtoSchema.ts";
 export { parceiroResponseDtoSchema } from "./schemas/parceiroResponseDtoSchema.ts";
 export { parceiroSchema } from "./schemas/parceiroSchema.ts";

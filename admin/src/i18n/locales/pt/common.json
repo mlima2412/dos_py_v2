@@ -1126,6 +1126,11 @@
 				"amountPositive": "Quantidade deve ser maior que zero",
 				"insufficientStock": "Estoque insuficiente para decrementar"
 			},
+			"conference": {
+				"title": "Local em Conferência",
+				"message": "Não é possível ajustar o estoque enquanto o local estiver em processo de conferência. Aguarde a conclusão da conferência para realizar ajustes.",
+				"button": "Entendi"
+			},
 			"tooltip": {
 				"title": "Alteração manual do estoque",
 				"description": "Nesta ação você poderá ajustar manualmente o estoque de cada produto que desejar. Digite um valor positivo para aumentar o estoque ou negativo para diminuir."
@@ -1206,18 +1211,99 @@
 			"PENDENTE": "Pendente",
 			"EM_ANDAMENTO": "Em andamento",
 			"FINALIZADA": "Finalizada",
-			"CANCELADA": "Cancelada"
+			"CANCELADA": "Cancelada",
+			"CONCLUIDA": "Concluída"
 		},
 		"actions": {
 			"create": "Nova Conferência",
 			"view": "Visualizar",
-			"complete": "Marcar como concluída"
+			"complete": "Marcar como concluída",
+			"delete": "Excluir"
 		},
 		"messages": {
 			"loadError": "Erro ao carregar conferências",
 			"completeSuccess": "Conferência marcada como concluída com sucesso!",
-			"completeError": "Erro ao marcar conferência como concluída. Tente novamente."
+			"completeError": "Erro ao marcar conferência como concluída. Tente novamente.",
+			"deleteSuccess": "Conferência excluída com sucesso!",
+			"deleteError": "Erro ao excluir conferência. Tente novamente.",
+			"deleteConfirm": "Tem certeza que deseja excluir esta conferência?",
+			"deleteConfirmTitle": "Confirmar exclusão",
+			"deleteConfirmDescription": "Esta ação não pode ser desfeita. A conferência será permanentemente removida do sistema.",
+			"deleteConfirmButton": "Excluir",
+			"deleteCancelButton": "Cancelar"
+		},
+		"details": {
+			"title": "Conferência de Estoque",
+			"subtitle": "Gerencie a conferência de estoque",
+			"newConference": "Nova Conferência",
+			"viewConference": "Visualizar Conferência",
+			"configureConference": "Configurar Conferência",
+			"selectLocation": "Selecione um local de estoque",
+			"noLocations": "Nenhum local de estoque encontrado",
+			"locationRequired": "Local é obrigatório",
+			"createConference": "Criar Conferência",
+			"creatingConference": "Criando conferência...",
+			"conferenceCreated": "Conferência criada com sucesso!",
+			"conferenceError": "Erro ao criar conferência. Tente novamente.",
+			"progress": "Progresso da Conferência",
+			"itemsConferred": "itens conferidos",
+			"of": "de",
+			"items": "itens",
+			"concluded": "concluído",
+			"continueConference": "Continuar Conferência",
+			"scanCode": "Digite ou escaneie o código do produto (XXX-YYY)",
+			"confer": "Conferir",
+			"productsInConference": "Produtos em Conferência",
+			"conferredItems": "Itens Conferidos",
+			"noItemsConferred": "Nenhum item foi conferido ainda.",
+			"system": "Sistema",
+			"physical": "Físico",
+			"difference": "Diferença",
+			"status": "Status",
+			"correct": "Correto",
+			"excess": "Excesso",
+			"shortage": "Falta",
+			"completeConference": "Concluir Conferência",
+			"completingConference": "Concluindo...",
+			"finalize": "Finalizar",
+			"processing": "Processando...",
+			"conferenceCompleted": "Conferência concluída com sucesso!",
+			"adjustmentsProcessed": "Ajustes processados com sucesso!",
+			"itemsAdjusted": "itens ajustados",
+			"itemsIgnored": "ignorados",
+			"adjustmentsError": "Erro ao processar ajustes. Tente novamente.",
+			"noAdjustmentsNeeded": "Não há ajustes necessários para processar.",
+			"conferenceFinalized": "Conferência finalizada com sucesso!",
+			"invalidCodeFormat": "Formato de código inválido. Use XXX-YYY",
+			"invalidSku": "SKU inválido",
+			"skuNotFound": "SKU não encontrado no estoque deste local",
+			"productConferred": "Produto conferido! Quantidade: {{quantity}}",
+			"registerItemError": "Erro ao registrar item de conferência",
+			"startConference": "Iniciar Conferência",
+			"conferenceStarted": "Conferência iniciada com sucesso!",
+			"unconferredProducts": {
+				"title": "Produtos Não Conferidos",
+				"description": "Existem produtos no estoque que não foram conferidos fisicamente. Ao finalizar a conferência, estes produtos terão seu estoque zerado automaticamente, pois assumimos que se não foram conferidos, não estão mais disponíveis no local.",
+				"confirm": "Sim, Concluir",
+				"cancel": "Cancelar",
+				"productCode": "Código",
+				"productName": "Nome do Produto",
+				"systemStock": "Estoque Sistema"
+			},
+			"finalizeDialog": {
+				"title": "Finalizar Conferência",
+				"description": "Esta ação irá processar todos os ajustes de estoque baseados na conferência realizada no local \"{{location}}\". Esta operação não pode ser desfeita.",
+				"confirm": "Sim, Finalizar",
+				"cancel": "Cancelar"
+			},
+			"conferenceInfo": {
+				"title": "Informações da Conferência",
+				"location": "Local",
+				"responsible": "Responsável",
+				"startDate": "Data de Início",
+				"endDate": "Data de Fim",
+				"id": "ID"
+			}
 		}
-	},
-	"conferenceDetails": {}
+	}
 }

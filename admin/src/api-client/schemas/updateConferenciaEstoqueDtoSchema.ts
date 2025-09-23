@@ -12,5 +12,5 @@ export const updateConferenciaEstoqueDtoSchema = z.object({
   "usuarioResponsavel": z.coerce.number().describe("ID do usuário responsável pela conferência").optional(),
   "dataInicio": z.coerce.string().describe("Data de início da conferência").optional(),
   "dataFim": z.coerce.string().describe("Data de fim da conferência").optional(),
-  "status": z.enum(["PENDENTE", "EM_ANDAMENTO", "FINALIZADA", "CANCELADA"]).default("PENDENTE").describe("Status da conferência")
+  "status": z.enum(["PENDENTE", "EM_ANDAMENTO", "CONCLUIDA", "FINALIZADA", "CANCELADA"]).default("PENDENTE").describe("Status da conferência")
       }) as unknown as ToZod<UpdateConferenciaEstoqueDto>

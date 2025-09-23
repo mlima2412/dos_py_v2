@@ -1,7 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsString,
-  IsNotEmpty,
   IsOptional,
   IsInt,
   IsPositive,
@@ -12,6 +10,7 @@ import {
 export enum StatusConferencia {
   PENDENTE = 'PENDENTE',
   EM_ANDAMENTO = 'EM_ANDAMENTO',
+  CONCLUIDA = 'CONCLUIDA',
   FINALIZADA = 'FINALIZADA',
   CANCELADA = 'CANCELADA',
 }

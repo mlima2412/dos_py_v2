@@ -19,6 +19,8 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { AlertDialogWithIcon } from "@/components/ui/alert-dialog-with-icon";
+import { AlertTriangle } from "lucide-react";
 
 import {
 	Table,
@@ -44,6 +46,8 @@ import {
 	useConferencias,
 	useCompleteConferencia,
 } from "@/hooks/useConferencias";
+import { useConferenciaEstoqueControllerRemove } from "@/api-client/hooks/useConferenciaEstoqueControllerRemove";
+import { usePartnerContext } from "@/hooks/usePartnerContext";
 import { useParceirosAll } from "@/hooks/useParceiros";
 import type { ConferenciaEstoque } from "@/api-client/types";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -62,12 +66,18 @@ export const ListarConferencias: React.FC = () => {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState("");
 	const [parceiroFilter, setParceiroFilter] = useState<string>("all");
+	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+	const [conferenciaToDelete, setConferenciaToDelete] =
+		useState<ConferenciaEstoque | null>(null);
 
 	// Debounce para busca
 	const debouncedGlobalFilter = useDebounce(globalFilter, 500);
 
 	// Buscar parceiros para o filtro
 	const { data: parceiros } = useParceirosAll();
+
+	// Obter parceiro selecionado para headers
+	const { selectedPartnerId } = usePartnerContext();
 
 	// Buscar conferências com scroll infinito
 	const {
@@ -84,6 +94,21 @@ export const ListarConferencias: React.FC = () => {
 
 	// Hook para completar conferência
 	const { completeConferencia } = useCompleteConferencia();
+
+	// Hook para eliminar conferência
+	const { mutate: deleteConferencia, isPending: isDeleting } =
+		useConferenciaEstoqueControllerRemove({
+			mutation: {
+				onSuccess: () => {
+					toast.success(t("conference.messages.deleteSuccess"));
+					// Recarregar dados após eliminação
+					window.location.reload();
+				},
+				onError: () => {
+					toast.error(t("conference.messages.deleteError"));
+				},
+			},
+		});
 
 	// Flatten dos dados para a tabela
 	const data = useMemo(() => {
@@ -124,12 +149,43 @@ export const ListarConferencias: React.FC = () => {
 		}
 	};
 
+	const handleDelete = (conferencia: ConferenciaEstoque) => {
+		if (!selectedPartnerId) {
+			toast.error("Parceiro não selecionado");
+			return;
+		}
+
+		const parceiroId = Number(selectedPartnerId);
+		if (isNaN(parceiroId)) {
+			toast.error("ID do parceiro inválido");
+			return;
+		}
+
+		setConferenciaToDelete(conferencia);
+		setDeleteDialogOpen(true);
+	};
+
+	const confirmDelete = () => {
+		if (!conferenciaToDelete || !selectedPartnerId) return;
+
+		const parceiroId = Number(selectedPartnerId);
+		deleteConferencia({
+			publicId: conferenciaToDelete.publicId,
+			headers: {
+				"x-parceiro-id": parceiroId,
+			},
+		});
+
+		setDeleteDialogOpen(false);
+		setConferenciaToDelete(null);
+	};
+
 	// Colunas da tabela (responsivas)
 	const columns = useResponsiveColumns({
 		t,
 		isMobile,
 		onView: handleView,
-		onComplete: handleComplete,
+		onDelete: handleDelete,
 		locale: i18n.language,
 	});
 
@@ -306,6 +362,20 @@ export const ListarConferencias: React.FC = () => {
 						</div>
 					</CardContent>
 				</Card>
+
+				{/* Dialog de confirmação de eliminação */}
+				<AlertDialogWithIcon
+					trigger={<div />}
+					icon={<AlertTriangle className="h-6 w-6" />}
+					title={t("conference.messages.deleteConfirmTitle")}
+					description={t("conference.messages.deleteConfirmDescription")}
+					cancelText={t("conference.messages.deleteCancelButton")}
+					confirmText={t("conference.messages.deleteConfirmButton")}
+					onConfirm={confirmDelete}
+					variant="destructive"
+					open={deleteDialogOpen}
+					onOpenChange={setDeleteDialogOpen}
+				/>
 			</div>
 		</DashboardLayout>
 	);

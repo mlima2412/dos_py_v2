@@ -17,10 +17,14 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { MovimentoEstoqueService } from './movimento-estoque.service';
-import { CreateMovimentoEstoqueDto, TipoMovimento } from './dto/create-movimento-estoque.dto';
+import {
+  CreateMovimentoEstoqueDto,
+  TipoMovimento,
+} from './dto/create-movimento-estoque.dto';
 import { MovimentoEstoqueResponseDto } from './dto/movimento-estoque-response.dto';
 import { HistoricoSkuQueryDto } from './dto/historico-sku-query.dto';
 import { AjusteEstoqueDto } from './dto/ajuste-estoque.dto';
+import { AjusteConferenciaLoteDto } from './dto/ajuste-conferencia-lote.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('Movimento de Estoque')
@@ -28,12 +32,15 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 @UseGuards(JwtAuthGuard)
 @Controller('movimento-estoque')
 export class MovimentoEstoqueController {
-  constructor(private readonly movimentoEstoqueService: MovimentoEstoqueService) {}
+  constructor(
+    private readonly movimentoEstoqueService: MovimentoEstoqueService,
+  ) {}
 
   @Post()
   @ApiOperation({
     summary: 'Criar movimento de estoque',
-    description: 'Registra um novo movimento de estoque e atualiza automaticamente as quantidades',
+    description:
+      'Registra um novo movimento de estoque e atualiza automaticamente as quantidades',
   })
   @ApiResponse({
     status: 201,
@@ -53,13 +60,17 @@ export class MovimentoEstoqueController {
     @Request() req: any,
   ): Promise<MovimentoEstoqueResponseDto> {
     const usuarioId = req.user.id;
-    return this.movimentoEstoqueService.create(createMovimentoEstoqueDto, usuarioId);
+    return this.movimentoEstoqueService.create(
+      createMovimentoEstoqueDto,
+      usuarioId,
+    );
   }
 
   @Post('ajuste')
   @ApiOperation({
     summary: 'Realizar ajuste de estoque',
-    description: 'Endpoint específico para ajustes de estoque. Permite valores positivos (aumentar) ou negativos (diminuir) para corrigir divergências entre estoque físico e sistema',
+    description:
+      'Endpoint específico para ajustes de estoque. Permite valores positivos (aumentar) ou negativos (diminuir) para corrigir divergências entre estoque físico e sistema',
   })
   @ApiResponse({
     status: 201,
@@ -79,7 +90,7 @@ export class MovimentoEstoqueController {
     @Request() req: any,
   ): Promise<MovimentoEstoqueResponseDto> {
     const usuarioId = req.user.id;
-    
+
     // Converter AjusteEstoqueDto para CreateMovimentoEstoqueDto
     const createMovimentoDto: CreateMovimentoEstoqueDto = {
       skuId: ajusteEstoqueDto.skuId,
@@ -92,10 +103,51 @@ export class MovimentoEstoqueController {
     return this.movimentoEstoqueService.create(createMovimentoDto, usuarioId);
   }
 
+  @Post('ajuste-conferencia-lote')
+  @ApiOperation({
+    summary: 'Processar ajustes de conferência em lote',
+    description:
+      'Processa múltiplos ajustes de estoque baseados em uma conferência de estoque. Cria movimentos de ajuste para cada item com diferença diferente de zero, ignorando itens sem diferença.',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Ajustes processados com sucesso',
+    schema: {
+      type: 'object',
+      properties: {
+        totalProcessados: { type: 'number', example: 5 },
+        totalIgnorados: { type: 'number', example: 2 },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Dados inválidos ou lista vazia',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'SKU ou local não encontrado',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Estoque insuficiente para ajuste negativo',
+  })
+  async processarAjustesConferenciaLote(
+    @Body() ajusteConferenciaLoteDto: AjusteConferenciaLoteDto,
+    @Request() req: any,
+  ) {
+    const usuarioId = req.user.id;
+    return this.movimentoEstoqueService.processarAjustesConferenciaLote(
+      ajusteConferenciaLoteDto,
+      usuarioId,
+    );
+  }
+
   @Get()
   @ApiOperation({
     summary: 'Listar todos os movimentos',
-    description: 'Retorna todos os movimentos de estoque ordenados por data (mais recentes primeiro)',
+    description:
+      'Retorna todos os movimentos de estoque ordenados por data (mais recentes primeiro)',
   })
   @ApiResponse({
     status: 200,
@@ -109,7 +161,8 @@ export class MovimentoEstoqueController {
   @Get('historico-sku/:skuId')
   @ApiOperation({
     summary: 'Histórico de movimentos de um SKU',
-    description: 'Retorna o histórico completo de movimentos de um SKU específico em ordem cronológica',
+    description:
+      'Retorna o histórico completo de movimentos de um SKU específico em ordem cronológica',
   })
   @ApiParam({
     name: 'skuId',

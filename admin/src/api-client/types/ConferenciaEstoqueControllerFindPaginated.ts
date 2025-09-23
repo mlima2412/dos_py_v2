@@ -8,6 +8,7 @@ import type { ConferenciaEstoqueResponseDto } from "./ConferenciaEstoqueResponse
 export const conferenciaEstoqueControllerFindPaginatedQueryParamsStatusEnum = {
     "PENDENTE": "PENDENTE",
     "EM_ANDAMENTO": "EM_ANDAMENTO",
+    "CONCLUIDA": "CONCLUIDA",
     "FINALIZADA": "FINALIZADA",
     "CANCELADA": "CANCELADA"
 } as const;

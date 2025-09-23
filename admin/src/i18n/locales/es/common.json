@@ -982,6 +982,11 @@
 				"amountPositive": "La cantidad debe ser mayor que cero",
 				"insufficientStock": "Inventario insuficiente para decrementar"
 			},
+			"conference": {
+				"title": "Local en Conferencia",
+				"message": "No es posible ajustar el inventario mientras el local esté en proceso de conferencia. Espere la conclusión de la conferencia para realizar ajustes.",
+				"button": "Entendido"
+			},
 			"tooltip": {
 				"title": "Alteración manual del inventario",
 				"description": "En esta acción podrás ajustar manualmente el inventario de cada producto que desees. Ingresa un valor positivo para aumentar el inventario o negativo para disminuir."
@@ -1075,5 +1080,125 @@
 			"completeError": "Error al marcar conferencia como concluida. Inténtalo de nuevo."
 		}
 	},
-	"conferenceDetails": {}
+	"conferenceDetails": {},
+	"conference": {
+		"title": "Conferencia de Inventario",
+		"list": {
+			"title": "Lista de Conferencias",
+			"noResults": "No se encontraron conferencias",
+			"search": "Buscar por ubicación...",
+			"filterByPartner": "Filtrar por socio",
+			"allPartners": "Todos los socios",
+			"results": "conferencias",
+			"showing": "Mostrando",
+			"of": "de",
+			"loadMore": "Cargar más"
+		},
+		"columns": {
+			"date": "Fecha",
+			"location": "Ubicación",
+			"user": "Conferido por",
+			"endDate": "Fecha fin",
+			"status": "Estado",
+			"actions": "Acciones"
+		},
+		"status": {
+			"PENDENTE": "Pendiente",
+			"EM_ANDAMENTO": "En progreso",
+			"FINALIZADA": "Finalizada",
+			"CANCELADA": "Cancelada",
+			"CONCLUIDA": "Concluida"
+		},
+		"actions": {
+			"create": "Nueva Conferencia",
+			"view": "Visualizar",
+			"complete": "Marcar como concluida",
+			"delete": "Eliminar"
+		},
+		"messages": {
+			"loadError": "Error al cargar conferencias",
+			"completeSuccess": "¡Conferencia marcada como concluida con éxito!",
+			"completeError": "Error al marcar conferencia como concluida. Inténtalo de nuevo.",
+			"deleteSuccess": "¡Conferencia eliminada con éxito!",
+			"deleteError": "Error al eliminar conferencia. Inténtalo de nuevo.",
+			"deleteConfirm": "¿Estás seguro de que quieres eliminar esta conferencia?",
+			"deleteConfirmTitle": "Confirmar eliminación",
+			"deleteConfirmDescription": "Esta acción no se puede deshacer. La conferencia será eliminada permanentemente del sistema.",
+			"deleteConfirmButton": "Eliminar",
+			"deleteCancelButton": "Cancelar"
+		},
+		"details": {
+			"title": "Conferencia de Inventario",
+			"subtitle": "Gestiona la conferencia de inventario",
+			"newConference": "Nueva Conferencia",
+			"viewConference": "Visualizar Conferencia",
+			"configureConference": "Configurar Conferencia",
+			"selectLocation": "Selecciona un local de inventario",
+			"noLocations": "Ningún local de inventario encontrado",
+			"locationRequired": "Local es obligatorio",
+			"createConference": "Crear Conferencia",
+			"creatingConference": "Creando conferencia...",
+			"conferenceCreated": "¡Conferencia creada con éxito!",
+			"progress": "Progreso de la Conferencia",
+			"itemsConferred": "artículos conferidos",
+			"of": "de",
+			"items": "artículos",
+			"concluded": "concluido",
+			"continueConference": "Continuar Conferencia",
+			"scanCode": "Digite o escanee el código del producto (XXX-YYY)",
+			"confer": "Conferir",
+			"productsInConference": "Productos en Conferencia",
+			"conferredItems": "Artículos Conferidos",
+			"noItemsConferred": "Ningún artículo fue conferido aún.",
+			"system": "Sistema",
+			"physical": "Físico",
+			"difference": "Diferencia",
+			"status": "Estado",
+			"correct": "Correcto",
+			"excess": "Exceso",
+			"shortage": "Falta",
+			"completeConference": "Concluir Conferencia",
+			"completingConference": "Concluyendo...",
+			"finalize": "Finalizar",
+			"processing": "Procesando...",
+			"conferenceCompleted": "¡Conferencia concluida con éxito!",
+			"conferenceError": "Error al concluir conferencia. Inténtalo de nuevo.",
+			"adjustmentsProcessed": "¡Ajustes procesados con éxito!",
+			"itemsAdjusted": "artículos ajustados",
+			"itemsIgnored": "ignorados",
+			"adjustmentsError": "Error al procesar ajustes. Inténtalo de nuevo.",
+			"noAdjustmentsNeeded": "No hay ajustes necesarios para procesar.",
+			"conferenceFinalized": "¡Conferencia finalizada con éxito!",
+			"invalidCodeFormat": "Formato de código inválido. Use XXX-YYY",
+			"invalidSku": "SKU inválido",
+			"skuNotFound": "SKU no encontrado en el inventario de este local",
+			"productConferred": "¡Producto conferido! Cantidad: {{quantity}}",
+			"registerItemError": "Error al registrar artículo de conferencia",
+			"startConference": "Iniciar Conferencia",
+			"conferenceStarted": "¡Conferencia iniciada con éxito!",
+			"unconferredProducts": {
+				"title": "Productos No Conferidos",
+				"description": "Existen productos en el inventario que no fueron conferidos físicamente. Al finalizar la conferencia, estos productos tendrán su inventario zerado automáticamente, ya que asumimos que si no fueron conferidos, ya no están disponibles en el local.",
+				"confirm": "Sí, Adelante",
+				"cancel": "Cancelar",
+				"productCode": "Código",
+				"productName": "Nombre del Producto",
+				"systemStock": "Inventario Sistema"
+			},
+			"finalizeDialog": {
+				"title": "Finalizar Conferencia",
+				"description": "Esta acción procesará todos los ajustes de inventario basados en la conferencia realizada en el local \"{{location}}\". Esta operación no puede ser deshecha.",
+				"confirm": "Sí, Finalizar",
+				"cancel": "Cancelar"
+			},
+			"conferenceInfo": {
+				"title": "Informaciones de la Conferencia",
+				"location": "Local",
+				"responsible": "Responsable",
+				"startDate": "Fecha de Inicio",
+				"endDate": "Fecha de Fin",
+				"id": "ID"
+			}
+		}
+	}
 }

@@ -133,7 +133,7 @@ export class ConferenciaEstoqueResponseDto {
   @ApiProperty({
     description: 'Status da conferência',
     example: 'PENDENTE',
-    enum: ['PENDENTE', 'EM_ANDAMENTO', 'FINALIZADA', 'CANCELADA'],
+    enum: ['PENDENTE', 'EM_ANDAMENTO', 'FINALIZADA', 'CANCELADA', 'CONCLUIDA'],
   })
   status: string;
 
