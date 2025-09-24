@@ -6,6 +6,8 @@
 import type { ProdutosPorLocalResponseDto } from "../types/ProdutosPorLocalResponseDto.ts";
 import type { ToZod } from "@kubb/plugin-zod/utils";
 import { categoriaResponseDtoSchema } from "./categoriaResponseDtoSchema.ts";
+import { currencyResponseDtoSchema } from "./currencyResponseDtoSchema.ts";
+import { fornecedorResponseDtoSchema } from "./fornecedorResponseDtoSchema.ts";
 import { produtoSKUEstoqueResponseDtoSchema } from "./produtoSKUEstoqueResponseDtoSchema.ts";
 import { z } from "zod";
 
@@ -20,5 +22,7 @@ export const produtosPorLocalResponseDtoSchema = z.object({
   "ativo": z.boolean().describe("Status ativo do produto"),
   "consignado": z.boolean().describe("Produto consignado"),
   "categoria": z.lazy(() => categoriaResponseDtoSchema).describe("Categoria do produto").optional(),
+  "fornecedor": z.lazy(() => fornecedorResponseDtoSchema).describe("Fornecedor do produto").optional(),
+  "currency": z.lazy(() => currencyResponseDtoSchema).describe("Moeda do produto").optional(),
   "ProdutoSKU": z.array(z.lazy(() => produtoSKUEstoqueResponseDtoSchema)).describe("SKUs do produto com informações de estoque")
       }) as unknown as ToZod<ProdutosPorLocalResponseDto>

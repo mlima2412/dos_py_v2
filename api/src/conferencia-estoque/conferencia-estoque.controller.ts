@@ -196,19 +196,17 @@ export class ConferenciaEstoqueController {
 
   @Get('local/:localPublicId/em-conferencia')
   @ApiBearerAuth('JWT-auth')
-  @ApiOperation({
-    summary: 'Verificar se local de estoque está em processo de conferência',
-  })
+  @ApiOperation({ summary: 'Verificar se local de estoque está em processo de conferência' })
   @ApiHeader({
     name: 'x-parceiro-id',
     description: 'ID do parceiro logado',
     required: true,
     schema: { type: 'integer', example: 1 },
   })
-  @ApiParam({
-    name: 'localPublicId',
+  @ApiParam({ 
+    name: 'localPublicId', 
     description: 'ID público do local de estoque',
-    example: 'local-123-abc',
+    example: 'local-123-abc'
   })
   @ApiResponse({
     status: 200,
@@ -218,23 +216,21 @@ export class ConferenciaEstoqueController {
       properties: {
         emConferencia: {
           type: 'boolean',
-          description:
-            'True se existe conferência pendente, false caso contrário',
-          example: true,
-        },
-      },
-    },
+          description: 'True se existe conferência pendente, false caso contrário',
+          example: true
+        }
+      }
+    }
   })
   @ApiResponse({ status: 404, description: 'Local de estoque não encontrado' })
   async checkLocalEmConferencia(
     @Param('localPublicId') localPublicId: string,
     @ParceiroId() parceiroId: number,
   ): Promise<{ emConferencia: boolean }> {
-    const emConferencia =
-      await this.conferenciaEstoqueService.isLocalEstoqueEmConferencia(
-        localPublicId,
-        parceiroId,
-      );
+    const emConferencia = await this.conferenciaEstoqueService.isLocalEstoqueEmConferencia(
+      localPublicId,
+      parceiroId,
+    );
     return { emConferencia };
   }
 

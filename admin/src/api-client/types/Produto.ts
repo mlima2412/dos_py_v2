@@ -4,6 +4,8 @@
 */
 
 import type { CategoriaProduto } from "./CategoriaProduto.ts";
+import type { Currency } from "./Currency.ts";
+import type { Fornecedor } from "./Fornecedor.ts";
 import type { Parceiro } from "./Parceiro.ts";
 import type { ProdutoSKU } from "./ProdutoSKU.ts";
 
@@ -69,6 +71,16 @@ export type Produto = {
     */
     parceiroId: number;
     /**
+     * @description ID do fornecedor do produto
+     * @type number | undefined
+    */
+    fornecedorId?: number;
+    /**
+     * @description ID da moeda do produto
+     * @type number | undefined
+    */
+    currencyId?: number;
+    /**
      * @description Categoria do produto
     */
     categoria?: CategoriaProduto;
@@ -76,6 +88,14 @@ export type Produto = {
      * @description Parceiro proprietário do produto
     */
     Parceiro: Parceiro;
+    /**
+     * @description Fornecedor do produto
+    */
+    fornecedor?: Fornecedor;
+    /**
+     * @description Moeda do produto
+    */
+    currency?: Currency;
     /**
      * @description SKUs do produto
      * @type array | undefined

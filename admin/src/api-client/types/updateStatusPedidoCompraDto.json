@@ -1,0 +1,1 @@
+{"type":"object","properties":{"status":{"type":"number","description":"Novo status do pedido de compra","example":2,"enum":[1,2,3]}},"required":["status"],"x-readme-ref-name":"UpdateStatusPedidoCompraDto"}

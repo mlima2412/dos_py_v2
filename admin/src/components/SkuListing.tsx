@@ -17,7 +17,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { Search, Package, ShoppingCart } from "lucide-react";
+import { Search, Package, ShoppingCart, Edit3 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -25,6 +25,16 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { useDebounce } from "@/hooks/useDebounce";
 
 import type {
@@ -37,13 +47,16 @@ interface SkuListingProps {
 	selectedProductId: number | null;
 	skus: ProdutoSKUEstoqueResponseDto[];
 	isLoading: boolean;
-	error: any;
+	error: unknown;
 	enableStockAdjustment?: boolean;
 	onStockAdjust?: (sku: ProdutoSKUEstoqueResponseDto) => void;
 	onDoubleClick?: (sku: ProdutoSKUEstoqueResponseDto) => void;
+	allowZeroStock?: boolean;
+	showProductPrice?: boolean;
+	onPriceChange?: (newPrice: number) => void;
 }
 
-export const SkuListing: React.FC<SkuListingProps> = ({
+const SkuListing: React.FC<SkuListingProps> = ({
 	selectedProduct,
 	selectedProductId,
 	skus,
@@ -52,10 +65,15 @@ export const SkuListing: React.FC<SkuListingProps> = ({
 	enableStockAdjustment = false,
 	onStockAdjust,
 	onDoubleClick,
+	allowZeroStock = false,
+	showProductPrice = false,
+	onPriceChange,
 }) => {
 	const { t } = useTranslation("common");
 	const [skuSearch, setSkuSearch] = React.useState("");
 	const [sizeFilter, setSizeFilter] = React.useState<string>("all");
+	const [isPriceDialogOpen, setIsPriceDialogOpen] = React.useState(false);
+	const [newPrice, setNewPrice] = React.useState<string>("");
 
 	const debouncedSkuSearch = useDebounce(skuSearch, 500);
 
@@ -114,13 +132,53 @@ export const SkuListing: React.FC<SkuListingProps> = ({
 		}
 	};
 
+	const handlePriceClick = () => {
+		if (selectedProduct) {
+			setNewPrice(selectedProduct.precoCompra.toString());
+			setIsPriceDialogOpen(true);
+		}
+	};
+
+	const handlePriceSave = () => {
+		const priceValue = parseFloat(newPrice);
+		if (!isNaN(priceValue) && priceValue >= 0 && onPriceChange) {
+			onPriceChange(priceValue);
+			setIsPriceDialogOpen(false);
+		}
+	};
+
+	const handlePriceCancel = () => {
+		setIsPriceDialogOpen(false);
+		setNewPrice("");
+	};
+
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle className="flex items-center gap-2">
-					<Package className="h-5 w-5" />
-					{t("inventory.view.skus")}
-					{selectedProduct && ` - ${selectedProduct.nome}`}
+				<CardTitle>
+					<div className="flex justify-between">
+						<div className="flex items-center gap-2">
+							<Package className="h-5 w-5" />{" "}
+							{selectedProduct && `${selectedProduct.nome}`}
+						</div>
+						{showProductPrice && (
+							<div
+								className="text-sm text-muted-foreground cursor-pointer hover:text-foreground transition-colors flex items-center gap-1"
+								onClick={handlePriceClick}
+							>
+								{/* Formatar o preço de compra */}
+								{selectedProduct?.currency?.prefixo}{" "}
+								{selectedProduct?.precoCompra.toLocaleString(
+									selectedProduct?.currency?.isoCode || "pt-BR",
+									{
+										minimumFractionDigits: 2,
+										maximumFractionDigits: 2,
+									}
+								)}
+								<Edit3 className="h-3 w-3 opacity-50" />
+							</div>
+						)}
+					</div>
 				</CardTitle>
 			</CardHeader>
 			<CardContent>
@@ -206,14 +264,14 @@ export const SkuListing: React.FC<SkuListingProps> = ({
 										<TableRow
 											key={`${sku.id}-${sku.publicId}`}
 											onDoubleClick={() => {
-												if (sku.estoque > 0) {
+												if (allowZeroStock || sku.estoque > 0) {
 													onDoubleClick?.(sku);
 												}
 											}}
 											className={
-												onDoubleClick && sku.estoque > 0
+												onDoubleClick && (allowZeroStock || sku.estoque > 0)
 													? "cursor-pointer hover:bg-muted/50"
-													: onDoubleClick && sku.estoque <= 0
+													: onDoubleClick && !allowZeroStock && sku.estoque <= 0
 														? "cursor-not-allowed opacity-50"
 														: ""
 											}
@@ -293,6 +351,58 @@ export const SkuListing: React.FC<SkuListingProps> = ({
 					</ScrollArea>
 				)}
 			</CardContent>
+
+			{/* Dialog para ajuste de preço */}
+			<Dialog open={isPriceDialogOpen} onOpenChange={setIsPriceDialogOpen}>
+				<DialogContent className="sm:max-w-[425px]">
+					<DialogHeader>
+						<DialogTitle>{t("inventory.priceAdjust.title")}</DialogTitle>
+						<DialogDescription>
+							{t("inventory.priceAdjust.description")}
+						</DialogDescription>
+					</DialogHeader>
+					<div className="grid gap-4 py-4">
+						<div className="grid grid-cols-4 items-center gap-4">
+							<Label htmlFor="current-price" className="text-right">
+								{t("inventory.priceAdjust.currentPrice")}
+							</Label>
+							<div className="col-span-3 text-sm text-muted-foreground">
+								{selectedProduct?.currency?.prefixo}{" "}
+								{selectedProduct?.precoCompra.toLocaleString(
+									selectedProduct?.currency?.isoCode || "pt-BR",
+									{
+										minimumFractionDigits: 2,
+										maximumFractionDigits: 2,
+									}
+								)}
+							</div>
+						</div>
+						<div className="grid grid-cols-4 items-center gap-4">
+							<Label htmlFor="new-price" className="text-right">
+								{t("inventory.priceAdjust.newPrice")}
+							</Label>
+							<Input
+								id="new-price"
+								type="number"
+								step="0.01"
+								min="0"
+								value={newPrice}
+								onChange={e => setNewPrice(e.target.value)}
+								className="col-span-3"
+								placeholder={t("inventory.priceAdjust.enterNewPrice")}
+							/>
+						</div>
+					</div>
+					<DialogFooter>
+						<Button variant="outline" onClick={handlePriceCancel}>
+							{t("common.cancel")}
+						</Button>
+						<Button onClick={handlePriceSave}>{t("common.save")}</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
 		</Card>
 	);
 };
+
+export { SkuListing };

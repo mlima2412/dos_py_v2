@@ -113,6 +113,26 @@ export class CreateProdutoDto {
   categoriaId?: number;
 
   @ApiProperty({
+    description: 'ID do fornecedor do produto',
+    example: 1,
+    required: false,
+  })
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  fornecedorId?: number;
+
+  @ApiProperty({
+    description: 'ID da moeda do produto',
+    example: 1,
+    required: false,
+  })
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  currencyId?: number;
+
+  @ApiProperty({
     description: 'Status ativo do produto',
     example: true,
     default: true,

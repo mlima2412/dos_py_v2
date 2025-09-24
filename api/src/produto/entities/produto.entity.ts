@@ -3,6 +3,8 @@ import { uuidv7 } from 'uuidv7';
 import { ProdutoSKU } from '../../produto-sku/entities/produto-sku.entity';
 import { CategoriaProduto } from '../../categoria-produto/entities/categoria-produto.entity';
 import { Parceiro } from '../../parceiros/entities/parceiro.entity';
+import { Fornecedor } from '../../fornecedores/entities/fornecedor.entity';
+import { Currency } from '../../currency/entities/currency.entity';
 
 export class Produto {
   @ApiProperty({
@@ -83,6 +85,20 @@ export class Produto {
   parceiroId: number;
 
   @ApiProperty({
+    description: 'ID do fornecedor do produto',
+    example: 1,
+    required: false,
+  })
+  fornecedorId: number | null;
+
+  @ApiProperty({
+    description: 'ID da moeda do produto',
+    example: 1,
+    required: false,
+  })
+  currencyId: number | null;
+
+  @ApiProperty({
     description: 'Categoria do produto',
     type: () => CategoriaProduto,
     required: false,
@@ -94,6 +110,20 @@ export class Produto {
     type: () => Parceiro,
   })
   Parceiro?: Parceiro;
+
+  @ApiProperty({
+    description: 'Fornecedor do produto',
+    type: () => Fornecedor,
+    required: false,
+  })
+  fornecedor?: Fornecedor;
+
+  @ApiProperty({
+    description: 'Moeda do produto',
+    type: () => Currency,
+    required: false,
+  })
+  currency?: Currency;
 
   @ApiProperty({
     description: 'SKUs do produto',

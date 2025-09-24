@@ -304,15 +304,12 @@ export class ConferenciaEstoqueService {
     }
 
     // Verificar se existe alguma conferência com status PENDENTE para este local
-    const conferenciaEmAndamento =
-      await this.prisma.conferenciaEstoque.findFirst({
-        where: {
-          localEstoqueId: localEstoque.id,
-          status: {
-            in: ['PENDENTE', 'EM_ANDAMENTO', 'CONCLUIDA'],
-          },
-        },
-      });
+    const conferenciaEmAndamento = await this.prisma.conferenciaEstoque.findFirst({
+      where: {
+        localEstoqueId: localEstoque.id,
+        status: 'PENDENTE',
+      },
+    });
 
     return !!conferenciaEmAndamento;
   }

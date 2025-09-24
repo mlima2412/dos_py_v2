@@ -8,6 +8,40 @@ export class CategoriaResponseDto {
   descricao: string;
 }
 
+export class FornecedorResponseDto {
+  @ApiProperty({ example: 1, description: 'ID do fornecedor' })
+  id: number;
+
+  @ApiProperty({ 
+    example: 'f47ac10b-58cc-4372-a567-0e02b2c3d479', 
+    description: 'ID público do fornecedor' 
+  })
+  publicId: string;
+
+  @ApiProperty({ example: 'Fornecedor ABC Ltda', description: 'Nome do fornecedor' })
+  nome: string;
+}
+
+export class CurrencyResponseDto {
+  @ApiProperty({ example: 1, description: 'ID da moeda' })
+  id: number;
+
+  @ApiProperty({ 
+    example: 'f47ac10b-58cc-4372-a567-0e02b2c3d479', 
+    description: 'ID público da moeda' 
+  })
+  publicId: string;
+
+  @ApiProperty({ example: 'Real Brasileiro', description: 'Nome da moeda' })
+  nome: string;
+
+  @ApiProperty({ example: 'R$', description: 'Prefixo da moeda' })
+  prefixo: string;
+
+  @ApiProperty({ example: 'BRL', description: 'Código ISO da moeda' })
+  isoCode: string;
+}
+
 export class ProdutoSKUEstoqueResponseDto {
   @ApiProperty({ example: 1, description: 'ID do SKU' })
   id: number;
@@ -79,6 +113,20 @@ export class ProdutosPorLocalResponseDto {
     required: false 
   })
   categoria?: CategoriaResponseDto;
+
+  @ApiProperty({ 
+    type: FornecedorResponseDto, 
+    description: 'Fornecedor do produto',
+    required: false 
+  })
+  fornecedor?: FornecedorResponseDto;
+
+  @ApiProperty({ 
+    type: CurrencyResponseDto, 
+    description: 'Moeda do produto',
+    required: false 
+  })
+  currency?: CurrencyResponseDto;
 
   @ApiProperty({ 
     type: [ProdutoSKUEstoqueResponseDto], 

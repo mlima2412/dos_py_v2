@@ -14,7 +14,7 @@ export const produtoControllerFindByLocalSuspenseQueryKey = (localId: ProdutoCon
 export type ProdutoControllerFindByLocalSuspenseQueryKey = ReturnType<typeof produtoControllerFindByLocalSuspenseQueryKey>
 
 /**
- * @description Lista todos os produtos que possuem SKUs com estoque em um local específico
+ * @description Lista todos os produtos que possuem SKUs com estoque em um local específico. Opcionalmente pode filtrar por fornecedor.
  * @summary Listar produtos por local de estoque
  * {@link /produto/local/:localId}
  */
@@ -41,7 +41,7 @@ export function produtoControllerFindByLocalSuspenseQueryOptions(localId: Produt
 }
 
 /**
- * @description Lista todos os produtos que possuem SKUs com estoque em um local específico
+ * @description Lista todos os produtos que possuem SKUs com estoque em um local específico. Opcionalmente pode filtrar por fornecedor.
  * @summary Listar produtos por local de estoque
  * {@link /produto/local/:localId}
  */

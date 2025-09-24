@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ProductListing } from "../components/ProductListing";
-import { SkuListing } from "../components/SkuListing";
+import { SkuListing } from "../../../components/SkuListing";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import type {

@@ -234,9 +234,9 @@ export function getMenuList(
 								submenus: [],
 							},
 							{
-								href: "/formPagamento",
+								href: "/formaPagamento",
 								label: t("menu.paymentMethods"),
-								active: pathname.includes("/formPagamento"),
+								active: pathname.includes("/formaPagamento"),
 								icon: CreditCardIcon,
 								submenus: [],
 							},

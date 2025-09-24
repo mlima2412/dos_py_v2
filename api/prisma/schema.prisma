@@ -68,6 +68,8 @@ model Fornecedor {
 
   despesas            Despesa[]
   despesasRecorrentes DespesaRecorrente[]
+  PedidoCompra        PedidoCompra[]
+  Produto             Produto[]
 
   @@map("fornecedor")
 }
@@ -110,6 +112,8 @@ model Parceiro {
   LocalEstoque                   LocalEstoque[]
   TransferenciaEstoque           TransferenciaEstoque[]
   ConferenciaEstoque             ConferenciaEstoque[]
+  formaPagamento                 formaPagamento[]
+  PedidoCompra                   PedidoCompra[]
 
   @@map("parceiro")
 }
@@ -170,6 +174,8 @@ model Currency {
   despesas            Despesa[]
   despesasRecorrentes DespesaRecorrente[]
   ContasPagarParcelas ContasPagarParcelas[]
+  PedidoCompra        PedidoCompra[]
+  Produto             Produto[]
 
   @@map("currency")
 }
@@ -344,10 +350,14 @@ model Produto {
   descricao    String?
   imgURL       String?           @map("img_url")
   precoCompra  Decimal?          @default(0.0) @map("preco_compra") @db.Decimal(12, 3)
+  currencyId   Int?              @map("currency_id")
   precoVenda   Decimal           @map("preco_venda") @db.Decimal(12, 3)
   parceiroId   Int               @map("parceiro_id")
+  fornecedorId Int?              @map("fornecedor_id")
   Parceiro     Parceiro          @relation(fields: [parceiroId], references: [id])
+  fornecedor   Fornecedor?       @relation(fields: [fornecedorId], references: [id])
   categoria    CategoriaProduto? @relation(fields: [categoriaId], references: [id])
+  currency     Currency?         @relation(fields: [currencyId], references: [id])
   ProdutoSKU   ProdutoSKU[]
 
   @@map("produto")
@@ -367,6 +377,7 @@ model ProdutoSKU {
   EstoqueSKU       EstoqueSKU[]
   MovimentoEstoque MovimentoEstoque[]
   ConferenciaItem  ConferenciaItem[]
+  PedidoCompraItem PedidoCompraItem[]
 
   @@map("produto_sku")
 }
@@ -390,6 +401,7 @@ model LocalEstoque {
   TransferenciaEstoqueOrigem  TransferenciaEstoque[] @relation("Transferencia_Origem")
   TransferenciaEstoqueDestino TransferenciaEstoque[] @relation("Transferencia_Destino")
   ConferenciaEstoque          ConferenciaEstoque[]
+  PedidoCompra                PedidoCompra[]
 
   @@index([parceiroId])
   @@map("local_estoque")
@@ -431,6 +443,8 @@ model MovimentoEstoque {
   localOrigem              LocalEstoque?              @relation("Movimento_Origem", fields: [localOrigemId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   localDestino             LocalEstoque?              @relation("Movimento_Destino", fields: [localDestinoId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   TransferenciaEstoqueItem TransferenciaEstoqueItem[] @relation("Movimento_Estoque")
+  PedidoCompra             PedidoCompra?              @relation(fields: [pedidoCompraId], references: [id])
+  pedidoCompraId           Int?
 
   @@index([skuId])
   @@index([localOrigemId])
@@ -512,4 +526,56 @@ model ConferenciaItem {
   ConferenciaEstoque ConferenciaEstoque @relation(fields: [conferenciaId], references: [id], onDelete: Cascade)
 
   @@map("conferencia_item")
+}
+
+model formaPagamento {
+  idFormaPag        Int      @id @default(autoincrement())
+  parceiroId        Int      @map("parceiro_id")
+  nome              String
+  taxa              Decimal? @default(0) @db.Decimal(12, 3)
+  tempoLiberacao    Int      @default(0) @map("tempo_liberacao") // tempo em dias que o dinheiro irá ser liberado na conta bancaria
+  impostoPosCalculo Boolean  @default(false) @map("imposto_pos_calculo")
+  ativo             Boolean  @default(true) @map("ativo")
+  Parceiro          Parceiro @relation(fields: [parceiroId], references: [id])
+
+  @@map("forma_pagamento")
+}
+
+model PedidoCompra {
+  id               Int                @id @default(autoincrement())
+  publicId         String             @unique @map("public_id")
+  parceiroId       Int                @map("parceiro_id")
+  localEntradaId   Int                @map("local_entrada_id") // estoque de entrada quando chegar
+  fornecedorId     Int                @map("fornecedor_id")
+  dataPedido       DateTime           @default(now()) @map("data_pedido")
+  dataEntrega      DateTime?          @map("data_entrega")
+  valorFrete       Decimal?           @default(0) @map("valor_frete") @db.Decimal(12, 3)
+  valorTotal       Decimal?           @default(0) @map("valor_total") @db.Decimal(12, 3)
+  observacao       String?            @map("observacao")
+  valorComissao    Decimal?           @default(0) @map("valor_comissao") @db.Decimal(12, 3)
+  cotacao          Float?             @default(1) @map("cotacao")
+  currencyId       Int?               @map("currency_id")
+  consignado       Boolean            @default(false) @map("consignado")
+  status           Int                @default(1) @map("status") // diferentes status a ser implementado
+  fornecedor       Fornecedor         @relation(fields: [fornecedorId], references: [id])
+  currency         Currency?          @relation(fields: [currencyId], references: [id])
+  Parceiro         Parceiro           @relation(fields: [parceiroId], references: [id])
+  LocalEntrada     LocalEstoque       @relation(fields: [localEntradaId], references: [id])
+  MovimentoEstoque MovimentoEstoque[]
+  PedidoCompraItem PedidoCompraItem[]
+
+  @@map("pedido_compra")
+}
+
+model PedidoCompraItem {
+  id             Int          @id @default(autoincrement())
+  pedidoCompraId Int          @map("pedido_compra_id")
+  skuId          Int          @map("sku_id")
+  qtd            Int          @map("qtd")
+  precoCompra    Decimal      @map("preco_compra") @db.Decimal(12, 3)
+  observacao     String?      @map("observacao")
+  pedidoCompra   PedidoCompra @relation(fields: [pedidoCompraId], references: [id], onDelete: Cascade)
+  ProdutoSKU     ProdutoSKU   @relation(fields: [skuId], references: [id])
+
+  @@map("pedido_compra_item")
 }

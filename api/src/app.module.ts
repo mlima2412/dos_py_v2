@@ -34,6 +34,9 @@ import { TransferenciaEstoqueModule } from './transferencia-estoque/transferenci
 import { TransferenciaEstoqueSkuModule } from './transferencia-estoque-sku/transferencia-estoque-sku.module';
 import { ConferenciaEstoqueModule } from './conferencia-estoque/conferencia-estoque.module';
 import { ConferenciaItemModule } from './conferencia-item/conferencia-item.module';
+import { FormaPagamentoModule } from './forma-pagamento/forma-pagamento.module';
+import { PedidoCompraModule } from './pedido-compra/pedido-compra.module';
+import { PedidoCompraItemModule } from './pedido-compra-item/pedido-compra-item.module';
 
 @Module({
   imports: [
@@ -65,6 +68,9 @@ import { ConferenciaItemModule } from './conferencia-item/conferencia-item.modul
     TransferenciaEstoqueSkuModule,
     ConferenciaEstoqueModule,
     ConferenciaItemModule,
+    FormaPagamentoModule,
+    PedidoCompraModule,
+    PedidoCompraItemModule,
   ],
   controllers: [AppController],
   providers: [

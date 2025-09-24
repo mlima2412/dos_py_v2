@@ -12,8 +12,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Package, MapPin } from "lucide-react";
 import { AdjustStockDialog } from "./components/AdjustStockDialog";
-import { ProductListing } from "../components/ProductListing";
-import { SkuListing } from "../components/SkuListing";
+import { ProductSelector, SkuListing } from "@/components";
 
 import { useLocaisEstoque } from "@/hooks/useEstoques";
 import { useProdutoControllerFindByLocal } from "@/api-client";
@@ -265,13 +264,24 @@ export const VisualizarEstoque: React.FC = () => {
 				{selectedLocationId && (
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 						{/* Card de Produtos */}
-						<ProductListing
-							products={produtosData || []}
-							selectedProductId={selectedProductId}
-							onProductSelect={setSelectedProductId}
-							isLoading={isLoadingProducts}
-							error={errorProducts}
-						/>
+						<Card>
+							<CardHeader>
+								<CardTitle className="flex items-center gap-2">
+									<Package className="h-5 w-5" />
+									{t("inventory.view.products")}
+								</CardTitle>
+							</CardHeader>
+							<CardContent>
+								<ProductSelector
+									products={produtosData || []}
+									selectedProductId={selectedProductId}
+									onProductSelect={setSelectedProductId}
+									isLoading={isLoadingProducts}
+									error={errorProducts}
+									placeholder={t("inventory.view.selectProduct")}
+								/>
+							</CardContent>
+						</Card>
 
 						{/* Card de SKUs */}
 						<SkuListing

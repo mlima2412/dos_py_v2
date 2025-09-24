@@ -6,6 +6,8 @@
 import type { Produto } from "../types/Produto.ts";
 import type { ToZod } from "@kubb/plugin-zod/utils";
 import { categoriaProdutoSchema } from "./categoriaProdutoSchema.ts";
+import { currencySchema } from "./currencySchema.ts";
+import { fornecedorSchema } from "./fornecedorSchema.ts";
 import { parceiroSchema } from "./parceiroSchema.ts";
 import { produtoSKUSchema } from "./produtoSKUSchema.ts";
 import { z } from "zod";
@@ -23,7 +25,11 @@ export const produtoSchema = z.object({
   "precoCompra": z.coerce.number().describe("Preço de compra do produto"),
   "precoVenda": z.coerce.number().describe("Preço de venda do produto"),
   "parceiroId": z.coerce.number().describe("ID do parceiro proprietário"),
+  "fornecedorId": z.coerce.number().describe("ID do fornecedor do produto").optional(),
+  "currencyId": z.coerce.number().describe("ID da moeda do produto").optional(),
   "categoria": z.lazy(() => categoriaProdutoSchema).describe("Categoria do produto").optional(),
   "Parceiro": z.lazy(() => parceiroSchema).describe("Parceiro proprietário do produto"),
+  "fornecedor": z.lazy(() => fornecedorSchema).describe("Fornecedor do produto").optional(),
+  "currency": z.lazy(() => currencySchema).describe("Moeda do produto").optional(),
   "ProdutoSKU": z.array(z.lazy(() => produtoSKUSchema)).describe("SKUs do produto").optional()
       }) as unknown as ToZod<Produto>

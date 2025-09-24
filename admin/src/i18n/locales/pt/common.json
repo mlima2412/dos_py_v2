@@ -63,6 +63,7 @@
 		"updating": "Atualizando...",
 		"edit": "Editar",
 		"delete": "Excluir",
+		"saving": "Salvando...",
 		"close": "Fechar",
 		"access": "Acessar",
 		"actions": "Ações",
@@ -97,7 +98,9 @@
 		"roles": {
 			"administrator": "Administrador",
 			"user": "Usuário"
-		}
+		},
+		"page": "Página",
+		"of": "de"
 	},
 	"dashboard": {
 		"title": "Dashboard",
@@ -910,6 +913,8 @@
 		"name": "Nome",
 		"description": "Descrição",
 		"category": "Categoria",
+		"supplier": "Fornecedor",
+		"currency": "Moeda de Compra",
 		"purchasePrice": "Preço de Compra",
 		"salePrice": "Preço de Venda",
 		"active": "Ativo",
@@ -931,7 +936,9 @@
 			"purchasePrice": "0,00",
 			"salePrice": "0,00",
 			"search": "Buscar por nome...",
-			"categoryFilter": "Selecione uma categoria"
+			"categoryFilter": "Selecione uma categoria",
+			"supplier": "Selecione um fornecedor",
+			"currency": "Selecione uma moeda"
 		},
 		"filters": {
 			"allCategories": "Todas as categorias"
@@ -1109,6 +1116,13 @@
 			"errorLoadingLocations": "Erro ao carregar locais de estoque",
 			"errorLoadingProducts": "Erro ao carregar produtos",
 			"errorLoadingSkus": "Erro ao carregar SKUs"
+		},
+		"priceAdjust": {
+			"title": "Ajustar Preço do Produto",
+			"description": "Digite o novo preço para este produto. Esta alteração será aplicada apenas na sessão atual.",
+			"currentPrice": "Preço Atual",
+			"newPrice": "Novo Preço",
+			"enterNewPrice": "Digite o novo preço"
 		},
 		"adjust": {
 			"title": "Ajuste de Estoque",
@@ -1303,6 +1317,162 @@
 				"startDate": "Data de Início",
 				"endDate": "Data de Fim",
 				"id": "ID"
+			}
+		}
+	},
+	"paymentMethods": {
+		"title": "Forma de Pagamento",
+		"list": "Lista de Forma de Pagamento",
+		"create": "Nova Forma de Pagamento",
+		"edit": "Editar Forma de Pagamento",
+		"search": "Buscar forma de pagamento...",
+		"noResults": "Nenhuma forma de pagamento encontrada",
+		"name": "Nome",
+		"tax": "Taxa",
+		"releaseTime": "Tempo de Liberação",
+		"taxAfterCalculation": "Imposto Após Cálculo",
+		"active": "Ativo",
+		"messages": {
+			"createSuccess": "Forma de pagamento criada com sucesso!",
+			"updateSuccess": "Forma de pagamento atualizada com sucesso!",
+			"createError": "Erro ao criar forma de pagamento. Tente novamente.",
+			"updateError": "Erro ao atualizar forma de pagamento. Tente novamente.",
+			"activateSuccess": "Forma de pagamento ativada com sucesso!",
+			"deactivateSuccess": "Forma de pagamento desativada com sucesso!",
+			"activateError": "Erro ao ativar forma de pagamento. Tente novamente.",
+			"deactivateError": "Erro ao desativar forma de pagamento. Tente novamente."
+		},
+		"placeholders": {
+			"name": "Digite o nome da forma de pagamento",
+			"tax": "0,00",
+			"releaseTime": "0"
+		},
+		"labels": {
+			"name": "Nome",
+			"tax": "Taxa (%)",
+			"releaseTime": "Tempo de Liberação (dias)",
+			"taxAfterCalculation": "Imposto Após Cálculo",
+			"active": "Ativo"
+		},
+		"view": "Visualizar Forma de Pagamento",
+		"columns": {
+			"name": "Nome",
+			"tax": "Taxa (%)",
+			"discountApplied": "Desconto Aplicado",
+			"daysToRelease": "Dias para Liberação",
+			"actions": "Ações"
+		},
+		"validations": {
+			"nameRequired": "Nome é obrigatório",
+			"nameMinLength": "Nome deve ter pelo menos 2 caracteres",
+			"nameMaxLength": "Nome deve ter no máximo 255 caracteres",
+			"taxMin": "Taxa deve ser maior ou igual a zero",
+			"releaseTimeMin": "Tempo de liberação deve ser maior ou igual a zero"
+		}
+	},
+	"purchaseOrders": {
+		"title": "Pedidos de Compra",
+		"list": "Lista de Pedidos de Compra",
+		"create": "Novo Pedido de Compra",
+		"edit": "Editar Pedido de Compra",
+		"search": "Buscar pedido de compra...",
+		"noResults": "Nenhum pedido de compra encontrado",
+		"breadcrumb": {
+			"home": "Início",
+			"purchaseOrders": "Pedidos de Compra"
+		},
+		"filters": {
+			"supplier": "Filtrar por fornecedor",
+			"allSuppliers": "Todos os fornecedores"
+		},
+		"columns": {
+			"supplier": "Fornecedor",
+			"orderDate": "Data do Pedido",
+			"purchaseValue": "Valor da Compra",
+			"status": "Status",
+			"actions": "Ações"
+		},
+		"status": {
+			"pending": "Pendente",
+			"confirmed": "Confirmado",
+			"delivered": "Entregue",
+			"cancelled": "Cancelado"
+		},
+		"actions": {
+			"view": "Visualizar",
+			"delete": "Eliminar",
+			"print": "Imprimir"
+		},
+		"messages": {
+			"deleteSuccess": "Pedido de compra eliminado com sucesso!",
+			"deleteError": "Erro ao eliminar pedido de compra. Tente novamente.",
+			"deleteConfirmTitle": "Eliminar pedido de compra",
+			"deleteConfirmDescription": "Tem certeza de que deseja eliminar este pedido de compra? Esta ação não pode ser desfeita.",
+			"deleteConfirmCancel": "Cancelar",
+			"deleteConfirmConfirm": "Eliminar",
+			"loadError": "Erro ao carregar pedidos de compra"
+		},
+		"pagination": {
+			"showing": "Mostrando",
+			"to": "até",
+			"of": "de",
+			"results": "resultados",
+			"previous": "Anterior",
+			"next": "Próximo"
+		},
+		"form": {
+			"title": "Novo Pedido de Compra",
+			"subtitle": "Dados Básicos do Pedido",
+			"breadcrumb": {
+				"home": "Início",
+				"purchaseOrders": "Pedidos de Compra",
+				"new": "Novo Pedido"
+			},
+			"labels": {
+				"supplier": "Fornecedor",
+				"entryLocation": "Local de Entrada",
+				"currency": "Moeda",
+				"orderDate": "Data do Pedido",
+				"deliveryDate": "Data de Entrega",
+				"freightValue": "Frete",
+				"observation": "Observação",
+				"commissionValue": "Comissão",
+				"exchangeRate": "Taxa de Câmbio",
+				"consigned": "Consignado",
+				"product": "Produto",
+				"productSelection": "Seleção de Produtos",
+				"productSkus": "SKUs do Produto",
+				"selectedProducts": "Produtos Selecionados"
+			},
+			"placeholders": {
+				"supplier": "Selecione um fornecedor",
+				"entryLocation": "Selecione um local de entrada",
+				"currency": "Selecione uma moeda",
+				"orderDate": "Selecione a data do pedido",
+				"deliveryDate": "Selecione a data de entrega (opcional)",
+				"product": "Selecione um produto",
+				"freightValue": "0,00",
+				"observation": "Digite observações sobre o pedido",
+				"commissionValue": "0,00",
+				"exchangeRate": "1,00"
+			},
+			"noProductsSelected": "Nenhum produto selecionado",
+			"selectEntryLocation": "Selecione um local de entrada primeiro",
+			"doubleClickToAdd": "Duplo clique para adicionar à lista de compra",
+			"actions": {
+				"save": "Salvar e Continuar",
+				"saving": "Salvando...",
+				"cancel": "Cancelar"
+			},
+			"messages": {
+				"createSuccess": "Pedido de compra criado com sucesso!",
+				"createError": "Erro ao criar pedido de compra. Tente novamente."
+			},
+			"validation": {
+				"supplierRequired": "Fornecedor é obrigatório",
+				"localEntradaRequired": "Local de entrada é obrigatório",
+				"currencyRequired": "Moeda é obrigatória",
+				"dataPedidoRequired": "Data do pedido é obrigatória"
 			}
 		}
 	}

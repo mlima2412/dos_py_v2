@@ -27,6 +27,10 @@ import { ClientesRoutes } from "./pages/clientes/clientes";
 import { CategoriasProdutoRoutes } from "./pages/produtos/categorias/categorias";
 import { ProdutosRoutes } from "./pages/produtos/produtos";
 import { EstoquesRoutes } from "./pages/produtos/estoques";
+import { ListarFormasPagamento } from "./pages/formas-pagamento";
+import { FormularioFormaPagamento } from "./pages/formas-pagamento/FormularioFormaPagamento";
+import { PedidoCompraPage } from "./pages/pedido-compra/pedido-compra";
+import { FormularioPedidoCompra } from "./pages/pedido-compra/FormularioPedidoCompra";
 
 import { ThemeProvider } from "./components/theme-provider";
 import "./i18n";
@@ -171,6 +175,54 @@ function App() {
 										element={
 											<ProtectedRoute>
 												<EstoquesRoutes />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="/formaPagamento"
+										element={
+											<ProtectedRoute>
+												<ListarFormasPagamento />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="/formaPagamento/criar"
+										element={
+											<ProtectedRoute>
+												<FormularioFormaPagamento />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="/formaPagamento/editar/:id"
+										element={
+											<ProtectedRoute>
+												<FormularioFormaPagamento />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="/formaPagamento/visualizar/:id"
+										element={
+											<ProtectedRoute>
+												<FormularioFormaPagamento />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="/pedidoCompra"
+										element={
+											<ProtectedRoute>
+												<PedidoCompraPage />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="/pedidoCompra/criar"
+										element={
+											<ProtectedRoute>
+												<FormularioPedidoCompra />
 											</ProtectedRoute>
 										}
 									/>

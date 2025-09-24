@@ -14,7 +14,7 @@ export const produtoControllerFindByLocalQueryKey = (localId: ProdutoControllerF
 export type ProdutoControllerFindByLocalQueryKey = ReturnType<typeof produtoControllerFindByLocalQueryKey>
 
 /**
- * @description Lista todos os produtos que possuem SKUs com estoque em um local específico
+ * @description Lista todos os produtos que possuem SKUs com estoque em um local específico. Opcionalmente pode filtrar por fornecedor.
  * @summary Listar produtos por local de estoque
  * {@link /produto/local/:localId}
  */
@@ -41,7 +41,7 @@ export function produtoControllerFindByLocalQueryOptions(localId: ProdutoControl
 }
 
 /**
- * @description Lista todos os produtos que possuem SKUs com estoque em um local específico
+ * @description Lista todos os produtos que possuem SKUs com estoque em um local específico. Opcionalmente pode filtrar por fornecedor.
  * @summary Listar produtos por local de estoque
  * {@link /produto/local/:localId}
  */

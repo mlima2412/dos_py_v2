@@ -58,6 +58,16 @@ export type UpdateProdutoDto = {
     */
     categoriaId?: number;
     /**
+     * @description ID do fornecedor do produto
+     * @type number | undefined
+    */
+    fornecedorId?: number;
+    /**
+     * @description ID da moeda do produto
+     * @type number | undefined
+    */
+    currencyId?: number;
+    /**
      * @description Status ativo do produto
      * @default true
      * @type boolean | undefined

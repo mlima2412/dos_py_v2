@@ -1,15 +1,13 @@
-import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import CurrencyInput from "react-currency-input-field";
 import { Save, X, Edit } from "lucide-react";
 
-import { useToast } from "@/hooks/useToast";
 import { usePartnerContext } from "@/hooks/usePartnerContext";
+import { useProdutoData } from "@/hooks/useProdutoData";
+import { useProdutoForm } from "@/hooks/useProdutoForm";
 
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import {
@@ -54,45 +52,16 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import {
-	useProdutoControllerCreate,
-	useProdutoControllerFindOne,
-	useProdutoControllerUpdate,
-	useCategoriaProdutoControllerFindAll,
-	useProdutoSkuControllerFindByProduto,
 	useProdutoSkuControllerCreate,
 	useProdutoSkuControllerUpdate,
 	useProdutoSkuControllerRemove,
-	type CreateProdutoDto,
-	type UpdateProdutoDto,
 	type CreateProdutoSkuDto,
 	type UpdateProdutoSkuDto,
 } from "@/api-client";
 
 import { TabelaSkus } from "./components/TabelaSkus";
 import { DialogSku } from "./components/DialogSku";
-
-// Função para criar schema com traduções
-const createFormSchema = (t: (key: string) => string) =>
-	z.object({
-		nome: z
-			.string()
-			.min(1, t("products.validations.nameRequired"))
-			.min(2, t("products.validations.nameMinLength"))
-			.max(255, t("products.validations.nameMaxLength")),
-		descricao: z.string().optional(),
-		categoriaId: z.string().optional(),
-		precoCompra: z
-			.number()
-			.min(0.01, t("products.validations.purchasePriceMin")),
-		precoVenda: z.number().min(0.01, t("products.validations.salePriceMin")),
-		ativo: z.boolean(),
-		consignado: z.boolean(),
-		imgURL: z
-			.string()
-			.url(t("products.validations.imageUrlInvalid"))
-			.optional()
-			.or(z.literal("")),
-	});
+import { PRODUTO_FORM_GRID_CLASSES } from "@/constants/produtoConstants";
 
 export function FormularioProduto() {
 	const { t } = useTranslation();
@@ -104,8 +73,6 @@ export function FormularioProduto() {
 	const isEditing = Boolean(id);
 	const isViewing = location.pathname.includes("/visualizar/");
 
-	const [precoCompraInput, setPrecoCompraInput] = useState<string>("");
-	const [precoVendaInput, setPrecoVendaInput] = useState<string>("");
 	const [isSkuDialogOpen, setIsSkuDialogOpen] = useState(false);
 	const [editingSku, setEditingSku] = useState<{
 		id: number;
@@ -117,121 +84,40 @@ export function FormularioProduto() {
 	} | null>(null);
 	const [deleteSkuId, setDeleteSkuId] = useState<string | null>(null);
 
-	// Criar schema com traduções
-	const formSchema = createFormSchema(t);
-	type FormData = z.infer<typeof formSchema>;
+	// Hooks customizados
+	const {
+		produto,
+		categorias,
+		fornecedores,
+		currencies,
+		skus,
+		isLoadingProduto,
+		isLoadingCategorias,
+		isLoadingFornecedores,
+		isLoadingCurrencies,
+		isLoadingSkus,
+	} = useProdutoData(id, isEditing);
 
-	const form = useForm<FormData>({
-		resolver: zodResolver(formSchema),
-		defaultValues: {
-			nome: "",
-			descricao: "",
-			categoriaId: "",
-			precoCompra: 0,
-			precoVenda: 0,
-			ativo: true,
-			consignado: false,
-			imgURL: "",
-		},
+	const {
+		form,
+		onSubmit,
+		isSubmitting,
+		precoCompraInput,
+		setPrecoCompraInput,
+		precoVendaInput,
+		setPrecoVendaInput,
+	} = useProdutoForm({
+		produto,
+		isEditing,
+		categorias,
+		fornecedores,
+		currencies,
 	});
 
-	// Queries
-	const { data: produto, isLoading: isLoadingProduto } =
-		useProdutoControllerFindOne(
-			id!,
-			{ "x-parceiro-id": Number(selectedPartnerId!) },
-			{ query: { enabled: isEditing && Boolean(selectedPartnerId) } }
-		);
-
-	const { data: categorias = [], isLoading: isLoadingCategorias } =
-		useCategoriaProdutoControllerFindAll();
-
-	const { data: skus = [], isLoading: isLoadingSkus } =
-		useProdutoSkuControllerFindByProduto(
-			produto?.publicId || "",
-			{ "x-parceiro-id": Number(selectedPartnerId!) },
-			{
-				query: {
-					enabled: Boolean(produto?.publicId) && Boolean(selectedPartnerId),
-				},
-			}
-		);
-
-	// Mutations
-	const createMutation = useProdutoControllerCreate();
-	const updateMutation = useProdutoControllerUpdate();
+	// Mutations para SKUs
 	const createSkuMutation = useProdutoSkuControllerCreate();
 	const updateSkuMutation = useProdutoSkuControllerUpdate();
 	const deleteSkuMutation = useProdutoSkuControllerRemove();
-
-	// Populate form when editing
-	useEffect(() => {
-		if (produto && isEditing) {
-			form.reset({
-				nome: produto.nome,
-				descricao: produto.descricao || "",
-				categoriaId: produto.categoriaId?.toString() || "",
-				precoCompra: produto.precoCompra,
-				precoVenda: produto.precoVenda,
-				ativo: produto.ativo,
-				consignado: produto.consignado,
-				imgURL: produto.imgURL || "",
-			});
-
-			setPrecoCompraInput(produto.precoCompra.toFixed(2).replace(".", ","));
-			setPrecoVendaInput(produto.precoVenda.toFixed(2).replace(".", ","));
-		}
-	}, [produto, isEditing, form]);
-
-	const toast = useToast();
-
-	const onSubmit = async (data: FormData) => {
-		if (!selectedPartnerId) {
-			toast.error(t("products.messages.noPartnerSelected"));
-			return;
-		}
-
-		try {
-			const payload: CreateProdutoDto | UpdateProdutoDto = {
-				nome: data.nome,
-				descricao: data.descricao || undefined,
-				categoriaId: data.categoriaId ? Number(data.categoriaId) : undefined,
-				precoCompra: data.precoCompra,
-				precoVenda: data.precoVenda,
-				ativo: data.ativo,
-				consignado: data.consignado,
-				imgURL: data.imgURL || undefined,
-			};
-
-			let produtoId: string;
-
-			if (isEditing) {
-				await updateMutation.mutateAsync({
-					publicId: id!,
-					headers: { "x-parceiro-id": Number(selectedPartnerId!) },
-					data: payload as UpdateProdutoDto,
-				});
-				toast.success(t("products.messages.updateSuccess"));
-				produtoId = id!;
-			} else {
-				const response = await createMutation.mutateAsync({
-					data: payload as CreateProdutoDto,
-					headers: { "x-parceiro-id": Number(selectedPartnerId!) },
-				});
-				toast.success(t("products.messages.createSuccess"));
-				produtoId = response.publicId;
-			}
-
-			// Redirecionar para o modo de visualização
-			navigate(`/produtos/visualizar/${produtoId}`);
-		} catch {
-			toast.error(
-				isEditing
-					? t("products.messages.updateError")
-					: t("products.messages.createError")
-			);
-		}
-	};
 
 	const handleCreateSku = async (skuData: {
 		cor: string;
@@ -260,11 +146,10 @@ export function FormularioProduto() {
 				queryKey: [{ url: "/produto-sku/produto/:produtoPublicId" }],
 			});
 
-			toast.success(t("products.skus.messages.createSuccess"));
 			// Limpar o formulário para permitir criar outro SKU
 			// O dialog permanece aberto
-		} catch {
-			toast.error(t("products.skus.messages.createError"));
+		} catch (error) {
+			console.error("Erro ao criar SKU:", error);
 		}
 	};
 
@@ -294,12 +179,11 @@ export function FormularioProduto() {
 				queryKey: [{ url: "/produto-sku/produto/:produtoPublicId" }],
 			});
 
-			toast.success(t("products.skus.messages.updateSuccess"));
 			// Fechar o dialog após editar
 			setEditingSku(null);
 			setIsSkuDialogOpen(false);
-		} catch {
-			toast.error(t("products.skus.messages.updateError"));
+		} catch (error) {
+			console.error("Erro ao atualizar SKU:", error);
 		}
 	};
 
@@ -317,10 +201,9 @@ export function FormularioProduto() {
 				queryKey: [{ url: "/produto-sku/produto/:produtoPublicId" }],
 			});
 
-			toast.success(t("products.skus.messages.deleteSuccess"));
 			setDeleteSkuId(null);
-		} catch {
-			toast.error(t("products.skus.messages.deleteError"));
+		} catch (error) {
+			console.error("Erro ao deletar SKU:", error);
 		}
 	};
 
@@ -350,10 +233,8 @@ export function FormularioProduto() {
 			queryClient.invalidateQueries({
 				queryKey: [{ url: "/produto-sku/produto/:produtoPublicId" }],
 			});
-
-			toast.success(t("products.skus.messages.colorUpdated"));
-		} catch {
-			toast.error(t("products.skus.messages.colorUpdateError"));
+		} catch (error) {
+			console.error("Erro ao atualizar cor do SKU:", error);
 		}
 	};
 
@@ -365,6 +246,16 @@ export function FormularioProduto() {
 	const categoriaOptions = categorias.map(categoria => ({
 		value: categoria.id?.toString() || "",
 		label: categoria.descricao,
+	}));
+
+	const fornecedorOptions = fornecedores.map(fornecedor => ({
+		value: fornecedor.id?.toString() || "",
+		label: fornecedor.nome,
+	}));
+
+	const currencyOptions = currencies.map(currency => ({
+		value: currency.id?.toString() || "",
+		label: `${currency.isoCode} - ${currency.nome}`,
 	}));
 
 	if (isLoadingProduto && isEditing) {
@@ -451,7 +342,7 @@ export function FormularioProduto() {
 									className="space-y-6"
 								>
 									{/* Linha 1: Nome, Ativo, Consignado */}
-									<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+									<div className={PRODUTO_FORM_GRID_CLASSES.row}>
 										<FormField
 											control={form.control}
 											name="nome"
@@ -514,7 +405,7 @@ export function FormularioProduto() {
 									</div>
 
 									{/* Linha 2: Descrição e Categoria */}
-									<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+									<div className={PRODUTO_FORM_GRID_CLASSES.row2}>
 										<FormField
 											control={form.control}
 											name="descricao"
@@ -576,8 +467,87 @@ export function FormularioProduto() {
 										/>
 									</div>
 
-									{/* Linha 3: Preço de Compra e Preço de Venda */}
-									<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+									{/* Linha 3: Fornecedor e Currency */}
+									<div className={PRODUTO_FORM_GRID_CLASSES.row2}>
+										<FormField
+											control={form.control}
+											name="fornecedorId"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>
+														{t("products.supplier")} ({t("common.optional")})
+													</FormLabel>
+													<FormControl>
+														<Select
+															value={field.value}
+															onValueChange={field.onChange}
+															disabled={isLoadingFornecedores || isViewing}
+														>
+															<SelectTrigger>
+																<SelectValue
+																	placeholder={t(
+																		"products.placeholders.supplier"
+																	)}
+																/>
+															</SelectTrigger>
+															<SelectContent>
+																{fornecedorOptions.map(fornecedor => (
+																	<SelectItem
+																		key={fornecedor.value}
+																		value={fornecedor.value}
+																	>
+																		{fornecedor.label}
+																	</SelectItem>
+																))}
+															</SelectContent>
+														</Select>
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+
+										<FormField
+											control={form.control}
+											name="currencyId"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>
+														{t("products.currency")} ({t("common.optional")})
+													</FormLabel>
+													<FormControl>
+														<Select
+															value={field.value}
+															onValueChange={field.onChange}
+															disabled={isLoadingCurrencies || isViewing}
+														>
+															<SelectTrigger>
+																<SelectValue
+																	placeholder={t(
+																		"products.placeholders.currency"
+																	)}
+																/>
+															</SelectTrigger>
+															<SelectContent>
+																{currencyOptions.map(currency => (
+																	<SelectItem
+																		key={currency.value}
+																		value={currency.value}
+																	>
+																		{currency.label}
+																	</SelectItem>
+																))}
+															</SelectContent>
+														</Select>
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+									</div>
+
+									{/* Linha 4: Preço de Compra e Preço de Venda */}
+									<div className={PRODUTO_FORM_GRID_CLASSES.row2}>
 										<FormField
 											control={form.control}
 											name="precoCompra"
@@ -648,14 +618,8 @@ export function FormularioProduto() {
 											{isViewing ? t("common.close") : t("common.cancel")}
 										</Button>
 										{!isViewing && (
-											<Button
-												type="submit"
-												disabled={
-													createMutation.isPending || updateMutation.isPending
-												}
-											>
-												{createMutation.isPending ||
-												updateMutation.isPending ? (
+											<Button type="submit" disabled={isSubmitting}>
+												{isSubmitting ? (
 													<>
 														<Spinner size="sm" className="mr-2" />
 														{isEditing

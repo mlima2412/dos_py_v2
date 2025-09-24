@@ -102,6 +102,33 @@ export class ProdutoController {
     );
   }
 
+  @Get('fornecedor/:fornecedorPublicId')
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Listar produtos por fornecedor' })
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro logado',
+    required: true,
+    schema: { type: 'integer', example: 1 },
+  })
+  @ApiParam({ 
+    name: 'fornecedorPublicId', 
+    description: 'ID público do fornecedor',
+    example: 'f47ac10b-58cc-4372-a567-0e02b2c3d479'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de produtos do fornecedor',
+    type: [Produto],
+  })
+  @ApiResponse({ status: 404, description: 'Fornecedor não encontrado' })
+  findByFornecedor(
+    @Param('fornecedorPublicId') fornecedorPublicId: string,
+    @ParceiroId() parceiroId: number,
+  ): Promise<Produto[]> {
+    return this.produtoService.findByFornecedor(fornecedorPublicId, parceiroId);
+  }
+
   @Get('paginated')
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Listar produtos paginados' })
@@ -128,30 +155,17 @@ export class ProdutoController {
       },
     },
   })
-  async findPaginated(
+  findPaginated(
     @Query() query: PaginatedQueryDto,
     @ParceiroId() parceiroId: number,
   ) {
-    const pageNum = parseInt(query.page || '1', 10);
-    const limitNum = parseInt(query.limit || '20', 10);
-    const categoriaIdNum =
-      query.categoriaId && query.categoriaId.trim() !== ''
-        ? parseInt(query.categoriaId, 10)
-        : undefined;
-    const ativoBoolean =
-      query.ativo && query.ativo.trim() !== ''
-        ? query.ativo === 'true'
-        : undefined;
-    const searchTerm =
-      query.search && query.search.trim() !== '' ? query.search : undefined;
-
     return this.produtoService.findPaginated({
-      page: pageNum,
-      limit: limitNum,
-      search: searchTerm,
+      page: parseInt(query.page || '1', 10),
+      limit: parseInt(query.limit || '20', 10),
+      search: query.search,
+      categoriaId: query.categoriaId ? parseInt(query.categoriaId, 10) : undefined,
+      ativo: query.ativo ? query.ativo === 'true' : undefined,
       parceiroId,
-      categoriaId: categoriaIdNum,
-      ativo: ativoBoolean,
     });
   }
 
@@ -261,7 +275,7 @@ export class ProdutoController {
   @ApiOperation({
     summary: 'Listar produtos por local de estoque',
     description:
-      'Lista todos os produtos que possuem SKUs com estoque em um local específico',
+      'Lista todos os produtos que possuem SKUs com estoque em um local específico. Opcionalmente pode filtrar por fornecedor.',
   })
   @ApiHeader({
     name: 'x-parceiro-id',
@@ -289,6 +303,7 @@ export class ProdutoController {
       localId,
       parceiroId,
       query.apenasComEstoque,
+      query.fornecedorId,
     );
   }
 }

@@ -63,6 +63,7 @@
 		"updating": "Actualizando...",
 		"edit": "Editar",
 		"delete": "Eliminar",
+		"saving": "Guardando...",
 		"close": "Cerrar",
 		"access": "Acceder",
 		"actions": "Acciones",
@@ -96,7 +97,9 @@
 		"roles": {
 			"administrator": "Administrador",
 			"user": "Usuario"
-		}
+		},
+		"page": "Página",
+		"of": "de"
 	},
 	"dashboard": {
 		"title": "Dashboard",
@@ -782,6 +785,8 @@
 		"name": "Nombre",
 		"description": "Descripción",
 		"category": "Categoría",
+		"supplier": "Proveedor",
+		"currency": "Moneda de Compra",
 		"purchasePrice": "Precio de Compra",
 		"salePrice": "Precio de Venta",
 		"active": "Activo",
@@ -803,7 +808,9 @@
 			"purchasePrice": "0,00",
 			"salePrice": "0,00",
 			"search": "Buscar por nombre...",
-			"categoryFilter": "Seleccione una categoría"
+			"categoryFilter": "Seleccione una categoría",
+			"supplier": "Selecciona un proveedor",
+			"currency": "Selecciona una moneda"
 		},
 		"validations": {
 			"nameRequired": "Nombre es obligatorio",
@@ -1198,6 +1205,154 @@
 				"startDate": "Fecha de Inicio",
 				"endDate": "Fecha de Fin",
 				"id": "ID"
+			}
+		}
+	},
+	"paymentMethods": {
+		"title": "Forma de Pagamento",
+		"list": "Lista de Forma de Pagamento",
+		"create": "Nueva Forma de Pagamento",
+		"edit": "Editar Forma de Pagamento",
+		"search": "Buscar forma de pagamento...",
+		"noResults": "Ninguna forma de pagamento encontrada",
+		"name": "Nombre",
+		"tax": "Tasa",
+		"releaseTime": "Tiempo de Liberación",
+		"taxAfterCalculation": "Impuesto Después del Cálculo",
+		"active": "Activo",
+		"messages": {
+			"createSuccess": "¡Forma de pago creada con éxito!",
+			"updateSuccess": "¡Forma de pago actualizada con éxito!",
+			"createError": "Error al crear forma de pago. Inténtalo de nuevo.",
+			"updateError": "Error al actualizar forma de pago. Inténtalo de nuevo.",
+			"activateSuccess": "¡Forma de pago activada con éxito!",
+			"deactivateSuccess": "¡Forma de pago desactivada con éxito!",
+			"activateError": "Error al activar forma de pago. Inténtalo de nuevo.",
+			"deactivateError": "Error al desactivar forma de pago. Inténtalo de nuevo."
+		},
+		"placeholders": {
+			"name": "Ingresa el nombre de la forma de pago",
+			"tax": "0,00",
+			"releaseTime": "0"
+		},
+		"labels": {
+			"name": "Nombre",
+			"tax": "Tasa (%)",
+			"releaseTime": "Tiempo de Liberación (días)",
+			"taxAfterCalculation": "Impuesto Después del Cálculo",
+			"active": "Activo"
+		},
+		"view": "Visualizar Forma de Pagamento",
+		"columns": {
+			"name": "Nombre",
+			"tax": "Tasa (%)",
+			"discountApplied": "Descuento Aplicado",
+			"daysToRelease": "Días para Liberación",
+			"actions": "Acciones"
+		},
+		"validations": {
+			"nameRequired": "El nombre es obligatorio",
+			"nameMinLength": "El nombre debe tener al menos 2 caracteres",
+			"nameMaxLength": "El nombre debe tener máximo 255 caracteres",
+			"taxMin": "La tasa debe ser mayor o igual a cero",
+			"releaseTimeMin": "El tiempo de liberación debe ser mayor o igual a cero"
+		}
+	},
+	"purchaseOrders": {
+		"title": "Pedidos de Compra",
+		"list": "Lista de Pedidos de Compra",
+		"create": "Nuevo Pedido de Compra",
+		"edit": "Editar Pedido de Compra",
+		"search": "Buscar pedido de compra...",
+		"noResults": "Ningún pedido de compra encontrado",
+		"breadcrumb": {
+			"home": "Inicio",
+			"purchaseOrders": "Pedidos de Compra"
+		},
+		"filters": {
+			"supplier": "Filtrar por proveedor",
+			"allSuppliers": "Todos los proveedores"
+		},
+		"columns": {
+			"supplier": "Proveedor",
+			"orderDate": "Fecha del Pedido",
+			"purchaseValue": "Valor de la Compra",
+			"status": "Estado",
+			"actions": "Acciones"
+		},
+		"status": {
+			"pending": "Pendiente",
+			"confirmed": "Confirmado",
+			"delivered": "Entregado",
+			"cancelled": "Cancelado"
+		},
+		"actions": {
+			"view": "Visualizar",
+			"delete": "Eliminar",
+			"print": "Imprimir"
+		},
+		"messages": {
+			"deleteSuccess": "¡Pedido de compra eliminado con éxito!",
+			"deleteError": "Error al eliminar pedido de compra. Inténtalo de nuevo.",
+			"deleteConfirmTitle": "Eliminar pedido de compra",
+			"deleteConfirmDescription": "¿Estás seguro de que deseas eliminar este pedido de compra? Esta acción no se puede deshacer.",
+			"deleteConfirmCancel": "Cancelar",
+			"deleteConfirmConfirm": "Eliminar",
+			"loadError": "Error al cargar pedidos de compra"
+		},
+		"pagination": {
+			"showing": "Mostrando",
+			"to": "hasta",
+			"of": "de",
+			"results": "resultados",
+			"previous": "Anterior",
+			"next": "Siguiente"
+		},
+		"form": {
+			"title": "Nuevo Pedido de Compra",
+			"subtitle": "Datos Básicos del Pedido",
+			"breadcrumb": {
+				"home": "Inicio",
+				"purchaseOrders": "Pedidos de Compra",
+				"new": "Nuevo Pedido"
+			},
+			"labels": {
+				"supplier": "Proveedor",
+				"entryLocation": "Local de Entrada",
+				"currency": "Moneda",
+				"orderDate": "Fecha del Pedido",
+				"deliveryDate": "Fecha de Entrega",
+				"freightValue": "Flete",
+				"observation": "Observación",
+				"commissionValue": "Comisión",
+				"exchangeRate": "Tasa de Cambio",
+				"consigned": "Consignado"
+			},
+			"placeholders": {
+				"supplier": "Seleccione un proveedor",
+				"entryLocation": "Seleccione un local de entrada",
+				"currency": "Seleccione una moneda",
+				"orderDate": "Seleccione la fecha del pedido",
+				"deliveryDate": "Seleccione la fecha de entrega (opcional)",
+				"freightValue": "0,00",
+				"observation": "Digite observaciones sobre el pedido",
+				"commissionValue": "0,00",
+				"exchangeRate": "1,00"
+			},
+			"actions": {
+				"save": "Guardar y Continuar",
+				"saving": "Guardando...",
+				"cancel": "Cancelar"
+			},
+			"messages": {
+				"createSuccess": "¡Pedido de compra creado con éxito!",
+				"createError": "Error al crear pedido de compra. Inténtalo de nuevo."
+			},
+			"validation": {
+				"supplierRequired": "Proveedor es obligatorio",
+				"localEntradaRequired": "Local de entrada es obligatorio",
+				"currencyRequired": "Moneda es obligatoria",
+				"dataPedidoRequired": "Fecha del pedido es obligatoria"
 			}
 		}
 	}

@@ -18,6 +18,8 @@ export const updateProdutoDtoSchema = z.object({
   "precoVenda": z.coerce.number().describe("Preço de venda do produto").optional(),
   "consignado": z.boolean().default(false).describe("Se o produto é consignado"),
   "categoriaId": z.coerce.number().describe("ID da categoria do produto").optional(),
+  "fornecedorId": z.coerce.number().describe("ID do fornecedor do produto").optional(),
+  "currencyId": z.coerce.number().describe("ID da moeda do produto").optional(),
   "ativo": z.boolean().default(true).describe("Status ativo do produto"),
   "dataCadastro": z.string().datetime().describe("Data de cadastro do produto").optional()
       }) as unknown as ToZod<UpdateProdutoDto>

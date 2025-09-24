@@ -9,10 +9,14 @@ import { CreateProdutoDto } from './dto/create-produto.dto';
 import { UpdateProdutoDto } from './dto/update-produto.dto';
 import { Produto } from './entities/produto.entity';
 import { Decimal } from '@prisma/client/runtime/library';
+import { CurrencyService } from '../currency/currency.service';
 
 @Injectable()
 export class ProdutoService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private currencyService: CurrencyService,
+  ) {}
 
   async create(
     createProdutoDto: CreateProdutoDto,
@@ -24,6 +28,16 @@ export class ProdutoService {
     // Verificar se categoria existe (se fornecida)
     if (createProdutoDto.categoriaId) {
       await this.validateCategoriaExists(createProdutoDto.categoriaId);
+    }
+
+    // Verificar se fornecedor existe (se fornecido)
+    if (createProdutoDto.fornecedorId) {
+      await this.validateFornecedorExists(createProdutoDto.fornecedorId, parceiroId);
+    }
+
+    // Verificar se currency existe (se fornecida)
+    if (createProdutoDto.currencyId) {
+      await this.validateCurrencyExists(createProdutoDto.currencyId);
     }
 
     // Criar entidade e validar regras de negócio
@@ -44,12 +58,16 @@ export class ProdutoService {
         descricao: produtoEntity.descricao,
         imgURL: produtoEntity.imgURL,
         precoCompra: new Decimal(produtoEntity.precoCompra),
+        currencyId: produtoEntity.currencyId,
         precoVenda: new Decimal(produtoEntity.precoVenda),
         parceiroId: produtoEntity.parceiroId,
+        fornecedorId: produtoEntity.fornecedorId,
       },
       include: {
         categoria: true,
         Parceiro: true,
+        fornecedor: true,
+        currency: true,
         ProdutoSKU: true,
       },
     });
@@ -63,6 +81,8 @@ export class ProdutoService {
       include: {
         categoria: true,
         Parceiro: true,
+        fornecedor: true,
+        currency: true,
         ProdutoSKU: true,
       },
       orderBy: { dataCadastro: 'desc' },
@@ -73,13 +93,12 @@ export class ProdutoService {
 
   async findOne(publicId: string, parceiroId: number): Promise<Produto> {
     const produto = await this.prisma.produto.findFirst({
-      where: {
-        publicId,
-        parceiroId,
-      },
+      where: { publicId, parceiroId },
       include: {
         categoria: true,
         Parceiro: true,
+        fornecedor: true,
+        currency: true,
         ProdutoSKU: true,
       },
     });
@@ -96,7 +115,6 @@ export class ProdutoService {
     updateProdutoDto: UpdateProdutoDto,
     parceiroId: number,
   ): Promise<Produto> {
-    // Verificar se produto existe
     const existingProduto = await this.prisma.produto.findFirst({
       where: { publicId, parceiroId },
     });
@@ -105,16 +123,9 @@ export class ProdutoService {
       throw new NotFoundException('Produto não encontrado');
     }
 
-    // Verificar nome único se está sendo alterado
-    if (
-      updateProdutoDto.nome &&
-      updateProdutoDto.nome !== existingProduto.nome
-    ) {
-      await this.validateUniqueNome(
-        updateProdutoDto.nome,
-        parceiroId,
-        existingProduto.id,
-      );
+    // Verificar se o nome é único (se está sendo alterado)
+    if (updateProdutoDto.nome && updateProdutoDto.nome !== existingProduto.nome) {
+      await this.validateUniqueNome(updateProdutoDto.nome, parceiroId, existingProduto.id);
     }
 
     // Verificar se categoria existe (se fornecida)
@@ -122,13 +133,20 @@ export class ProdutoService {
       await this.validateCategoriaExists(updateProdutoDto.categoriaId);
     }
 
+    // Verificar se fornecedor existe (se fornecido)
+    if (updateProdutoDto.fornecedorId) {
+      await this.validateFornecedorExists(updateProdutoDto.fornecedorId, parceiroId);
+    }
+
+    // Verificar se currency existe (se fornecida)
+    if (updateProdutoDto.currencyId) {
+      await this.validateCurrencyExists(updateProdutoDto.currencyId);
+    }
+
     const updateData: any = {};
-    if (updateProdutoDto.nome !== undefined)
-      updateData.nome = updateProdutoDto.nome;
-    if (updateProdutoDto.descricao !== undefined)
-      updateData.descricao = updateProdutoDto.descricao;
-    if (updateProdutoDto.imgURL !== undefined)
-      updateData.imgURL = updateProdutoDto.imgURL;
+    if (updateProdutoDto.nome !== undefined) updateData.nome = updateProdutoDto.nome;
+    if (updateProdutoDto.descricao !== undefined) updateData.descricao = updateProdutoDto.descricao;
+    if (updateProdutoDto.imgURL !== undefined) updateData.imgURL = updateProdutoDto.imgURL;
     if (updateProdutoDto.precoCompra !== undefined)
       updateData.precoCompra = new Decimal(updateProdutoDto.precoCompra);
     if (updateProdutoDto.precoVenda !== undefined)
@@ -137,6 +155,10 @@ export class ProdutoService {
       updateData.consignado = updateProdutoDto.consignado;
     if (updateProdutoDto.categoriaId !== undefined)
       updateData.categoriaId = updateProdutoDto.categoriaId;
+    if (updateProdutoDto.fornecedorId !== undefined)
+      updateData.fornecedorId = updateProdutoDto.fornecedorId;
+    if (updateProdutoDto.currencyId !== undefined)
+      updateData.currencyId = updateProdutoDto.currencyId;
     if (updateProdutoDto.ativo !== undefined)
       updateData.ativo = updateProdutoDto.ativo;
 
@@ -146,6 +168,8 @@ export class ProdutoService {
       include: {
         categoria: true,
         Parceiro: true,
+        fornecedor: true,
+        currency: true,
         ProdutoSKU: true,
       },
     });
@@ -173,6 +197,39 @@ export class ProdutoService {
       include: {
         categoria: true,
         Parceiro: true,
+        fornecedor: true,
+        currency: true,
+        ProdutoSKU: true,
+      },
+      orderBy: { dataCadastro: 'desc' },
+    });
+
+    return produtos.map(produto => this.mapToProdutoEntity(produto));
+  }
+
+  async findByFornecedor(
+    fornecedorPublicId: string,
+    parceiroId: number,
+  ): Promise<Produto[]> {
+    // Primeiro buscar o fornecedor pelo publicId
+    const fornecedor = await this.prisma.fornecedor.findFirst({
+      where: { publicId: fornecedorPublicId, parceiroId },
+    });
+
+    if (!fornecedor) {
+      throw new NotFoundException('Fornecedor não encontrado');
+    }
+
+    const produtos = await this.prisma.produto.findMany({
+      where: {
+        fornecedorId: fornecedor.id,
+        parceiroId,
+      },
+      include: {
+        categoria: true,
+        Parceiro: true,
+        fornecedor: true,
+        currency: true,
         ProdutoSKU: true,
       },
       orderBy: { dataCadastro: 'desc' },
@@ -192,55 +249,42 @@ export class ProdutoService {
     const { page, limit, search, parceiroId, categoriaId, ativo } = params;
     const skip = (page - 1) * limit;
 
-    // Construir filtros
-    const where: any = {};
-    const andConditions: any[] = [];
+    const whereCondition: any = {
+      parceiroId,
+    };
 
-    // Filtro obrigatório por parceiro
-    andConditions.push({ parceiroId });
-
-    // Filtro de busca (nome do produto)
     if (search) {
-      andConditions.push({
-        nome: { contains: search, mode: 'insensitive' },
-      });
+      whereCondition.nome = {
+        contains: search,
+        mode: 'insensitive',
+      };
     }
 
-    // Filtro por categoria
     if (categoriaId) {
-      andConditions.push({ categoriaId });
+      whereCondition.categoriaId = categoriaId;
     }
 
-    // Filtro por status ativo
     if (ativo !== undefined) {
-      andConditions.push({ ativo });
+      whereCondition.ativo = ativo;
     }
 
-    if (andConditions.length > 0) {
-      where.AND = andConditions;
-    }
-
-    // Buscar dados paginados
     const [produtos, total] = await Promise.all([
       this.prisma.produto.findMany({
-        where,
+        where: whereCondition,
         include: {
           categoria: true,
           Parceiro: true,
-          ProdutoSKU: {
-            select: {
-              id: true,
-              publicId: true,
-              cor: true,
-              tamanho: true,
-            },
-          },
+          fornecedor: true,
+          currency: true,
+          ProdutoSKU: true,
         },
         orderBy: { dataCadastro: 'desc' },
         skip,
         take: limit,
       }),
-      this.prisma.produto.count({ where }),
+      this.prisma.produto.count({
+        where: whereCondition,
+      }),
     ]);
 
     const totalPages = Math.ceil(total / limit);
@@ -268,9 +312,7 @@ export class ProdutoService {
     });
 
     if (existingProduto) {
-      throw new ConflictException(
-        'Já existe um produto com este nome nesta organização',
-      );
+      throw new ConflictException('Nome do produto já está em uso nesta organização');
     }
   }
 
@@ -281,6 +323,33 @@ export class ProdutoService {
 
     if (!categoria) {
       throw new BadRequestException('Categoria não encontrada');
+    }
+  }
+
+  private async validateFornecedorExists(fornecedorId: number, parceiroId: number): Promise<void> {
+    const fornecedor = await this.prisma.fornecedor.findFirst({
+      where: { 
+        id: fornecedorId,
+        parceiroId, // Garantir que o fornecedor pertence ao parceiro
+      },
+    });
+
+    if (!fornecedor) {
+      throw new BadRequestException('Fornecedor não encontrado');
+    }
+  }
+
+  private async validateCurrencyExists(currencyId: number): Promise<void> {
+    const currency = await this.prisma.currency.findUnique({
+      where: { id: currencyId },
+    });
+
+    if (!currency) {
+      throw new BadRequestException('Moeda não encontrada');
+    }
+
+    if (!currency.ativo) {
+      throw new BadRequestException('Moeda não está ativa');
     }
   }
 
@@ -298,8 +367,12 @@ export class ProdutoService {
       precoCompra: Number(data.precoCompra),
       precoVenda: Number(data.precoVenda),
       parceiroId: data.parceiroId,
+      fornecedorId: data.fornecedorId,
+      currencyId: data.currencyId,
       categoria: data.categoria,
       Parceiro: data.Parceiro,
+      fornecedor: data.fornecedor,
+      currency: data.currency,
       ProdutoSKU: data.ProdutoSKU,
     });
   }
@@ -308,6 +381,7 @@ export class ProdutoService {
     localPublicId: string,
     parceiroId: number,
     apenasComEstoque: boolean = true,
+    fornecedorPublicId?: string,
   ): Promise<any[]> {
     // Primeiro, buscar o local pelo publicId para obter o ID interno
     const local = await this.prisma.localEstoque.findFirst({
@@ -321,8 +395,27 @@ export class ProdutoService {
       throw new NotFoundException('Local de estoque não encontrado');
     }
 
+    let fornecedorId: number | undefined;
+
+    // Se fornecedor foi especificado, buscar o ID interno
+    if (fornecedorPublicId) {
+      const fornecedor = await this.prisma.fornecedor.findFirst({
+        where: {
+          publicId: fornecedorPublicId,
+          parceiroId,
+        },
+      });
+
+      if (!fornecedor) {
+        throw new NotFoundException('Fornecedor não encontrado');
+      }
+
+      fornecedorId = fornecedor.id;
+    }
+
     const whereCondition: any = {
       parceiroId,
+      ...(fornecedorId && { fornecedorId }),
       ProdutoSKU: {
         some: {
           EstoqueSKU: {
@@ -351,6 +444,22 @@ export class ProdutoService {
           select: {
             id: true,
             descricao: true,
+          },
+        },
+        fornecedor: {
+          select: {
+            id: true,
+            publicId: true,
+            nome: true,
+          },
+        },
+        currency: {
+          select: {
+            id: true,
+            publicId: true,
+            nome: true,
+            prefixo: true,
+            isoCode: true,
           },
         },
         ProdutoSKU: {

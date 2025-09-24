@@ -19,18 +19,9 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-	ArrowLeftRight,
-	MapPin,
-	Package,
-	ShoppingCart,
-	X,
-	CheckIcon,
-	ChevronDownIcon,
-	Plus,
-	Minus,
-} from "lucide-react";
-import { SkuListing } from "../components/SkuListing";
+import { ArrowLeftRight, MapPin, Package } from "lucide-react";
+import { SkuListing } from "@/components/SkuListing";
+import { ProductSelector, SelectedSkusList } from "@/components/";
 import { useLocaisEstoque } from "@/hooks/useEstoques";
 import {
 	useProdutoControllerFindByLocal,
@@ -38,21 +29,6 @@ import {
 } from "@/api-client";
 import { usePartnerContext } from "@/hooks/usePartnerContext";
 import { useToast } from "@/hooks/useToast";
-import { cn } from "@/lib/utils";
-import {
-	Command,
-	CommandEmpty,
-	CommandGroup,
-	CommandInput,
-	CommandItem,
-	CommandList,
-} from "@/components/ui/command";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 import type { LocalEstoque } from "@/api-client/types";
 import type {
@@ -60,262 +36,6 @@ import type {
 	ProdutoSKUEstoqueResponseDto,
 	CreateTransferenciaEstoqueDto,
 } from "@/api-client/types";
-
-// Componente para seleção de produtos com busca (baseado no comp-229)
-const ProductSelector: React.FC<{
-	products: ProdutosPorLocalResponseDto[];
-	selectedProductId: number | null;
-	onProductSelect: (productId: number) => void;
-	isLoading: boolean;
-	error: unknown;
-	disabled?: boolean;
-}> = ({
-	products,
-	selectedProductId,
-	onProductSelect,
-	isLoading,
-	error,
-	disabled = false,
-}) => {
-	const { t } = useTranslation("common");
-	const [open, setOpen] = useState(false);
-	const [searchValue, setSearchValue] = useState("");
-
-	const selectedProduct = products.find(p => p.id === selectedProductId);
-
-	// Filtrar produtos por busca
-	const filteredProducts = useMemo(() => {
-		if (!searchValue) return products;
-		return products.filter(product =>
-			product.nome.toLowerCase().includes(searchValue.toLowerCase())
-		);
-	}, [products, searchValue]);
-
-	const handleSelect = (productId: number) => {
-		if (disabled) return;
-		onProductSelect(productId);
-		setOpen(false);
-		setSearchValue("");
-	};
-
-	if (isLoading) {
-		return (
-			<div className="flex items-center justify-center py-8">
-				<div className="text-muted-foreground">
-					{t("inventory.view.loadingProducts")}
-				</div>
-			</div>
-		);
-	}
-
-	if (error) {
-		return (
-			<div className="flex items-center justify-center py-8">
-				<div className="text-destructive">
-					{t("inventory.view.errorLoadingProducts")}
-				</div>
-			</div>
-		);
-	}
-
-	return (
-		<div className="space-y-2">
-			<label className="text-sm font-medium">
-				{t("inventory.transfer.products")}
-			</label>
-			<Popover open={open && !disabled} onOpenChange={setOpen}>
-				<PopoverTrigger asChild>
-					<Button
-						variant="outline"
-						role="combobox"
-						aria-expanded={open}
-						className="w-full justify-between"
-						disabled={disabled}
-					>
-						<span
-							className={cn(
-								"truncate",
-								!selectedProduct && "text-muted-foreground"
-							)}
-						>
-							{selectedProduct
-								? selectedProduct.nome
-								: t("inventory.transfer.selectProduct")}
-						</span>
-						<ChevronDownIcon className="h-4 w-4 shrink-0 opacity-50" />
-					</Button>
-				</PopoverTrigger>
-				<PopoverContent className="w-full p-0" align="start">
-					<Command>
-						<CommandInput
-							placeholder={t("inventory.view.searchProducts")}
-							value={searchValue}
-							onValueChange={setSearchValue}
-						/>
-						<CommandList>
-							<CommandEmpty>{t("inventory.view.noProducts")}</CommandEmpty>
-							<CommandGroup>
-								{filteredProducts.map(product => (
-									<CommandItem
-										key={product.id}
-										value={product.nome}
-										onSelect={() => handleSelect(product.id)}
-									>
-										{product.nome}
-										{selectedProductId === product.id && (
-											<CheckIcon className="ml-auto h-4 w-4" />
-										)}
-									</CommandItem>
-								))}
-							</CommandGroup>
-						</CommandList>
-					</Command>
-				</PopoverContent>
-			</Popover>
-		</div>
-	);
-};
-
-// Componente para lista de SKUs selecionados
-const SelectedSkusList: React.FC<{
-	selectedSkus: Array<{
-		sku: ProdutoSKUEstoqueResponseDto;
-		product: ProdutosPorLocalResponseDto;
-		quantity: number;
-	}>;
-	onRemoveSku: (skuId: number) => void;
-	onUpdateQuantity: (skuId: number, quantity: number) => void;
-}> = ({ selectedSkus, onRemoveSku, onUpdateQuantity }) => {
-	const { t } = useTranslation("common");
-
-	const handleIncrement = (
-		skuId: number,
-		currentQuantity: number,
-		maxQuantity: number
-	) => {
-		const newQuantity = Math.min(currentQuantity + 1, maxQuantity);
-		onUpdateQuantity(skuId, newQuantity);
-	};
-
-	const handleDecrement = (skuId: number, currentQuantity: number) => {
-		const newQuantity = Math.max(currentQuantity - 1, 1);
-		onUpdateQuantity(skuId, newQuantity);
-	};
-
-	const totalItems = selectedSkus.reduce((sum, item) => sum + item.quantity, 0);
-
-	return (
-		<Card>
-			<CardHeader>
-				<CardTitle className="flex items-center justify-between">
-					<div className="flex items-center gap-2">
-						<ShoppingCart className="h-5 w-5" />
-						{t("inventory.transfer.selectedSkus")}
-					</div>
-					<div>
-						{selectedSkus.length > 0 && (
-							<span className="text-base font-normal text-muted-foreground">
-								{totalItems} {totalItems === 1 ? "item" : "itens"}
-							</span>
-						)}
-					</div>
-				</CardTitle>
-			</CardHeader>
-			<CardContent>
-				{selectedSkus.length === 0 ? (
-					<div className="flex items-center justify-center py-8">
-						<div className="text-center">
-							<Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-							<p className="text-muted-foreground">
-								{t("inventory.transfer.noSkusSelected")}
-							</p>
-						</div>
-					</div>
-				) : (
-					<ScrollArea className="h-[680px] w-full rounded-md">
-						<div className="space-y-2 pr-2">
-							{selectedSkus.map(({ sku, product, quantity }) => (
-								<div
-									key={sku.id}
-									className="flex items-center justify-between p-3 border rounded-lg"
-								>
-									<div className="flex-1 min-w-0">
-										<div className="flex items-center gap-2">
-											<span className="font-mono text-sm">
-												{product.id.toString().padStart(3, "0")}-
-												{sku.id.toString().padStart(3, "0")}
-											</span>
-											{sku.cor && (
-												<div className="flex items-center gap-1">
-													{sku.codCor && (
-														<div
-															className="w-3 h-3 rounded-full border"
-															style={{
-																backgroundColor: `#${sku.codCor
-																	.toString(16)
-																	.padStart(6, "0")}`,
-															}}
-														/>
-													)}
-													<span className="text-xs text-muted-foreground">
-														{sku.cor}
-													</span>
-												</div>
-											)}
-											{sku.tamanho && (
-												<span className="text-xs text-muted-foreground">
-													{sku.tamanho}
-												</span>
-											)}
-										</div>
-										<p className="text-sm font-medium truncate">
-											{product.nome}
-										</p>
-									</div>
-									<div className="flex items-center gap-2">
-										<div className="flex items-center gap-1">
-											<Button
-												variant="outline"
-												size="sm"
-												onClick={() => handleDecrement(sku.id, quantity)}
-												disabled={quantity <= 1}
-												className="h-8 w-8 p-0"
-											>
-												<Minus className="h-4 w-4" />
-											</Button>
-											<span className="w-12 text-center font-medium">
-												{quantity}
-											</span>
-											<Button
-												variant="outline"
-												size="sm"
-												onClick={() =>
-													handleIncrement(sku.id, quantity, sku.estoque)
-												}
-												disabled={quantity >= sku.estoque}
-												className="h-8 w-8 p-0"
-											>
-												<Plus className="h-4 w-4" />
-											</Button>
-										</div>
-										<Button
-											variant="ghost"
-											size="sm"
-											onClick={() => onRemoveSku(sku.id)}
-											className="h-8 w-8 p-0"
-										>
-											<X className="h-4 w-4" />
-										</Button>
-									</div>
-								</div>
-							))}
-						</div>
-					</ScrollArea>
-				)}
-			</CardContent>
-		</Card>
-	);
-};
 
 export const TransferenciaEstoque: React.FC = () => {
 	const { t } = useTranslation("common");
@@ -684,6 +404,7 @@ export const TransferenciaEstoque: React.FC = () => {
 										isLoading={isLoadingProducts}
 										error={errorProducts}
 										disabled={!canSelectProducts}
+										placeholder={t("inventory.transfer.selectProduct")}
 									/>
 
 									{/* Campo de busca por código SKU */}
@@ -736,6 +457,7 @@ export const TransferenciaEstoque: React.FC = () => {
 										error={errorProducts}
 										enableStockAdjustment={false}
 										onDoubleClick={handleAddSkuToTransfer}
+										allowZeroStock={false}
 									/>
 								</div>
 							)}
@@ -747,6 +469,11 @@ export const TransferenciaEstoque: React.FC = () => {
 						selectedSkus={selectedSkus}
 						onRemoveSku={handleRemoveSku}
 						onUpdateQuantity={handleUpdateQuantity}
+						title={t("inventory.transfer.selectedSkus")}
+						emptyMessage={t("inventory.transfer.noSkusSelected")}
+						showStockLimit={true}
+						maxQuantity={sku => sku.estoque}
+						scrollAreaHeight="h-[800px]"
 					/>
 				</div>
 

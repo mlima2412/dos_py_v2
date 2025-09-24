@@ -4,6 +4,8 @@
 */
 
 import type { CategoriaResponseDto } from "./CategoriaResponseDto.ts";
+import type { CurrencyResponseDto } from "./CurrencyResponseDto.ts";
+import type { FornecedorResponseDto } from "./FornecedorResponseDto.ts";
 import type { ProdutoSKUEstoqueResponseDto } from "./ProdutoSKUEstoqueResponseDto.ts";
 
 export type ProdutosPorLocalResponseDto = {
@@ -56,6 +58,14 @@ export type ProdutosPorLocalResponseDto = {
      * @description Categoria do produto
     */
     categoria?: CategoriaResponseDto;
+    /**
+     * @description Fornecedor do produto
+    */
+    fornecedor?: FornecedorResponseDto;
+    /**
+     * @description Moeda do produto
+    */
+    currency?: CurrencyResponseDto;
     /**
      * @description SKUs do produto com informações de estoque
      * @type array

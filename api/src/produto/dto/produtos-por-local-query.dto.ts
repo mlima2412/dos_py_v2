@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsBoolean } from 'class-validator';
+import { IsOptional, IsBoolean, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class ProdutosPorLocalQueryDto {
@@ -16,4 +16,12 @@ export class ProdutosPorLocalQueryDto {
     return value;
   })
   apenasComEstoque?: boolean = true;
+
+  @ApiPropertyOptional({
+    description: 'ID público do fornecedor para filtrar produtos',
+    example: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+  })
+  @IsOptional()
+  @IsString()
+  fornecedorId?: string;
 }
