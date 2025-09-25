@@ -4,7 +4,7 @@
 */
 
 import fetch from "@/lib/fetch-client";
-import type { FornecedoresControllerFindActiveFornecedoresQueryResponse } from "../types/FornecedoresControllerFindActiveFornecedores.ts";
+import type { FornecedoresControllerFindActiveFornecedoresQueryResponse, FornecedoresControllerFindActiveFornecedoresHeaderParams, FornecedoresControllerFindActiveFornecedores400 } from "../types/FornecedoresControllerFindActiveFornecedores.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
@@ -17,23 +17,23 @@ export type FornecedoresControllerFindActiveFornecedoresSuspenseQueryKey = Retur
  * @summary Listar fornecedores ativos
  * {@link /fornecedores/ativos}
  */
-export async function fornecedoresControllerFindActiveFornecedoresSuspense(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+export async function fornecedoresControllerFindActiveFornecedoresSuspense(headers: FornecedoresControllerFindActiveFornecedoresHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
   const { client:request = fetch, ...requestConfig } = config
 
 
-const res = await request<FornecedoresControllerFindActiveFornecedoresQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/fornecedores/ativos`, ... requestConfig })
+const res = await request<FornecedoresControllerFindActiveFornecedoresQueryResponse, ResponseErrorConfig<FornecedoresControllerFindActiveFornecedores400>, unknown>({ method : "GET", url : `/fornecedores/ativos`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
 return res.data
 }
 
-export function fornecedoresControllerFindActiveFornecedoresSuspenseQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+export function fornecedoresControllerFindActiveFornecedoresSuspenseQueryOptions(headers: FornecedoresControllerFindActiveFornecedoresHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
   
         const queryKey = fornecedoresControllerFindActiveFornecedoresSuspenseQueryKey()
-        return queryOptions<FornecedoresControllerFindActiveFornecedoresQueryResponse, ResponseErrorConfig<Error>, FornecedoresControllerFindActiveFornecedoresQueryResponse, typeof queryKey>({
+        return queryOptions<FornecedoresControllerFindActiveFornecedoresQueryResponse, ResponseErrorConfig<FornecedoresControllerFindActiveFornecedores400>, FornecedoresControllerFindActiveFornecedoresQueryResponse, typeof queryKey>({
          
          queryKey,
          queryFn: async ({ signal }) => {
             config.signal = signal
-            return fornecedoresControllerFindActiveFornecedoresSuspense(config)
+            return fornecedoresControllerFindActiveFornecedoresSuspense(headers, config)
          },
         })
   
@@ -43,9 +43,9 @@ export function fornecedoresControllerFindActiveFornecedoresSuspenseQueryOptions
  * @summary Listar fornecedores ativos
  * {@link /fornecedores/ativos}
  */
-export function useFornecedoresControllerFindActiveFornecedoresSuspense<TData = FornecedoresControllerFindActiveFornecedoresQueryResponse, TQueryKey extends QueryKey = FornecedoresControllerFindActiveFornecedoresSuspenseQueryKey>(options: 
+export function useFornecedoresControllerFindActiveFornecedoresSuspense<TData = FornecedoresControllerFindActiveFornecedoresQueryResponse, TQueryKey extends QueryKey = FornecedoresControllerFindActiveFornecedoresSuspenseQueryKey>(headers: FornecedoresControllerFindActiveFornecedoresHeaderParams, options: 
   {
-    query?: Partial<UseSuspenseQueryOptions<FornecedoresControllerFindActiveFornecedoresQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+    query?: Partial<UseSuspenseQueryOptions<FornecedoresControllerFindActiveFornecedoresQueryResponse, ResponseErrorConfig<FornecedoresControllerFindActiveFornecedores400>, TData, TQueryKey>> & { client?: QueryClient },
     client?: Partial<RequestConfig> & { client?: typeof fetch }
   }
    = {}) {
@@ -54,10 +54,10 @@ export function useFornecedoresControllerFindActiveFornecedoresSuspense<TData = 
          const queryKey = queryOptions?.queryKey ?? fornecedoresControllerFindActiveFornecedoresSuspenseQueryKey()
   
          const query = useSuspenseQuery({
-          ...fornecedoresControllerFindActiveFornecedoresSuspenseQueryOptions(config),
+          ...fornecedoresControllerFindActiveFornecedoresSuspenseQueryOptions(headers, config),
           queryKey,
           ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<FornecedoresControllerFindActiveFornecedores400>> & { queryKey: TQueryKey }
   
          query.queryKey = queryKey as TQueryKey
   

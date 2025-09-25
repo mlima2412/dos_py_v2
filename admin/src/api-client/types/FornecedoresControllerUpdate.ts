@@ -14,10 +14,23 @@ export type FornecedoresControllerUpdatePathParams = {
     publicId: string;
 };
 
+export type FornecedoresControllerUpdateHeaderParams = {
+    /**
+     * @description ID do parceiro
+     * @type string
+    */
+    "x-parceiro-id": string;
+};
+
 /**
  * @description Fornecedor atualizado com sucesso
 */
 export type FornecedoresControllerUpdate200 = Fornecedor;
+
+/**
+ * @description Header x-parceiro-id é obrigatório
+*/
+export type FornecedoresControllerUpdate400 = any;
 
 /**
  * @description Fornecedor não encontrado
@@ -40,5 +53,6 @@ export type FornecedoresControllerUpdateMutation = {
     Response: FornecedoresControllerUpdate200;
     Request: FornecedoresControllerUpdateMutationRequest;
     PathParams: FornecedoresControllerUpdatePathParams;
-    Errors: FornecedoresControllerUpdate404 | FornecedoresControllerUpdate409;
+    HeaderParams: FornecedoresControllerUpdateHeaderParams;
+    Errors: FornecedoresControllerUpdate400 | FornecedoresControllerUpdate404 | FornecedoresControllerUpdate409;
 };

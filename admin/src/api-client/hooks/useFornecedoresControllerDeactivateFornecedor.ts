@@ -4,7 +4,7 @@
 */
 
 import fetch from "@/lib/fetch-client";
-import type { FornecedoresControllerDeactivateFornecedorMutationResponse, FornecedoresControllerDeactivateFornecedorPathParams, FornecedoresControllerDeactivateFornecedor404 } from "../types/FornecedoresControllerDeactivateFornecedor.ts";
+import type { FornecedoresControllerDeactivateFornecedorMutationResponse, FornecedoresControllerDeactivateFornecedorPathParams, FornecedoresControllerDeactivateFornecedorHeaderParams, FornecedoresControllerDeactivateFornecedor400, FornecedoresControllerDeactivateFornecedor404 } from "../types/FornecedoresControllerDeactivateFornecedor.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
@@ -17,11 +17,11 @@ export type FornecedoresControllerDeactivateFornecedorMutationKey = ReturnType<t
  * @summary Desativar fornecedor
  * {@link /fornecedores/:publicId/desativar}
  */
-export async function fornecedoresControllerDeactivateFornecedor(publicId: FornecedoresControllerDeactivateFornecedorPathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+export async function fornecedoresControllerDeactivateFornecedor(publicId: FornecedoresControllerDeactivateFornecedorPathParams["publicId"], headers: FornecedoresControllerDeactivateFornecedorHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
   const { client:request = fetch, ...requestConfig } = config
 
 
-const res = await request<FornecedoresControllerDeactivateFornecedorMutationResponse, ResponseErrorConfig<FornecedoresControllerDeactivateFornecedor404>, unknown>({ method : "PATCH", url : `/fornecedores/${publicId}/desativar`, ... requestConfig })
+const res = await request<FornecedoresControllerDeactivateFornecedorMutationResponse, ResponseErrorConfig<FornecedoresControllerDeactivateFornecedor400 | FornecedoresControllerDeactivateFornecedor404>, unknown>({ method : "PATCH", url : `/fornecedores/${publicId}/desativar`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
 return res.data
 }
 
@@ -31,7 +31,7 @@ return res.data
  */
 export function useFornecedoresControllerDeactivateFornecedor<TContext>(options: 
   {
-    mutation?: UseMutationOptions<FornecedoresControllerDeactivateFornecedorMutationResponse, ResponseErrorConfig<FornecedoresControllerDeactivateFornecedor404>, {publicId: FornecedoresControllerDeactivateFornecedorPathParams["publicId"]}, TContext> & { client?: QueryClient },
+    mutation?: UseMutationOptions<FornecedoresControllerDeactivateFornecedorMutationResponse, ResponseErrorConfig<FornecedoresControllerDeactivateFornecedor400 | FornecedoresControllerDeactivateFornecedor404>, {publicId: FornecedoresControllerDeactivateFornecedorPathParams["publicId"], headers: FornecedoresControllerDeactivateFornecedorHeaderParams}, TContext> & { client?: QueryClient },
     client?: Partial<RequestConfig> & { client?: typeof fetch },
   }
    = {}) {
@@ -40,9 +40,9 @@ export function useFornecedoresControllerDeactivateFornecedor<TContext>(options:
           const { client: queryClient, ...mutationOptions } = mutation;
           const mutationKey = mutationOptions.mutationKey ?? fornecedoresControllerDeactivateFornecedorMutationKey()
   
-          return useMutation<FornecedoresControllerDeactivateFornecedorMutationResponse, ResponseErrorConfig<FornecedoresControllerDeactivateFornecedor404>, {publicId: FornecedoresControllerDeactivateFornecedorPathParams["publicId"]}, TContext>({
-            mutationFn: async({ publicId }) => {
-              return fornecedoresControllerDeactivateFornecedor(publicId, config)
+          return useMutation<FornecedoresControllerDeactivateFornecedorMutationResponse, ResponseErrorConfig<FornecedoresControllerDeactivateFornecedor400 | FornecedoresControllerDeactivateFornecedor404>, {publicId: FornecedoresControllerDeactivateFornecedorPathParams["publicId"], headers: FornecedoresControllerDeactivateFornecedorHeaderParams}, TContext>({
+            mutationFn: async({ publicId, headers }) => {
+              return fornecedoresControllerDeactivateFornecedor(publicId, headers, config)
             },
             mutationKey,
             ...mutationOptions

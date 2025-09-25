@@ -11,9 +11,6 @@ import { usePartner } from "./usePartner";
 
 export const useFormasPagamento = () => {
 	const { selectedPartnerId } = usePartner();
-	const queryClient = useQueryClient();
-	const toast = useToast();
-	const { t } = useTranslation("common");
 
 	const headers = {
 		"x-parceiro-id": selectedPartnerId ? parseInt(selectedPartnerId) : 0,

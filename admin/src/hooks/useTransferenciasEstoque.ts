@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import { useTransferenciaEstoqueControllerFindAll } from "@/api-client";
 import type { TransferenciaEstoqueResponseDto } from "@/api-client/types";
 

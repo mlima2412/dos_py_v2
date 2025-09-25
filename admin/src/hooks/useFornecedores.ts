@@ -34,7 +34,9 @@ export function useFornecedores(params: UseFornecedoresParams = {}) {
 			if (!parceiroId) {
 				throw new Error("parceiroId é obrigatório");
 			}
-			const allFornecedores = await fornecedoresControllerFindAll(parceiroId);
+			const allFornecedores = await fornecedoresControllerFindAll({
+				"x-parceiro-id": parceiroId.toString(),
+			});
 
 			// Filtrar por busca
 			let filteredFornecedores = allFornecedores;
@@ -79,11 +81,15 @@ export function useFornecedores(params: UseFornecedoresParams = {}) {
 }
 
 export function useFornecedoresAll(parceiroId: number) {
-	return useFornecedoresControllerFindAll(parceiroId);
+	return useFornecedoresControllerFindAll({
+		"x-parceiro-id": parceiroId.toString(),
+	});
 }
 
-export function useFornecedoresAtivos() {
-	return useFornecedoresControllerFindActiveFornecedores();
+export function useFornecedoresAtivos(parceiroId: number) {
+	return useFornecedoresControllerFindActiveFornecedores({
+		"x-parceiro-id": parceiroId.toString(),
+	});
 }
 
 export type { UseFornecedoresParams };

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { usePartner } from "@/hooks/usePartner";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
@@ -37,7 +38,21 @@ import { toast } from "react-toastify";
 import { Edit } from "lucide-react";
 import CurrencyInput from "react-currency-input-field";
 import { useLocaisEstoque } from "@/hooks/useEstoques";
-import { useProdutoControllerFindByLocal } from "@/api-client";
+import {
+	useProdutoControllerFindByLocal,
+	useFornecedoresControllerFindAll,
+	useCurrencyControllerFindAllActive,
+	usePedidoCompraControllerCreate,
+	usePedidoCompraControllerUpdate,
+	usePedidoCompraControllerFindOne,
+	usePedidoCompraItemControllerFindByPedidoCompra,
+	usePedidoCompraItemControllerCreate,
+	usePedidoCompraItemControllerUpdate,
+	usePedidoCompraItemControllerRemove,
+	pedidoCompraControllerFindAllQueryKey,
+	pedidoCompraControllerFindOneQueryKey,
+	pedidoCompraItemControllerFindByPedidoCompraQueryKey,
+} from "@/api-client";
 import {
 	pedidoCompraBasicSchema,
 	type PedidoCompraBasicFormData,
@@ -45,71 +60,45 @@ import {
 import { SkuListing } from "@/components/SkuListing";
 import { ProductSelector, SelectedSkusList } from "@/components";
 
-import type { LocalEstoque } from "@/api-client/types";
 import type {
+	LocalEstoque,
 	ProdutosPorLocalResponseDto,
 	ProdutoSKUEstoqueResponseDto,
+	Fornecedor,
+	Currency,
+	PedidoCompra,
+	CreatePedidoCompraDto,
+	UpdatePedidoCompraDto,
+	PedidoCompraItem,
 } from "@/api-client/types";
 
-// Dados mockados
-const mockSuppliers = [
-	{ id: "1", nome: "Fornecedor ABC Ltda" },
-	{ id: "2", nome: "Distribuidora XYZ S.A." },
-	{ id: "3", nome: "Comercial DEF Ltda" },
-	{ id: "4", nome: "Importadora GHI Ltda" },
-	{ id: "5", nome: "Atacadista JKL S.A." },
-];
-
-const mockLocations = [
-	{ id: "1", nome: "Depósito Central", endereco: "Rua Principal, 123" },
-	{ id: "2", nome: "Filial Norte", endereco: "Av. Norte, 456" },
-	{ id: "3", nome: "Filial Sul", endereco: "Rua Sul, 789" },
-	{
-		id: "4",
-		nome: "Centro de Distribuição",
-		endereco: "Rodovia BR-101, Km 10",
-	},
-];
-
-const mockCurrencies = [
-	{
-		id: "1",
-		nome: "Real Brasileiro",
-		prefixo: "R$",
-		isoCode: "BRL",
-		locale: "pt-BR",
-	},
-	{
-		id: "2",
-		nome: "Dólar Americano",
-		prefixo: "$",
-		isoCode: "USD",
-		locale: "en-US",
-	},
-	{ id: "3", nome: "Euro", prefixo: "€", isoCode: "EUR", locale: "de-DE" },
-	{
-		id: "4",
-		nome: "Peso Argentino",
-		prefixo: "$",
-		isoCode: "ARS",
-		locale: "es-AR",
-	},
-];
+type SelectedSkuItem = {
+	itemId?: number;
+	sku: ProdutoSKUEstoqueResponseDto;
+	product: {
+		id: number;
+		nome: string;
+		precoCompra: number;
+	};
+	quantity: number;
+	unitPrice: number;
+};
 
 export const FormularioPedidoCompra: React.FC = () => {
 	const { t } = useTranslation("common");
 	const navigate = useNavigate();
+	const { publicId } = useParams<{ publicId?: string }>();
+	const queryClient = useQueryClient();
 	const { selectedPartnerId, selectedPartnerLocale, selectedPartnerIsoCode } =
 		usePartner();
-	const [isLoading, setIsLoading] = useState(false);
-	const [isEditing, setIsEditing] = useState(true);
+	const [isEditing, setIsEditing] = useState(!publicId);
 	const [savedData, setSavedData] = useState<PedidoCompraBasicFormData | null>(
 		null
 	);
-	const [valorTotalOriginal, setValorTotalOriginal] =
-		useState<string>("7.531,00");
+	const [pedidoAtual, setPedidoAtual] = useState<PedidoCompra | null>(null);
+	const [valorTotalOriginal, setValorTotalOriginal] = useState<string>("0.00");
 	const [valorTotalConvertido, setValorTotalConvertido] =
-		useState<string>("7.531,000");
+		useState<string>("0.00");
 
 	// Estados para seleção de local e produtos
 	const [localEntradaId, setLocalEntradaId] = useState<number | null>(null);
@@ -118,17 +107,64 @@ export const FormularioPedidoCompra: React.FC = () => {
 	);
 
 	// Estado para SKUs selecionados para compra
-	const [selectedSkus, setSelectedSkus] = useState<
-		Array<{
-			sku: ProdutoSKUEstoqueResponseDto;
-			product: ProdutosPorLocalResponseDto;
-			quantity: number;
-		}>
-	>([]);
+	const [selectedSkus, setSelectedSkus] = useState<SelectedSkuItem[]>([]);
+	const selectedSkusRef = React.useRef<SelectedSkuItem[]>([]);
+
+	useEffect(() => {
+		selectedSkusRef.current = selectedSkus;
+	}, [selectedSkus]);
 
 	// Estado para controlar preços ajustados dos produtos
 	const [adjustedPrices, setAdjustedPrices] = useState<Record<number, number>>(
 		{}
+	);
+
+	const parceiroIdNumber = selectedPartnerId ? Number(selectedPartnerId) : null;
+
+	const {
+		data: pedidoData,
+		isLoading: isLoadingPedido,
+		error: errorPedido,
+	} = usePedidoCompraControllerFindOne(
+		publicId ?? "",
+		{ "x-parceiro-id": parceiroIdNumber ?? 0 },
+		{
+			query: {
+				enabled: !!(publicId && parceiroIdNumber),
+			},
+		}
+	);
+
+	const fornecedoresHeaders = useMemo(
+		() => ({
+			"x-parceiro-id": parceiroIdNumber?.toString() ?? "",
+		}),
+		[parceiroIdNumber]
+	);
+
+	const isFornecedorLocked = useMemo(
+		() => Boolean(pedidoAtual?.id),
+		[pedidoAtual]
+	);
+
+	const { data: fornecedoresData, isLoading: isLoadingFornecedores } =
+		useFornecedoresControllerFindAll(fornecedoresHeaders, {
+			query: {
+				enabled: !!parceiroIdNumber,
+			},
+		});
+
+	const fornecedores = useMemo<Fornecedor[]>(
+		() => fornecedoresData ?? [],
+		[fornecedoresData]
+	);
+
+	const { data: currenciesData, isLoading: isLoadingCurrencies } =
+		useCurrencyControllerFindAllActive();
+
+	const currencies = useMemo<Currency[]>(
+		() => currenciesData ?? [],
+		[currenciesData]
 	);
 
 	// Buscar locais de estoque do parceiro selecionado
@@ -190,6 +226,42 @@ export const FormularioPedidoCompra: React.FC = () => {
 			}
 		: null;
 
+	const skuProductMap = useMemo(() => {
+		const map = new Map<
+			number,
+			{
+				product: ProdutosPorLocalResponseDto;
+				sku: ProdutoSKUEstoqueResponseDto;
+			}
+		>();
+		if (!produtosData) return map;
+		produtosData.forEach(product => {
+			(product.ProdutoSKU || []).forEach(skuItem => {
+				map.set(skuItem.id, { product, sku: skuItem });
+			});
+		});
+		return map;
+	}, [produtosData]);
+
+	const pedidoIdForItems = pedidoAtual?.id ?? pedidoData?.id;
+	const pedidoPublicId = pedidoAtual?.publicId ?? publicId ?? null;
+
+	const pedidoQueryKey = useMemo(() => {
+		if (!pedidoPublicId) return null;
+		return pedidoCompraControllerFindOneQueryKey(pedidoPublicId);
+	}, [pedidoPublicId]);
+
+	const { data: pedidoItensData, isLoading: isLoadingItens } =
+		usePedidoCompraItemControllerFindByPedidoCompra(
+			pedidoIdForItems ? pedidoIdForItems.toString() : "",
+			{ "x-parceiro-id": parceiroIdNumber ?? 0 },
+			{
+				query: {
+					enabled: !!(pedidoIdForItems && parceiroIdNumber),
+				},
+			}
+		);
+
 	const form = useForm<PedidoCompraBasicFormData>({
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		resolver: zodResolver(pedidoCompraBasicSchema) as any,
@@ -205,68 +277,288 @@ export const FormularioPedidoCompra: React.FC = () => {
 		},
 	});
 
-	// Função para calcular valores totais e conversões
-	const calculateTotals = React.useCallback(() => {
-		const valorFrete = parseFloat(form.getValues("valorFrete") || "0");
-		const valorComissao = parseFloat(form.getValues("valorComissao") || "0");
-		const cotacao = parseFloat(form.getValues("cotacao") || "1");
+	const parseToNumber = React.useCallback((raw: unknown): number => {
+		if (raw === null || raw === undefined) {
+			return Number.NaN;
+		}
+		if (typeof raw === "number") {
+			return Number.isFinite(raw) ? raw : Number.NaN;
+		}
+		if (typeof raw === "string") {
+			if (raw.trim() === "") return Number.NaN;
+			const direct = Number(raw);
+			if (!Number.isNaN(direct)) {
+				return direct;
+			}
+			const normalized = raw.replace(/\./g, "").replace(",", ".");
+			const normalizedNumber = Number(normalized);
+			return Number.isNaN(normalizedNumber) ? Number.NaN : normalizedNumber;
+		}
+		if (
+			typeof raw === "object" &&
+			"value" in (raw as Record<string, unknown>)
+		) {
+			return parseToNumber((raw as Record<string, unknown>).value);
+		}
+		return Number.NaN;
+	}, []);
 
-		// Calcular valor dos produtos selecionados
-		const valorProdutos = selectedSkus.reduce((total, item) => {
-			// Usar o preço de compra do produto selecionado
-			const valorUnitario = item.product.precoCompra || 0;
-			return total + valorUnitario * item.quantity;
-		}, 0);
+	const safeNumber = React.useCallback(
+		(raw: unknown, fallback = 0) => {
+			const parsed = parseToNumber(raw);
+			return Number.isNaN(parsed) ? fallback : parsed;
+		},
+		[parseToNumber]
+	);
 
-		// Valor total na moeda original (frete + comissão + produtos)
-		const totalOriginal = valorFrete + valorComissao + valorProdutos;
-		setValorTotalOriginal(totalOriginal.toFixed(2));
+	const computeConvertedTotal = React.useCallback(
+		(originalRaw: unknown, cotacaoRaw: unknown) => {
+			const original = safeNumber(originalRaw, 0);
+			const cotacao = safeNumber(cotacaoRaw ?? 1, 1);
+			return original * cotacao;
+		},
+		[safeNumber]
+	);
 
-		// Valor total convertido para a moeda do parceiro
-		const totalConvertido = totalOriginal * cotacao;
-		setValorTotalConvertido(totalConvertido.toFixed(2));
-	}, [form, selectedSkus]);
+	const resolveTotalsFromData = React.useCallback(
+		(values: Partial<PedidoCompraBasicFormData>, items: SelectedSkuItem[]) => {
+			const valorFreteNumber = parseToNumber(values.valorFrete ?? "0");
+			const valorComissaoNumber = parseToNumber(values.valorComissao ?? "0");
+			const cotacaoNumber = parseToNumber(values.cotacao ?? "1");
+
+			const valorFrete = Number.isNaN(valorFreteNumber) ? 0 : valorFreteNumber;
+			const valorComissao = Number.isNaN(valorComissaoNumber)
+				? 0
+				: valorComissaoNumber;
+			const cotacao = Number.isNaN(cotacaoNumber) ? 1 : cotacaoNumber;
+
+			const valorProdutos = items.reduce((total, item) => {
+				return total + item.unitPrice * item.quantity;
+			}, 0);
+
+			const totalOriginal = valorFrete + valorComissao + valorProdutos;
+			const totalConvertido = totalOriginal * cotacao;
+
+			return {
+				valorFrete,
+				valorComissao,
+				cotacao,
+				valorProdutos,
+				totalOriginal,
+				totalConvertido,
+			};
+		},
+		[parseToNumber]
+	);
+
+	const updateTotalsState = React.useCallback(
+		(
+			itemsArg?: SelectedSkuItem[],
+			valuesArg?: Partial<PedidoCompraBasicFormData>
+		) => {
+			const currentItems = itemsArg ?? selectedSkusRef.current;
+			const currentValues = valuesArg ?? form.getValues();
+			const totals = resolveTotalsFromData(currentValues, currentItems);
+			setValorTotalOriginal(totals.totalOriginal.toFixed(2));
+			setValorTotalConvertido(totals.totalConvertido.toFixed(2));
+			return totals;
+		},
+		[form, resolveTotalsFromData]
+	);
+
+	const refreshTotals = React.useCallback(
+		(patch?: Partial<PedidoCompraBasicFormData>) => {
+			const baseValues = form.getValues();
+			const mergedValues = patch ? { ...baseValues, ...patch } : baseValues;
+			updateTotalsState(selectedSkusRef.current, mergedValues);
+		},
+		[form, updateTotalsState]
+	);
+
+	const updatePedidoTotalsMutation = usePedidoCompraControllerUpdate({
+		mutation: {
+			onSuccess: data => {
+				setPedidoAtual(data);
+			},
+			onError: () => {
+				toast.error(
+					t("purchaseOrders.form.messages.updateTotalsError", {
+						defaultValue: "Não foi possível atualizar os totais do pedido.",
+					})
+				);
+			},
+		},
+	});
+
+	const persistTotals = React.useCallback(
+		(items: SelectedSkuItem[]) => {
+			const currentValues = form.getValues();
+			const totals = updateTotalsState(items, currentValues);
+
+			if (!pedidoPublicId || !parceiroIdNumber) {
+				return;
+			}
+
+			updatePedidoTotalsMutation.mutate(
+				{
+					publicId: pedidoPublicId,
+					headers: { "x-parceiro-id": parceiroIdNumber },
+					data: {
+						valorFrete: totals.valorFrete,
+						valorComissao: totals.valorComissao,
+						valorTotal: Number(totals.totalOriginal.toFixed(2)),
+						cotacao: totals.cotacao,
+					},
+				},
+				{
+					onSuccess: data => {
+						setPedidoAtual(data);
+						updateTotalsState(selectedSkusRef.current, currentValues);
+					},
+					onSettled: () => {
+						queryClient.invalidateQueries({
+							queryKey: pedidoCompraControllerFindAllQueryKey(),
+						});
+						if (pedidoPublicId) {
+							queryClient.invalidateQueries({
+								queryKey: pedidoCompraControllerFindOneQueryKey(pedidoPublicId),
+							});
+						}
+					},
+				}
+			);
+		},
+		[
+			form,
+			parceiroIdNumber,
+			pedidoPublicId,
+			queryClient,
+			updatePedidoTotalsMutation,
+			updateTotalsState,
+		]
+	);
 
 	// Função para adicionar SKU à lista de compra
 	const handleAddSkuToPurchase = (sku: ProdutoSKUEstoqueResponseDto) => {
+		if (isMutatingItems) return;
 		if (!selectedProduct) return;
-
-		const existingSkuIndex = selectedSkus.findIndex(
-			item => item.sku.id === sku.id
-		);
-
-		if (existingSkuIndex >= 0) {
-			// Se já existe, incrementar quantidade
-			const currentQuantity = selectedSkus[existingSkuIndex].quantity;
-			const newQuantity = currentQuantity + 1;
-
-			setSelectedSkus(prev =>
-				prev.map((item, index) =>
-					index === existingSkuIndex ? { ...item, quantity: newQuantity } : item
-				)
+		if (!pedidoAtual || !pedidoAtual.id) {
+			toast.warn(
+				t("purchaseOrders.form.messages.saveBeforeAdding", {
+					defaultValue: "Salve o pedido antes de adicionar itens.",
+				})
 			);
-		} else {
-			// Se não existe, adicionar com quantidade 1
-			setSelectedSkus(prev => [
-				...prev,
-				{
-					sku,
-					product: selectedProduct,
-					quantity: 1,
-				},
-			]);
+			return;
 		}
+		if (!parceiroIdNumber) {
+			toast.error(t("common.noPartnerSelected"));
+			return;
+		}
+
+		const existingItem = selectedSkus.find(item => item.sku.id === sku.id);
+
+		if (existingItem && existingItem.itemId) {
+			const previousItems = selectedSkus.map(selected => ({
+				...selected,
+				product: { ...selected.product },
+				sku: { ...selected.sku },
+			}));
+			const newQuantity = existingItem.quantity + 1;
+			const nextItems = previousItems.map(item =>
+				item.sku.id === sku.id ? { ...item, quantity: newQuantity } : item
+			);
+			setSelectedSkus(nextItems);
+			updateTotalsState(nextItems);
+			updateItemMutation.mutate(
+				{
+					id: existingItem.itemId.toString(),
+					headers: { "x-parceiro-id": parceiroIdNumber },
+					data: {
+						qtd: newQuantity,
+						precoCompra: existingItem.unitPrice,
+					},
+				},
+				{
+					onError: () => {
+						setSelectedSkus(previousItems);
+						updateTotalsState(previousItems);
+					},
+				}
+			);
+			return;
+		}
+
+		const unitPrice =
+			(selectedProductId && adjustedPrices[selectedProductId]) ??
+			selectedProduct.precoCompra ??
+			0;
+
+		createItemMutation.mutate({
+			data: {
+				pedidoCompraId: pedidoAtual.id,
+				skuId: sku.id,
+				qtd: 1,
+				precoCompra: unitPrice,
+			},
+			headers: { "x-parceiro-id": parceiroIdNumber },
+		});
 	};
 
 	// Função para remover SKU da lista de compra
 	const handleRemoveSku = (skuId: number) => {
-		setSelectedSkus(prev => prev.filter(item => item.sku.id !== skuId));
+		if (isMutatingItems) return;
+		const item = selectedSkus.find(selected => selected.sku.id === skuId);
+		if (!item) return;
+
+		if (!item.itemId || !parceiroIdNumber) {
+			setSelectedSkus(prev =>
+				prev.filter(selected => selected.sku.id !== skuId)
+			);
+			return;
+		}
+
+		removeItemMutation.mutate({
+			id: item.itemId.toString(),
+			headers: { "x-parceiro-id": parceiroIdNumber },
+		});
 	};
 
 	// Função para atualizar quantidade de um SKU
 	const handleUpdateQuantity = (skuId: number, quantity: number) => {
-		setSelectedSkus(prev =>
-			prev.map(item => (item.sku.id === skuId ? { ...item, quantity } : item))
+		if (isMutatingItems) return;
+		const item = selectedSkus.find(selected => selected.sku.id === skuId);
+		if (!item) return;
+
+		const previousItems = selectedSkus.map(selected => ({
+			...selected,
+			product: { ...selected.product },
+			sku: { ...selected.sku },
+		}));
+		const nextItems = previousItems.map(selected =>
+			selected.sku.id === skuId ? { ...selected, quantity } : selected
+		);
+		setSelectedSkus(nextItems);
+		updateTotalsState(nextItems);
+
+		if (!item.itemId || !parceiroIdNumber) {
+			return;
+		}
+
+		updateItemMutation.mutate(
+			{
+				id: item.itemId.toString(),
+				headers: { "x-parceiro-id": parceiroIdNumber },
+				data: {
+					qtd: quantity,
+					precoCompra: item.unitPrice,
+				},
+			},
+			{
+				onError: () => {
+					setSelectedSkus(previousItems);
+					updateTotalsState(previousItems);
+				},
+			}
 		);
 	};
 
@@ -276,8 +568,8 @@ export const FormularioPedidoCompra: React.FC = () => {
 	const cotacao = form.watch("cotacao");
 
 	useEffect(() => {
-		calculateTotals();
-	}, [valorFrete, valorComissao, cotacao, selectedSkus, calculateTotals]);
+		refreshTotals();
+	}, [valorFrete, valorComissao, cotacao, selectedSkus, refreshTotals]);
 
 	// Limpar seleções quando mudar o local de entrada
 	useEffect(() => {
@@ -290,7 +582,7 @@ export const FormularioPedidoCompra: React.FC = () => {
 		setSelectedProductId(null);
 	}, [localEntradaId]);
 
-	const onSubmit = async (data: PedidoCompraBasicFormData) => {
+	const onSubmit = (data: PedidoCompraBasicFormData) => {
 		if (!selectedPartnerId) {
 			toast.error(t("common.noPartnerSelected"));
 			return;
@@ -303,30 +595,21 @@ export const FormularioPedidoCompra: React.FC = () => {
 			return;
 		}
 
-		setIsLoading(true);
+		const payload = buildPedidoPayload(data);
+		const headers = { "x-parceiro-id": Number(selectedPartnerId) };
 
-		try {
-			// Simular criação do pedido
-			await new Promise(resolve => setTimeout(resolve, 1000));
-
-			// TODO: Aqui será feita a chamada real para a API
-			console.log("Dados do pedido:", {
-				...data,
-				parceiroId: selectedPartnerId,
-				localEntradaId: formLocalEntradaId,
+		if (!pedidoAtual) {
+			createPedidoMutation.mutate({
+				data: payload,
+				headers,
 			});
-
-			// Salvar dados e mudar para modo de visualização
-			setSavedData(data);
-			setIsEditing(false);
-			toast.success(t("purchaseOrders.form.messages.createSuccess"));
-
-			// Após salvar, o usuário pode selecionar produtos no modo de visualização
-		} catch (error) {
-			console.error("Erro ao criar pedido:", error);
-			toast.error(t("purchaseOrders.form.messages.createError"));
-		} finally {
-			setIsLoading(false);
+		} else {
+			const updatePayload: UpdatePedidoCompraDto = { ...payload };
+			updatePedidoMutation.mutate({
+				publicId: pedidoAtual.publicId,
+				headers,
+				data: updatePayload,
+			});
 		}
 	};
 
@@ -337,43 +620,382 @@ export const FormularioPedidoCompra: React.FC = () => {
 	const handleEdit = () => {
 		setIsEditing(true);
 		// Resetar o formulário com os dados salvos
-		if (savedData) {
-			form.reset(savedData);
-			setLocalEntradaId(Number(savedData.localEntradaId));
+		const dataToReset = displayData;
+		if (dataToReset) {
+			form.reset(dataToReset);
+			setLocalEntradaId(Number(dataToReset.localEntradaId));
 		}
 	};
 
 	// Funções auxiliares para obter dados dos selects
 	const getSupplierName = (id: string) => {
-		return mockSuppliers.find(s => s.id === id)?.nome || "";
+		if (!id) return "";
+		const supplier = fornecedores.find(s => s.id?.toString() === id);
+		return supplier?.nome || "";
 	};
 
 	const getLocationName = (id: string) => {
-		return mockLocations.find(l => l.id === id)?.nome || "";
+		if (!id) return "";
+		const location = locais.find(local => local.id?.toString() === id);
+		return location?.nome || "";
 	};
 
 	// Função para formatar valores monetários
 	const formatCurrency = (value: string, currencyId: string) => {
-		const currency = mockCurrencies.find(c => c.id === currencyId);
+		if (!currencyId) return value;
+		const currency = currencies.find(c => c.id?.toString() === currencyId);
 		if (!currency) return value;
 
-		const numericValue = parseFloat(value || "0");
-		return new Intl.NumberFormat(currency.locale, {
+		const numericValue = parseToNumber(value ?? "0");
+		const safeValue = Number.isNaN(numericValue) ? 0 : numericValue;
+		return new Intl.NumberFormat(currency.locale || "pt-BR", {
 			style: "currency",
 			currency: currency.isoCode,
-		}).format(numericValue);
+		}).format(safeValue);
 	};
 
 	// Função para formatar valores na moeda do parceiro
 	const formatPartnerCurrency = (value: string) => {
 		if (!selectedPartnerLocale || !selectedPartnerIsoCode) return value;
 
-		const numericValue = parseFloat(value || "0");
+		const numericValue = parseToNumber(value ?? "0");
+		const safeValue = Number.isNaN(numericValue) ? 0 : numericValue;
 		return new Intl.NumberFormat(selectedPartnerLocale, {
 			style: "currency",
 			currency: selectedPartnerIsoCode,
-		}).format(numericValue);
+		}).format(safeValue);
 	};
+
+	const optionalNumber = React.useCallback(
+		(raw?: string) => {
+			if (raw === undefined || raw === null) return undefined;
+			if (raw === "") return undefined;
+			const parsed = parseToNumber(raw);
+			return Number.isNaN(parsed) ? undefined : parsed;
+		},
+		[parseToNumber]
+	);
+
+	const numberToInputString = React.useCallback(
+		(raw: unknown) => {
+			const parsed = parseToNumber(raw);
+			return Number.isNaN(parsed) ? "" : parsed.toString();
+		},
+		[parseToNumber]
+	);
+
+	const mapPedidoToFormData = React.useCallback(
+		(pedido: PedidoCompra): PedidoCompraBasicFormData => ({
+			fornecedorId: pedido.fornecedorId?.toString() || "",
+			localEntradaId: pedido.localEntradaId?.toString() || "",
+			currencyId: pedido.currencyId?.toString() || "",
+			valorFrete: numberToInputString(pedido.valorFrete),
+			observacao: pedido.observacao || "",
+			valorComissao: numberToInputString(pedido.valorComissao),
+			cotacao: numberToInputString(pedido.cotacao) || "1",
+			consignado: pedido.consignado ?? false,
+		}),
+		[numberToInputString]
+	);
+
+	const buildPedidoPayload = (values: PedidoCompraBasicFormData) => {
+		const payload: CreatePedidoCompraDto = {
+			localEntradaId: Number(values.localEntradaId),
+			fornecedorId: Number(values.fornecedorId),
+			currencyId: Number(values.currencyId),
+			consignado: values.consignado,
+			cotacao: optionalNumber(values.cotacao) ?? 1,
+			observacao: values.observacao || undefined,
+		};
+
+		const valorFreteNumber = optionalNumber(values.valorFrete);
+		if (valorFreteNumber !== undefined) {
+			payload.valorFrete = valorFreteNumber;
+		}
+
+		const valorComissaoNumber = optionalNumber(values.valorComissao);
+		if (valorComissaoNumber !== undefined) {
+			payload.valorComissao = valorComissaoNumber;
+		}
+
+		const totals = resolveTotalsFromData(values, selectedSkus);
+		payload.valorTotal = Number(totals.totalOriginal.toFixed(2));
+
+		return payload;
+	};
+
+	const buildSelectedSkuFromItem = React.useCallback(
+		(item: PedidoCompraItem): SelectedSkuItem => {
+			const mapping = skuProductMap.get(item.skuId);
+			const unitPriceNumber = parseToNumber(item.precoCompra);
+			const unitPrice = Number.isNaN(unitPriceNumber)
+				? (mapping?.product.precoCompra ?? 0)
+				: unitPriceNumber;
+
+			const skuInfo: ProdutoSKUEstoqueResponseDto = mapping
+				? { ...mapping.sku }
+				: {
+						id: item.skuId,
+						publicId: String(item.skuId),
+						cor: "",
+						tamanho: "",
+						codCor: 0,
+						qtdMinima: 0,
+						estoque: 0,
+					};
+
+			const productInfo = mapping
+				? {
+						id: mapping.product.id,
+						nome: mapping.product.nome,
+						precoCompra: unitPrice,
+					}
+				: {
+						id: 0,
+						nome: t("common.unknownProduct", { defaultValue: "Produto" }),
+						precoCompra: unitPrice,
+					};
+
+			return {
+				itemId: item.id,
+				sku: skuInfo,
+				product: productInfo,
+				quantity: item.qtd,
+				unitPrice,
+			};
+		},
+		[skuProductMap, t, parseToNumber]
+	);
+
+	const createPedidoMutation = usePedidoCompraControllerCreate({
+		mutation: {
+			onSuccess: data => {
+				const formData = mapPedidoToFormData(data);
+				setPedidoAtual(data);
+				setSavedData(formData);
+				form.reset(formData);
+				setLocalEntradaId(data.localEntradaId ?? null);
+				const totalOriginalNumber = safeNumber(data.valorTotal, 0);
+				const convertedNumber = computeConvertedTotal(
+					totalOriginalNumber,
+					formData.cotacao ?? "1"
+				);
+				setValorTotalOriginal(totalOriginalNumber.toFixed(2));
+				setValorTotalConvertido(convertedNumber.toFixed(2));
+				toast.success(t("purchaseOrders.form.messages.createSuccess"));
+				setIsEditing(false);
+			},
+			onError: () => {
+				toast.error(t("purchaseOrders.form.messages.createError"));
+			},
+		},
+	});
+
+	const updatePedidoMutation = usePedidoCompraControllerUpdate({
+		mutation: {
+			onSuccess: data => {
+				const currentValues = form.getValues();
+				const formData = mapPedidoToFormData(data);
+				const mergedData: PedidoCompraBasicFormData = {
+					...formData,
+					valorFrete: currentValues.valorFrete ?? formData.valorFrete,
+					valorComissao: currentValues.valorComissao ?? formData.valorComissao,
+					cotacao: currentValues.cotacao ?? formData.cotacao,
+					observacao: currentValues.observacao ?? formData.observacao,
+					localEntradaId: formData.localEntradaId,
+					fornecedorId: formData.fornecedorId,
+					currencyId: formData.currencyId,
+					consignado: currentValues.consignado ?? formData.consignado,
+				};
+				setPedidoAtual(data);
+				setSavedData(mergedData);
+				form.reset(mergedData);
+				setLocalEntradaId(data.localEntradaId ?? null);
+				const totalOriginalNumber = safeNumber(data.valorTotal, 0);
+				const cotacaoValue = mergedData.cotacao ?? currentValues.cotacao ?? "1";
+				const convertedNumber = computeConvertedTotal(
+					totalOriginalNumber,
+					cotacaoValue
+				);
+				setValorTotalOriginal(totalOriginalNumber.toFixed(2));
+				setValorTotalConvertido(convertedNumber.toFixed(2));
+				toast.success(
+					t("purchaseOrders.form.messages.updateSuccess", {
+						defaultValue: "Pedido atualizado com sucesso.",
+					})
+				);
+				setIsEditing(false);
+				if (pedidoQueryKey) {
+					queryClient.invalidateQueries({ queryKey: pedidoQueryKey });
+				}
+				queryClient.invalidateQueries({
+					queryKey: pedidoCompraControllerFindAllQueryKey(),
+				});
+			},
+			onError: () => {
+				toast.error(
+					t("purchaseOrders.form.messages.updateError", {
+						defaultValue: "Não foi possível atualizar o pedido.",
+					})
+				);
+			},
+		},
+	});
+
+	const isSaving =
+		createPedidoMutation.isPending || updatePedidoMutation.isPending;
+
+	useEffect(() => {
+		if (!pedidoData) return;
+
+		const formData = mapPedidoToFormData(pedidoData);
+		setPedidoAtual(pedidoData);
+		setSavedData(formData);
+		if (!isEditing) {
+			form.reset(formData);
+			setLocalEntradaId(pedidoData.localEntradaId ?? null);
+		}
+		const totalOriginalNumber = safeNumber(pedidoData.valorTotal, 0);
+		const convertedNumber = computeConvertedTotal(
+			totalOriginalNumber,
+			formData.cotacao ?? "1"
+		);
+		setValorTotalOriginal(totalOriginalNumber.toFixed(2));
+		setValorTotalConvertido(convertedNumber.toFixed(2));
+		if (publicId) {
+			setIsEditing(prev => (prev ? prev : false));
+		}
+	}, [
+		pedidoData,
+		form,
+		isEditing,
+		publicId,
+		mapPedidoToFormData,
+		safeNumber,
+		computeConvertedTotal,
+	]);
+
+	const displayData = useMemo<PedidoCompraBasicFormData | null>(() => {
+		if (savedData) return savedData;
+		if (pedidoAtual) return mapPedidoToFormData(pedidoAtual);
+		return null;
+	}, [savedData, pedidoAtual, mapPedidoToFormData]);
+
+	const itensQueryKey = useMemo(() => {
+		if (!pedidoIdForItems) return null;
+		return pedidoCompraItemControllerFindByPedidoCompraQueryKey(
+			pedidoIdForItems.toString()
+		);
+	}, [pedidoIdForItems]);
+
+	const invalidateItensQuery = React.useCallback(() => {
+		if (!itensQueryKey) return;
+		queryClient.invalidateQueries({ queryKey: itensQueryKey });
+	}, [itensQueryKey, queryClient]);
+
+	const createItemMutation = usePedidoCompraItemControllerCreate({
+		mutation: {
+			onSuccess: item => {
+				const selectedItem = buildSelectedSkuFromItem(item);
+				const nextItems = [...selectedSkus, selectedItem];
+				setSelectedSkus(nextItems);
+				setAdjustedPrices(prev => ({
+					...prev,
+					[selectedItem.product.id]: selectedItem.unitPrice,
+				}));
+				persistTotals(nextItems);
+				invalidateItensQuery();
+			},
+			onError: () => {
+				toast.error(
+					t("purchaseOrders.form.messages.itemCreateError", {
+						defaultValue: "Não foi possível adicionar o item ao pedido.",
+					})
+				);
+			},
+		},
+	});
+
+	const updateItemMutation = usePedidoCompraItemControllerUpdate({
+		mutation: {
+			onSuccess: item => {
+				const updatedItem = buildSelectedSkuFromItem(item);
+				const nextItems = selectedSkus.map(existing =>
+					existing.itemId === item.id ? updatedItem : existing
+				);
+				setSelectedSkus(nextItems);
+				setAdjustedPrices(prev => ({
+					...prev,
+					[updatedItem.product.id]: updatedItem.unitPrice,
+				}));
+				persistTotals(nextItems);
+				invalidateItensQuery();
+			},
+			onError: () => {
+				toast.error(
+					t("purchaseOrders.form.messages.itemUpdateError", {
+						defaultValue: "Não foi possível atualizar o item do pedido.",
+					})
+				);
+			},
+		},
+	});
+
+	const removeItemMutation = usePedidoCompraItemControllerRemove({
+		mutation: {
+			onSuccess: (_, variables) => {
+				const removedId = Number(variables.id);
+				const nextItems = selectedSkus.filter(
+					item => item.itemId !== removedId
+				);
+				setSelectedSkus(nextItems);
+				persistTotals(nextItems);
+				invalidateItensQuery();
+			},
+			onError: () => {
+				toast.error(
+					t("purchaseOrders.form.messages.itemRemoveError", {
+						defaultValue: "Não foi possível remover o item do pedido.",
+					})
+				);
+			},
+		},
+	});
+
+	const isMutatingItems =
+		isLoadingItens ||
+		createItemMutation.isPending ||
+		updateItemMutation.isPending ||
+		removeItemMutation.isPending ||
+		updatePedidoTotalsMutation.isPending;
+
+	useEffect(() => {
+		if (!pedidoItensData) {
+			if (!pedidoIdForItems) {
+				setSelectedSkus([]);
+				updateTotalsState([]);
+			}
+			return;
+		}
+
+		const mappedItems = pedidoItensData.map(buildSelectedSkuFromItem);
+		setSelectedSkus(mappedItems);
+		setAdjustedPrices(prev => {
+			const next = { ...prev };
+			mappedItems.forEach(item => {
+				if (item.product.id) {
+					next[item.product.id] = item.unitPrice;
+				}
+			});
+			return next;
+		});
+		updateTotalsState(mappedItems);
+	}, [
+		pedidoItensData,
+		buildSelectedSkuFromItem,
+		pedidoIdForItems,
+		updateTotalsState,
+	]);
 
 	const handlePriceChange = (newPrice: number) => {
 		if (selectedProductId) {
@@ -391,6 +1013,33 @@ export const FormularioPedidoCompra: React.FC = () => {
 					<p className="text-muted-foreground">
 						{t("common.noPartnerSelected")}
 					</p>
+				</div>
+			</DashboardLayout>
+		);
+	}
+
+	if (publicId && isLoadingPedido && !pedidoAtual) {
+		return (
+			<DashboardLayout>
+				<div className="text-center">
+					<p className="text-muted-foreground">{t("common.loading")}</p>
+				</div>
+			</DashboardLayout>
+		);
+	}
+
+	if (publicId && errorPedido && !pedidoAtual) {
+		return (
+			<DashboardLayout>
+				<div className="text-center space-y-2">
+					<p className="text-destructive">
+						{t("purchaseOrders.form.messages.loadError", {
+							defaultValue: "Não foi possível carregar o pedido de compra.",
+						})}
+					</p>
+					<Button variant="outline" onClick={() => navigate("/pedidoCompra")}>
+						{t("common.back", { defaultValue: "Voltar" })}
+					</Button>
 				</div>
 			</DashboardLayout>
 		);
@@ -422,7 +1071,7 @@ export const FormularioPedidoCompra: React.FC = () => {
 			</Breadcrumb>
 
 			{/* Formulário */}
-			{!isEditing && savedData ? (
+			{!isEditing && displayData ? (
 				// Modo de visualização - Layout com cards
 				<div className="space-y-6 mt-4">
 					{/* Cards de dados básicos */}
@@ -441,10 +1090,10 @@ export const FormularioPedidoCompra: React.FC = () => {
 									<div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr] gap-2">
 										<div>
 											<span className="text-sm font-medium">
-												{getSupplierName(savedData.fornecedorId)}
+												{getSupplierName(displayData.fornecedorId)}
 											</span>
 											<p className="text-sm text-muted-foreground">
-												{getLocationName(savedData.localEntradaId)}
+												{getLocationName(displayData.localEntradaId)}
 											</p>
 										</div>
 										<div>
@@ -452,10 +1101,10 @@ export const FormularioPedidoCompra: React.FC = () => {
 												{t("purchaseOrders.form.labels.freightValue")}
 											</Label>
 											<p className="text-sm font-medium">
-												{savedData?.valorFrete && savedData?.currencyId
+												{displayData?.valorFrete && displayData?.currencyId
 													? formatCurrency(
-															savedData?.valorFrete || "",
-															savedData?.currencyId || ""
+															displayData?.valorFrete || "",
+															displayData?.currencyId || ""
 														)
 													: "R$ 0,00"}
 											</p>
@@ -465,22 +1114,22 @@ export const FormularioPedidoCompra: React.FC = () => {
 												{t("purchaseOrders.form.labels.commissionValue")}
 											</Label>
 											<p className="text-sm font-medium">
-												{savedData?.valorComissao && savedData?.currencyId
+												{displayData?.valorComissao && displayData?.currencyId
 													? formatCurrency(
-															savedData?.valorComissao || "",
-															savedData?.currencyId || ""
+															displayData?.valorComissao || "",
+															displayData?.currencyId || ""
 														)
 													: "R$ 0,00"}
 											</p>
 										</div>
 									</div>
 
-									{savedData.observacao && (
+									{displayData.observacao && (
 										<div>
 											<Label className="text-sm font-medium text-muted-foreground">
 												{t("purchaseOrders.form.labels.observation")}
 											</Label>
-											<p className="text-sm">{savedData.observacao}</p>
+											<p className="text-sm">{displayData.observacao}</p>
 										</div>
 									)}
 								</div>
@@ -498,11 +1147,11 @@ export const FormularioPedidoCompra: React.FC = () => {
 												Valor Original
 											</Label>
 											<div className="p-4 bg-primary/10 rounded-lg border-2 border-primary/20">
-												<span className="text-2xl font-bold text-primary">
-													{valorTotalOriginal && savedData?.currencyId
+												<span className="text-xl font-bold text-primary">
+													{valorTotalOriginal && displayData?.currencyId
 														? formatCurrency(
 																valorTotalOriginal,
-																savedData?.currencyId || ""
+																displayData?.currencyId || ""
 															)
 														: "R$ 0,00"}
 												</span>
@@ -514,7 +1163,7 @@ export const FormularioPedidoCompra: React.FC = () => {
 												Valor Total
 											</Label>
 											<div className="p-4 bg-primary/10 rounded-lg border-2 border-primary/20">
-												<span className="text-2xl font-bold text-primary">
+												<span className="text-xl font-bold text-primary">
 													{valorTotalConvertido
 														? formatPartnerCurrency(valorTotalConvertido)
 														: "R$ 0,00"}
@@ -610,8 +1259,16 @@ export const FormularioPedidoCompra: React.FC = () => {
 													{t("purchaseOrders.form.labels.supplier")} *
 												</FormLabel>
 												<Select
-													onValueChange={field.onChange}
-													defaultValue={field.value}
+													onValueChange={value => {
+														field.onChange(value);
+													}}
+													value={field.value}
+													disabled={
+														isLoadingFornecedores ||
+														!parceiroIdNumber ||
+														fornecedores.length === 0 ||
+														isFornecedorLocked
+													}
 												>
 													<FormControl>
 														<SelectTrigger>
@@ -623,11 +1280,26 @@ export const FormularioPedidoCompra: React.FC = () => {
 														</SelectTrigger>
 													</FormControl>
 													<SelectContent>
-														{mockSuppliers.map(supplier => (
-															<SelectItem key={supplier.id} value={supplier.id}>
-																{supplier.nome}
+														{isLoadingFornecedores ? (
+															<SelectItem value="loading" disabled>
+																{t("common.loading")}
 															</SelectItem>
-														))}
+														) : fornecedores.length === 0 ? (
+															<SelectItem value="empty" disabled>
+																{t("purchaseOrders.form.noSuppliers", {
+																	defaultValue: "Nenhum fornecedor disponível",
+																})}
+															</SelectItem>
+														) : (
+															fornecedores.map(supplier => (
+																<SelectItem
+																	key={supplier.id}
+																	value={supplier.id.toString()}
+																>
+																	{supplier.nome}
+																</SelectItem>
+															))
+														)}
 													</SelectContent>
 												</Select>
 												<FormMessage />
@@ -649,8 +1321,8 @@ export const FormularioPedidoCompra: React.FC = () => {
 														field.onChange(value);
 														setLocalEntradaId(Number(value));
 													}}
-													defaultValue={field.value}
-													disabled={isLoadingLocations}
+													value={field.value}
+													disabled={isLoadingLocations || locais.length === 0}
 												>
 													<FormControl>
 														<SelectTrigger>
@@ -662,14 +1334,22 @@ export const FormularioPedidoCompra: React.FC = () => {
 														</SelectTrigger>
 													</FormControl>
 													<SelectContent>
-														{locais.map((local: LocalEstoque) => (
-															<SelectItem
-																key={local.id}
-																value={local.id.toString()}
-															>
-																{local.nome}
+														{locais.length === 0 ? (
+															<SelectItem value="empty" disabled>
+																{t("purchaseOrders.form.noLocations", {
+																	defaultValue: "Nenhum local disponível",
+																})}
 															</SelectItem>
-														))}
+														) : (
+															locais.map((local: LocalEstoque) => (
+																<SelectItem
+																	key={local.id}
+																	value={local.id.toString()}
+																>
+																	{local.nome}
+																</SelectItem>
+															))
+														)}
 													</SelectContent>
 												</Select>
 												<FormMessage />
@@ -712,7 +1392,10 @@ export const FormularioPedidoCompra: React.FC = () => {
 												</FormLabel>
 												<Select
 													onValueChange={field.onChange}
-													defaultValue={field.value}
+													value={field.value}
+													disabled={
+														isLoadingCurrencies || currencies.length === 0
+													}
 												>
 													<FormControl>
 														<SelectTrigger>
@@ -724,12 +1407,27 @@ export const FormularioPedidoCompra: React.FC = () => {
 														</SelectTrigger>
 													</FormControl>
 													<SelectContent>
-														{mockCurrencies.map(currency => (
-															<SelectItem key={currency.id} value={currency.id}>
-																{currency.prefixo} {currency.nome} (
-																{currency.isoCode})
+														{isLoadingCurrencies ? (
+															<SelectItem value="loading" disabled>
+																{t("common.loading")}
 															</SelectItem>
-														))}
+														) : currencies.length === 0 ? (
+															<SelectItem value="empty" disabled>
+																{t("purchaseOrders.form.noCurrencies", {
+																	defaultValue: "Nenhuma moeda disponível",
+																})}
+															</SelectItem>
+														) : (
+															currencies.map(currency => (
+																<SelectItem
+																	key={currency.id}
+																	value={currency.id.toString()}
+																>
+																	{currency.prefixo} {currency.nome} (
+																	{currency.isoCode})
+																</SelectItem>
+															))
+														)}
 													</SelectContent>
 												</Select>
 												<FormMessage />
@@ -756,8 +1454,9 @@ export const FormularioPedidoCompra: React.FC = () => {
 														value={field.value}
 														decimalsLimit={2}
 														onValueChange={value => {
-															field.onChange(value || "");
-															calculateTotals();
+															const nextValue = value || "";
+															field.onChange(nextValue);
+															refreshTotals({ cotacao: nextValue });
 														}}
 														className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 													/>
@@ -789,8 +1488,9 @@ export const FormularioPedidoCompra: React.FC = () => {
 														value={field.value}
 														decimalsLimit={2}
 														onValueChange={value => {
-															field.onChange(value || "");
-															calculateTotals();
+															const nextValue = value || "";
+															field.onChange(nextValue);
+															refreshTotals({ valorFrete: nextValue });
 														}}
 														className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 													/>
@@ -819,8 +1519,9 @@ export const FormularioPedidoCompra: React.FC = () => {
 														value={field.value}
 														decimalsLimit={2}
 														onValueChange={value => {
-															field.onChange(value || "");
-															calculateTotals();
+															const nextValue = value || "";
+															field.onChange(nextValue);
+															refreshTotals({ valorComissao: nextValue });
 														}}
 														className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 													/>
@@ -861,12 +1562,12 @@ export const FormularioPedidoCompra: React.FC = () => {
 										type="button"
 										variant="outline"
 										onClick={handleCancel}
-										disabled={isLoading}
+										disabled={isSaving}
 									>
 										{t("purchaseOrders.form.actions.cancel")}
 									</Button>
-									<Button type="submit" disabled={isLoading}>
-										{isLoading
+									<Button type="submit" disabled={isSaving}>
+										{isSaving
 											? t("purchaseOrders.form.actions.saving")
 											: t("purchaseOrders.form.actions.save")}
 									</Button>

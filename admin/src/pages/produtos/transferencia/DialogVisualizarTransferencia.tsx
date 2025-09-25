@@ -12,7 +12,6 @@ import {
 	FormField,
 	FormItem,
 	FormLabel,
-	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -40,7 +39,6 @@ import { useForm } from "react-hook-form";
 import { format } from "date-fns";
 import { ptBR, es } from "date-fns/locale";
 import CurrencyInput from "react-currency-input-field";
-import { useCurrencyFormatter } from "@/hooks/useCurrencyFormatter";
 import { useTransferenciaEstoqueControllerFindOne } from "@/api-client";
 import type { TransferenciaEstoqueResponseDto } from "@/api-client/types";
 
@@ -55,7 +53,6 @@ export const DialogVisualizarTransferencia: React.FC<
 	DialogVisualizarTransferenciaProps
 > = ({ isOpen, onClose, publicId, parceiroId }) => {
 	const { t, i18n } = useTranslation("common");
-	const { formatCurrency } = useCurrencyFormatter();
 
 	const {
 		data: transferencia,
@@ -89,7 +86,7 @@ export const DialogVisualizarTransferencia: React.FC<
 			form.reset({
 				dataTransferencia: transferencia.dataTransferencia || "",
 				dataRecebimento: transferencia.dataRecebimento || "",
-				observacao: transferencia.observacao || "",
+				observacao: "", // Propriedade observacao não existe no DTO
 				valorTotal: transferencia.valorTotal || 0,
 			});
 		}
@@ -257,7 +254,7 @@ export const DialogVisualizarTransferencia: React.FC<
 													{transferencia.localOrigem.nome}
 												</div>
 												<div className="text-sm text-muted-foreground">
-													{transferencia.localOrigem.endereco}
+													{transferencia.localOrigem.descricao}
 												</div>
 												{transferencia.localOrigem.descricao && (
 													<div className="text-sm text-muted-foreground">
@@ -283,7 +280,7 @@ export const DialogVisualizarTransferencia: React.FC<
 													{transferencia.localDestino.nome}
 												</div>
 												<div className="text-sm text-muted-foreground">
-													{transferencia.localDestino.endereco}
+													{transferencia.localDestino.descricao}
 												</div>
 												{transferencia.localDestino.descricao && (
 													<div className="text-sm text-muted-foreground">
@@ -312,7 +309,7 @@ export const DialogVisualizarTransferencia: React.FC<
 													{transferencia.enviadoPorUsuario.nome}
 												</div>
 												<div className="text-sm text-muted-foreground">
-													{transferencia.enviadoPorUsuario.email}
+													{transferencia.enviadoPorUsuario.nome}
 												</div>
 											</div>
 										)}
@@ -335,7 +332,7 @@ export const DialogVisualizarTransferencia: React.FC<
 															{transferencia.recebidoPorUsuario.nome}
 														</div>
 														<div className="text-sm text-muted-foreground">
-															{transferencia.recebidoPorUsuario.email}
+															{transferencia.recebidoPorUsuario.nome}
 														</div>
 													</>
 												) : (
@@ -349,21 +346,7 @@ export const DialogVisualizarTransferencia: React.FC<
 								</Card>
 							</div>
 
-							{/* Observações */}
-							{transferencia?.observacao && (
-								<Card>
-									<CardHeader>
-										<CardTitle>{t("clients.labels.observations")}</CardTitle>
-									</CardHeader>
-									<CardContent>
-										<Textarea
-											value={transferencia.observacao}
-											disabled
-											className="min-h-[80px]"
-										/>
-									</CardContent>
-								</Card>
-							)}
+							{/* Seção de observações removida pois a propriedade observacao não existe no DTO */}
 
 							{/* Itens da Transferência */}
 							<Card>
@@ -393,16 +376,13 @@ export const DialogVisualizarTransferencia: React.FC<
 													(item, index) => (
 														<TableRow key={index}>
 															<TableCell className="font-mono">
-																{item.sku?.produto?.id
-																	.toString()
-																	.padStart(3, "0")}
-																-{item.sku?.id.toString().padStart(3, "0")}
+																{item.id.toString().padStart(3, "0")}
 															</TableCell>
-															<TableCell>{item.sku?.produto?.nome}</TableCell>
-															<TableCell>{item.sku?.cor || "-"}</TableCell>
-															<TableCell>{item.sku?.tamanho || "-"}</TableCell>
+															<TableCell>-</TableCell>
+															<TableCell>-</TableCell>
+															<TableCell>-</TableCell>
 															<TableCell className="font-medium">
-																{item.qtd}
+																- // Propriedades sku e qtd não existem no DTO
 															</TableCell>
 														</TableRow>
 													)

@@ -5,14 +5,28 @@
 
 import type { Fornecedor } from "./Fornecedor.ts";
 
+export type FornecedoresControllerFindActiveFornecedoresHeaderParams = {
+    /**
+     * @description ID do parceiro
+     * @type string
+    */
+    "x-parceiro-id": string;
+};
+
 /**
  * @description Lista de fornecedores ativos retornada com sucesso
 */
 export type FornecedoresControllerFindActiveFornecedores200 = Fornecedor[];
 
+/**
+ * @description Header x-parceiro-id é obrigatório
+*/
+export type FornecedoresControllerFindActiveFornecedores400 = any;
+
 export type FornecedoresControllerFindActiveFornecedoresQueryResponse = FornecedoresControllerFindActiveFornecedores200;
 
 export type FornecedoresControllerFindActiveFornecedoresQuery = {
     Response: FornecedoresControllerFindActiveFornecedores200;
-    Errors: any;
+    HeaderParams: FornecedoresControllerFindActiveFornecedoresHeaderParams;
+    Errors: FornecedoresControllerFindActiveFornecedores400;
 };

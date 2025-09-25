@@ -64,10 +64,16 @@ export const useUpdateFornecedor = () => {
 	});
 };
 
-export const useGetFornecedor = (publicId: string) => {
-	return useFornecedoresControllerFindOne(publicId, {
-		query: {
-			enabled: !!publicId,
+export const useGetFornecedor = (publicId: string, parceiroId: number) => {
+	return useFornecedoresControllerFindOne(
+		publicId,
+		{
+			"x-parceiro-id": parceiroId.toString(),
 		},
-	});
+		{
+			query: {
+				enabled: !!publicId && !!parceiroId,
+			},
+		}
+	);
 };

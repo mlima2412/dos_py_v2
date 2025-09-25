@@ -13,10 +13,23 @@ export type FornecedoresControllerActivateFornecedorPathParams = {
     publicId: string;
 };
 
+export type FornecedoresControllerActivateFornecedorHeaderParams = {
+    /**
+     * @description ID do parceiro
+     * @type string
+    */
+    "x-parceiro-id": string;
+};
+
 /**
  * @description Fornecedor ativado com sucesso
 */
 export type FornecedoresControllerActivateFornecedor200 = Fornecedor;
+
+/**
+ * @description Header x-parceiro-id é obrigatório
+*/
+export type FornecedoresControllerActivateFornecedor400 = any;
 
 /**
  * @description Fornecedor não encontrado
@@ -28,5 +41,6 @@ export type FornecedoresControllerActivateFornecedorMutationResponse = Fornecedo
 export type FornecedoresControllerActivateFornecedorMutation = {
     Response: FornecedoresControllerActivateFornecedor200;
     PathParams: FornecedoresControllerActivateFornecedorPathParams;
-    Errors: FornecedoresControllerActivateFornecedor404;
+    HeaderParams: FornecedoresControllerActivateFornecedorHeaderParams;
+    Errors: FornecedoresControllerActivateFornecedor400 | FornecedoresControllerActivateFornecedor404;
 };

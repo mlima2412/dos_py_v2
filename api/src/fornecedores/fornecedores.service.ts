@@ -66,7 +66,22 @@ export class FornecedoresService {
     return fornecedores as Fornecedor[];
   }
 
-  async findOne(publicId: string): Promise<Fornecedor> {
+  async findOne(publicId: string, parceiroId: number): Promise<Fornecedor> {
+    const fornecedor = await this.prisma.fornecedor.findFirst({
+      where: {
+        publicId,
+        parceiroId,
+      },
+    });
+
+    if (!fornecedor) {
+      throw new NotFoundException('Fornecedor não encontrado');
+    }
+
+    return fornecedor as Fornecedor;
+  }
+
+  async findOneWithoutParceiro(publicId: string): Promise<Fornecedor> {
     const fornecedor = await this.prisma.fornecedor.findUnique({
       where: { publicId },
     });
@@ -95,9 +110,12 @@ export class FornecedoresService {
   async update(
     publicId: string,
     updateFornecedorDto: UpdateFornecedorDto,
+    parceiroId?: number,
   ): Promise<Fornecedor> {
     // Verificar se o fornecedor existe
-    const existingFornecedor = await this.findOne(publicId);
+    const existingFornecedor = parceiroId
+      ? await this.findOne(publicId, parceiroId)
+      : await this.findOneWithoutParceiro(publicId);
 
     // Se está tentando atualizar o email, verificar se não está em uso
     if (
@@ -138,23 +156,42 @@ export class FornecedoresService {
     return fornecedor as Fornecedor;
   }
 
-  async findActiveFornecedores(): Promise<Fornecedor[]> {
+  async findActiveFornecedores(parceiroId: number): Promise<Fornecedor[]> {
     const fornecedores = await this.prisma.fornecedor.findMany({
-      where: { ativo: true },
+      where: {
+        ativo: true,
+        parceiroId,
+      },
       orderBy: { createdAt: 'desc' },
     });
     return fornecedores as Fornecedor[];
   }
 
-  async deactivateFornecedor(publicId: string): Promise<Fornecedor> {
-    return this.update(publicId, { ativo: false });
+  async deactivateFornecedor(
+    publicId: string,
+    parceiroId?: number,
+  ): Promise<Fornecedor> {
+    return this.update(publicId, { ativo: false }, parceiroId);
   }
 
-  async activateFornecedor(publicId: string): Promise<Fornecedor> {
-    return this.update(publicId, { ativo: true });
+  async activateFornecedor(
+    publicId: string,
+    parceiroId?: number,
+  ): Promise<Fornecedor> {
+    return this.update(publicId, { ativo: true }, parceiroId);
   }
 
-  async updateUltimaCompra(publicId: string): Promise<Fornecedor> {
+  async updateUltimaCompra(
+    publicId: string,
+    parceiroId?: number,
+  ): Promise<Fornecedor> {
+    // Verificar se o fornecedor existe e pertence ao parceiro
+    if (parceiroId) {
+      await this.findOne(publicId, parceiroId);
+    } else {
+      await this.findOneWithoutParceiro(publicId);
+    }
+
     const fornecedor = await this.prisma.fornecedor.update({
       where: { publicId },
       data: { ultimaCompra: new Date() },

@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { FornecedoresControllerDeactivateFornecedorPathParams, FornecedoresControllerDeactivateFornecedor200, FornecedoresControllerDeactivateFornecedor404, FornecedoresControllerDeactivateFornecedorMutationResponse } from "../types/FornecedoresControllerDeactivateFornecedor.ts";
+import type { FornecedoresControllerDeactivateFornecedorPathParams, FornecedoresControllerDeactivateFornecedorHeaderParams, FornecedoresControllerDeactivateFornecedor200, FornecedoresControllerDeactivateFornecedor400, FornecedoresControllerDeactivateFornecedor404, FornecedoresControllerDeactivateFornecedorMutationResponse } from "../types/FornecedoresControllerDeactivateFornecedor.ts";
 import type { ToZod } from "@kubb/plugin-zod/utils";
 import { fornecedorSchema } from "./fornecedorSchema.ts";
 import { z } from "zod";
@@ -12,10 +12,19 @@ export const fornecedoresControllerDeactivateFornecedorPathParamsSchema = z.obje
       "publicId": z.string().describe("ID público do fornecedor (UUID v7)")
       }) as unknown as ToZod<FornecedoresControllerDeactivateFornecedorPathParams>
 
+export const fornecedoresControllerDeactivateFornecedorHeaderParamsSchema = z.object({
+      "x-parceiro-id": z.string().describe("ID do parceiro")
+      }) as unknown as ToZod<FornecedoresControllerDeactivateFornecedorHeaderParams>
+
 /**
  * @description Fornecedor desativado com sucesso
  */
 export const fornecedoresControllerDeactivateFornecedor200Schema = z.lazy(() => fornecedorSchema) as unknown as ToZod<FornecedoresControllerDeactivateFornecedor200>
+
+/**
+ * @description Header x-parceiro-id é obrigatório
+ */
+export const fornecedoresControllerDeactivateFornecedor400Schema = z.unknown() as unknown as ToZod<FornecedoresControllerDeactivateFornecedor400>
 
 /**
  * @description Fornecedor não encontrado

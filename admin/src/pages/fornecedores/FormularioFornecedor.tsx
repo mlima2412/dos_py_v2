@@ -101,11 +101,17 @@ export function FormularioFornecedor() {
 
 	// Buscar dados do fornecedor para edição
 	const { data: fornecedorData, isLoading: isLoadingFornecedor } =
-		useFornecedoresControllerFindOne(publicId || "", {
-			query: {
-				enabled: isEditing && !!publicId,
+		useFornecedoresControllerFindOne(
+			publicId || "",
+			{
+				"x-parceiro-id": selectedPartnerId?.toString() || "",
 			},
-		}) as { data: Fornecedor | undefined; isLoading: boolean };
+			{
+				query: {
+					enabled: isEditing && !!publicId && !!selectedPartnerId,
+				},
+			}
+		) as { data: Fornecedor | undefined; isLoading: boolean };
 
 	// Preencher formulário com dados do fornecedor
 	useEffect(() => {
@@ -169,6 +175,9 @@ export function FormularioFornecedor() {
 				await updateMutation.mutateAsync({
 					publicId,
 					data: cleanData,
+					headers: {
+						"x-parceiro-id": selectedPartnerId?.toString() || "",
+					},
 				});
 			} else {
 				if (!selectedPartnerId) {

@@ -7,6 +7,8 @@ import {
   Param,
   ValidationPipe,
   UsePipes,
+  Headers,
+  BadRequestException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -15,6 +17,7 @@ import {
   ApiParam,
   ApiBody,
   ApiBearerAuth,
+  ApiHeader,
 } from '@nestjs/swagger';
 import { FornecedoresService } from './fornecedores.service';
 import { CreateFornecedorDto } from './dto/create-fornecedor.dto';
@@ -49,33 +52,58 @@ export class FornecedoresController {
     return this.fornecedoresService.create(createFornecedorDto);
   }
 
-  @Get(':parceiroId')
+  @Get()
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Listar todos os fornecedores de um parceiro' })
-  @ApiParam({
-    name: 'parceiroId',
+  @ApiHeader({
+    name: 'x-parceiro-id',
     description: 'ID do parceiro',
-    example: 1,
+    required: true,
+    example: '1',
   })
   @ApiResponse({
     status: 200,
     description: 'Lista de fornecedores retornada com sucesso',
     type: [Fornecedor],
   })
-  findAll(@Param('parceiroId') parceiroId: number): Promise<Fornecedor[]> {
-    return this.fornecedoresService.findAll(parceiroId);
+  @ApiResponse({
+    status: 400,
+    description: 'Header x-parceiro-id é obrigatório',
+  })
+  findAll(@Headers('x-parceiro-id') parceiroId: string): Promise<Fornecedor[]> {
+    if (!parceiroId) {
+      throw new BadRequestException('Header x-parceiro-id é obrigatório');
+    }
+    return this.fornecedoresService.findAll(parseInt(parceiroId, 10));
   }
 
   @Get('ativos')
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Listar fornecedores ativos' })
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro',
+    required: true,
+    example: '1',
+  })
   @ApiResponse({
     status: 200,
     description: 'Lista de fornecedores ativos retornada com sucesso',
     type: [Fornecedor],
   })
-  findActiveFornecedores(): Promise<Fornecedor[]> {
-    return this.fornecedoresService.findActiveFornecedores();
+  @ApiResponse({
+    status: 400,
+    description: 'Header x-parceiro-id é obrigatório',
+  })
+  findActiveFornecedores(
+    @Headers('x-parceiro-id') parceiroId: string,
+  ): Promise<Fornecedor[]> {
+    if (!parceiroId) {
+      throw new BadRequestException('Header x-parceiro-id é obrigatório');
+    }
+    return this.fornecedoresService.findActiveFornecedores(
+      parseInt(parceiroId, 10),
+    );
   }
 
   @Get(':publicId')
@@ -86,6 +114,12 @@ export class FornecedoresController {
     description: 'ID público do fornecedor (UUID v7)',
     example: '01234567-89ab-cdef-0123-456789abcdef',
   })
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro',
+    required: true,
+    example: '1',
+  })
   @ApiResponse({
     status: 200,
     description: 'Fornecedor encontrado com sucesso',
@@ -95,8 +129,18 @@ export class FornecedoresController {
     status: 404,
     description: 'Fornecedor não encontrado',
   })
-  findOne(@Param('publicId') publicId: string): Promise<Fornecedor> {
-    return this.fornecedoresService.findOne(publicId);
+  @ApiResponse({
+    status: 400,
+    description: 'Header x-parceiro-id é obrigatório',
+  })
+  findOne(
+    @Param('publicId') publicId: string,
+    @Headers('x-parceiro-id') parceiroId: string,
+  ): Promise<Fornecedor> {
+    if (!parceiroId) {
+      throw new BadRequestException('Header x-parceiro-id é obrigatório');
+    }
+    return this.fornecedoresService.findOne(publicId, parseInt(parceiroId, 10));
   }
 
   @Patch(':publicId')
@@ -106,6 +150,12 @@ export class FornecedoresController {
     name: 'publicId',
     description: 'ID público do fornecedor (UUID v7)',
     example: '01234567-89ab-cdef-0123-456789abcdef',
+  })
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro',
+    required: true,
+    example: '1',
   })
   @ApiBody({
     type: UpdateFornecedorDto,
@@ -124,11 +174,23 @@ export class FornecedoresController {
     status: 409,
     description: 'Email ou RUC/CNPJ já está em uso',
   })
+  @ApiResponse({
+    status: 400,
+    description: 'Header x-parceiro-id é obrigatório',
+  })
   update(
     @Param('publicId') publicId: string,
     @Body() updateFornecedorDto: UpdateFornecedorDto,
+    @Headers('x-parceiro-id') parceiroId: string,
   ): Promise<Fornecedor> {
-    return this.fornecedoresService.update(publicId, updateFornecedorDto);
+    if (!parceiroId) {
+      throw new BadRequestException('Header x-parceiro-id é obrigatório');
+    }
+    return this.fornecedoresService.update(
+      publicId,
+      updateFornecedorDto,
+      parseInt(parceiroId, 10),
+    );
   }
 
   @Patch(':publicId/desativar')
@@ -139,6 +201,12 @@ export class FornecedoresController {
     description: 'ID público do fornecedor (UUID v7)',
     example: '01234567-89ab-cdef-0123-456789abcdef',
   })
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro',
+    required: true,
+    example: '1',
+  })
   @ApiResponse({
     status: 200,
     description: 'Fornecedor desativado com sucesso',
@@ -148,10 +216,21 @@ export class FornecedoresController {
     status: 404,
     description: 'Fornecedor não encontrado',
   })
+  @ApiResponse({
+    status: 400,
+    description: 'Header x-parceiro-id é obrigatório',
+  })
   deactivateFornecedor(
     @Param('publicId') publicId: string,
+    @Headers('x-parceiro-id') parceiroId: string,
   ): Promise<Fornecedor> {
-    return this.fornecedoresService.deactivateFornecedor(publicId);
+    if (!parceiroId) {
+      throw new BadRequestException('Header x-parceiro-id é obrigatório');
+    }
+    return this.fornecedoresService.deactivateFornecedor(
+      publicId,
+      parseInt(parceiroId, 10),
+    );
   }
 
   @Patch(':publicId/ativar')
@@ -162,6 +241,12 @@ export class FornecedoresController {
     description: 'ID público do fornecedor (UUID v7)',
     example: '01234567-89ab-cdef-0123-456789abcdef',
   })
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro',
+    required: true,
+    example: '1',
+  })
   @ApiResponse({
     status: 200,
     description: 'Fornecedor ativado com sucesso',
@@ -171,8 +256,21 @@ export class FornecedoresController {
     status: 404,
     description: 'Fornecedor não encontrado',
   })
-  activateFornecedor(@Param('publicId') publicId: string): Promise<Fornecedor> {
-    return this.fornecedoresService.activateFornecedor(publicId);
+  @ApiResponse({
+    status: 400,
+    description: 'Header x-parceiro-id é obrigatório',
+  })
+  activateFornecedor(
+    @Param('publicId') publicId: string,
+    @Headers('x-parceiro-id') parceiroId: string,
+  ): Promise<Fornecedor> {
+    if (!parceiroId) {
+      throw new BadRequestException('Header x-parceiro-id é obrigatório');
+    }
+    return this.fornecedoresService.activateFornecedor(
+      publicId,
+      parseInt(parceiroId, 10),
+    );
   }
 
   @Patch(':publicId/ultima-compra')
@@ -183,6 +281,12 @@ export class FornecedoresController {
     description: 'ID público do fornecedor (UUID v7)',
     example: '01234567-89ab-cdef-0123-456789abcdef',
   })
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro',
+    required: true,
+    example: '1',
+  })
   @ApiResponse({
     status: 200,
     description: 'Data da última compra atualizada com sucesso',
@@ -192,7 +296,20 @@ export class FornecedoresController {
     status: 404,
     description: 'Fornecedor não encontrado',
   })
-  updateUltimaCompra(@Param('publicId') publicId: string): Promise<Fornecedor> {
-    return this.fornecedoresService.updateUltimaCompra(publicId);
+  @ApiResponse({
+    status: 400,
+    description: 'Header x-parceiro-id é obrigatório',
+  })
+  updateUltimaCompra(
+    @Param('publicId') publicId: string,
+    @Headers('x-parceiro-id') parceiroId: string,
+  ): Promise<Fornecedor> {
+    if (!parceiroId) {
+      throw new BadRequestException('Header x-parceiro-id é obrigatório');
+    }
+    return this.fornecedoresService.updateUltimaCompra(
+      publicId,
+      parseInt(parceiroId, 10),
+    );
   }
 }

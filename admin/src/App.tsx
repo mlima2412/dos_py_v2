@@ -226,6 +226,14 @@ function App() {
 											</ProtectedRoute>
 										}
 									/>
+									<Route
+										path="/pedidoCompra/visualizar/:publicId"
+										element={
+											<ProtectedRoute>
+												<FormularioPedidoCompra />
+											</ProtectedRoute>
+										}
+									/>
 									<Route path="/" element={<Navigate to="/inicio" replace />} />
 									{/* Rota 404 - deve ser a última */}
 									<Route path="*" element={<NotFound />} />

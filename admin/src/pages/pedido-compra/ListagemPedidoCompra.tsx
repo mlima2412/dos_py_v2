@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { usePartner } from "@/hooks/usePartner";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -43,64 +44,59 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Eye, Trash2, Printer, Plus } from "lucide-react";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import {
+	usePedidoCompraControllerFindAll,
+	usePedidoCompraControllerRemove,
+	pedidoCompraControllerFindAllQueryKey,
+	useFornecedoresControllerFindActiveFornecedores,
+} from "@/api-client";
+import type { PedidoCompraStatusEnum, Fornecedor } from "@/api-client/types";
 
-// Tipos para os dados mockados
-interface MockSupplier {
-	id: string;
-	nome: string;
-}
+type OrderStatusKey = "pending" | "confirmed" | "delivered" | "cancelled";
 
-interface MockPurchaseOrder {
-	id: string;
-	fornecedorId: string;
-	fornecedorNome: string;
+interface PurchaseOrderListItem {
+	id: number;
+	publicId: string;
+	supplierId: string;
+	supplierName: string;
 	dataPedido: string;
 	valorTotal: number;
-	status: "pending" | "confirmed" | "delivered" | "cancelled";
-	parceiroId: string;
+	status: OrderStatusKey;
 }
 
-// Dados mockados
-const mockSuppliers: MockSupplier[] = [
-	{ id: "1", nome: "Fornecedor ABC Ltda" },
-	{ id: "2", nome: "Distribuidora XYZ S.A." },
-	{ id: "3", nome: "Comercial DEF Ltda" },
-	{ id: "4", nome: "Importadora GHI Ltda" },
-	{ id: "5", nome: "Atacadista JKL S.A." },
-];
+const STATUS_MAP: Record<number, OrderStatusKey> = {
+	1: "pending",
+	2: "confirmed",
+	3: "delivered",
+};
 
-const generateMockOrders = (parceiroId: string): MockPurchaseOrder[] => {
-	const statuses: Array<"pending" | "confirmed" | "delivered" | "cancelled"> = [
-		"pending",
-		"confirmed",
-		"delivered",
-		"cancelled",
-	];
-	const orders: MockPurchaseOrder[] = [];
+const mapStatusToKey = (
+	status?: PedidoCompraStatusEnum | number | null
+): OrderStatusKey => {
+	if (!status) return "pending";
+	return STATUS_MAP[Number(status)] ?? "pending";
+};
 
-	for (let i = 1; i <= 50; i++) {
-		const supplier =
-			mockSuppliers[Math.floor(Math.random() * mockSuppliers.length)];
-		const status = statuses[Math.floor(Math.random() * statuses.length)];
-		const dataPedido = new Date();
-		dataPedido.setDate(dataPedido.getDate() - Math.floor(Math.random() * 90));
-
-		orders.push({
-			id: `PO-${parceiroId}-${i.toString().padStart(3, "0")}`,
-			fornecedorId: supplier.id,
-			fornecedorNome: supplier.nome,
-			dataPedido: dataPedido.toISOString().split("T")[0],
-			valorTotal: Math.floor(Math.random() * 50000) + 1000,
-			status,
-			parceiroId,
-		});
+const parseCurrencyValue = (value: unknown): number => {
+	if (typeof value === "number") {
+		return value;
 	}
-
-	return orders.sort(
-		(a, b) =>
-			new Date(b.dataPedido).getTime() - new Date(a.dataPedido).getTime()
-	);
+	if (typeof value === "string") {
+		const parsed = Number(value);
+		return Number.isNaN(parsed) ? 0 : parsed;
+	}
+	if (value && typeof value === "object") {
+		const nested = (value as { value?: unknown }).value;
+		if (typeof nested === "number") {
+			return nested;
+		}
+		if (typeof nested === "string") {
+			const parsed = Number(nested);
+			return Number.isNaN(parsed) ? 0 : parsed;
+		}
+	}
+	return 0;
 };
 
 // Função para formatar currency baseada no parceiro
@@ -126,7 +122,7 @@ const getStatusBadgeVariant = (status: string) => {
 		case "confirmed":
 			return "default";
 		case "delivered":
-			return "success";
+			return "default";
 		case "cancelled":
 			return "destructive";
 		default:
@@ -138,52 +134,122 @@ export const ListagemPedidoCompra: React.FC = () => {
 	const { t } = useTranslation("common");
 	const { selectedPartnerId, selectedPartnerLocale, selectedPartnerIsoCode } =
 		usePartner();
+	const navigate = useNavigate();
+	const queryClient = useQueryClient();
 
 	const [searchTerm, setSearchTerm] = useState("");
 	const debouncedSearchTerm = useDebounce(searchTerm, 300);
 	const [selectedSupplier, setSelectedSupplier] = useState<string>("all");
 	const [currentPage, setCurrentPage] = useState(1);
 	const [ordersPerPage] = useState(10);
-	const [mockOrders, setMockOrders] = useState<MockPurchaseOrder[]>([]);
-	const [isLoading, setIsLoading] = useState(false);
+	const [deletingOrderId, setDeletingOrderId] = useState<string | null>(null);
 
-	// Gerar dados mockados quando o parceiro mudar
-	useEffect(() => {
-		if (selectedPartnerId) {
-			setIsLoading(true);
-			// Simular carregamento
-			setTimeout(() => {
-				const orders = generateMockOrders(selectedPartnerId);
-				setMockOrders(orders);
-				setIsLoading(false);
-			}, 500);
-		}
-	}, [selectedPartnerId]);
+	const parceiroId = selectedPartnerId ? Number(selectedPartnerId) : null;
+
+	const { data: pedidosData, isLoading: isLoadingOrders } =
+		usePedidoCompraControllerFindAll(
+			{ "x-parceiro-id": parceiroId ?? 0 },
+			{
+				query: {
+					enabled: !!parceiroId,
+				},
+			}
+		);
+
+	const fornecedoresHeaders = useMemo(
+		() => ({
+			"x-parceiro-id": parceiroId?.toString() ?? "",
+		}),
+		[parceiroId]
+	);
+
+	const { data: fornecedoresData, isLoading: isLoadingFornecedores } =
+		useFornecedoresControllerFindActiveFornecedores(fornecedoresHeaders, {
+			query: {
+				enabled: !!parceiroId,
+			},
+		});
+
+	const removePedidoMutation = usePedidoCompraControllerRemove({
+		mutation: {
+			onSuccess: () => {
+				toast.success(t("purchaseOrders.messages.deleteSuccess"));
+				queryClient.invalidateQueries({
+					queryKey: pedidoCompraControllerFindAllQueryKey(),
+				});
+			},
+			onError: () => {
+				toast.error(
+					t("purchaseOrders.messages.deleteError", {
+						defaultValue: "Não foi possível excluir o pedido. Tente novamente.",
+					})
+				);
+			},
+			onSettled: () => {
+				setDeletingOrderId(null);
+			},
+		},
+	});
+
+	const isLoading = isLoadingOrders || isLoadingFornecedores;
+
+	const suppliers = useMemo(() => {
+		if (!fornecedoresData) return [];
+		if (!parceiroId) return fornecedoresData;
+		return fornecedoresData.filter(
+			(supplier: Fornecedor) => supplier.parceiroId === parceiroId
+		);
+	}, [fornecedoresData, parceiroId]);
+
+	const orders = useMemo<PurchaseOrderListItem[]>(() => {
+		if (!pedidosData) return [];
+
+		return pedidosData
+			.filter(order => !parceiroId || order.parceiroId === parceiroId)
+			.map(order => {
+				const supplierId = order.fornecedorId
+					? order.fornecedorId.toString()
+					: "";
+				const supplierFromOrder = (order as { fornecedor?: { nome?: string } })
+					.fornecedor?.nome;
+				const supplierFromList = suppliers.find(
+					(supplier: Fornecedor) => supplier.id === order.fornecedorId
+				)?.nome;
+				const supplierName = supplierFromOrder || supplierFromList || "-";
+
+				return {
+					id: order.id,
+					publicId: order.publicId || order.id.toString(),
+					supplierId,
+					supplierName,
+					dataPedido: order.dataPedido,
+					valorTotal: parseCurrencyValue(order.valorTotal),
+					status: mapStatusToKey(order.status),
+				};
+			});
+	}, [pedidosData, suppliers, parceiroId]);
 
 	// Filtrar pedidos baseado na busca e fornecedor
 	const filteredOrders = useMemo(() => {
-		let filtered = mockOrders;
+		let filtered = orders;
 
-		// Filtrar por termo de busca (usando debouncedSearchTerm)
 		if (debouncedSearchTerm) {
-			filtered = filtered.filter(
-				order =>
-					order.id.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-					order.fornecedorNome
-						.toLowerCase()
-						.includes(debouncedSearchTerm.toLowerCase())
-			);
+			const term = debouncedSearchTerm.toLowerCase();
+			filtered = filtered.filter(order => {
+				const orderId = order.publicId.toLowerCase();
+				const supplier = order.supplierName.toLowerCase();
+				return orderId.includes(term) || supplier.includes(term);
+			});
 		}
 
-		// Filtrar por fornecedor
 		if (selectedSupplier !== "all") {
 			filtered = filtered.filter(
-				order => order.fornecedorId === selectedSupplier
+				order => order.supplierId === selectedSupplier
 			);
 		}
 
 		return filtered;
-	}, [mockOrders, debouncedSearchTerm, selectedSupplier]);
+	}, [orders, debouncedSearchTerm, selectedSupplier]);
 
 	// Calcular paginação
 	const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
@@ -206,19 +272,24 @@ export const ListagemPedidoCompra: React.FC = () => {
 		setCurrentPage(page);
 	};
 
-	const handleDeleteOrder = (orderId: string) => {
-		setMockOrders(prev => prev.filter(order => order.id !== orderId));
-		toast.success(t("purchaseOrders.messages.deleteSuccess"));
+	const handleDeleteOrder = (orderPublicId: string) => {
+		if (!parceiroId) return;
+		setDeletingOrderId(orderPublicId);
+		removePedidoMutation.mutate({
+			publicId: orderPublicId,
+			headers: {
+				"x-parceiro-id": parceiroId,
+			},
+		});
 	};
 
-	const handleViewOrder = (orderId: string) => {
-		// TODO: Implementar visualização do pedido
-		console.log("Visualizar pedido:", orderId);
+	const handleViewOrder = (orderPublicId: string) => {
+		navigate(`/pedidoCompra/visualizar/${orderPublicId}`);
 	};
 
-	const handlePrintOrder = (orderId: string) => {
+	const handlePrintOrder = (orderPublicId: string) => {
 		// TODO: Implementar impressão do pedido
-		console.log("Imprimir pedido:", orderId);
+		console.log("Imprimir pedido:", orderPublicId);
 	};
 
 	if (!selectedPartnerId) {
@@ -278,8 +349,8 @@ export const ListagemPedidoCompra: React.FC = () => {
 								<SelectItem value="all">
 									{t("purchaseOrders.filters.allSuppliers")}
 								</SelectItem>
-								{mockSuppliers.map(supplier => (
-									<SelectItem key={supplier.id} value={supplier.id}>
+								{suppliers.map(supplier => (
+									<SelectItem key={supplier.id} value={supplier.id.toString()}>
 										{supplier.nome}
 									</SelectItem>
 								))}
@@ -333,12 +404,14 @@ export const ListagemPedidoCompra: React.FC = () => {
 									</TableHeader>
 									<TableBody>
 										{currentOrders.map(order => (
-											<TableRow key={order.id} className="group">
+											<TableRow key={order.publicId} className="group">
 												<TableCell className="font-medium">
-													{order.fornecedorNome}
+													{order.supplierName}
 												</TableCell>
 												<TableCell className="text-center">
-													{new Date(order.dataPedido).toLocaleDateString()}
+													{order.dataPedido
+														? new Date(order.dataPedido).toLocaleDateString()
+														: "-"}
 												</TableCell>
 												<TableCell className="text-right font-medium">
 													{formatCurrency(
@@ -357,7 +430,7 @@ export const ListagemPedidoCompra: React.FC = () => {
 														<Button
 															variant="ghost"
 															size="sm"
-															onClick={() => handleViewOrder(order.id)}
+															onClick={() => handleViewOrder(order.publicId)}
 															title={t("purchaseOrders.actions.view")}
 														>
 															<Eye className="h-4 w-4" />
@@ -365,7 +438,7 @@ export const ListagemPedidoCompra: React.FC = () => {
 														<Button
 															variant="ghost"
 															size="sm"
-															onClick={() => handlePrintOrder(order.id)}
+															onClick={() => handlePrintOrder(order.publicId)}
 															title={t("purchaseOrders.actions.print")}
 														>
 															<Printer className="h-4 w-4" />
@@ -400,7 +473,13 @@ export const ListagemPedidoCompra: React.FC = () => {
 																		)}
 																	</AlertDialogCancel>
 																	<AlertDialogAction
-																		onClick={() => handleDeleteOrder(order.id)}
+																		onClick={() =>
+																			handleDeleteOrder(order.publicId)
+																		}
+																		disabled={
+																			deletingOrderId === order.publicId &&
+																			removePedidoMutation.isPending
+																		}
 																	>
 																		{t(
 																			"purchaseOrders.messages.deleteConfirmConfirm"

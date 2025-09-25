@@ -5,12 +5,12 @@
 
 import type { Fornecedor } from "./Fornecedor.ts";
 
-export type FornecedoresControllerFindAllPathParams = {
+export type FornecedoresControllerFindAllHeaderParams = {
     /**
      * @description ID do parceiro
-     * @type number
+     * @type string
     */
-    parceiroId: number;
+    "x-parceiro-id": string;
 };
 
 /**
@@ -18,10 +18,15 @@ export type FornecedoresControllerFindAllPathParams = {
 */
 export type FornecedoresControllerFindAll200 = Fornecedor[];
 
+/**
+ * @description Header x-parceiro-id é obrigatório
+*/
+export type FornecedoresControllerFindAll400 = any;
+
 export type FornecedoresControllerFindAllQueryResponse = FornecedoresControllerFindAll200;
 
 export type FornecedoresControllerFindAllQuery = {
     Response: FornecedoresControllerFindAll200;
-    PathParams: FornecedoresControllerFindAllPathParams;
-    Errors: any;
+    HeaderParams: FornecedoresControllerFindAllHeaderParams;
+    Errors: FornecedoresControllerFindAll400;
 };

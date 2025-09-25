@@ -13,10 +13,23 @@ export type FornecedoresControllerUpdateUltimaCompraPathParams = {
     publicId: string;
 };
 
+export type FornecedoresControllerUpdateUltimaCompraHeaderParams = {
+    /**
+     * @description ID do parceiro
+     * @type string
+    */
+    "x-parceiro-id": string;
+};
+
 /**
  * @description Data da última compra atualizada com sucesso
 */
 export type FornecedoresControllerUpdateUltimaCompra200 = Fornecedor;
+
+/**
+ * @description Header x-parceiro-id é obrigatório
+*/
+export type FornecedoresControllerUpdateUltimaCompra400 = any;
 
 /**
  * @description Fornecedor não encontrado
@@ -28,5 +41,6 @@ export type FornecedoresControllerUpdateUltimaCompraMutationResponse = Fornecedo
 export type FornecedoresControllerUpdateUltimaCompraMutation = {
     Response: FornecedoresControllerUpdateUltimaCompra200;
     PathParams: FornecedoresControllerUpdateUltimaCompraPathParams;
-    Errors: FornecedoresControllerUpdateUltimaCompra404;
+    HeaderParams: FornecedoresControllerUpdateUltimaCompraHeaderParams;
+    Errors: FornecedoresControllerUpdateUltimaCompra400 | FornecedoresControllerUpdateUltimaCompra404;
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -31,7 +31,6 @@ import {
 	useFormaPagamento,
 	useFormaPagamentoMutations,
 } from "@/hooks/useFormasPagamento";
-import { createFormaPagamentoDtoSchema } from "@/api-client/schemas/createFormaPagamentoDtoSchema";
 
 // Schema de validação baseado no DTO
 const formaPagamentoSchema = z.object({

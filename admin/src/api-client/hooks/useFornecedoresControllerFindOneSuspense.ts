@@ -4,7 +4,7 @@
 */
 
 import fetch from "@/lib/fetch-client";
-import type { FornecedoresControllerFindOneQueryResponse, FornecedoresControllerFindOnePathParams, FornecedoresControllerFindOne404 } from "../types/FornecedoresControllerFindOne.ts";
+import type { FornecedoresControllerFindOneQueryResponse, FornecedoresControllerFindOnePathParams, FornecedoresControllerFindOneHeaderParams, FornecedoresControllerFindOne400, FornecedoresControllerFindOne404 } from "../types/FornecedoresControllerFindOne.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
@@ -17,23 +17,23 @@ export type FornecedoresControllerFindOneSuspenseQueryKey = ReturnType<typeof fo
  * @summary Buscar fornecedor por ID público
  * {@link /fornecedores/:publicId}
  */
-export async function fornecedoresControllerFindOneSuspense(publicId: FornecedoresControllerFindOnePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+export async function fornecedoresControllerFindOneSuspense(publicId: FornecedoresControllerFindOnePathParams["publicId"], headers: FornecedoresControllerFindOneHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
   const { client:request = fetch, ...requestConfig } = config
 
 
-const res = await request<FornecedoresControllerFindOneQueryResponse, ResponseErrorConfig<FornecedoresControllerFindOne404>, unknown>({ method : "GET", url : `/fornecedores/${publicId}`, ... requestConfig })
+const res = await request<FornecedoresControllerFindOneQueryResponse, ResponseErrorConfig<FornecedoresControllerFindOne400 | FornecedoresControllerFindOne404>, unknown>({ method : "GET", url : `/fornecedores/${publicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
 return res.data
 }
 
-export function fornecedoresControllerFindOneSuspenseQueryOptions(publicId: FornecedoresControllerFindOnePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+export function fornecedoresControllerFindOneSuspenseQueryOptions(publicId: FornecedoresControllerFindOnePathParams["publicId"], headers: FornecedoresControllerFindOneHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
   
         const queryKey = fornecedoresControllerFindOneSuspenseQueryKey(publicId)
-        return queryOptions<FornecedoresControllerFindOneQueryResponse, ResponseErrorConfig<FornecedoresControllerFindOne404>, FornecedoresControllerFindOneQueryResponse, typeof queryKey>({
+        return queryOptions<FornecedoresControllerFindOneQueryResponse, ResponseErrorConfig<FornecedoresControllerFindOne400 | FornecedoresControllerFindOne404>, FornecedoresControllerFindOneQueryResponse, typeof queryKey>({
          enabled: !!(publicId),
          queryKey,
          queryFn: async ({ signal }) => {
             config.signal = signal
-            return fornecedoresControllerFindOneSuspense(publicId, config)
+            return fornecedoresControllerFindOneSuspense(publicId, headers, config)
          },
         })
   
@@ -43,9 +43,9 @@ export function fornecedoresControllerFindOneSuspenseQueryOptions(publicId: Forn
  * @summary Buscar fornecedor por ID público
  * {@link /fornecedores/:publicId}
  */
-export function useFornecedoresControllerFindOneSuspense<TData = FornecedoresControllerFindOneQueryResponse, TQueryKey extends QueryKey = FornecedoresControllerFindOneSuspenseQueryKey>(publicId: FornecedoresControllerFindOnePathParams["publicId"], options: 
+export function useFornecedoresControllerFindOneSuspense<TData = FornecedoresControllerFindOneQueryResponse, TQueryKey extends QueryKey = FornecedoresControllerFindOneSuspenseQueryKey>(publicId: FornecedoresControllerFindOnePathParams["publicId"], headers: FornecedoresControllerFindOneHeaderParams, options: 
   {
-    query?: Partial<UseSuspenseQueryOptions<FornecedoresControllerFindOneQueryResponse, ResponseErrorConfig<FornecedoresControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
+    query?: Partial<UseSuspenseQueryOptions<FornecedoresControllerFindOneQueryResponse, ResponseErrorConfig<FornecedoresControllerFindOne400 | FornecedoresControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
     client?: Partial<RequestConfig> & { client?: typeof fetch }
   }
    = {}) {
@@ -54,10 +54,10 @@ export function useFornecedoresControllerFindOneSuspense<TData = FornecedoresCon
          const queryKey = queryOptions?.queryKey ?? fornecedoresControllerFindOneSuspenseQueryKey(publicId)
   
          const query = useSuspenseQuery({
-          ...fornecedoresControllerFindOneSuspenseQueryOptions(publicId, config),
+          ...fornecedoresControllerFindOneSuspenseQueryOptions(publicId, headers, config),
           queryKey,
           ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<FornecedoresControllerFindOne404>> & { queryKey: TQueryKey }
+         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<FornecedoresControllerFindOne400 | FornecedoresControllerFindOne404>> & { queryKey: TQueryKey }
   
          query.queryKey = queryKey as TQueryKey
   

@@ -3,18 +3,23 @@
 * Do not edit manually.
 */
 
-import type { FornecedoresControllerFindAllPathParams, FornecedoresControllerFindAll200, FornecedoresControllerFindAllQueryResponse } from "../types/FornecedoresControllerFindAll.ts";
+import type { FornecedoresControllerFindAllHeaderParams, FornecedoresControllerFindAll200, FornecedoresControllerFindAll400, FornecedoresControllerFindAllQueryResponse } from "../types/FornecedoresControllerFindAll.ts";
 import type { ToZod } from "@kubb/plugin-zod/utils";
 import { fornecedorSchema } from "./fornecedorSchema.ts";
 import { z } from "zod";
 
-export const fornecedoresControllerFindAllPathParamsSchema = z.object({
-      "parceiroId": z.coerce.number().describe("ID do parceiro")
-      }) as unknown as ToZod<FornecedoresControllerFindAllPathParams>
+export const fornecedoresControllerFindAllHeaderParamsSchema = z.object({
+      "x-parceiro-id": z.string().describe("ID do parceiro")
+      }) as unknown as ToZod<FornecedoresControllerFindAllHeaderParams>
 
 /**
  * @description Lista de fornecedores retornada com sucesso
  */
 export const fornecedoresControllerFindAll200Schema = z.array(z.lazy(() => fornecedorSchema)) as unknown as ToZod<FornecedoresControllerFindAll200>
+
+/**
+ * @description Header x-parceiro-id é obrigatório
+ */
+export const fornecedoresControllerFindAll400Schema = z.unknown() as unknown as ToZod<FornecedoresControllerFindAll400>
 
 export const fornecedoresControllerFindAllQueryResponseSchema = z.lazy(() => fornecedoresControllerFindAll200Schema) as unknown as ToZod<FornecedoresControllerFindAllQueryResponse>

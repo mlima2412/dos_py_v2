@@ -13,10 +13,23 @@ export type FornecedoresControllerFindOnePathParams = {
     publicId: string;
 };
 
+export type FornecedoresControllerFindOneHeaderParams = {
+    /**
+     * @description ID do parceiro
+     * @type string
+    */
+    "x-parceiro-id": string;
+};
+
 /**
  * @description Fornecedor encontrado com sucesso
 */
 export type FornecedoresControllerFindOne200 = Fornecedor;
+
+/**
+ * @description Header x-parceiro-id é obrigatório
+*/
+export type FornecedoresControllerFindOne400 = any;
 
 /**
  * @description Fornecedor não encontrado
@@ -28,5 +41,6 @@ export type FornecedoresControllerFindOneQueryResponse = FornecedoresControllerF
 export type FornecedoresControllerFindOneQuery = {
     Response: FornecedoresControllerFindOne200;
     PathParams: FornecedoresControllerFindOnePathParams;
-    Errors: FornecedoresControllerFindOne404;
+    HeaderParams: FornecedoresControllerFindOneHeaderParams;
+    Errors: FornecedoresControllerFindOne400 | FornecedoresControllerFindOne404;
 };

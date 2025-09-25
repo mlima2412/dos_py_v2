@@ -4,7 +4,7 @@
 */
 
 import fetch from "@/lib/fetch-client";
-import type { FornecedoresControllerUpdateUltimaCompraMutationResponse, FornecedoresControllerUpdateUltimaCompraPathParams, FornecedoresControllerUpdateUltimaCompra404 } from "../types/FornecedoresControllerUpdateUltimaCompra.ts";
+import type { FornecedoresControllerUpdateUltimaCompraMutationResponse, FornecedoresControllerUpdateUltimaCompraPathParams, FornecedoresControllerUpdateUltimaCompraHeaderParams, FornecedoresControllerUpdateUltimaCompra400, FornecedoresControllerUpdateUltimaCompra404 } from "../types/FornecedoresControllerUpdateUltimaCompra.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
@@ -17,11 +17,11 @@ export type FornecedoresControllerUpdateUltimaCompraMutationKey = ReturnType<typ
  * @summary Atualizar data da última compra
  * {@link /fornecedores/:publicId/ultima-compra}
  */
-export async function fornecedoresControllerUpdateUltimaCompra(publicId: FornecedoresControllerUpdateUltimaCompraPathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+export async function fornecedoresControllerUpdateUltimaCompra(publicId: FornecedoresControllerUpdateUltimaCompraPathParams["publicId"], headers: FornecedoresControllerUpdateUltimaCompraHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
   const { client:request = fetch, ...requestConfig } = config
 
 
-const res = await request<FornecedoresControllerUpdateUltimaCompraMutationResponse, ResponseErrorConfig<FornecedoresControllerUpdateUltimaCompra404>, unknown>({ method : "PATCH", url : `/fornecedores/${publicId}/ultima-compra`, ... requestConfig })
+const res = await request<FornecedoresControllerUpdateUltimaCompraMutationResponse, ResponseErrorConfig<FornecedoresControllerUpdateUltimaCompra400 | FornecedoresControllerUpdateUltimaCompra404>, unknown>({ method : "PATCH", url : `/fornecedores/${publicId}/ultima-compra`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
 return res.data
 }
 
@@ -31,7 +31,7 @@ return res.data
  */
 export function useFornecedoresControllerUpdateUltimaCompra<TContext>(options: 
   {
-    mutation?: UseMutationOptions<FornecedoresControllerUpdateUltimaCompraMutationResponse, ResponseErrorConfig<FornecedoresControllerUpdateUltimaCompra404>, {publicId: FornecedoresControllerUpdateUltimaCompraPathParams["publicId"]}, TContext> & { client?: QueryClient },
+    mutation?: UseMutationOptions<FornecedoresControllerUpdateUltimaCompraMutationResponse, ResponseErrorConfig<FornecedoresControllerUpdateUltimaCompra400 | FornecedoresControllerUpdateUltimaCompra404>, {publicId: FornecedoresControllerUpdateUltimaCompraPathParams["publicId"], headers: FornecedoresControllerUpdateUltimaCompraHeaderParams}, TContext> & { client?: QueryClient },
     client?: Partial<RequestConfig> & { client?: typeof fetch },
   }
    = {}) {
@@ -40,9 +40,9 @@ export function useFornecedoresControllerUpdateUltimaCompra<TContext>(options:
           const { client: queryClient, ...mutationOptions } = mutation;
           const mutationKey = mutationOptions.mutationKey ?? fornecedoresControllerUpdateUltimaCompraMutationKey()
   
-          return useMutation<FornecedoresControllerUpdateUltimaCompraMutationResponse, ResponseErrorConfig<FornecedoresControllerUpdateUltimaCompra404>, {publicId: FornecedoresControllerUpdateUltimaCompraPathParams["publicId"]}, TContext>({
-            mutationFn: async({ publicId }) => {
-              return fornecedoresControllerUpdateUltimaCompra(publicId, config)
+          return useMutation<FornecedoresControllerUpdateUltimaCompraMutationResponse, ResponseErrorConfig<FornecedoresControllerUpdateUltimaCompra400 | FornecedoresControllerUpdateUltimaCompra404>, {publicId: FornecedoresControllerUpdateUltimaCompraPathParams["publicId"], headers: FornecedoresControllerUpdateUltimaCompraHeaderParams}, TContext>({
+            mutationFn: async({ publicId, headers }) => {
+              return fornecedoresControllerUpdateUltimaCompra(publicId, headers, config)
             },
             mutationKey,
             ...mutationOptions

@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { FornecedoresControllerUpdatePathParams, FornecedoresControllerUpdate200, FornecedoresControllerUpdate404, FornecedoresControllerUpdate409, FornecedoresControllerUpdateMutationRequest, FornecedoresControllerUpdateMutationResponse } from "../types/FornecedoresControllerUpdate.ts";
+import type { FornecedoresControllerUpdatePathParams, FornecedoresControllerUpdateHeaderParams, FornecedoresControllerUpdate200, FornecedoresControllerUpdate400, FornecedoresControllerUpdate404, FornecedoresControllerUpdate409, FornecedoresControllerUpdateMutationRequest, FornecedoresControllerUpdateMutationResponse } from "../types/FornecedoresControllerUpdate.ts";
 import type { ToZod } from "@kubb/plugin-zod/utils";
 import { fornecedorSchema } from "./fornecedorSchema.ts";
 import { updateFornecedorDtoSchema } from "./updateFornecedorDtoSchema.ts";
@@ -13,10 +13,19 @@ export const fornecedoresControllerUpdatePathParamsSchema = z.object({
       "publicId": z.string().describe("ID público do fornecedor (UUID v7)")
       }) as unknown as ToZod<FornecedoresControllerUpdatePathParams>
 
+export const fornecedoresControllerUpdateHeaderParamsSchema = z.object({
+      "x-parceiro-id": z.string().describe("ID do parceiro")
+      }) as unknown as ToZod<FornecedoresControllerUpdateHeaderParams>
+
 /**
  * @description Fornecedor atualizado com sucesso
  */
 export const fornecedoresControllerUpdate200Schema = z.lazy(() => fornecedorSchema) as unknown as ToZod<FornecedoresControllerUpdate200>
+
+/**
+ * @description Header x-parceiro-id é obrigatório
+ */
+export const fornecedoresControllerUpdate400Schema = z.unknown() as unknown as ToZod<FornecedoresControllerUpdate400>
 
 /**
  * @description Fornecedor não encontrado

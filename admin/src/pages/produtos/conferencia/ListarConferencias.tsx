@@ -96,19 +96,18 @@ export const ListarConferencias: React.FC = () => {
 	const { completeConferencia } = useCompleteConferencia();
 
 	// Hook para eliminar conferência
-	const { mutate: deleteConferencia, isPending: isDeleting } =
-		useConferenciaEstoqueControllerRemove({
-			mutation: {
-				onSuccess: () => {
-					toast.success(t("conference.messages.deleteSuccess"));
-					// Recarregar dados após eliminação
-					window.location.reload();
-				},
-				onError: () => {
-					toast.error(t("conference.messages.deleteError"));
-				},
+	const { mutate: deleteConferencia } = useConferenciaEstoqueControllerRemove({
+		mutation: {
+			onSuccess: () => {
+				toast.success(t("conference.messages.deleteSuccess"));
+				// Recarregar dados após eliminação
+				window.location.reload();
 			},
-		});
+			onError: () => {
+				toast.error(t("conference.messages.deleteError"));
+			},
+		},
+	});
 
 	// Flatten dos dados para a tabela
 	const data = useMemo(() => {
@@ -138,15 +137,6 @@ export const ListarConferencias: React.FC = () => {
 	// Handlers para ações
 	const handleView = (conferencia: ConferenciaEstoque) => {
 		navigate(`/produtos/conferencia/visualizar/${conferencia.publicId}`);
-	};
-
-	const handleComplete = async (conferencia: ConferenciaEstoque) => {
-		try {
-			await completeConferencia(conferencia.publicId);
-			toast.success(t("conference.messages.completeSuccess"));
-		} catch (error) {
-			toast.error(t("conference.messages.completeError"));
-		}
 	};
 
 	const handleDelete = (conferencia: ConferenciaEstoque) => {

@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { FornecedoresControllerUpdateUltimaCompraPathParams, FornecedoresControllerUpdateUltimaCompra200, FornecedoresControllerUpdateUltimaCompra404, FornecedoresControllerUpdateUltimaCompraMutationResponse } from "../types/FornecedoresControllerUpdateUltimaCompra.ts";
+import type { FornecedoresControllerUpdateUltimaCompraPathParams, FornecedoresControllerUpdateUltimaCompraHeaderParams, FornecedoresControllerUpdateUltimaCompra200, FornecedoresControllerUpdateUltimaCompra400, FornecedoresControllerUpdateUltimaCompra404, FornecedoresControllerUpdateUltimaCompraMutationResponse } from "../types/FornecedoresControllerUpdateUltimaCompra.ts";
 import type { ToZod } from "@kubb/plugin-zod/utils";
 import { fornecedorSchema } from "./fornecedorSchema.ts";
 import { z } from "zod";
@@ -12,10 +12,19 @@ export const fornecedoresControllerUpdateUltimaCompraPathParamsSchema = z.object
       "publicId": z.string().describe("ID público do fornecedor (UUID v7)")
       }) as unknown as ToZod<FornecedoresControllerUpdateUltimaCompraPathParams>
 
+export const fornecedoresControllerUpdateUltimaCompraHeaderParamsSchema = z.object({
+      "x-parceiro-id": z.string().describe("ID do parceiro")
+      }) as unknown as ToZod<FornecedoresControllerUpdateUltimaCompraHeaderParams>
+
 /**
  * @description Data da última compra atualizada com sucesso
  */
 export const fornecedoresControllerUpdateUltimaCompra200Schema = z.lazy(() => fornecedorSchema) as unknown as ToZod<FornecedoresControllerUpdateUltimaCompra200>
+
+/**
+ * @description Header x-parceiro-id é obrigatório
+ */
+export const fornecedoresControllerUpdateUltimaCompra400Schema = z.unknown() as unknown as ToZod<FornecedoresControllerUpdateUltimaCompra400>
 
 /**
  * @description Fornecedor não encontrado

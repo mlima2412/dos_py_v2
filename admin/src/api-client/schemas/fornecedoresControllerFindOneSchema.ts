@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { FornecedoresControllerFindOnePathParams, FornecedoresControllerFindOne200, FornecedoresControllerFindOne404, FornecedoresControllerFindOneQueryResponse } from "../types/FornecedoresControllerFindOne.ts";
+import type { FornecedoresControllerFindOnePathParams, FornecedoresControllerFindOneHeaderParams, FornecedoresControllerFindOne200, FornecedoresControllerFindOne400, FornecedoresControllerFindOne404, FornecedoresControllerFindOneQueryResponse } from "../types/FornecedoresControllerFindOne.ts";
 import type { ToZod } from "@kubb/plugin-zod/utils";
 import { fornecedorSchema } from "./fornecedorSchema.ts";
 import { z } from "zod";
@@ -12,10 +12,19 @@ export const fornecedoresControllerFindOnePathParamsSchema = z.object({
       "publicId": z.string().describe("ID público do fornecedor (UUID v7)")
       }) as unknown as ToZod<FornecedoresControllerFindOnePathParams>
 
+export const fornecedoresControllerFindOneHeaderParamsSchema = z.object({
+      "x-parceiro-id": z.string().describe("ID do parceiro")
+      }) as unknown as ToZod<FornecedoresControllerFindOneHeaderParams>
+
 /**
  * @description Fornecedor encontrado com sucesso
  */
 export const fornecedoresControllerFindOne200Schema = z.lazy(() => fornecedorSchema) as unknown as ToZod<FornecedoresControllerFindOne200>
+
+/**
+ * @description Header x-parceiro-id é obrigatório
+ */
+export const fornecedoresControllerFindOne400Schema = z.unknown() as unknown as ToZod<FornecedoresControllerFindOne400>
 
 /**
  * @description Fornecedor não encontrado
