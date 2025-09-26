@@ -973,6 +973,13 @@
 			"errorLoadingProducts": "Error al cargar productos",
 			"errorLoadingSkus": "Error al cargar SKUs"
 		},
+		"priceAdjust": {
+			"title": "Ajustar Precio del Producto",
+			"description": "Digite el nuevo precio para este producto. Esta alteración se aplicará solo a este pedido. Cuando los productos sean reabastecidos, el precio original se ajustará.",
+			"currentPrice": "Precio Actual",
+			"newPrice": "Nuevo Precio",
+			"enterNewPrice": "Digite el nuevo precio"
+		},
 		"adjust": {
 			"title": "Ajuste de Inventario",
 			"currentStock": "Inventario Actual",

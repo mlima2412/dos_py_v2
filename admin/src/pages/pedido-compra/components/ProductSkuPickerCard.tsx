@@ -42,7 +42,7 @@ const ProductSkuPickerCardComponent: React.FC<ProductSkuPickerCardProps> = ({
 }) => {
 	return (
 		<Card>
-			<CardContent className="pt-6 space-y-4">
+			<CardContent className="p-2 space-y-4">
 				{!isLocationSelected ? (
 					<div className="flex items-center justify-center py-8">
 						<div className="text-muted-foreground">{selectLocationMessage}</div>

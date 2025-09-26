@@ -182,7 +182,8 @@ export const FormularioPedidoCompra: React.FC = () => {
 		if (!selectedProductId || !produtosData) return null;
 		return (
 			produtosData.find(
-				(produto: ProdutosPorLocalResponseDto) => produto.id === selectedProductId
+				(produto: ProdutosPorLocalResponseDto) =>
+					produto.id === selectedProductId
 			) || null
 		);
 	}, [selectedProductId, produtosData]);
@@ -402,7 +403,8 @@ export const FormularioPedidoCompra: React.FC = () => {
 	const selectedProduct = useMemo(() => {
 		if (!selectedProductBase) return null;
 		const adjustedPrice =
-			selectedProductId !== null && adjustedPrices[selectedProductId] !== undefined
+			selectedProductId !== null &&
+			adjustedPrices[selectedProductId] !== undefined
 				? adjustedPrices[selectedProductId]
 				: selectedProductBase.precoCompra;
 		return {
@@ -837,27 +839,27 @@ export const FormularioPedidoCompra: React.FC = () => {
 				</div>
 			) : (
 				// Modo de edição - Apenas formulário básico
-				<Card>
-					<CardContent className="pt-6">
-							<PurchaseOrderBasicForm
-								form={form}
-								fornecedores={fornecedores}
-								locais={locais}
-								currencies={currencies}
-								isLoadingFornecedores={isLoadingFornecedores}
-								isLoadingLocations={isLoadingLocations}
-								isLoadingCurrencies={isLoadingCurrencies}
-								isFornecedorLocked={isFornecedorLocked}
-								isCotacaoLocked={isCotacaoLocked}
-								isCurrencyLocked={isCurrencyLocked}
-								parceiroIdNumber={parceiroIdNumber}
-								onSubmit={onSubmit}
-								onCancel={handleCancel}
-								onLocalChange={setLocalEntradaId}
-								refreshTotals={refreshTotals}
-								isSaving={isSaving}
-								t={t}
-							/>
+				<Card className="mt-4">
+					<CardContent className="pt-2">
+						<PurchaseOrderBasicForm
+							form={form}
+							fornecedores={fornecedores}
+							locais={locais}
+							currencies={currencies}
+							isLoadingFornecedores={isLoadingFornecedores}
+							isLoadingLocations={isLoadingLocations}
+							isLoadingCurrencies={isLoadingCurrencies}
+							isFornecedorLocked={isFornecedorLocked}
+							isCotacaoLocked={isCotacaoLocked}
+							isCurrencyLocked={isCurrencyLocked}
+							parceiroIdNumber={parceiroIdNumber}
+							onSubmit={onSubmit}
+							onCancel={handleCancel}
+							onLocalChange={setLocalEntradaId}
+							refreshTotals={refreshTotals}
+							isSaving={isSaving}
+							t={t}
+						/>
 					</CardContent>
 				</Card>
 			)}

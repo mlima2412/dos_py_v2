@@ -498,7 +498,7 @@
 		"selectDate": "Selecione uma data",
 		"selectDueDate": "Selecione a data de vencimento",
 		"selectPaymentType": "Selecione o tipo de pagamento",
-		"selectFirstInstallmentDate": "Selecione a data da primeira parcela",
+		"selectFirstInstallmentDate": "Primeira parcela",
 		"descriptionPlaceholder": "Digite a descrição da despesa",
 		"valuePlaceholder": "0,00",
 		"exchangePlaceholder": "1,00",
@@ -1119,7 +1119,7 @@
 		},
 		"priceAdjust": {
 			"title": "Ajustar Preço do Produto",
-			"description": "Digite o novo preço para este produto. Esta alteração será aplicada apenas na sessão atual.",
+			"description": "Digite o novo preço para este produto. Esta alteração será aplicada apenas neste pedido. Quando os produtos forem repostos, o preço original será ajustado.",
 			"currentPrice": "Preço Atual",
 			"newPrice": "Novo Preço",
 			"enterNewPrice": "Digite o novo preço"
