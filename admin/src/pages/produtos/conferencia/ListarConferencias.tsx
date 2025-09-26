@@ -44,12 +44,12 @@ import { toast } from "react-toastify";
 
 import {
 	useConferencias,
-	useCompleteConferencia,
+	// useCompleteConferencia, // Removido pois não é usado
 } from "@/hooks/useConferencias";
 import { useConferenciaEstoqueControllerRemove } from "@/api-client/hooks/useConferenciaEstoqueControllerRemove";
 import { usePartnerContext } from "@/hooks/usePartnerContext";
 import { useParceirosAll } from "@/hooks/useParceiros";
-import type { ConferenciaEstoque } from "@/api-client/types";
+import type { ConferenciaEstoqueResponseDto } from "@/api-client/types";
 import { useDebounce } from "@/hooks/useDebounce";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -68,7 +68,7 @@ export const ListarConferencias: React.FC = () => {
 	const [parceiroFilter, setParceiroFilter] = useState<string>("all");
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [conferenciaToDelete, setConferenciaToDelete] =
-		useState<ConferenciaEstoque | null>(null);
+		useState<ConferenciaEstoqueResponseDto | null>(null);
 
 	// Debounce para busca
 	const debouncedGlobalFilter = useDebounce(globalFilter, 500);
@@ -92,8 +92,8 @@ export const ListarConferencias: React.FC = () => {
 		parceiroId: parceiroFilter !== "all" ? Number(parceiroFilter) : undefined,
 	});
 
-	// Hook para completar conferência
-	const { completeConferencia } = useCompleteConferencia();
+	// Hook para completar conferência (comentado pois não é usado)
+	// const { completeConferencia } = useCompleteConferencia();
 
 	// Hook para eliminar conferência
 	const { mutate: deleteConferencia } = useConferenciaEstoqueControllerRemove({
@@ -117,12 +117,10 @@ export const ListarConferencias: React.FC = () => {
 				.filter(Boolean) || [];
 
 		// Filtrar por parceiro no frontend se necessário
+		// Nota: ConferenciaEstoqueResponseDto não tem parceiroId, então o filtro é feito no backend
 		if (parceiroFilter !== "all") {
-			allConferencias = allConferencias.filter(
-				(conferencia: ConferenciaEstoque) => {
-					return conferencia?.parceiroId?.toString() === parceiroFilter;
-				}
-			);
+			// O filtro por parceiro é feito no hook useConferencias
+			// Não é necessário filtrar aqui pois já vem filtrado da API
 		}
 
 		return allConferencias;
@@ -135,11 +133,11 @@ export const ListarConferencias: React.FC = () => {
 	const isMobile = useIsMobile();
 
 	// Handlers para ações
-	const handleView = (conferencia: ConferenciaEstoque) => {
+	const handleView = (conferencia: ConferenciaEstoqueResponseDto) => {
 		navigate(`/produtos/conferencia/visualizar/${conferencia.publicId}`);
 	};
 
-	const handleDelete = (conferencia: ConferenciaEstoque) => {
+	const handleDelete = (conferencia: ConferenciaEstoqueResponseDto) => {
 		if (!selectedPartnerId) {
 			toast.error("Parceiro não selecionado");
 			return;

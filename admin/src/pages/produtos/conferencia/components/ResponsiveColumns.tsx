@@ -2,15 +2,15 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Eye, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import type { ConferenciaEstoque } from "@/api-client/types";
+import type { ConferenciaEstoqueResponseDto } from "@/api-client/types";
 import { format } from "date-fns";
 import { ptBR, es } from "date-fns/locale";
 
 interface UseResponsiveColumnsProps {
 	t: (key: string) => string;
 	isMobile: boolean;
-	onView: (conferencia: ConferenciaEstoque) => void;
-	onDelete: (conferencia: ConferenciaEstoque) => void;
+	onView: (conferencia: ConferenciaEstoqueResponseDto) => void;
+	onDelete: (conferencia: ConferenciaEstoqueResponseDto) => void;
 	locale: string;
 }
 
@@ -20,7 +20,7 @@ export function useResponsiveColumns({
 	onView,
 	onDelete,
 	locale,
-}: UseResponsiveColumnsProps): ColumnDef<ConferenciaEstoque>[] {
+}: UseResponsiveColumnsProps): ColumnDef<ConferenciaEstoqueResponseDto>[] {
 	const dateLocale = locale === "es" ? es : ptBR;
 
 	const getStatusColor = (status: string) => {
@@ -48,7 +48,7 @@ export function useResponsiveColumns({
 		}
 	};
 
-	const baseColumns: ColumnDef<ConferenciaEstoque>[] = [
+	const baseColumns: ColumnDef<ConferenciaEstoqueResponseDto>[] = [
 		{
 			accessorKey: "dataInicio",
 			header: t("conference.columns.date"),

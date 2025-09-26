@@ -461,7 +461,7 @@ export const ConferenciaPage: React.FC = () => {
 					onCreateConference={handleIniciarConferencia}
 					onBack={isViewing ? handleBack : undefined}
 					isCreating={createConferencia.isPending}
-					isUpdating={updateConferencia.isPending}
+					// isUpdating removido pois não existe na interface ConferenceHeaderProps
 				/>
 
 				{/* Área de Conferência Ativa */}

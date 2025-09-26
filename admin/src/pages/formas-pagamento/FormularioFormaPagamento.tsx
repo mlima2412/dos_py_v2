@@ -38,11 +38,8 @@ const formaPagamentoSchema = z.object({
 		.string()
 		.min(2, "Nome deve ter pelo menos 2 caracteres")
 		.max(255, "Nome deve ter no máximo 255 caracteres"),
-	taxa: z.coerce
-		.number()
-		.min(0, "Taxa deve ser maior ou igual a zero")
-		.optional(),
-	tempoLiberacao: z.coerce
+	taxa: z.number().min(0, "Taxa deve ser maior ou igual a zero").optional(),
+	tempoLiberacao: z
 		.number()
 		.min(0, "Tempo de liberação deve ser maior ou igual a zero"),
 	impostoPosCalculo: z.boolean(),
@@ -77,7 +74,7 @@ export const FormularioFormaPagamento: React.FC = () => {
 		resolver: zodResolver(formaPagamentoSchema),
 		defaultValues: {
 			nome: "",
-			taxa: 0,
+			taxa: undefined,
 			tempoLiberacao: 0,
 			impostoPosCalculo: false,
 			ativo: true,
@@ -89,7 +86,7 @@ export const FormularioFormaPagamento: React.FC = () => {
 		if (formaPagamento && (mode === "edit" || mode === "view")) {
 			form.reset({
 				nome: formaPagamento.nome,
-				taxa: formaPagamento.taxa || 0,
+				taxa: formaPagamento.taxa,
 				tempoLiberacao: formaPagamento.tempoLiberacao,
 				impostoPosCalculo: formaPagamento.impostoPosCalculo,
 				ativo: formaPagamento.ativo,
