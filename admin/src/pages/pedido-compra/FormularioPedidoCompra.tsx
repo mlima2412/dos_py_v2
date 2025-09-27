@@ -165,18 +165,6 @@ export const FormularioPedidoCompra: React.FC = () => {
 	const produtosData = useMemo<ProdutosPorLocalResponseDto[]>(() => {
 		if (!produtosResponse) return [];
 
-		const normalizeCodCor = (codCor: unknown): number => {
-			if (typeof codCor === "number" && !Number.isNaN(codCor)) {
-				return codCor;
-			}
-			if (typeof codCor === "string" && codCor.length > 0) {
-				const normalized = codCor.startsWith("#") ? codCor.slice(1) : codCor;
-				const parsed = parseInt(normalized, 16);
-				return Number.isNaN(parsed) ? 0 : parsed;
-			}
-			return 0;
-		};
-
 		const normalizeEstoque = (
 			sku: NonNullable<Produto["ProdutoSKU"]>[number]
 		): number => {
@@ -223,7 +211,7 @@ export const FormularioPedidoCompra: React.FC = () => {
 				publicId: sku.publicId,
 				cor: sku.cor ?? "",
 				tamanho: sku.tamanho ?? "",
-				codCor: normalizeCodCor(sku.codCor),
+				codCor: sku.codCor ?? "",
 				qtdMinima: sku.qtdMinima ?? 0,
 				estoque: normalizeEstoque(sku),
 			})),
