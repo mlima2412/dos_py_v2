@@ -9,6 +9,7 @@ import {
   ValidationPipe,
   UsePipes,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -23,14 +24,18 @@ import { PedidoCompraService } from './pedido-compra.service';
 import { CreatePedidoCompraDto } from './dto/create-pedido-compra.dto';
 import { UpdatePedidoCompraDto } from './dto/update-pedido-compra.dto';
 import { UpdateStatusPedidoCompraDto } from './dto/update-status-pedido-compra.dto';
+import { ProcessaPedidoCompraDto } from './dto/processa-pedido-compra.dto';
 import { PaginatedQueryDto } from './dto/paginated-query.dto';
 import { PedidoCompra } from './entities/pedido-compra.entity';
 import { StatusPedidoCompra } from './enums/status-pedido-compra.enum';
 import { ParceiroId } from '../auth/decorators/parceiro-id.decorator';
+import { UserId } from '../auth/decorators/user-id.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('Pedidos de Compra')
 @Controller('pedido-compra')
 @UsePipes(new ValidationPipe({ transform: true }))
+@UseGuards(JwtAuthGuard)
 export class PedidoCompraController {
   constructor(private readonly pedidoCompraService: PedidoCompraService) {}
 
@@ -93,7 +98,9 @@ export class PedidoCompraController {
     required: true,
     schema: { type: 'integer' },
   })
-  @ApiOperation({ summary: 'Listar pedidos de compra com paginação, busca e filtros' })
+  @ApiOperation({
+    summary: 'Listar pedidos de compra com paginação, busca e filtros',
+  })
   @ApiResponse({
     status: 200,
     description: 'Lista paginada de pedidos de compra retornada com sucesso',
@@ -286,6 +293,86 @@ export class PedidoCompraController {
       publicId,
       updateStatusDto,
       parceiroId,
+    );
+  }
+
+  @Post('processa-pedido-compra')
+  @ApiBearerAuth('JWT-auth')
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro',
+    required: true,
+    schema: { type: 'integer' },
+  })
+  @ApiOperation({
+    summary:
+      'Processar pedido de compra - gerar movimentação de estoque e despesas',
+  })
+  @ApiBody({
+    type: ProcessaPedidoCompraDto,
+    description: 'Dados para processamento do pedido de compra',
+    examples: {
+      a_prazo_sem_parcelas: {
+        summary: 'À prazo sem parcelas',
+        value: {
+          publicId: '019985f6-584d-7341-b671-ab7e62aa3955',
+          paymentType: 'A_PRAZO_SEM_PARCELAS',
+          dueDate: '2025-10-17T03:00:00.000Z',
+          entryValue: 0,
+          installments: 1,
+          firstInstallmentDate: null,
+        },
+      },
+      a_vista_imediata: {
+        summary: 'À vista imediata',
+        value: {
+          publicId: '019985f6-584d-7341-b671-ab7e62aa3955',
+          paymentType: 'A_VISTA_IMEDIATA',
+          dueDate: null,
+          entryValue: 0,
+          installments: 1,
+          firstInstallmentDate: null,
+        },
+      },
+      parcelado: {
+        summary: 'Parcelado',
+        value: {
+          publicId: '019985f6-584d-7341-b671-ab7e62aa3955',
+          paymentType: 'PARCELADO',
+          dueDate: null,
+          entryValue: 15343,
+          installments: 3,
+          firstInstallmentDate: '2025-10-29T03:00:00.000Z',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Pedido de compra processado com sucesso',
+    type: PedidoCompra,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Dados inválidos ou pedido já processado',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Pedido de compra não encontrado',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Pedido de compra já foi processado',
+  })
+  processaPedidoCompra(
+    @Body() processaPedidoCompraDto: ProcessaPedidoCompraDto,
+    @ParceiroId() parceiroId: number,
+    @UserId() usuarioId: number,
+  ): Promise<PedidoCompra> {
+    return this.pedidoCompraService.processaPedidoCompra(
+      processaPedidoCompraDto,
+      parceiroId,
+      usuarioId,
     );
   }
 

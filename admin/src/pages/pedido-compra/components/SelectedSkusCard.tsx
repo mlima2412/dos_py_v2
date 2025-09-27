@@ -8,6 +8,7 @@ interface SelectedSkusCardProps {
 	onUpdateQuantity: (skuId: number, quantity: number) => void;
 	emptyMessage?: string;
 	title?: string;
+	isEnabled?: boolean;
 }
 
 const SelectedSkusCardComponent: React.FC<SelectedSkusCardProps> = ({
@@ -16,6 +17,7 @@ const SelectedSkusCardComponent: React.FC<SelectedSkusCardProps> = ({
 	onUpdateQuantity,
 	emptyMessage,
 	title,
+	isEnabled = true,
 }) => {
 	return (
 		<SelectedSkusList
@@ -26,6 +28,7 @@ const SelectedSkusCardComponent: React.FC<SelectedSkusCardProps> = ({
 			scrollAreaHeight="h-[800px]"
 			emptyMessage={emptyMessage}
 			title={title}
+			enabledStockAdjustment={isEnabled}
 		/>
 	);
 };

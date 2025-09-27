@@ -192,9 +192,7 @@ export const createColumns = (
 				</Button>
 			),
 			cell: ({ row }) => (
-				<Badge variant="secondary">
-					{row.original.currency?.isoCode || "BRL"}
-				</Badge>
+				<Badge variant="secondary">{row.original.currency?.isoCode}</Badge>
 			),
 		}),
 		columnHelper.accessor(row => row.statusPagamento, {

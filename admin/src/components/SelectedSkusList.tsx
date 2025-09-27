@@ -26,6 +26,7 @@ export interface SelectedSkusListProps<T = any> {
 	showStockLimit?: boolean;
 	maxQuantity?: (sku: T) => number;
 	scrollAreaHeight?: string;
+	enabledStockAdjustment?: boolean;
 }
 
 export const SelectedSkusList: React.FC<SelectedSkusListProps> = ({
@@ -37,6 +38,7 @@ export const SelectedSkusList: React.FC<SelectedSkusListProps> = ({
 	showStockLimit = false,
 	maxQuantity,
 	scrollAreaHeight = "h-[400px]",
+	enabledStockAdjustment = true,
 }) => {
 	const { t } = useTranslation("common");
 
@@ -115,9 +117,7 @@ export const SelectedSkusList: React.FC<SelectedSkusListProps> = ({
 															<div
 																className="w-3 h-3 rounded-full border"
 																style={{
-																	backgroundColor: `#${sku.codCor
-																		.toString(16)
-																		.padStart(6, "0")}`,
+																	backgroundColor: `#${sku.codCor}`,
 																}}
 															/>
 														)}
@@ -131,49 +131,48 @@ export const SelectedSkusList: React.FC<SelectedSkusListProps> = ({
 														{sku.tamanho}
 													</span>
 												)}
-												{showStockLimit && maxQty !== undefined && (
-													<span className="text-xs text-muted-foreground">
-														(Disponível: {maxQty})
-													</span>
-												)}
 											</div>
 											<p className="text-sm font-medium truncate">
 												{product.nome}
 											</p>
 										</div>
-										<div className="flex items-center gap-2">
-											<div className="flex items-center gap-1">
+										{enabledStockAdjustment && (
+											<div className="flex items-center gap-2">
+												<div className="flex items-center gap-1">
+													<Button
+														variant="outline"
+														size="sm"
+														onClick={() => handleDecrement(sku.id, quantity)}
+														disabled={quantity <= 1}
+														className="h-8 w-8 p-0"
+													>
+														<Minus className="h-4 w-4" />
+													</Button>
+													<span className="w-12 text-center font-medium">
+														{quantity}
+													</span>
+													<Button
+														variant="outline"
+														size="sm"
+														onClick={() =>
+															handleIncrement(sku.id, quantity, sku)
+														}
+														disabled={isAtMaxLimit}
+														className="h-8 w-8 p-0"
+													>
+														<Plus className="h-4 w-4" />
+													</Button>
+												</div>
 												<Button
-													variant="outline"
+													variant="ghost"
 													size="sm"
-													onClick={() => handleDecrement(sku.id, quantity)}
-													disabled={quantity <= 1}
+													onClick={() => onRemoveSku(sku.id)}
 													className="h-8 w-8 p-0"
 												>
-													<Minus className="h-4 w-4" />
-												</Button>
-												<span className="w-12 text-center font-medium">
-													{quantity}
-												</span>
-												<Button
-													variant="outline"
-													size="sm"
-													onClick={() => handleIncrement(sku.id, quantity, sku)}
-													disabled={isAtMaxLimit}
-													className="h-8 w-8 p-0"
-												>
-													<Plus className="h-4 w-4" />
+													<X className="h-4 w-4" />
 												</Button>
 											</div>
-											<Button
-												variant="ghost"
-												size="sm"
-												onClick={() => onRemoveSku(sku.id)}
-												className="h-8 w-8 p-0"
-											>
-												<X className="h-4 w-4" />
-											</Button>
-										</div>
+										)}
 									</div>
 								);
 							})}

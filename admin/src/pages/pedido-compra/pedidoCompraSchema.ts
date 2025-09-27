@@ -9,6 +9,7 @@ export const pedidoCompraBasicSchema = z.object({
 	valorComissao: z.string().optional(),
 	cotacao: z.string().optional(),
 	consignado: z.boolean().default(false),
+	status: z.int().default(1),
 });
 
 export type PedidoCompraBasicFormData = z.infer<typeof pedidoCompraBasicSchema>;

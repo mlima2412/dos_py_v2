@@ -19,7 +19,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "react-toastify";
 import { useLocaisEstoque } from "@/hooks/useEstoques";
 import {
-	useProdutoControllerFindByLocal,
+	useProdutoControllerFindAll,
 	useFornecedoresControllerFindAll,
 	useCurrencyControllerFindAllActive,
 	usePedidoCompraControllerCreate,
@@ -53,6 +53,7 @@ import {
 import type { SelectedSkuItem } from "./types";
 
 import type {
+	Produto,
 	ProdutosPorLocalResponseDto,
 	ProdutoSKUEstoqueResponseDto,
 	Fornecedor,
@@ -147,29 +148,91 @@ export const FormularioPedidoCompra: React.FC = () => {
 		);
 	}, [locaisData]);
 
-	// Buscar produtos do local de entrada selecionado
+	// Buscar todos os produtos disponíveis para o parceiro selecionado
 	const {
-		data: produtosData,
+		data: produtosResponse,
 		isLoading: isLoadingProducts,
 		error: errorProducts,
-	} = useProdutoControllerFindByLocal(
-		locais.find(loc => loc.id === localEntradaId)?.publicId || "",
-		{
-			"x-parceiro-id": selectedPartnerId ? Number(selectedPartnerId) : 0,
-		},
-		{
-			apenasComEstoque: false, // Para pedido de compra, mostrar todos os produtos
-		},
+	} = useProdutoControllerFindAll(
+		{ "x-parceiro-id": parceiroIdNumber ?? 0 },
 		{
 			query: {
-				enabled: !!localEntradaId && !!selectedPartnerId,
+				enabled: !!parceiroIdNumber,
 			},
 		}
 	);
 
+	const produtosData = useMemo<ProdutosPorLocalResponseDto[]>(() => {
+		if (!produtosResponse) return [];
+
+		const normalizeCodCor = (codCor: unknown): number => {
+			if (typeof codCor === "number" && !Number.isNaN(codCor)) {
+				return codCor;
+			}
+			if (typeof codCor === "string" && codCor.length > 0) {
+				const normalized = codCor.startsWith("#") ? codCor.slice(1) : codCor;
+				const parsed = parseInt(normalized, 16);
+				return Number.isNaN(parsed) ? 0 : parsed;
+			}
+			return 0;
+		};
+
+		const normalizeEstoque = (
+			sku: NonNullable<Produto["ProdutoSKU"]>[number]
+		): number => {
+			const estoqueValue = (sku as unknown as { estoque?: number }).estoque;
+			return typeof estoqueValue === "number" && !Number.isNaN(estoqueValue)
+				? estoqueValue
+				: 0;
+		};
+
+		return produtosResponse.map(produto => ({
+			id: produto.id,
+			publicId: produto.publicId,
+			nome: produto.nome,
+			descricao: produto.descricao,
+			imgURL: produto.imgURL,
+			precoVenda: produto.precoVenda,
+			precoCompra: produto.precoCompra,
+			ativo: produto.ativo,
+			consignado: produto.consignado,
+			categoria: produto.categoria
+				? {
+						id: produto.categoria.id,
+						descricao: produto.categoria.descricao,
+					}
+				: undefined,
+			fornecedor: produto.fornecedor
+				? {
+						id: produto.fornecedor.id,
+						publicId: produto.fornecedor.publicId,
+						nome: produto.fornecedor.nome,
+					}
+				: undefined,
+			currency: produto.currency
+				? {
+						id: produto.currency.id,
+						publicId: produto.currency.publicId,
+						nome: produto.currency.nome,
+						prefixo: produto.currency.prefixo ?? "",
+						isoCode: produto.currency.isoCode ?? "",
+					}
+				: undefined,
+			ProdutoSKU: (produto.ProdutoSKU ?? []).map(sku => ({
+				id: sku.id,
+				publicId: sku.publicId,
+				cor: sku.cor ?? "",
+				tamanho: sku.tamanho ?? "",
+				codCor: normalizeCodCor(sku.codCor),
+				qtdMinima: sku.qtdMinima ?? 0,
+				estoque: normalizeEstoque(sku),
+			})),
+		}));
+	}, [produtosResponse]);
+
 	// Obter SKUs do produto selecionado
 	const selectedProductSkus = useMemo(() => {
-		if (!selectedProductId || !produtosData) return [];
+		if (!selectedProductId || produtosData.length === 0) return [];
 
 		const selectedProduct = produtosData.find(
 			(produto: ProdutosPorLocalResponseDto) => produto.id === selectedProductId
@@ -179,7 +242,7 @@ export const FormularioPedidoCompra: React.FC = () => {
 	}, [selectedProductId, produtosData]);
 
 	const selectedProductBase = useMemo(() => {
-		if (!selectedProductId || !produtosData) return null;
+		if (!selectedProductId || produtosData.length === 0) return null;
 		return (
 			produtosData.find(
 				(produto: ProdutosPorLocalResponseDto) =>
@@ -196,7 +259,7 @@ export const FormularioPedidoCompra: React.FC = () => {
 				sku: ProdutoSKUEstoqueResponseDto;
 			}
 		>();
-		if (!produtosData) return map;
+		if (produtosData.length === 0) return map;
 		produtosData.forEach(product => {
 			(product.ProdutoSKU || []).forEach(skuItem => {
 				map.set(skuItem.id, { product, sku: skuItem });
@@ -542,6 +605,7 @@ export const FormularioPedidoCompra: React.FC = () => {
 			valorComissao: numberToInputString(pedido.valorComissao),
 			cotacao: numberToInputString(pedido.cotacao) || "1",
 			consignado: pedido.consignado ?? false,
+			status: pedido.status ?? 1,
 		}),
 		[numberToInputString]
 	);
@@ -760,28 +824,46 @@ export const FormularioPedidoCompra: React.FC = () => {
 
 	return (
 		<DashboardLayout>
-			{/* Breadcrumb */}
-			<Breadcrumb>
-				<BreadcrumbList>
-					<BreadcrumbItem>
-						<BreadcrumbLink href="/inicio">
-							{t("purchaseOrders.form.breadcrumb.home")}
-						</BreadcrumbLink>
-					</BreadcrumbItem>
-					<BreadcrumbSeparator />
-					<BreadcrumbItem>
-						<BreadcrumbLink href="/pedidoCompra">
-							{t("purchaseOrders.form.breadcrumb.purchaseOrders")}
-						</BreadcrumbLink>
-					</BreadcrumbItem>
-					<BreadcrumbSeparator />
-					<BreadcrumbItem>
-						<BreadcrumbPage>
-							{t("purchaseOrders.form.breadcrumb.new")}
-						</BreadcrumbPage>
-					</BreadcrumbItem>
-				</BreadcrumbList>
-			</Breadcrumb>
+			{/* alinhe as duas divs no eixo da linha */}
+			<div className="class flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+				<div>
+					<Breadcrumb>
+						<BreadcrumbList>
+							<BreadcrumbItem>
+								<BreadcrumbLink href="/inicio">
+									{t("purchaseOrders.form.breadcrumb.home")}
+								</BreadcrumbLink>
+							</BreadcrumbItem>
+							<BreadcrumbSeparator />
+							<BreadcrumbItem>
+								<BreadcrumbLink href="/pedidoCompra">
+									{t("purchaseOrders.form.breadcrumb.purchaseOrders")}
+								</BreadcrumbLink>
+							</BreadcrumbItem>
+							<BreadcrumbSeparator />
+							<BreadcrumbItem>
+								<BreadcrumbPage>
+									{t("purchaseOrders.form.breadcrumb.new")}
+								</BreadcrumbPage>
+							</BreadcrumbItem>
+						</BreadcrumbList>
+					</Breadcrumb>
+				</div>
+				<div>
+					{pedidoData?.status === 1 && pedidoPublicId && !isEditing ? (
+						<div className="mt-4">
+							<Button
+								variant="default"
+								onClick={() =>
+									navigate(`/pedidoCompra/finalizar/${pedidoPublicId}`)
+								}
+							>
+								{t("purchaseOrders.finalize.actions.openFinalize")}
+							</Button>
+						</div>
+					) : null}
+				</div>
+			</div>
 
 			{/* Formulário */}
 			{!isEditing && displayData ? (
@@ -803,6 +885,7 @@ export const FormularioPedidoCompra: React.FC = () => {
 							formattedCommission={formattedCommissionDisplay}
 							observation={displayData.observacao}
 							editLabel={editLabelText}
+							status={pedidoAtual?.status || displayData.status || 1}
 						/>
 						<PurchaseOrderValuesCard
 							originalLabel={originalValueLabel}
@@ -826,6 +909,7 @@ export const FormularioPedidoCompra: React.FC = () => {
 							onAddSku={handleSkuAddition}
 							onPriceChange={handleProductPriceUpdate}
 							labels={productSkuPickerLabels}
+							isEnabled={pedidoData?.status === 1}
 						/>
 
 						<SelectedSkusCard
@@ -834,6 +918,7 @@ export const FormularioPedidoCompra: React.FC = () => {
 							onUpdateQuantity={handleUpdateQuantity}
 							emptyMessage={selectedProductsEmpty}
 							title={selectedProductsTitle}
+							isEnabled={pedidoData?.status === 1}
 						/>
 					</div>
 				</div>

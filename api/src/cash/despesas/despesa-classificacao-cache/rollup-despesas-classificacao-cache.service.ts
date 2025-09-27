@@ -68,17 +68,6 @@ export class RollupDespesasClassificacaoCacheService {
   ) {
     if (!valor) return;
 
-    console.log(
-      'updateClassAggregateDelta',
-      parceiroId,
-      ym,
-      classId,
-      catId,
-      valor,
-      nomeClassificacao,
-      nomeCategoria,
-      opts,
-    );
     const yyyy = ym.slice(0, 4);
 
     // Keys por sub-classificação
@@ -175,28 +164,32 @@ export class RollupDespesasClassificacaoCacheService {
 
       if (hasRm) await rm.exec();
     }
-
   }
   async getClassesMes(parceiroId: number, ym: string) {
-    const kByClass = `app:dospy:{${parceiroId}}:exp:sum:month:${ym}:by:class`;           // ZSET
-    const kTot     = `app:dospy:{${parceiroId}}:exp:sum:month:${ym}:by:class:total`;     // STRING
-    const dictKey  = `app:dospy:dict:class`;                                            // HASH (value = JSON { nome, catId })
-  
+    const kByClass = `app:dospy:{${parceiroId}}:exp:sum:month:${ym}:by:class`; // ZSET
+    const kTot = `app:dospy:{${parceiroId}}:exp:sum:month:${ym}:by:class:total`; // STRING
+    const dictKey = `app:dospy:dict:class`; // HASH (value = JSON { nome, catId })
+
     const total = Number((await this.redis.get(kTot)) ?? 0) || 0;
-  
-    const rows: string[] = await this.redis.zrevrange(kByClass, 0, -1, 'WITHSCORES');   // [classId, score, ...]
+
+    const rows: string[] = await this.redis.zrevrange(
+      kByClass,
+      0,
+      -1,
+      'WITHSCORES',
+    ); // [classId, score, ...]
     if (!rows || rows.length === 0) {
       // nada no mês: evita HMGET sem fields
       return { totalCentavos: total, classificacoes: [] };
     }
-  
+
     const ids: string[] = [];
     const valores: number[] = [];
     for (let i = 0; i < rows.length; i += 2) {
       ids.push(rows[i]);
       valores.push(Number(rows[i + 1]));
     }
-  
+
     // ioredis -> hmget(key, ...fields)
     // node-redis v4 -> hmGet(key, fieldsArray)
     let rawMeta: (string | null)[] = [];
@@ -207,7 +200,7 @@ export class RollupDespesasClassificacaoCacheService {
         rawMeta = await (this.redis as any).hmGet(dictKey, ids);
       }
     }
-  
+
     const classificacoes = ids.map((id, i) => {
       let meta: any = null;
       try {
@@ -224,61 +217,68 @@ export class RollupDespesasClassificacaoCacheService {
         percentual: total ? v / total : 0,
       };
     });
-  
+
     return { totalCentavos: total, classificacoes };
   }
-  
-// Retorna todas as categorias de um mês, já ordenadas (maior -> menor)
-// Formato: { totalCentavos, categorias: [{ catId, nome, valorCentavos, percentual }] }
-async getCategoriasMes(parceiroId: number, ym: string) {
-  const kByCat   = `app:dospy:{${parceiroId}}:exp:sum:month:${ym}:by:cat`;          // ZSET
-  const kTot     = `app:dospy:{${parceiroId}}:exp:sum:month:${ym}:by:cat:total`;    // STRING
-  const dictKey  = `app:dospy:dict:cat`;                                            // HASH (value = JSON { nome })
 
-  const totalCentavos = Number((await this.redis.get(kTot)) ?? 0) || 0;
+  // Retorna todas as categorias de um mês, já ordenadas (maior -> menor)
+  // Formato: { totalCentavos, categorias: [{ catId, nome, valorCentavos, percentual }] }
+  async getCategoriasMes(parceiroId: number, ym: string) {
+    const kByCat = `app:dospy:{${parceiroId}}:exp:sum:month:${ym}:by:cat`; // ZSET
+    const kTot = `app:dospy:{${parceiroId}}:exp:sum:month:${ym}:by:cat:total`; // STRING
+    const dictKey = `app:dospy:dict:cat`; // HASH (value = JSON { nome })
 
-  const rows: string[] = await this.redis.zrevrange(kByCat, 0, -1, 'WITHSCORES');   // [catId, score, ...]
-  if (!rows || rows.length === 0) {
-    return { totalCentavos, categorias: [] }; // evita HMGET sem fields
-  }
+    const totalCentavos = Number((await this.redis.get(kTot)) ?? 0) || 0;
 
-  const ids: string[] = [];
-  const valores: number[] = [];
-  for (let i = 0; i < rows.length; i += 2) {
-    ids.push(rows[i]);
-    valores.push(Number(rows[i + 1]));
-  }
+    const rows: string[] = await this.redis.zrevrange(
+      kByCat,
+      0,
+      -1,
+      'WITHSCORES',
+    ); // [catId, score, ...]
+    if (!rows || rows.length === 0) {
+      return { totalCentavos, categorias: [] }; // evita HMGET sem fields
+    }
 
-  // ioredis: hmget(key, ...fields)  |  node-redis v4: hmGet(key, fieldsArray)
-  let rawMeta: (string | null)[] = [];
-  if (typeof (this.redis as any).hmget === 'function') {
-    rawMeta = await (this.redis as any).hmget(dictKey, ...ids);
-  } else if (typeof (this.redis as any).hmGet === 'function') {
-    rawMeta = await (this.redis as any).hmGet(dictKey, ids);
-  }
+    const ids: string[] = [];
+    const valores: number[] = [];
+    for (let i = 0; i < rows.length; i += 2) {
+      ids.push(rows[i]);
+      valores.push(Number(rows[i + 1]));
+    }
 
-  const parseCat = (s: string | null) => {
-    if (!s) return { nome: null as string | null };
-    try {
-      const obj = JSON.parse(s);
-      if (obj && typeof obj === 'object') return { nome: obj.nome ?? null };
-    } catch { /* formato antigo (string simples) */ }
-    return { nome: s };
-  };
+    // ioredis: hmget(key, ...fields)  |  node-redis v4: hmGet(key, fieldsArray)
+    let rawMeta: (string | null)[] = [];
+    if (typeof (this.redis as any).hmget === 'function') {
+      rawMeta = await (this.redis as any).hmget(dictKey, ...ids);
+    } else if (typeof (this.redis as any).hmGet === 'function') {
+      rawMeta = await (this.redis as any).hmGet(dictKey, ids);
+    }
 
-  const categorias = ids.map((id, i) => {
-    const meta = parseCat(rawMeta?.[i] ?? null);
-    const v = valores[i];
-    return {
-      catId: /^\d+$/.test(id) ? Number(id) : id, // mantém número se for numérico
-      nome: meta.nome,
-      valorCentavos: v,
-      percentual: totalCentavos ? v / totalCentavos : 0,
+    const parseCat = (s: string | null) => {
+      if (!s) return { nome: null as string | null };
+      try {
+        const obj = JSON.parse(s);
+        if (obj && typeof obj === 'object') return { nome: obj.nome ?? null };
+      } catch {
+        /* formato antigo (string simples) */
+      }
+      return { nome: s };
     };
-  });
 
-  return { totalCentavos, categorias };
-}
+    const categorias = ids.map((id, i) => {
+      const meta = parseCat(rawMeta?.[i] ?? null);
+      const v = valores[i];
+      return {
+        catId: /^\d+$/.test(id) ? Number(id) : id, // mantém número se for numérico
+        nome: meta.nome,
+        valorCentavos: v,
+        percentual: totalCentavos ? v / totalCentavos : 0,
+      };
+    });
+
+    return { totalCentavos, categorias };
+  }
 
   async getCategoriasAno(parceiroId: number, yyyy: string) {
     const k = `app:dospy:{${parceiroId}}:exp:sum:year:${yyyy}:by:cat`;
@@ -308,24 +308,29 @@ async getCategoriasMes(parceiroId: number, ym: string) {
   }
 
   async getClassesAno(parceiroId: number, yyyy: string) {
-    const kByClass = `app:dospy:{${parceiroId}}:exp:sum:year:${yyyy}:by:class`;          // ZSET
-    const kTot     = `app:dospy:{${parceiroId}}:exp:sum:year:${yyyy}:by:class:total`;    // STRING
-    const dictKey  = `app:dospy:dict:class`;                                            // HASH (value = JSON { nome, catId } ou string antiga)
-  
+    const kByClass = `app:dospy:{${parceiroId}}:exp:sum:year:${yyyy}:by:class`; // ZSET
+    const kTot = `app:dospy:{${parceiroId}}:exp:sum:year:${yyyy}:by:class:total`; // STRING
+    const dictKey = `app:dospy:dict:class`; // HASH (value = JSON { nome, catId } ou string antiga)
+
     const totalCentavos = Number((await this.redis.get(kTot)) ?? 0) || 0;
-  
-    const rows: string[] = await this.redis.zrevrange(kByClass, 0, -1, 'WITHSCORES');   // [classId, score, ...]
+
+    const rows: string[] = await this.redis.zrevrange(
+      kByClass,
+      0,
+      -1,
+      'WITHSCORES',
+    ); // [classId, score, ...]
     if (!rows || rows.length === 0) {
       return { totalCentavos, classificacoes: [] };
     }
-  
+
     const ids: string[] = [];
     const valores: number[] = [];
     for (let i = 0; i < rows.length; i += 2) {
       ids.push(rows[i]);
       valores.push(Number(rows[i + 1]));
     }
-  
+
     // ioredis: hmget(key, ...fields)   | node-redis v4: hmGet(key, fieldsArray)
     let rawMeta: (string | null)[] = [];
     if (ids.length > 0) {
@@ -335,9 +340,10 @@ async getCategoriasMes(parceiroId: number, ym: string) {
         rawMeta = await (this.redis as any).hmGet(dictKey, ids);
       }
     }
-  
+
     const parseMeta = (s: string | null) => {
-      if (!s) return { nome: null as string | null, catId: null as string | null };
+      if (!s)
+        return { nome: null as string | null, catId: null as string | null };
       // Se o dicionário já estiver em JSON (novo formato)
       try {
         const obj = JSON.parse(s);
@@ -353,7 +359,7 @@ async getCategoriasMes(parceiroId: number, ym: string) {
       // Formato antigo: apenas o nome como string
       return { nome: s, catId: null };
     };
-  
+
     const classificacoes = ids.map((id, i) => {
       const meta = parseMeta(rawMeta?.[i] ?? null);
       const v = valores[i];
@@ -365,8 +371,7 @@ async getCategoriasMes(parceiroId: number, ym: string) {
         percentual: totalCentavos ? v / totalCentavos : 0,
       };
     });
-  
+
     return { totalCentavos, classificacoes };
   }
-  
 }

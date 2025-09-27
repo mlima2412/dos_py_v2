@@ -19,9 +19,12 @@ interface PurchaseOrderDetailsCardProps {
 	formattedCommission: string;
 	observation?: string | null;
 	editLabel: string;
+	status: number;
 }
 
-const PurchaseOrderDetailsCardComponent: React.FC<PurchaseOrderDetailsCardProps> = ({
+const PurchaseOrderDetailsCardComponent: React.FC<
+	PurchaseOrderDetailsCardProps
+> = ({
 	title,
 	supplierLabel,
 	locationLabel,
@@ -36,6 +39,7 @@ const PurchaseOrderDetailsCardComponent: React.FC<PurchaseOrderDetailsCardProps>
 	formattedCommission,
 	observation,
 	editLabel,
+	status = 1,
 }) => {
 	return (
 		<Card>
@@ -43,10 +47,12 @@ const PurchaseOrderDetailsCardComponent: React.FC<PurchaseOrderDetailsCardProps>
 				<div className="space-y-6">
 					<div className="flex items-center justify-between">
 						<h3 className="text-lg font-semibold">{title}</h3>
-						<Button variant="outline" size="sm" onClick={onEdit}>
-							<Edit className="mr-2 h-4 w-4" />
-							{editLabel}
-						</Button>
+						{status === 1 && (
+							<Button variant="outline" size="sm" onClick={onEdit}>
+								<Edit className="mr-2 h-4 w-4" />
+								{editLabel}
+							</Button>
+						)}
 					</div>
 
 					<div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr] gap-2">
@@ -90,4 +96,6 @@ const PurchaseOrderDetailsCardComponent: React.FC<PurchaseOrderDetailsCardProps>
 	);
 };
 
-export const PurchaseOrderDetailsCard = React.memo(PurchaseOrderDetailsCardComponent);
+export const PurchaseOrderDetailsCard = React.memo(
+	PurchaseOrderDetailsCardComponent
+);

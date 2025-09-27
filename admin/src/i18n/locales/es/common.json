@@ -98,8 +98,7 @@
 			"administrator": "Administrador",
 			"user": "Usuario"
 		},
-		"page": "Página",
-		"of": "de"
+		"page": "Página"
 	},
 	"dashboard": {
 		"title": "Dashboard",
@@ -401,14 +400,12 @@
 		"ruccnpj": "RUC/CNPJ",
 		"currency": "Moneda",
 		"socialNetwork": "Red Social",
-
 		"namePlaceholder": "Ingresa el nombre del socio",
 		"emailPlaceholder": "Ingresa el correo electrónico",
 		"phonePlaceholder": "Ingresa el teléfono",
 		"ruccnpjPlaceholder": "Ingresa el RUC/CNPJ",
 		"selectCurrency": "Selecciona una moneda",
 		"socialNetworkPlaceholder": "Ingresa la red social",
-
 		"status": {
 			"label": "Estado",
 			"active": "Activo",
@@ -416,7 +413,6 @@
 			"all": "Todos",
 			"filter": "Filtrar por estado"
 		},
-
 		"messages": {
 			"createSuccess": "¡Socio creado con éxito!",
 			"updateSuccess": "¡Socio actualizado con éxito!",
@@ -470,7 +466,6 @@
 		"noCurrencyFound": "Ninguna moneda encontrada",
 		"noSupplierFound": "Ningún proveedor encontrado",
 		"noSubcategoryFound": "Ninguna subcategoría encontrada",
-
 		"dashboard": {
 			"title": "Dashboard de Gastos",
 			"totalMonth": "Total del Mes",
@@ -500,7 +495,6 @@
 			"noDataToDisplay": "No hay datos para mostrar",
 			"noRecentExpenses": "No hay gastos recientes"
 		},
-
 		"columns": {
 			"description": "Descripción",
 			"date": "Fecha",
@@ -535,7 +529,18 @@
 			"deleteConfirmTitle": "Eliminar gasto",
 			"deleteConfirmDescription": "¿Estás seguro de que deseas eliminar este gasto? Esta acción no se puede deshacer.",
 			"deleteConfirmCancel": "Cancelar",
-			"deleteConfirmConfirm": "Eliminar"
+			"deleteConfirmConfirm": "Eliminar",
+			"processOrderConfirmTitle": "Finalizar Pedido de Compra",
+			"processOrderConfirmDescription": "¿Estás seguro de que deseas finalizar este pedido de compra? Esta acción:",
+			"processOrderConfirmImpact1": "• Generará movimientos de inventario (entrada de productos)",
+			"processOrderConfirmImpact2": "• Creará gastos y cuentas por pagar",
+			"processOrderConfirmImpact3": "• Actualizará precios de productos si es necesario",
+			"processOrderConfirmImpact4": "• Marcará el pedido como finalizado",
+			"processOrderConfirmWarning": "Esta acción no se puede deshacer.",
+			"processOrderConfirmCancel": "Cancelar",
+			"processOrderConfirmConfirm": "Sí, finalizar pedido",
+			"processOrderSuccess": "¡Pedido de compra finalizado con éxito!",
+			"processOrderError": "Error al finalizar pedido de compra. Inténtalo de nuevo."
 		},
 		"validation": {
 			"descriptionRequired": "Descripción es obligatoria",
@@ -724,7 +729,6 @@
 			"eventMoved": "Gasto \"{{title}}\" movido"
 		}
 	},
-
 	"productCategories": {
 		"title": "Categorías de Productos",
 		"list": "Lista de Categorías",
@@ -1081,45 +1085,6 @@
 			"PENDENTE": "Pendiente",
 			"EM_ANDAMENTO": "En progreso",
 			"FINALIZADA": "Finalizada",
-			"CANCELADA": "Cancelada"
-		},
-		"actions": {
-			"create": "Nueva Conferencia",
-			"view": "Visualizar",
-			"complete": "Marcar como concluida"
-		},
-		"messages": {
-			"loadError": "Error al cargar conferencias",
-			"completeSuccess": "¡Conferencia marcada como concluida con éxito!",
-			"completeError": "Error al marcar conferencia como concluida. Inténtalo de nuevo."
-		}
-	},
-	"conferenceDetails": {},
-	"conference": {
-		"title": "Conferencia de Inventario",
-		"list": {
-			"title": "Lista de Conferencias",
-			"noResults": "No se encontraron conferencias",
-			"search": "Buscar por ubicación...",
-			"filterByPartner": "Filtrar por socio",
-			"allPartners": "Todos los socios",
-			"results": "conferencias",
-			"showing": "Mostrando",
-			"of": "de",
-			"loadMore": "Cargar más"
-		},
-		"columns": {
-			"date": "Fecha",
-			"location": "Ubicación",
-			"user": "Conferido por",
-			"endDate": "Fecha fin",
-			"status": "Estado",
-			"actions": "Acciones"
-		},
-		"status": {
-			"PENDENTE": "Pendiente",
-			"EM_ANDAMENTO": "En progreso",
-			"FINALIZADA": "Finalizada",
 			"CANCELADA": "Cancelada",
 			"CONCLUIDA": "Concluida"
 		},
@@ -1215,6 +1180,7 @@
 			}
 		}
 	},
+	"conferenceDetails": {},
 	"paymentMethods": {
 		"title": "Forma de Pagamento",
 		"list": "Lista de Forma de Pagamento",
@@ -1360,6 +1326,61 @@
 				"localEntradaRequired": "Local de entrada es obligatorio",
 				"currencyRequired": "Moneda es obligatoria",
 				"dataPedidoRequired": "Fecha del pedido es obligatoria"
+			}
+		},
+		"finalize": {
+			"title": "Finalizar Pedido",
+			"breadcrumb": {
+				"home": "Inicio",
+				"purchaseOrders": "Pedidos de Compra",
+				"finalize": "Finalizar Pedido"
+			},
+			"summary": {
+				"title": "Resumen de la Compra",
+				"supplier": "Proveedor",
+				"currency": "Moneda",
+				"originalValue": "Valor Original",
+				"totalValue": "Valor Total",
+				"exchangeRate": "Cotización",
+				"unknownValue": "-"
+			},
+			"form": {
+				"title": "Información de Pago",
+				"paymentType": "Tipo de Pago",
+				"paymentTypePlaceholder": "Seleccione el tipo de pago",
+				"entryValue": "Valor de Entrada",
+				"optional": "(Opcional)",
+				"installments": "Número de Cuotas",
+				"firstInstallmentDate": "Primera Cuota",
+				"dueDate": "Fecha de Pago"
+			},
+			"paymentTypes": {
+				"A_VISTA_IMEDIATA": "Pago al contado",
+				"A_PRAZO_SEM_PARCELAS": "Pago a crédito",
+				"PARCELADO": "Pago en cuotas"
+			},
+			"placeholders": {
+				"entryValue": "0,00",
+				"installments": "1",
+				"firstInstallmentDate": "Seleccione la fecha de la primera cuota",
+				"dueDate": "Seleccione la fecha de pago"
+			},
+			"actions": {
+				"cancel": "Cancelar",
+				"finalize": "Finalizar Pedido",
+				"openFinalize": "Finalizar Pedido"
+			},
+			"messages": {
+				"success": "Pedido finalizado con éxito.",
+				"loadError": "No fue posible cargar el pedido de compra."
+			},
+			"validation": {
+				"paymentTypeRequired": "Seleccione el tipo de pago.",
+				"entryValueMin": "El valor de entrada debe ser mayor o igual a 0.",
+				"installmentsMin": "Indique al menos 1 cuota.",
+				"dueDateRequired": "Indique la fecha de pago.",
+				"firstInstallmentDateRequired": "Indique la fecha de la primera cuota.",
+				"generic": "Revise los campos del formulario."
 			}
 		}
 	}

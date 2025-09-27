@@ -99,8 +99,7 @@
 			"administrator": "Administrador",
 			"user": "Usuário"
 		},
-		"page": "Página",
-		"of": "de"
+		"page": "Página"
 	},
 	"dashboard": {
 		"title": "Dashboard",
@@ -359,14 +358,12 @@
 		"ruccnpj": "RUC/CNPJ",
 		"currency": "Moeda",
 		"socialNetwork": "Rede Social",
-
 		"namePlaceholder": "Digite o nome do parceiro",
 		"emailPlaceholder": "Digite o e-mail",
 		"phonePlaceholder": "Digite o telefone",
 		"ruccnpjPlaceholder": "Digite o RUC/CNPJ",
 		"selectCurrency": "Selecione uma moeda",
 		"socialNetworkPlaceholder": "Digite a rede social",
-
 		"status": {
 			"label": "Status",
 			"active": "Ativo",
@@ -374,7 +371,6 @@
 			"all": "Todos",
 			"filter": "Filtrar por status"
 		},
-
 		"messages": {
 			"createSuccess": "Parceiro criado com sucesso!",
 			"updateSuccess": "Parceiro atualizado com sucesso!",
@@ -514,7 +510,6 @@
 		"noCurrencyFound": "Nenhuma moeda encontrada",
 		"noSupplierFound": "Nenhum fornecedor encontrado",
 		"noSubcategoryFound": "Nenhuma subcategoria encontrada",
-
 		"dashboard": {
 			"title": "Dashboard de Despesas",
 			"totalMonth": "Total do Mês",
@@ -544,7 +539,6 @@
 			"noDataToDisplay": "Nenhum dado para exibir",
 			"noRecentExpenses": "Nenhuma despesa recente"
 		},
-
 		"columns": {
 			"description": "Descrição",
 			"date": "Data",
@@ -587,7 +581,18 @@
 			"deleteConfirmTitle": "Eliminar despesa",
 			"deleteConfirmDescription": "Tem certeza de que deseja eliminar esta despesa? Esta ação não pode ser desfeita.",
 			"deleteConfirmCancel": "Cancelar",
-			"deleteConfirmConfirm": "Eliminar"
+			"deleteConfirmConfirm": "Eliminar",
+			"processOrderConfirmTitle": "Finalizar Pedido de Compra",
+			"processOrderConfirmDescription": "Tem certeza de que deseja finalizar este pedido de compra? Esta ação irá:",
+			"processOrderConfirmImpact1": "• Gerar movimentação de estoque (entrada de produtos)",
+			"processOrderConfirmImpact2": "• Criar despesas e contas a pagar",
+			"processOrderConfirmImpact3": "• Atualizar preços dos produtos se necessário",
+			"processOrderConfirmImpact4": "• Marcar o pedido como finalizado",
+			"processOrderConfirmWarning": "Esta ação não pode ser desfeita.",
+			"processOrderConfirmCancel": "Cancelar",
+			"processOrderConfirmConfirm": "Sim, finalizar pedido",
+			"processOrderSuccess": "Pedido de compra finalizado com sucesso!",
+			"processOrderError": "Erro ao finalizar pedido de compra. Tente novamente."
 		},
 		"validation": {
 			"descriptionRequired": "Descrição é obrigatória",
@@ -1473,6 +1478,61 @@
 				"localEntradaRequired": "Local de entrada é obrigatório",
 				"currencyRequired": "Moeda é obrigatória",
 				"dataPedidoRequired": "Data do pedido é obrigatória"
+			}
+		},
+		"finalize": {
+			"title": "Finalizar Pedido",
+			"breadcrumb": {
+				"home": "Início",
+				"purchaseOrders": "Pedidos de Compra",
+				"finalize": "Finalizar Pedido"
+			},
+			"summary": {
+				"title": "Resumo da Compra",
+				"supplier": "Fornecedor",
+				"currency": "Moeda",
+				"originalValue": "Valor Original",
+				"totalValue": "Valor Total",
+				"exchangeRate": "Cotação",
+				"unknownValue": "-"
+			},
+			"form": {
+				"title": "Informações de Pagamento",
+				"paymentType": "Tipo de Pagamento",
+				"paymentTypePlaceholder": "Selecione o tipo de pagamento",
+				"entryValue": "Valor de Entrada",
+				"optional": "(Opcional)",
+				"installments": "Número de Parcelas",
+				"firstInstallmentDate": "Data da Primeira Parcela",
+				"dueDate": "Data de Pagamento"
+			},
+			"paymentTypes": {
+				"A_VISTA_IMEDIATA": "Pagamento à vista",
+				"A_PRAZO_SEM_PARCELAS": "Pagamento à prazo",
+				"PARCELADO": "Pagamento parcelado"
+			},
+			"placeholders": {
+				"entryValue": "0,00",
+				"installments": "1",
+				"firstInstallmentDate": "Primeira parcela",
+				"dueDate": "Selecione a data de pagamento"
+			},
+			"actions": {
+				"cancel": "Cancelar",
+				"finalize": "Finalizar Pedido",
+				"openFinalize": "Finalizar Pedido"
+			},
+			"messages": {
+				"success": "Pedido finalizado com sucesso!",
+				"loadError": "Não foi possível carregar o pedido de compra."
+			},
+			"validation": {
+				"paymentTypeRequired": "Selecione o tipo de pagamento.",
+				"entryValueMin": "O valor de entrada deve ser maior ou igual a 0.",
+				"installmentsMin": "Informe pelo menos 1 parcela.",
+				"dueDateRequired": "Informe a data de pagamento.",
+				"firstInstallmentDateRequired": "Informe a data da primeira parcela.",
+				"generic": "Revise os campos do formulário."
 			}
 		}
 	}

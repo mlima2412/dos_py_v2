@@ -30,7 +30,10 @@ import { EstoquesRoutes } from "./pages/produtos/estoques";
 import { ListarFormasPagamento } from "./pages/formas-pagamento";
 import { FormularioFormaPagamento } from "./pages/formas-pagamento/FormularioFormaPagamento";
 import { PedidoCompraPage } from "./pages/pedido-compra/pedido-compra";
-import { FormularioPedidoCompra } from "./pages/pedido-compra/FormularioPedidoCompra";
+import {
+	FormularioPedidoCompra,
+	FinalizarPedidoCompra,
+} from "./pages/pedido-compra";
 
 import { ThemeProvider } from "./components/theme-provider";
 import "./i18n";
@@ -231,6 +234,14 @@ function App() {
 										element={
 											<ProtectedRoute>
 												<FormularioPedidoCompra />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="/pedidoCompra/finalizar/:publicId"
+										element={
+											<ProtectedRoute>
+												<FinalizarPedidoCompra />
 											</ProtectedRoute>
 										}
 									/>

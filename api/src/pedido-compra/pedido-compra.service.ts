@@ -9,13 +9,26 @@ import { Decimal } from '@prisma/client/runtime/library';
 import { CreatePedidoCompraDto } from './dto/create-pedido-compra.dto';
 import { UpdatePedidoCompraDto } from './dto/update-pedido-compra.dto';
 import { UpdateStatusPedidoCompraDto } from './dto/update-status-pedido-compra.dto';
+import {
+  ProcessaPedidoCompraDto,
+  TipoPagamentoPedido,
+} from './dto/processa-pedido-compra.dto';
 import { PedidoCompra } from './entities/pedido-compra.entity';
 import { StatusPedidoCompra } from './enums/status-pedido-compra.enum';
+import { TipoMovimento } from '../movimento-estoque/dto/create-movimento-estoque.dto';
+import {
+  TipoPagamento,
+  CreateDespesaDto,
+} from '../despesas/dto/create-despesa.dto';
+import { DespesasService } from '../despesas/despesas.service';
 import { uuidv7 } from 'uuidv7';
 
 @Injectable()
 export class PedidoCompraService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly despesasService: DespesasService,
+  ) {}
 
   async create(
     createPedidoCompraDto: CreatePedidoCompraDto,
@@ -98,9 +111,9 @@ export class PedidoCompraService {
       });
 
       return PedidoCompra.create(pedidoCompra);
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
+    } catch (err) {
+      if (err instanceof NotFoundException) {
+        throw err;
       }
       throw new BadRequestException('Erro ao criar pedido de compra');
     }
@@ -288,12 +301,12 @@ export class PedidoCompraService {
       });
 
       return PedidoCompra.create(pedidoCompra);
-    } catch (error) {
+    } catch (err) {
       if (
-        error instanceof NotFoundException ||
-        error instanceof ConflictException
+        err instanceof NotFoundException ||
+        err instanceof ConflictException
       ) {
-        throw error;
+        throw err;
       }
       throw new BadRequestException('Erro ao atualizar pedido de compra');
     }
@@ -352,7 +365,7 @@ export class PedidoCompraService {
       });
 
       return PedidoCompra.create(pedidoCompra);
-    } catch (error) {
+    } catch {
       throw new BadRequestException('Erro ao atualizar status do pedido');
     }
   }
@@ -382,7 +395,7 @@ export class PedidoCompraService {
           publicId: publicId,
         },
       });
-    } catch (error) {
+    } catch {
       throw new BadRequestException('Erro ao remover pedido de compra');
     }
   }
@@ -525,6 +538,310 @@ export class PedidoCompraService {
       limit,
       totalPages,
     };
+  }
+
+  async processaPedidoCompra(
+    processaPedidoCompraDto: ProcessaPedidoCompraDto,
+    parceiroId: number,
+    usuarioId: number,
+  ): Promise<PedidoCompra> {
+    return await this.prisma.$transaction(async tx => {
+      // 1. Localizar o pedido de compra e validar
+      const pedidoCompra = await tx.pedidoCompra.findFirst({
+        where: {
+          publicId: processaPedidoCompraDto.publicId,
+          parceiroId: parceiroId,
+        },
+        include: {
+          fornecedor: true,
+          currency: true,
+          Parceiro: {
+            include: {
+              currency: true,
+            },
+          },
+          LocalEntrada: true,
+          PedidoCompraItem: {
+            include: {
+              ProdutoSKU: {
+                include: {
+                  produto: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!pedidoCompra) {
+        throw new NotFoundException('Pedido de compra não encontrado');
+      }
+      if (pedidoCompra.status === StatusPedidoCompra.FINALIZADO) {
+        throw new ConflictException('Pedido de compra já foi processado');
+      }
+
+      // 2. Validar dados de pagamento
+      this.validatePaymentData(processaPedidoCompraDto);
+
+      // 3. Buscar subcategoria "Entrada de Estoque"
+      const subCategoriaEntradaEstoque = await tx.subCategoriaDespesa.findFirst(
+        {
+          where: {
+            descricao: 'Entrada de Estoque',
+            ativo: true,
+          },
+        },
+      );
+
+      if (!subCategoriaEntradaEstoque) {
+        throw new NotFoundException(
+          'Subcategoria "Entrada de Estoque" não encontrada',
+        );
+      }
+
+      // 4. Processar movimentação de estoque para cada item
+      const produtosProcessados = new Set<number>();
+
+      for (const item of pedidoCompra.PedidoCompraItem) {
+        // Criar movimento de entrada de estoque
+        await tx.movimentoEstoque.create({
+          data: {
+            skuId: item.skuId,
+            tipo: TipoMovimento.ENTRADA,
+            qtd: item.qtd,
+            idUsuario: usuarioId,
+            localDestinoId: pedidoCompra.localEntradaId,
+            observacao: `Entrada do pedido ${pedidoCompra.id}`,
+          },
+        });
+
+        // Atualizar estoque
+        await tx.estoqueSKU.upsert({
+          where: {
+            localId_skuId: {
+              localId: pedidoCompra.localEntradaId,
+              skuId: item.skuId,
+            },
+          },
+          update: {
+            qtd: {
+              increment: item.qtd,
+            },
+          },
+          create: {
+            localId: pedidoCompra.localEntradaId,
+            skuId: item.skuId,
+            qtd: item.qtd,
+          },
+        });
+
+        // 5. Verificar e atualizar preço do produto se necessário (apenas uma vez por produto)
+        const produto = item.ProdutoSKU.produto;
+
+        if (!produtosProcessados.has(produto.id)) {
+          produtosProcessados.add(produto.id);
+
+          const precoAtual = Number(produto.precoCompra);
+          const precoPedido = Number(item.precoCompra);
+
+          if (precoAtual !== precoPedido) {
+            // Atualizar preço do produto
+            await tx.produto.update({
+              where: { id: produto.id },
+              data: {
+                precoCompra: new Decimal(precoPedido),
+              },
+            });
+
+            // Registrar no histórico de preços
+            await tx.produtoHistoricoPreco.create({
+              data: {
+                produtoId: produto.id,
+                preco: new Decimal(precoPedido),
+                data: new Date(),
+              },
+            });
+          }
+        }
+      }
+
+      // 6. Gerar despesas usando o DespesasService
+      // Atualiza o valorTotal com a cotação do pedido
+      if (pedidoCompra.currency.id !== pedidoCompra.Parceiro.currency.id) {
+        pedidoCompra.valorTotal = new Decimal(pedidoCompra.valorTotal).mul(
+          pedidoCompra.cotacao,
+        );
+      }
+
+      if (
+        processaPedidoCompraDto.paymentType === TipoPagamentoPedido.PARCELADO &&
+        processaPedidoCompraDto.entryValue &&
+        processaPedidoCompraDto.entryValue > 0
+      ) {
+        // Criar despesa à vista para o valor de entrada
+        const despesaEntradaData = this.createDespesaData(
+          processaPedidoCompraDto,
+          pedidoCompra,
+          subCategoriaEntradaEstoque.idSubCategoria,
+          true, // isEntryValue
+        );
+
+        await this.despesasService.createWithinTransaction(
+          despesaEntradaData,
+          pedidoCompra.parceiroId,
+          tx,
+        );
+
+        //Criar despesa parcelada para o valor restante
+        const despesaParceladaData = this.createDespesaData(
+          processaPedidoCompraDto,
+          pedidoCompra,
+          subCategoriaEntradaEstoque.idSubCategoria,
+          false, // isEntryValue
+        );
+
+        await this.despesasService.createWithinTransaction(
+          despesaParceladaData,
+          pedidoCompra.parceiroId,
+          tx,
+        );
+      } else {
+        // Criar despesa única
+        const despesaData = this.createDespesaData(
+          processaPedidoCompraDto,
+          pedidoCompra,
+          subCategoriaEntradaEstoque.idSubCategoria,
+        );
+
+        await this.despesasService.createWithinTransaction(
+          despesaData,
+          pedidoCompra.parceiroId,
+          tx,
+        );
+      }
+
+      // 9. Atualizar status do pedido para FINALIZADO
+      const pedidoAtualizado = await tx.pedidoCompra.update({
+        where: { id: pedidoCompra.id },
+        data: {
+          status: StatusPedidoCompra.FINALIZADO,
+        },
+        include: {
+          fornecedor: true,
+          currency: true,
+          Parceiro: true,
+          LocalEntrada: true,
+        },
+      });
+
+      return PedidoCompra.create(pedidoAtualizado);
+    });
+  }
+
+  private validatePaymentData(dto: ProcessaPedidoCompraDto): void {
+    switch (dto.paymentType) {
+      case TipoPagamentoPedido.A_PRAZO_SEM_PARCELAS:
+        if (!dto.dueDate) {
+          throw new BadRequestException(
+            'Data de vencimento é obrigatória para pagamento à prazo',
+          );
+        }
+        break;
+      case TipoPagamentoPedido.PARCELADO:
+        if (!dto.firstInstallmentDate) {
+          throw new BadRequestException(
+            'Data da primeira parcela é obrigatória para pagamento parcelado',
+          );
+        }
+        if (dto.installments < 2) {
+          throw new BadRequestException(
+            'Pagamento parcelado deve ter pelo menos 2 parcelas',
+          );
+        }
+        break;
+    }
+  }
+
+  private createDespesaData(
+    dto: ProcessaPedidoCompraDto,
+    pedidoCompra: any,
+    subCategoriaId: number,
+    isEntryValue?: boolean,
+  ): CreateDespesaDto {
+    const now = new Date();
+
+    // Obter moeda do parceiro
+    const moedaParceiro = pedidoCompra.Parceiro?.currency;
+    // Iguala a moeda para evitar outra conversão.
+    // Os pedidos de compra já entram aqui convertidos para a moeda do parceiro.
+
+    // Determinar moeda e valor da despesa
+    let valorDespesa: number;
+
+    // Se é valor de entrada, usar apenas o valor de entrada
+    if (isEntryValue) {
+      valorDespesa = dto.entryValue || 0;
+    } else {
+      // Se é parcelado com entrada, subtrair o valor de entrada do total
+      if (
+        dto.paymentType === TipoPagamentoPedido.PARCELADO &&
+        dto.entryValue &&
+        dto.entryValue > 0
+      ) {
+        valorDespesa = Number(pedidoCompra.valorTotal) - dto.entryValue;
+      } else {
+        valorDespesa = Number(pedidoCompra.valorTotal);
+      }
+    }
+
+    const despesaData: CreateDespesaDto = {
+      dataRegistro: now.toISOString(),
+      valorTotal: valorDespesa,
+      descricao: isEntryValue
+        ? `Entrada Pedido ${pedidoCompra.id}`
+        : `Compra Pedido ${pedidoCompra.id}`,
+      tipoPagamento: isEntryValue
+        ? TipoPagamento.A_VISTA_IMEDIATA
+        : this.mapPaymentType(dto.paymentType),
+      subCategoriaId: subCategoriaId,
+      parceiroId: pedidoCompra.parceiroId,
+      fornecedorId: pedidoCompra.fornecedorId,
+      currencyId: moedaParceiro.id,
+      cotacao: undefined,
+    };
+
+    // Adicionar campos específicos baseados no tipo de pagamento
+    if (!isEntryValue) {
+      switch (dto.paymentType) {
+        case TipoPagamentoPedido.A_PRAZO_SEM_PARCELAS:
+          if (dto.dueDate) {
+            despesaData.dataVencimento = dto.dueDate;
+          }
+          break;
+        case TipoPagamentoPedido.PARCELADO:
+          despesaData.numeroParcelas = dto.installments;
+          // Para parcelas, não incluir valor de entrada (já foi tratado na despesa à vista)
+          if (dto.firstInstallmentDate) {
+            despesaData.dataPrimeiraParcela = dto.firstInstallmentDate;
+          }
+          break;
+      }
+    }
+
+    return despesaData;
+  }
+
+  private mapPaymentType(paymentType: TipoPagamentoPedido): TipoPagamento {
+    switch (paymentType) {
+      case TipoPagamentoPedido.A_VISTA_IMEDIATA:
+        return TipoPagamento.A_VISTA_IMEDIATA;
+      case TipoPagamentoPedido.A_PRAZO_SEM_PARCELAS:
+        return TipoPagamento.A_PRAZO_SEM_PARCELAS;
+      case TipoPagamentoPedido.PARCELADO:
+        return TipoPagamento.PARCELADO;
+      default:
+        throw new BadRequestException('Tipo de pagamento inválido');
+    }
   }
 
   private mapToPedidoCompraEntity(pedido: any): PedidoCompra {

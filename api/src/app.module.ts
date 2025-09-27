@@ -37,6 +37,7 @@ import { ConferenciaItemModule } from './conferencia-item/conferencia-item.modul
 import { FormaPagamentoModule } from './forma-pagamento/forma-pagamento.module';
 import { PedidoCompraModule } from './pedido-compra/pedido-compra.module';
 import { PedidoCompraItemModule } from './pedido-compra-item/pedido-compra-item.module';
+import { ProdutoHistoricoPrecoModule } from './produto-historico-preco/produto-historico-preco.module';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { PedidoCompraItemModule } from './pedido-compra-item/pedido-compra-item.
     FormaPagamentoModule,
     PedidoCompraModule,
     PedidoCompraItemModule,
+    ProdutoHistoricoPrecoModule,
   ],
   controllers: [AppController],
   providers: [

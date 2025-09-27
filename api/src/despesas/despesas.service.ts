@@ -81,13 +81,16 @@ export class DespesasService {
 
     return await this.prisma.$transaction(async prisma => {
       // Criar instância da entidade com valores padrão
+      console.log('>>>>>', createDespesaDto.currencyId, parceiro.currencyId);
       const despesaEntity = Despesa.create({
         valorTotal: createDespesaDto.valorTotal,
         descricao: createDespesaDto.descricao,
         subCategoriaId: createDespesaDto.subCategoriaId,
         parceiroId: parceiroId,
         fornecedorId: createDespesaDto.fornecedorId,
-        currencyId: createDespesaDto.currencyId,
+        currencyId: createDespesaDto.currencyId
+          ? createDespesaDto.currencyId
+          : parceiro.currencyId,
         cotacao: createDespesaDto.cotacao,
       });
 
@@ -104,7 +107,9 @@ export class DespesasService {
           subCategoriaId: createDespesaDto.subCategoriaId,
           parceiroId: parceiroId,
           fornecedorId: createDespesaDto.fornecedorId,
-          currencyId: createDespesaDto.currencyId,
+          currencyId: createDespesaDto.currencyId
+            ? createDespesaDto.currencyId
+            : parceiro.currencyId,
           cotacao: createDespesaDto.cotacao,
         },
         include: {
@@ -279,6 +284,149 @@ export class DespesasService {
       default:
         throw new BadRequestException('Tipo de pagamento inválido');
     }
+  }
+
+  /**
+   * Cria uma despesa dentro de uma transação externa
+   * Usado para integração com outros serviços que precisam manter transação
+   */
+  async createWithinTransaction(
+    createDespesaDto: CreateDespesaDto,
+    parceiroId: number,
+    tx: any,
+  ): Promise<Despesa> {
+    // Verificar se o parceiro existe
+    const parceiro = await tx.parceiro.findUnique({
+      where: { id: parceiroId },
+    });
+
+    if (!parceiro) {
+      throw new BadRequestException('Parceiro não encontrado');
+    }
+
+    // Verificar se a subcategoria existe
+    const subCategoria = await tx.subCategoriaDespesa.findUnique({
+      where: { idSubCategoria: createDespesaDto.subCategoriaId },
+    });
+
+    if (!subCategoria) {
+      throw new BadRequestException('Subcategoria não encontrada');
+    }
+
+    // Verificar se o fornecedor existe (se fornecido)
+    if (createDespesaDto.fornecedorId) {
+      const fornecedor = await tx.fornecedor.findUnique({
+        where: { id: createDespesaDto.fornecedorId },
+      });
+
+      if (!fornecedor) {
+        throw new BadRequestException('Fornecedor não encontrado');
+      }
+    }
+
+    // Validações específicas por tipo de pagamento
+    if (createDespesaDto.tipoPagamento === TipoPagamento.PARCELADO) {
+      if (
+        !createDespesaDto.numeroParcelas ||
+        createDespesaDto.numeroParcelas < 2
+      ) {
+        throw new BadRequestException(
+          'Número de parcelas deve ser maior que 1 para pagamento parcelado',
+        );
+      }
+      if (!createDespesaDto.dataPrimeiraParcela) {
+        throw new BadRequestException(
+          'Data da primeira parcela é obrigatória para pagamento parcelado',
+        );
+      }
+      if (
+        createDespesaDto.valorEntrada &&
+        createDespesaDto.valorEntrada >= createDespesaDto.valorTotal
+      ) {
+        throw new BadRequestException(
+          'Valor de entrada deve ser menor que o valor total',
+        );
+      }
+    }
+
+    // Criar instância da entidade com valores padrão
+    const despesaEntity = Despesa.create({
+      valorTotal: createDespesaDto.valorTotal,
+      descricao: createDespesaDto.descricao,
+      subCategoriaId: createDespesaDto.subCategoriaId,
+      parceiroId: parceiroId,
+      fornecedorId: createDespesaDto.fornecedorId,
+      currencyId: createDespesaDto.currencyId,
+      cotacao: createDespesaDto.cotacao,
+    });
+
+    // Criar a despesa
+    const despesa = await tx.despesa.create({
+      data: {
+        publicId: despesaEntity.publicId,
+        dataRegistro: createDespesaDto.dataRegistro
+          ? new Date(createDespesaDto.dataRegistro)
+          : new Date(),
+        valorTotal: createDespesaDto.valorTotal,
+        descricao: createDespesaDto.descricao,
+        tipoPagamento: createDespesaDto.tipoPagamento,
+        subCategoriaId: createDespesaDto.subCategoriaId,
+        parceiroId: parceiroId,
+        fornecedorId: createDespesaDto.fornecedorId,
+        currencyId: createDespesaDto.currencyId,
+        cotacao: createDespesaDto.cotacao,
+      },
+      include: {
+        parceiro: true,
+        fornecedor: true,
+        subCategoria: {
+          include: {
+            categoria: true,
+          },
+        },
+      },
+    });
+
+    // Criar ContasPagar
+    const contasPagar = await tx.contasPagar.create({
+      data: {
+        publicId: `cp_${despesaEntity.publicId}`,
+        despesaId: despesa.id,
+        dataCriacao: createDespesaDto.dataRegistro,
+        valorTotal: createDespesaDto.valorTotal,
+        saldo: 0,
+        pago: false,
+      },
+    });
+
+    // Criar ContasPagarParcelas baseado no tipo de pagamento
+    await this.createContasPagarParcelas(tx, contasPagar.id, createDespesaDto);
+
+    // Atualizar cache de despesas (fora da transação)
+    await this.updateCacheForNewDespesa(despesa, createDespesaDto);
+
+    // Atualizar cache de despesas classificacao (fora da transação)
+    await this.DespesaClassificacaoCacheService.updateDespesaClassificacaoCache(
+      despesa.parceiroId,
+      despesa.dataRegistro,
+      despesa.subCategoria.categoriaId,
+      despesa.subCategoriaId,
+      new Decimal(despesa.valorTotal),
+      despesa.subCategoria.descricao,
+      despesa.subCategoria.categoria.descricao,
+    );
+
+    // incremente o contador de despesas no ano (fora da transação)
+    await this.rollupDespesasCacheService.incrYear(
+      parceiroId,
+      new Date(createDespesaDto.dataRegistro).getFullYear().toString(),
+    );
+
+    return {
+      ...despesa,
+      valorTotal: Number(despesa.valorTotal),
+      cotacao: despesa.cotacao ? Number(despesa.cotacao) : null,
+    } as Despesa;
   }
 
   async findAll(): Promise<Despesa[]> {

@@ -24,6 +24,7 @@ interface ProductSkuPickerCardProps {
 		productSkus: string;
 		doubleClickToAdd: string;
 	};
+	isEnabled?: boolean;
 }
 
 const ProductSkuPickerCardComponent: React.FC<ProductSkuPickerCardProps> = ({
@@ -39,6 +40,7 @@ const ProductSkuPickerCardComponent: React.FC<ProductSkuPickerCardProps> = ({
 	onAddSku,
 	onPriceChange,
 	labels,
+	isEnabled = true,
 }) => {
 	return (
 		<Card>
@@ -55,7 +57,7 @@ const ProductSkuPickerCardComponent: React.FC<ProductSkuPickerCardProps> = ({
 							onProductSelect={onProductSelect}
 							isLoading={isLoadingProducts}
 							error={errorProducts}
-							disabled={!isLocationSelected}
+							disabled={!isEnabled || !isLocationSelected}
 						/>
 
 						{selectedProductId && (

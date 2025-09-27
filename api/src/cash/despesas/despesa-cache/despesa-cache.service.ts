@@ -61,6 +61,11 @@ export class DespesaCacheService {
     dataDespesa: Date,
     valor: number,
   ): Promise<void> {
+    console.log('updateParcelaDespesaCache', {
+      parceiroId,
+      dataDespesa,
+      valor,
+    });
     // Validar parâmetros de entrada
     if (
       !parceiroId ||

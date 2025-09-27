@@ -340,25 +340,26 @@ model CategoriaProduto {
 }
 
 model Produto {
-  id           Int               @id @default(autoincrement())
-  publicId     String            @unique @map("public_id")
-  nome         String
-  dataCadastro DateTime          @default(now()) @map("data_cadastro")
-  ativo        Boolean           @default(true)
-  consignado   Boolean           @default(false)
-  categoriaId  Int?              @map("categoria_id")
-  descricao    String?
-  imgURL       String?           @map("img_url")
-  precoCompra  Decimal?          @default(0.0) @map("preco_compra") @db.Decimal(12, 3)
-  currencyId   Int?              @map("currency_id")
-  precoVenda   Decimal           @map("preco_venda") @db.Decimal(12, 3)
-  parceiroId   Int               @map("parceiro_id")
-  fornecedorId Int?              @map("fornecedor_id")
-  Parceiro     Parceiro          @relation(fields: [parceiroId], references: [id])
-  fornecedor   Fornecedor?       @relation(fields: [fornecedorId], references: [id])
-  categoria    CategoriaProduto? @relation(fields: [categoriaId], references: [id])
-  currency     Currency?         @relation(fields: [currencyId], references: [id])
-  ProdutoSKU   ProdutoSKU[]
+  id                    Int                     @id @default(autoincrement())
+  publicId              String                  @unique @map("public_id")
+  nome                  String
+  dataCadastro          DateTime                @default(now()) @map("data_cadastro")
+  ativo                 Boolean                 @default(true)
+  consignado            Boolean                 @default(false)
+  categoriaId           Int?                    @map("categoria_id")
+  descricao             String?
+  imgURL                String?                 @map("img_url")
+  precoCompra           Decimal?                @default(0.0) @map("preco_compra") @db.Decimal(12, 3)
+  currencyId            Int?                    @map("currency_id")
+  precoVenda            Decimal                 @map("preco_venda") @db.Decimal(12, 3)
+  parceiroId            Int                     @map("parceiro_id")
+  fornecedorId          Int?                    @map("fornecedor_id")
+  Parceiro              Parceiro                @relation(fields: [parceiroId], references: [id])
+  fornecedor            Fornecedor?             @relation(fields: [fornecedorId], references: [id])
+  categoria             CategoriaProduto?       @relation(fields: [categoriaId], references: [id])
+  currency              Currency?               @relation(fields: [currencyId], references: [id])
+  ProdutoSKU            ProdutoSKU[]
+  ProdutoHistoricoPreco ProdutoHistoricoPreco[]
 
   @@map("produto")
 }
@@ -380,6 +381,16 @@ model ProdutoSKU {
   PedidoCompraItem PedidoCompraItem[]
 
   @@map("produto_sku")
+}
+
+model ProdutoHistoricoPreco {
+  id        Int      @id @default(autoincrement())
+  produtoId Int      @map("produto_id")
+  preco     Decimal  @map("preco") @db.Decimal(12, 3)
+  data      DateTime @default(now()) @map("data")
+  Produto   Produto  @relation(fields: [produtoId], references: [id])
+
+  @@map("produto_historico_preco")
 }
 
 model LocalEstoque {
