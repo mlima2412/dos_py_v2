@@ -16,21 +16,23 @@ import {
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import {
-    usePedidoCompraControllerFindAll,
-    usePedidoCompraControllerRemove,
-    pedidoCompraControllerFindAllQueryKey,
-    useFornecedoresControllerFindActiveFornecedores,
-    useCurrencyControllerFindAllActive,
+	usePedidoCompraControllerFindAll,
+	usePedidoCompraControllerRemove,
+	pedidoCompraControllerFindAllQueryKey,
+	useFornecedoresControllerFindActiveFornecedores,
+	useCurrencyControllerFindAllActive,
 } from "@/api-client";
 import type { Fornecedor } from "@/api-client/types";
 import { safeNumber } from "./utils/numberUtils";
-import { formatCurrency, formatCurrencyForPartner } from "./utils/currencyUtils";
+import {
+	formatCurrency,
+	formatCurrencyForPartner,
+} from "./utils/currencyUtils";
 import { mapStatusToKey } from "./utils/statusUtils";
 import type { PurchaseOrderListItem, OrderStatusKey } from "./types";
 import { SearchAndFilterBar } from "./components/SearchAndFilterBar";
 import { PurchaseOrdersTable } from "./components/PurchaseOrdersTable";
 import { PaginationBar } from "./components/PaginationBar";
-
 
 export const ListagemPedidoCompra: React.FC = () => {
 	const { t } = useTranslation("common");
@@ -48,20 +50,22 @@ export const ListagemPedidoCompra: React.FC = () => {
 
 	const parceiroId = selectedPartnerId ? Number(selectedPartnerId) : null;
 
-    const { data: pedidosData, isLoading: isLoadingOrders } =
-        usePedidoCompraControllerFindAll(
-            { "x-parceiro-id": parceiroId ?? 0 },
-            {
-                query: {
-                    enabled: !!parceiroId,
-                },
-            }
-        );
+	const { data: pedidosData, isLoading: isLoadingOrders } =
+		usePedidoCompraControllerFindAll(
+			{ "x-parceiro-id": parceiroId ?? 0 },
+			{
+				query: {
+					enabled: !!parceiroId,
+				},
+			}
+		);
 
-    // Carregar moedas para formatar pelo currency do pedido
-    const { data: currenciesData, isLoading: isLoadingCurrencies } =
-        useCurrencyControllerFindAllActive();
-    const currencies = React.useMemo(() => currenciesData ?? [], [currenciesData]);
+	// Carregar moedas para formatar pelo currency do pedido
+	const { data: currenciesData } = useCurrencyControllerFindAllActive();
+	const currencies = React.useMemo(
+		() => currenciesData ?? [],
+		[currenciesData]
+	);
 
 	const fornecedoresHeaders = useMemo(
 		() => ({
@@ -119,58 +123,58 @@ export const ListagemPedidoCompra: React.FC = () => {
 		[suppliers]
 	);
 
-    const orders = useMemo<PurchaseOrderListItem[]>(() => {
-        if (!pedidosData) return [];
+	const orders = useMemo<PurchaseOrderListItem[]>(() => {
+		if (!pedidosData) return [];
 
-        return pedidosData
-            .filter(order => !parceiroId || order.parceiroId === parceiroId)
-            .map(order => {
-                const supplierId = order.fornecedorId
-                    ? order.fornecedorId.toString()
-                    : "";
-                const supplierFromOrder = (order as { fornecedor?: { nome?: string } })
-                    .fornecedor?.nome;
-                const supplierFromList = suppliers.find(
-                    (supplier: Fornecedor) => supplier.id === order.fornecedorId
-                )?.nome;
-                const supplierName = supplierFromOrder || supplierFromList || "-";
+		return pedidosData
+			.filter(order => !parceiroId || order.parceiroId === parceiroId)
+			.map(order => {
+				const supplierId = order.fornecedorId
+					? order.fornecedorId.toString()
+					: "";
+				const supplierFromOrder = (order as { fornecedor?: { nome?: string } })
+					.fornecedor?.nome;
+				const supplierFromList = suppliers.find(
+					(supplier: Fornecedor) => supplier.id === order.fornecedorId
+				)?.nome;
+				const supplierName = supplierFromOrder || supplierFromList || "-";
 
-                return {
-                    id: order.id,
-                    publicId: order.publicId || order.id.toString(),
-                    supplierId,
-                    supplierName,
-                    dataPedido: order.dataPedido,
-                    valorTotal: safeNumber(order.valorTotal, 0),
-                    currencyId: order.currencyId,
-                    cotacao: order.cotacao,
-                    status: mapStatusToKey(order.status),
-                };
-            });
-    }, [pedidosData, suppliers, parceiroId]);
+				return {
+					id: order.id,
+					publicId: order.publicId || order.id.toString(),
+					supplierId,
+					supplierName,
+					dataPedido: order.dataPedido,
+					valorTotal: safeNumber(order.valorTotal, 0),
+					currencyId: order.currencyId,
+					cotacao: order.cotacao,
+					status: mapStatusToKey(order.status),
+				};
+			});
+	}, [pedidosData, suppliers, parceiroId]);
 
-    const formatPurchaseValue = useCallback(
-        (order: PurchaseOrderListItem) => {
-            const currency = currencies.find(c => c.id === order.currencyId);
-            return formatCurrency(order.valorTotal, {
-                locale: currency?.locale,
-                currency: currency?.isoCode,
-            });
-        },
-        [currencies]
-    );
+	const formatPurchaseValue = useCallback(
+		(order: PurchaseOrderListItem) => {
+			const currency = currencies.find(c => c.id === order.currencyId);
+			return formatCurrency(order.valorTotal, {
+				locale: currency?.locale,
+				currency: currency?.isoCode,
+			});
+		},
+		[currencies]
+	);
 
-    const formatPayableValue = useCallback(
-        (order: PurchaseOrderListItem) => {
-            const totalToPay = order.valorTotal * (order.cotacao ?? 1);
-            return formatCurrencyForPartner(
-                totalToPay,
-                selectedPartnerLocale,
-                selectedPartnerIsoCode
-            );
-        },
-        [selectedPartnerLocale, selectedPartnerIsoCode]
-    );
+	const formatPayableValue = useCallback(
+		(order: PurchaseOrderListItem) => {
+			const totalToPay = order.valorTotal * (order.cotacao ?? 1);
+			return formatCurrencyForPartner(
+				totalToPay,
+				selectedPartnerLocale,
+				selectedPartnerIsoCode
+			);
+		},
+		[selectedPartnerLocale, selectedPartnerIsoCode]
+	);
 
 	const formatOrderDate = useCallback(
 		(value: string) => {
@@ -252,9 +256,12 @@ export const ListagemPedidoCompra: React.FC = () => {
 		[navigate]
 	);
 
-	const handlePrintOrder = useCallback((orderPublicId: string) => {
-		console.log("Imprimir pedido:", orderPublicId);
-	}, []);
+	const handlePrintTagsOrder = useCallback(
+		(orderPublicId: string) => {
+			navigate(`/pedidoCompra/etiquetas/${orderPublicId}`);
+		},
+		[navigate]
+	);
 
 	const filterLabels = useMemo(
 		() => ({
@@ -266,19 +273,19 @@ export const ListagemPedidoCompra: React.FC = () => {
 		[t]
 	);
 
-    const tableColumns = useMemo(
-        () => ({
-            supplier: t("purchaseOrders.columns.supplier"),
-            orderDate: t("purchaseOrders.columns.orderDate"),
-            purchaseValue: t("purchaseOrders.columns.purchaseValue"),
-            payableValue: t("purchaseOrders.columns.payableValue", {
-                defaultValue: "Valor a Pagar",
-            }),
-            status: t("purchaseOrders.columns.status"),
-            actions: t("purchaseOrders.columns.actions"),
-        }),
-        [t]
-    );
+	const tableColumns = useMemo(
+		() => ({
+			supplier: t("purchaseOrders.columns.supplier"),
+			orderDate: t("purchaseOrders.columns.orderDate"),
+			purchaseValue: t("purchaseOrders.columns.purchaseValue"),
+			payableValue: t("purchaseOrders.columns.payableValue", {
+				defaultValue: "Valor a Pagar",
+			}),
+			status: t("purchaseOrders.columns.status"),
+			actions: t("purchaseOrders.columns.actions"),
+		}),
+		[t]
+	);
 
 	const tableActions = useMemo(
 		() => ({
@@ -366,20 +373,20 @@ export const ListagemPedidoCompra: React.FC = () => {
 							</div>
 						) : (
 							<>
-                        <PurchaseOrdersTable
-                            orders={currentOrders}
-                            formatPurchaseValue={formatPurchaseValue}
-                            formatPayableValue={formatPayableValue}
-                            formatDate={formatOrderDate}
-                            getStatusLabel={getStatusLabel}
-                            onView={handleViewOrder}
-                            onPrint={handlePrintOrder}
-                            onDelete={handleDeleteOrder}
-                            deletingOrderId={deletingOrderId}
-                            isDeleting={removePedidoMutation.isPending}
-                            columns={tableColumns}
-                            actions={tableActions}
-                        />
+								<PurchaseOrdersTable
+									orders={currentOrders}
+									formatPurchaseValue={formatPurchaseValue}
+									formatPayableValue={formatPayableValue}
+									formatDate={formatOrderDate}
+									getStatusLabel={getStatusLabel}
+									onView={handleViewOrder}
+									onPrint={handlePrintTagsOrder}
+									onDelete={handleDeleteOrder}
+									deletingOrderId={deletingOrderId}
+									isDeleting={removePedidoMutation.isPending}
+									columns={tableColumns}
+									actions={tableActions}
+								/>
 								<PaginationBar
 									currentPage={currentPage}
 									totalPages={totalPages}

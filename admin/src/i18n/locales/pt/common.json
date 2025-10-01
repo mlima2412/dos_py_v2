@@ -1406,7 +1406,7 @@
 		"actions": {
 			"view": "Visualizar",
 			"delete": "Eliminar",
-			"print": "Imprimir"
+			"print": "Imprimir Etiquetas"
 		},
 		"messages": {
 			"deleteSuccess": "Pedido de compra eliminado com sucesso!",

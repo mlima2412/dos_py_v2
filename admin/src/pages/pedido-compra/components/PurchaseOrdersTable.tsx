@@ -20,7 +20,7 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Eye, Printer, Trash2 } from "lucide-react";
+import { Eye, Tag, Trash2 } from "lucide-react";
 import { getStatusBadgeVariant } from "../constants/status";
 import type { PurchaseOrderListItem, OrderStatusKey } from "../types";
 
@@ -103,7 +103,7 @@ export const PurchaseOrdersTable: React.FC<PurchaseOrdersTableProps> = ({
 							</Badge>
 						</TableCell>
 						<TableCell>
-							<div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+							<div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
 								<Button
 									variant="ghost"
 									size="sm"
@@ -112,48 +112,48 @@ export const PurchaseOrdersTable: React.FC<PurchaseOrdersTableProps> = ({
 								>
 									<Eye className="h-4 w-4" />
 								</Button>
-								<Button
-									variant="ghost"
-									size="sm"
-									onClick={() => onPrint(order.publicId)}
-									title={actions.print}
-								>
-									<Printer className="h-4 w-4" />
-								</Button>
-								<AlertDialog>
-									<AlertDialogTrigger asChild>
-										<Button
-											variant="ghost"
-											size="sm"
-											title={actions.delete}
-										>
-											<Trash2 className="h-4 w-4" />
-										</Button>
-									</AlertDialogTrigger>
-									<AlertDialogContent>
-										<AlertDialogHeader>
-											<AlertDialogTitle>
-												{actions.deleteConfirmTitle}
-											</AlertDialogTitle>
-											<AlertDialogDescription>
-												{actions.deleteConfirmDescription}
-											</AlertDialogDescription>
-										</AlertDialogHeader>
-										<AlertDialogFooter>
-											<AlertDialogCancel>
-												{actions.deleteConfirmCancel}
-											</AlertDialogCancel>
-											<AlertDialogAction
-												onClick={() => onDelete(order.publicId)}
-												disabled={
-													isDeleting && deletingOrderId === order.publicId
-												}
-											>
-												{actions.deleteConfirmConfirm}
-											</AlertDialogAction>
-										</AlertDialogFooter>
-									</AlertDialogContent>
-								</AlertDialog>
+								{order.status === "delivered" && (
+									<Button
+										variant="ghost"
+										size="sm"
+										onClick={() => onPrint(order.publicId)}
+										title={actions.print}
+									>
+										<Tag className="h-4 w-4" />
+									</Button>
+								)}
+								{order.status !== "delivered" && (
+									<AlertDialog>
+										<AlertDialogTrigger asChild>
+											<Button variant="ghost" size="sm" title={actions.delete}>
+												<Trash2 className="h-4 w-4" />
+											</Button>
+										</AlertDialogTrigger>
+										<AlertDialogContent>
+											<AlertDialogHeader>
+												<AlertDialogTitle>
+													{actions.deleteConfirmTitle}
+												</AlertDialogTitle>
+												<AlertDialogDescription>
+													{actions.deleteConfirmDescription}
+												</AlertDialogDescription>
+											</AlertDialogHeader>
+											<AlertDialogFooter>
+												<AlertDialogCancel>
+													{actions.deleteConfirmCancel}
+												</AlertDialogCancel>
+												<AlertDialogAction
+													onClick={() => onDelete(order.publicId)}
+													disabled={
+														isDeleting && deletingOrderId === order.publicId
+													}
+												>
+													{actions.deleteConfirmConfirm}
+												</AlertDialogAction>
+											</AlertDialogFooter>
+										</AlertDialogContent>
+									</AlertDialog>
+								)}
 							</div>
 						</TableCell>
 					</TableRow>

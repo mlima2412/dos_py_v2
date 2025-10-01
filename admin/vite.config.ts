@@ -10,7 +10,14 @@ export default defineConfig({
 			"@": path.resolve(__dirname, "./src"),
 			"@/api-client": path.resolve(__dirname, "./src/api-client"),
 			"@repo/api": path.resolve(__dirname, "../../packages/api/src"),
+			buffer: "buffer",
 		},
+	},
+	define: {
+		global: "globalThis",
+	},
+	optimizeDeps: {
+		include: ["buffer"],
 	},
 	server: {
 		proxy: {

@@ -189,6 +189,7 @@ export class PedidoCompraItemService {
               select: {
                 id: true,
                 nome: true,
+                precoVenda: true,
               },
             },
           },
@@ -431,6 +432,7 @@ export class PedidoCompraItemService {
             produto: {
               id: item.ProdutoSKU.produto.id,
               nome: item.ProdutoSKU.produto.nome,
+              precoVenda: item.ProdutoSKU.produto.precoVenda,
             },
           }
         : undefined,

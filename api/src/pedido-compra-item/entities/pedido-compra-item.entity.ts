@@ -59,6 +59,7 @@ export class PedidoCompraItem {
     produto: {
       id: number;
       nome: string;
+      precoVenda: Decimal;
     };
   };
 

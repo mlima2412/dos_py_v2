@@ -41,6 +41,7 @@ import { PurchaseOrderDetailsCard } from "./components/PurchaseOrderDetailsCard"
 import { PurchaseOrderValuesCard } from "./components/PurchaseOrderValuesCard";
 import { ProductSkuPickerCard } from "./components/ProductSkuPickerCard";
 import { SelectedSkusCard } from "./components/SelectedSkusCard";
+import { ImprimirEtiquetas } from "./ImprimirEtiquetas";
 import {
 	parseToNumber,
 	optionalNumber,
@@ -76,6 +77,7 @@ export const FormularioPedidoCompra: React.FC = () => {
 		null
 	);
 	const [pedidoAtual, setPedidoAtual] = useState<PedidoCompra | null>(null);
+	const [mostrarEtiquetas, setMostrarEtiquetas] = useState(false);
 
 	// Estados para seleção de local e produtos
 	const [localEntradaId, setLocalEntradaId] = useState<number | null>(null);
@@ -839,7 +841,7 @@ export const FormularioPedidoCompra: React.FC = () => {
 				</div>
 				<div>
 					{pedidoData?.status === 1 && pedidoPublicId && !isEditing ? (
-						<div className="mt-4">
+						<div className="mt-4 flex gap-2">
 							<Button
 								variant="default"
 								onClick={() =>
@@ -850,91 +852,108 @@ export const FormularioPedidoCompra: React.FC = () => {
 							</Button>
 						</div>
 					) : null}
+					<Button variant="outline" onClick={() => setMostrarEtiquetas(true)}>
+						{t("purchaseOrders.labels.printLabels", {
+							defaultValue: "Imprimir Etiquetas",
+						})}
+					</Button>
 				</div>
 			</div>
 
-			{/* Formulário */}
-			{!isEditing && displayData ? (
-				// Modo de visualização - Layout com cards
-				<div className="space-y-6 mt-4">
-					<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-						<PurchaseOrderDetailsCard
-							title={detailsCardTitle}
-							supplierLabel={supplierLabel}
-							locationLabel={locationLabel}
-							freightLabel={freightLabel}
-							commissionLabel={commissionLabel}
-							observationLabel={observationLabel}
-							onEdit={handleEdit}
-							supplierName={supplierNameDisplay}
-							locationName={locationNameDisplay}
-							supplierInfoFallback={supplierInfoFallback}
-							formattedFreight={formattedFreightDisplay}
-							formattedCommission={formattedCommissionDisplay}
-							observation={displayData.observacao}
-							editLabel={editLabelText}
-							status={pedidoAtual?.status || displayData.status || 1}
-						/>
-						<PurchaseOrderValuesCard
-							originalLabel={originalValueLabel}
-							totalLabel={totalValueLabel}
-							formattedOriginal={formattedOriginalValue}
-							formattedTotal={formattedConvertedValue}
-						/>
-					</div>
-
-					<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-						<ProductSkuPickerCard
-							isLocationSelected={Boolean(localEntradaId)}
-							selectLocationMessage={selectEntryLocationMessage}
-							products={produtosData || []}
-							selectedProductId={selectedProductId}
-							onProductSelect={setSelectedProductId}
-							isLoadingProducts={isLoadingProducts}
-							errorProducts={errorProducts}
-							selectedProduct={selectedProduct}
-							skus={selectedProductSkus}
-							onAddSku={handleSkuAddition}
-							onPriceChange={handleProductPriceUpdate}
-							labels={productSkuPickerLabels}
-							isEnabled={pedidoData?.status === 1}
-						/>
-
-						<SelectedSkusCard
-							selectedSkus={selectedSkus}
-							onRemoveSku={handleRemoveSku}
-							onUpdateQuantity={handleUpdateQuantity}
-							emptyMessage={selectedProductsEmpty}
-							title={selectedProductsTitle}
-							isEnabled={pedidoData?.status === 1}
-						/>
-					</div>
+			{/* Renderizar Etiquetas se solicitado */}
+			{mostrarEtiquetas ? (
+				<div className="mt-4">
+					<ImprimirEtiquetas
+						pedidoPublicId={pedidoPublicId || undefined}
+						onClose={() => setMostrarEtiquetas(false)}
+					/>
 				</div>
 			) : (
-				// Modo de edição - Apenas formulário básico
-				<Card className="mt-4">
-					<CardContent className="pt-2">
-						<PurchaseOrderBasicForm
-							form={form}
-							fornecedores={fornecedores}
-							locais={locais}
-							currencies={currencies}
-							isLoadingFornecedores={isLoadingFornecedores}
-							isLoadingLocations={isLoadingLocations}
-							isLoadingCurrencies={isLoadingCurrencies}
-							isFornecedorLocked={isFornecedorLocked}
-							isCotacaoLocked={isCotacaoLocked}
-							isCurrencyLocked={isCurrencyLocked}
-							parceiroIdNumber={parceiroIdNumber}
-							onSubmit={onSubmit}
-							onCancel={handleCancel}
-							onLocalChange={setLocalEntradaId}
-							refreshTotals={refreshTotals}
-							isSaving={isSaving}
-							t={t}
-						/>
-					</CardContent>
-				</Card>
+				<>
+					{/* Formulário */}
+					{!isEditing && displayData ? (
+						// Modo de visualização - Layout com cards
+						<div className="space-y-6 mt-4">
+							<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+								<PurchaseOrderDetailsCard
+									title={detailsCardTitle}
+									supplierLabel={supplierLabel}
+									locationLabel={locationLabel}
+									freightLabel={freightLabel}
+									commissionLabel={commissionLabel}
+									observationLabel={observationLabel}
+									onEdit={handleEdit}
+									supplierName={supplierNameDisplay}
+									locationName={locationNameDisplay}
+									supplierInfoFallback={supplierInfoFallback}
+									formattedFreight={formattedFreightDisplay}
+									formattedCommission={formattedCommissionDisplay}
+									observation={displayData.observacao}
+									editLabel={editLabelText}
+									status={pedidoAtual?.status || displayData.status || 1}
+								/>
+								<PurchaseOrderValuesCard
+									originalLabel={originalValueLabel}
+									totalLabel={totalValueLabel}
+									formattedOriginal={formattedOriginalValue}
+									formattedTotal={formattedConvertedValue}
+								/>
+							</div>
+
+							<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+								<ProductSkuPickerCard
+									isLocationSelected={Boolean(localEntradaId)}
+									selectLocationMessage={selectEntryLocationMessage}
+									products={produtosData || []}
+									selectedProductId={selectedProductId}
+									onProductSelect={setSelectedProductId}
+									isLoadingProducts={isLoadingProducts}
+									errorProducts={errorProducts}
+									selectedProduct={selectedProduct}
+									skus={selectedProductSkus}
+									onAddSku={handleSkuAddition}
+									onPriceChange={handleProductPriceUpdate}
+									labels={productSkuPickerLabels}
+									isEnabled={pedidoData?.status === 1}
+								/>
+
+								<SelectedSkusCard
+									selectedSkus={selectedSkus}
+									onRemoveSku={handleRemoveSku}
+									onUpdateQuantity={handleUpdateQuantity}
+									emptyMessage={selectedProductsEmpty}
+									title={selectedProductsTitle}
+									isEnabled={pedidoData?.status === 1}
+								/>
+							</div>
+						</div>
+					) : (
+						// Modo de edição - Apenas formulário básico
+						<Card className="mt-4">
+							<CardContent className="pt-2">
+								<PurchaseOrderBasicForm
+									form={form}
+									fornecedores={fornecedores}
+									locais={locais}
+									currencies={currencies}
+									isLoadingFornecedores={isLoadingFornecedores}
+									isLoadingLocations={isLoadingLocations}
+									isLoadingCurrencies={isLoadingCurrencies}
+									isFornecedorLocked={isFornecedorLocked}
+									isCotacaoLocked={isCotacaoLocked}
+									isCurrencyLocked={isCurrencyLocked}
+									parceiroIdNumber={parceiroIdNumber}
+									onSubmit={onSubmit}
+									onCancel={handleCancel}
+									onLocalChange={setLocalEntradaId}
+									refreshTotals={refreshTotals}
+									isSaving={isSaving}
+									t={t}
+								/>
+							</CardContent>
+						</Card>
+					)}
+				</>
 			)}
 		</DashboardLayout>
 	);
