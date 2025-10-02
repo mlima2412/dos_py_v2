@@ -24,6 +24,7 @@ export class ProdutoSkuService {
 
     const produtoSku = await this.prisma.produtoSKU.create({
       data: {
+        id: produtoSkuEntity.id,
         publicId: produtoSkuEntity.publicId,
         produtoId: produtoSkuEntity.produtoId,
         cor: produtoSkuEntity.cor,

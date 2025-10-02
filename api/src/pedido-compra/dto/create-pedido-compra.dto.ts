@@ -26,6 +26,15 @@ export class CreatePedidoCompraDto {
   fornecedorId: number;
 
   @ApiProperty({
+    description: 'Data do pedido',
+    example: '2024-01-20T10:30:00Z',
+    required: false,
+  })
+  @IsOptional()
+  @IsDateString()
+  dataPedido?: string;
+
+  @ApiProperty({
     description: 'Data de entrega prevista',
     example: '2024-01-20T10:30:00Z',
     required: false,
@@ -101,6 +110,17 @@ export class CreatePedidoCompraDto {
   @IsOptional()
   @IsBoolean()
   consignado?: boolean;
+
+  // status 1 a 3
+  @ApiProperty({
+    description: 'Status do pedido (1 a 3)',
+    example: 1,
+    required: false,
+  })
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  status?: number;
 
   // Nota: parceiroId será obtido automaticamente do header x-parceiro-id
 }

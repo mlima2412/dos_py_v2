@@ -98,7 +98,9 @@
 			"administrator": "Administrador",
 			"user": "Usuario"
 		},
-		"page": "Página"
+		"page": "Página",
+		"back": "Volver",
+		"download": "Descargar"
 	},
 	"dashboard": {
 		"title": "Dashboard",
@@ -922,7 +924,10 @@
 			"name": "Nombre",
 			"description": "Descripción",
 			"partner": "Socio",
-			"address": "Dirección"
+			"address": "Dirección",
+			"title": "Etiquetas del Inventario",
+			"stockNumber": "Número del Inventario",
+			"preview": "Vista Previa"
 		},
 		"validations": {
 			"nameRequired": "Nombre es obligatorio",
@@ -937,6 +942,8 @@
 		"actions": {
 			"edit": "Editar",
 			"update": "Actualizar",
+			"view": "Visualizar",
+			"printTags": "Imprimir Etiquetas",
 			"create": "Crear Local",
 			"save": "Guardar",
 			"cancel": "Cancelar"
@@ -1299,7 +1306,8 @@
 				"observation": "Observación",
 				"commissionValue": "Comisión",
 				"exchangeRate": "Tasa de Cambio",
-				"consigned": "Consignado"
+				"consigned": "Consignado",
+				"selectedProducts": "Productos"
 			},
 			"placeholders": {
 				"supplier": "Seleccione un proveedor",
@@ -1382,6 +1390,11 @@
 				"firstInstallmentDateRequired": "Indique la fecha de la primera cuota.",
 				"generic": "Revise los campos del formulario."
 			}
+		},
+		"labels": {
+			"title": "Impresión de Etiquetas",
+			"orderNumber": "Número de Pedido",
+			"preview": "Vista Previa"
 		}
 	}
 }

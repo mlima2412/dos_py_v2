@@ -50,9 +50,11 @@ import {
 	useResponsiveColumns,
 	useIsMobile,
 } from "./components/ResponsiveColumns";
+import { useNavigate } from "react-router-dom";
 
 export const ListarEstoques: React.FC = () => {
 	const { t } = useTranslation("common");
+	const navigate = useNavigate();
 
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState("");
@@ -98,8 +100,15 @@ export const ListarEstoques: React.FC = () => {
 	// Detectar dispositivo móvel
 	const isMobile = useIsMobile();
 
+	// Função para imprimir etiquetas do estoque
+	const handlePrintTagsStock = (stockPublicId: string, nomeLocal: string) => {
+		navigate(
+			`/estoques/etiquetas/${stockPublicId}/${encodeURIComponent(nomeLocal)}`
+		);
+	};
+
 	// Colunas da tabela (responsivas)
-	const columns = useResponsiveColumns(t, isMobile);
+	const columns = useResponsiveColumns(t, isMobile, handlePrintTagsStock);
 
 	const table = useReactTable({
 		data,
@@ -135,7 +144,7 @@ export const ListarEstoques: React.FC = () => {
 							</BreadcrumbItem>
 							<BreadcrumbSeparator />
 							<BreadcrumbItem>
-								<BreadcrumbPage>{t("menu.produtc.stocks")}</BreadcrumbPage>
+								<BreadcrumbPage>{t("menu.products.stocks")}</BreadcrumbPage>
 							</BreadcrumbItem>
 						</BreadcrumbList>
 					</Breadcrumb>

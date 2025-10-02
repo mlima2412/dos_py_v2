@@ -34,12 +34,12 @@ export class PedidoCompraItemService {
       }
 
       // Verificar se o pedido não está finalizado
-      if (pedidoCompra.status === 3) {
-        // FINALIZADO
-        throw new ConflictException(
-          'Não é possível adicionar itens a um pedido finalizado',
-        );
-      }
+      // if (pedidoCompra.status === 3) {
+      //   // FINALIZADO
+      //   throw new ConflictException(
+      //     'Não é possível adicionar itens a um pedido finalizado',
+      //   );
+      // }
 
       // Verificar se o SKU existe e pertence ao parceiro
       const produtoSku = await this.prisma.produtoSKU.findFirst({

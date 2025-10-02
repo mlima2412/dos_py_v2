@@ -75,8 +75,9 @@ export const SelectedSkusList: React.FC<SelectedSkusListProps> = ({
 					</div>
 					<div>
 						{selectedSkus.length > 0 && (
-							<span className="text-base font-normal text-muted-foreground">
-								{totalItems} {totalItems === 1 ? "item" : "itens"}
+							<span className="text-xs font-normal text-muted-foreground">
+								{selectedSkus.length} itens, {totalItems}{" "}
+								{totalItems === 1 ? "pc" : "pcs"}
 							</span>
 						)}
 					</div>
@@ -136,9 +137,9 @@ export const SelectedSkusList: React.FC<SelectedSkusListProps> = ({
 												{product.nome}
 											</p>
 										</div>
-										{enabledStockAdjustment && (
-											<div className="flex items-center gap-2">
-												<div className="flex items-center gap-1">
+										<div className="flex items-center gap-2">
+											<div className="flex items-center gap-1">
+												{enabledStockAdjustment && (
 													<Button
 														variant="outline"
 														size="sm"
@@ -148,9 +149,11 @@ export const SelectedSkusList: React.FC<SelectedSkusListProps> = ({
 													>
 														<Minus className="h-4 w-4" />
 													</Button>
-													<span className="w-12 text-center font-medium">
-														{quantity}
-													</span>
+												)}
+												<span className="w-12 text-center font-medium">
+													{quantity}
+												</span>
+												{enabledStockAdjustment && (
 													<Button
 														variant="outline"
 														size="sm"
@@ -162,7 +165,9 @@ export const SelectedSkusList: React.FC<SelectedSkusListProps> = ({
 													>
 														<Plus className="h-4 w-4" />
 													</Button>
-												</div>
+												)}
+											</div>
+											{enabledStockAdjustment && (
 												<Button
 													variant="ghost"
 													size="sm"
@@ -171,8 +176,8 @@ export const SelectedSkusList: React.FC<SelectedSkusListProps> = ({
 												>
 													<X className="h-4 w-4" />
 												</Button>
-											</div>
-										)}
+											)}
+										</div>
 									</div>
 								);
 							})}

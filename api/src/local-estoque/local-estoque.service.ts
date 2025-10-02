@@ -7,6 +7,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateLocalEstoqueDto } from './dto/create-local-estoque.dto';
 import { UpdateLocalEstoqueDto } from './dto/update-local-estoque.dto';
 import { LocalEstoque } from './entities/local-estoque.entity';
+import { EtiquetaPedidoCompraDto } from 'src/pedido-compra/dto/etiquetas-pedido-compra';
 
 @Injectable()
 export class LocalEstoqueService {
@@ -151,5 +152,53 @@ export class LocalEstoqueService {
       descricao: data.descricao,
       endereco: data.endereco,
     } as LocalEstoque;
+  }
+
+  async imprimeEtiquetasLocalEstoque(
+    publicId: string,
+    parceiroId: number,
+  ): Promise<EtiquetaPedidoCompraDto[]> {
+    // Acha o pedido de compra pelo publicid
+    const localEstoque = await this.prisma.localEstoque.findFirst({
+      where: {
+        publicId,
+        parceiroId,
+      },
+    });
+    if (!localEstoque) {
+      throw new NotFoundException('Local de estoque não encontrado');
+    }
+
+    const result = await this.prisma.$queryRaw<
+      {
+        produto_id: number;
+        sku_id: number;
+        nome: string;
+        cor: string;
+        tamanho: string;
+        preco: number;
+        qtd: number;
+      }[]
+    >`
+    WITH repetidos as (
+      select p.id as produto_id, psku.id as sku_id, p.nome, psku.cor, psku.tamanho, estoque.qtd, p."preco_venda" as preco, generate_series(1, estoque.qtd) as repeticao
+        FROM public."estoque_sku" as estoque 
+        JOIN public."produto_sku" as psku on estoque."sku_id" = psku.id
+        join public."produto" as p on p.id = psku."produto_id"
+        where estoque."local_id" = ${localEstoque.id}
+    )
+    select produto_id, sku_id, nome, cor, tamanho, preco, 1 as qtd
+      from repetidos
+      order by nome asc, cor desc
+    `;
+
+    return result.map(item => ({
+      id_produto: item.produto_id,
+      id_sku: item.sku_id,
+      nome: item.nome,
+      cor: item.cor,
+      tamanho: item.tamanho,
+      preco: item.preco,
+    }));
   }
 }

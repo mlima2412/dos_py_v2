@@ -7,6 +7,9 @@ CREATE TYPE "public"."TipoPagamento" AS ENUM ('A_VISTA_IMEDIATA', 'A_PRAZO_SEM_P
 -- CreateEnum
 CREATE TYPE "public"."FrequenciaEnum" AS ENUM ('SEMANAL', 'QUINZENAL', 'MENSAL', 'TRIMESTRAL', 'SEMESTRAL', 'ANUAL');
 
+-- CreateEnum
+CREATE TYPE "public"."TipoMovimento" AS ENUM ('ENTRADA', 'SAIDA', 'TRANSFERENCIA', 'CONDICIONAL', 'DEVOLUCAO', 'AJUSTE');
+
 -- CreateTable
 CREATE TABLE "public"."perfil" (
     "id" SERIAL NOT NULL,
@@ -273,8 +276,11 @@ CREATE TABLE "public"."produto" (
     "categoria_id" INTEGER,
     "descricao" TEXT,
     "img_url" TEXT,
-    "preco_compra" DECIMAL(12,3) NOT NULL,
+    "preco_compra" DECIMAL(12,3) DEFAULT 0.0,
+    "currency_id" INTEGER,
     "preco_venda" DECIMAL(12,3) NOT NULL,
+    "parceiro_id" INTEGER NOT NULL,
+    "fornecedor_id" INTEGER,
 
     CONSTRAINT "produto_pkey" PRIMARY KEY ("id")
 );
@@ -285,13 +291,158 @@ CREATE TABLE "public"."produto_sku" (
     "public_id" TEXT NOT NULL,
     "produto_id" INTEGER NOT NULL,
     "cor" TEXT,
-    "cod_cor" INTEGER,
+    "cod_cor" TEXT,
     "tamanho" TEXT,
-    "qtd" INTEGER NOT NULL DEFAULT 0,
     "qtd_minima" INTEGER NOT NULL DEFAULT 0,
     "data_ultima_compra" TIMESTAMP(3),
 
     CONSTRAINT "produto_sku_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."produto_historico_preco" (
+    "id" SERIAL NOT NULL,
+    "produto_id" INTEGER NOT NULL,
+    "preco" DECIMAL(12,3) NOT NULL,
+    "data" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "produto_historico_preco_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."local_estoque" (
+    "id" SERIAL NOT NULL,
+    "public_id" TEXT NOT NULL,
+    "parceiro_id" INTEGER NOT NULL,
+    "nome" TEXT NOT NULL,
+    "descricao" TEXT NOT NULL,
+    "endereco" TEXT NOT NULL,
+
+    CONSTRAINT "local_estoque_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."estoque_sku" (
+    "sku_id" INTEGER NOT NULL,
+    "local_id" INTEGER NOT NULL,
+    "qtd" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "estoque_sku_pkey" PRIMARY KEY ("local_id","sku_id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."movimento_estoque" (
+    "id" SERIAL NOT NULL,
+    "sku_id" INTEGER NOT NULL,
+    "tipo" "public"."TipoMovimento" NOT NULL DEFAULT 'ENTRADA',
+    "qtd" INTEGER NOT NULL DEFAULT 1,
+    "id_usuario" INTEGER NOT NULL,
+    "data_movimento" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "local_origem_id" INTEGER,
+    "local_destino_id" INTEGER,
+    "observacao" TEXT,
+    "pedidoCompraId" INTEGER,
+
+    CONSTRAINT "movimento_estoque_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."transferencia_estoque" (
+    "id" SERIAL NOT NULL,
+    "public_id" TEXT NOT NULL,
+    "parceiro_id" INTEGER NOT NULL,
+    "local_origem_id" INTEGER NOT NULL,
+    "local_destino_id" INTEGER NOT NULL,
+    "enviado_por_usuario_id" INTEGER NOT NULL,
+    "recebido_por_usuario_id" INTEGER,
+    "qtd" INTEGER NOT NULL DEFAULT 1,
+    "valor_total" DECIMAL(12,3) NOT NULL DEFAULT 0.0,
+    "data_transferencia" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "data_recebimento" TIMESTAMP(3),
+
+    CONSTRAINT "transferencia_estoque_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."transferencia_estoque_item" (
+    "id" SERIAL NOT NULL,
+    "transferencia_id" INTEGER NOT NULL,
+    "movimento_estoque_id" INTEGER NOT NULL,
+
+    CONSTRAINT "transferencia_estoque_item_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."conferencia_estoque" (
+    "id" SERIAL NOT NULL,
+    "public_id" TEXT NOT NULL,
+    "parceiro_id" INTEGER NOT NULL,
+    "local_estoque_id" INTEGER NOT NULL,
+    "data_inicio" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "data_fim" TIMESTAMP(3),
+    "usuario_responsavel_id" INTEGER NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'PENDENTE',
+
+    CONSTRAINT "conferencia_estoque_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."conferencia_item" (
+    "id" SERIAL NOT NULL,
+    "conferencia_id" INTEGER NOT NULL,
+    "sku_id" INTEGER NOT NULL,
+    "qtd_sistema" INTEGER NOT NULL DEFAULT 0,
+    "qtd_conferencia" INTEGER NOT NULL DEFAULT 0,
+    "diferenca" INTEGER NOT NULL DEFAULT 0,
+    "ajustado" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "conferencia_item_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."forma_pagamento" (
+    "idFormaPag" SERIAL NOT NULL,
+    "parceiro_id" INTEGER NOT NULL,
+    "nome" TEXT NOT NULL,
+    "taxa" DECIMAL(12,3) DEFAULT 0,
+    "tempo_liberacao" INTEGER NOT NULL DEFAULT 0,
+    "imposto_pos_calculo" BOOLEAN NOT NULL DEFAULT false,
+    "ativo" BOOLEAN NOT NULL DEFAULT true,
+
+    CONSTRAINT "forma_pagamento_pkey" PRIMARY KEY ("idFormaPag")
+);
+
+-- CreateTable
+CREATE TABLE "public"."pedido_compra" (
+    "id" SERIAL NOT NULL,
+    "public_id" TEXT NOT NULL,
+    "parceiro_id" INTEGER NOT NULL,
+    "local_entrada_id" INTEGER NOT NULL,
+    "fornecedor_id" INTEGER NOT NULL,
+    "data_pedido" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "data_entrega" TIMESTAMP(3),
+    "valor_frete" DECIMAL(12,3) DEFAULT 0,
+    "valor_total" DECIMAL(12,3) DEFAULT 0,
+    "observacao" TEXT,
+    "valor_comissao" DECIMAL(12,3) DEFAULT 0,
+    "cotacao" DOUBLE PRECISION DEFAULT 1,
+    "currency_id" INTEGER,
+    "consignado" BOOLEAN NOT NULL DEFAULT false,
+    "status" INTEGER NOT NULL DEFAULT 1,
+
+    CONSTRAINT "pedido_compra_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."pedido_compra_item" (
+    "id" SERIAL NOT NULL,
+    "pedido_compra_id" INTEGER NOT NULL,
+    "sku_id" INTEGER NOT NULL,
+    "qtd" INTEGER NOT NULL,
+    "preco_compra" DECIMAL(12,3) NOT NULL,
+    "observacao" TEXT,
+
+    CONSTRAINT "pedido_compra_item_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -353,6 +504,45 @@ CREATE UNIQUE INDEX "produto_public_id_key" ON "public"."produto"("public_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "produto_sku_public_id_key" ON "public"."produto_sku"("public_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "local_estoque_public_id_key" ON "public"."local_estoque"("public_id");
+
+-- CreateIndex
+CREATE INDEX "local_estoque_parceiro_id_idx" ON "public"."local_estoque"("parceiro_id");
+
+-- CreateIndex
+CREATE INDEX "movimento_estoque_sku_id_idx" ON "public"."movimento_estoque"("sku_id");
+
+-- CreateIndex
+CREATE INDEX "movimento_estoque_local_origem_id_idx" ON "public"."movimento_estoque"("local_origem_id");
+
+-- CreateIndex
+CREATE INDEX "movimento_estoque_local_destino_id_idx" ON "public"."movimento_estoque"("local_destino_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "transferencia_estoque_public_id_key" ON "public"."transferencia_estoque"("public_id");
+
+-- CreateIndex
+CREATE INDEX "transferencia_estoque_local_origem_id_idx" ON "public"."transferencia_estoque"("local_origem_id");
+
+-- CreateIndex
+CREATE INDEX "transferencia_estoque_local_destino_id_idx" ON "public"."transferencia_estoque"("local_destino_id");
+
+-- CreateIndex
+CREATE INDEX "transferencia_estoque_enviado_por_usuario_id_idx" ON "public"."transferencia_estoque"("enviado_por_usuario_id");
+
+-- CreateIndex
+CREATE INDEX "transferencia_estoque_recebido_por_usuario_id_idx" ON "public"."transferencia_estoque"("recebido_por_usuario_id");
+
+-- CreateIndex
+CREATE INDEX "transferencia_estoque_item_transferencia_id_idx" ON "public"."transferencia_estoque_item"("transferencia_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "conferencia_estoque_public_id_key" ON "public"."conferencia_estoque"("public_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "pedido_compra_public_id_key" ON "public"."pedido_compra"("public_id");
 
 -- AddForeignKey
 ALTER TABLE "public"."password_reset_token" ADD CONSTRAINT "password_reset_token_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."usuario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -427,7 +617,100 @@ ALTER TABLE "public"."rollup_despesas_mensais_categoria" ADD CONSTRAINT "rollup_
 ALTER TABLE "public"."rollup_despesas_mensais_categoria" ADD CONSTRAINT "rollup_despesas_mensais_categoria_sub_categoria_id_fkey" FOREIGN KEY ("sub_categoria_id") REFERENCES "public"."subcategoria_despesa"("subcategoria_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "public"."produto" ADD CONSTRAINT "produto_parceiro_id_fkey" FOREIGN KEY ("parceiro_id") REFERENCES "public"."parceiro"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."produto" ADD CONSTRAINT "produto_fornecedor_id_fkey" FOREIGN KEY ("fornecedor_id") REFERENCES "public"."fornecedor"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "public"."produto" ADD CONSTRAINT "produto_categoria_id_fkey" FOREIGN KEY ("categoria_id") REFERENCES "public"."categoria_produto"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."produto_sku" ADD CONSTRAINT "produto_sku_produto_id_fkey" FOREIGN KEY ("produto_id") REFERENCES "public"."produto"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "public"."produto" ADD CONSTRAINT "produto_currency_id_fkey" FOREIGN KEY ("currency_id") REFERENCES "public"."currency"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."produto_sku" ADD CONSTRAINT "produto_sku_produto_id_fkey" FOREIGN KEY ("produto_id") REFERENCES "public"."produto"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."produto_historico_preco" ADD CONSTRAINT "produto_historico_preco_produto_id_fkey" FOREIGN KEY ("produto_id") REFERENCES "public"."produto"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."local_estoque" ADD CONSTRAINT "local_estoque_parceiro_id_fkey" FOREIGN KEY ("parceiro_id") REFERENCES "public"."parceiro"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."estoque_sku" ADD CONSTRAINT "estoque_sku_sku_id_fkey" FOREIGN KEY ("sku_id") REFERENCES "public"."produto_sku"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."estoque_sku" ADD CONSTRAINT "estoque_sku_local_id_fkey" FOREIGN KEY ("local_id") REFERENCES "public"."local_estoque"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."movimento_estoque" ADD CONSTRAINT "movimento_estoque_id_usuario_fkey" FOREIGN KEY ("id_usuario") REFERENCES "public"."usuario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."movimento_estoque" ADD CONSTRAINT "movimento_estoque_sku_id_fkey" FOREIGN KEY ("sku_id") REFERENCES "public"."produto_sku"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."movimento_estoque" ADD CONSTRAINT "movimento_estoque_local_origem_id_fkey" FOREIGN KEY ("local_origem_id") REFERENCES "public"."local_estoque"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."movimento_estoque" ADD CONSTRAINT "movimento_estoque_local_destino_id_fkey" FOREIGN KEY ("local_destino_id") REFERENCES "public"."local_estoque"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."movimento_estoque" ADD CONSTRAINT "movimento_estoque_pedidoCompraId_fkey" FOREIGN KEY ("pedidoCompraId") REFERENCES "public"."pedido_compra"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."transferencia_estoque" ADD CONSTRAINT "transferencia_estoque_enviado_por_usuario_id_fkey" FOREIGN KEY ("enviado_por_usuario_id") REFERENCES "public"."usuario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."transferencia_estoque" ADD CONSTRAINT "transferencia_estoque_recebido_por_usuario_id_fkey" FOREIGN KEY ("recebido_por_usuario_id") REFERENCES "public"."usuario"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."transferencia_estoque" ADD CONSTRAINT "transferencia_estoque_local_origem_id_fkey" FOREIGN KEY ("local_origem_id") REFERENCES "public"."local_estoque"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."transferencia_estoque" ADD CONSTRAINT "transferencia_estoque_local_destino_id_fkey" FOREIGN KEY ("local_destino_id") REFERENCES "public"."local_estoque"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."transferencia_estoque" ADD CONSTRAINT "transferencia_estoque_parceiro_id_fkey" FOREIGN KEY ("parceiro_id") REFERENCES "public"."parceiro"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."transferencia_estoque_item" ADD CONSTRAINT "transferencia_estoque_item_transferencia_id_fkey" FOREIGN KEY ("transferencia_id") REFERENCES "public"."transferencia_estoque"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."transferencia_estoque_item" ADD CONSTRAINT "transferencia_estoque_item_movimento_estoque_id_fkey" FOREIGN KEY ("movimento_estoque_id") REFERENCES "public"."movimento_estoque"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."conferencia_estoque" ADD CONSTRAINT "conferencia_estoque_parceiro_id_fkey" FOREIGN KEY ("parceiro_id") REFERENCES "public"."parceiro"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."conferencia_estoque" ADD CONSTRAINT "conferencia_estoque_usuario_responsavel_id_fkey" FOREIGN KEY ("usuario_responsavel_id") REFERENCES "public"."usuario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."conferencia_estoque" ADD CONSTRAINT "conferencia_estoque_local_estoque_id_fkey" FOREIGN KEY ("local_estoque_id") REFERENCES "public"."local_estoque"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."conferencia_item" ADD CONSTRAINT "conferencia_item_sku_id_fkey" FOREIGN KEY ("sku_id") REFERENCES "public"."produto_sku"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."conferencia_item" ADD CONSTRAINT "conferencia_item_conferencia_id_fkey" FOREIGN KEY ("conferencia_id") REFERENCES "public"."conferencia_estoque"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."forma_pagamento" ADD CONSTRAINT "forma_pagamento_parceiro_id_fkey" FOREIGN KEY ("parceiro_id") REFERENCES "public"."parceiro"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."pedido_compra" ADD CONSTRAINT "pedido_compra_fornecedor_id_fkey" FOREIGN KEY ("fornecedor_id") REFERENCES "public"."fornecedor"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."pedido_compra" ADD CONSTRAINT "pedido_compra_currency_id_fkey" FOREIGN KEY ("currency_id") REFERENCES "public"."currency"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."pedido_compra" ADD CONSTRAINT "pedido_compra_parceiro_id_fkey" FOREIGN KEY ("parceiro_id") REFERENCES "public"."parceiro"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."pedido_compra" ADD CONSTRAINT "pedido_compra_local_entrada_id_fkey" FOREIGN KEY ("local_entrada_id") REFERENCES "public"."local_estoque"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."pedido_compra_item" ADD CONSTRAINT "pedido_compra_item_pedido_compra_id_fkey" FOREIGN KEY ("pedido_compra_id") REFERENCES "public"."pedido_compra"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."pedido_compra_item" ADD CONSTRAINT "pedido_compra_item_sku_id_fkey" FOREIGN KEY ("sku_id") REFERENCES "public"."produto_sku"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -6,6 +6,11 @@
 
 export type UpdateFornecedorDto = {
     /**
+     * @description Código do fornecedor
+     * @type number | undefined
+    */
+    id?: number;
+    /**
      * @description Nome do fornecedor
      * @type string | undefined
     */
@@ -35,6 +40,11 @@ export type UpdateFornecedorDto = {
      * @type string | undefined
     */
     redesocial?: string;
+    /**
+     * @description Data da última compra do fornecedor
+     * @type string | undefined, date-time
+    */
+    ultimaCompra?: string;
     /**
      * @description Status ativo do fornecedor
      * @type boolean | undefined

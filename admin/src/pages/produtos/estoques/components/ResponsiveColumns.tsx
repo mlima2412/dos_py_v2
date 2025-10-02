@@ -1,6 +1,6 @@
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { Eye, Edit } from "lucide-react";
+import { Eye, Edit, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import type { LocalEstoque } from "@/api-client/types";
@@ -8,7 +8,8 @@ import { useParceirosAll } from "@/hooks/useParceiros";
 
 export function useResponsiveColumns(
 	t: (key: string) => string,
-	isMobile: boolean
+	isMobile: boolean,
+	onPrintTags?: (stockPublicId: string, nomeLocal: string) => void
 ): ColumnDef<LocalEstoque>[] {
 	const { data: parceiros } = useParceirosAll();
 
@@ -65,6 +66,21 @@ export function useResponsiveColumns(
 								<span className="sr-only">{t("inventory.actions.edit")}</span>
 							</Button>
 						</Link>
+						{onPrintTags && (
+							<Button
+								variant="ghost"
+								size="sm"
+								className="h-8 px-2"
+								onClick={() =>
+									onPrintTags(row.original.publicId!, row.original.nome)
+								}
+							>
+								<Tag className="h-4 w-4" />
+								<span className="sr-only">
+									{t("inventory.actions.printTags")}
+								</span>
+							</Button>
+						)}
 					</div>
 				);
 			},

@@ -10,6 +10,7 @@ import { z } from "zod";
 export const createPedidoCompraDtoSchema = z.object({
       "localEntradaId": z.coerce.number().describe("ID do local de entrada do estoque"),
   "fornecedorId": z.coerce.number().describe("ID do fornecedor"),
+  "dataPedido": z.coerce.string().describe("Data do pedido").optional(),
   "dataEntrega": z.coerce.string().describe("Data de entrega prevista").optional(),
   "valorFrete": z.coerce.number().describe("Valor do frete").optional(),
   "valorTotal": z.coerce.number().describe("Valor total do pedido").optional(),
@@ -17,5 +18,6 @@ export const createPedidoCompraDtoSchema = z.object({
   "valorComissao": z.coerce.number().describe("Valor da comissão").optional(),
   "cotacao": z.coerce.number().describe("Cotação da moeda").optional(),
   "currencyId": z.coerce.number().describe("ID da moeda").optional(),
-  "consignado": z.boolean().describe("Indica se o pedido é consignado").optional()
+  "consignado": z.boolean().describe("Indica se o pedido é consignado").optional(),
+  "status": z.coerce.number().describe("Status do pedido (1 a 3)").optional()
       }) as unknown as ToZod<CreatePedidoCompraDto>

@@ -99,7 +99,9 @@
 			"administrator": "Administrador",
 			"user": "Usuário"
 		},
-		"page": "Página"
+		"page": "Página",
+		"back": "Voltar",
+		"download": "Baixar"
 	},
 	"dashboard": {
 		"title": "Dashboard",
@@ -1067,7 +1069,10 @@
 			"name": "Nome",
 			"description": "Descrição",
 			"partner": "Parceiro",
-			"address": "Endereço"
+			"address": "Endereço",
+			"title": "Etiquetas do Estoque",
+			"stockNumber": "Número do Estoque",
+			"preview": "Visualização"
 		},
 		"validations": {
 			"nameRequired": "Nome é obrigatório",
@@ -1082,6 +1087,8 @@
 		"actions": {
 			"edit": "Editar",
 			"update": "Atualizar",
+			"view": "Visualizar",
+			"printTags": "Imprimir Etiquetas",
 			"create": "Criar Local",
 			"save": "Salvar",
 			"cancel": "Cancelar"
@@ -1447,7 +1454,7 @@
 				"product": "Produto",
 				"productSelection": "Seleção de Produtos",
 				"productSkus": "SKUs do Produto",
-				"selectedProducts": "Produtos Selecionados"
+				"selectedProducts": "Produtos"
 			},
 			"placeholders": {
 				"supplier": "Selecione um fornecedor",
@@ -1534,6 +1541,11 @@
 				"firstInstallmentDateRequired": "Informe a data da primeira parcela.",
 				"generic": "Revise os campos do formulário."
 			}
+		},
+		"labels": {
+			"title": "Impressão de Etiquetas",
+			"orderNumber": "Número do Pedido",
+			"preview": "Pré-visualização"
 		}
 	}
 }

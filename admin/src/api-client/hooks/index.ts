@@ -161,6 +161,8 @@ export type { LocalEstoqueControllerFindAllQueryKey } from "./useLocalEstoqueCon
 export type { LocalEstoqueControllerFindAllSuspenseQueryKey } from "./useLocalEstoqueControllerFindAllSuspense.ts";
 export type { LocalEstoqueControllerFindOneQueryKey } from "./useLocalEstoqueControllerFindOne.ts";
 export type { LocalEstoqueControllerFindOneSuspenseQueryKey } from "./useLocalEstoqueControllerFindOneSuspense.ts";
+export type { LocalEstoqueControllerImprimeEtiquetasLocalEstoqueQueryKey } from "./useLocalEstoqueControllerImprimeEtiquetasLocalEstoque.ts";
+export type { LocalEstoqueControllerImprimeEtiquetasLocalEstoqueSuspenseQueryKey } from "./useLocalEstoqueControllerImprimeEtiquetasLocalEstoqueSuspense.ts";
 export type { LocalEstoqueControllerRemoveMutationKey } from "./useLocalEstoqueControllerRemove.ts";
 export type { LocalEstoqueControllerUpdateMutationKey } from "./useLocalEstoqueControllerUpdate.ts";
 export type { MovimentoEstoqueControllerAjusteEstoqueMutationKey } from "./useMovimentoEstoqueControllerAjusteEstoque.ts";
@@ -197,6 +199,8 @@ export type { PedidoCompraControllerFindOneQueryKey } from "./usePedidoCompraCon
 export type { PedidoCompraControllerFindOneSuspenseQueryKey } from "./usePedidoCompraControllerFindOneSuspense.ts";
 export type { PedidoCompraControllerFindPaginatedQueryKey } from "./usePedidoCompraControllerFindPaginated.ts";
 export type { PedidoCompraControllerFindPaginatedSuspenseQueryKey } from "./usePedidoCompraControllerFindPaginatedSuspense.ts";
+export type { PedidoCompraControllerImprimeEtiquetasPedidoCompraQueryKey } from "./usePedidoCompraControllerImprimeEtiquetasPedidoCompra.ts";
+export type { PedidoCompraControllerImprimeEtiquetasPedidoCompraSuspenseQueryKey } from "./usePedidoCompraControllerImprimeEtiquetasPedidoCompraSuspense.ts";
 export type { PedidoCompraControllerProcessaPedidoCompraMutationKey } from "./usePedidoCompraControllerProcessaPedidoCompra.ts";
 export type { PedidoCompraControllerRemoveMutationKey } from "./usePedidoCompraControllerRemove.ts";
 export type { PedidoCompraControllerUpdateMutationKey } from "./usePedidoCompraControllerUpdate.ts";
@@ -473,6 +477,8 @@ export { localEstoqueControllerFindAllQueryKey, localEstoqueControllerFindAll, l
 export { localEstoqueControllerFindAllSuspenseQueryKey, localEstoqueControllerFindAllSuspense, localEstoqueControllerFindAllSuspenseQueryOptions, useLocalEstoqueControllerFindAllSuspense } from "./useLocalEstoqueControllerFindAllSuspense.ts";
 export { localEstoqueControllerFindOneQueryKey, localEstoqueControllerFindOne, localEstoqueControllerFindOneQueryOptions, useLocalEstoqueControllerFindOne } from "./useLocalEstoqueControllerFindOne.ts";
 export { localEstoqueControllerFindOneSuspenseQueryKey, localEstoqueControllerFindOneSuspense, localEstoqueControllerFindOneSuspenseQueryOptions, useLocalEstoqueControllerFindOneSuspense } from "./useLocalEstoqueControllerFindOneSuspense.ts";
+export { localEstoqueControllerImprimeEtiquetasLocalEstoqueQueryKey, localEstoqueControllerImprimeEtiquetasLocalEstoque, localEstoqueControllerImprimeEtiquetasLocalEstoqueQueryOptions, useLocalEstoqueControllerImprimeEtiquetasLocalEstoque } from "./useLocalEstoqueControllerImprimeEtiquetasLocalEstoque.ts";
+export { localEstoqueControllerImprimeEtiquetasLocalEstoqueSuspenseQueryKey, localEstoqueControllerImprimeEtiquetasLocalEstoqueSuspense, localEstoqueControllerImprimeEtiquetasLocalEstoqueSuspenseQueryOptions, useLocalEstoqueControllerImprimeEtiquetasLocalEstoqueSuspense } from "./useLocalEstoqueControllerImprimeEtiquetasLocalEstoqueSuspense.ts";
 export { localEstoqueControllerRemoveMutationKey, localEstoqueControllerRemove, useLocalEstoqueControllerRemove } from "./useLocalEstoqueControllerRemove.ts";
 export { localEstoqueControllerUpdateMutationKey, localEstoqueControllerUpdate, useLocalEstoqueControllerUpdate } from "./useLocalEstoqueControllerUpdate.ts";
 export { movimentoEstoqueControllerAjusteEstoqueMutationKey, movimentoEstoqueControllerAjusteEstoque, useMovimentoEstoqueControllerAjusteEstoque } from "./useMovimentoEstoqueControllerAjusteEstoque.ts";
@@ -509,6 +515,8 @@ export { pedidoCompraControllerFindOneQueryKey, pedidoCompraControllerFindOne, p
 export { pedidoCompraControllerFindOneSuspenseQueryKey, pedidoCompraControllerFindOneSuspense, pedidoCompraControllerFindOneSuspenseQueryOptions, usePedidoCompraControllerFindOneSuspense } from "./usePedidoCompraControllerFindOneSuspense.ts";
 export { pedidoCompraControllerFindPaginatedQueryKey, pedidoCompraControllerFindPaginated, pedidoCompraControllerFindPaginatedQueryOptions, usePedidoCompraControllerFindPaginated } from "./usePedidoCompraControllerFindPaginated.ts";
 export { pedidoCompraControllerFindPaginatedSuspenseQueryKey, pedidoCompraControllerFindPaginatedSuspense, pedidoCompraControllerFindPaginatedSuspenseQueryOptions, usePedidoCompraControllerFindPaginatedSuspense } from "./usePedidoCompraControllerFindPaginatedSuspense.ts";
+export { pedidoCompraControllerImprimeEtiquetasPedidoCompraQueryKey, pedidoCompraControllerImprimeEtiquetasPedidoCompra, pedidoCompraControllerImprimeEtiquetasPedidoCompraQueryOptions, usePedidoCompraControllerImprimeEtiquetasPedidoCompra } from "./usePedidoCompraControllerImprimeEtiquetasPedidoCompra.ts";
+export { pedidoCompraControllerImprimeEtiquetasPedidoCompraSuspenseQueryKey, pedidoCompraControllerImprimeEtiquetasPedidoCompraSuspense, pedidoCompraControllerImprimeEtiquetasPedidoCompraSuspenseQueryOptions, usePedidoCompraControllerImprimeEtiquetasPedidoCompraSuspense } from "./usePedidoCompraControllerImprimeEtiquetasPedidoCompraSuspense.ts";
 export { pedidoCompraControllerProcessaPedidoCompraMutationKey, pedidoCompraControllerProcessaPedidoCompra, usePedidoCompraControllerProcessaPedidoCompra } from "./usePedidoCompraControllerProcessaPedidoCompra.ts";
 export { pedidoCompraControllerRemoveMutationKey, pedidoCompraControllerRemove, usePedidoCompraControllerRemove } from "./usePedidoCompraControllerRemove.ts";
 export { pedidoCompraControllerUpdateMutationKey, pedidoCompraControllerUpdate, usePedidoCompraControllerUpdate } from "./usePedidoCompraControllerUpdate.ts";

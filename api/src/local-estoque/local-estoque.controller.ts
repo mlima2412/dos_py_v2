@@ -18,11 +18,14 @@ import {
   ApiParam,
   ApiBody,
   ApiBearerAuth,
+  ApiHeader,
 } from '@nestjs/swagger';
 import { LocalEstoqueService } from './local-estoque.service';
 import { CreateLocalEstoqueDto } from './dto/create-local-estoque.dto';
 import { UpdateLocalEstoqueDto } from './dto/update-local-estoque.dto';
 import { LocalEstoque } from './entities/local-estoque.entity';
+import { EtiquetaPedidoCompraDto } from 'src/pedido-compra/dto/etiquetas-pedido-compra';
+import { ParceiroId } from 'src/auth/decorators/parceiro-id.decorator';
 
 @ApiTags('Local Estoque')
 @Controller('local-estoque')
@@ -82,9 +85,7 @@ export class LocalEstoqueController {
     status: 404,
     description: 'Local de estoque não encontrado',
   })
-  findOne(
-    @Param('publicId') publicId: string,
-  ): Promise<LocalEstoque> {
+  findOne(@Param('publicId') publicId: string): Promise<LocalEstoque> {
     return this.localEstoqueService.findOne(publicId);
   }
 
@@ -117,10 +118,7 @@ export class LocalEstoqueController {
     @Param('publicId') publicId: string,
     @Body() updateLocalEstoqueDto: UpdateLocalEstoqueDto,
   ): Promise<LocalEstoque> {
-    return this.localEstoqueService.update(
-      publicId,
-      updateLocalEstoqueDto,
-    );
+    return this.localEstoqueService.update(publicId, updateLocalEstoqueDto);
   }
 
   @Delete(':publicId')
@@ -144,9 +142,42 @@ export class LocalEstoqueController {
     status: 409,
     description: 'Não é possível excluir local que possui produtos em estoque',
   })
-  remove(
-    @Param('publicId') publicId: string,
-  ): Promise<void> {
+  remove(@Param('publicId') publicId: string): Promise<void> {
     return this.localEstoqueService.remove(publicId);
+  }
+
+  @Get('etiquetas/:publicId')
+  @ApiBearerAuth('JWT-auth')
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro',
+    required: true,
+    schema: { type: 'integer' },
+  })
+  @ApiOperation({
+    summary: 'Buscar etiquetas do estoque por ID público',
+  })
+  @ApiParam({
+    name: 'publicId',
+    description: 'ID público do estoque (UUID v7)',
+    example: '01234567-89ab-cdef-0123-456789abcdef',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Estoque encontrado com sucesso',
+    type: [EtiquetaPedidoCompraDto],
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Estoque não encontrado',
+  })
+  imprimeEtiquetasLocalEstoque(
+    @Param('publicId') publicId: string,
+    @ParceiroId() parceiroId: number,
+  ): Promise<EtiquetaPedidoCompraDto[]> {
+    return this.localEstoqueService.imprimeEtiquetasLocalEstoque(
+      publicId,
+      parceiroId,
+    );
   }
 }

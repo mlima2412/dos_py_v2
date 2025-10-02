@@ -9,7 +9,9 @@ import { ClientesModule } from '../src/clientes/clientes.module';
 import { ProdutoModule } from '../src/produto/produto.module';
 import { ProdutoSkuModule } from '../src/produto-sku/produto-sku.module';
 import { EstoqueSkuModule } from '../src/estoque-sku/estoque-sku.module';
-
+import { FornecedoresModule } from '../src/fornecedores/fornecedores.module';
+import { PedidoCompraModule } from '../src/pedido-compra/pedido-compra.module';
+import { PedidoCompraItemModule } from '../src/pedido-compra-item/pedido-compra-item.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -21,6 +23,9 @@ import { EstoqueSkuModule } from '../src/estoque-sku/estoque-sku.module';
     ProdutoModule,
     ProdutoSkuModule,
     EstoqueSkuModule,
+    FornecedoresModule,
+    PedidoCompraModule,
+    PedidoCompraItemModule,
   ],
 })
 export class SeedModule {}

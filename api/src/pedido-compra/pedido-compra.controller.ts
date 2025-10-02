@@ -31,6 +31,7 @@ import { StatusPedidoCompra } from './enums/status-pedido-compra.enum';
 import { ParceiroId } from '../auth/decorators/parceiro-id.decorator';
 import { UserId } from '../auth/decorators/user-id.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { EtiquetaPedidoCompraDto } from './dto/etiquetas-pedido-compra';
 
 @ApiTags('Pedidos de Compra')
 @Controller('pedido-compra')
@@ -208,6 +209,41 @@ export class PedidoCompraController {
     @ParceiroId() parceiroId: number,
   ): Promise<PedidoCompra> {
     return this.pedidoCompraService.findOne(publicId, parceiroId);
+  }
+
+  @Get('etiquetas/:publicId')
+  @ApiBearerAuth('JWT-auth')
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro',
+    required: true,
+    schema: { type: 'integer' },
+  })
+  @ApiOperation({
+    summary: 'Buscar etiquetas do pedido de compra por ID público',
+  })
+  @ApiParam({
+    name: 'publicId',
+    description: 'ID público do pedido de compra (UUID v7)',
+    example: '01234567-89ab-cdef-0123-456789abcdef',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Pedido de compra encontrado com sucesso',
+    type: [EtiquetaPedidoCompraDto],
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Pedido de compra não encontrado',
+  })
+  imprimeEtiquetasPedidoCompra(
+    @Param('publicId') publicId: string,
+    @ParceiroId() parceiroId: number,
+  ): Promise<EtiquetaPedidoCompraDto[]> {
+    return this.pedidoCompraService.imprimeEtiquetasPedidoCompra(
+      publicId,
+      parceiroId,
+    );
   }
 
   @Patch(':publicId')

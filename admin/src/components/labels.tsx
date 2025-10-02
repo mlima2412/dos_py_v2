@@ -10,22 +10,8 @@ import {
 } from "@react-pdf/renderer";
 import JsBarcode from "jsbarcode";
 import { createCanvas } from "canvas";
+import type { EtiquetaPedidoCompraDto } from "@/api-client/types";
 
-// -------------------
-// Types
-// -------------------
-interface LabelData {
-	nomeProduto: string;
-	cor: string;
-	tamanho: string;
-	codigo: string; // Código Produto + "-" + Código SKU
-	valor: string;
-}
-
-// -------------------
-// Styles
-// -------------------
-// Margem em todas as direçÕes
 const styles = StyleSheet.create({
 	page: {
 		width: 113.4, // 4 cm
@@ -84,32 +70,34 @@ function generateBarcodeBase64(value: string): string {
 // -------------------
 // Label Component
 // -------------------
-const Label: React.FC<{ data: LabelData }> = ({ data }) => {
-	const barcode = generateBarcodeBase64(data.codigo);
+const Label: React.FC<{ data: EtiquetaPedidoCompraDto }> = ({ data }) => {
+	// Criar código do produto concatenando id_produto e id_sku
+	// Com o formato XXX-YYY
+	const codigo = `${data.id_produto.toString().padStart(3, "0")}-${data.id_sku.toString().padStart(3, "0")}`;
+	const barcode = generateBarcodeBase64(codigo);
 
 	return (
 		<Page size={{ width: 113.4, height: 85.05 }} style={styles.page}>
 			<View>
-				<Text style={styles.textCenter}>{data.nomeProduto}</Text>
+				<Text style={styles.textCenter}>{data.nome}</Text>
 				<View style={styles.barcodeBox}>
 					<Image style={styles.barcodeImg} src={barcode} />
-					<Text style={styles.textRowValue}>{data.codigo}</Text>
+					<Text style={styles.textRowValue}>{codigo}</Text>
 				</View>
 				<View style={styles.textRow}>
 					<Text>
-						{data.cor} - {data.tamanho}
+						{data.cor || "-"} - {data.tamanho || "-"}
 					</Text>
-					<Text>{data.valor}</Text>
+					<Text>{data.preco}</Text>
 				</View>
 			</View>
 		</Page>
 	);
 };
 
-// -------------------
-// Document generator
-// -------------------
-export const LabelsDocument: React.FC<{ items: LabelData[] }> = ({ items }) => (
+export const LabelsDocument: React.FC<{ items: EtiquetaPedidoCompraDto[] }> = ({
+	items,
+}) => (
 	<Document>
 		{items.map((item, idx) => (
 			<Label key={idx} data={item} />

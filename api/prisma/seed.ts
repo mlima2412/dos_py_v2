@@ -10,6 +10,9 @@ import { ClientesService } from '../src/clientes/clientes.service';
 import { ProdutoService } from '../src/produto/produto.service';
 import { ProdutoSkuService } from '../src/produto-sku/produto-sku.service';
 import { EstoqueSkuService } from '../src/estoque-sku/estoque-sku.service';
+import { FornecedoresService } from '../src/fornecedores/fornecedores.service';
+import { PedidoCompraService } from '../src/pedido-compra/pedido-compra.service';
+import { PedidoCompraItemService } from '../src/pedido-compra-item/pedido-compra-item.service';
 
 import {
   CreateDespesaDto,
@@ -22,6 +25,10 @@ import { CreateProdutoDto } from '../src/produto/dto/create-produto.dto';
 import { CreateProdutoSkuDto } from '../src/produto-sku/dto/create-produto-sku.dto';
 import { CreateEstoqueSkuDto } from '../src/estoque-sku/dto/create-estoque-sku.dto';
 import { uuidv7 } from 'uuidv7';
+import { CreateFornecedorDto } from 'src/fornecedores/dto/create-fornecedor.dto';
+import { CreatePedidoCompraDto } from 'src/pedido-compra/dto/create-pedido-compra.dto';
+import { PedidoCompra } from '@prisma/client';
+import { CreatePedidoCompraItemDto } from 'src/pedido-compra-item/dto/create-pedido-compra-item.dto';
 
 async function fetchDespesaFromLegacy(app, legacyDb) {
   console.log('🌱 Migrando Despesas');
@@ -117,6 +124,99 @@ async function fetchClientesFromLegacy(app, legacyDb) {
   }
 }
 
+async function fetchPedidoCompraFromLegacy(app, legacyDb) {
+  console.log('🌱 Migrando Pedidos de Compra');
+  const pedidos = await legacyDb.query(
+    'SELECT * FROM public."PedidoCompra" order by id asc',
+  );
+
+  const pedidoService = app.get(PedidoCompraService);
+  const pedidoCompraItemService = app.get(PedidoCompraItemService);
+  const fornecedorService = app.get(FornecedoresService);
+
+  for (const raw of pedidos.rows) {
+    // mapeie do legado -> DTO do seu service
+    console.log(`Criando o pedido de compra:${raw.id}`);
+    const dto: CreatePedidoCompraDto = {
+      fornecedorId: raw.fornecedorId,
+      localEntradaId: 1,
+      valorTotal: raw.valorTotal,
+      valorComissao: raw.valorComissao,
+      valorFrete: raw.valorFrete,
+      cotacao: raw.cotacao,
+      currencyId: 2, // real
+      consignado: false,
+      // se dataCompra for null, setar a data atual
+      dataPedido: raw.dataPedido,
+      dataEntrega: raw.dataEntrega,
+      status: 3,
+      observacao: raw.observacao,
+    };
+    const pedido: PedidoCompra = await pedidoService.create(dto, 1);
+
+    const itens = await legacyDb.query(
+      'SELECT * FROM public."PedidoCompraItem" WHERE "pedidoCompraId" = $1 order by id asc',
+      [raw.id],
+    );
+
+    for (const rowItens of itens.rows) {
+      console.log(
+        `  - Criando o item do pedido de compra: SKU ${rowItens.produtoVarianteId}`,
+      );
+      // mapeie do legado -> DTO do seu service
+      const dtoItens: CreatePedidoCompraItemDto = {
+        pedidoCompraId: pedido.id,
+        skuId: rowItens.produtoVarianteId,
+        precoCompra: rowItens.precoCompra,
+        qtd: rowItens.qtd,
+      };
+      await pedidoCompraItemService.create(dtoItens, 1);
+    }
+
+    const fornecedor_publicId: string = await fornecedorService.findById(
+      raw.fornecedorId,
+    );
+    console.log(
+      `  - Atualizando a data da última compra do fornecedor: ${fornecedor_publicId}`,
+    );
+    if (fornecedor_publicId) {
+      // Atualizar data da ultima compra do fornecedor
+      await fornecedorService.update(fornecedor_publicId, {
+        ultimaCompra: raw.dataPedido,
+      });
+    } else {
+      console.log(
+        `  - Fornecedor com id ${raw.fornecedorId} não encontrado, pulando atualização da última compra.`,
+      );
+    }
+  }
+}
+
+async function fetchFornecedoresFromLegacy(app, legacyDb) {
+  console.log('🌱 Migrando Fornecedores');
+  const fornecedores = await legacyDb.query(
+    'SELECT * FROM public."Fornecedor" order by id asc',
+  );
+
+  const fornecedorService = app.get(FornecedoresService);
+  for (const raw of fornecedores.rows) {
+    // mapeie do legado -> DTO do seu service
+    console.log(`Criando o fornecedor:${raw.nome}`);
+    const dto: CreateFornecedorDto = {
+      id: raw.id,
+      parceiroId: 1,
+      nome: raw.nome,
+      email: raw.email,
+      telefone: raw.celular,
+      redesocial: raw.redeSocial,
+      ruccnpj: raw.ruc?.length > 0 ? raw.ruc : null,
+      ultimaCompra: raw.dataUltimaCompra,
+      ativo: true,
+    };
+    await fornecedorService.create(dto);
+  }
+}
+
 async function fetchProdutosFromLegacy(app, legacyDb) {
   console.log('🌱 Migrando Produtos');
   const produtos = await legacyDb.query(
@@ -198,7 +298,9 @@ async function run() {
     // await fetchSubCategoriaFromLegacy(app, legacyDb);
     // await fetchDespesaFromLegacy(app, legacyDb);
     // await fetchClientesFromLegacy(app, legacyDb);
-    await fetchProdutosFromLegacy(app, legacyDb);
+    // await fetchProdutosFromLegacy(app, legacyDb);
+    // await fetchFornecedoresFromLegacy(app, legacyDb);
+    await fetchPedidoCompraFromLegacy(app, legacyDb);
 
     legacyDb.end();
     console.log('Seed concluído com sucesso.');
@@ -238,4 +340,4 @@ run();
 //     ativo: true,
 //     avatar: '',
 //   };
-//});
+//})

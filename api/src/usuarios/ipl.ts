@@ -56,6 +56,16 @@ export async function ensureSystemInitialized(prisma: PrismaService) {
       },
     });
     console.log('Parceiro DOS PY criado.');
+    await prisma.localEstoque.create({
+      data: {
+        publicId: uuidv7(),
+        nome: 'Principal',
+        descricao: 'Local de estoque principal DOS PY',
+        endereco: 'Residencia dos MORES',
+        parceiroId: parceiro.id,
+      },
+    });
+    console.log('Local de estoque principal criado para DOS PY.');
   } else {
     console.log('Parceiro DOS PY já existe.');
   }

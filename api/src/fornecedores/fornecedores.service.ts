@@ -43,6 +43,7 @@ export class FornecedoresService {
 
     const fornecedor = await this.prisma.fornecedor.create({
       data: {
+        id: fornecedorEntity.id,
         publicId: fornecedorEntity.publicId,
         parceiroId: fornecedorEntity.parceiroId,
         nome: fornecedorEntity.nome,
@@ -198,5 +199,12 @@ export class FornecedoresService {
     });
 
     return fornecedor as Fornecedor;
+  }
+
+  async findById(id: number): Promise<String | null> {
+    const fornecedor = await this.prisma.fornecedor.findUnique({
+      where: { id },
+    });
+    return fornecedor.publicId || null;
   }
 }

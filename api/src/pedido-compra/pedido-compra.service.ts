@@ -22,6 +22,7 @@ import {
 } from '../despesas/dto/create-despesa.dto';
 import { DespesasService } from '../despesas/despesas.service';
 import { uuidv7 } from 'uuidv7';
+import { EtiquetaPedidoCompraDto } from './dto/etiquetas-pedido-compra';
 
 @Injectable()
 export class PedidoCompraService {
@@ -49,7 +50,6 @@ export class PedidoCompraService {
           'Fornecedor não encontrado ou não pertence ao parceiro',
         );
       }
-
       // Verificar se o local de estoque existe e pertence ao parceiro
       const localEstoque = await this.prisma.localEstoque.findFirst({
         where: {
@@ -82,6 +82,7 @@ export class PedidoCompraService {
         data: {
           publicId: uuidv7(),
           parceiroId: parceiroId,
+          dataPedido: createPedidoCompraDto.dataPedido,
           localEntradaId: createPedidoCompraDto.localEntradaId,
           fornecedorId: createPedidoCompraDto.fornecedorId,
           dataEntrega: createPedidoCompraDto.dataEntrega
@@ -100,7 +101,7 @@ export class PedidoCompraService {
           cotacao: createPedidoCompraDto.cotacao || 1,
           currencyId: createPedidoCompraDto.currencyId,
           consignado: createPedidoCompraDto.consignado || false,
-          status: StatusPedidoCompra.EDICAO,
+          status: createPedidoCompraDto.status || StatusPedidoCompra.EDICAO,
         },
         include: {
           fornecedor: true,
@@ -540,6 +541,54 @@ export class PedidoCompraService {
     };
   }
 
+  async imprimeEtiquetasPedidoCompra(
+    publicId: string,
+    parceiroId: number,
+  ): Promise<EtiquetaPedidoCompraDto[]> {
+    // Acha o pedido de compra pelo publicid
+    const pedidoCompra = await this.prisma.pedidoCompra.findFirst({
+      where: {
+        publicId,
+        parceiroId,
+      },
+    });
+    if (!pedidoCompra) {
+      throw new NotFoundException('Pedido de compra não encontrado');
+    }
+
+    const result = await this.prisma.$queryRaw<
+      {
+        produto_id: number;
+        sku_id: number;
+        nome: string;
+        cor: string;
+        tamanho: string;
+        preco: number;
+        qtd: number;
+      }[]
+    >`
+      WITH repetidos as (
+        select p.id as produto_id, psku.id as sku_id, p.nome, psku.cor, psku.tamanho, pc.qtd, p."preco_venda" as preco, generate_series(1, pc.qtd) as repeticao
+          FROM public."pedido_compra_item" as pc
+          JOIN public."produto_sku" as psku on pc."sku_id" = psku.id
+          join public."produto" as p on p.id = psku."produto_id"
+          where pc."pedido_compra_id" = ${pedidoCompra.id}
+      )
+      select produto_id, sku_id, nome, cor, tamanho, preco, 1 as qtd
+        from repetidos
+        order by nome asc, cor desc
+    `;
+
+    return result.map(item => ({
+      id_produto: item.produto_id,
+      id_sku: item.sku_id,
+      nome: item.nome,
+      cor: item.cor,
+      tamanho: item.tamanho,
+      preco: item.preco,
+    }));
+  }
+
   async processaPedidoCompra(
     processaPedidoCompraDto: ProcessaPedidoCompraDto,
     parceiroId: number,
@@ -732,6 +781,12 @@ export class PedidoCompraService {
           Parceiro: true,
           LocalEntrada: true,
         },
+      });
+
+      // atualiza a data da ultima compra para o fornecedor do pedido
+      await this.prisma.fornecedor.update({
+        where: { id: pedidoCompra.fornecedorId },
+        data: { ultimaCompra: new Date() },
       });
 
       return PedidoCompra.create(pedidoAtualizado);

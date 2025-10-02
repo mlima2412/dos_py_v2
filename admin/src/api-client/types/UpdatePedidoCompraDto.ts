@@ -16,6 +16,11 @@ export type UpdatePedidoCompraDto = {
     */
     fornecedorId?: number;
     /**
+     * @description Data do pedido
+     * @type string | undefined
+    */
+    dataPedido?: string;
+    /**
      * @description Data de entrega prevista
      * @type string | undefined
     */
@@ -55,4 +60,9 @@ export type UpdatePedidoCompraDto = {
      * @type boolean | undefined
     */
     consignado?: boolean;
+    /**
+     * @description Status do pedido (1 a 3)
+     * @type number | undefined
+    */
+    status?: number;
 };

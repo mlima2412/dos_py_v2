@@ -5,9 +5,19 @@ import {
   IsOptional,
   IsBoolean,
   IsNumber,
+  IsDate,
 } from 'class-validator';
 
 export class CreateFornecedorDto {
+  @ApiProperty({
+    description: 'Código do fornecedor',
+    example: 'FORN-001',
+    required: false,
+  })
+  @IsNumber()
+  @IsOptional()
+  id?: number;
+
   @ApiProperty({
     description: 'Nome do fornecedor',
     example: 'Fornecedor ABC Ltda',
@@ -57,6 +67,16 @@ export class CreateFornecedorDto {
   @IsOptional()
   @IsString()
   redesocial?: string;
+
+  // ultiaCompra
+  @ApiProperty({
+    description: 'Data da última compra do fornecedor',
+    example: '2023-10-01T12:00:00Z',
+    required: false,
+  })
+  @IsOptional()
+  @IsDate()
+  ultimaCompra?: Date;
 
   @ApiProperty({
     description: 'Status ativo do fornecedor',

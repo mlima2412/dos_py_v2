@@ -8,11 +8,13 @@ import type { ToZod } from "@kubb/plugin-zod/utils";
 import { z } from "zod";
 
 export const createFornecedorDtoSchema = z.object({
-      "nome": z.coerce.string().describe("Nome do fornecedor"),
+      "id": z.coerce.number().describe("Código do fornecedor").optional(),
+  "nome": z.coerce.string().describe("Nome do fornecedor"),
   "parceiroId": z.coerce.number().describe("ID parceiro do fornecedor"),
   "ruccnpj": z.coerce.string().describe("RUC/CNPJ do fornecedor").optional(),
   "email": z.coerce.string().describe("Email do fornecedor").optional(),
   "telefone": z.coerce.string().describe("Telefone do fornecedor").optional(),
   "redesocial": z.coerce.string().describe("Rede social do fornecedor").optional(),
+  "ultimaCompra": z.string().datetime().describe("Data da última compra do fornecedor").optional(),
   "ativo": z.boolean().describe("Status ativo do fornecedor").optional()
       }) as unknown as ToZod<CreateFornecedorDto>
