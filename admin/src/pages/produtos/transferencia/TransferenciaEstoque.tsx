@@ -26,6 +26,7 @@ import { useLocaisEstoque } from "@/hooks/useEstoques";
 import {
 	useProdutoControllerFindByLocal,
 	useTransferenciaEstoqueControllerCreate,
+	estoqueSkuControllerFindOne,
 } from "@/api-client";
 import { usePartnerContext } from "@/hooks/usePartnerContext";
 import { useToast } from "@/hooks/useToast";
@@ -36,6 +37,24 @@ import type {
 	ProdutoSKUEstoqueResponseDto,
 	CreateTransferenciaEstoqueDto,
 } from "@/api-client/types";
+
+// Interfaces para tipagem dos dados do backend
+interface SkuData {
+	publicId?: string;
+	cor?: string;
+	tamanho?: string;
+	codCor?: number;
+	qtdMinima?: number;
+	produto?: {
+		id?: number;
+		publicId?: string;
+		nome?: string;
+		precoVenda?: number;
+		precoCompra?: number;
+		ativo?: boolean;
+		consignado?: boolean;
+	};
+}
 
 export const TransferenciaEstoque: React.FC = () => {
 	const { t } = useTranslation("common");
@@ -174,20 +193,104 @@ export const TransferenciaEstoque: React.FC = () => {
 		);
 	};
 
-	// Função para buscar SKU por código
-	const handleSkuSearch = (code: string) => {
-		if (!selectedProductSkus || !selectedProduct) return;
+	// Função para buscar SKU por código diretamente no backend
+	const handleSkuSearch = async (code: string) => {
+		if (!localSaidaId || !code.trim()) {
+			showError("Selecione o local de origem e digite um código válido");
+			return;
+		}
 
-		const sku = selectedProductSkus.find(sku => {
-			const skuCode = `${selectedProduct.id
-				.toString()
-				.padStart(3, "0")}-${sku.id.toString().padStart(3, "0")}`;
-			return skuCode.includes(code);
-		});
+		try {
+			// Extrair SKU ID dos últimos 3 dígitos do código
+			const skuId = parseInt(code.slice(-3));
 
-		if (sku) {
-			handleAddSkuToTransfer(sku);
+			if (isNaN(skuId)) {
+				showError("Código inválido. Use o formato XXX-YYY");
+				return;
+			}
+
+			// Buscar estoque no backend - verifica automaticamente se o SKU pertence ao local
+			const estoqueSku = await estoqueSkuControllerFindOne(localSaidaId, skuId);
+
+			// Verificar se há estoque disponível
+			if (estoqueSku.qtd <= 0) {
+				showError("SKU não possui estoque disponível no local de origem");
+				return;
+			}
+
+			// Verificar se os dados do SKU estão disponíveis
+			if (!estoqueSku.sku || typeof estoqueSku.sku !== "object") {
+				showError("Dados do SKU não encontrados");
+				return;
+			}
+
+			const skuData = estoqueSku.sku as SkuData;
+
+			// Converter EstoqueSku para o formato esperado
+			const skuForTransfer: ProdutoSKUEstoqueResponseDto = {
+				id: estoqueSku.skuId,
+				publicId: skuData.publicId || estoqueSku.skuId.toString(),
+				cor: skuData.cor || "",
+				tamanho: skuData.tamanho || "",
+				codCor: skuData.codCor || 0,
+				qtdMinima: skuData.qtdMinima || 0,
+				estoque: estoqueSku.qtd,
+			};
+
+			// Criar objeto produto para compatibilidade
+			const productForTransfer: ProdutosPorLocalResponseDto = {
+				id: skuData.produto?.id || 0,
+				publicId:
+					skuData.produto?.publicId || skuData.produto?.id?.toString() || "0",
+				nome: skuData.produto?.nome || "Produto não encontrado",
+				precoVenda: skuData.produto?.precoVenda || 0,
+				precoCompra: skuData.produto?.precoCompra || 0,
+				ativo: skuData.produto?.ativo || true,
+				consignado: skuData.produto?.consignado || false,
+				ProdutoSKU: [skuForTransfer],
+			};
+
+			// Adicionar à lista de transferência
+			setSelectedSkus(prev => {
+				const existingIndex = prev.findIndex(
+					item => item.sku.id === skuForTransfer.id
+				);
+
+				if (existingIndex >= 0) {
+					// Se já existe, incrementar quantidade até o máximo disponível
+					const currentQuantity = prev[existingIndex].quantity;
+					const maxQuantity = skuForTransfer.estoque;
+					const newQuantity = Math.min(currentQuantity + 1, maxQuantity);
+
+					return prev.map((item, index) =>
+						index === existingIndex ? { ...item, quantity: newQuantity } : item
+					);
+				} else {
+					// Se não existe, adicionar com quantidade 1
+					return [
+						...prev,
+						{
+							sku: skuForTransfer,
+							product: productForTransfer,
+							quantity: 1,
+						},
+					];
+				}
+			});
+
 			setSkuSearchCode("");
+			showSuccess(`SKU ${code} adicionado à transferência`);
+		} catch (error: unknown) {
+			console.error("Erro ao buscar SKU:", error);
+			const apiError = error as {
+				status?: number;
+				data?: { message?: string };
+			};
+			if (apiError?.status === 404) {
+				showError("SKU não encontrado no local de origem selecionado");
+			} else {
+				showError(apiError?.data?.message || "Erro ao buscar SKU no estoque");
+			}
 		}
 	};
 
@@ -421,7 +524,7 @@ export const TransferenciaEstoque: React.FC = () => {
 													handleSkuSearch(skuSearchCode);
 												}
 											}}
-											disabled={!selectedProductId}
+											disabled={!localSaidaId}
 										/>
 									</div>
 								</div>

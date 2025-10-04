@@ -199,27 +199,24 @@ export const ConferenciaSkuListing: React.FC<ConferenciaSkuListingProps> = ({
 						<div className="text-muted-foreground">Nenhum item encontrado</div>
 					</div>
 				) : (
-					<ScrollArea className="h-[450px] w-full rounded-md border">
-						<div className="min-w-[700px]">
-							<Table>
+					<ScrollArea className="h-[450px] w-full rounded-md border overflow-auto">
+						<div className="min-w-[600px]">
+							<Table className="table-fixed">
 								<TableHeader className="sticky top-0 bg-background z-10">
 									<TableRow>
-										<TableHead className="h-8 py-1 px-2 bg-background text-center w-[200px]">
-											Código / Produto
+										<TableHead className="h-8 py-1 px-2 bg-background text-left w-[50px]">
+											Produto
 										</TableHead>
-										<TableHead className="h-8 py-1 px-2 bg-background text-center w-[120px]">
-											SKU
+										<TableHead className="h-8 py-1 px-2 bg-background text-center w-[30px]">
+											Sistema
 										</TableHead>
-										<TableHead className="h-8 py-1 px-2 bg-background text-center w-[100px]">
-											Estoque Sistema
+										<TableHead className="h-8 py-1 px-2 bg-background text-center w-[25px]">
+											Físico
 										</TableHead>
-										<TableHead className="h-8 py-1 px-2 bg-background text-center w-[100px]">
-											Estoque Físico
+										<TableHead className="h-8 py-1 px-2 bg-background text-center w-[25px]">
+											Dif
 										</TableHead>
-										<TableHead className="h-8 py-1 px-2 bg-background text-center w-[80px]">
-											Diferença
-										</TableHead>
-										<TableHead className="h-8 py-1 px-2 bg-background text-center w-[100px]">
+										<TableHead className="h-8 py-1 px-2 bg-background text-center w-[50px]">
 											Status
 										</TableHead>
 									</TableRow>
@@ -239,41 +236,34 @@ export const ConferenciaSkuListing: React.FC<ConferenciaSkuListingProps> = ({
 												key={`${item.produtoId}-${item.skuId}`}
 												className={conferidoQtd > 0 ? "bg-muted/30" : ""}
 											>
-												<TableCell className="text-left py-1 px-2">
-													<div>
+												<TableCell className="text-left py-1 px-1 w-[140px]">
+													<div className="truncate">
 														<p className="font-mono text-xs font-medium">
 															{item.produtoId > 0
 																? `${item.produtoId.toString().padStart(3, "0")}-${item.skuId.toString().padStart(3, "0")}`
 																: item.skuId.toString().padStart(3, "0")}
 														</p>
-														<p className="text-xs font-medium truncate">
+														<p
+															className="text-xs font-medium truncate"
+															title={item.produtoNome}
+														>
 															{item.produtoNome}
+														</p>
+														<p className="text-xs text-muted-foreground truncate">
+															{item.cor} - {item.tamanho}
 														</p>
 													</div>
 												</TableCell>
-												<TableCell className="text-center py-1 px-2">
-													<div className="text-sm">
-														{item.cor && (
-															<p className="text-xs text-muted-foreground truncate">
-																Cor: {item.cor}
-															</p>
-														)}
-														{item.tamanho && (
-															<p className="text-xs text-muted-foreground truncate">
-																Tamanho: {item.tamanho}
-															</p>
-														)}
-													</div>
-												</TableCell>
-												<TableCell className="text-center py-1 px-2">
-													<Badge variant="outline" className="text-xs">
+
+												<TableCell className="text-center py-1 px-1 w-[80px]">
+													<Badge variant="outline" className="text-xs px-1">
 														{item.qtd}
 													</Badge>
 												</TableCell>
-												<TableCell className="text-center py-1 px-2">
+												<TableCell className="text-center py-1 px-1 w-[80px]">
 													<Badge
 														variant={conferidoQtd > 0 ? "default" : "secondary"}
-														className={`text-xs ${
+														className={`text-xs px-1 ${
 															conferidoQtd > 0
 																? "bg-blue-100 text-blue-800"
 																: ""
@@ -282,15 +272,15 @@ export const ConferenciaSkuListing: React.FC<ConferenciaSkuListingProps> = ({
 														{conferidoQtd}
 													</Badge>
 												</TableCell>
-												<TableCell className="text-center py-1 px-2">
+												<TableCell className="text-center py-1 px-1 w-[70px]">
 													{conferidoQtd > 0 ? (
 														<span
-															className={`text-xs ${
+															className={`text-xs font-medium ${
 																diferenca === 0
-																	? "text-green-600 font-medium"
+																	? "text-green-600"
 																	: diferenca > 0
-																		? "text-blue-600 font-medium"
-																		: "text-red-600 font-medium"
+																		? "text-blue-600"
+																		: "text-red-600"
 															}`}
 														>
 															{diferenca > 0 ? `+${diferenca}` : diferenca}
@@ -301,13 +291,13 @@ export const ConferenciaSkuListing: React.FC<ConferenciaSkuListingProps> = ({
 														</span>
 													)}
 												</TableCell>
-												<TableCell className="text-center py-1 px-2">
+												<TableCell className="text-center py-1 px-1 w-[80px]">
 													{conferidoQtd > 0 ? (
 														getStatusBadge(item.qtd, conferidoQtd)
 													) : (
 														<Badge
 															variant="outline"
-															className="text-muted-foreground text-xs"
+															className="text-muted-foreground text-xs px-1"
 														>
 															Pendente
 														</Badge>

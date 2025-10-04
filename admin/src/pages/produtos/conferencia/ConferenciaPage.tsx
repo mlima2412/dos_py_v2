@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, useNavigate } from "react-router-dom";
 import { DashboardLayout } from "../../../components/layout/DashboardLayout";
@@ -31,8 +31,14 @@ import type { LocalEstoque } from "@/api-client/types";
 
 // Componentes internos
 import { ConferenceHeader } from "./components/ConferenceHeader";
-import { ConferredItemsCard } from "./components/ConferredItemsCard";
-import { ConferenceScanner } from "./components/ConferenceScanner";
+import {
+	ConferredItemsCard,
+	type ConferredItemsCardRef,
+} from "./components/ConferredItemsCard";
+import {
+	ConferenceScanner,
+	type ConferenceScannerRef,
+} from "./components/ConferenceScanner";
 import { ProgressBar } from "./components/ProgressBar";
 import { ConferenciaSkuListing } from "./components/ConferenciaSkuListing";
 import {
@@ -52,6 +58,13 @@ export const ConferenciaPage: React.FC = () => {
 	const [itensConferidos, setItensConferidos] = useState<Map<number, number>>(
 		new Map()
 	);
+
+	// Refs para os componentes
+	const conferenceScannerRef = useRef<ConferenceScannerRef>(null);
+	const conferredItemsCardRef = useRef<ConferredItemsCardRef>(null);
+
+	// Estado para controlar quando focar o input
+	const [shouldFocusInput, setShouldFocusInput] = useState(false);
 
 	// Estados para dialogs
 	const [showProdutosNaoConferidosDialog, setShowProdutosNaoConferidosDialog] =
@@ -125,6 +138,18 @@ export const ConferenciaPage: React.FC = () => {
 	const updateConferencia = useConferenciaEstoqueControllerUpdate();
 	const processarAjustes =
 		useMovimentoEstoqueControllerProcessarAjustesConferenciaLote();
+
+	// Effect para focar o input quando necessário
+	useEffect(() => {
+		if (shouldFocusInput) {
+			const timer = setTimeout(() => {
+				conferenceScannerRef.current?.focus();
+				setShouldFocusInput(false);
+			}, 200); // Aumentar o delay para garantir que tudo esteja pronto
+
+			return () => clearTimeout(timer);
+		}
+	}, [shouldFocusInput]);
 
 	// Inicializar itens conferidos com dados existentes
 	useMemo(() => {
@@ -221,7 +246,6 @@ export const ConferenciaPage: React.FC = () => {
 					},
 				});
 			}
-
 			setCodigoProduto("");
 			toast.success(
 				t("conference.details.productConferred", { quantity: novoContador })
@@ -229,6 +253,19 @@ export const ConferenciaPage: React.FC = () => {
 
 			// Recarregar lista de itens conferidos
 			refetchItens();
+
+			// Sinalizar para focar o input após o próximo render
+			setShouldFocusInput(true);
+
+			// Scroll para o item adicionado
+			setTimeout(() => {
+				conferredItemsCardRef.current?.scrollToItem(skuId);
+			}, 600);
+
+			// Fallback: tentar focar diretamente também
+			setTimeout(() => {
+				conferenceScannerRef.current?.focus();
+			}, 500);
 		} catch (error) {
 			console.error("Erro ao registrar item:", error);
 			toast.error(t("conference.details.registerItemError"));
@@ -517,6 +554,7 @@ export const ConferenciaPage: React.FC = () => {
 						{/* Scanner de Código - apenas durante conferência */}
 						{conferencia.status === "EM_ANDAMENTO" && (
 							<ConferenceScanner
+								ref={conferenceScannerRef}
 								codigoProduto={codigoProduto}
 								onCodigoChange={setCodigoProduto}
 								onConferir={handleCodigoProduto}
@@ -539,6 +577,7 @@ export const ConferenciaPage: React.FC = () => {
 
 								{/* Itens da Conferência */}
 								<ConferredItemsCard
+									ref={conferredItemsCardRef}
 									title={t("conference.details.conferredItems")}
 									items={(itensConferencia || []).map(item => ({
 										id: item.id,
@@ -579,6 +618,7 @@ export const ConferenciaPage: React.FC = () => {
 							<>
 								{/* Card de Itens Conferidos em tela cheia */}
 								<ConferredItemsCard
+									ref={conferredItemsCardRef}
 									title={t("conference.details.conferredItems")}
 									items={(itensConferencia || []).map(item => ({
 										id: item.id,
@@ -615,6 +655,7 @@ export const ConferenciaPage: React.FC = () => {
 						{/* Área para Conferência Finalizada - apenas visualização dos itens */}
 						{conferencia.status === "FINALIZADA" && (
 							<ConferredItemsCard
+								ref={conferredItemsCardRef}
 								title={t("conference.details.conferredItems")}
 								items={(itensConferencia || []).map(item => ({
 									id: item.id,
