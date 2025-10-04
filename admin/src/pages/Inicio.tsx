@@ -108,7 +108,7 @@ export const Inicio: React.FC = () => {
 								Gestão de compras
 							</p>
 							<Button size="sm" variant="outline" asChild>
-								<Link to="/compras">
+								<Link to="/pedidoCompra">
 									Acessar <ArrowRight className="ml-1 h-3 w-3" />
 								</Link>
 							</Button>
