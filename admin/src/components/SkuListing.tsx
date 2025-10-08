@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useImperativeHandle, forwardRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -56,353 +56,422 @@ interface SkuListingProps {
 	onPriceChange?: (newPrice: number) => void;
 }
 
-const SkuListing: React.FC<SkuListingProps> = ({
-	selectedProduct,
-	selectedProductId,
-	skus,
-	isLoading,
-	error,
-	enableStockAdjustment = false,
-	onStockAdjust,
-	onDoubleClick,
-	allowZeroStock = false,
-	showProductPrice = false,
-	onPriceChange,
-}) => {
-	const { t } = useTranslation("common");
-	const [skuSearch, setSkuSearch] = React.useState("");
-	const [sizeFilter, setSizeFilter] = React.useState<string>("all");
-	const [isPriceDialogOpen, setIsPriceDialogOpen] = React.useState(false);
-	const [newPrice, setNewPrice] = React.useState<string>("");
+export interface SkuListingRef {
+	scrollToItem: (skuId: number) => void;
+}
 
-	const debouncedSkuSearch = useDebounce(skuSearch, 500);
+const SkuListingComponent = forwardRef<SkuListingRef, SkuListingProps>(
+	(
+		{
+			selectedProduct,
+			selectedProductId,
+			skus,
+			isLoading,
+			error,
+			enableStockAdjustment = false,
+			onStockAdjust,
+			onDoubleClick,
+			allowZeroStock = false,
+			showProductPrice = false,
+			onPriceChange,
+		},
+		ref
+	) => {
+		const { t } = useTranslation("common");
+		const [skuSearch, setSkuSearch] = React.useState("");
+		const [sizeFilter, setSizeFilter] = React.useState<string>("all");
+		const [isPriceDialogOpen, setIsPriceDialogOpen] = React.useState(false);
+		const [newPrice, setNewPrice] = React.useState<string>("");
 
-	// Filtrar SKUs por busca e tamanho
-	const filteredSkus = React.useMemo(() => {
-		if (!selectedProductId || !skus) return [];
+		const scrollAreaRef = useRef<HTMLDivElement>(null);
+		const rowRefs = useRef<Map<number, HTMLTableRowElement>>(new Map());
 
-		let filtered = skus;
+		const debouncedSkuSearch = useDebounce(skuSearch, 500);
 
-		// Filtrar por busca (código ou cor)
-		if (debouncedSkuSearch) {
-			filtered = filtered.filter((sku: ProdutoSKUEstoqueResponseDto) => {
-				const searchTerm = debouncedSkuSearch.toLowerCase();
-				const skuCode =
-					`${selectedProduct?.id?.toString().padStart(3, "0")}-${sku.id.toString().padStart(3, "0")}`.toLowerCase();
-				const color = sku.cor?.toLowerCase() || "";
+		useImperativeHandle(ref, () => ({
+			scrollToItem: (skuId: number) => {
+				const rowElement = rowRefs.current.get(skuId);
+				if (rowElement && scrollAreaRef.current) {
+					// Encontrar o container de scroll
+					const scrollContainer = scrollAreaRef.current.querySelector(
+						"[data-radix-scroll-area-viewport]"
+					);
+					if (scrollContainer) {
+						// Calcular a posição do item em relação ao container
+						const containerRect = scrollContainer.getBoundingClientRect();
+						const rowRect = rowElement.getBoundingClientRect();
+						const scrollTop = scrollContainer.scrollTop;
+						const rowTop = rowRect.top - containerRect.top + scrollTop;
 
-				return skuCode.includes(searchTerm) || color.includes(searchTerm);
-			});
-		}
+						// Fazer scroll suave para o item
+						scrollContainer.scrollTo({
+							top: rowTop - 100, // 100px de margem do topo para considerar o header
+							behavior: "smooth",
+						});
 
-		// Filtrar por tamanho
-		if (sizeFilter !== "all") {
-			filtered = filtered.filter(
-				(sku: ProdutoSKUEstoqueResponseDto) => sku.tamanho === sizeFilter
-			);
-		}
+						// Destacar o item temporariamente
+						rowElement.classList.add(
+							"ring-2",
+							"ring-blue-500",
+							"ring-opacity-50",
+							"border-blue-500",
+							"border-2"
+						);
+						setTimeout(() => {
+							rowElement.classList.remove(
+								"ring-2",
+								"ring-blue-500",
+								"ring-opacity-50",
+								"border-blue-500",
+								"border-2"
+							);
+						}, 2000);
+					}
+				}
+			},
+		}));
 
-		return filtered;
-	}, [
-		selectedProductId,
-		skus,
-		debouncedSkuSearch,
-		sizeFilter,
-		selectedProduct?.id,
-	]);
+		// Filtrar SKUs por busca e tamanho
+		const filteredSkus = React.useMemo(() => {
+			if (!selectedProductId || !skus) return [];
 
-	// Obter tamanhos únicos dos SKUs
-	const availableSizes = React.useMemo(() => {
-		if (!skus) return [];
-		return skus
-			.map((sku: ProdutoSKUEstoqueResponseDto) => sku.tamanho)
-			.filter((size, index, self) => size && self.indexOf(size) === index)
-			.sort();
-	}, [skus]);
+			let filtered = skus;
 
-	// Limpar filtros quando mudar o produto
-	React.useEffect(() => {
-		setSkuSearch("");
-		setSizeFilter("all");
-	}, [selectedProductId]);
+			// Filtrar por busca (código ou cor)
+			if (debouncedSkuSearch) {
+				filtered = filtered.filter((sku: ProdutoSKUEstoqueResponseDto) => {
+					const searchTerm = debouncedSkuSearch.toLowerCase();
+					const skuCode =
+						`${selectedProduct?.id?.toString().padStart(3, "0")}-${sku.id.toString().padStart(3, "0")}`.toLowerCase();
+					const color = sku.cor?.toLowerCase() || "";
 
-	const handleStockClick = (sku: ProdutoSKUEstoqueResponseDto) => {
-		if (enableStockAdjustment && onStockAdjust) {
-			onStockAdjust(sku);
-		}
-	};
+					return skuCode.includes(searchTerm) || color.includes(searchTerm);
+				});
+			}
 
-	const handlePriceClick = () => {
-		if (selectedProduct) {
-			setNewPrice(selectedProduct.precoCompra.toString());
-			setIsPriceDialogOpen(true);
-		}
-	};
+			// Filtrar por tamanho
+			if (sizeFilter !== "all") {
+				filtered = filtered.filter(
+					(sku: ProdutoSKUEstoqueResponseDto) => sku.tamanho === sizeFilter
+				);
+			}
 
-	const handlePriceSave = () => {
-		const priceValue = parseFloat(newPrice);
-		if (!isNaN(priceValue) && priceValue >= 0 && onPriceChange) {
-			onPriceChange(priceValue);
+			return filtered;
+		}, [
+			selectedProductId,
+			skus,
+			debouncedSkuSearch,
+			sizeFilter,
+			selectedProduct?.id,
+		]);
+
+		// Obter tamanhos únicos dos SKUs
+		const availableSizes = React.useMemo(() => {
+			if (!skus) return [];
+			return skus
+				.map((sku: ProdutoSKUEstoqueResponseDto) => sku.tamanho)
+				.filter((size, index, self) => size && self.indexOf(size) === index)
+				.sort();
+		}, [skus]);
+
+		// Limpar filtros quando mudar o produto
+		React.useEffect(() => {
+			setSkuSearch("");
+			setSizeFilter("all");
+		}, [selectedProductId]);
+
+		const handleStockClick = (sku: ProdutoSKUEstoqueResponseDto) => {
+			if (enableStockAdjustment && onStockAdjust) {
+				onStockAdjust(sku);
+			}
+		};
+
+		const handlePriceClick = () => {
+			if (selectedProduct) {
+				setNewPrice(selectedProduct.precoCompra.toString());
+				setIsPriceDialogOpen(true);
+			}
+		};
+
+		const handlePriceSave = () => {
+			const priceValue = parseFloat(newPrice);
+			if (!isNaN(priceValue) && priceValue >= 0 && onPriceChange) {
+				onPriceChange(priceValue);
+				setIsPriceDialogOpen(false);
+			}
+		};
+
+		const handlePriceCancel = () => {
 			setIsPriceDialogOpen(false);
-		}
-	};
+			setNewPrice("");
+		};
 
-	const handlePriceCancel = () => {
-		setIsPriceDialogOpen(false);
-		setNewPrice("");
-	};
-
-	return (
-		<Card>
-			<CardHeader>
-				<CardTitle>
-					<div className="flex justify-between">
-						<div className="flex items-center gap-2">
-							<Package className="h-5 w-5" />{" "}
-							{selectedProduct && `${selectedProduct.nome}`}
-						</div>
-						{showProductPrice && (
-							<div
-								className="text-sm text-muted-foreground cursor-pointer hover:text-foreground transition-colors flex items-center gap-1"
-								onClick={handlePriceClick}
-							>
-								{/* Formatar o preço de compra */}
-								{selectedProduct?.currency?.prefixo}{" "}
-								{selectedProduct?.precoCompra.toLocaleString(
-									selectedProduct?.currency?.isoCode || "pt-BR",
-									{
-										minimumFractionDigits: 2,
-										maximumFractionDigits: 2,
-									}
-								)}
-								<Edit3 className="h-3 w-3 opacity-50" />
+		return (
+			<Card>
+				<CardHeader>
+					<CardTitle>
+						<div className="flex justify-between">
+							<div className="flex items-center gap-2">
+								<Package className="h-5 w-5" />{" "}
+								{selectedProduct && `${selectedProduct.nome}`}
 							</div>
-						)}
-					</div>
-				</CardTitle>
-			</CardHeader>
-			<CardContent>
-				{/* Filtros para SKUs */}
-				{selectedProductId && (
-					<div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-4 mb-4">
-						<div className="relative flex-1">
-							<Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-							<Input
-								placeholder={t("inventory.view.searchSkus")}
-								value={skuSearch}
-								onChange={e => setSkuSearch(e.target.value)}
-								className="pl-8"
-							/>
+							{showProductPrice && (
+								<div
+									className="text-sm text-muted-foreground cursor-pointer hover:text-foreground transition-colors flex items-center gap-1"
+									onClick={handlePriceClick}
+								>
+									{/* Formatar o preço de compra */}
+									{selectedProduct?.currency?.prefixo}{" "}
+									{selectedProduct?.precoCompra.toLocaleString(
+										selectedProduct?.currency?.isoCode || "pt-BR",
+										{
+											minimumFractionDigits: 2,
+											maximumFractionDigits: 2,
+										}
+									)}
+									<Edit3 className="h-3 w-3 opacity-50" />
+								</div>
+							)}
 						</div>
-						<Select value={sizeFilter} onValueChange={setSizeFilter}>
-							<SelectTrigger className="w-full md:w-[200px]">
-								<SelectValue placeholder={t("inventory.view.filterBySize")} />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectItem value="all">
-									{t("inventory.view.allSizes")}
-								</SelectItem>
-								{availableSizes.map(size => (
-									<SelectItem key={size} value={size!}>
-										{size}
+					</CardTitle>
+				</CardHeader>
+				<CardContent>
+					{/* Filtros para SKUs */}
+					{selectedProductId && (
+						<div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-4 mb-4">
+							<div className="relative flex-1">
+								<Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+								<Input
+									placeholder={t("inventory.view.searchSkus")}
+									value={skuSearch}
+									onChange={e => setSkuSearch(e.target.value)}
+									className="pl-8"
+								/>
+							</div>
+							<Select value={sizeFilter} onValueChange={setSizeFilter}>
+								<SelectTrigger className="w-full md:w-[200px]">
+									<SelectValue placeholder={t("inventory.view.filterBySize")} />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="all">
+										{t("inventory.view.allSizes")}
 									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
-					</div>
-				)}
-
-				{!selectedProductId ? (
-					<div className="flex items-center justify-center py-8">
-						<div className="text-center">
-							<ShoppingCart className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-							<p className="text-muted-foreground">
-								{t("inventory.view.selectProduct")}
-							</p>
-						</div>
-					</div>
-				) : isLoading ? (
-					<div className="flex items-center justify-center py-8">
-						<div className="text-muted-foreground">
-							{t("inventory.view.loadingSkus")}
-						</div>
-					</div>
-				) : error ? (
-					<div className="flex items-center justify-center py-8">
-						<div className="text-destructive">
-							{t("inventory.view.errorLoadingSkus")}
-						</div>
-					</div>
-				) : filteredSkus.length === 0 ? (
-					<div className="flex items-center justify-center py-8">
-						<div className="text-muted-foreground">
-							{t("inventory.view.noSkus")}
-						</div>
-					</div>
-				) : (
-					<ScrollArea className="h-[450px] w-full rounded-md border">
-						<div className="min-w-[400px]">
-							<Table>
-								<TableHeader className="sticky top-0 bg-background z-10">
-									<TableRow>
-										<TableHead className="h-8 py-2 bg-background text-center">
-											{t("inventory.view.skuCode")}
-										</TableHead>
-										<TableHead className="h-8 py-2 bg-background text-left">
-											{t("inventory.view.color")}
-										</TableHead>
-										<TableHead className="h-8 py-2 bg-background text-center">
-											{t("inventory.view.size")}
-										</TableHead>
-										<TableHead className="h-8 py-2 bg-background text-center">
-											{t("inventory.view.quantity")}
-										</TableHead>
-									</TableRow>
-								</TableHeader>
-								<TableBody>
-									{filteredSkus.map((sku: ProdutoSKUEstoqueResponseDto) => (
-										<TableRow
-											key={`${sku.id}-${sku.publicId}`}
-											onDoubleClick={() => {
-												if (allowZeroStock || sku.estoque > 0) {
-													onDoubleClick?.(sku);
-												}
-											}}
-											className={
-												onDoubleClick && (allowZeroStock || sku.estoque > 0)
-													? "cursor-pointer hover:bg-muted/50"
-													: onDoubleClick && !allowZeroStock && sku.estoque <= 0
-														? "cursor-not-allowed opacity-50"
-														: ""
-											}
-										>
-											<TableCell className="font-mono text-sm text-center">
-												{selectedProduct?.id.toString().padStart(3, "0")}-
-												{sku.id.toString().padStart(3, "0")}
-											</TableCell>
-											<TableCell className="text-left">
-												{sku.cor ? (
-													<div className="flex items-center gap-2">
-														{sku.codCor && (
-															<div
-																className="w-4 h-4 rounded-full border"
-																style={{
-																	backgroundColor: `#${sku.codCor.toString(16).padStart(6, "0")}`,
-																}}
-															/>
-														)}
-														{sku.cor}
-													</div>
-												) : (
-													"-"
-												)}
-											</TableCell>
-											<TableCell className="text-center">
-												{sku.tamanho || "-"}
-											</TableCell>
-											<TableCell className="text-center">
-												{enableStockAdjustment ? (
-													<Tooltip>
-														<TooltipTrigger asChild>
-															<Badge
-																variant={
-																	sku.estoque <= sku.qtdMinima
-																		? "destructive"
-																		: sku.estoque <= sku.qtdMinima * 2
-																			? "secondary"
-																			: "default"
-																}
-																className="cursor-pointer hover:opacity-80 transition-opacity"
-																onClick={() => handleStockClick(sku)}
-															>
-																{sku.estoque}
-															</Badge>
-														</TooltipTrigger>
-														<TooltipContent side="top" className="max-w-xs">
-															<div className="space-y-1">
-																<div className="font-semibold">
-																	{t("inventory.adjust.tooltip.title")}
-																</div>
-																<div className="text-xs text-muted-foreground">
-																	{t("inventory.adjust.tooltip.description")}
-																</div>
-															</div>
-														</TooltipContent>
-													</Tooltip>
-												) : (
-													<Badge
-														variant={
-															sku.estoque <= sku.qtdMinima
-																? "destructive"
-																: sku.estoque <= sku.qtdMinima * 2
-																	? "secondary"
-																	: "default"
-														}
-													>
-														{sku.estoque}
-													</Badge>
-												)}
-											</TableCell>
-										</TableRow>
+									{availableSizes.map(size => (
+										<SelectItem key={size} value={size!}>
+											{size}
+										</SelectItem>
 									))}
-								</TableBody>
-							</Table>
+								</SelectContent>
+							</Select>
 						</div>
-					</ScrollArea>
-				)}
-			</CardContent>
+					)}
 
-			{/* Dialog para ajuste de preço */}
-			<Dialog open={isPriceDialogOpen} onOpenChange={setIsPriceDialogOpen}>
-				<DialogContent className="sm:max-w-[425px]">
-					<DialogHeader>
-						<DialogTitle>{t("inventory.priceAdjust.title")}</DialogTitle>
-						<DialogDescription>
-							{t("inventory.priceAdjust.description")}
-						</DialogDescription>
-					</DialogHeader>
-					<div className="grid gap-4 py-4">
-						<div className="grid grid-cols-4 items-center gap-4">
-							<Label htmlFor="current-price" className="text-right">
-								{t("inventory.priceAdjust.currentPrice")}
-							</Label>
-							<div className="col-span-3 text-sm text-muted-foreground">
-								{selectedProduct?.currency?.prefixo}{" "}
-								{selectedProduct?.precoCompra.toLocaleString(
-									selectedProduct?.currency?.isoCode || "pt-BR",
-									{
-										minimumFractionDigits: 2,
-										maximumFractionDigits: 2,
-									}
-								)}
+					{!selectedProductId ? (
+						<div className="flex items-center justify-center py-8">
+							<div className="text-center">
+								<ShoppingCart className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+								<p className="text-muted-foreground">
+									{t("inventory.view.selectProduct")}
+								</p>
 							</div>
 						</div>
-						<div className="grid grid-cols-4 items-center gap-4">
-							<Label htmlFor="new-price" className="text-right">
-								{t("inventory.priceAdjust.newPrice")}
-							</Label>
-							<Input
-								id="new-price"
-								type="number"
-								step="0.01"
-								min="0"
-								value={newPrice}
-								onChange={e => setNewPrice(e.target.value)}
-								className="col-span-3"
-								placeholder={t("inventory.priceAdjust.enterNewPrice")}
-							/>
+					) : isLoading ? (
+						<div className="flex items-center justify-center py-8">
+							<div className="text-muted-foreground">
+								{t("inventory.view.loadingSkus")}
+							</div>
 						</div>
-					</div>
-					<DialogFooter>
-						<Button variant="outline" onClick={handlePriceCancel}>
-							{t("common.cancel")}
-						</Button>
-						<Button onClick={handlePriceSave}>{t("common.save")}</Button>
-					</DialogFooter>
-				</DialogContent>
-			</Dialog>
-		</Card>
-	);
-};
+					) : error ? (
+						<div className="flex items-center justify-center py-8">
+							<div className="text-destructive">
+								{t("inventory.view.errorLoadingSkus")}
+							</div>
+						</div>
+					) : filteredSkus.length === 0 ? (
+						<div className="flex items-center justify-center py-8">
+							<div className="text-muted-foreground">
+								{t("inventory.view.noSkus")}
+							</div>
+						</div>
+					) : (
+						<ScrollArea
+							ref={scrollAreaRef}
+							className="h-[450px] w-full rounded-md border"
+						>
+							<div className="min-w-[400px]">
+								<Table>
+									<TableHeader className="sticky top-0 bg-background z-10">
+										<TableRow>
+											<TableHead className="h-8 py-2 bg-background text-center">
+												{t("inventory.view.skuCode")}
+											</TableHead>
+											<TableHead className="h-8 py-2 bg-background text-left">
+												{t("inventory.view.color")}
+											</TableHead>
+											<TableHead className="h-8 py-2 bg-background text-center">
+												{t("inventory.view.size")}
+											</TableHead>
+											<TableHead className="h-8 py-2 bg-background text-center">
+												{t("inventory.view.quantity")}
+											</TableHead>
+										</TableRow>
+									</TableHeader>
+									<TableBody>
+										{filteredSkus.map((sku: ProdutoSKUEstoqueResponseDto) => (
+											<TableRow
+												key={`${sku.id}-${sku.publicId}`}
+												ref={el => {
+													if (el) {
+														rowRefs.current.set(sku.id, el);
+													} else {
+														rowRefs.current.delete(sku.id);
+													}
+												}}
+												onDoubleClick={() => {
+													if (allowZeroStock || sku.estoque > 0) {
+														onDoubleClick?.(sku);
+													}
+												}}
+												className={`transition-all duration-300 ${
+													onDoubleClick && (allowZeroStock || sku.estoque > 0)
+														? "cursor-pointer hover:bg-muted/50"
+														: onDoubleClick &&
+															  !allowZeroStock &&
+															  sku.estoque <= 0
+															? "cursor-not-allowed opacity-50"
+															: ""
+												}`}
+											>
+												<TableCell className="font-mono text-sm text-center">
+													{selectedProduct?.id.toString().padStart(3, "0")}-
+													{sku.id.toString().padStart(3, "0")}
+												</TableCell>
+												<TableCell className="text-left">
+													{sku.cor ? (
+														<div className="flex items-center gap-2">
+															{sku.codCor && (
+																<div
+																	className="w-4 h-4 rounded-full border"
+																	style={{
+																		backgroundColor: `#${sku.codCor.toString(16).padStart(6, "0")}`,
+																	}}
+																/>
+															)}
+															{sku.cor}
+														</div>
+													) : (
+														"-"
+													)}
+												</TableCell>
+												<TableCell className="text-center">
+													{sku.tamanho || "-"}
+												</TableCell>
+												<TableCell className="text-center">
+													{enableStockAdjustment ? (
+														<Tooltip>
+															<TooltipTrigger asChild>
+																<Badge
+																	variant={
+																		sku.estoque <= sku.qtdMinima
+																			? "destructive"
+																			: sku.estoque <= sku.qtdMinima * 2
+																				? "secondary"
+																				: "default"
+																	}
+																	className="cursor-pointer hover:opacity-80 transition-opacity"
+																	onClick={() => handleStockClick(sku)}
+																>
+																	{sku.estoque}
+																</Badge>
+															</TooltipTrigger>
+															<TooltipContent side="top" className="max-w-xs">
+																<div className="space-y-1">
+																	<div className="font-semibold">
+																		{t("inventory.adjust.tooltip.title")}
+																	</div>
+																	<div className="text-xs text-muted-foreground">
+																		{t("inventory.adjust.tooltip.description")}
+																	</div>
+																</div>
+															</TooltipContent>
+														</Tooltip>
+													) : (
+														<Badge
+															variant={
+																sku.estoque <= sku.qtdMinima
+																	? "destructive"
+																	: sku.estoque <= sku.qtdMinima * 2
+																		? "secondary"
+																		: "default"
+															}
+														>
+															{sku.estoque}
+														</Badge>
+													)}
+												</TableCell>
+											</TableRow>
+										))}
+									</TableBody>
+								</Table>
+							</div>
+						</ScrollArea>
+					)}
+				</CardContent>
 
-export { SkuListing };
+				{/* Dialog para ajuste de preço */}
+				<Dialog open={isPriceDialogOpen} onOpenChange={setIsPriceDialogOpen}>
+					<DialogContent className="sm:max-w-[425px]">
+						<DialogHeader>
+							<DialogTitle>{t("inventory.priceAdjust.title")}</DialogTitle>
+							<DialogDescription>
+								{t("inventory.priceAdjust.description")}
+							</DialogDescription>
+						</DialogHeader>
+						<div className="grid gap-4 py-4">
+							<div className="grid grid-cols-4 items-center gap-4">
+								<Label htmlFor="current-price" className="text-right">
+									{t("inventory.priceAdjust.currentPrice")}
+								</Label>
+								<div className="col-span-3 text-sm text-muted-foreground">
+									{selectedProduct?.currency?.prefixo}{" "}
+									{selectedProduct?.precoCompra.toLocaleString(
+										selectedProduct?.currency?.isoCode || "pt-BR",
+										{
+											minimumFractionDigits: 2,
+											maximumFractionDigits: 2,
+										}
+									)}
+								</div>
+							</div>
+							<div className="grid grid-cols-4 items-center gap-4">
+								<Label htmlFor="new-price" className="text-right">
+									{t("inventory.priceAdjust.newPrice")}
+								</Label>
+								<Input
+									id="new-price"
+									type="number"
+									step="0.01"
+									min="0"
+									value={newPrice}
+									onChange={e => setNewPrice(e.target.value)}
+									className="col-span-3"
+									placeholder={t("inventory.priceAdjust.enterNewPrice")}
+								/>
+							</div>
+						</div>
+						<DialogFooter>
+							<Button variant="outline" onClick={handlePriceCancel}>
+								{t("common.cancel")}
+							</Button>
+							<Button onClick={handlePriceSave}>{t("common.save")}</Button>
+						</DialogFooter>
+					</DialogContent>
+				</Dialog>
+			</Card>
+		);
+	}
+);
+
+SkuListingComponent.displayName = "SkuListing";
+
+export const SkuListing = SkuListingComponent;

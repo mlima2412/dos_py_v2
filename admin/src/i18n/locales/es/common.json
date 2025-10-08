@@ -1269,7 +1269,8 @@
 		"actions": {
 			"view": "Visualizar",
 			"delete": "Eliminar",
-			"print": "Imprimir Etiquetas"
+			"print": "Imprimir Etiquetas",
+			"printReport": "Imprimir Informe"
 		},
 		"messages": {
 			"deleteSuccess": "¡Pedido de compra eliminado con éxito!",
@@ -1395,6 +1396,32 @@
 			"title": "Impresión de Etiquetas",
 			"orderNumber": "Número de Pedido",
 			"preview": "Vista Previa"
+		},
+		"report": {
+			"title": "Informe de Pedido de Compra",
+			"header": {
+				"supplier": "Proveedor",
+				"date": "Fecha del Pedido",
+				"currency": "Moneda",
+				"exchangeRate": "Tipo de Cambio",
+				"freight": "Flete",
+				"commission": "Comisión",
+				"entryLocation": "Local de Entrada"
+			},
+			"table": {
+				"product": "Producto",
+				"color": "Color",
+				"size": "Tamaño",
+				"quantity": "Cantidad",
+				"unitValue": "Valor Unitario",
+				"subtotal": "Subtotal"
+			},
+			"summary": {
+				"totalItems": "Total de Ítems",
+				"originalTotal": "Valor Total",
+				"convertedTotal": "Valor Total Convertido"
+			},
+			"generatedAt": "Generado en"
 		}
 	}
 }

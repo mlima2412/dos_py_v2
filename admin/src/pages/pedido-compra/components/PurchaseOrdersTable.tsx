@@ -20,7 +20,7 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Eye, Tag, Trash2 } from "lucide-react";
+import { Eye, Tag, Trash2, FileText } from "lucide-react";
 import { getStatusBadgeVariant } from "../constants/status";
 import type { PurchaseOrderListItem, OrderStatusKey } from "../types";
 
@@ -36,6 +36,7 @@ interface ColumnLabels {
 interface ActionLabels {
 	view: string;
 	print: string;
+	printReport: string;
 	delete: string;
 	deleteConfirmTitle: string;
 	deleteConfirmDescription: string;
@@ -51,6 +52,7 @@ interface PurchaseOrdersTableProps {
 	getStatusLabel: (status: OrderStatusKey) => string;
 	onView: (publicId: string) => void;
 	onPrint: (publicId: string) => void;
+	onPrintReport: (publicId: string) => void;
 	onDelete: (publicId: string) => void;
 	deletingOrderId: string | null;
 	isDeleting: boolean;
@@ -66,6 +68,7 @@ export const PurchaseOrdersTable: React.FC<PurchaseOrdersTableProps> = ({
 	getStatusLabel,
 	onView,
 	onPrint,
+	onPrintReport,
 	onDelete,
 	deletingOrderId,
 	isDeleting,
@@ -111,6 +114,14 @@ export const PurchaseOrdersTable: React.FC<PurchaseOrdersTableProps> = ({
 									title={actions.view}
 								>
 									<Eye className="h-4 w-4" />
+								</Button>
+								<Button
+									variant="ghost"
+									size="sm"
+									onClick={() => onPrintReport(order.publicId)}
+									title={actions.printReport}
+								>
+									<FileText className="h-4 w-4" />
 								</Button>
 								{order.status === "delivered" && (
 									<Button

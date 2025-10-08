@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useImperativeHandle, forwardRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -29,162 +29,239 @@ export interface SelectedSkusListProps<T = any> {
 	enabledStockAdjustment?: boolean;
 }
 
-export const SelectedSkusList: React.FC<SelectedSkusListProps> = ({
-	selectedSkus,
-	onRemoveSku,
-	onUpdateQuantity,
-	title,
-	emptyMessage,
-	showStockLimit = false,
-	maxQuantity,
-	scrollAreaHeight = "h-[400px]",
-	enabledStockAdjustment = true,
-}) => {
-	const { t } = useTranslation("common");
+export interface SelectedSkusListRef {
+	scrollToItem: (skuId: number) => void;
+}
 
-	const handleIncrement = (
-		skuId: number,
-		currentQuantity: number,
-		sku: any
+const SelectedSkusListComponent = forwardRef<
+	SelectedSkusListRef,
+	SelectedSkusListProps
+>(
+	(
+		{
+			selectedSkus,
+			onRemoveSku,
+			onUpdateQuantity,
+			title,
+			emptyMessage,
+			showStockLimit = false,
+			maxQuantity,
+			scrollAreaHeight = "h-[400px]",
+			enabledStockAdjustment = true,
+		},
+		ref
 	) => {
-		if (showStockLimit && maxQuantity) {
-			const maxQty = maxQuantity(sku);
-			const newQuantity = Math.min(currentQuantity + 1, maxQty);
+		const { t } = useTranslation("common");
+		const scrollAreaRef = useRef<HTMLDivElement>(null);
+		const itemRefs = useRef<Map<number, HTMLDivElement>>(new Map());
+
+		useImperativeHandle(ref, () => ({
+			scrollToItem: (skuId: number) => {
+				const itemElement = itemRefs.current.get(skuId);
+				if (itemElement && scrollAreaRef.current) {
+					// Encontrar o container de scroll
+					const scrollContainer = scrollAreaRef.current.querySelector(
+						"[data-radix-scroll-area-viewport]"
+					);
+					if (scrollContainer) {
+						// Calcular a posição do item em relação ao container
+						const containerRect = scrollContainer.getBoundingClientRect();
+						const itemRect = itemElement.getBoundingClientRect();
+						const scrollTop = scrollContainer.scrollTop;
+						const itemTop = itemRect.top - containerRect.top + scrollTop;
+
+						// Fazer scroll suave para o item
+						scrollContainer.scrollTo({
+							top: itemTop - 20, // 20px de margem do topo
+							behavior: "smooth",
+						});
+
+						// Destacar o item temporariamente
+						itemElement.classList.add(
+							"ring-2",
+							"ring-blue-500",
+							"ring-opacity-50",
+							"border-blue-500",
+							"border-2"
+						);
+						setTimeout(() => {
+							itemElement.classList.remove(
+								"ring-2",
+								"ring-blue-500",
+								"ring-opacity-50",
+								"border-blue-500",
+								"border-2"
+							);
+						}, 2000);
+					}
+				}
+			},
+		}));
+
+		const handleIncrement = (
+			skuId: number,
+			currentQuantity: number,
+			sku: any
+		) => {
+			if (showStockLimit && maxQuantity) {
+				const maxQty = maxQuantity(sku);
+				const newQuantity = Math.min(currentQuantity + 1, maxQty);
+				onUpdateQuantity(skuId, newQuantity);
+			} else {
+				// Para pedido de compra, não há limite de estoque
+				const newQuantity = currentQuantity + 1;
+				onUpdateQuantity(skuId, newQuantity);
+			}
+		};
+
+		const handleDecrement = (skuId: number, currentQuantity: number) => {
+			const newQuantity = Math.max(currentQuantity - 1, 1);
 			onUpdateQuantity(skuId, newQuantity);
-		} else {
-			// Para pedido de compra, não há limite de estoque
-			const newQuantity = currentQuantity + 1;
-			onUpdateQuantity(skuId, newQuantity);
-		}
-	};
+		};
 
-	const handleDecrement = (skuId: number, currentQuantity: number) => {
-		const newQuantity = Math.max(currentQuantity - 1, 1);
-		onUpdateQuantity(skuId, newQuantity);
-	};
+		const totalItems = selectedSkus.reduce(
+			(sum, item) => sum + item.quantity,
+			0
+		);
 
-	const totalItems = selectedSkus.reduce((sum, item) => sum + item.quantity, 0);
-
-	return (
-		<Card>
-			<CardHeader>
-				<CardTitle className="flex items-center justify-between">
-					<div className="flex items-center gap-2">
-						<ShoppingCart className="h-5 w-5" />
-						{title || t("purchaseOrders.form.labels.selectedProducts")}
-					</div>
-					<div>
-						{selectedSkus.length > 0 && (
-							<span className="text-xs font-normal text-muted-foreground">
-								{selectedSkus.length} itens, {totalItems}{" "}
-								{totalItems === 1 ? "pc" : "pcs"}
-							</span>
-						)}
-					</div>
-				</CardTitle>
-			</CardHeader>
-			<CardContent>
-				{selectedSkus.length === 0 ? (
-					<div className="flex items-center justify-center py-8">
-						<div className="text-center">
-							<Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-							<p className="text-muted-foreground">
-								{emptyMessage || t("purchaseOrders.form.noProductsSelected")}
-							</p>
+		return (
+			<Card>
+				<CardHeader>
+					<CardTitle className="flex items-center justify-between">
+						<div className="flex items-center gap-2">
+							<ShoppingCart className="h-5 w-5" />
+							{title || t("purchaseOrders.form.labels.selectedProducts")}
 						</div>
-					</div>
-				) : (
-					<ScrollArea className={`${scrollAreaHeight} w-full rounded-md`}>
-						<div className="space-y-2 pr-2">
-							{selectedSkus.map(({ sku, product, quantity }) => {
-								const maxQty =
-									showStockLimit && maxQuantity ? maxQuantity(sku) : undefined;
-								const isAtMaxLimit = maxQty !== undefined && quantity >= maxQty;
+						<div>
+							{selectedSkus.length > 0 && (
+								<span className="text-xs font-normal text-muted-foreground">
+									{selectedSkus.length} itens, {totalItems}{" "}
+									{totalItems === 1 ? "pc" : "pcs"}
+								</span>
+							)}
+						</div>
+					</CardTitle>
+				</CardHeader>
+				<CardContent>
+					{selectedSkus.length === 0 ? (
+						<div className="flex items-center justify-center py-8">
+							<div className="text-center">
+								<Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+								<p className="text-muted-foreground">
+									{emptyMessage || t("purchaseOrders.form.noProductsSelected")}
+								</p>
+							</div>
+						</div>
+					) : (
+						<ScrollArea
+							ref={scrollAreaRef}
+							className={`${scrollAreaHeight} w-full rounded-md`}
+						>
+							<div className="space-y-2 pr-2">
+								{selectedSkus.map(({ sku, product, quantity }) => {
+									const maxQty =
+										showStockLimit && maxQuantity
+											? maxQuantity(sku)
+											: undefined;
+									const isAtMaxLimit =
+										maxQty !== undefined && quantity >= maxQty;
 
-								return (
-									<div
-										key={sku.id}
-										className="flex items-center justify-between p-3 border rounded-lg"
-									>
-										<div className="flex-1 min-w-0">
-											<div className="flex items-center gap-2">
-												<span className="font-mono text-sm">
-													{product.id.toString().padStart(3, "0")}-
-													{sku.id.toString().padStart(3, "0")}
-												</span>
-												{sku.cor && (
-													<div className="flex items-center gap-1">
-														{sku.codCor && (
-															<div
-																className="w-3 h-3 rounded-full border"
-																style={{
-																	backgroundColor: `#${sku.codCor}`,
-																}}
-															/>
-														)}
-														<span className="text-xs text-muted-foreground">
-															{sku.cor}
-														</span>
-													</div>
-												)}
-												{sku.tamanho && (
-													<span className="text-xs text-muted-foreground">
-														{sku.tamanho}
+									return (
+										<div
+											key={sku.id}
+											ref={el => {
+												if (el) {
+													itemRefs.current.set(sku.id, el);
+												} else {
+													itemRefs.current.delete(sku.id);
+												}
+											}}
+											className="flex items-center justify-between p-3 border rounded-lg transition-all duration-300"
+										>
+											<div className="flex-1 min-w-0">
+												<div className="flex items-center gap-2">
+													<span className="font-mono text-sm">
+														{product.id.toString().padStart(3, "0")}-
+														{sku.id.toString().padStart(3, "0")}
 													</span>
-												)}
+													{sku.cor && (
+														<div className="flex items-center gap-1">
+															{sku.codCor && (
+																<div
+																	className="w-3 h-3 rounded-full border"
+																	style={{
+																		backgroundColor: `#${sku.codCor}`,
+																	}}
+																/>
+															)}
+															<span className="text-xs text-muted-foreground">
+																{sku.cor}
+															</span>
+														</div>
+													)}
+													{sku.tamanho && (
+														<span className="text-xs text-muted-foreground">
+															{sku.tamanho}
+														</span>
+													)}
+												</div>
+												<p className="text-sm font-medium truncate">
+													{product.nome}
+												</p>
 											</div>
-											<p className="text-sm font-medium truncate">
-												{product.nome}
-											</p>
-										</div>
-										<div className="flex items-center gap-2">
-											<div className="flex items-center gap-1">
+											<div className="flex items-center gap-2">
+												<div className="flex items-center gap-1">
+													{enabledStockAdjustment && (
+														<Button
+															variant="outline"
+															size="sm"
+															onClick={() => handleDecrement(sku.id, quantity)}
+															disabled={quantity <= 1}
+															className="h-8 w-8 p-0"
+														>
+															<Minus className="h-4 w-4" />
+														</Button>
+													)}
+													<span className="w-12 text-center font-medium">
+														{quantity}
+													</span>
+													{enabledStockAdjustment && (
+														<Button
+															variant="outline"
+															size="sm"
+															onClick={() =>
+																handleIncrement(sku.id, quantity, sku)
+															}
+															disabled={isAtMaxLimit}
+															className="h-8 w-8 p-0"
+														>
+															<Plus className="h-4 w-4" />
+														</Button>
+													)}
+												</div>
 												{enabledStockAdjustment && (
 													<Button
-														variant="outline"
+														variant="ghost"
 														size="sm"
-														onClick={() => handleDecrement(sku.id, quantity)}
-														disabled={quantity <= 1}
+														onClick={() => onRemoveSku(sku.id)}
 														className="h-8 w-8 p-0"
 													>
-														<Minus className="h-4 w-4" />
-													</Button>
-												)}
-												<span className="w-12 text-center font-medium">
-													{quantity}
-												</span>
-												{enabledStockAdjustment && (
-													<Button
-														variant="outline"
-														size="sm"
-														onClick={() =>
-															handleIncrement(sku.id, quantity, sku)
-														}
-														disabled={isAtMaxLimit}
-														className="h-8 w-8 p-0"
-													>
-														<Plus className="h-4 w-4" />
+														<X className="h-4 w-4" />
 													</Button>
 												)}
 											</div>
-											{enabledStockAdjustment && (
-												<Button
-													variant="ghost"
-													size="sm"
-													onClick={() => onRemoveSku(sku.id)}
-													className="h-8 w-8 p-0"
-												>
-													<X className="h-4 w-4" />
-												</Button>
-											)}
 										</div>
-									</div>
-								);
-							})}
-						</div>
-					</ScrollArea>
-				)}
-			</CardContent>
-		</Card>
-	);
-};
+									);
+								})}
+							</div>
+						</ScrollArea>
+					)}
+				</CardContent>
+			</Card>
+		);
+	}
+);
+
+SelectedSkusListComponent.displayName = "SelectedSkusList";
+
+export const SelectedSkusList = SelectedSkusListComponent;

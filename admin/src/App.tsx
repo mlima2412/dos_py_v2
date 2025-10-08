@@ -35,6 +35,7 @@ import {
 	FinalizarPedidoCompra,
 	ImprimirEtiquetas,
 } from "./pages/pedido-compra";
+import { PedidoCompraPrintPage } from "./pages/pedido-compra/print";
 
 import { ThemeProvider } from "./components/theme-provider";
 import "./i18n";
@@ -251,6 +252,14 @@ function App() {
 										element={
 											<ProtectedRoute>
 												<ImprimirEtiquetas />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="/pedidoCompra/imprimir/:publicId"
+										element={
+											<ProtectedRoute>
+												<PedidoCompraPrintPage />
 											</ProtectedRoute>
 										}
 									/>

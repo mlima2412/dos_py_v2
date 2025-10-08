@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { DashboardLayout } from "../../../components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,8 +20,9 @@ import {
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { ArrowLeftRight, MapPin, Package } from "lucide-react";
-import { SkuListing } from "@/components/SkuListing";
-import { ProductSelector, SelectedSkusList } from "@/components/";
+import { SkuListing, type SkuListingRef } from "@/components/SkuListing";
+import { type SelectedSkusListRef } from "@/components/SelectedSkusList";
+import { ProductSelector, SelectedSkusList } from "@/components";
 import { useLocaisEstoque } from "@/hooks/useEstoques";
 import {
 	useProdutoControllerFindByLocal,
@@ -60,6 +61,10 @@ export const TransferenciaEstoque: React.FC = () => {
 	const { t } = useTranslation("common");
 	const { selectedPartnerId } = usePartnerContext();
 	const { success: showSuccess, error: showError } = useToast();
+
+	// Refs para os componentes
+	const skuListingRef = useRef<SkuListingRef>(null);
+	const selectedSkusListRef = useRef<SelectedSkusListRef>(null);
 
 	// Estados para seleção de locais
 	const [localSaidaId, setLocalSaidaId] = useState<number | null>(null);
@@ -250,7 +255,24 @@ export const TransferenciaEstoque: React.FC = () => {
 				ProdutoSKU: [skuForTransfer],
 			};
 
+			// Verificar quantidade já selecionada
+			const existingItem = selectedSkus.find(
+				item => item.sku.id === skuForTransfer.id
+			);
+			const currentQuantity = existingItem?.quantity || 0;
+			const availableStock = skuForTransfer.estoque;
+
+			// Validar se há estoque suficiente
+			if (currentQuantity >= availableStock) {
+				showError(
+					`Estoque insuficiente. Disponível: ${availableStock}, Já selecionado: ${currentQuantity}`
+				);
+				setSkuSearchCode("");
+				return;
+			}
+
 			// Adicionar à lista de transferência
+			let wasAdded = false;
 			setSelectedSkus(prev => {
 				const existingIndex = prev.findIndex(
 					item => item.sku.id === skuForTransfer.id
@@ -258,15 +280,19 @@ export const TransferenciaEstoque: React.FC = () => {
 
 				if (existingIndex >= 0) {
 					// Se já existe, incrementar quantidade até o máximo disponível
-					const currentQuantity = prev[existingIndex].quantity;
-					const maxQuantity = skuForTransfer.estoque;
-					const newQuantity = Math.min(currentQuantity + 1, maxQuantity);
+					const currentQty = prev[existingIndex].quantity;
+					const newQuantity = Math.min(currentQty + 1, availableStock);
+
+					if (newQuantity > currentQty) {
+						wasAdded = true;
+					}
 
 					return prev.map((item, index) =>
 						index === existingIndex ? { ...item, quantity: newQuantity } : item
 					);
 				} else {
 					// Se não existe, adicionar com quantidade 1
+					wasAdded = true;
 					return [
 						...prev,
 						{
@@ -278,8 +304,26 @@ export const TransferenciaEstoque: React.FC = () => {
 				}
 			});
 
+			// Selecionar automaticamente o produto
+			if (skuData.produto?.id && skuData.produto.id !== selectedProductId) {
+				setSelectedProductId(skuData.produto.id);
+			}
+
 			setSkuSearchCode("");
-			showSuccess(`SKU ${code} adicionado à transferência`);
+
+			if (wasAdded) {
+				showSuccess(`SKU ${code} adicionado à transferência`);
+
+				// Scroll para o item no SkuListing após pequeno delay
+				setTimeout(() => {
+					skuListingRef.current?.scrollToItem(skuForTransfer.id);
+				}, 100);
+
+				// Scroll para o item no SelectedSkusList após delay maior
+				setTimeout(() => {
+					selectedSkusListRef.current?.scrollToItem(skuForTransfer.id);
+				}, 400);
+			}
 		} catch (error: unknown) {
 			console.error("Erro ao buscar SKU:", error);
 			const apiError = error as {
@@ -291,6 +335,7 @@ export const TransferenciaEstoque: React.FC = () => {
 			} else {
 				showError(apiError?.data?.message || "Erro ao buscar SKU no estoque");
 			}
+			setSkuSearchCode("");
 		}
 	};
 
@@ -553,6 +598,7 @@ export const TransferenciaEstoque: React.FC = () => {
 										{t("inventory.transfer.doubleClickToAdd")}
 									</p>
 									<SkuListing
+										ref={skuListingRef}
 										selectedProduct={selectedProduct}
 										selectedProductId={selectedProductId}
 										skus={selectedProductSkus}
@@ -569,6 +615,7 @@ export const TransferenciaEstoque: React.FC = () => {
 
 					{/* Card 4: SKUs Selecionados para Transferência */}
 					<SelectedSkusList
+						ref={selectedSkusListRef}
 						selectedSkus={selectedSkus}
 						onRemoveSku={handleRemoveSku}
 						onUpdateQuantity={handleUpdateQuantity}

@@ -263,6 +263,10 @@ export const ListagemPedidoCompra: React.FC = () => {
 		[navigate]
 	);
 
+	const handlePrintReport = useCallback((orderPublicId: string) => {
+		window.open(`/pedidoCompra/imprimir/${orderPublicId}`, "_blank");
+	}, []);
+
 	const filterLabels = useMemo(
 		() => ({
 			searchPlaceholder: t("purchaseOrders.search"),
@@ -291,6 +295,7 @@ export const ListagemPedidoCompra: React.FC = () => {
 		() => ({
 			view: t("purchaseOrders.actions.view"),
 			print: t("purchaseOrders.actions.print"),
+			printReport: t("purchaseOrders.actions.printReport"),
 			delete: t("purchaseOrders.actions.delete"),
 			deleteConfirmTitle: t("purchaseOrders.messages.deleteConfirmTitle"),
 			deleteConfirmDescription: t(
@@ -381,6 +386,7 @@ export const ListagemPedidoCompra: React.FC = () => {
 									getStatusLabel={getStatusLabel}
 									onView={handleViewOrder}
 									onPrint={handlePrintTagsOrder}
+									onPrintReport={handlePrintReport}
 									onDelete={handleDeleteOrder}
 									deletingOrderId={deletingOrderId}
 									isDeleting={removePedidoMutation.isPending}

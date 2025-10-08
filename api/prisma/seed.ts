@@ -294,12 +294,12 @@ async function run() {
     console.log('🌱 Iniciando migração DOSv1 para DOSv2...');
     console.log('PATH:', process.env.LEGACY_DATABASE_URL);
 
-    // await fetchCategoriaFromLegacy(app, legacyDb);
-    // await fetchSubCategoriaFromLegacy(app, legacyDb);
-    // await fetchDespesaFromLegacy(app, legacyDb);
-    // await fetchClientesFromLegacy(app, legacyDb);
-    // await fetchProdutosFromLegacy(app, legacyDb);
-    // await fetchFornecedoresFromLegacy(app, legacyDb);
+    await fetchCategoriaFromLegacy(app, legacyDb);
+    await fetchSubCategoriaFromLegacy(app, legacyDb);
+    await fetchDespesaFromLegacy(app, legacyDb);
+    await fetchClientesFromLegacy(app, legacyDb);
+    await fetchProdutosFromLegacy(app, legacyDb);
+    await fetchFornecedoresFromLegacy(app, legacyDb);
     await fetchPedidoCompraFromLegacy(app, legacyDb);
 
     legacyDb.end();
