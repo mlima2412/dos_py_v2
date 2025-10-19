@@ -50,8 +50,6 @@ interface PagamentoProps {
 
 export const Pagamento: React.FC<PagamentoProps> = ({
 	mode,
-	vendaResumo,
-	getValues,
 	setValue,
 	watch,
 	descontoTotal,

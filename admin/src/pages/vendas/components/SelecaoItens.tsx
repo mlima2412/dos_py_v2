@@ -112,7 +112,11 @@ export const SelecaoItens: React.FC<SelecaoItensProps> = ({
 			await handlers.onUpdateDiscount(editingSkuId, discount);
 		} else if (pendingAddition) {
 			// Adding new item
-			await handlers.onAddSku(pendingAddition.sku, pendingAddition.product, discount);
+			await handlers.onAddSku(
+				pendingAddition.sku,
+				pendingAddition.product,
+				discount
+			);
 		}
 		setPendingAddition(null);
 		setEditingSkuId(null);
@@ -144,7 +148,7 @@ export const SelecaoItens: React.FC<SelecaoItensProps> = ({
 							disabled={mode === "view" || !selectedLocal}
 							placeholder={t("salesOrders.form.placeholders.product")}
 						/>
-						<ScrollArea className="h-[320px] rounded-md border">
+						<ScrollArea className="h-[620px] rounded-md border">
 							<SkuListing
 								ref={skuListingRef}
 								selectedProduct={
@@ -169,8 +173,8 @@ export const SelecaoItens: React.FC<SelecaoItensProps> = ({
 										void handleAddSkuWithDiscount(sku, product);
 									}
 								}}
-								allowZeroStock
-								showProductPrice
+								allowZeroStock={false}
+								showProductPrice={false}
 							/>
 						</ScrollArea>
 					</CardContent>
@@ -221,16 +225,17 @@ export const SelecaoItens: React.FC<SelecaoItensProps> = ({
 							showDiscount={true}
 							onEditDiscount={handleEditDiscount}
 						/>
-						<div className="space-y-2">
-							<div className="text-sm font-semibold">
-								{t("salesOrders.form.labels.totalItems")}:{" "}
-								{itensSelecionados.length}
-							</div>
-							<div className="text-sm text-muted-foreground">
+						<div className="flex flex-row justify-between space-x-4">
+							<div className="text-sm font-semibold border rounded-md border-red-400 p-1">
 								{t("salesOrders.form.labels.subtotal")}:{" "}
 								{formatCurrency(totals.itensSubtotal)}
 							</div>
-							<div className="text-sm text-muted-foreground">
+							<div className="text-sm font-semibold border rounded-md border-red-400 p-1">
+								{t("salesOrders.form.labels.discountItems")}:{" "}
+								{formatCurrency(totals.descontoItens)}
+							</div>
+
+							<div className="text-sm font-semibold border rounded-md border-red-400 p-1">
 								{t("salesOrders.form.labels.total")}:{" "}
 								{formatCurrency(totals.total)}
 							</div>
@@ -255,7 +260,8 @@ export const SelecaoItens: React.FC<SelecaoItensProps> = ({
 				onOpenChange={setDiscountDialogOpen}
 				currentDiscount={
 					editingSkuId !== null
-						? itensSelecionados.find(i => i.skuId === editingSkuId)?.desconto ?? 0
+						? (itensSelecionados.find(i => i.skuId === editingSkuId)
+								?.desconto ?? 0)
 						: 0
 				}
 				itemPrice={editingItemPrice}

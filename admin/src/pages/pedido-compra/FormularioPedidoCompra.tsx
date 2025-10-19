@@ -852,11 +852,6 @@ export const FormularioPedidoCompra: React.FC = () => {
 							</Button>
 						</div>
 					) : null}
-					<Button variant="outline" onClick={() => setMostrarEtiquetas(true)}>
-						{t("purchaseOrders.labels.printLabels", {
-							defaultValue: "Imprimir Etiquetas",
-						})}
-					</Button>
 				</div>
 			</div>
 
