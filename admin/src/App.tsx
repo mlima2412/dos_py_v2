@@ -36,6 +36,7 @@ import {
 	ImprimirEtiquetas,
 } from "./pages/pedido-compra";
 import { PedidoCompraPrintPage } from "./pages/pedido-compra/print";
+import { VendasRoutes } from "./pages/vendas/vendas";
 
 import { ThemeProvider } from "./components/theme-provider";
 import "./i18n";
@@ -260,6 +261,14 @@ function App() {
 										element={
 											<ProtectedRoute>
 												<PedidoCompraPrintPage />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="/pedidoVendas/*"
+										element={
+											<ProtectedRoute>
+												<VendasRoutes />
 											</ProtectedRoute>
 										}
 									/>

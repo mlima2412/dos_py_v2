@@ -4,7 +4,6 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { DespesaRecorrente } from './entities/despesa-recorrente.entity';
 import { CreateDespesaRecorrenteDto } from './dto/create-despesa-recorrente.dto';
 import { UpdateDespesaRecorrenteDto } from './dto/update-despesa-recorrente.dto';
 

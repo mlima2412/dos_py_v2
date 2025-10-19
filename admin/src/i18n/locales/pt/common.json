@@ -1574,5 +1574,185 @@
 			},
 			"generatedAt": "Gerado em"
 		}
+	},
+	"salesOrders": {
+		"title": "Vendas Realizadas",
+		"list": "Lista de Vendas",
+		"new": "Nova Venda",
+		"search": "Buscar por cliente...",
+		"selectType": "Tipo de venda",
+		"noResults": "Nenhuma venda encontrada",
+		"breadcrumb": {
+			"home": "Início",
+			"sales": "Vendas",
+			"salesOrders": "Vendas Realizadas"
+		},
+		"columns": {
+			"saleId": "ID Venda",
+			"client": "Cliente",
+			"saleDate": "Data Venda",
+			"value": "Valor",
+			"discount": "Desconto",
+			"type": "Tipo",
+			"status": "Status",
+			"actions": "Ações"
+		},
+		"types": {
+			"all": "Todos",
+			"DIRETA": "Direta",
+			"CONDICIONAL": "Condicional",
+			"BRINDE": "Brinde"
+		},
+		"status": {
+			"PEDIDO": "Pedido",
+			"ABERTA": "Aberta",
+			"CONFIRMADA": "Confirmada",
+			"CONFIRMADA_PARCIAL": "Confirmada Parcial",
+			"CONFIRMADA_TOTAL": "Confirmada Total",
+			"CANCELADA": "Cancelada"
+		},
+		"actions": {
+			"view": "Visualizar",
+			"edit": "Editar",
+			"delete": "Excluir"
+		},
+		"messages": {
+			"loadError": "Erro ao carregar vendas",
+			"deleteSuccess": "Venda excluída com sucesso!",
+			"deleteError": "Erro ao excluir venda. Tente novamente."
+		},
+		"pagination": {
+			"showing": "Mostrando",
+			"to": "até",
+			"of": "de",
+			"results": "resultados",
+			"previous": "Anterior",
+			"next": "Próximo"
+		},
+		"form": {
+			"title": "Gerenciar venda",
+			"title_create": "Nova venda",
+			"title_edit": "Editar venda",
+			"title_view": "Detalhes da venda",
+			"helpText": "Preencha as etapas para criar ou atualizar o pedido de venda.",
+			"steps": {
+				"basic": "Dados básicos",
+				"items": "Itens",
+				"review": "Pagamento"
+			},
+			"sections": {
+				"basic": "Dados básicos da venda",
+				"availableProducts": "Produtos disponíveis",
+				"selectedItems": "Itens selecionados",
+				"itemsTable": "Detalhes dos itens",
+				"review": "Revisão e confirmação",
+				"itemsSummary": "Resumo dos itens"
+			},
+			"breadcrumb": {
+				"section": "Venda",
+				"list": "Listagem de vendas"
+			},
+			"labels": {
+				"client": "Cliente",
+				"partner": "Parceiro",
+				"location": "Local de saída",
+				"saleType": "Tipo de venda",
+				"saleDate": "Data da venda",
+				"deliveryDate": "Data de entrega",
+				"ruccnpj": "RUC/CNPJ",
+				"invoiceNumber": "Número da fatura",
+				"observation": "Observações",
+				"unknownLocation": "Local não identificado",
+				"unknownProduct": "Produto não identificado",
+				"quantity": "Quantidade",
+				"unitPrice": "Preço unitário",
+				"itemDiscount": "Desconto",
+				"subtotal": "Subtotal",
+				"itemObservation": "Observação do item",
+				"totalItems": "Itens selecionados",
+				"itemsTotal": "Total dos itens",
+				"discountItems": "Desconto nos itens",
+				"discountGeneral": "Desconto geral",
+				"freight": "Frete",
+				"commission": "Comissão",
+				"total": "Total final",
+				"paymentType": "Tipo de pagamento",
+				"paymentMethod": "Forma de pagamento",
+				"paymentMethods": "Formas de Pagamento",
+				"paymentValue": "Valor",
+				"installmentNumber": "Número de parcelas",
+				"installments": "Parcelas",
+				"installmentValue": "Valor da parcela",
+				"firstDueDate": "Primeira parcela",
+				"dueDate": "Vencimento",
+				"isEntry": "É entrada?",
+				"entry": "Entrada",
+				"addPayment": "Adicionar forma de pagamento",
+				"editPayment": "Editar forma de pagamento",
+				"totalAllocated": "Total alocado",
+				"remaining": "Faltam alocar",
+				"fullyAllocated": "Valor totalmente alocado",
+				"payments": "Formas de Pagamento",
+				"valueSituation": "Situação dos Valores",
+				"adjustments": "Ajustes",
+				"actions": "Ações",
+				"paymentDialogDescription": "Preencha os dados da forma de pagamento"
+			},
+			"paymentTypes": {
+				"A_VISTA_IMEDIATA": "À vista",
+				"A_PRAZO_SEM_PARCELAS": "A prazo",
+				"PARCELADO": "Parcelado",
+				"PARCELADO_FLEXIVEL": "Parcelamento flexível"
+			},
+			"placeholders": {
+				"client": "Selecione um cliente",
+				"location": "Selecione o local de saída",
+				"saleType": "Selecione o tipo de venda",
+				"saleDate": "Escolha a data da venda",
+				"deliveryDate": "Defina a data de entrega",
+				"ruccnpj": "Informe o RUC/CNPJ",
+				"invoiceNumber": "Informe o número da fatura",
+				"observation": "Adicione observações gerais",
+				"product": "Busque um produto",
+				"barcode": "Código de barras ou SKU"
+			},
+			"actions": {
+				"saveAndContinue": "Salvar e avançar",
+				"addByCode": "Adicionar código",
+				"back": "Voltar",
+				"next": "Avançar",
+				"save": "Salvar",
+				"cancel": "Cancelar",
+				"confirmSale": "Confirmar venda",
+				"backToList": "Voltar para listagem"
+			},
+			"messages": {
+				"partnerRequired": "Selecione um parceiro para continuar.",
+				"checkRequiredFields": "Revise os campos obrigatórios antes de avançar.",
+				"basicDataSaved": "Dados básicos salvos com sucesso!",
+				"basicDataError": "Não foi possível salvar os dados básicos.",
+				"saveBasicFirst": "Salve os dados básicos para liberar a inclusão de itens.",
+				"noItemsSelected": "Nenhum item selecionado até o momento.",
+				"addItemsHint": "Busque um produto e utilize o código de barras para adicioná-lo à venda.",
+				"removeItemError": "Não foi possível remover o item da venda.",
+				"searchSkuError": "Informe o código e selecione o local de saída.",
+				"invalidSkuFormat": "Código inválido. Use o formato XXX-YYY.",
+				"skuWithoutStock": "Este SKU não possui estoque disponível.",
+				"productNotFound": "Produto não localizado para o código informado.",
+				"searchSkuServerError": "Erro ao buscar o SKU no estoque.",
+				"itemsSaved": "Itens sincronizados com sucesso!",
+				"itemsSaveError": "Não foi possível salvar os itens da venda.",
+				"finalizeSuccess": "Venda finalizada com sucesso!",
+				"finalizeError": "Não foi possível finalizar a venda.",
+				"noPaymentsAdded": "Nenhuma forma de pagamento adicionada"
+			},
+			"discount": {
+				"title": "Desconto",
+				"description": "Informe o desconto em valor ou porcentagem. Utilize apenas um dos campos.",
+				"valueLabel": "Valor do desconto",
+				"percentageLabel": "Porcentagem do desconto",
+				"itemPrice": "Preço do item"
+			}
+		}
 	}
 }

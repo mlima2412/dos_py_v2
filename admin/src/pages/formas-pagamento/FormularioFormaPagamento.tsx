@@ -254,6 +254,13 @@ export const FormularioFormaPagamento: React.FC = () => {
 													placeholder={t("paymentMethods.placeholders.tax")}
 													disabled={mode === "view"}
 													{...field}
+													value={field.value ?? ""}
+													onChange={e => {
+														const value = e.target.value;
+														field.onChange(
+															value === "" ? undefined : parseFloat(value)
+														);
+													}}
 												/>
 											</FormControl>
 											<FormMessage />
@@ -279,6 +286,13 @@ export const FormularioFormaPagamento: React.FC = () => {
 													)}
 													disabled={mode === "view"}
 													{...field}
+													value={field.value ?? ""}
+													onChange={e => {
+														const value = e.target.value;
+														field.onChange(
+															value === "" ? 0 : parseInt(value, 10)
+														);
+													}}
 												/>
 											</FormControl>
 											<FormMessage />

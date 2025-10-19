@@ -1,6 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString, IsNumberString } from 'class-validator';
-import { Transform } from 'class-transformer';
 
 export class PaginatedQueryDto {
   @ApiPropertyOptional({

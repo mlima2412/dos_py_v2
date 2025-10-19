@@ -1,9 +1,9 @@
 import React, { useRef, useImperativeHandle, forwardRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Package, ShoppingCart, Plus, Minus, X } from "lucide-react";
+import { Package, ShoppingCart } from "lucide-react";
+import { SelectedSkuItem } from "./SelectedSkuItem";
 
 export interface SelectedSkusListProps<T = any> {
 	selectedSkus: Array<{
@@ -18,6 +18,8 @@ export interface SelectedSkusListProps<T = any> {
 			nome: string;
 		};
 		quantity: number;
+		discount?: number;
+		price?: number;
 	}>;
 	onRemoveSku: (skuId: number) => void;
 	onUpdateQuantity: (skuId: number, quantity: number) => void;
@@ -27,6 +29,8 @@ export interface SelectedSkusListProps<T = any> {
 	maxQuantity?: (sku: T) => number;
 	scrollAreaHeight?: string;
 	enabledStockAdjustment?: boolean;
+	showDiscount?: boolean;
+	onEditDiscount?: (skuId: number) => void;
 }
 
 export interface SelectedSkusListRef {
@@ -48,6 +52,8 @@ const SelectedSkusListComponent = forwardRef<
 			maxQuantity,
 			scrollAreaHeight = "h-[400px]",
 			enabledStockAdjustment = true,
+			showDiscount = false,
+			onEditDiscount,
 		},
 		ref
 	) => {
@@ -126,10 +132,10 @@ const SelectedSkusListComponent = forwardRef<
 
 		return (
 			<Card>
-				<CardHeader>
-					<CardTitle className="flex items-center justify-between">
+				<CardHeader className="pb-3">
+					<CardTitle className="flex items-center justify-between text-base">
 						<div className="flex items-center gap-2">
-							<ShoppingCart className="h-5 w-5" />
+							<ShoppingCart className="h-4 w-4" />
 							{title || t("purchaseOrders.form.labels.selectedProducts")}
 						</div>
 						<div>
@@ -142,12 +148,12 @@ const SelectedSkusListComponent = forwardRef<
 						</div>
 					</CardTitle>
 				</CardHeader>
-				<CardContent>
+				<CardContent className="pt-0">
 					{selectedSkus.length === 0 ? (
-						<div className="flex items-center justify-center py-8">
+						<div className="flex items-center justify-center py-6">
 							<div className="text-center">
-								<Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-								<p className="text-muted-foreground">
+								<Package className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
+								<p className="text-sm text-muted-foreground">
 									{emptyMessage || t("purchaseOrders.form.noProductsSelected")}
 								</p>
 							</div>
@@ -157,8 +163,8 @@ const SelectedSkusListComponent = forwardRef<
 							ref={scrollAreaRef}
 							className={`${scrollAreaHeight} w-full rounded-md`}
 						>
-							<div className="space-y-2 pr-2">
-								{selectedSkus.map(({ sku, product, quantity }) => {
+							<div className="space-y-1 pr-2">
+								{selectedSkus.map(({ sku, product, quantity, discount, price }) => {
 									const maxQty =
 										showStockLimit && maxQuantity
 											? maxQuantity(sku)
@@ -167,90 +173,28 @@ const SelectedSkusListComponent = forwardRef<
 										maxQty !== undefined && quantity >= maxQty;
 
 									return (
-										<div
+										<SelectedSkuItem
 											key={sku.id}
-											ref={el => {
+											sku={sku}
+											product={product}
+											quantity={quantity}
+											onRemove={onRemoveSku}
+											onIncrement={handleIncrement}
+											onDecrement={handleDecrement}
+											isAtMaxLimit={isAtMaxLimit}
+											enabledStockAdjustment={enabledStockAdjustment}
+											setRef={(skuId, el) => {
 												if (el) {
-													itemRefs.current.set(sku.id, el);
+													itemRefs.current.set(skuId, el);
 												} else {
-													itemRefs.current.delete(sku.id);
+													itemRefs.current.delete(skuId);
 												}
 											}}
-											className="flex items-center justify-between p-3 border rounded-lg transition-all duration-300"
-										>
-											<div className="flex-1 min-w-0">
-												<div className="flex items-center gap-2">
-													<span className="font-mono text-sm">
-														{product.id.toString().padStart(3, "0")}-
-														{sku.id.toString().padStart(3, "0")}
-													</span>
-													{sku.cor && (
-														<div className="flex items-center gap-1">
-															{sku.codCor && (
-																<div
-																	className="w-3 h-3 rounded-full border"
-																	style={{
-																		backgroundColor: `#${sku.codCor}`,
-																	}}
-																/>
-															)}
-															<span className="text-xs text-muted-foreground">
-																{sku.cor}
-															</span>
-														</div>
-													)}
-													{sku.tamanho && (
-														<span className="text-xs text-muted-foreground">
-															{sku.tamanho}
-														</span>
-													)}
-												</div>
-												<p className="text-sm font-medium truncate">
-													{product.nome}
-												</p>
-											</div>
-											<div className="flex items-center gap-2">
-												<div className="flex items-center gap-1">
-													{enabledStockAdjustment && (
-														<Button
-															variant="outline"
-															size="sm"
-															onClick={() => handleDecrement(sku.id, quantity)}
-															disabled={quantity <= 1}
-															className="h-8 w-8 p-0"
-														>
-															<Minus className="h-4 w-4" />
-														</Button>
-													)}
-													<span className="w-12 text-center font-medium">
-														{quantity}
-													</span>
-													{enabledStockAdjustment && (
-														<Button
-															variant="outline"
-															size="sm"
-															onClick={() =>
-																handleIncrement(sku.id, quantity, sku)
-															}
-															disabled={isAtMaxLimit}
-															className="h-8 w-8 p-0"
-														>
-															<Plus className="h-4 w-4" />
-														</Button>
-													)}
-												</div>
-												{enabledStockAdjustment && (
-													<Button
-														variant="ghost"
-														size="sm"
-														onClick={() => onRemoveSku(sku.id)}
-														className="h-8 w-8 p-0"
-													>
-														<X className="h-4 w-4" />
-													</Button>
-												)}
-											</div>
-										</div>
+											showDiscount={showDiscount}
+											discount={discount}
+											price={price}
+											onDoubleClick={onEditDiscount}
+										/>
 									);
 								})}
 							</div>

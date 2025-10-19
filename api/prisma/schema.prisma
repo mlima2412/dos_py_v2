@@ -34,6 +34,7 @@ model Usuario {
   TransferenciaEstoqueEnviadas  TransferenciaEstoque[] @relation("UsuarioEnviou")
   TransferenciaEstoqueRecebidas TransferenciaEstoque[] @relation("UsuarioRecebeu")
   ConferenciaEstoque            ConferenciaEstoque[]
+  Venda                         Venda[]
 
   @@map("usuario")
 }
@@ -112,8 +113,9 @@ model Parceiro {
   LocalEstoque                   LocalEstoque[]
   TransferenciaEstoque           TransferenciaEstoque[]
   ConferenciaEstoque             ConferenciaEstoque[]
-  formaPagamento                 formaPagamento[]
+  formaPagamento                 FormaPagamento[]
   PedidoCompra                   PedidoCompra[]
+  Venda                          Venda[]
 
   @@map("parceiro")
 }
@@ -131,30 +133,32 @@ model CanalOrigem {
 }
 
 model Cliente {
-  id                Int          @id @default(autoincrement())
-  publicId          String       @unique @map("public_id")
+  id                Int            @id @default(autoincrement())
+  publicId          String         @unique @map("public_id")
   nome              String
   sobrenome         String?
   email             String?
-  redeSocial        String?      @map("rede_social")
+  redeSocial        String?        @map("rede_social")
   celular           String?
-  ruccnpj           String?      @unique
-  ruccnpjSecundario String?      @map("ruccnpj_secundario")
-  nomeFatura        String?      @map("nome_fatura")
+  ruccnpj           String?        @unique
+  ruccnpjSecundario String?        @map("ruccnpj_secundario")
+  nomeFatura        String?        @map("nome_fatura")
   endereco          String?
   cidade            String?
   cep               String?
   observacoes       String?
-  linguagem         Linguagem    @default(Espanol)
-  ativo             Boolean      @default(true)
-  ultimaCompra      DateTime?    @map("ultima_compra")
-  qtdCompras        Int          @default(0) @map("qtd_compras")
-  parceiroId        Int          @map("parceiro_id")
-  canalOrigemId     Int?         @map("canal_origem_id")
-  createdAt         DateTime     @default(now()) @map("created_at")
-  updatedAt         DateTime     @updatedAt @map("updated_at")
-  CanalOrigem       CanalOrigem? @relation(fields: [canalOrigemId], references: [id])
-  Parceiro          Parceiro     @relation(fields: [parceiroId], references: [id])
+  linguagem         Linguagem      @default(Espanol)
+  ativo             Boolean        @default(true)
+  ultimaCompra      DateTime?      @map("ultima_compra")
+  qtdCompras        Int            @default(0) @map("qtd_compras")
+  parceiroId        Int            @map("parceiro_id")
+  canalOrigemId     Int?           @map("canal_origem_id")
+  createdAt         DateTime       @default(now()) @map("created_at")
+  updatedAt         DateTime       @updatedAt @map("updated_at")
+  CanalOrigem       CanalOrigem?   @relation(fields: [canalOrigemId], references: [id])
+  Parceiro          Parceiro       @relation(fields: [parceiroId], references: [id])
+  Parcelamento      Parcelamento[]
+  Venda             Venda[]
 
   @@map("cliente")
 }
@@ -379,6 +383,7 @@ model ProdutoSKU {
   MovimentoEstoque MovimentoEstoque[]
   ConferenciaItem  ConferenciaItem[]
   PedidoCompraItem PedidoCompraItem[]
+  VendaItem        VendaItem[]
 
   @@map("produto_sku")
 }
@@ -413,6 +418,7 @@ model LocalEstoque {
   TransferenciaEstoqueDestino TransferenciaEstoque[] @relation("Transferencia_Destino")
   ConferenciaEstoque          ConferenciaEstoque[]
   PedidoCompra                PedidoCompra[]
+  Venda                       Venda[]
 
   @@index([parceiroId])
   @@map("local_estoque")
@@ -539,15 +545,17 @@ model ConferenciaItem {
   @@map("conferencia_item")
 }
 
-model formaPagamento {
-  idFormaPag        Int      @id @default(autoincrement())
-  parceiroId        Int      @map("parceiro_id")
+model FormaPagamento {
+  idFormaPag        Int            @id @default(autoincrement())
+  parceiroId        Int            @map("parceiro_id")
   nome              String
-  taxa              Decimal? @default(0) @db.Decimal(12, 3)
-  tempoLiberacao    Int      @default(0) @map("tempo_liberacao") // tempo em dias que o dinheiro irá ser liberado na conta bancaria
-  impostoPosCalculo Boolean  @default(false) @map("imposto_pos_calculo")
-  ativo             Boolean  @default(true) @map("ativo")
-  Parceiro          Parceiro @relation(fields: [parceiroId], references: [id])
+  taxa              Decimal?       @default(0) @db.Decimal(12, 3)
+  tempoLiberacao    Int            @default(0) @map("tempo_liberacao") // tempo em dias que o dinheiro irá ser liberado na conta bancaria
+  impostoPosCalculo Boolean        @default(false) @map("imposto_pos_calculo")
+  ativo             Boolean        @default(true) @map("ativo")
+  Parceiro          Parceiro       @relation(fields: [parceiroId], references: [id])
+  Pagamento         Pagamento[]
+  Parcelamento      Parcelamento[]
 
   @@map("forma_pagamento")
 }
@@ -589,4 +597,127 @@ model PedidoCompraItem {
   ProdutoSKU     ProdutoSKU   @relation(fields: [skuId], references: [id])
 
   @@map("pedido_compra_item")
+}
+
+enum VendaTipo {
+  DIRETA
+  CONDICIONAL
+  BRINDE
+}
+
+enum VendaStatus {
+  PEDIDO // quando é só um orçamento/intenção
+  ABERTA // usada em condicional
+  CONFIRMADA
+  CONFIRMADA_PARCIAL
+  CONFIRMADA_TOTAL
+  CANCELADA
+}
+
+enum VendaItemTipo {
+  NORMAL
+  BRINDE
+}
+
+enum TipoVenda {
+  A_VISTA_IMEDIATA
+  A_PRAZO_SEM_PARCELAS
+  PARCELADO
+  PARCELADO_FLEXIVEL // O cliente vai pagando quando possivel
+}
+
+model Pagamento {
+  id               Int            @id @default(autoincrement())
+  vendaId          Int            @map("venda_id")
+  formaPagamentoId Int            @map("forma_pagamento_id") // transferencia, pik, dinheiro etc
+  tipo             TipoVenda      @map("tipo") // parcelado, a vista etc
+  valor            Decimal        @map("valor")
+  valorDelivery    Decimal?       @map("valor_delivery") @db.Decimal(12, 3) // valor do delivery caso seja pago separado. Gera despesa.
+  entrada          Boolean        @default(false) // se é entrada
+  Venda            Venda          @relation(fields: [vendaId], references: [id])
+  Parcelamento     Parcelamento[]
+  FormaPagamento   FormaPagamento @relation(fields: [formaPagamentoId], references: [idFormaPag])
+
+  @@map("pagamento")
+}
+
+model Parcelamento {
+  id             Int            @id @default(autoincrement())
+  idPagamento    Int            @map("id_pagamento") // um pagamento pode ter vários parcelamentos
+  clienteId      Int            @map("cliente_id")
+  valorTotal     Float          @map("valor_total")
+  valorPago      Float          @map("valor_pago")
+  idFormaPag     Int            @map("id_forma_pag")
+  situacao       Int            @default(1) // 1 - Aberto, 2 - Concluido 
+  cliente        Cliente        @relation(fields: [clienteId], references: [id])
+  parcelas       Parcelas[]
+  Pagamento      Pagamento      @relation(fields: [idPagamento], references: [id])
+  FormaPagamento FormaPagamento @relation(fields: [idFormaPag], references: [idFormaPag])
+
+  @@map("parcelamento")
+}
+
+// situação parcela
+enum ParcelaStatus {
+  PENDENTE
+  PAGO
+  PAGO_ATRASADO
+}
+
+model Parcelas {
+  id             Int           @id @default(autoincrement())
+  parcelamentoId Int           @map("parcelamento_id")
+  numero         Int           @map("numero")
+  valor          Decimal       @map("valor")
+  vencimento     DateTime?     @map("vencimento") // se for nulo, é parcelado flexivel
+  recebidoEm     DateTime?     @map("recebido_em")
+  status         ParcelaStatus @default(PENDENTE) @map("status")
+  Parcelamento   Parcelamento? @relation(fields: [parcelamentoId], references: [id])
+
+  @@map("parcelas")
+}
+
+model Venda {
+  id            Int          @id @default(autoincrement())
+  publicId      String       @unique @map("public_id")
+  usuarioId     Int          @map("usuario_id")
+  parceiroId    Int          @map("parceiro_id")
+  localSaidaId  Int          @map("local_saida_id") // estoque de saida quando sair
+  clienteId     Int          @map("cliente_id")
+  tipo          VendaTipo    @default(DIRETA) @map("tipo")
+  status        VendaStatus  @default(PEDIDO) @map("status")
+  dataVenda     DateTime     @default(now()) @map("data_venda")
+  dataEntrega   DateTime?    @map("data_entrega")
+  valorFrete    Decimal?     @default(0) @map("valor_frete") @db.Decimal(12, 3)
+  valorTotal    Decimal?     @default(0) @map("valor_total") @db.Decimal(12, 3)
+  desconto      Decimal?     @default(0) @map("desconto") @db.Decimal(12, 3) // desconto da venda
+  ruccnpj       String?      @map("ruccnpj")
+  numeroFatura  String?      @map("numero_fatura") // pode não ser o mesmo do cliente
+  observacao    String?      @map("observacao")
+  valorComissao Decimal?     @default(0) @map("valor_comissao") @db.Decimal(12, 3)
+  Cliente       Cliente      @relation(fields: [clienteId], references: [id])
+  VendaItem     VendaItem[]
+  Pagamento     Pagamento[] // uma venda pode ter vários pagamentos
+  Usuario       Usuario      @relation(fields: [usuarioId], references: [id])
+  Parceiro      Parceiro     @relation(fields: [parceiroId], references: [id])
+  LocalSaida    LocalEstoque @relation(fields: [localSaidaId], references: [id])
+
+  @@map("venda")
+}
+
+model VendaItem {
+  id           Int           @id @default(autoincrement())
+  vendaId      Int           @map("venda_id")
+  skuId        Int           @map("sku_id")
+  tipo         VendaItemTipo @default(NORMAL) @map("tipo")
+  qtdReservada Int           @map("qtd_reservada")
+  qtdAceita    Int           @default(0) @map("qtd_aceita") // cliente ficou
+  qtdDevolvida Int           @default(0) @map("qtd_devolvida") // cliente devolveu
+  desconto     Decimal?      @default(0) @map("desconto") @db.Decimal(12, 3) // desconto do item
+  precoUnit    Decimal       @map("preco_unit") @db.Decimal(12, 3)
+  observacao   String?       @map("observacao")
+  Venda        Venda         @relation(fields: [vendaId], references: [id], onDelete: Cascade)
+  ProdutoSKU   ProdutoSKU    @relation(fields: [skuId], references: [id])
+
+  @@map("venda_item")
 }

@@ -1,4 +1,3 @@
-import { Resend } from 'resend';
 import {
   Injectable,
   NotFoundException,
@@ -304,8 +303,8 @@ export class UsuariosService {
   }
 
   async deactivateUser(publicId: string): Promise<Usuario> {
-    const resend = new Resend(process.env.RESEND_API);
-    const usuario = await this.findOne(publicId);
+    // const resend = new Resend(process.env.RESEND_API);
+    // const usuario = await this.findOne(publicId);
     // await resend.emails.send({
     //   from: 'admin@dos.com.py',
     //   to: 'mlima001@gmail.com',

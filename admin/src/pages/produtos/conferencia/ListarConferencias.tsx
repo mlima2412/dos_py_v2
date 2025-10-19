@@ -111,7 +111,7 @@ export const ListarConferencias: React.FC = () => {
 
 	// Flatten dos dados para a tabela
 	const data = useMemo(() => {
-		let allConferencias =
+		const allConferencias =
 			conferenciasData?.pages
 				.flatMap(page => page.data || [])
 				.filter(Boolean) || [];

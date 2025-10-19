@@ -98,10 +98,7 @@ export class DespesasController {
     description: 'Lista de despesas do parceiro',
     type: [Despesa],
   })
-  async findAll(
-    @ParceiroId() parceiroId: number,
-    @Query('search') search?: string,
-  ): Promise<Despesa[]> {
+  async findAll(@ParceiroId() parceiroId: number): Promise<Despesa[]> {
     return this.despesasService.findByParceiro(parceiroId);
   }
 

@@ -38,6 +38,11 @@ import { FormaPagamentoModule } from './forma-pagamento/forma-pagamento.module';
 import { PedidoCompraModule } from './pedido-compra/pedido-compra.module';
 import { PedidoCompraItemModule } from './pedido-compra-item/pedido-compra-item.module';
 import { ProdutoHistoricoPrecoModule } from './produto-historico-preco/produto-historico-preco.module';
+import { VendaModule } from './venda/venda.module';
+import { VendaItemModule } from './venda-item/venda-item.module';
+import { PagamentoModule } from './pagamento/pagamento.module';
+import { ParcelamentoModule } from './parcelamento/parcelamento.module';
+import { ParcelasModule } from './parcelas/parcelas.module';
 
 @Module({
   imports: [
@@ -73,6 +78,11 @@ import { ProdutoHistoricoPrecoModule } from './produto-historico-preco/produto-h
     PedidoCompraModule,
     PedidoCompraItemModule,
     ProdutoHistoricoPrecoModule,
+    VendaModule,
+    VendaItemModule,
+    PagamentoModule,
+    ParcelamentoModule,
+    ParcelasModule,
   ],
   controllers: [AppController],
   providers: [

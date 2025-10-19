@@ -33,6 +33,7 @@ export class AuthService {
       try {
         const isPasswordValid = await bcrypt.compare(senha, user.senha);
         if (isPasswordValid) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
           const { senha: _, ...result } = user;
           return result;
         }
@@ -109,12 +110,6 @@ export class AuthService {
       const user = await this.prisma.usuario.findUnique({
         where: { id: payload.sub },
       });
-      const usuarioParceiro = user
-        ? await this.prisma.usuarioParceiro.findFirst({
-            where: { usuarioId: user.id },
-            include: { perfil: true },
-          })
-        : null;
 
       if (!user || !user.ativo) {
         throw new UnauthorizedException('Usuário não encontrado ou inativo');
@@ -130,7 +125,7 @@ export class AuthService {
       });
 
       return { accessToken };
-    } catch (error) {
+    } catch {
       throw new UnauthorizedException('Refresh token inválido');
     }
   }
