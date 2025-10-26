@@ -4,33 +4,34 @@
 */
 
 import type { MovimentoEstoqueControllerFindHistoricoSkuPathParams, MovimentoEstoqueControllerFindHistoricoSkuQueryParams, MovimentoEstoqueControllerFindHistoricoSku200, MovimentoEstoqueControllerFindHistoricoSku404, MovimentoEstoqueControllerFindHistoricoSkuQueryResponse } from "../types/MovimentoEstoqueControllerFindHistoricoSku.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { movimentoEstoqueResponseDtoSchema } from "./movimentoEstoqueResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const movimentoEstoqueControllerFindHistoricoSkuPathParamsSchema = z.object({
-      "skuId": z.string().describe("ID do SKU")
-      }) as unknown as ToZod<MovimentoEstoqueControllerFindHistoricoSkuPathParams>
+    "skuId": z.string().describe("ID do SKU")
+    }) as unknown as z.ZodType<MovimentoEstoqueControllerFindHistoricoSkuPathParams>
 
 export const movimentoEstoqueControllerFindHistoricoSkuQueryParamsSchema = z.object({
-      "page": z.coerce.number().min(1).describe("Página para paginação").optional(),
-  "limit": z.coerce.number().min(1).max(100).describe("Limite de itens por página").optional()
-      }).optional() as unknown as ToZod<MovimentoEstoqueControllerFindHistoricoSkuQueryParams>
+    "page": z.optional(z.coerce.number().min(1).describe("Página para paginação")),
+"limit": z.optional(z.coerce.number().min(1).max(100).describe("Limite de itens por página"))
+    }).optional() as unknown as z.ZodType<MovimentoEstoqueControllerFindHistoricoSkuQueryParams>
 
 /**
  * @description Histórico do SKU retornado com sucesso
  */
 export const movimentoEstoqueControllerFindHistoricoSku200Schema = z.object({
-      "data": z.array(z.lazy(() => movimentoEstoqueResponseDtoSchema)).optional(),
-  "total": z.coerce.number().optional(),
-  "page": z.coerce.number().optional(),
-  "limit": z.coerce.number().optional(),
-  "totalPages": z.coerce.number().optional()
-      }) as unknown as ToZod<MovimentoEstoqueControllerFindHistoricoSku200>
+    get "data"(){
+                return z.optional(z.array(movimentoEstoqueResponseDtoSchema))
+              },
+"total": z.optional(z.coerce.number()),
+"page": z.optional(z.coerce.number()),
+"limit": z.optional(z.coerce.number()),
+"totalPages": z.optional(z.coerce.number())
+    }) as unknown as z.ZodType<MovimentoEstoqueControllerFindHistoricoSku200>
 
 /**
  * @description SKU não encontrado
  */
-export const movimentoEstoqueControllerFindHistoricoSku404Schema = z.unknown() as unknown as ToZod<MovimentoEstoqueControllerFindHistoricoSku404>
+export const movimentoEstoqueControllerFindHistoricoSku404Schema = z.unknown() as unknown as z.ZodType<MovimentoEstoqueControllerFindHistoricoSku404>
 
-export const movimentoEstoqueControllerFindHistoricoSkuQueryResponseSchema = z.lazy(() => movimentoEstoqueControllerFindHistoricoSku200Schema) as unknown as ToZod<MovimentoEstoqueControllerFindHistoricoSkuQueryResponse>
+export const movimentoEstoqueControllerFindHistoricoSkuQueryResponseSchema = movimentoEstoqueControllerFindHistoricoSku200Schema as unknown as z.ZodType<MovimentoEstoqueControllerFindHistoricoSkuQueryResponse>

@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const movimentoEstoqueControllerFindHistoricoSkuSuspenseQueryKey = (skuId: MovimentoEstoqueControllerFindHistoricoSkuPathParams["skuId"], params?: MovimentoEstoqueControllerFindHistoricoSkuQueryParams) =>   [{ url: '/movimento-estoque/historico-sku/:skuId', params: {skuId:skuId} }, ...(params ? [params] : [])] as const
+export const movimentoEstoqueControllerFindHistoricoSkuSuspenseQueryKey = (skuId: MovimentoEstoqueControllerFindHistoricoSkuPathParams["skuId"], params?: MovimentoEstoqueControllerFindHistoricoSkuQueryParams) => [{ url: '/movimento-estoque/historico-sku/:skuId', params: {skuId:skuId} }, ...(params ? [params] : [])] as const
 
 export type MovimentoEstoqueControllerFindHistoricoSkuSuspenseQueryKey = ReturnType<typeof movimentoEstoqueControllerFindHistoricoSkuSuspenseQueryKey>
 
@@ -19,25 +19,22 @@ export type MovimentoEstoqueControllerFindHistoricoSkuSuspenseQueryKey = ReturnT
  * {@link /movimento-estoque/historico-sku/:skuId}
  */
 export async function movimentoEstoqueControllerFindHistoricoSkuSuspense(skuId: MovimentoEstoqueControllerFindHistoricoSkuPathParams["skuId"], params?: MovimentoEstoqueControllerFindHistoricoSkuQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<MovimentoEstoqueControllerFindHistoricoSkuQueryResponse, ResponseErrorConfig<MovimentoEstoqueControllerFindHistoricoSku404>, unknown>({ method : "GET", url : `/movimento-estoque/historico-sku/${skuId}`, params, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<MovimentoEstoqueControllerFindHistoricoSkuQueryResponse, ResponseErrorConfig<MovimentoEstoqueControllerFindHistoricoSku404>, unknown>({ method : "GET", url : `/movimento-estoque/historico-sku/${skuId}`, params, ... requestConfig })  
+  return res.data
 }
 
 export function movimentoEstoqueControllerFindHistoricoSkuSuspenseQueryOptions(skuId: MovimentoEstoqueControllerFindHistoricoSkuPathParams["skuId"], params?: MovimentoEstoqueControllerFindHistoricoSkuQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = movimentoEstoqueControllerFindHistoricoSkuSuspenseQueryKey(skuId, params)
-        return queryOptions<MovimentoEstoqueControllerFindHistoricoSkuQueryResponse, ResponseErrorConfig<MovimentoEstoqueControllerFindHistoricoSku404>, MovimentoEstoqueControllerFindHistoricoSkuQueryResponse, typeof queryKey>({
-         enabled: !!(skuId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return movimentoEstoqueControllerFindHistoricoSkuSuspense(skuId, params, config)
-         },
-        })
-  
+  const queryKey = movimentoEstoqueControllerFindHistoricoSkuSuspenseQueryKey(skuId, params)
+  return queryOptions<MovimentoEstoqueControllerFindHistoricoSkuQueryResponse, ResponseErrorConfig<MovimentoEstoqueControllerFindHistoricoSku404>, MovimentoEstoqueControllerFindHistoricoSkuQueryResponse, typeof queryKey>({
+   enabled: !!(skuId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return movimentoEstoqueControllerFindHistoricoSkuSuspense(skuId, params, config)
+   },
+  })
 }
 
 /**
@@ -46,23 +43,22 @@ export function movimentoEstoqueControllerFindHistoricoSkuSuspenseQueryOptions(s
  * {@link /movimento-estoque/historico-sku/:skuId}
  */
 export function useMovimentoEstoqueControllerFindHistoricoSkuSuspense<TData = MovimentoEstoqueControllerFindHistoricoSkuQueryResponse, TQueryKey extends QueryKey = MovimentoEstoqueControllerFindHistoricoSkuSuspenseQueryKey>(skuId: MovimentoEstoqueControllerFindHistoricoSkuPathParams["skuId"], params?: MovimentoEstoqueControllerFindHistoricoSkuQueryParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<MovimentoEstoqueControllerFindHistoricoSkuQueryResponse, ResponseErrorConfig<MovimentoEstoqueControllerFindHistoricoSku404>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? movimentoEstoqueControllerFindHistoricoSkuSuspenseQueryKey(skuId, params)
-  
-         const query = useSuspenseQuery({
-          ...movimentoEstoqueControllerFindHistoricoSkuSuspenseQueryOptions(skuId, params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<MovimentoEstoqueControllerFindHistoricoSku404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<MovimentoEstoqueControllerFindHistoricoSkuQueryResponse, ResponseErrorConfig<MovimentoEstoqueControllerFindHistoricoSku404>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? movimentoEstoqueControllerFindHistoricoSkuSuspenseQueryKey(skuId, params)
+
+  const query = useSuspenseQuery({
+   ...movimentoEstoqueControllerFindHistoricoSkuSuspenseQueryOptions(skuId, params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<MovimentoEstoqueControllerFindHistoricoSku404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

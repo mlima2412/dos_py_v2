@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const formaPagamentoControllerFindAllActiveSuspenseQueryKey = () =>   [{ url: '/forma-pagamento/ativas' }] as const
+export const formaPagamentoControllerFindAllActiveSuspenseQueryKey = () => [{ url: '/forma-pagamento/ativas' }] as const
 
 export type FormaPagamentoControllerFindAllActiveSuspenseQueryKey = ReturnType<typeof formaPagamentoControllerFindAllActiveSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type FormaPagamentoControllerFindAllActiveSuspenseQueryKey = ReturnType<t
  * {@link /forma-pagamento/ativas}
  */
 export async function formaPagamentoControllerFindAllActiveSuspense(headers: FormaPagamentoControllerFindAllActiveHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<FormaPagamentoControllerFindAllActiveQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/forma-pagamento/ativas`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<FormaPagamentoControllerFindAllActiveQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/forma-pagamento/ativas`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function formaPagamentoControllerFindAllActiveSuspenseQueryOptions(headers: FormaPagamentoControllerFindAllActiveHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = formaPagamentoControllerFindAllActiveSuspenseQueryKey()
-        return queryOptions<FormaPagamentoControllerFindAllActiveQueryResponse, ResponseErrorConfig<Error>, FormaPagamentoControllerFindAllActiveQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return formaPagamentoControllerFindAllActiveSuspense(headers, config)
-         },
-        })
-  
+  const queryKey = formaPagamentoControllerFindAllActiveSuspenseQueryKey()
+  return queryOptions<FormaPagamentoControllerFindAllActiveQueryResponse, ResponseErrorConfig<Error>, FormaPagamentoControllerFindAllActiveQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return formaPagamentoControllerFindAllActiveSuspense(headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function formaPagamentoControllerFindAllActiveSuspenseQueryOptions(header
  * {@link /forma-pagamento/ativas}
  */
 export function useFormaPagamentoControllerFindAllActiveSuspense<TData = FormaPagamentoControllerFindAllActiveQueryResponse, TQueryKey extends QueryKey = FormaPagamentoControllerFindAllActiveSuspenseQueryKey>(headers: FormaPagamentoControllerFindAllActiveHeaderParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<FormaPagamentoControllerFindAllActiveQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? formaPagamentoControllerFindAllActiveSuspenseQueryKey()
-  
-         const query = useSuspenseQuery({
-          ...formaPagamentoControllerFindAllActiveSuspenseQueryOptions(headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<FormaPagamentoControllerFindAllActiveQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? formaPagamentoControllerFindAllActiveSuspenseQueryKey()
+
+  const query = useSuspenseQuery({
+   ...formaPagamentoControllerFindAllActiveSuspenseQueryOptions(headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

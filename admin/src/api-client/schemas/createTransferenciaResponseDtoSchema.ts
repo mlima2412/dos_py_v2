@@ -4,9 +4,8 @@
 */
 
 import type { CreateTransferenciaResponseDto } from "../types/CreateTransferenciaResponseDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const createTransferenciaResponseDtoSchema = z.object({
-      "publicId": z.coerce.string().describe("ID público da transferência criada")
-      }) as unknown as ToZod<CreateTransferenciaResponseDto>
+    "publicId": z.coerce.string().describe("ID público da transferência criada")
+    }) as unknown as z.ZodType<CreateTransferenciaResponseDto>

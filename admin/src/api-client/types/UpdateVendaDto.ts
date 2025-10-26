@@ -7,10 +7,11 @@
 export const updateVendaDtoTipoEnum = {
     "DIRETA": "DIRETA",
     "CONDICIONAL": "CONDICIONAL",
-    "BRINDE": "BRINDE"
+    "BRINDE": "BRINDE",
+    "PERMUTA": "PERMUTA"
 } as const;
 
-export type UpdateVendaDtoTipoEnum = (typeof updateVendaDtoTipoEnum)[keyof typeof updateVendaDtoTipoEnum];
+export type UpdateVendaDtoTipoEnumKey = (typeof updateVendaDtoTipoEnum)[keyof typeof updateVendaDtoTipoEnum];
 
 export type UpdateVendaDto = {
     /**
@@ -28,7 +29,7 @@ export type UpdateVendaDto = {
      * @default "DIRETA"
      * @type string | undefined
     */
-    tipo?: UpdateVendaDtoTipoEnum;
+    tipo?: UpdateVendaDtoTipoEnumKey;
     /**
      * @description Data de entrega
      * @type string | undefined
@@ -49,6 +50,11 @@ export type UpdateVendaDto = {
      * @type string | undefined
     */
     ruccnpj?: string;
+    /**
+     * @description Nome para a fatura da venda
+     * @type string | undefined
+    */
+    nomeFatura?: string;
     /**
      * @description Número da fatura
      * @type string | undefined

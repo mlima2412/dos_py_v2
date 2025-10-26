@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const currencyControllerFindAllQueryKey = (params?: CurrencyControllerFindAllQueryParams) =>   [{ url: '/currency' }, ...(params ? [params] : [])] as const
+export const currencyControllerFindAllQueryKey = (params?: CurrencyControllerFindAllQueryParams) => [{ url: '/currency' }, ...(params ? [params] : [])] as const
 
 export type CurrencyControllerFindAllQueryKey = ReturnType<typeof currencyControllerFindAllQueryKey>
 
@@ -18,25 +18,22 @@ export type CurrencyControllerFindAllQueryKey = ReturnType<typeof currencyContro
  * {@link /currency}
  */
 export async function currencyControllerFindAll(params?: CurrencyControllerFindAllQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<CurrencyControllerFindAllQueryResponse, ResponseErrorConfig<CurrencyControllerFindAll401>, unknown>({ method : "GET", url : `/currency`, params, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<CurrencyControllerFindAllQueryResponse, ResponseErrorConfig<CurrencyControllerFindAll401>, unknown>({ method : "GET", url : `/currency`, params, ... requestConfig })  
+  return res.data
 }
 
 export function currencyControllerFindAllQueryOptions(params?: CurrencyControllerFindAllQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = currencyControllerFindAllQueryKey(params)
-        return queryOptions<CurrencyControllerFindAllQueryResponse, ResponseErrorConfig<CurrencyControllerFindAll401>, CurrencyControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return currencyControllerFindAll(params, config)
-         },
-        })
-  
+  const queryKey = currencyControllerFindAllQueryKey(params)
+  return queryOptions<CurrencyControllerFindAllQueryResponse, ResponseErrorConfig<CurrencyControllerFindAll401>, CurrencyControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return currencyControllerFindAll(params, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function currencyControllerFindAllQueryOptions(params?: CurrencyControlle
  * {@link /currency}
  */
 export function useCurrencyControllerFindAll<TData = CurrencyControllerFindAllQueryResponse, TQueryData = CurrencyControllerFindAllQueryResponse, TQueryKey extends QueryKey = CurrencyControllerFindAllQueryKey>(params?: CurrencyControllerFindAllQueryParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<CurrencyControllerFindAllQueryResponse, ResponseErrorConfig<CurrencyControllerFindAll401>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? currencyControllerFindAllQueryKey(params)
-  
-         const query = useQuery({
-          ...currencyControllerFindAllQueryOptions(params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<CurrencyControllerFindAll401>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<CurrencyControllerFindAllQueryResponse, ResponseErrorConfig<CurrencyControllerFindAll401>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? currencyControllerFindAllQueryKey(params)
+
+  const query = useQuery({
+   ...currencyControllerFindAllQueryOptions(params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<CurrencyControllerFindAll401>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

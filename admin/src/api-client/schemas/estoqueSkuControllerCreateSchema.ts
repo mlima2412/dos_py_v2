@@ -4,34 +4,33 @@
 */
 
 import type { EstoqueSkuControllerCreate201, EstoqueSkuControllerCreate400, EstoqueSkuControllerCreate404, EstoqueSkuControllerCreate409, EstoqueSkuControllerCreateMutationRequest, EstoqueSkuControllerCreateMutationResponse } from "../types/EstoqueSkuControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createEstoqueSkuDtoSchema } from "./createEstoqueSkuDtoSchema.ts";
 import { estoqueSkuSchema } from "./estoqueSkuSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Registro de estoque criado com sucesso
  */
-export const estoqueSkuControllerCreate201Schema = z.lazy(() => estoqueSkuSchema) as unknown as ToZod<EstoqueSkuControllerCreate201>
+export const estoqueSkuControllerCreate201Schema = estoqueSkuSchema as unknown as z.ZodType<EstoqueSkuControllerCreate201>
 
 /**
  * @description Dados inválidos
  */
-export const estoqueSkuControllerCreate400Schema = z.unknown() as unknown as ToZod<EstoqueSkuControllerCreate400>
+export const estoqueSkuControllerCreate400Schema = z.unknown() as unknown as z.ZodType<EstoqueSkuControllerCreate400>
 
 /**
  * @description SKU ou local não encontrado
  */
-export const estoqueSkuControllerCreate404Schema = z.unknown() as unknown as ToZod<EstoqueSkuControllerCreate404>
+export const estoqueSkuControllerCreate404Schema = z.unknown() as unknown as z.ZodType<EstoqueSkuControllerCreate404>
 
 /**
  * @description Já existe registro de estoque para este SKU neste local
  */
-export const estoqueSkuControllerCreate409Schema = z.unknown() as unknown as ToZod<EstoqueSkuControllerCreate409>
+export const estoqueSkuControllerCreate409Schema = z.unknown() as unknown as z.ZodType<EstoqueSkuControllerCreate409>
 
 /**
  * @description Dados para criação do registro de estoque
  */
-export const estoqueSkuControllerCreateMutationRequestSchema = z.lazy(() => createEstoqueSkuDtoSchema) as unknown as ToZod<EstoqueSkuControllerCreateMutationRequest>
+export const estoqueSkuControllerCreateMutationRequestSchema = createEstoqueSkuDtoSchema as unknown as z.ZodType<EstoqueSkuControllerCreateMutationRequest>
 
-export const estoqueSkuControllerCreateMutationResponseSchema = z.lazy(() => estoqueSkuControllerCreate201Schema) as unknown as ToZod<EstoqueSkuControllerCreateMutationResponse>
+export const estoqueSkuControllerCreateMutationResponseSchema = estoqueSkuControllerCreate201Schema as unknown as z.ZodType<EstoqueSkuControllerCreateMutationResponse>

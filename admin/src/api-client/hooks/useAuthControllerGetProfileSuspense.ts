@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const authControllerGetProfileSuspenseQueryKey = () =>   [{ url: '/auth/me' }] as const
+export const authControllerGetProfileSuspenseQueryKey = () => [{ url: '/auth/me' }] as const
 
 export type AuthControllerGetProfileSuspenseQueryKey = ReturnType<typeof authControllerGetProfileSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type AuthControllerGetProfileSuspenseQueryKey = ReturnType<typeof authCon
  * {@link /auth/me}
  */
 export async function authControllerGetProfileSuspense(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<AuthControllerGetProfileQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/auth/me`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<AuthControllerGetProfileQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/auth/me`, ... requestConfig })  
+  return res.data
 }
 
 export function authControllerGetProfileSuspenseQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = authControllerGetProfileSuspenseQueryKey()
-        return queryOptions<AuthControllerGetProfileQueryResponse, ResponseErrorConfig<Error>, AuthControllerGetProfileQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return authControllerGetProfileSuspense(config)
-         },
-        })
-  
+  const queryKey = authControllerGetProfileSuspenseQueryKey()
+  return queryOptions<AuthControllerGetProfileQueryResponse, ResponseErrorConfig<Error>, AuthControllerGetProfileQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return authControllerGetProfileSuspense(config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function authControllerGetProfileSuspenseQueryOptions(config: Partial<Req
  * {@link /auth/me}
  */
 export function useAuthControllerGetProfileSuspense<TData = AuthControllerGetProfileQueryResponse, TQueryKey extends QueryKey = AuthControllerGetProfileSuspenseQueryKey>(options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<AuthControllerGetProfileQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? authControllerGetProfileSuspenseQueryKey()
-  
-         const query = useSuspenseQuery({
-          ...authControllerGetProfileSuspenseQueryOptions(config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<AuthControllerGetProfileQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? authControllerGetProfileSuspenseQueryKey()
+
+  const query = useSuspenseQuery({
+   ...authControllerGetProfileSuspenseQueryOptions(config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

@@ -4,13 +4,12 @@
 */
 
 import type { ConferenciaItemControllerFindAll200, ConferenciaItemControllerFindAllQueryResponse } from "../types/ConferenciaItemControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { conferenciaItemResponseDtoSchema } from "./conferenciaItemResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Lista de itens de conferência com dados completos do produto
  */
-export const conferenciaItemControllerFindAll200Schema = z.array(z.lazy(() => conferenciaItemResponseDtoSchema)) as unknown as ToZod<ConferenciaItemControllerFindAll200>
+export const conferenciaItemControllerFindAll200Schema = z.array(conferenciaItemResponseDtoSchema) as unknown as z.ZodType<ConferenciaItemControllerFindAll200>
 
-export const conferenciaItemControllerFindAllQueryResponseSchema = z.lazy(() => conferenciaItemControllerFindAll200Schema) as unknown as ToZod<ConferenciaItemControllerFindAllQueryResponse>
+export const conferenciaItemControllerFindAllQueryResponseSchema = conferenciaItemControllerFindAll200Schema as unknown as z.ZodType<ConferenciaItemControllerFindAllQueryResponse>

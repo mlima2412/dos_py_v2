@@ -4,13 +4,12 @@
 */
 
 import type { UsuariosControllerFindActiveUsers200, UsuariosControllerFindActiveUsersQueryResponse } from "../types/UsuariosControllerFindActiveUsers.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { usuarioSchema } from "./usuarioSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Lista de usuários ativos retornada com sucesso
  */
-export const usuariosControllerFindActiveUsers200Schema = z.array(z.lazy(() => usuarioSchema)) as unknown as ToZod<UsuariosControllerFindActiveUsers200>
+export const usuariosControllerFindActiveUsers200Schema = z.array(usuarioSchema) as unknown as z.ZodType<UsuariosControllerFindActiveUsers200>
 
-export const usuariosControllerFindActiveUsersQueryResponseSchema = z.lazy(() => usuariosControllerFindActiveUsers200Schema) as unknown as ToZod<UsuariosControllerFindActiveUsersQueryResponse>
+export const usuariosControllerFindActiveUsersQueryResponseSchema = usuariosControllerFindActiveUsers200Schema as unknown as z.ZodType<UsuariosControllerFindActiveUsersQueryResponse>

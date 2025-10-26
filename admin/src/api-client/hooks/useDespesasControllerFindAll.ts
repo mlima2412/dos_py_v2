@@ -4,12 +4,12 @@
 */
 
 import fetch from "@/lib/fetch-client";
-import type { DespesasControllerFindAllQueryResponse, DespesasControllerFindAllQueryParams, DespesasControllerFindAllHeaderParams } from "../types/DespesasControllerFindAll.ts";
+import type { DespesasControllerFindAllQueryResponse, DespesasControllerFindAllHeaderParams } from "../types/DespesasControllerFindAll.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const despesasControllerFindAllQueryKey = (params: DespesasControllerFindAllQueryParams) =>   [{ url: '/despesas' }, ...(params ? [params] : [])] as const
+export const despesasControllerFindAllQueryKey = () => [{ url: '/despesas' }] as const
 
 export type DespesasControllerFindAllQueryKey = ReturnType<typeof despesasControllerFindAllQueryKey>
 
@@ -17,50 +17,46 @@ export type DespesasControllerFindAllQueryKey = ReturnType<typeof despesasContro
  * @summary Listar todas as despesas do parceiro
  * {@link /despesas}
  */
-export async function despesasControllerFindAll(params: DespesasControllerFindAllQueryParams, headers: DespesasControllerFindAllHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<DespesasControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/despesas`, params, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export async function despesasControllerFindAll(headers: DespesasControllerFindAllHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<DespesasControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/despesas`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
-export function despesasControllerFindAllQueryOptions(params: DespesasControllerFindAllQueryParams, headers: DespesasControllerFindAllHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = despesasControllerFindAllQueryKey(params)
-        return queryOptions<DespesasControllerFindAllQueryResponse, ResponseErrorConfig<Error>, DespesasControllerFindAllQueryResponse, typeof queryKey>({
-         enabled: !!(params),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return despesasControllerFindAll(params, headers, config)
-         },
-        })
-  
+export function despesasControllerFindAllQueryOptions(headers: DespesasControllerFindAllHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const queryKey = despesasControllerFindAllQueryKey()
+  return queryOptions<DespesasControllerFindAllQueryResponse, ResponseErrorConfig<Error>, DespesasControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return despesasControllerFindAll(headers, config)
+   },
+  })
 }
 
 /**
  * @summary Listar todas as despesas do parceiro
  * {@link /despesas}
  */
-export function useDespesasControllerFindAll<TData = DespesasControllerFindAllQueryResponse, TQueryData = DespesasControllerFindAllQueryResponse, TQueryKey extends QueryKey = DespesasControllerFindAllQueryKey>(params: DespesasControllerFindAllQueryParams, headers: DespesasControllerFindAllHeaderParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<DespesasControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? despesasControllerFindAllQueryKey(params)
-  
-         const query = useQuery({
-          ...despesasControllerFindAllQueryOptions(params, headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+export function useDespesasControllerFindAll<TData = DespesasControllerFindAllQueryResponse, TQueryData = DespesasControllerFindAllQueryResponse, TQueryKey extends QueryKey = DespesasControllerFindAllQueryKey>(headers: DespesasControllerFindAllHeaderParams, options: 
+{
+  query?: Partial<QueryObserverOptions<DespesasControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? despesasControllerFindAllQueryKey()
+
+  const query = useQuery({
+   ...despesasControllerFindAllQueryOptions(headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

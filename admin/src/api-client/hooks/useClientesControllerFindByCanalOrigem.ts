@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const clientesControllerFindByCanalOrigemQueryKey = (canalOrigemId: ClientesControllerFindByCanalOrigemPathParams["canalOrigemId"]) =>   [{ url: '/clientes/canal-origem/:canalOrigemId', params: {canalOrigemId:canalOrigemId} }] as const
+export const clientesControllerFindByCanalOrigemQueryKey = (canalOrigemId: ClientesControllerFindByCanalOrigemPathParams["canalOrigemId"]) => [{ url: '/clientes/canal-origem/:canalOrigemId', params: {canalOrigemId:canalOrigemId} }] as const
 
 export type ClientesControllerFindByCanalOrigemQueryKey = ReturnType<typeof clientesControllerFindByCanalOrigemQueryKey>
 
@@ -18,25 +18,22 @@ export type ClientesControllerFindByCanalOrigemQueryKey = ReturnType<typeof clie
  * {@link /clientes/canal-origem/:canalOrigemId}
  */
 export async function clientesControllerFindByCanalOrigem(canalOrigemId: ClientesControllerFindByCanalOrigemPathParams["canalOrigemId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ClientesControllerFindByCanalOrigemQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/clientes/canal-origem/${canalOrigemId}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ClientesControllerFindByCanalOrigemQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/clientes/canal-origem/${canalOrigemId}`, ... requestConfig })  
+  return res.data
 }
 
 export function clientesControllerFindByCanalOrigemQueryOptions(canalOrigemId: ClientesControllerFindByCanalOrigemPathParams["canalOrigemId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = clientesControllerFindByCanalOrigemQueryKey(canalOrigemId)
-        return queryOptions<ClientesControllerFindByCanalOrigemQueryResponse, ResponseErrorConfig<Error>, ClientesControllerFindByCanalOrigemQueryResponse, typeof queryKey>({
-         enabled: !!(canalOrigemId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return clientesControllerFindByCanalOrigem(canalOrigemId, config)
-         },
-        })
-  
+  const queryKey = clientesControllerFindByCanalOrigemQueryKey(canalOrigemId)
+  return queryOptions<ClientesControllerFindByCanalOrigemQueryResponse, ResponseErrorConfig<Error>, ClientesControllerFindByCanalOrigemQueryResponse, typeof queryKey>({
+   enabled: !!(canalOrigemId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return clientesControllerFindByCanalOrigem(canalOrigemId, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function clientesControllerFindByCanalOrigemQueryOptions(canalOrigemId: C
  * {@link /clientes/canal-origem/:canalOrigemId}
  */
 export function useClientesControllerFindByCanalOrigem<TData = ClientesControllerFindByCanalOrigemQueryResponse, TQueryData = ClientesControllerFindByCanalOrigemQueryResponse, TQueryKey extends QueryKey = ClientesControllerFindByCanalOrigemQueryKey>(canalOrigemId: ClientesControllerFindByCanalOrigemPathParams["canalOrigemId"], options: 
-  {
-    query?: Partial<QueryObserverOptions<ClientesControllerFindByCanalOrigemQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? clientesControllerFindByCanalOrigemQueryKey(canalOrigemId)
-  
-         const query = useQuery({
-          ...clientesControllerFindByCanalOrigemQueryOptions(canalOrigemId, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<ClientesControllerFindByCanalOrigemQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? clientesControllerFindByCanalOrigemQueryKey(canalOrigemId)
+
+  const query = useQuery({
+   ...clientesControllerFindByCanalOrigemQueryOptions(canalOrigemId, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

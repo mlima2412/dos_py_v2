@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { EstoqueSkuControllerCreateMutationRequest, EstoqueSkuControllerCreateMutationResponse, EstoqueSkuControllerCreate400, EstoqueSkuControllerCreate404, EstoqueSkuControllerCreate409 } from "../types/EstoqueSkuControllerCreate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const estoqueSkuControllerCreateMutationKey = () =>   [{"url":"/estoque-sku"}] as const
+export const estoqueSkuControllerCreateMutationKey = () => [{ url: '/estoque-sku' }] as const
 
 export type EstoqueSkuControllerCreateMutationKey = ReturnType<typeof estoqueSkuControllerCreateMutationKey>
 
@@ -18,11 +18,22 @@ export type EstoqueSkuControllerCreateMutationKey = ReturnType<typeof estoqueSku
  * {@link /estoque-sku}
  */
 export async function estoqueSkuControllerCreate(data: EstoqueSkuControllerCreateMutationRequest, config: Partial<RequestConfig<EstoqueSkuControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<EstoqueSkuControllerCreateMutationResponse, ResponseErrorConfig<EstoqueSkuControllerCreate400 | EstoqueSkuControllerCreate404 | EstoqueSkuControllerCreate409>, EstoqueSkuControllerCreateMutationRequest>({ method : "POST", url : `/estoque-sku`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<EstoqueSkuControllerCreateMutationResponse, ResponseErrorConfig<EstoqueSkuControllerCreate400 | EstoqueSkuControllerCreate404 | EstoqueSkuControllerCreate409>, EstoqueSkuControllerCreateMutationRequest>({ method : "POST", url : `/estoque-sku`, data : requestData, ... requestConfig })
-return res.data
+export function estoqueSkuControllerCreateMutationOptions(config: Partial<RequestConfig<EstoqueSkuControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = estoqueSkuControllerCreateMutationKey()
+  return mutationOptions<EstoqueSkuControllerCreateMutationResponse, ResponseErrorConfig<EstoqueSkuControllerCreate400 | EstoqueSkuControllerCreate404 | EstoqueSkuControllerCreate409>, {data: EstoqueSkuControllerCreateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data }) => {
+      return estoqueSkuControllerCreate(data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /estoque-sku}
  */
 export function useEstoqueSkuControllerCreate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<EstoqueSkuControllerCreateMutationResponse, ResponseErrorConfig<EstoqueSkuControllerCreate400 | EstoqueSkuControllerCreate404 | EstoqueSkuControllerCreate409>, {data: EstoqueSkuControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<EstoqueSkuControllerCreateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? estoqueSkuControllerCreateMutationKey()
-  
-          return useMutation<EstoqueSkuControllerCreateMutationResponse, ResponseErrorConfig<EstoqueSkuControllerCreate400 | EstoqueSkuControllerCreate404 | EstoqueSkuControllerCreate409>, {data: EstoqueSkuControllerCreateMutationRequest}, TContext>({
-            mutationFn: async({ data }) => {
-              return estoqueSkuControllerCreate(data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<EstoqueSkuControllerCreateMutationResponse, ResponseErrorConfig<EstoqueSkuControllerCreate400 | EstoqueSkuControllerCreate404 | EstoqueSkuControllerCreate409>, {data: EstoqueSkuControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<EstoqueSkuControllerCreateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? estoqueSkuControllerCreateMutationKey()
+
+  const baseOptions = estoqueSkuControllerCreateMutationOptions(config) as UseMutationOptions<EstoqueSkuControllerCreateMutationResponse, ResponseErrorConfig<EstoqueSkuControllerCreate400 | EstoqueSkuControllerCreate404 | EstoqueSkuControllerCreate409>, {data: EstoqueSkuControllerCreateMutationRequest}, TContext>
+
+  return useMutation<EstoqueSkuControllerCreateMutationResponse, ResponseErrorConfig<EstoqueSkuControllerCreate400 | EstoqueSkuControllerCreate404 | EstoqueSkuControllerCreate409>, {data: EstoqueSkuControllerCreateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<EstoqueSkuControllerCreateMutationResponse, ResponseErrorConfig<EstoqueSkuControllerCreate400 | EstoqueSkuControllerCreate404 | EstoqueSkuControllerCreate409>, {data: EstoqueSkuControllerCreateMutationRequest}, TContext>
 }

@@ -4,21 +4,20 @@
 */
 
 import type { ContasPagarParcelasControllerRemovePathParams, ContasPagarParcelasControllerRemove200, ContasPagarParcelasControllerRemove404, ContasPagarParcelasControllerRemoveMutationResponse } from "../types/ContasPagarParcelasControllerRemove.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const contasPagarParcelasControllerRemovePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público da parcela")
-      }) as unknown as ToZod<ContasPagarParcelasControllerRemovePathParams>
+    "publicId": z.string().describe("ID público da parcela")
+    }) as unknown as z.ZodType<ContasPagarParcelasControllerRemovePathParams>
 
 /**
  * @description Parcela removida com sucesso.
  */
-export const contasPagarParcelasControllerRemove200Schema = z.unknown() as unknown as ToZod<ContasPagarParcelasControllerRemove200>
+export const contasPagarParcelasControllerRemove200Schema = z.unknown() as unknown as z.ZodType<ContasPagarParcelasControllerRemove200>
 
 /**
  * @description Parcela não encontrada.
  */
-export const contasPagarParcelasControllerRemove404Schema = z.unknown() as unknown as ToZod<ContasPagarParcelasControllerRemove404>
+export const contasPagarParcelasControllerRemove404Schema = z.unknown() as unknown as z.ZodType<ContasPagarParcelasControllerRemove404>
 
-export const contasPagarParcelasControllerRemoveMutationResponseSchema = z.lazy(() => contasPagarParcelasControllerRemove200Schema) as unknown as ToZod<ContasPagarParcelasControllerRemoveMutationResponse>
+export const contasPagarParcelasControllerRemoveMutationResponseSchema = contasPagarParcelasControllerRemove200Schema as unknown as z.ZodType<ContasPagarParcelasControllerRemoveMutationResponse>

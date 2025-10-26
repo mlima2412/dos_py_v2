@@ -4,15 +4,14 @@
 */
 
 import type { CreateCurrencyDto } from "../types/CreateCurrencyDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const createCurrencyDtoSchema = z.object({
-      "nome": z.coerce.string().describe("Nome da moeda"),
-  "prefixo": z.coerce.string().describe("Prefixo da moeda"),
-  "isoCode": z.coerce.string().describe("Código ISO da moeda"),
-  "precision": z.coerce.number().default(2).describe("Precisão decimal da moeda"),
-  "locale": z.coerce.string().default("pt-BR").describe("Locale para formatação"),
-  "defaultRate": z.coerce.number().default(0).describe("Taxa de câmbio padrão"),
-  "ativo": z.boolean().default(true).describe("Status ativo da moeda")
-      }) as unknown as ToZod<CreateCurrencyDto>
+    "nome": z.coerce.string().describe("Nome da moeda"),
+"prefixo": z.coerce.string().describe("Prefixo da moeda"),
+"isoCode": z.coerce.string().describe("Código ISO da moeda"),
+"precision": z.optional(z.coerce.number().default(2).describe("Precisão decimal da moeda")),
+"locale": z.optional(z.coerce.string().default("pt-BR").describe("Locale para formatação")),
+"defaultRate": z.optional(z.coerce.number().default(0).describe("Taxa de câmbio padrão")),
+"ativo": z.optional(z.boolean().default(true).describe("Status ativo da moeda"))
+    }) as unknown as z.ZodType<CreateCurrencyDto>

@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ConferenciaItemControllerRemoveMutationResponse, ConferenciaItemControllerRemovePathParams, ConferenciaItemControllerRemove400, ConferenciaItemControllerRemove404 } from "../types/ConferenciaItemControllerRemove.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const conferenciaItemControllerRemoveMutationKey = () =>   [{"url":"/conferencia-item/{id}"}] as const
+export const conferenciaItemControllerRemoveMutationKey = () => [{ url: '/conferencia-item/:id' }] as const
 
 export type ConferenciaItemControllerRemoveMutationKey = ReturnType<typeof conferenciaItemControllerRemoveMutationKey>
 
@@ -18,11 +18,20 @@ export type ConferenciaItemControllerRemoveMutationKey = ReturnType<typeof confe
  * {@link /conferencia-item/:id}
  */
 export async function conferenciaItemControllerRemove(id: ConferenciaItemControllerRemovePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ConferenciaItemControllerRemoveMutationResponse, ResponseErrorConfig<ConferenciaItemControllerRemove400 | ConferenciaItemControllerRemove404>, unknown>({ method : "DELETE", url : `/conferencia-item/${id}`, ... requestConfig })  
+  return res.data
+}
 
-
-const res = await request<ConferenciaItemControllerRemoveMutationResponse, ResponseErrorConfig<ConferenciaItemControllerRemove400 | ConferenciaItemControllerRemove404>, unknown>({ method : "DELETE", url : `/conferencia-item/${id}`, ... requestConfig })
-return res.data
+export function conferenciaItemControllerRemoveMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = conferenciaItemControllerRemoveMutationKey()
+  return mutationOptions<ConferenciaItemControllerRemoveMutationResponse, ResponseErrorConfig<ConferenciaItemControllerRemove400 | ConferenciaItemControllerRemove404>, {id: ConferenciaItemControllerRemovePathParams["id"]}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ id }) => {
+      return conferenciaItemControllerRemove(id, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /conferencia-item/:id}
  */
 export function useConferenciaItemControllerRemove<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ConferenciaItemControllerRemoveMutationResponse, ResponseErrorConfig<ConferenciaItemControllerRemove400 | ConferenciaItemControllerRemove404>, {id: ConferenciaItemControllerRemovePathParams["id"]}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? conferenciaItemControllerRemoveMutationKey()
-  
-          return useMutation<ConferenciaItemControllerRemoveMutationResponse, ResponseErrorConfig<ConferenciaItemControllerRemove400 | ConferenciaItemControllerRemove404>, {id: ConferenciaItemControllerRemovePathParams["id"]}, TContext>({
-            mutationFn: async({ id }) => {
-              return conferenciaItemControllerRemove(id, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ConferenciaItemControllerRemoveMutationResponse, ResponseErrorConfig<ConferenciaItemControllerRemove400 | ConferenciaItemControllerRemove404>, {id: ConferenciaItemControllerRemovePathParams["id"]}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? conferenciaItemControllerRemoveMutationKey()
+
+  const baseOptions = conferenciaItemControllerRemoveMutationOptions(config) as UseMutationOptions<ConferenciaItemControllerRemoveMutationResponse, ResponseErrorConfig<ConferenciaItemControllerRemove400 | ConferenciaItemControllerRemove404>, {id: ConferenciaItemControllerRemovePathParams["id"]}, TContext>
+
+  return useMutation<ConferenciaItemControllerRemoveMutationResponse, ResponseErrorConfig<ConferenciaItemControllerRemove400 | ConferenciaItemControllerRemove404>, {id: ConferenciaItemControllerRemovePathParams["id"]}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ConferenciaItemControllerRemoveMutationResponse, ResponseErrorConfig<ConferenciaItemControllerRemove400 | ConferenciaItemControllerRemove404>, {id: ConferenciaItemControllerRemovePathParams["id"]}, TContext>
 }

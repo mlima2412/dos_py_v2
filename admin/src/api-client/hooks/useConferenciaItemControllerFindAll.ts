@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const conferenciaItemControllerFindAllQueryKey = () =>   [{ url: '/conferencia-item' }] as const
+export const conferenciaItemControllerFindAllQueryKey = () => [{ url: '/conferencia-item' }] as const
 
 export type ConferenciaItemControllerFindAllQueryKey = ReturnType<typeof conferenciaItemControllerFindAllQueryKey>
 
@@ -18,25 +18,22 @@ export type ConferenciaItemControllerFindAllQueryKey = ReturnType<typeof confere
  * {@link /conferencia-item}
  */
 export async function conferenciaItemControllerFindAll(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ConferenciaItemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/conferencia-item`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ConferenciaItemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/conferencia-item`, ... requestConfig })  
+  return res.data
 }
 
 export function conferenciaItemControllerFindAllQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = conferenciaItemControllerFindAllQueryKey()
-        return queryOptions<ConferenciaItemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, ConferenciaItemControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return conferenciaItemControllerFindAll(config)
-         },
-        })
-  
+  const queryKey = conferenciaItemControllerFindAllQueryKey()
+  return queryOptions<ConferenciaItemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, ConferenciaItemControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return conferenciaItemControllerFindAll(config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function conferenciaItemControllerFindAllQueryOptions(config: Partial<Req
  * {@link /conferencia-item}
  */
 export function useConferenciaItemControllerFindAll<TData = ConferenciaItemControllerFindAllQueryResponse, TQueryData = ConferenciaItemControllerFindAllQueryResponse, TQueryKey extends QueryKey = ConferenciaItemControllerFindAllQueryKey>(options: 
-  {
-    query?: Partial<QueryObserverOptions<ConferenciaItemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? conferenciaItemControllerFindAllQueryKey()
-  
-         const query = useQuery({
-          ...conferenciaItemControllerFindAllQueryOptions(config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<ConferenciaItemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? conferenciaItemControllerFindAllQueryKey()
+
+  const query = useQuery({
+   ...conferenciaItemControllerFindAllQueryOptions(config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

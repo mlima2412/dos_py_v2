@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const pedidoCompraItemControllerFindByPedidoCompraQueryKey = (pedidoCompraId: PedidoCompraItemControllerFindByPedidoCompraPathParams["pedidoCompraId"]) =>   [{ url: '/pedido-compra-item/pedido/:pedidoCompraId', params: {pedidoCompraId:pedidoCompraId} }] as const
+export const pedidoCompraItemControllerFindByPedidoCompraQueryKey = (pedidoCompraId: PedidoCompraItemControllerFindByPedidoCompraPathParams["pedidoCompraId"]) => [{ url: '/pedido-compra-item/pedido/:pedidoCompraId', params: {pedidoCompraId:pedidoCompraId} }] as const
 
 export type PedidoCompraItemControllerFindByPedidoCompraQueryKey = ReturnType<typeof pedidoCompraItemControllerFindByPedidoCompraQueryKey>
 
@@ -18,25 +18,22 @@ export type PedidoCompraItemControllerFindByPedidoCompraQueryKey = ReturnType<ty
  * {@link /pedido-compra-item/pedido/:pedidoCompraId}
  */
 export async function pedidoCompraItemControllerFindByPedidoCompra(pedidoCompraId: PedidoCompraItemControllerFindByPedidoCompraPathParams["pedidoCompraId"], headers: PedidoCompraItemControllerFindByPedidoCompraHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<PedidoCompraItemControllerFindByPedidoCompraQueryResponse, ResponseErrorConfig<PedidoCompraItemControllerFindByPedidoCompra404>, unknown>({ method : "GET", url : `/pedido-compra-item/pedido/${pedidoCompraId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<PedidoCompraItemControllerFindByPedidoCompraQueryResponse, ResponseErrorConfig<PedidoCompraItemControllerFindByPedidoCompra404>, unknown>({ method : "GET", url : `/pedido-compra-item/pedido/${pedidoCompraId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function pedidoCompraItemControllerFindByPedidoCompraQueryOptions(pedidoCompraId: PedidoCompraItemControllerFindByPedidoCompraPathParams["pedidoCompraId"], headers: PedidoCompraItemControllerFindByPedidoCompraHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = pedidoCompraItemControllerFindByPedidoCompraQueryKey(pedidoCompraId)
-        return queryOptions<PedidoCompraItemControllerFindByPedidoCompraQueryResponse, ResponseErrorConfig<PedidoCompraItemControllerFindByPedidoCompra404>, PedidoCompraItemControllerFindByPedidoCompraQueryResponse, typeof queryKey>({
-         enabled: !!(pedidoCompraId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return pedidoCompraItemControllerFindByPedidoCompra(pedidoCompraId, headers, config)
-         },
-        })
-  
+  const queryKey = pedidoCompraItemControllerFindByPedidoCompraQueryKey(pedidoCompraId)
+  return queryOptions<PedidoCompraItemControllerFindByPedidoCompraQueryResponse, ResponseErrorConfig<PedidoCompraItemControllerFindByPedidoCompra404>, PedidoCompraItemControllerFindByPedidoCompraQueryResponse, typeof queryKey>({
+   enabled: !!(pedidoCompraId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return pedidoCompraItemControllerFindByPedidoCompra(pedidoCompraId, headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function pedidoCompraItemControllerFindByPedidoCompraQueryOptions(pedidoC
  * {@link /pedido-compra-item/pedido/:pedidoCompraId}
  */
 export function usePedidoCompraItemControllerFindByPedidoCompra<TData = PedidoCompraItemControllerFindByPedidoCompraQueryResponse, TQueryData = PedidoCompraItemControllerFindByPedidoCompraQueryResponse, TQueryKey extends QueryKey = PedidoCompraItemControllerFindByPedidoCompraQueryKey>(pedidoCompraId: PedidoCompraItemControllerFindByPedidoCompraPathParams["pedidoCompraId"], headers: PedidoCompraItemControllerFindByPedidoCompraHeaderParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<PedidoCompraItemControllerFindByPedidoCompraQueryResponse, ResponseErrorConfig<PedidoCompraItemControllerFindByPedidoCompra404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? pedidoCompraItemControllerFindByPedidoCompraQueryKey(pedidoCompraId)
-  
-         const query = useQuery({
-          ...pedidoCompraItemControllerFindByPedidoCompraQueryOptions(pedidoCompraId, headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<PedidoCompraItemControllerFindByPedidoCompra404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<PedidoCompraItemControllerFindByPedidoCompraQueryResponse, ResponseErrorConfig<PedidoCompraItemControllerFindByPedidoCompra404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? pedidoCompraItemControllerFindByPedidoCompraQueryKey(pedidoCompraId)
+
+  const query = useQuery({
+   ...pedidoCompraItemControllerFindByPedidoCompraQueryOptions(pedidoCompraId, headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<PedidoCompraItemControllerFindByPedidoCompra404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

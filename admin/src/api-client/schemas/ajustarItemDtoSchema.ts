@@ -4,9 +4,8 @@
 */
 
 import type { AjustarItemDto } from "../types/AjustarItemDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const ajustarItemDtoSchema = z.object({
-      "ajustar": z.boolean().describe("Se deve ajustar o estoque com base na conferência")
-      }) as unknown as ToZod<AjustarItemDto>
+    "ajustar": z.boolean().describe("Se deve ajustar o estoque com base na conferência")
+    }) as unknown as z.ZodType<AjustarItemDto>

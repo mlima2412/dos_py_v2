@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { CanalOrigemControllerRemoveMutationResponse, CanalOrigemControllerRemovePathParams, CanalOrigemControllerRemove400, CanalOrigemControllerRemove404 } from "../types/CanalOrigemControllerRemove.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const canalOrigemControllerRemoveMutationKey = () =>   [{"url":"/canal-origem/{publicId}"}] as const
+export const canalOrigemControllerRemoveMutationKey = () => [{ url: '/canal-origem/:publicId' }] as const
 
 export type CanalOrigemControllerRemoveMutationKey = ReturnType<typeof canalOrigemControllerRemoveMutationKey>
 
@@ -18,11 +18,20 @@ export type CanalOrigemControllerRemoveMutationKey = ReturnType<typeof canalOrig
  * {@link /canal-origem/:publicId}
  */
 export async function canalOrigemControllerRemove(publicId: CanalOrigemControllerRemovePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<CanalOrigemControllerRemoveMutationResponse, ResponseErrorConfig<CanalOrigemControllerRemove400 | CanalOrigemControllerRemove404>, unknown>({ method : "DELETE", url : `/canal-origem/${publicId}`, ... requestConfig })  
+  return res.data
+}
 
-
-const res = await request<CanalOrigemControllerRemoveMutationResponse, ResponseErrorConfig<CanalOrigemControllerRemove400 | CanalOrigemControllerRemove404>, unknown>({ method : "DELETE", url : `/canal-origem/${publicId}`, ... requestConfig })
-return res.data
+export function canalOrigemControllerRemoveMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = canalOrigemControllerRemoveMutationKey()
+  return mutationOptions<CanalOrigemControllerRemoveMutationResponse, ResponseErrorConfig<CanalOrigemControllerRemove400 | CanalOrigemControllerRemove404>, {publicId: CanalOrigemControllerRemovePathParams["publicId"]}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId }) => {
+      return canalOrigemControllerRemove(publicId, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /canal-origem/:publicId}
  */
 export function useCanalOrigemControllerRemove<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<CanalOrigemControllerRemoveMutationResponse, ResponseErrorConfig<CanalOrigemControllerRemove400 | CanalOrigemControllerRemove404>, {publicId: CanalOrigemControllerRemovePathParams["publicId"]}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? canalOrigemControllerRemoveMutationKey()
-  
-          return useMutation<CanalOrigemControllerRemoveMutationResponse, ResponseErrorConfig<CanalOrigemControllerRemove400 | CanalOrigemControllerRemove404>, {publicId: CanalOrigemControllerRemovePathParams["publicId"]}, TContext>({
-            mutationFn: async({ publicId }) => {
-              return canalOrigemControllerRemove(publicId, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<CanalOrigemControllerRemoveMutationResponse, ResponseErrorConfig<CanalOrigemControllerRemove400 | CanalOrigemControllerRemove404>, {publicId: CanalOrigemControllerRemovePathParams["publicId"]}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? canalOrigemControllerRemoveMutationKey()
+
+  const baseOptions = canalOrigemControllerRemoveMutationOptions(config) as UseMutationOptions<CanalOrigemControllerRemoveMutationResponse, ResponseErrorConfig<CanalOrigemControllerRemove400 | CanalOrigemControllerRemove404>, {publicId: CanalOrigemControllerRemovePathParams["publicId"]}, TContext>
+
+  return useMutation<CanalOrigemControllerRemoveMutationResponse, ResponseErrorConfig<CanalOrigemControllerRemove400 | CanalOrigemControllerRemove404>, {publicId: CanalOrigemControllerRemovePathParams["publicId"]}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<CanalOrigemControllerRemoveMutationResponse, ResponseErrorConfig<CanalOrigemControllerRemove400 | CanalOrigemControllerRemove404>, {publicId: CanalOrigemControllerRemovePathParams["publicId"]}, TContext>
 }

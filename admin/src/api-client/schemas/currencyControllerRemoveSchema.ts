@@ -4,31 +4,30 @@
 */
 
 import type { CurrencyControllerRemovePathParams, CurrencyControllerRemove200, CurrencyControllerRemove401, CurrencyControllerRemove404, CurrencyControllerRemove409, CurrencyControllerRemoveMutationResponse } from "../types/CurrencyControllerRemove.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const currencyControllerRemovePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público da moeda")
-      }) as unknown as ToZod<CurrencyControllerRemovePathParams>
+    "publicId": z.string().describe("ID público da moeda")
+    }) as unknown as z.ZodType<CurrencyControllerRemovePathParams>
 
 /**
  * @description Moeda removida com sucesso
  */
-export const currencyControllerRemove200Schema = z.unknown() as unknown as ToZod<CurrencyControllerRemove200>
+export const currencyControllerRemove200Schema = z.unknown() as unknown as z.ZodType<CurrencyControllerRemove200>
 
 /**
  * @description Não autorizado
  */
-export const currencyControllerRemove401Schema = z.unknown() as unknown as ToZod<CurrencyControllerRemove401>
+export const currencyControllerRemove401Schema = z.unknown() as unknown as z.ZodType<CurrencyControllerRemove401>
 
 /**
  * @description Moeda não encontrada
  */
-export const currencyControllerRemove404Schema = z.unknown() as unknown as ToZod<CurrencyControllerRemove404>
+export const currencyControllerRemove404Schema = z.unknown() as unknown as z.ZodType<CurrencyControllerRemove404>
 
 /**
  * @description Moeda está sendo utilizada e não pode ser removida
  */
-export const currencyControllerRemove409Schema = z.unknown() as unknown as ToZod<CurrencyControllerRemove409>
+export const currencyControllerRemove409Schema = z.unknown() as unknown as z.ZodType<CurrencyControllerRemove409>
 
-export const currencyControllerRemoveMutationResponseSchema = z.lazy(() => currencyControllerRemove200Schema) as unknown as ToZod<CurrencyControllerRemoveMutationResponse>
+export const currencyControllerRemoveMutationResponseSchema = currencyControllerRemove200Schema as unknown as z.ZodType<CurrencyControllerRemoveMutationResponse>

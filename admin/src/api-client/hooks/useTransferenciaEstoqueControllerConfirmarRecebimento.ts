@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest, TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse, TransferenciaEstoqueControllerConfirmarRecebimentoPathParams, TransferenciaEstoqueControllerConfirmarRecebimentoHeaderParams, TransferenciaEstoqueControllerConfirmarRecebimento404, TransferenciaEstoqueControllerConfirmarRecebimento409 } from "../types/TransferenciaEstoqueControllerConfirmarRecebimento.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const transferenciaEstoqueControllerConfirmarRecebimentoMutationKey = () =>   [{"url":"/transferencia-estoque/{id}/confirmar-recebimento"}] as const
+export const transferenciaEstoqueControllerConfirmarRecebimentoMutationKey = () => [{ url: '/transferencia-estoque/:id/confirmar-recebimento' }] as const
 
 export type TransferenciaEstoqueControllerConfirmarRecebimentoMutationKey = ReturnType<typeof transferenciaEstoqueControllerConfirmarRecebimentoMutationKey>
 
@@ -19,11 +19,22 @@ export type TransferenciaEstoqueControllerConfirmarRecebimentoMutationKey = Retu
  * {@link /transferencia-estoque/:id/confirmar-recebimento}
  */
 export async function transferenciaEstoqueControllerConfirmarRecebimento(id: TransferenciaEstoqueControllerConfirmarRecebimentoPathParams["id"], headers: TransferenciaEstoqueControllerConfirmarRecebimentoHeaderParams, data?: TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest, config: Partial<RequestConfig<TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerConfirmarRecebimento404 | TransferenciaEstoqueControllerConfirmarRecebimento409>, TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest>({ method : "PATCH", url : `/transferencia-estoque/${id}/confirmar-recebimento`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerConfirmarRecebimento404 | TransferenciaEstoqueControllerConfirmarRecebimento409>, TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest>({ method : "PATCH", url : `/transferencia-estoque/${id}/confirmar-recebimento`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function transferenciaEstoqueControllerConfirmarRecebimentoMutationOptions(config: Partial<RequestConfig<TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = transferenciaEstoqueControllerConfirmarRecebimentoMutationKey()
+  return mutationOptions<TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerConfirmarRecebimento404 | TransferenciaEstoqueControllerConfirmarRecebimento409>, {id: TransferenciaEstoqueControllerConfirmarRecebimentoPathParams["id"], headers: TransferenciaEstoqueControllerConfirmarRecebimentoHeaderParams, data?: TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ id, headers, data }) => {
+      return transferenciaEstoqueControllerConfirmarRecebimento(id, headers, data, config)
+    },
+  })
 }
 
 /**
@@ -32,22 +43,20 @@ return res.data
  * {@link /transferencia-estoque/:id/confirmar-recebimento}
  */
 export function useTransferenciaEstoqueControllerConfirmarRecebimento<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerConfirmarRecebimento404 | TransferenciaEstoqueControllerConfirmarRecebimento409>, {id: TransferenciaEstoqueControllerConfirmarRecebimentoPathParams["id"], headers: TransferenciaEstoqueControllerConfirmarRecebimentoHeaderParams, data?: TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? transferenciaEstoqueControllerConfirmarRecebimentoMutationKey()
-  
-          return useMutation<TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerConfirmarRecebimento404 | TransferenciaEstoqueControllerConfirmarRecebimento409>, {id: TransferenciaEstoqueControllerConfirmarRecebimentoPathParams["id"], headers: TransferenciaEstoqueControllerConfirmarRecebimentoHeaderParams, data?: TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest}, TContext>({
-            mutationFn: async({ id, headers, data }) => {
-              return transferenciaEstoqueControllerConfirmarRecebimento(id, headers, data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerConfirmarRecebimento404 | TransferenciaEstoqueControllerConfirmarRecebimento409>, {id: TransferenciaEstoqueControllerConfirmarRecebimentoPathParams["id"], headers: TransferenciaEstoqueControllerConfirmarRecebimentoHeaderParams, data?: TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? transferenciaEstoqueControllerConfirmarRecebimentoMutationKey()
+
+  const baseOptions = transferenciaEstoqueControllerConfirmarRecebimentoMutationOptions(config) as UseMutationOptions<TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerConfirmarRecebimento404 | TransferenciaEstoqueControllerConfirmarRecebimento409>, {id: TransferenciaEstoqueControllerConfirmarRecebimentoPathParams["id"], headers: TransferenciaEstoqueControllerConfirmarRecebimentoHeaderParams, data?: TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest}, TContext>
+
+  return useMutation<TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerConfirmarRecebimento404 | TransferenciaEstoqueControllerConfirmarRecebimento409>, {id: TransferenciaEstoqueControllerConfirmarRecebimentoPathParams["id"], headers: TransferenciaEstoqueControllerConfirmarRecebimentoHeaderParams, data?: TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerConfirmarRecebimento404 | TransferenciaEstoqueControllerConfirmarRecebimento409>, {id: TransferenciaEstoqueControllerConfirmarRecebimentoPathParams["id"], headers: TransferenciaEstoqueControllerConfirmarRecebimentoHeaderParams, data?: TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest}, TContext>
 }

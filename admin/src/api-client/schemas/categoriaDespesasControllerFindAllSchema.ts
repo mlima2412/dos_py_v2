@@ -4,22 +4,21 @@
 */
 
 import type { CategoriaDespesasControllerFindAll200, CategoriaDespesasControllerFindAll401, CategoriaDespesasControllerFindAllQueryResponse } from "../types/CategoriaDespesasControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Lista de categorias de despesas retornada com sucesso
  */
 export const categoriaDespesasControllerFindAll200Schema = z.array(z.object({
-      "idCategoria": z.coerce.number().optional(),
-  "descricao": z.coerce.string().optional(),
-  "ativo": z.boolean().optional(),
-  "createdAt": z.coerce.string().optional()
-      })) as unknown as ToZod<CategoriaDespesasControllerFindAll200>
+    "idCategoria": z.optional(z.coerce.number()),
+"descricao": z.optional(z.coerce.string()),
+"ativo": z.optional(z.boolean()),
+"createdAt": z.optional(z.coerce.string())
+    })) as unknown as z.ZodType<CategoriaDespesasControllerFindAll200>
 
 /**
  * @description Não autorizado
  */
-export const categoriaDespesasControllerFindAll401Schema = z.unknown() as unknown as ToZod<CategoriaDespesasControllerFindAll401>
+export const categoriaDespesasControllerFindAll401Schema = z.unknown() as unknown as z.ZodType<CategoriaDespesasControllerFindAll401>
 
-export const categoriaDespesasControllerFindAllQueryResponseSchema = z.lazy(() => categoriaDespesasControllerFindAll200Schema) as unknown as ToZod<CategoriaDespesasControllerFindAllQueryResponse>
+export const categoriaDespesasControllerFindAllQueryResponseSchema = categoriaDespesasControllerFindAll200Schema as unknown as z.ZodType<CategoriaDespesasControllerFindAllQueryResponse>

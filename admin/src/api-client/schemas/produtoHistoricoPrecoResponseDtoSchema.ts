@@ -4,13 +4,12 @@
 */
 
 import type { ProdutoHistoricoPrecoResponseDto } from "../types/ProdutoHistoricoPrecoResponseDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const produtoHistoricoPrecoResponseDtoSchema = z.object({
-      "id": z.coerce.number().describe("ID único do histórico de preço"),
-  "produtoId": z.coerce.number().describe("ID do produto"),
-  "preco": z.coerce.number().describe("Preço do produto"),
-  "data": z.string().datetime().describe("Data do registro do preço"),
-  "nomeProduto": z.coerce.string().describe("Nome do produto").optional()
-      }) as unknown as ToZod<ProdutoHistoricoPrecoResponseDto>
+    "id": z.coerce.number().describe("ID único do histórico de preço"),
+"produtoId": z.coerce.number().describe("ID do produto"),
+"preco": z.coerce.number().describe("Preço do produto"),
+"data": z.string().datetime().describe("Data do registro do preço"),
+"nomeProduto": z.optional(z.coerce.string().describe("Nome do produto"))
+    }) as unknown as z.ZodType<ProdutoHistoricoPrecoResponseDto>

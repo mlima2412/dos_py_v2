@@ -4,19 +4,24 @@
 */
 
 import type { UsuarioParceiro } from "../types/UsuarioParceiro.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { parceiroSchema } from "./parceiroSchema.ts";
 import { perfilSchema } from "./perfilSchema.ts";
 import { usuarioSchema } from "./usuarioSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const usuarioParceiroSchema = z.object({
-      "id": z.coerce.number().describe("ID único da relação usuário-parceiro"),
-  "usuarioId": z.coerce.number().describe("ID do usuário"),
-  "parceiroId": z.coerce.number().describe("ID do parceiro"),
-  "perfilId": z.coerce.number().describe("ID do perfil"),
-  "createdAt": z.string().datetime().describe("Data de criação da relação"),
-  "Usuario": z.lazy(() => usuarioSchema).describe("Dados do usuário relacionado").optional(),
-  "Parceiro": z.lazy(() => parceiroSchema).describe("Dados do parceiro relacionado").optional(),
-  "perfil": z.lazy(() => perfilSchema).describe("Dados do perfil relacionado").optional()
-      }) as unknown as ToZod<UsuarioParceiro>
+    "id": z.coerce.number().describe("ID único da relação usuário-parceiro"),
+"usuarioId": z.coerce.number().describe("ID do usuário"),
+"parceiroId": z.coerce.number().describe("ID do parceiro"),
+"perfilId": z.coerce.number().describe("ID do perfil"),
+"createdAt": z.string().datetime().describe("Data de criação da relação"),
+get "Usuario"(){
+                return z.optional(usuarioSchema.describe("Dados do usuário relacionado"))
+              },
+get "Parceiro"(){
+                return z.optional(parceiroSchema.describe("Dados do parceiro relacionado"))
+              },
+get "perfil"(){
+                return z.optional(perfilSchema.describe("Dados do perfil relacionado"))
+              }
+    }) as unknown as z.ZodType<UsuarioParceiro>

@@ -4,14 +4,13 @@
 */
 
 import type { UpdateContasPagarParcelasDto } from "../types/UpdateContasPagarParcelasDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const updateContasPagarParcelasDtoSchema = z.object({
-      "dataPagamento": z.coerce.string().describe("Data do pagamento da parcela").optional(),
-  "dataVencimento": z.coerce.string().describe("Data de vencimento da parcela").optional(),
-  "valor": z.coerce.number().describe("Valor da parcela").optional(),
-  "pago": z.boolean().describe("Se a parcela foi paga").optional(),
-  "contasPagarId": z.coerce.number().describe("ID da conta a pagar relacionada").optional(),
-  "currencyId": z.coerce.number().describe("ID da moeda").optional()
-      }) as unknown as ToZod<UpdateContasPagarParcelasDto>
+    "dataPagamento": z.optional(z.coerce.string().describe("Data do pagamento da parcela")),
+"dataVencimento": z.optional(z.coerce.string().describe("Data de vencimento da parcela")),
+"valor": z.optional(z.coerce.number().describe("Valor da parcela")),
+"pago": z.optional(z.boolean().describe("Se a parcela foi paga")),
+"contasPagarId": z.optional(z.coerce.number().describe("ID da conta a pagar relacionada")),
+"currencyId": z.optional(z.coerce.number().describe("ID da moeda"))
+    }) as unknown as z.ZodType<UpdateContasPagarParcelasDto>

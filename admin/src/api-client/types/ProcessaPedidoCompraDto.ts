@@ -10,7 +10,7 @@ export const processaPedidoCompraDtoPaymentTypeEnum = {
     "PARCELADO": "PARCELADO"
 } as const;
 
-export type ProcessaPedidoCompraDtoPaymentTypeEnum = (typeof processaPedidoCompraDtoPaymentTypeEnum)[keyof typeof processaPedidoCompraDtoPaymentTypeEnum];
+export type ProcessaPedidoCompraDtoPaymentTypeEnumKey = (typeof processaPedidoCompraDtoPaymentTypeEnum)[keyof typeof processaPedidoCompraDtoPaymentTypeEnum];
 
 export type ProcessaPedidoCompraDto = {
     /**
@@ -22,7 +22,7 @@ export type ProcessaPedidoCompraDto = {
      * @description Tipo de pagamento do pedido
      * @type string
     */
-    paymentType: ProcessaPedidoCompraDtoPaymentTypeEnum;
+    paymentType: ProcessaPedidoCompraDtoPaymentTypeEnumKey;
     /**
      * @description Data de vencimento (obrigatório para A_PRAZO_SEM_PARCELAS)
      * @type string | undefined

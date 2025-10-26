@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const authControllerGetUserParceirosQueryKey = () =>   [{ url: '/auth/me/parceiros' }] as const
+export const authControllerGetUserParceirosQueryKey = () => [{ url: '/auth/me/parceiros' }] as const
 
 export type AuthControllerGetUserParceirosQueryKey = ReturnType<typeof authControllerGetUserParceirosQueryKey>
 
@@ -18,25 +18,22 @@ export type AuthControllerGetUserParceirosQueryKey = ReturnType<typeof authContr
  * {@link /auth/me/parceiros}
  */
 export async function authControllerGetUserParceiros(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<AuthControllerGetUserParceirosQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/auth/me/parceiros`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<AuthControllerGetUserParceirosQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/auth/me/parceiros`, ... requestConfig })  
+  return res.data
 }
 
 export function authControllerGetUserParceirosQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = authControllerGetUserParceirosQueryKey()
-        return queryOptions<AuthControllerGetUserParceirosQueryResponse, ResponseErrorConfig<Error>, AuthControllerGetUserParceirosQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return authControllerGetUserParceiros(config)
-         },
-        })
-  
+  const queryKey = authControllerGetUserParceirosQueryKey()
+  return queryOptions<AuthControllerGetUserParceirosQueryResponse, ResponseErrorConfig<Error>, AuthControllerGetUserParceirosQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return authControllerGetUserParceiros(config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function authControllerGetUserParceirosQueryOptions(config: Partial<Reque
  * {@link /auth/me/parceiros}
  */
 export function useAuthControllerGetUserParceiros<TData = AuthControllerGetUserParceirosQueryResponse, TQueryData = AuthControllerGetUserParceirosQueryResponse, TQueryKey extends QueryKey = AuthControllerGetUserParceirosQueryKey>(options: 
-  {
-    query?: Partial<QueryObserverOptions<AuthControllerGetUserParceirosQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? authControllerGetUserParceirosQueryKey()
-  
-         const query = useQuery({
-          ...authControllerGetUserParceirosQueryOptions(config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<AuthControllerGetUserParceirosQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? authControllerGetUserParceirosQueryKey()
+
+  const query = useQuery({
+   ...authControllerGetUserParceirosQueryOptions(config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

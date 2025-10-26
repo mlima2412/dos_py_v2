@@ -4,30 +4,29 @@
 */
 
 import type { ConferenciaItemControllerAjustarEstoquePathParams, ConferenciaItemControllerAjustarEstoque200, ConferenciaItemControllerAjustarEstoque400, ConferenciaItemControllerAjustarEstoque404, ConferenciaItemControllerAjustarEstoqueMutationRequest, ConferenciaItemControllerAjustarEstoqueMutationResponse } from "../types/ConferenciaItemControllerAjustarEstoque.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { ajustarItemDtoSchema } from "./ajustarItemDtoSchema.ts";
 import { conferenciaItemResponseDtoSchema } from "./conferenciaItemResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const conferenciaItemControllerAjustarEstoquePathParamsSchema = z.object({
-      "id": z.coerce.number().describe("ID do item de conferência")
-      }) as unknown as ToZod<ConferenciaItemControllerAjustarEstoquePathParams>
+    "id": z.coerce.number().describe("ID do item de conferência")
+    }) as unknown as z.ZodType<ConferenciaItemControllerAjustarEstoquePathParams>
 
 /**
  * @description Estoque ajustado com sucesso
  */
-export const conferenciaItemControllerAjustarEstoque200Schema = z.lazy(() => conferenciaItemResponseDtoSchema) as unknown as ToZod<ConferenciaItemControllerAjustarEstoque200>
+export const conferenciaItemControllerAjustarEstoque200Schema = conferenciaItemResponseDtoSchema as unknown as z.ZodType<ConferenciaItemControllerAjustarEstoque200>
 
 /**
  * @description Não é possível ajustar item de conferência finalizada
  */
-export const conferenciaItemControllerAjustarEstoque400Schema = z.unknown() as unknown as ToZod<ConferenciaItemControllerAjustarEstoque400>
+export const conferenciaItemControllerAjustarEstoque400Schema = z.unknown() as unknown as z.ZodType<ConferenciaItemControllerAjustarEstoque400>
 
 /**
  * @description Item de conferência não encontrado
  */
-export const conferenciaItemControllerAjustarEstoque404Schema = z.unknown() as unknown as ToZod<ConferenciaItemControllerAjustarEstoque404>
+export const conferenciaItemControllerAjustarEstoque404Schema = z.unknown() as unknown as z.ZodType<ConferenciaItemControllerAjustarEstoque404>
 
-export const conferenciaItemControllerAjustarEstoqueMutationRequestSchema = z.lazy(() => ajustarItemDtoSchema) as unknown as ToZod<ConferenciaItemControllerAjustarEstoqueMutationRequest>
+export const conferenciaItemControllerAjustarEstoqueMutationRequestSchema = ajustarItemDtoSchema as unknown as z.ZodType<ConferenciaItemControllerAjustarEstoqueMutationRequest>
 
-export const conferenciaItemControllerAjustarEstoqueMutationResponseSchema = z.lazy(() => conferenciaItemControllerAjustarEstoque200Schema) as unknown as ToZod<ConferenciaItemControllerAjustarEstoqueMutationResponse>
+export const conferenciaItemControllerAjustarEstoqueMutationResponseSchema = conferenciaItemControllerAjustarEstoque200Schema as unknown as z.ZodType<ConferenciaItemControllerAjustarEstoqueMutationResponse>

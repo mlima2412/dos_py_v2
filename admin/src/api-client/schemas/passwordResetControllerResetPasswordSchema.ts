@@ -4,22 +4,21 @@
 */
 
 import type { PasswordResetControllerResetPassword200, PasswordResetControllerResetPassword400, PasswordResetControllerResetPasswordMutationRequest, PasswordResetControllerResetPasswordMutationResponse } from "../types/PasswordResetControllerResetPassword.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { resetPasswordDtoSchema } from "./resetPasswordDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Senha alterada com sucesso
  */
 export const passwordResetControllerResetPassword200Schema = z.object({
-      "message": z.coerce.string().optional()
-      }) as unknown as ToZod<PasswordResetControllerResetPassword200>
+    "message": z.optional(z.coerce.string())
+    }) as unknown as z.ZodType<PasswordResetControllerResetPassword200>
 
 /**
  * @description Token inválido ou expirado
  */
-export const passwordResetControllerResetPassword400Schema = z.unknown() as unknown as ToZod<PasswordResetControllerResetPassword400>
+export const passwordResetControllerResetPassword400Schema = z.unknown() as unknown as z.ZodType<PasswordResetControllerResetPassword400>
 
-export const passwordResetControllerResetPasswordMutationRequestSchema = z.lazy(() => resetPasswordDtoSchema) as unknown as ToZod<PasswordResetControllerResetPasswordMutationRequest>
+export const passwordResetControllerResetPasswordMutationRequestSchema = resetPasswordDtoSchema as unknown as z.ZodType<PasswordResetControllerResetPasswordMutationRequest>
 
-export const passwordResetControllerResetPasswordMutationResponseSchema = z.lazy(() => passwordResetControllerResetPassword200Schema) as unknown as ToZod<PasswordResetControllerResetPasswordMutationResponse>
+export const passwordResetControllerResetPasswordMutationResponseSchema = passwordResetControllerResetPassword200Schema as unknown as z.ZodType<PasswordResetControllerResetPasswordMutationResponse>

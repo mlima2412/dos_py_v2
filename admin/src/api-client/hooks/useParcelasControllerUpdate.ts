@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ParcelasControllerUpdateMutationRequest, ParcelasControllerUpdateMutationResponse, ParcelasControllerUpdatePathParams } from "../types/ParcelasControllerUpdate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const parcelasControllerUpdateMutationKey = () =>   [{"url":"/parcelas/{id}"}] as const
+export const parcelasControllerUpdateMutationKey = () => [{ url: '/parcelas/:id' }] as const
 
 export type ParcelasControllerUpdateMutationKey = ReturnType<typeof parcelasControllerUpdateMutationKey>
 
@@ -18,11 +18,22 @@ export type ParcelasControllerUpdateMutationKey = ReturnType<typeof parcelasCont
  * {@link /parcelas/:id}
  */
 export async function parcelasControllerUpdate(id: ParcelasControllerUpdatePathParams["id"], data?: ParcelasControllerUpdateMutationRequest, config: Partial<RequestConfig<ParcelasControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<ParcelasControllerUpdateMutationResponse, ResponseErrorConfig<Error>, ParcelasControllerUpdateMutationRequest>({ method : "PATCH", url : `/parcelas/${id}`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<ParcelasControllerUpdateMutationResponse, ResponseErrorConfig<Error>, ParcelasControllerUpdateMutationRequest>({ method : "PATCH", url : `/parcelas/${id}`, data : requestData, ... requestConfig })
-return res.data
+export function parcelasControllerUpdateMutationOptions(config: Partial<RequestConfig<ParcelasControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = parcelasControllerUpdateMutationKey()
+  return mutationOptions<ParcelasControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {id: ParcelasControllerUpdatePathParams["id"], data?: ParcelasControllerUpdateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ id, data }) => {
+      return parcelasControllerUpdate(id, data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /parcelas/:id}
  */
 export function useParcelasControllerUpdate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ParcelasControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {id: ParcelasControllerUpdatePathParams["id"], data?: ParcelasControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<ParcelasControllerUpdateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? parcelasControllerUpdateMutationKey()
-  
-          return useMutation<ParcelasControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {id: ParcelasControllerUpdatePathParams["id"], data?: ParcelasControllerUpdateMutationRequest}, TContext>({
-            mutationFn: async({ id, data }) => {
-              return parcelasControllerUpdate(id, data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ParcelasControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {id: ParcelasControllerUpdatePathParams["id"], data?: ParcelasControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<ParcelasControllerUpdateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? parcelasControllerUpdateMutationKey()
+
+  const baseOptions = parcelasControllerUpdateMutationOptions(config) as UseMutationOptions<ParcelasControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {id: ParcelasControllerUpdatePathParams["id"], data?: ParcelasControllerUpdateMutationRequest}, TContext>
+
+  return useMutation<ParcelasControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {id: ParcelasControllerUpdatePathParams["id"], data?: ParcelasControllerUpdateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ParcelasControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {id: ParcelasControllerUpdatePathParams["id"], data?: ParcelasControllerUpdateMutationRequest}, TContext>
 }

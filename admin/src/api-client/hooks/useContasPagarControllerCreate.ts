@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ContasPagarControllerCreateMutationRequest, ContasPagarControllerCreateMutationResponse, ContasPagarControllerCreate400 } from "../types/ContasPagarControllerCreate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const contasPagarControllerCreateMutationKey = () =>   [{"url":"/contas-pagar"}] as const
+export const contasPagarControllerCreateMutationKey = () => [{ url: '/contas-pagar' }] as const
 
 export type ContasPagarControllerCreateMutationKey = ReturnType<typeof contasPagarControllerCreateMutationKey>
 
@@ -18,11 +18,22 @@ export type ContasPagarControllerCreateMutationKey = ReturnType<typeof contasPag
  * {@link /contas-pagar}
  */
 export async function contasPagarControllerCreate(data: ContasPagarControllerCreateMutationRequest, config: Partial<RequestConfig<ContasPagarControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<ContasPagarControllerCreateMutationResponse, ResponseErrorConfig<ContasPagarControllerCreate400>, ContasPagarControllerCreateMutationRequest>({ method : "POST", url : `/contas-pagar`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<ContasPagarControllerCreateMutationResponse, ResponseErrorConfig<ContasPagarControllerCreate400>, ContasPagarControllerCreateMutationRequest>({ method : "POST", url : `/contas-pagar`, data : requestData, ... requestConfig })
-return res.data
+export function contasPagarControllerCreateMutationOptions(config: Partial<RequestConfig<ContasPagarControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = contasPagarControllerCreateMutationKey()
+  return mutationOptions<ContasPagarControllerCreateMutationResponse, ResponseErrorConfig<ContasPagarControllerCreate400>, {data: ContasPagarControllerCreateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data }) => {
+      return contasPagarControllerCreate(data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /contas-pagar}
  */
 export function useContasPagarControllerCreate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ContasPagarControllerCreateMutationResponse, ResponseErrorConfig<ContasPagarControllerCreate400>, {data: ContasPagarControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<ContasPagarControllerCreateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? contasPagarControllerCreateMutationKey()
-  
-          return useMutation<ContasPagarControllerCreateMutationResponse, ResponseErrorConfig<ContasPagarControllerCreate400>, {data: ContasPagarControllerCreateMutationRequest}, TContext>({
-            mutationFn: async({ data }) => {
-              return contasPagarControllerCreate(data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ContasPagarControllerCreateMutationResponse, ResponseErrorConfig<ContasPagarControllerCreate400>, {data: ContasPagarControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<ContasPagarControllerCreateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? contasPagarControllerCreateMutationKey()
+
+  const baseOptions = contasPagarControllerCreateMutationOptions(config) as UseMutationOptions<ContasPagarControllerCreateMutationResponse, ResponseErrorConfig<ContasPagarControllerCreate400>, {data: ContasPagarControllerCreateMutationRequest}, TContext>
+
+  return useMutation<ContasPagarControllerCreateMutationResponse, ResponseErrorConfig<ContasPagarControllerCreate400>, {data: ContasPagarControllerCreateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ContasPagarControllerCreateMutationResponse, ResponseErrorConfig<ContasPagarControllerCreate400>, {data: ContasPagarControllerCreateMutationRequest}, TContext>
 }

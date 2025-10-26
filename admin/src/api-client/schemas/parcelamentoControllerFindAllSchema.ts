@@ -4,17 +4,16 @@
 */
 
 import type { ParcelamentoControllerFindAllQueryParams, ParcelamentoControllerFindAll200, ParcelamentoControllerFindAllQueryResponse } from "../types/ParcelamentoControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { parcelamentoSchema } from "./parcelamentoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const parcelamentoControllerFindAllQueryParamsSchema = z.object({
-      "pagamentoId": z.coerce.number()
-      }) as unknown as ToZod<ParcelamentoControllerFindAllQueryParams>
+    "pagamentoId": z.coerce.number()
+    }) as unknown as z.ZodType<ParcelamentoControllerFindAllQueryParams>
 
 /**
  * @description Lista de parcelamentos
  */
-export const parcelamentoControllerFindAll200Schema = z.array(z.lazy(() => parcelamentoSchema)) as unknown as ToZod<ParcelamentoControllerFindAll200>
+export const parcelamentoControllerFindAll200Schema = z.array(parcelamentoSchema) as unknown as z.ZodType<ParcelamentoControllerFindAll200>
 
-export const parcelamentoControllerFindAllQueryResponseSchema = z.lazy(() => parcelamentoControllerFindAll200Schema) as unknown as ToZod<ParcelamentoControllerFindAllQueryResponse>
+export const parcelamentoControllerFindAllQueryResponseSchema = parcelamentoControllerFindAll200Schema as unknown as z.ZodType<ParcelamentoControllerFindAllQueryResponse>

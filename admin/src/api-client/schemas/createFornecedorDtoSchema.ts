@@ -4,17 +4,16 @@
 */
 
 import type { CreateFornecedorDto } from "../types/CreateFornecedorDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const createFornecedorDtoSchema = z.object({
-      "id": z.coerce.number().describe("Código do fornecedor").optional(),
-  "nome": z.coerce.string().describe("Nome do fornecedor"),
-  "parceiroId": z.coerce.number().describe("ID parceiro do fornecedor"),
-  "ruccnpj": z.coerce.string().describe("RUC/CNPJ do fornecedor").optional(),
-  "email": z.coerce.string().describe("Email do fornecedor").optional(),
-  "telefone": z.coerce.string().describe("Telefone do fornecedor").optional(),
-  "redesocial": z.coerce.string().describe("Rede social do fornecedor").optional(),
-  "ultimaCompra": z.string().datetime().describe("Data da última compra do fornecedor").optional(),
-  "ativo": z.boolean().describe("Status ativo do fornecedor").optional()
-      }) as unknown as ToZod<CreateFornecedorDto>
+    "id": z.optional(z.coerce.number().describe("Código do fornecedor")),
+"nome": z.coerce.string().describe("Nome do fornecedor"),
+"parceiroId": z.coerce.number().describe("ID parceiro do fornecedor"),
+"ruccnpj": z.optional(z.coerce.string().describe("RUC/CNPJ do fornecedor")),
+"email": z.optional(z.coerce.string().describe("Email do fornecedor")),
+"telefone": z.optional(z.coerce.string().describe("Telefone do fornecedor")),
+"redesocial": z.optional(z.coerce.string().describe("Rede social do fornecedor")),
+"ultimaCompra": z.optional(z.string().datetime().describe("Data da última compra do fornecedor")),
+"ativo": z.optional(z.boolean().describe("Status ativo do fornecedor"))
+    }) as unknown as z.ZodType<CreateFornecedorDto>

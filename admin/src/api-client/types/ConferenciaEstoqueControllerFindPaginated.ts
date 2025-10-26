@@ -13,7 +13,7 @@ export const conferenciaEstoqueControllerFindPaginatedQueryParamsStatusEnum = {
     "CANCELADA": "CANCELADA"
 } as const;
 
-export type ConferenciaEstoqueControllerFindPaginatedQueryParamsStatusEnum = (typeof conferenciaEstoqueControllerFindPaginatedQueryParamsStatusEnum)[keyof typeof conferenciaEstoqueControllerFindPaginatedQueryParamsStatusEnum];
+export type ConferenciaEstoqueControllerFindPaginatedQueryParamsStatusEnumKey = (typeof conferenciaEstoqueControllerFindPaginatedQueryParamsStatusEnum)[keyof typeof conferenciaEstoqueControllerFindPaginatedQueryParamsStatusEnum];
 
 export type ConferenciaEstoqueControllerFindPaginatedQueryParams = {
     /**
@@ -37,7 +37,7 @@ export type ConferenciaEstoqueControllerFindPaginatedQueryParams = {
      * @description Filtrar por status
      * @type string | undefined
     */
-    status?: ConferenciaEstoqueControllerFindPaginatedQueryParamsStatusEnum;
+    status?: ConferenciaEstoqueControllerFindPaginatedQueryParamsStatusEnumKey;
     /**
      * @description ID do local de estoque
      * @type number | undefined

@@ -4,29 +4,36 @@
 */
 
 import type { DespesaRecorrente } from "../types/DespesaRecorrente.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { currencySchema } from "./currencySchema.ts";
 import { fornecedorSchema } from "./fornecedorSchema.ts";
 import { parceiroSchema } from "./parceiroSchema.ts";
 import { subCategoriaDespesaSchema } from "./subCategoriaDespesaSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const despesaRecorrenteSchema = z.object({
-      "id": z.coerce.number().describe("ID único da despesa recorrente"),
-  "publicId": z.coerce.string().describe("ID público da despesa recorrente"),
-  "descricao": z.coerce.string().describe("Descrição da despesa recorrente"),
-  "valor": z.coerce.number().describe("Valor da despesa recorrente"),
-  "frequencia": z.enum(["SEMANAL", "QUINZENAL", "MENSAL", "TRIMESTRAL", "SEMESTRAL", "ANUAL"]).describe("Frequência da despesa recorrente"),
-  "diaVencimento": z.coerce.number().describe("Dia do vencimento da despesa recorrente"),
-  "dataInicio": z.string().datetime().describe("Data de início da despesa recorrente"),
-  "dataFim": z.string().datetime().describe("Data de fim da despesa recorrente").optional(),
-  "subCategoriaId": z.coerce.number().describe("ID da subcategoria da despesa"),
-  "parceiroId": z.coerce.number().describe("ID do parceiro responsável pela despesa"),
-  "fornecedorId": z.coerce.number().describe("ID do fornecedor da despesa").optional(),
-  "currencyId": z.coerce.number().describe("ID da moeda da despesa").optional(),
-  "cotacao": z.coerce.number().describe("Cotação da moeda no momento da despesa").optional(),
-  "fornecedor": z.lazy(() => fornecedorSchema).describe("Fornecedor da despesa").optional(),
-  "parceiro": z.lazy(() => parceiroSchema).describe("Parceiro responsável pela despesa"),
-  "subCategoria": z.lazy(() => subCategoriaDespesaSchema).describe("Subcategoria da despesa"),
-  "currency": z.lazy(() => currencySchema).describe("Moeda da despesa").optional()
-      }) as unknown as ToZod<DespesaRecorrente>
+    "id": z.coerce.number().describe("ID único da despesa recorrente"),
+"publicId": z.coerce.string().describe("ID público da despesa recorrente"),
+"descricao": z.coerce.string().describe("Descrição da despesa recorrente"),
+"valor": z.coerce.number().describe("Valor da despesa recorrente"),
+"frequencia": z.enum(["SEMANAL", "QUINZENAL", "MENSAL", "TRIMESTRAL", "SEMESTRAL", "ANUAL"]).describe("Frequência da despesa recorrente"),
+"diaVencimento": z.coerce.number().describe("Dia do vencimento da despesa recorrente"),
+"dataInicio": z.string().datetime().describe("Data de início da despesa recorrente"),
+"dataFim": z.optional(z.string().datetime().describe("Data de fim da despesa recorrente")),
+"subCategoriaId": z.coerce.number().describe("ID da subcategoria da despesa"),
+"parceiroId": z.coerce.number().describe("ID do parceiro responsável pela despesa"),
+"fornecedorId": z.optional(z.coerce.number().describe("ID do fornecedor da despesa")),
+"currencyId": z.optional(z.coerce.number().describe("ID da moeda da despesa")),
+"cotacao": z.optional(z.coerce.number().describe("Cotação da moeda no momento da despesa")),
+get "fornecedor"(){
+                return z.optional(fornecedorSchema.describe("Fornecedor da despesa"))
+              },
+get "parceiro"(){
+                return parceiroSchema.describe("Parceiro responsável pela despesa")
+              },
+get "subCategoria"(){
+                return subCategoriaDespesaSchema.describe("Subcategoria da despesa")
+              },
+get "currency"(){
+                return z.optional(currencySchema.describe("Moeda da despesa"))
+              }
+    }) as unknown as z.ZodType<DespesaRecorrente>

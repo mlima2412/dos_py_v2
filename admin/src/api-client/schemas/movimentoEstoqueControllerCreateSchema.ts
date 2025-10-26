@@ -4,26 +4,25 @@
 */
 
 import type { MovimentoEstoqueControllerCreate201, MovimentoEstoqueControllerCreate400, MovimentoEstoqueControllerCreate404, MovimentoEstoqueControllerCreateMutationRequest, MovimentoEstoqueControllerCreateMutationResponse } from "../types/MovimentoEstoqueControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createMovimentoEstoqueDtoSchema } from "./createMovimentoEstoqueDtoSchema.ts";
 import { movimentoEstoqueResponseDtoSchema } from "./movimentoEstoqueResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Movimento criado com sucesso
  */
-export const movimentoEstoqueControllerCreate201Schema = z.lazy(() => movimentoEstoqueResponseDtoSchema) as unknown as ToZod<MovimentoEstoqueControllerCreate201>
+export const movimentoEstoqueControllerCreate201Schema = movimentoEstoqueResponseDtoSchema as unknown as z.ZodType<MovimentoEstoqueControllerCreate201>
 
 /**
  * @description Dados inválidos ou estoque insuficiente
  */
-export const movimentoEstoqueControllerCreate400Schema = z.unknown() as unknown as ToZod<MovimentoEstoqueControllerCreate400>
+export const movimentoEstoqueControllerCreate400Schema = z.unknown() as unknown as z.ZodType<MovimentoEstoqueControllerCreate400>
 
 /**
  * @description SKU ou local não encontrado
  */
-export const movimentoEstoqueControllerCreate404Schema = z.unknown() as unknown as ToZod<MovimentoEstoqueControllerCreate404>
+export const movimentoEstoqueControllerCreate404Schema = z.unknown() as unknown as z.ZodType<MovimentoEstoqueControllerCreate404>
 
-export const movimentoEstoqueControllerCreateMutationRequestSchema = z.lazy(() => createMovimentoEstoqueDtoSchema) as unknown as ToZod<MovimentoEstoqueControllerCreateMutationRequest>
+export const movimentoEstoqueControllerCreateMutationRequestSchema = createMovimentoEstoqueDtoSchema as unknown as z.ZodType<MovimentoEstoqueControllerCreateMutationRequest>
 
-export const movimentoEstoqueControllerCreateMutationResponseSchema = z.lazy(() => movimentoEstoqueControllerCreate201Schema) as unknown as ToZod<MovimentoEstoqueControllerCreateMutationResponse>
+export const movimentoEstoqueControllerCreateMutationResponseSchema = movimentoEstoqueControllerCreate201Schema as unknown as z.ZodType<MovimentoEstoqueControllerCreateMutationResponse>

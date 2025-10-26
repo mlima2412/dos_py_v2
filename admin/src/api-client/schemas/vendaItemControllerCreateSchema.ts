@@ -4,25 +4,24 @@
 */
 
 import type { VendaItemControllerCreateHeaderParams, VendaItemControllerCreate201, VendaItemControllerCreate400, VendaItemControllerCreateMutationRequest, VendaItemControllerCreateMutationResponse } from "../types/VendaItemControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createVendaItemDtoSchema } from "./createVendaItemDtoSchema.ts";
 import { vendaItemEntitySchema } from "./vendaItemEntitySchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const vendaItemControllerCreateHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<VendaItemControllerCreateHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<VendaItemControllerCreateHeaderParams>
 
 /**
  * @description Item criado com sucesso
  */
-export const vendaItemControllerCreate201Schema = z.lazy(() => vendaItemEntitySchema) as unknown as ToZod<VendaItemControllerCreate201>
+export const vendaItemControllerCreate201Schema = vendaItemEntitySchema as unknown as z.ZodType<VendaItemControllerCreate201>
 
 /**
  * @description Parâmetros inválidos
  */
-export const vendaItemControllerCreate400Schema = z.unknown() as unknown as ToZod<VendaItemControllerCreate400>
+export const vendaItemControllerCreate400Schema = z.unknown() as unknown as z.ZodType<VendaItemControllerCreate400>
 
-export const vendaItemControllerCreateMutationRequestSchema = z.lazy(() => createVendaItemDtoSchema) as unknown as ToZod<VendaItemControllerCreateMutationRequest>
+export const vendaItemControllerCreateMutationRequestSchema = createVendaItemDtoSchema as unknown as z.ZodType<VendaItemControllerCreateMutationRequest>
 
-export const vendaItemControllerCreateMutationResponseSchema = z.lazy(() => vendaItemControllerCreate201Schema) as unknown as ToZod<VendaItemControllerCreateMutationResponse>
+export const vendaItemControllerCreateMutationResponseSchema = vendaItemControllerCreate201Schema as unknown as z.ZodType<VendaItemControllerCreateMutationResponse>

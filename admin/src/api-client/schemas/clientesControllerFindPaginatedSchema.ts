@@ -4,31 +4,32 @@
 */
 
 import type { ClientesControllerFindPaginatedQueryParams, ClientesControllerFindPaginatedHeaderParams, ClientesControllerFindPaginated200, ClientesControllerFindPaginatedQueryResponse } from "../types/ClientesControllerFindPaginated.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { clienteSchema } from "./clienteSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const clientesControllerFindPaginatedQueryParamsSchema = z.object({
-      "page": z.string().default("1").describe("Número da página"),
-  "limit": z.string().default("20").describe("Número de itens por página"),
-  "search": z.string().describe("Termo de busca para filtrar por nome, sobrenome ou email").optional(),
-  "canalOrigemId": z.string().describe("ID do canal de origem para filtrar").optional(),
-  "ativo": z.string().describe("Filtrar apenas clientes ativos").optional()
-      }) as unknown as ToZod<ClientesControllerFindPaginatedQueryParams>
+    "page": z.optional(z.string().default("1").describe("Número da página")),
+"limit": z.optional(z.string().default("20").describe("Número de itens por página")),
+"search": z.optional(z.string().describe("Termo de busca para filtrar por nome, sobrenome ou email")),
+"canalOrigemId": z.optional(z.string().describe("ID do canal de origem para filtrar")),
+"ativo": z.optional(z.string().describe("Filtrar apenas clientes ativos"))
+    }) as unknown as z.ZodType<ClientesControllerFindPaginatedQueryParams>
 
 export const clientesControllerFindPaginatedHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<ClientesControllerFindPaginatedHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<ClientesControllerFindPaginatedHeaderParams>
 
 /**
  * @description Lista paginada de clientes
  */
 export const clientesControllerFindPaginated200Schema = z.object({
-      "data": z.array(z.lazy(() => clienteSchema)).optional(),
-  "total": z.coerce.number().optional(),
-  "page": z.coerce.number().optional(),
-  "limit": z.coerce.number().optional(),
-  "totalPages": z.coerce.number().optional()
-      }) as unknown as ToZod<ClientesControllerFindPaginated200>
+    get "data"(){
+                return z.optional(z.array(clienteSchema))
+              },
+"total": z.optional(z.coerce.number()),
+"page": z.optional(z.coerce.number()),
+"limit": z.optional(z.coerce.number()),
+"totalPages": z.optional(z.coerce.number())
+    }) as unknown as z.ZodType<ClientesControllerFindPaginated200>
 
-export const clientesControllerFindPaginatedQueryResponseSchema = z.lazy(() => clientesControllerFindPaginated200Schema) as unknown as ToZod<ClientesControllerFindPaginatedQueryResponse>
+export const clientesControllerFindPaginatedQueryResponseSchema = clientesControllerFindPaginated200Schema as unknown as z.ZodType<ClientesControllerFindPaginatedQueryResponse>

@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const produtoControllerFindByLocalQueryKey = (localId: ProdutoControllerFindByLocalPathParams["localId"], params?: ProdutoControllerFindByLocalQueryParams) =>   [{ url: '/produto/local/:localId', params: {localId:localId} }, ...(params ? [params] : [])] as const
+export const produtoControllerFindByLocalQueryKey = (localId: ProdutoControllerFindByLocalPathParams["localId"], params?: ProdutoControllerFindByLocalQueryParams) => [{ url: '/produto/local/:localId', params: {localId:localId} }, ...(params ? [params] : [])] as const
 
 export type ProdutoControllerFindByLocalQueryKey = ReturnType<typeof produtoControllerFindByLocalQueryKey>
 
@@ -19,25 +19,22 @@ export type ProdutoControllerFindByLocalQueryKey = ReturnType<typeof produtoCont
  * {@link /produto/local/:localId}
  */
 export async function produtoControllerFindByLocal(localId: ProdutoControllerFindByLocalPathParams["localId"], headers: ProdutoControllerFindByLocalHeaderParams, params?: ProdutoControllerFindByLocalQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ProdutoControllerFindByLocalQueryResponse, ResponseErrorConfig<ProdutoControllerFindByLocal404>, unknown>({ method : "GET", url : `/produto/local/${localId}`, params, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ProdutoControllerFindByLocalQueryResponse, ResponseErrorConfig<ProdutoControllerFindByLocal404>, unknown>({ method : "GET", url : `/produto/local/${localId}`, params, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function produtoControllerFindByLocalQueryOptions(localId: ProdutoControllerFindByLocalPathParams["localId"], headers: ProdutoControllerFindByLocalHeaderParams, params?: ProdutoControllerFindByLocalQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = produtoControllerFindByLocalQueryKey(localId, params)
-        return queryOptions<ProdutoControllerFindByLocalQueryResponse, ResponseErrorConfig<ProdutoControllerFindByLocal404>, ProdutoControllerFindByLocalQueryResponse, typeof queryKey>({
-         enabled: !!(localId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return produtoControllerFindByLocal(localId, headers, params, config)
-         },
-        })
-  
+  const queryKey = produtoControllerFindByLocalQueryKey(localId, params)
+  return queryOptions<ProdutoControllerFindByLocalQueryResponse, ResponseErrorConfig<ProdutoControllerFindByLocal404>, ProdutoControllerFindByLocalQueryResponse, typeof queryKey>({
+   enabled: !!(localId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return produtoControllerFindByLocal(localId, headers, params, config)
+   },
+  })
 }
 
 /**
@@ -46,23 +43,22 @@ export function produtoControllerFindByLocalQueryOptions(localId: ProdutoControl
  * {@link /produto/local/:localId}
  */
 export function useProdutoControllerFindByLocal<TData = ProdutoControllerFindByLocalQueryResponse, TQueryData = ProdutoControllerFindByLocalQueryResponse, TQueryKey extends QueryKey = ProdutoControllerFindByLocalQueryKey>(localId: ProdutoControllerFindByLocalPathParams["localId"], headers: ProdutoControllerFindByLocalHeaderParams, params?: ProdutoControllerFindByLocalQueryParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<ProdutoControllerFindByLocalQueryResponse, ResponseErrorConfig<ProdutoControllerFindByLocal404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? produtoControllerFindByLocalQueryKey(localId, params)
-  
-         const query = useQuery({
-          ...produtoControllerFindByLocalQueryOptions(localId, headers, params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<ProdutoControllerFindByLocal404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<ProdutoControllerFindByLocalQueryResponse, ResponseErrorConfig<ProdutoControllerFindByLocal404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? produtoControllerFindByLocalQueryKey(localId, params)
+
+  const query = useQuery({
+   ...produtoControllerFindByLocalQueryOptions(localId, headers, params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<ProdutoControllerFindByLocal404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

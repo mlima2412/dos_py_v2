@@ -13,15 +13,11 @@ import {
 } from "@/components/ui/table";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import type { PagamentoFormData } from "../types";
-import type {
-	PagamentoTipoEnum,
-	FormaPagamentoResponseDto,
-} from "@/api-client/types";
+import type { FormaPagamentoResponseDto } from "@/api-client/types";
 
 interface PagamentosTableProps {
 	pagamentos: PagamentoFormData[];
 	formasPagamento: FormaPagamentoResponseDto[];
-	tipoVenda: PagamentoTipoEnum | undefined;
 	onEdit: (index: number) => void;
 	onRemove: (index: number) => void;
 	formatCurrency: (value: number) => string;
@@ -33,7 +29,6 @@ const DATE_FORMAT = "dd/MM/yyyy";
 export const PagamentosTable: React.FC<PagamentosTableProps> = ({
 	pagamentos,
 	formasPagamento,
-	tipoVenda,
 	onEdit,
 	onRemove,
 	formatCurrency,
@@ -56,14 +51,18 @@ export const PagamentosTable: React.FC<PagamentosTableProps> = ({
 		return forma?.nome || "-";
 	};
 
-	const showParcelasColumn = tipoVenda === "PARCELADO";
-	const showVencimentoColumn = tipoVenda === "A_PRAZO_SEM_PARCELAS";
+	// Verificar se algum pagamento tem parcelas ou vencimento para mostrar as colunas
+	const showParcelasColumn = pagamentos.some(p => p.tipo === "PARCELADO");
+	const showVencimentoColumn = pagamentos.some(
+		p => p.tipo === "A_PRAZO_SEM_PARCELAS"
+	);
 
 	return (
 		<div className="rounded-md border">
 			<Table>
 				<TableHeader>
 					<TableRow>
+						<TableHead>{t("salesOrders.form.labels.paymentType")}</TableHead>
 						<TableHead>{t("salesOrders.form.labels.paymentMethod")}</TableHead>
 						<TableHead className="text-right">
 							{t("salesOrders.form.labels.paymentValue")}
@@ -94,6 +93,9 @@ export const PagamentosTable: React.FC<PagamentosTableProps> = ({
 				<TableBody>
 					{pagamentos.map((pagamento, index) => (
 						<TableRow key={index}>
+							<TableCell className="text-sm">
+								{t(`salesOrders.form.paymentTypes.${pagamento.tipo}`)}
+							</TableCell>
 							<TableCell className="font-medium">
 								{getFormaPagamentoNome(pagamento.formaPagamentoId)}
 							</TableCell>
@@ -110,10 +112,13 @@ export const PagamentosTable: React.FC<PagamentosTableProps> = ({
 							{showParcelasColumn && (
 								<>
 									<TableCell className="text-center">
-										{pagamento.numeroParcelas || "-"}
+										{pagamento.tipo === "PARCELADO"
+											? pagamento.numeroParcelas || "-"
+											: "-"}
 									</TableCell>
 									<TableCell>
-										{pagamento.primeiraParcelaData
+										{pagamento.tipo === "PARCELADO" &&
+										pagamento.primeiraParcelaData
 											? format(pagamento.primeiraParcelaData, DATE_FORMAT)
 											: "-"}
 									</TableCell>
@@ -121,7 +126,8 @@ export const PagamentosTable: React.FC<PagamentosTableProps> = ({
 							)}
 							{showVencimentoColumn && (
 								<TableCell>
-									{pagamento.vencimento
+									{pagamento.tipo === "A_PRAZO_SEM_PARCELAS" &&
+									pagamento.vencimento
 										? format(pagamento.vencimento, DATE_FORMAT)
 										: "-"}
 								</TableCell>

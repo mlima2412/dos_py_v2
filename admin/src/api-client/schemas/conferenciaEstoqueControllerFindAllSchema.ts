@@ -4,17 +4,16 @@
 */
 
 import type { ConferenciaEstoqueControllerFindAllHeaderParams, ConferenciaEstoqueControllerFindAll200, ConferenciaEstoqueControllerFindAllQueryResponse } from "../types/ConferenciaEstoqueControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { conferenciaEstoqueResponseDtoSchema } from "./conferenciaEstoqueResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const conferenciaEstoqueControllerFindAllHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<ConferenciaEstoqueControllerFindAllHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<ConferenciaEstoqueControllerFindAllHeaderParams>
 
 /**
  * @description Lista de conferências de estoque
  */
-export const conferenciaEstoqueControllerFindAll200Schema = z.array(z.lazy(() => conferenciaEstoqueResponseDtoSchema)) as unknown as ToZod<ConferenciaEstoqueControllerFindAll200>
+export const conferenciaEstoqueControllerFindAll200Schema = z.array(conferenciaEstoqueResponseDtoSchema) as unknown as z.ZodType<ConferenciaEstoqueControllerFindAll200>
 
-export const conferenciaEstoqueControllerFindAllQueryResponseSchema = z.lazy(() => conferenciaEstoqueControllerFindAll200Schema) as unknown as ToZod<ConferenciaEstoqueControllerFindAllQueryResponse>
+export const conferenciaEstoqueControllerFindAllQueryResponseSchema = conferenciaEstoqueControllerFindAll200Schema as unknown as z.ZodType<ConferenciaEstoqueControllerFindAllQueryResponse>

@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const pagamentoControllerFindAllQueryKey = (params: PagamentoControllerFindAllQueryParams) =>   [{ url: '/pagamento' }, ...(params ? [params] : [])] as const
+export const pagamentoControllerFindAllQueryKey = (params: PagamentoControllerFindAllQueryParams) => [{ url: '/pagamento' }, ...(params ? [params] : [])] as const
 
 export type PagamentoControllerFindAllQueryKey = ReturnType<typeof pagamentoControllerFindAllQueryKey>
 
@@ -18,25 +18,22 @@ export type PagamentoControllerFindAllQueryKey = ReturnType<typeof pagamentoCont
  * {@link /pagamento}
  */
 export async function pagamentoControllerFindAll(params: PagamentoControllerFindAllQueryParams, headers: PagamentoControllerFindAllHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<PagamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/pagamento`, params, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<PagamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/pagamento`, params, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function pagamentoControllerFindAllQueryOptions(params: PagamentoControllerFindAllQueryParams, headers: PagamentoControllerFindAllHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = pagamentoControllerFindAllQueryKey(params)
-        return queryOptions<PagamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, PagamentoControllerFindAllQueryResponse, typeof queryKey>({
-         enabled: !!(params),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return pagamentoControllerFindAll(params, headers, config)
-         },
-        })
-  
+  const queryKey = pagamentoControllerFindAllQueryKey(params)
+  return queryOptions<PagamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, PagamentoControllerFindAllQueryResponse, typeof queryKey>({
+   enabled: !!(params),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return pagamentoControllerFindAll(params, headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function pagamentoControllerFindAllQueryOptions(params: PagamentoControll
  * {@link /pagamento}
  */
 export function usePagamentoControllerFindAll<TData = PagamentoControllerFindAllQueryResponse, TQueryData = PagamentoControllerFindAllQueryResponse, TQueryKey extends QueryKey = PagamentoControllerFindAllQueryKey>(params: PagamentoControllerFindAllQueryParams, headers: PagamentoControllerFindAllHeaderParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<PagamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? pagamentoControllerFindAllQueryKey(params)
-  
-         const query = useQuery({
-          ...pagamentoControllerFindAllQueryOptions(params, headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<PagamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? pagamentoControllerFindAllQueryKey(params)
+
+  const query = useQuery({
+   ...pagamentoControllerFindAllQueryOptions(params, headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

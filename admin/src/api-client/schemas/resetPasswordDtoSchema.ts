@@ -4,10 +4,9 @@
 */
 
 import type { ResetPasswordDto } from "../types/ResetPasswordDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const resetPasswordDtoSchema = z.object({
-      "token": z.coerce.string().describe("Token de recuperação de senha"),
-  "newPassword": z.coerce.string().min(6).describe("Nova senha do usuário")
-      }) as unknown as ToZod<ResetPasswordDto>
+    "token": z.coerce.string().describe("Token de recuperação de senha"),
+"newPassword": z.coerce.string().min(6).describe("Nova senha do usuário")
+    }) as unknown as z.ZodType<ResetPasswordDto>

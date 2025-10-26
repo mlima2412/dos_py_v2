@@ -4,16 +4,15 @@
 */
 
 import type { Pagamento } from "../types/Pagamento.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const pagamentoSchema = z.object({
-      "id": z.coerce.number().describe("ID do pagamento"),
-  "vendaId": z.coerce.number().describe("ID da venda associada"),
-  "formaPagamentoId": z.coerce.number().describe("ID da forma de pagamento"),
-  "tipo": z.enum(["A_VISTA_IMEDIATA", "A_PRAZO_SEM_PARCELAS", "PARCELADO", "PARCELADO_FLEXIVEL"]).describe("Tipo da venda"),
-  "valor": z.coerce.number().describe("Valor pago"),
-  "valorDelivery": z.coerce.number().describe("Valor do delivery, se houver").optional(),
-  "entrada": z.boolean().describe("Indica se é pagamento de entrada"),
-  "formaPagamentoNome": z.coerce.string().describe("Nome da forma de pagamento").optional()
-      }) as unknown as ToZod<Pagamento>
+    "id": z.coerce.number().describe("ID do pagamento"),
+"vendaId": z.coerce.number().describe("ID da venda associada"),
+"formaPagamentoId": z.coerce.number().describe("ID da forma de pagamento"),
+"tipo": z.enum(["A_VISTA_IMEDIATA", "A_PRAZO_SEM_PARCELAS", "PARCELADO", "PARCELADO_FLEXIVEL"]).describe("Tipo da venda"),
+"valor": z.coerce.number().describe("Valor pago"),
+"valorDelivery": z.optional(z.coerce.number().describe("Valor do delivery, se houver")),
+"entrada": z.boolean().describe("Indica se é pagamento de entrada"),
+"formaPagamentoNome": z.optional(z.coerce.string().describe("Nome da forma de pagamento"))
+    }) as unknown as z.ZodType<Pagamento>

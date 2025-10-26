@@ -4,20 +4,27 @@
 */
 
 import type { MovimentoEstoqueResponseDto } from "../types/MovimentoEstoqueResponseDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { localEstoqueResponseDtoSchema } from "./localEstoqueResponseDtoSchema.ts";
 import { produtoSKUResponseDtoSchema } from "./produtoSKUResponseDtoSchema.ts";
 import { usuarioResponseDtoSchema } from "./usuarioResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const movimentoEstoqueResponseDtoSchema = z.object({
-      "id": z.coerce.number().describe("ID do movimento"),
-  "tipo": z.enum(["ENTRADA", "SAIDA", "TRANSFERENCIA", "CONDICIONAL", "DEVOLUCAO", "AJUSTE"]).describe("Tipo de movimento"),
-  "qtd": z.coerce.number().describe("Quantidade movimentada"),
-  "dataMovimento": z.string().datetime().describe("Data do movimento"),
-  "observacao": z.coerce.string().describe("Observação do movimento").optional(),
-  "sku": z.lazy(() => produtoSKUResponseDtoSchema).describe("Informações do SKU"),
-  "Usuario": z.lazy(() => usuarioResponseDtoSchema).describe("Informações do usuário"),
-  "localOrigem": z.lazy(() => localEstoqueResponseDtoSchema).describe("Local de origem").optional(),
-  "localDestino": z.lazy(() => localEstoqueResponseDtoSchema).describe("Local de destino").optional()
-      }) as unknown as ToZod<MovimentoEstoqueResponseDto>
+    "id": z.coerce.number().describe("ID do movimento"),
+"tipo": z.enum(["ENTRADA", "SAIDA", "TRANSFERENCIA", "CONDICIONAL", "DEVOLUCAO", "AJUSTE"]).describe("Tipo de movimento"),
+"qtd": z.coerce.number().describe("Quantidade movimentada"),
+"dataMovimento": z.string().datetime().describe("Data do movimento"),
+"observacao": z.optional(z.coerce.string().describe("Observação do movimento")),
+get "sku"(){
+                return produtoSKUResponseDtoSchema.describe("Informações do SKU")
+              },
+get "Usuario"(){
+                return usuarioResponseDtoSchema.describe("Informações do usuário")
+              },
+get "localOrigem"(){
+                return z.optional(localEstoqueResponseDtoSchema.describe("Local de origem"))
+              },
+get "localDestino"(){
+                return z.optional(localEstoqueResponseDtoSchema.describe("Local de destino"))
+              }
+    }) as unknown as z.ZodType<MovimentoEstoqueResponseDto>

@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const conferenciaEstoqueControllerFindPaginatedQueryKey = (params?: ConferenciaEstoqueControllerFindPaginatedQueryParams) =>   [{ url: '/conferencia-estoque/paginated' }, ...(params ? [params] : [])] as const
+export const conferenciaEstoqueControllerFindPaginatedQueryKey = (params?: ConferenciaEstoqueControllerFindPaginatedQueryParams) => [{ url: '/conferencia-estoque/paginated' }, ...(params ? [params] : [])] as const
 
 export type ConferenciaEstoqueControllerFindPaginatedQueryKey = ReturnType<typeof conferenciaEstoqueControllerFindPaginatedQueryKey>
 
@@ -18,25 +18,22 @@ export type ConferenciaEstoqueControllerFindPaginatedQueryKey = ReturnType<typeo
  * {@link /conferencia-estoque/paginated}
  */
 export async function conferenciaEstoqueControllerFindPaginated(headers: ConferenciaEstoqueControllerFindPaginatedHeaderParams, params?: ConferenciaEstoqueControllerFindPaginatedQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ConferenciaEstoqueControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/conferencia-estoque/paginated`, params, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ConferenciaEstoqueControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/conferencia-estoque/paginated`, params, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function conferenciaEstoqueControllerFindPaginatedQueryOptions(headers: ConferenciaEstoqueControllerFindPaginatedHeaderParams, params?: ConferenciaEstoqueControllerFindPaginatedQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = conferenciaEstoqueControllerFindPaginatedQueryKey(params)
-        return queryOptions<ConferenciaEstoqueControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, ConferenciaEstoqueControllerFindPaginatedQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return conferenciaEstoqueControllerFindPaginated(headers, params, config)
-         },
-        })
-  
+  const queryKey = conferenciaEstoqueControllerFindPaginatedQueryKey(params)
+  return queryOptions<ConferenciaEstoqueControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, ConferenciaEstoqueControllerFindPaginatedQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return conferenciaEstoqueControllerFindPaginated(headers, params, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function conferenciaEstoqueControllerFindPaginatedQueryOptions(headers: C
  * {@link /conferencia-estoque/paginated}
  */
 export function useConferenciaEstoqueControllerFindPaginated<TData = ConferenciaEstoqueControllerFindPaginatedQueryResponse, TQueryData = ConferenciaEstoqueControllerFindPaginatedQueryResponse, TQueryKey extends QueryKey = ConferenciaEstoqueControllerFindPaginatedQueryKey>(headers: ConferenciaEstoqueControllerFindPaginatedHeaderParams, params?: ConferenciaEstoqueControllerFindPaginatedQueryParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<ConferenciaEstoqueControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? conferenciaEstoqueControllerFindPaginatedQueryKey(params)
-  
-         const query = useQuery({
-          ...conferenciaEstoqueControllerFindPaginatedQueryOptions(headers, params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<ConferenciaEstoqueControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? conferenciaEstoqueControllerFindPaginatedQueryKey(params)
+
+  const query = useQuery({
+   ...conferenciaEstoqueControllerFindPaginatedQueryOptions(headers, params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

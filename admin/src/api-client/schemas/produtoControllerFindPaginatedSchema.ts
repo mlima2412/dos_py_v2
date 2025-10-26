@@ -4,31 +4,32 @@
 */
 
 import type { ProdutoControllerFindPaginatedQueryParams, ProdutoControllerFindPaginatedHeaderParams, ProdutoControllerFindPaginated200, ProdutoControllerFindPaginatedQueryResponse } from "../types/ProdutoControllerFindPaginated.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { produtoSchema } from "./produtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const produtoControllerFindPaginatedQueryParamsSchema = z.object({
-      "page": z.string().default("1").describe("Número da página"),
-  "limit": z.string().default("20").describe("Número de itens por página"),
-  "search": z.string().describe("Termo de busca para filtrar por nome do produto").optional(),
-  "categoriaId": z.string().describe("ID da categoria para filtrar").optional(),
-  "ativo": z.string().describe("Filtrar apenas produtos ativos").optional()
-      }) as unknown as ToZod<ProdutoControllerFindPaginatedQueryParams>
+    "page": z.optional(z.string().default("1").describe("Número da página")),
+"limit": z.optional(z.string().default("20").describe("Número de itens por página")),
+"search": z.optional(z.string().describe("Termo de busca para filtrar por nome do produto")),
+"categoriaId": z.optional(z.string().describe("ID da categoria para filtrar")),
+"ativo": z.optional(z.string().describe("Filtrar apenas produtos ativos"))
+    }) as unknown as z.ZodType<ProdutoControllerFindPaginatedQueryParams>
 
 export const produtoControllerFindPaginatedHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<ProdutoControllerFindPaginatedHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<ProdutoControllerFindPaginatedHeaderParams>
 
 /**
  * @description Lista paginada de produtos
  */
 export const produtoControllerFindPaginated200Schema = z.object({
-      "data": z.array(z.lazy(() => produtoSchema)).optional(),
-  "total": z.coerce.number().optional(),
-  "page": z.coerce.number().optional(),
-  "limit": z.coerce.number().optional(),
-  "totalPages": z.coerce.number().optional()
-      }) as unknown as ToZod<ProdutoControllerFindPaginated200>
+    get "data"(){
+                return z.optional(z.array(produtoSchema))
+              },
+"total": z.optional(z.coerce.number()),
+"page": z.optional(z.coerce.number()),
+"limit": z.optional(z.coerce.number()),
+"totalPages": z.optional(z.coerce.number())
+    }) as unknown as z.ZodType<ProdutoControllerFindPaginated200>
 
-export const produtoControllerFindPaginatedQueryResponseSchema = z.lazy(() => produtoControllerFindPaginated200Schema) as unknown as ToZod<ProdutoControllerFindPaginatedQueryResponse>
+export const produtoControllerFindPaginatedQueryResponseSchema = produtoControllerFindPaginated200Schema as unknown as z.ZodType<ProdutoControllerFindPaginatedQueryResponse>

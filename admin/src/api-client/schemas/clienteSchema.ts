@@ -4,34 +4,35 @@
 */
 
 import type { Cliente } from "../types/Cliente.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { canalOrigemSchema } from "./canalOrigemSchema.ts";
 import { parceiroSchema } from "./parceiroSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const clienteSchema = z.object({
-      "id": z.coerce.number().describe("ID único do cliente"),
-  "publicId": z.coerce.string().describe("ID público do cliente"),
-  "nome": z.coerce.string().describe("Nome do cliente"),
-  "sobrenome": z.coerce.string().describe("Sobrenome do cliente").optional(),
-  "email": z.coerce.string().describe("Email do cliente").optional(),
-  "redeSocial": z.coerce.string().describe("Rede social do cliente").optional(),
-  "celular": z.coerce.string().describe("Celular do cliente").optional(),
-  "ruccnpj": z.coerce.string().describe("RUC/CNPJ do cliente").optional(),
-  "ruccnpjSecundario": z.coerce.string().describe("RUC/CNPJ secundario do cliente").optional(),
-  "nomeFatura": z.coerce.string().describe("Nome da fatura do cliente (caso não seja o mesmo nome do cliente)").optional(),
-  "endereco": z.coerce.string().describe("Endereço do cliente").optional(),
-  "cidade": z.coerce.string().describe("Cidade do cliente").optional(),
-  "cep": z.coerce.string().describe("CEP do cliente").optional(),
-  "observacoes": z.coerce.string().describe("Observações sobre o cliente").optional(),
-  "linguagem": z.enum(["Espanol", "Portugues"]).describe("Linguagem preferida do cliente"),
-  "ativo": z.boolean().describe("Status ativo do cliente"),
-  "parceiroId": z.coerce.number().describe("ID do parceiro associado"),
-  "canalOrigemId": z.coerce.number().describe("ID do canal de origem").optional(),
-  "createdAt": z.string().datetime().describe("Data de criação do cliente"),
-  "updatedAt": z.string().datetime().describe("Data de atualização do cliente"),
-  "ultimaCompra": z.string().datetime().describe("Data da última compra do cliente"),
-  "qtdCompras": z.coerce.number().describe("Quantidade de compras do cliente"),
-  "parceiro": z.lazy(() => parceiroSchema).describe("Parceiro associado ao cliente").optional(),
-  "canalOrigem": z.lazy(() => canalOrigemSchema).describe("Canal de origem do cliente").optional()
-      }) as unknown as ToZod<Cliente>
+    "id": z.coerce.number().describe("ID único do cliente"),
+"publicId": z.coerce.string().describe("ID público do cliente"),
+"nome": z.coerce.string().describe("Nome do cliente"),
+"sobrenome": z.optional(z.coerce.string().describe("Sobrenome do cliente")),
+"email": z.optional(z.coerce.string().describe("Email do cliente")),
+"redeSocial": z.optional(z.coerce.string().describe("Rede social do cliente")),
+"celular": z.optional(z.coerce.string().describe("Celular do cliente")),
+"ruccnpj": z.optional(z.coerce.string().describe("RUC/CNPJ do cliente")),
+"endereco": z.optional(z.coerce.string().describe("Endereço do cliente")),
+"cidade": z.optional(z.coerce.string().describe("Cidade do cliente")),
+"cep": z.optional(z.coerce.string().describe("CEP do cliente")),
+"observacoes": z.optional(z.coerce.string().describe("Observações sobre o cliente")),
+"linguagem": z.enum(["Espanol", "Portugues"]).describe("Linguagem preferida do cliente"),
+"ativo": z.boolean().describe("Status ativo do cliente"),
+"parceiroId": z.coerce.number().describe("ID do parceiro associado"),
+"canalOrigemId": z.optional(z.coerce.number().describe("ID do canal de origem")),
+"createdAt": z.string().datetime().describe("Data de criação do cliente"),
+"updatedAt": z.string().datetime().describe("Data de atualização do cliente"),
+"ultimaCompra": z.string().datetime().describe("Data da última compra do cliente"),
+"qtdCompras": z.coerce.number().describe("Quantidade de compras do cliente"),
+get "parceiro"(){
+                return z.optional(parceiroSchema.describe("Parceiro associado ao cliente"))
+              },
+get "canalOrigem"(){
+                return z.optional(canalOrigemSchema.describe("Canal de origem do cliente"))
+              }
+    }) as unknown as z.ZodType<Cliente>

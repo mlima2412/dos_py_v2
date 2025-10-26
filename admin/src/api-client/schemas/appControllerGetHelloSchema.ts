@@ -4,9 +4,8 @@
 */
 
 import type { AppControllerGetHello200, AppControllerGetHelloQueryResponse } from "../types/AppControllerGetHello.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
-export const appControllerGetHello200Schema = z.unknown() as unknown as ToZod<AppControllerGetHello200>
+export const appControllerGetHello200Schema = z.unknown() as unknown as z.ZodType<AppControllerGetHello200>
 
-export const appControllerGetHelloQueryResponseSchema = z.lazy(() => appControllerGetHello200Schema) as unknown as ToZod<AppControllerGetHelloQueryResponse>
+export const appControllerGetHelloQueryResponseSchema = appControllerGetHello200Schema as unknown as z.ZodType<AppControllerGetHelloQueryResponse>

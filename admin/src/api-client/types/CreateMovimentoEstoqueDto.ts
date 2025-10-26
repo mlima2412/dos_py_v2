@@ -13,7 +13,7 @@ export const createMovimentoEstoqueDtoTipoEnum = {
     "AJUSTE": "AJUSTE"
 } as const;
 
-export type CreateMovimentoEstoqueDtoTipoEnum = (typeof createMovimentoEstoqueDtoTipoEnum)[keyof typeof createMovimentoEstoqueDtoTipoEnum];
+export type CreateMovimentoEstoqueDtoTipoEnumKey = (typeof createMovimentoEstoqueDtoTipoEnum)[keyof typeof createMovimentoEstoqueDtoTipoEnum];
 
 export type CreateMovimentoEstoqueDto = {
     /**
@@ -25,7 +25,7 @@ export type CreateMovimentoEstoqueDto = {
      * @description Tipo de movimento do estoque
      * @type string
     */
-    tipo: CreateMovimentoEstoqueDtoTipoEnum;
+    tipo: CreateMovimentoEstoqueDtoTipoEnumKey;
     /**
      * @description Quantidade a ser movimentada. Para AJUSTE, pode ser positiva (aumentar estoque) ou negativa (diminuir estoque)
      * @type number

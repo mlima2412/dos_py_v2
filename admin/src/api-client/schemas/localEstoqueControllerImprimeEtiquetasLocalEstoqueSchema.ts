@@ -4,26 +4,25 @@
 */
 
 import type { LocalEstoqueControllerImprimeEtiquetasLocalEstoquePathParams, LocalEstoqueControllerImprimeEtiquetasLocalEstoqueHeaderParams, LocalEstoqueControllerImprimeEtiquetasLocalEstoque200, LocalEstoqueControllerImprimeEtiquetasLocalEstoque404, LocalEstoqueControllerImprimeEtiquetasLocalEstoqueQueryResponse } from "../types/LocalEstoqueControllerImprimeEtiquetasLocalEstoque.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { etiquetaPedidoCompraDtoSchema } from "./etiquetaPedidoCompraDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const localEstoqueControllerImprimeEtiquetasLocalEstoquePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do estoque (UUID v7)")
-      }) as unknown as ToZod<LocalEstoqueControllerImprimeEtiquetasLocalEstoquePathParams>
+    "publicId": z.string().describe("ID público do estoque (UUID v7)")
+    }) as unknown as z.ZodType<LocalEstoqueControllerImprimeEtiquetasLocalEstoquePathParams>
 
 export const localEstoqueControllerImprimeEtiquetasLocalEstoqueHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
-      }) as unknown as ToZod<LocalEstoqueControllerImprimeEtiquetasLocalEstoqueHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+    }) as unknown as z.ZodType<LocalEstoqueControllerImprimeEtiquetasLocalEstoqueHeaderParams>
 
 /**
  * @description Estoque encontrado com sucesso
  */
-export const localEstoqueControllerImprimeEtiquetasLocalEstoque200Schema = z.array(z.lazy(() => etiquetaPedidoCompraDtoSchema)) as unknown as ToZod<LocalEstoqueControllerImprimeEtiquetasLocalEstoque200>
+export const localEstoqueControllerImprimeEtiquetasLocalEstoque200Schema = z.array(etiquetaPedidoCompraDtoSchema) as unknown as z.ZodType<LocalEstoqueControllerImprimeEtiquetasLocalEstoque200>
 
 /**
  * @description Estoque não encontrado
  */
-export const localEstoqueControllerImprimeEtiquetasLocalEstoque404Schema = z.unknown() as unknown as ToZod<LocalEstoqueControllerImprimeEtiquetasLocalEstoque404>
+export const localEstoqueControllerImprimeEtiquetasLocalEstoque404Schema = z.unknown() as unknown as z.ZodType<LocalEstoqueControllerImprimeEtiquetasLocalEstoque404>
 
-export const localEstoqueControllerImprimeEtiquetasLocalEstoqueQueryResponseSchema = z.lazy(() => localEstoqueControllerImprimeEtiquetasLocalEstoque200Schema) as unknown as ToZod<LocalEstoqueControllerImprimeEtiquetasLocalEstoqueQueryResponse>
+export const localEstoqueControllerImprimeEtiquetasLocalEstoqueQueryResponseSchema = localEstoqueControllerImprimeEtiquetasLocalEstoque200Schema as unknown as z.ZodType<LocalEstoqueControllerImprimeEtiquetasLocalEstoqueQueryResponse>

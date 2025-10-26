@@ -4,33 +4,32 @@
 */
 
 import type { PedidoCompraControllerCreateHeaderParams, PedidoCompraControllerCreate201, PedidoCompraControllerCreate400, PedidoCompraControllerCreate404, PedidoCompraControllerCreateMutationRequest, PedidoCompraControllerCreateMutationResponse } from "../types/PedidoCompraControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createPedidoCompraDtoSchema } from "./createPedidoCompraDtoSchema.ts";
 import { pedidoCompraSchema } from "./pedidoCompraSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const pedidoCompraControllerCreateHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
-      }) as unknown as ToZod<PedidoCompraControllerCreateHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+    }) as unknown as z.ZodType<PedidoCompraControllerCreateHeaderParams>
 
 /**
  * @description Pedido de compra criado com sucesso
  */
-export const pedidoCompraControllerCreate201Schema = z.lazy(() => pedidoCompraSchema) as unknown as ToZod<PedidoCompraControllerCreate201>
+export const pedidoCompraControllerCreate201Schema = pedidoCompraSchema as unknown as z.ZodType<PedidoCompraControllerCreate201>
 
 /**
  * @description Dados inválidos
  */
-export const pedidoCompraControllerCreate400Schema = z.unknown() as unknown as ToZod<PedidoCompraControllerCreate400>
+export const pedidoCompraControllerCreate400Schema = z.unknown() as unknown as z.ZodType<PedidoCompraControllerCreate400>
 
 /**
  * @description Fornecedor ou local de estoque não encontrado
  */
-export const pedidoCompraControllerCreate404Schema = z.unknown() as unknown as ToZod<PedidoCompraControllerCreate404>
+export const pedidoCompraControllerCreate404Schema = z.unknown() as unknown as z.ZodType<PedidoCompraControllerCreate404>
 
 /**
  * @description Dados para criação do pedido de compra
  */
-export const pedidoCompraControllerCreateMutationRequestSchema = z.lazy(() => createPedidoCompraDtoSchema) as unknown as ToZod<PedidoCompraControllerCreateMutationRequest>
+export const pedidoCompraControllerCreateMutationRequestSchema = createPedidoCompraDtoSchema as unknown as z.ZodType<PedidoCompraControllerCreateMutationRequest>
 
-export const pedidoCompraControllerCreateMutationResponseSchema = z.lazy(() => pedidoCompraControllerCreate201Schema) as unknown as ToZod<PedidoCompraControllerCreateMutationResponse>
+export const pedidoCompraControllerCreateMutationResponseSchema = pedidoCompraControllerCreate201Schema as unknown as z.ZodType<PedidoCompraControllerCreateMutationResponse>

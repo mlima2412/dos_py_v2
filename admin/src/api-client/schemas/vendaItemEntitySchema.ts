@@ -4,21 +4,20 @@
 */
 
 import type { VendaItemEntity } from "../types/VendaItemEntity.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const vendaItemEntitySchema = z.object({
-      "id": z.coerce.number().describe("ID do item da venda"),
-  "vendaId": z.coerce.number().describe("ID da venda"),
-  "skuId": z.coerce.number().describe("ID do SKU vendido"),
-  "tipo": z.enum(["NORMAL", "BRINDE"]).describe("Tipo do item"),
-  "qtdReservada": z.coerce.number().describe("Quantidade reservada"),
-  "qtdAceita": z.coerce.number().describe("Quantidade aceita (ficou com cliente)").optional(),
-  "qtdDevolvida": z.coerce.number().describe("Quantidade devolvida").optional(),
-  "desconto": z.coerce.number().describe("Desconto do item").optional(),
-  "precoUnit": z.coerce.number().describe("Preço unitário"),
-  "skuPublicId": z.coerce.string().describe("Public ID do SKU").optional(),
-  "skuCor": z.coerce.string().describe("Cor do SKU").optional(),
-  "skuCodCor": z.coerce.string().describe("Código da cor do SKU (hex)").optional(),
-  "skuTamanho": z.coerce.string().describe("Tamanho do SKU").optional()
-      }) as unknown as ToZod<VendaItemEntity>
+    "id": z.coerce.number().describe("ID do item da venda"),
+"vendaId": z.coerce.number().describe("ID da venda"),
+"skuId": z.coerce.number().describe("ID do SKU vendido"),
+"tipo": z.enum(["NORMAL", "BRINDE"]).describe("Tipo do item"),
+"qtdReservada": z.coerce.number().describe("Quantidade reservada"),
+"qtdAceita": z.optional(z.coerce.number().describe("Quantidade aceita (ficou com cliente)")),
+"qtdDevolvida": z.optional(z.coerce.number().describe("Quantidade devolvida")),
+"desconto": z.optional(z.coerce.number().describe("Desconto do item")),
+"precoUnit": z.coerce.number().describe("Preço unitário"),
+"skuPublicId": z.optional(z.coerce.string().describe("Public ID do SKU")),
+"skuCor": z.optional(z.coerce.string().describe("Cor do SKU")),
+"skuCodCor": z.optional(z.coerce.string().describe("Código da cor do SKU (hex)")),
+"skuTamanho": z.optional(z.coerce.string().describe("Tamanho do SKU"))
+    }) as unknown as z.ZodType<VendaItemEntity>

@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const parceirosControllerFindActiveParceirosSuspenseQueryKey = () =>   [{ url: '/parceiros/ativos' }] as const
+export const parceirosControllerFindActiveParceirosSuspenseQueryKey = () => [{ url: '/parceiros/ativos' }] as const
 
 export type ParceirosControllerFindActiveParceirosSuspenseQueryKey = ReturnType<typeof parceirosControllerFindActiveParceirosSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type ParceirosControllerFindActiveParceirosSuspenseQueryKey = ReturnType<
  * {@link /parceiros/ativos}
  */
 export async function parceirosControllerFindActiveParceirosSuspense(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ParceirosControllerFindActiveParceirosQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/parceiros/ativos`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ParceirosControllerFindActiveParceirosQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/parceiros/ativos`, ... requestConfig })  
+  return res.data
 }
 
 export function parceirosControllerFindActiveParceirosSuspenseQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = parceirosControllerFindActiveParceirosSuspenseQueryKey()
-        return queryOptions<ParceirosControllerFindActiveParceirosQueryResponse, ResponseErrorConfig<Error>, ParceirosControllerFindActiveParceirosQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return parceirosControllerFindActiveParceirosSuspense(config)
-         },
-        })
-  
+  const queryKey = parceirosControllerFindActiveParceirosSuspenseQueryKey()
+  return queryOptions<ParceirosControllerFindActiveParceirosQueryResponse, ResponseErrorConfig<Error>, ParceirosControllerFindActiveParceirosQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return parceirosControllerFindActiveParceirosSuspense(config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function parceirosControllerFindActiveParceirosSuspenseQueryOptions(confi
  * {@link /parceiros/ativos}
  */
 export function useParceirosControllerFindActiveParceirosSuspense<TData = ParceirosControllerFindActiveParceirosQueryResponse, TQueryKey extends QueryKey = ParceirosControllerFindActiveParceirosSuspenseQueryKey>(options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<ParceirosControllerFindActiveParceirosQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? parceirosControllerFindActiveParceirosSuspenseQueryKey()
-  
-         const query = useSuspenseQuery({
-          ...parceirosControllerFindActiveParceirosSuspenseQueryOptions(config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<ParceirosControllerFindActiveParceirosQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? parceirosControllerFindActiveParceirosSuspenseQueryKey()
+
+  const query = useSuspenseQuery({
+   ...parceirosControllerFindActiveParceirosSuspenseQueryOptions(config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

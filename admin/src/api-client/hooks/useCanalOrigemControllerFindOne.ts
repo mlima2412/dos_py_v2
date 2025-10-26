@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const canalOrigemControllerFindOneQueryKey = (publicId: CanalOrigemControllerFindOnePathParams["publicId"]) =>   [{ url: '/canal-origem/:publicId', params: {publicId:publicId} }] as const
+export const canalOrigemControllerFindOneQueryKey = (publicId: CanalOrigemControllerFindOnePathParams["publicId"]) => [{ url: '/canal-origem/:publicId', params: {publicId:publicId} }] as const
 
 export type CanalOrigemControllerFindOneQueryKey = ReturnType<typeof canalOrigemControllerFindOneQueryKey>
 
@@ -18,25 +18,22 @@ export type CanalOrigemControllerFindOneQueryKey = ReturnType<typeof canalOrigem
  * {@link /canal-origem/:publicId}
  */
 export async function canalOrigemControllerFindOne(publicId: CanalOrigemControllerFindOnePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<CanalOrigemControllerFindOneQueryResponse, ResponseErrorConfig<CanalOrigemControllerFindOne404>, unknown>({ method : "GET", url : `/canal-origem/${publicId}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<CanalOrigemControllerFindOneQueryResponse, ResponseErrorConfig<CanalOrigemControllerFindOne404>, unknown>({ method : "GET", url : `/canal-origem/${publicId}`, ... requestConfig })  
+  return res.data
 }
 
 export function canalOrigemControllerFindOneQueryOptions(publicId: CanalOrigemControllerFindOnePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = canalOrigemControllerFindOneQueryKey(publicId)
-        return queryOptions<CanalOrigemControllerFindOneQueryResponse, ResponseErrorConfig<CanalOrigemControllerFindOne404>, CanalOrigemControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(publicId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return canalOrigemControllerFindOne(publicId, config)
-         },
-        })
-  
+  const queryKey = canalOrigemControllerFindOneQueryKey(publicId)
+  return queryOptions<CanalOrigemControllerFindOneQueryResponse, ResponseErrorConfig<CanalOrigemControllerFindOne404>, CanalOrigemControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(publicId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return canalOrigemControllerFindOne(publicId, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function canalOrigemControllerFindOneQueryOptions(publicId: CanalOrigemCo
  * {@link /canal-origem/:publicId}
  */
 export function useCanalOrigemControllerFindOne<TData = CanalOrigemControllerFindOneQueryResponse, TQueryData = CanalOrigemControllerFindOneQueryResponse, TQueryKey extends QueryKey = CanalOrigemControllerFindOneQueryKey>(publicId: CanalOrigemControllerFindOnePathParams["publicId"], options: 
-  {
-    query?: Partial<QueryObserverOptions<CanalOrigemControllerFindOneQueryResponse, ResponseErrorConfig<CanalOrigemControllerFindOne404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? canalOrigemControllerFindOneQueryKey(publicId)
-  
-         const query = useQuery({
-          ...canalOrigemControllerFindOneQueryOptions(publicId, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<CanalOrigemControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<CanalOrigemControllerFindOneQueryResponse, ResponseErrorConfig<CanalOrigemControllerFindOne404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? canalOrigemControllerFindOneQueryKey(publicId)
+
+  const query = useQuery({
+   ...canalOrigemControllerFindOneQueryOptions(publicId, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<CanalOrigemControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

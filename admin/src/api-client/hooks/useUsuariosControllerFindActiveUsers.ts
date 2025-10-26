@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const usuariosControllerFindActiveUsersQueryKey = () =>   [{ url: '/usuarios/ativos' }] as const
+export const usuariosControllerFindActiveUsersQueryKey = () => [{ url: '/usuarios/ativos' }] as const
 
 export type UsuariosControllerFindActiveUsersQueryKey = ReturnType<typeof usuariosControllerFindActiveUsersQueryKey>
 
@@ -18,25 +18,22 @@ export type UsuariosControllerFindActiveUsersQueryKey = ReturnType<typeof usuari
  * {@link /usuarios/ativos}
  */
 export async function usuariosControllerFindActiveUsers(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<UsuariosControllerFindActiveUsersQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/usuarios/ativos`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<UsuariosControllerFindActiveUsersQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/usuarios/ativos`, ... requestConfig })  
+  return res.data
 }
 
 export function usuariosControllerFindActiveUsersQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = usuariosControllerFindActiveUsersQueryKey()
-        return queryOptions<UsuariosControllerFindActiveUsersQueryResponse, ResponseErrorConfig<Error>, UsuariosControllerFindActiveUsersQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return usuariosControllerFindActiveUsers(config)
-         },
-        })
-  
+  const queryKey = usuariosControllerFindActiveUsersQueryKey()
+  return queryOptions<UsuariosControllerFindActiveUsersQueryResponse, ResponseErrorConfig<Error>, UsuariosControllerFindActiveUsersQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return usuariosControllerFindActiveUsers(config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function usuariosControllerFindActiveUsersQueryOptions(config: Partial<Re
  * {@link /usuarios/ativos}
  */
 export function useUsuariosControllerFindActiveUsers<TData = UsuariosControllerFindActiveUsersQueryResponse, TQueryData = UsuariosControllerFindActiveUsersQueryResponse, TQueryKey extends QueryKey = UsuariosControllerFindActiveUsersQueryKey>(options: 
-  {
-    query?: Partial<QueryObserverOptions<UsuariosControllerFindActiveUsersQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? usuariosControllerFindActiveUsersQueryKey()
-  
-         const query = useQuery({
-          ...usuariosControllerFindActiveUsersQueryOptions(config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<UsuariosControllerFindActiveUsersQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? usuariosControllerFindActiveUsersQueryKey()
+
+  const query = useQuery({
+   ...usuariosControllerFindActiveUsersQueryOptions(config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

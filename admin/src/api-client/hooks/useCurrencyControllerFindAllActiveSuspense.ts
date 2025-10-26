@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const currencyControllerFindAllActiveSuspenseQueryKey = () =>   [{ url: '/currency/ativos' }] as const
+export const currencyControllerFindAllActiveSuspenseQueryKey = () => [{ url: '/currency/ativos' }] as const
 
 export type CurrencyControllerFindAllActiveSuspenseQueryKey = ReturnType<typeof currencyControllerFindAllActiveSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type CurrencyControllerFindAllActiveSuspenseQueryKey = ReturnType<typeof 
  * {@link /currency/ativos}
  */
 export async function currencyControllerFindAllActiveSuspense(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<CurrencyControllerFindAllActiveQueryResponse, ResponseErrorConfig<CurrencyControllerFindAllActive401>, unknown>({ method : "GET", url : `/currency/ativos`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<CurrencyControllerFindAllActiveQueryResponse, ResponseErrorConfig<CurrencyControllerFindAllActive401>, unknown>({ method : "GET", url : `/currency/ativos`, ... requestConfig })  
+  return res.data
 }
 
 export function currencyControllerFindAllActiveSuspenseQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = currencyControllerFindAllActiveSuspenseQueryKey()
-        return queryOptions<CurrencyControllerFindAllActiveQueryResponse, ResponseErrorConfig<CurrencyControllerFindAllActive401>, CurrencyControllerFindAllActiveQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return currencyControllerFindAllActiveSuspense(config)
-         },
-        })
-  
+  const queryKey = currencyControllerFindAllActiveSuspenseQueryKey()
+  return queryOptions<CurrencyControllerFindAllActiveQueryResponse, ResponseErrorConfig<CurrencyControllerFindAllActive401>, CurrencyControllerFindAllActiveQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return currencyControllerFindAllActiveSuspense(config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function currencyControllerFindAllActiveSuspenseQueryOptions(config: Part
  * {@link /currency/ativos}
  */
 export function useCurrencyControllerFindAllActiveSuspense<TData = CurrencyControllerFindAllActiveQueryResponse, TQueryKey extends QueryKey = CurrencyControllerFindAllActiveSuspenseQueryKey>(options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<CurrencyControllerFindAllActiveQueryResponse, ResponseErrorConfig<CurrencyControllerFindAllActive401>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? currencyControllerFindAllActiveSuspenseQueryKey()
-  
-         const query = useSuspenseQuery({
-          ...currencyControllerFindAllActiveSuspenseQueryOptions(config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<CurrencyControllerFindAllActive401>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<CurrencyControllerFindAllActiveQueryResponse, ResponseErrorConfig<CurrencyControllerFindAllActive401>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? currencyControllerFindAllActiveSuspenseQueryKey()
+
+  const query = useSuspenseQuery({
+   ...currencyControllerFindAllActiveSuspenseQueryOptions(config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<CurrencyControllerFindAllActive401>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

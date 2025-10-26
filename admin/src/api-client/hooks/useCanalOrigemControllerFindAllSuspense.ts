@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const canalOrigemControllerFindAllSuspenseQueryKey = () =>   [{ url: '/canal-origem' }] as const
+export const canalOrigemControllerFindAllSuspenseQueryKey = () => [{ url: '/canal-origem' }] as const
 
 export type CanalOrigemControllerFindAllSuspenseQueryKey = ReturnType<typeof canalOrigemControllerFindAllSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type CanalOrigemControllerFindAllSuspenseQueryKey = ReturnType<typeof can
  * {@link /canal-origem}
  */
 export async function canalOrigemControllerFindAllSuspense(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<CanalOrigemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/canal-origem`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<CanalOrigemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/canal-origem`, ... requestConfig })  
+  return res.data
 }
 
 export function canalOrigemControllerFindAllSuspenseQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = canalOrigemControllerFindAllSuspenseQueryKey()
-        return queryOptions<CanalOrigemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, CanalOrigemControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return canalOrigemControllerFindAllSuspense(config)
-         },
-        })
-  
+  const queryKey = canalOrigemControllerFindAllSuspenseQueryKey()
+  return queryOptions<CanalOrigemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, CanalOrigemControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return canalOrigemControllerFindAllSuspense(config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function canalOrigemControllerFindAllSuspenseQueryOptions(config: Partial
  * {@link /canal-origem}
  */
 export function useCanalOrigemControllerFindAllSuspense<TData = CanalOrigemControllerFindAllQueryResponse, TQueryKey extends QueryKey = CanalOrigemControllerFindAllSuspenseQueryKey>(options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<CanalOrigemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? canalOrigemControllerFindAllSuspenseQueryKey()
-  
-         const query = useSuspenseQuery({
-          ...canalOrigemControllerFindAllSuspenseQueryOptions(config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<CanalOrigemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? canalOrigemControllerFindAllSuspenseQueryKey()
+
+  const query = useSuspenseQuery({
+   ...canalOrigemControllerFindAllSuspenseQueryOptions(config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

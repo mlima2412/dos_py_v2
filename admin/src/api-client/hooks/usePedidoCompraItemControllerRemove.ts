@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { PedidoCompraItemControllerRemoveMutationResponse, PedidoCompraItemControllerRemovePathParams, PedidoCompraItemControllerRemoveHeaderParams, PedidoCompraItemControllerRemove404, PedidoCompraItemControllerRemove409 } from "../types/PedidoCompraItemControllerRemove.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const pedidoCompraItemControllerRemoveMutationKey = () =>   [{"url":"/pedido-compra-item/{id}"}] as const
+export const pedidoCompraItemControllerRemoveMutationKey = () => [{ url: '/pedido-compra-item/:id' }] as const
 
 export type PedidoCompraItemControllerRemoveMutationKey = ReturnType<typeof pedidoCompraItemControllerRemoveMutationKey>
 
@@ -18,11 +18,20 @@ export type PedidoCompraItemControllerRemoveMutationKey = ReturnType<typeof pedi
  * {@link /pedido-compra-item/:id}
  */
 export async function pedidoCompraItemControllerRemove(id: PedidoCompraItemControllerRemovePathParams["id"], headers: PedidoCompraItemControllerRemoveHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<PedidoCompraItemControllerRemoveMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerRemove404 | PedidoCompraItemControllerRemove409>, unknown>({ method : "DELETE", url : `/pedido-compra-item/${id}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-
-const res = await request<PedidoCompraItemControllerRemoveMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerRemove404 | PedidoCompraItemControllerRemove409>, unknown>({ method : "DELETE", url : `/pedido-compra-item/${id}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function pedidoCompraItemControllerRemoveMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = pedidoCompraItemControllerRemoveMutationKey()
+  return mutationOptions<PedidoCompraItemControllerRemoveMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerRemove404 | PedidoCompraItemControllerRemove409>, {id: PedidoCompraItemControllerRemovePathParams["id"], headers: PedidoCompraItemControllerRemoveHeaderParams}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ id, headers }) => {
+      return pedidoCompraItemControllerRemove(id, headers, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /pedido-compra-item/:id}
  */
 export function usePedidoCompraItemControllerRemove<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<PedidoCompraItemControllerRemoveMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerRemove404 | PedidoCompraItemControllerRemove409>, {id: PedidoCompraItemControllerRemovePathParams["id"], headers: PedidoCompraItemControllerRemoveHeaderParams}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? pedidoCompraItemControllerRemoveMutationKey()
-  
-          return useMutation<PedidoCompraItemControllerRemoveMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerRemove404 | PedidoCompraItemControllerRemove409>, {id: PedidoCompraItemControllerRemovePathParams["id"], headers: PedidoCompraItemControllerRemoveHeaderParams}, TContext>({
-            mutationFn: async({ id, headers }) => {
-              return pedidoCompraItemControllerRemove(id, headers, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<PedidoCompraItemControllerRemoveMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerRemove404 | PedidoCompraItemControllerRemove409>, {id: PedidoCompraItemControllerRemovePathParams["id"], headers: PedidoCompraItemControllerRemoveHeaderParams}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? pedidoCompraItemControllerRemoveMutationKey()
+
+  const baseOptions = pedidoCompraItemControllerRemoveMutationOptions(config) as UseMutationOptions<PedidoCompraItemControllerRemoveMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerRemove404 | PedidoCompraItemControllerRemove409>, {id: PedidoCompraItemControllerRemovePathParams["id"], headers: PedidoCompraItemControllerRemoveHeaderParams}, TContext>
+
+  return useMutation<PedidoCompraItemControllerRemoveMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerRemove404 | PedidoCompraItemControllerRemove409>, {id: PedidoCompraItemControllerRemovePathParams["id"], headers: PedidoCompraItemControllerRemoveHeaderParams}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<PedidoCompraItemControllerRemoveMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerRemove404 | PedidoCompraItemControllerRemove409>, {id: PedidoCompraItemControllerRemovePathParams["id"], headers: PedidoCompraItemControllerRemoveHeaderParams}, TContext>
 }

@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const contasPagarParcelasControllerFindAllSuspenseQueryKey = () =>   [{ url: '/contas-pagar-parcelas' }] as const
+export const contasPagarParcelasControllerFindAllSuspenseQueryKey = () => [{ url: '/contas-pagar-parcelas' }] as const
 
 export type ContasPagarParcelasControllerFindAllSuspenseQueryKey = ReturnType<typeof contasPagarParcelasControllerFindAllSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type ContasPagarParcelasControllerFindAllSuspenseQueryKey = ReturnType<ty
  * {@link /contas-pagar-parcelas}
  */
 export async function contasPagarParcelasControllerFindAllSuspense(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ContasPagarParcelasControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/contas-pagar-parcelas`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ContasPagarParcelasControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/contas-pagar-parcelas`, ... requestConfig })  
+  return res.data
 }
 
 export function contasPagarParcelasControllerFindAllSuspenseQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = contasPagarParcelasControllerFindAllSuspenseQueryKey()
-        return queryOptions<ContasPagarParcelasControllerFindAllQueryResponse, ResponseErrorConfig<Error>, ContasPagarParcelasControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return contasPagarParcelasControllerFindAllSuspense(config)
-         },
-        })
-  
+  const queryKey = contasPagarParcelasControllerFindAllSuspenseQueryKey()
+  return queryOptions<ContasPagarParcelasControllerFindAllQueryResponse, ResponseErrorConfig<Error>, ContasPagarParcelasControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return contasPagarParcelasControllerFindAllSuspense(config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function contasPagarParcelasControllerFindAllSuspenseQueryOptions(config:
  * {@link /contas-pagar-parcelas}
  */
 export function useContasPagarParcelasControllerFindAllSuspense<TData = ContasPagarParcelasControllerFindAllQueryResponse, TQueryKey extends QueryKey = ContasPagarParcelasControllerFindAllSuspenseQueryKey>(options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<ContasPagarParcelasControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? contasPagarParcelasControllerFindAllSuspenseQueryKey()
-  
-         const query = useSuspenseQuery({
-          ...contasPagarParcelasControllerFindAllSuspenseQueryOptions(config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<ContasPagarParcelasControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? contasPagarParcelasControllerFindAllSuspenseQueryKey()
+
+  const query = useSuspenseQuery({
+   ...contasPagarParcelasControllerFindAllSuspenseQueryOptions(config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

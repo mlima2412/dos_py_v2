@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { AuthControllerLogoutMutationResponse } from "../types/AuthControllerLogout.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const authControllerLogoutMutationKey = () =>   [{"url":"/auth/logout"}] as const
+export const authControllerLogoutMutationKey = () => [{ url: '/auth/logout' }] as const
 
 export type AuthControllerLogoutMutationKey = ReturnType<typeof authControllerLogoutMutationKey>
 
@@ -18,11 +18,20 @@ export type AuthControllerLogoutMutationKey = ReturnType<typeof authControllerLo
  * {@link /auth/logout}
  */
 export async function authControllerLogout(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<AuthControllerLogoutMutationResponse, ResponseErrorConfig<Error>, unknown>({ method : "POST", url : `/auth/logout`, ... requestConfig })  
+  return res.data
+}
 
-
-const res = await request<AuthControllerLogoutMutationResponse, ResponseErrorConfig<Error>, unknown>({ method : "POST", url : `/auth/logout`, ... requestConfig })
-return res.data
+export function authControllerLogoutMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = authControllerLogoutMutationKey()
+  return mutationOptions<AuthControllerLogoutMutationResponse, ResponseErrorConfig<Error>, void, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async() => {
+      return authControllerLogout(config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /auth/logout}
  */
 export function useAuthControllerLogout<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<AuthControllerLogoutMutationResponse, ResponseErrorConfig<Error>, void, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? authControllerLogoutMutationKey()
-  
-          return useMutation<AuthControllerLogoutMutationResponse, ResponseErrorConfig<Error>, void, TContext>({
-            mutationFn: async() => {
-              return authControllerLogout(config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<AuthControllerLogoutMutationResponse, ResponseErrorConfig<Error>, void, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? authControllerLogoutMutationKey()
+
+  const baseOptions = authControllerLogoutMutationOptions(config) as UseMutationOptions<AuthControllerLogoutMutationResponse, ResponseErrorConfig<Error>, void, TContext>
+
+  return useMutation<AuthControllerLogoutMutationResponse, ResponseErrorConfig<Error>, void, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<AuthControllerLogoutMutationResponse, ResponseErrorConfig<Error>, void, TContext>
 }

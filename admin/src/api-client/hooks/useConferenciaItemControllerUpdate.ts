@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ConferenciaItemControllerUpdateMutationRequest, ConferenciaItemControllerUpdateMutationResponse, ConferenciaItemControllerUpdatePathParams, ConferenciaItemControllerUpdate400, ConferenciaItemControllerUpdate404 } from "../types/ConferenciaItemControllerUpdate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const conferenciaItemControllerUpdateMutationKey = () =>   [{"url":"/conferencia-item/{id}"}] as const
+export const conferenciaItemControllerUpdateMutationKey = () => [{ url: '/conferencia-item/:id' }] as const
 
 export type ConferenciaItemControllerUpdateMutationKey = ReturnType<typeof conferenciaItemControllerUpdateMutationKey>
 
@@ -18,11 +18,22 @@ export type ConferenciaItemControllerUpdateMutationKey = ReturnType<typeof confe
  * {@link /conferencia-item/:id}
  */
 export async function conferenciaItemControllerUpdate(id: ConferenciaItemControllerUpdatePathParams["id"], data?: ConferenciaItemControllerUpdateMutationRequest, config: Partial<RequestConfig<ConferenciaItemControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<ConferenciaItemControllerUpdateMutationResponse, ResponseErrorConfig<ConferenciaItemControllerUpdate400 | ConferenciaItemControllerUpdate404>, ConferenciaItemControllerUpdateMutationRequest>({ method : "PATCH", url : `/conferencia-item/${id}`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<ConferenciaItemControllerUpdateMutationResponse, ResponseErrorConfig<ConferenciaItemControllerUpdate400 | ConferenciaItemControllerUpdate404>, ConferenciaItemControllerUpdateMutationRequest>({ method : "PATCH", url : `/conferencia-item/${id}`, data : requestData, ... requestConfig })
-return res.data
+export function conferenciaItemControllerUpdateMutationOptions(config: Partial<RequestConfig<ConferenciaItemControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = conferenciaItemControllerUpdateMutationKey()
+  return mutationOptions<ConferenciaItemControllerUpdateMutationResponse, ResponseErrorConfig<ConferenciaItemControllerUpdate400 | ConferenciaItemControllerUpdate404>, {id: ConferenciaItemControllerUpdatePathParams["id"], data?: ConferenciaItemControllerUpdateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ id, data }) => {
+      return conferenciaItemControllerUpdate(id, data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /conferencia-item/:id}
  */
 export function useConferenciaItemControllerUpdate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ConferenciaItemControllerUpdateMutationResponse, ResponseErrorConfig<ConferenciaItemControllerUpdate400 | ConferenciaItemControllerUpdate404>, {id: ConferenciaItemControllerUpdatePathParams["id"], data?: ConferenciaItemControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<ConferenciaItemControllerUpdateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? conferenciaItemControllerUpdateMutationKey()
-  
-          return useMutation<ConferenciaItemControllerUpdateMutationResponse, ResponseErrorConfig<ConferenciaItemControllerUpdate400 | ConferenciaItemControllerUpdate404>, {id: ConferenciaItemControllerUpdatePathParams["id"], data?: ConferenciaItemControllerUpdateMutationRequest}, TContext>({
-            mutationFn: async({ id, data }) => {
-              return conferenciaItemControllerUpdate(id, data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ConferenciaItemControllerUpdateMutationResponse, ResponseErrorConfig<ConferenciaItemControllerUpdate400 | ConferenciaItemControllerUpdate404>, {id: ConferenciaItemControllerUpdatePathParams["id"], data?: ConferenciaItemControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<ConferenciaItemControllerUpdateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? conferenciaItemControllerUpdateMutationKey()
+
+  const baseOptions = conferenciaItemControllerUpdateMutationOptions(config) as UseMutationOptions<ConferenciaItemControllerUpdateMutationResponse, ResponseErrorConfig<ConferenciaItemControllerUpdate400 | ConferenciaItemControllerUpdate404>, {id: ConferenciaItemControllerUpdatePathParams["id"], data?: ConferenciaItemControllerUpdateMutationRequest}, TContext>
+
+  return useMutation<ConferenciaItemControllerUpdateMutationResponse, ResponseErrorConfig<ConferenciaItemControllerUpdate400 | ConferenciaItemControllerUpdate404>, {id: ConferenciaItemControllerUpdatePathParams["id"], data?: ConferenciaItemControllerUpdateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ConferenciaItemControllerUpdateMutationResponse, ResponseErrorConfig<ConferenciaItemControllerUpdate400 | ConferenciaItemControllerUpdate404>, {id: ConferenciaItemControllerUpdatePathParams["id"], data?: ConferenciaItemControllerUpdateMutationRequest}, TContext>
 }

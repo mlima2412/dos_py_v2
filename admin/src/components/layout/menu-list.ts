@@ -171,28 +171,28 @@ export function getMenuList(
 				{
 					href: "/vendas",
 					label: t("menu.sales"),
-					active: pathname.includes("/vendas"),
+					active: pathname.includes("/vendas") || pathname.includes("/pedidoVendas"),
 					icon: ShoppingCartIcon,
 					submenus: [
 						{
-							href: "/pedidoVendas",
+							href: "/pedidoVendas/pedidos",
 							label: t("menu.openOrders"),
-							active: pathname === "/pedidoVendas",
+							active: pathname.includes("/pedidoVendas/pedidos"),
 						},
 						{
-							href: "/pedidoVendas/venda",
+							href: "/pedidoVendas/vendas",
 							label: t("menu.completedSales"),
-							active: pathname === "/pedidoVendas/venda",
+							active: pathname.includes("/pedidoVendas/vendas"),
 						},
 						{
 							href: "/pedidoVendas/condicionais",
 							label: t("menu.conditionals"),
-							active: pathname === "/pedidoVendas/condicionais",
+							active: pathname.includes("/pedidoVendas/condicionais"),
 						},
 						{
 							href: "/pedidoVendas/parcelamentos",
 							label: t("menu.installments"),
-							active: pathname === "/pedidoVendas/parcelamentos",
+							active: pathname.includes("/pedidoVendas/parcelamentos"),
 						},
 					],
 				},

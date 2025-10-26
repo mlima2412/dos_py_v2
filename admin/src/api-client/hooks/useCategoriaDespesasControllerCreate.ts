@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { CategoriaDespesasControllerCreateMutationRequest, CategoriaDespesasControllerCreateMutationResponse, CategoriaDespesasControllerCreate401, CategoriaDespesasControllerCreate409 } from "../types/CategoriaDespesasControllerCreate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const categoriaDespesasControllerCreateMutationKey = () =>   [{"url":"/categoria-despesas"}] as const
+export const categoriaDespesasControllerCreateMutationKey = () => [{ url: '/categoria-despesas' }] as const
 
 export type CategoriaDespesasControllerCreateMutationKey = ReturnType<typeof categoriaDespesasControllerCreateMutationKey>
 
@@ -18,11 +18,22 @@ export type CategoriaDespesasControllerCreateMutationKey = ReturnType<typeof cat
  * {@link /categoria-despesas}
  */
 export async function categoriaDespesasControllerCreate(data: CategoriaDespesasControllerCreateMutationRequest, config: Partial<RequestConfig<CategoriaDespesasControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<CategoriaDespesasControllerCreateMutationResponse, ResponseErrorConfig<CategoriaDespesasControllerCreate401 | CategoriaDespesasControllerCreate409>, CategoriaDespesasControllerCreateMutationRequest>({ method : "POST", url : `/categoria-despesas`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<CategoriaDespesasControllerCreateMutationResponse, ResponseErrorConfig<CategoriaDespesasControllerCreate401 | CategoriaDespesasControllerCreate409>, CategoriaDespesasControllerCreateMutationRequest>({ method : "POST", url : `/categoria-despesas`, data : requestData, ... requestConfig })
-return res.data
+export function categoriaDespesasControllerCreateMutationOptions(config: Partial<RequestConfig<CategoriaDespesasControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = categoriaDespesasControllerCreateMutationKey()
+  return mutationOptions<CategoriaDespesasControllerCreateMutationResponse, ResponseErrorConfig<CategoriaDespesasControllerCreate401 | CategoriaDespesasControllerCreate409>, {data: CategoriaDespesasControllerCreateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data }) => {
+      return categoriaDespesasControllerCreate(data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /categoria-despesas}
  */
 export function useCategoriaDespesasControllerCreate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<CategoriaDespesasControllerCreateMutationResponse, ResponseErrorConfig<CategoriaDespesasControllerCreate401 | CategoriaDespesasControllerCreate409>, {data: CategoriaDespesasControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<CategoriaDespesasControllerCreateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? categoriaDespesasControllerCreateMutationKey()
-  
-          return useMutation<CategoriaDespesasControllerCreateMutationResponse, ResponseErrorConfig<CategoriaDespesasControllerCreate401 | CategoriaDespesasControllerCreate409>, {data: CategoriaDespesasControllerCreateMutationRequest}, TContext>({
-            mutationFn: async({ data }) => {
-              return categoriaDespesasControllerCreate(data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<CategoriaDespesasControllerCreateMutationResponse, ResponseErrorConfig<CategoriaDespesasControllerCreate401 | CategoriaDespesasControllerCreate409>, {data: CategoriaDespesasControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<CategoriaDespesasControllerCreateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? categoriaDespesasControllerCreateMutationKey()
+
+  const baseOptions = categoriaDespesasControllerCreateMutationOptions(config) as UseMutationOptions<CategoriaDespesasControllerCreateMutationResponse, ResponseErrorConfig<CategoriaDespesasControllerCreate401 | CategoriaDespesasControllerCreate409>, {data: CategoriaDespesasControllerCreateMutationRequest}, TContext>
+
+  return useMutation<CategoriaDespesasControllerCreateMutationResponse, ResponseErrorConfig<CategoriaDespesasControllerCreate401 | CategoriaDespesasControllerCreate409>, {data: CategoriaDespesasControllerCreateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<CategoriaDespesasControllerCreateMutationResponse, ResponseErrorConfig<CategoriaDespesasControllerCreate401 | CategoriaDespesasControllerCreate409>, {data: CategoriaDespesasControllerCreateMutationRequest}, TContext>
 }

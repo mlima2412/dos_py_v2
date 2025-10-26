@@ -4,18 +4,17 @@
 */
 
 import type { DespesasRecorrentesControllerFindAll200, DespesasRecorrentesControllerFindAll401, DespesasRecorrentesControllerFindAllQueryResponse } from "../types/DespesasRecorrentesControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { despesaRecorrenteSchema } from "./despesaRecorrenteSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Lista de despesas recorrentes
  */
-export const despesasRecorrentesControllerFindAll200Schema = z.array(z.lazy(() => despesaRecorrenteSchema)) as unknown as ToZod<DespesasRecorrentesControllerFindAll200>
+export const despesasRecorrentesControllerFindAll200Schema = z.array(despesaRecorrenteSchema) as unknown as z.ZodType<DespesasRecorrentesControllerFindAll200>
 
 /**
  * @description Não autorizado
  */
-export const despesasRecorrentesControllerFindAll401Schema = z.unknown() as unknown as ToZod<DespesasRecorrentesControllerFindAll401>
+export const despesasRecorrentesControllerFindAll401Schema = z.unknown() as unknown as z.ZodType<DespesasRecorrentesControllerFindAll401>
 
-export const despesasRecorrentesControllerFindAllQueryResponseSchema = z.lazy(() => despesasRecorrentesControllerFindAll200Schema) as unknown as ToZod<DespesasRecorrentesControllerFindAllQueryResponse>
+export const despesasRecorrentesControllerFindAllQueryResponseSchema = despesasRecorrentesControllerFindAll200Schema as unknown as z.ZodType<DespesasRecorrentesControllerFindAllQueryResponse>

@@ -4,20 +4,19 @@
 */
 
 import type { ParcelamentoControllerUpdatePathParams, ParcelamentoControllerUpdate200, ParcelamentoControllerUpdateMutationRequest, ParcelamentoControllerUpdateMutationResponse } from "../types/ParcelamentoControllerUpdate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { parcelamentoSchema } from "./parcelamentoSchema.ts";
 import { updateParcelamentoDtoSchema } from "./updateParcelamentoDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const parcelamentoControllerUpdatePathParamsSchema = z.object({
-      "id": z.coerce.number()
-      }) as unknown as ToZod<ParcelamentoControllerUpdatePathParams>
+    "id": z.coerce.number()
+    }) as unknown as z.ZodType<ParcelamentoControllerUpdatePathParams>
 
 /**
  * @description Parcelamento atualizado
  */
-export const parcelamentoControllerUpdate200Schema = z.lazy(() => parcelamentoSchema) as unknown as ToZod<ParcelamentoControllerUpdate200>
+export const parcelamentoControllerUpdate200Schema = parcelamentoSchema as unknown as z.ZodType<ParcelamentoControllerUpdate200>
 
-export const parcelamentoControllerUpdateMutationRequestSchema = z.lazy(() => updateParcelamentoDtoSchema) as unknown as ToZod<ParcelamentoControllerUpdateMutationRequest>
+export const parcelamentoControllerUpdateMutationRequestSchema = updateParcelamentoDtoSchema as unknown as z.ZodType<ParcelamentoControllerUpdateMutationRequest>
 
-export const parcelamentoControllerUpdateMutationResponseSchema = z.lazy(() => parcelamentoControllerUpdate200Schema) as unknown as ToZod<ParcelamentoControllerUpdateMutationResponse>
+export const parcelamentoControllerUpdateMutationResponseSchema = parcelamentoControllerUpdate200Schema as unknown as z.ZodType<ParcelamentoControllerUpdateMutationResponse>

@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const despesasControllerListYearsQueryKey = () =>   [{ url: '/despesas/DespesasAno' }] as const
+export const despesasControllerListYearsQueryKey = () => [{ url: '/despesas/DespesasAno' }] as const
 
 export type DespesasControllerListYearsQueryKey = ReturnType<typeof despesasControllerListYearsQueryKey>
 
@@ -18,25 +18,22 @@ export type DespesasControllerListYearsQueryKey = ReturnType<typeof despesasCont
  * {@link /despesas/DespesasAno}
  */
 export async function despesasControllerListYears(headers: DespesasControllerListYearsHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<DespesasControllerListYearsQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/despesas/DespesasAno`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<DespesasControllerListYearsQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/despesas/DespesasAno`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function despesasControllerListYearsQueryOptions(headers: DespesasControllerListYearsHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = despesasControllerListYearsQueryKey()
-        return queryOptions<DespesasControllerListYearsQueryResponse, ResponseErrorConfig<Error>, DespesasControllerListYearsQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return despesasControllerListYears(headers, config)
-         },
-        })
-  
+  const queryKey = despesasControllerListYearsQueryKey()
+  return queryOptions<DespesasControllerListYearsQueryResponse, ResponseErrorConfig<Error>, DespesasControllerListYearsQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return despesasControllerListYears(headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function despesasControllerListYearsQueryOptions(headers: DespesasControl
  * {@link /despesas/DespesasAno}
  */
 export function useDespesasControllerListYears<TData = DespesasControllerListYearsQueryResponse, TQueryData = DespesasControllerListYearsQueryResponse, TQueryKey extends QueryKey = DespesasControllerListYearsQueryKey>(headers: DespesasControllerListYearsHeaderParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<DespesasControllerListYearsQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? despesasControllerListYearsQueryKey()
-  
-         const query = useQuery({
-          ...despesasControllerListYearsQueryOptions(headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<DespesasControllerListYearsQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? despesasControllerListYearsQueryKey()
+
+  const query = useQuery({
+   ...despesasControllerListYearsQueryOptions(headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

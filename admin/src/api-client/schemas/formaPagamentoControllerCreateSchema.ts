@@ -4,25 +4,24 @@
 */
 
 import type { FormaPagamentoControllerCreateHeaderParams, FormaPagamentoControllerCreate201, FormaPagamentoControllerCreate400, FormaPagamentoControllerCreateMutationRequest, FormaPagamentoControllerCreateMutationResponse } from "../types/FormaPagamentoControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createFormaPagamentoDtoSchema } from "./createFormaPagamentoDtoSchema.ts";
 import { formaPagamentoResponseDtoSchema } from "./formaPagamentoResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const formaPagamentoControllerCreateHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<FormaPagamentoControllerCreateHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<FormaPagamentoControllerCreateHeaderParams>
 
 /**
  * @description Forma de pagamento criada com sucesso
  */
-export const formaPagamentoControllerCreate201Schema = z.lazy(() => formaPagamentoResponseDtoSchema) as unknown as ToZod<FormaPagamentoControllerCreate201>
+export const formaPagamentoControllerCreate201Schema = formaPagamentoResponseDtoSchema as unknown as z.ZodType<FormaPagamentoControllerCreate201>
 
 /**
  * @description Dados inválidos ou nome já existe
  */
-export const formaPagamentoControllerCreate400Schema = z.unknown() as unknown as ToZod<FormaPagamentoControllerCreate400>
+export const formaPagamentoControllerCreate400Schema = z.unknown() as unknown as z.ZodType<FormaPagamentoControllerCreate400>
 
-export const formaPagamentoControllerCreateMutationRequestSchema = z.lazy(() => createFormaPagamentoDtoSchema) as unknown as ToZod<FormaPagamentoControllerCreateMutationRequest>
+export const formaPagamentoControllerCreateMutationRequestSchema = createFormaPagamentoDtoSchema as unknown as z.ZodType<FormaPagamentoControllerCreateMutationRequest>
 
-export const formaPagamentoControllerCreateMutationResponseSchema = z.lazy(() => formaPagamentoControllerCreate201Schema) as unknown as ToZod<FormaPagamentoControllerCreateMutationResponse>
+export const formaPagamentoControllerCreateMutationResponseSchema = formaPagamentoControllerCreate201Schema as unknown as z.ZodType<FormaPagamentoControllerCreateMutationResponse>

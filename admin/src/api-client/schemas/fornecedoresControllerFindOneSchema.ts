@@ -4,31 +4,30 @@
 */
 
 import type { FornecedoresControllerFindOnePathParams, FornecedoresControllerFindOneHeaderParams, FornecedoresControllerFindOne200, FornecedoresControllerFindOne400, FornecedoresControllerFindOne404, FornecedoresControllerFindOneQueryResponse } from "../types/FornecedoresControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { fornecedorSchema } from "./fornecedorSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const fornecedoresControllerFindOnePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do fornecedor (UUID v7)")
-      }) as unknown as ToZod<FornecedoresControllerFindOnePathParams>
+    "publicId": z.string().describe("ID público do fornecedor (UUID v7)")
+    }) as unknown as z.ZodType<FornecedoresControllerFindOnePathParams>
 
 export const fornecedoresControllerFindOneHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.string().describe("ID do parceiro")
-      }) as unknown as ToZod<FornecedoresControllerFindOneHeaderParams>
+    "x-parceiro-id": z.string().describe("ID do parceiro")
+    }) as unknown as z.ZodType<FornecedoresControllerFindOneHeaderParams>
 
 /**
  * @description Fornecedor encontrado com sucesso
  */
-export const fornecedoresControllerFindOne200Schema = z.lazy(() => fornecedorSchema) as unknown as ToZod<FornecedoresControllerFindOne200>
+export const fornecedoresControllerFindOne200Schema = fornecedorSchema as unknown as z.ZodType<FornecedoresControllerFindOne200>
 
 /**
  * @description Header x-parceiro-id é obrigatório
  */
-export const fornecedoresControllerFindOne400Schema = z.unknown() as unknown as ToZod<FornecedoresControllerFindOne400>
+export const fornecedoresControllerFindOne400Schema = z.unknown() as unknown as z.ZodType<FornecedoresControllerFindOne400>
 
 /**
  * @description Fornecedor não encontrado
  */
-export const fornecedoresControllerFindOne404Schema = z.unknown() as unknown as ToZod<FornecedoresControllerFindOne404>
+export const fornecedoresControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<FornecedoresControllerFindOne404>
 
-export const fornecedoresControllerFindOneQueryResponseSchema = z.lazy(() => fornecedoresControllerFindOne200Schema) as unknown as ToZod<FornecedoresControllerFindOneQueryResponse>
+export const fornecedoresControllerFindOneQueryResponseSchema = fornecedoresControllerFindOne200Schema as unknown as z.ZodType<FornecedoresControllerFindOneQueryResponse>

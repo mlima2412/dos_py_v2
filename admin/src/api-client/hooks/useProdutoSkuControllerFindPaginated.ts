@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const produtoSkuControllerFindPaginatedQueryKey = (params?: ProdutoSkuControllerFindPaginatedQueryParams) =>   [{ url: '/produto-sku/paginated' }, ...(params ? [params] : [])] as const
+export const produtoSkuControllerFindPaginatedQueryKey = (params?: ProdutoSkuControllerFindPaginatedQueryParams) => [{ url: '/produto-sku/paginated' }, ...(params ? [params] : [])] as const
 
 export type ProdutoSkuControllerFindPaginatedQueryKey = ReturnType<typeof produtoSkuControllerFindPaginatedQueryKey>
 
@@ -18,25 +18,22 @@ export type ProdutoSkuControllerFindPaginatedQueryKey = ReturnType<typeof produt
  * {@link /produto-sku/paginated}
  */
 export async function produtoSkuControllerFindPaginated(headers: ProdutoSkuControllerFindPaginatedHeaderParams, params?: ProdutoSkuControllerFindPaginatedQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ProdutoSkuControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/produto-sku/paginated`, params, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ProdutoSkuControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/produto-sku/paginated`, params, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function produtoSkuControllerFindPaginatedQueryOptions(headers: ProdutoSkuControllerFindPaginatedHeaderParams, params?: ProdutoSkuControllerFindPaginatedQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = produtoSkuControllerFindPaginatedQueryKey(params)
-        return queryOptions<ProdutoSkuControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, ProdutoSkuControllerFindPaginatedQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return produtoSkuControllerFindPaginated(headers, params, config)
-         },
-        })
-  
+  const queryKey = produtoSkuControllerFindPaginatedQueryKey(params)
+  return queryOptions<ProdutoSkuControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, ProdutoSkuControllerFindPaginatedQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return produtoSkuControllerFindPaginated(headers, params, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function produtoSkuControllerFindPaginatedQueryOptions(headers: ProdutoSk
  * {@link /produto-sku/paginated}
  */
 export function useProdutoSkuControllerFindPaginated<TData = ProdutoSkuControllerFindPaginatedQueryResponse, TQueryData = ProdutoSkuControllerFindPaginatedQueryResponse, TQueryKey extends QueryKey = ProdutoSkuControllerFindPaginatedQueryKey>(headers: ProdutoSkuControllerFindPaginatedHeaderParams, params?: ProdutoSkuControllerFindPaginatedQueryParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<ProdutoSkuControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? produtoSkuControllerFindPaginatedQueryKey(params)
-  
-         const query = useQuery({
-          ...produtoSkuControllerFindPaginatedQueryOptions(headers, params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<ProdutoSkuControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? produtoSkuControllerFindPaginatedQueryKey(params)
+
+  const query = useQuery({
+   ...produtoSkuControllerFindPaginatedQueryOptions(headers, params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

@@ -4,26 +4,25 @@
 */
 
 import type { DespesasRecorrentesControllerCreate201, DespesasRecorrentesControllerCreate400, DespesasRecorrentesControllerCreate401, DespesasRecorrentesControllerCreateMutationRequest, DespesasRecorrentesControllerCreateMutationResponse } from "../types/DespesasRecorrentesControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createDespesaRecorrenteDtoSchema } from "./createDespesaRecorrenteDtoSchema.ts";
 import { despesaRecorrenteSchema } from "./despesaRecorrenteSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Despesa recorrente criada com sucesso
  */
-export const despesasRecorrentesControllerCreate201Schema = z.lazy(() => despesaRecorrenteSchema) as unknown as ToZod<DespesasRecorrentesControllerCreate201>
+export const despesasRecorrentesControllerCreate201Schema = despesaRecorrenteSchema as unknown as z.ZodType<DespesasRecorrentesControllerCreate201>
 
 /**
  * @description Dados inválidos
  */
-export const despesasRecorrentesControllerCreate400Schema = z.unknown() as unknown as ToZod<DespesasRecorrentesControllerCreate400>
+export const despesasRecorrentesControllerCreate400Schema = z.unknown() as unknown as z.ZodType<DespesasRecorrentesControllerCreate400>
 
 /**
  * @description Não autorizado
  */
-export const despesasRecorrentesControllerCreate401Schema = z.unknown() as unknown as ToZod<DespesasRecorrentesControllerCreate401>
+export const despesasRecorrentesControllerCreate401Schema = z.unknown() as unknown as z.ZodType<DespesasRecorrentesControllerCreate401>
 
-export const despesasRecorrentesControllerCreateMutationRequestSchema = z.lazy(() => createDespesaRecorrenteDtoSchema) as unknown as ToZod<DespesasRecorrentesControllerCreateMutationRequest>
+export const despesasRecorrentesControllerCreateMutationRequestSchema = createDespesaRecorrenteDtoSchema as unknown as z.ZodType<DespesasRecorrentesControllerCreateMutationRequest>
 
-export const despesasRecorrentesControllerCreateMutationResponseSchema = z.lazy(() => despesasRecorrentesControllerCreate201Schema) as unknown as ToZod<DespesasRecorrentesControllerCreateMutationResponse>
+export const despesasRecorrentesControllerCreateMutationResponseSchema = despesasRecorrentesControllerCreate201Schema as unknown as z.ZodType<DespesasRecorrentesControllerCreateMutationResponse>

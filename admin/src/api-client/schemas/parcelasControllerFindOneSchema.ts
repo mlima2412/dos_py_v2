@@ -4,22 +4,21 @@
 */
 
 import type { ParcelasControllerFindOnePathParams, ParcelasControllerFindOne200, ParcelasControllerFindOne404, ParcelasControllerFindOneQueryResponse } from "../types/ParcelasControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { parcelaSchema } from "./parcelaSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const parcelasControllerFindOnePathParamsSchema = z.object({
-      "id": z.coerce.number()
-      }) as unknown as ToZod<ParcelasControllerFindOnePathParams>
+    "id": z.coerce.number()
+    }) as unknown as z.ZodType<ParcelasControllerFindOnePathParams>
 
 /**
  * @description Parcela encontrada
  */
-export const parcelasControllerFindOne200Schema = z.lazy(() => parcelaSchema) as unknown as ToZod<ParcelasControllerFindOne200>
+export const parcelasControllerFindOne200Schema = parcelaSchema as unknown as z.ZodType<ParcelasControllerFindOne200>
 
 /**
  * @description Parcela não encontrada
  */
-export const parcelasControllerFindOne404Schema = z.unknown() as unknown as ToZod<ParcelasControllerFindOne404>
+export const parcelasControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<ParcelasControllerFindOne404>
 
-export const parcelasControllerFindOneQueryResponseSchema = z.lazy(() => parcelasControllerFindOne200Schema) as unknown as ToZod<ParcelasControllerFindOneQueryResponse>
+export const parcelasControllerFindOneQueryResponseSchema = parcelasControllerFindOne200Schema as unknown as z.ZodType<ParcelasControllerFindOneQueryResponse>

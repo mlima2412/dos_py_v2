@@ -4,22 +4,21 @@
 */
 
 import type { DespesasRecorrentesControllerFindByFornecedorPathParams, DespesasRecorrentesControllerFindByFornecedor200, DespesasRecorrentesControllerFindByFornecedor401, DespesasRecorrentesControllerFindByFornecedorQueryResponse } from "../types/DespesasRecorrentesControllerFindByFornecedor.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { despesaRecorrenteSchema } from "./despesaRecorrenteSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const despesasRecorrentesControllerFindByFornecedorPathParamsSchema = z.object({
-      "fornecedorId": z.coerce.number().describe("ID do fornecedor")
-      }) as unknown as ToZod<DespesasRecorrentesControllerFindByFornecedorPathParams>
+    "fornecedorId": z.coerce.number().describe("ID do fornecedor")
+    }) as unknown as z.ZodType<DespesasRecorrentesControllerFindByFornecedorPathParams>
 
 /**
  * @description Lista de despesas recorrentes do fornecedor
  */
-export const despesasRecorrentesControllerFindByFornecedor200Schema = z.array(z.lazy(() => despesaRecorrenteSchema)) as unknown as ToZod<DespesasRecorrentesControllerFindByFornecedor200>
+export const despesasRecorrentesControllerFindByFornecedor200Schema = z.array(despesaRecorrenteSchema) as unknown as z.ZodType<DespesasRecorrentesControllerFindByFornecedor200>
 
 /**
  * @description Não autorizado
  */
-export const despesasRecorrentesControllerFindByFornecedor401Schema = z.unknown() as unknown as ToZod<DespesasRecorrentesControllerFindByFornecedor401>
+export const despesasRecorrentesControllerFindByFornecedor401Schema = z.unknown() as unknown as z.ZodType<DespesasRecorrentesControllerFindByFornecedor401>
 
-export const despesasRecorrentesControllerFindByFornecedorQueryResponseSchema = z.lazy(() => despesasRecorrentesControllerFindByFornecedor200Schema) as unknown as ToZod<DespesasRecorrentesControllerFindByFornecedorQueryResponse>
+export const despesasRecorrentesControllerFindByFornecedorQueryResponseSchema = despesasRecorrentesControllerFindByFornecedor200Schema as unknown as z.ZodType<DespesasRecorrentesControllerFindByFornecedorQueryResponse>

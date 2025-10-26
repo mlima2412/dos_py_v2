@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { CanalOrigemControllerActivateMutationResponse, CanalOrigemControllerActivatePathParams, CanalOrigemControllerActivate404 } from "../types/CanalOrigemControllerActivate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const canalOrigemControllerActivateMutationKey = () =>   [{"url":"/canal-origem/{publicId}/ativar"}] as const
+export const canalOrigemControllerActivateMutationKey = () => [{ url: '/canal-origem/:publicId/ativar' }] as const
 
 export type CanalOrigemControllerActivateMutationKey = ReturnType<typeof canalOrigemControllerActivateMutationKey>
 
@@ -18,11 +18,20 @@ export type CanalOrigemControllerActivateMutationKey = ReturnType<typeof canalOr
  * {@link /canal-origem/:publicId/ativar}
  */
 export async function canalOrigemControllerActivate(publicId: CanalOrigemControllerActivatePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<CanalOrigemControllerActivateMutationResponse, ResponseErrorConfig<CanalOrigemControllerActivate404>, unknown>({ method : "PATCH", url : `/canal-origem/${publicId}/ativar`, ... requestConfig })  
+  return res.data
+}
 
-
-const res = await request<CanalOrigemControllerActivateMutationResponse, ResponseErrorConfig<CanalOrigemControllerActivate404>, unknown>({ method : "PATCH", url : `/canal-origem/${publicId}/ativar`, ... requestConfig })
-return res.data
+export function canalOrigemControllerActivateMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = canalOrigemControllerActivateMutationKey()
+  return mutationOptions<CanalOrigemControllerActivateMutationResponse, ResponseErrorConfig<CanalOrigemControllerActivate404>, {publicId: CanalOrigemControllerActivatePathParams["publicId"]}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId }) => {
+      return canalOrigemControllerActivate(publicId, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /canal-origem/:publicId/ativar}
  */
 export function useCanalOrigemControllerActivate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<CanalOrigemControllerActivateMutationResponse, ResponseErrorConfig<CanalOrigemControllerActivate404>, {publicId: CanalOrigemControllerActivatePathParams["publicId"]}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? canalOrigemControllerActivateMutationKey()
-  
-          return useMutation<CanalOrigemControllerActivateMutationResponse, ResponseErrorConfig<CanalOrigemControllerActivate404>, {publicId: CanalOrigemControllerActivatePathParams["publicId"]}, TContext>({
-            mutationFn: async({ publicId }) => {
-              return canalOrigemControllerActivate(publicId, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<CanalOrigemControllerActivateMutationResponse, ResponseErrorConfig<CanalOrigemControllerActivate404>, {publicId: CanalOrigemControllerActivatePathParams["publicId"]}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? canalOrigemControllerActivateMutationKey()
+
+  const baseOptions = canalOrigemControllerActivateMutationOptions(config) as UseMutationOptions<CanalOrigemControllerActivateMutationResponse, ResponseErrorConfig<CanalOrigemControllerActivate404>, {publicId: CanalOrigemControllerActivatePathParams["publicId"]}, TContext>
+
+  return useMutation<CanalOrigemControllerActivateMutationResponse, ResponseErrorConfig<CanalOrigemControllerActivate404>, {publicId: CanalOrigemControllerActivatePathParams["publicId"]}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<CanalOrigemControllerActivateMutationResponse, ResponseErrorConfig<CanalOrigemControllerActivate404>, {publicId: CanalOrigemControllerActivatePathParams["publicId"]}, TContext>
 }

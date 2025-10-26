@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { CategoriaDespesasControllerUpdateMutationRequest, CategoriaDespesasControllerUpdateMutationResponse, CategoriaDespesasControllerUpdatePathParams, CategoriaDespesasControllerUpdate401, CategoriaDespesasControllerUpdate404, CategoriaDespesasControllerUpdate409 } from "../types/CategoriaDespesasControllerUpdate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const categoriaDespesasControllerUpdateMutationKey = () =>   [{"url":"/categoria-despesas/{id}"}] as const
+export const categoriaDespesasControllerUpdateMutationKey = () => [{ url: '/categoria-despesas/:id' }] as const
 
 export type CategoriaDespesasControllerUpdateMutationKey = ReturnType<typeof categoriaDespesasControllerUpdateMutationKey>
 
@@ -18,11 +18,22 @@ export type CategoriaDespesasControllerUpdateMutationKey = ReturnType<typeof cat
  * {@link /categoria-despesas/:id}
  */
 export async function categoriaDespesasControllerUpdate(id: CategoriaDespesasControllerUpdatePathParams["id"], data: CategoriaDespesasControllerUpdateMutationRequest, config: Partial<RequestConfig<CategoriaDespesasControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<CategoriaDespesasControllerUpdateMutationResponse, ResponseErrorConfig<CategoriaDespesasControllerUpdate401 | CategoriaDespesasControllerUpdate404 | CategoriaDespesasControllerUpdate409>, CategoriaDespesasControllerUpdateMutationRequest>({ method : "PATCH", url : `/categoria-despesas/${id}`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<CategoriaDespesasControllerUpdateMutationResponse, ResponseErrorConfig<CategoriaDespesasControllerUpdate401 | CategoriaDespesasControllerUpdate404 | CategoriaDespesasControllerUpdate409>, CategoriaDespesasControllerUpdateMutationRequest>({ method : "PATCH", url : `/categoria-despesas/${id}`, data : requestData, ... requestConfig })
-return res.data
+export function categoriaDespesasControllerUpdateMutationOptions(config: Partial<RequestConfig<CategoriaDespesasControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = categoriaDespesasControllerUpdateMutationKey()
+  return mutationOptions<CategoriaDespesasControllerUpdateMutationResponse, ResponseErrorConfig<CategoriaDespesasControllerUpdate401 | CategoriaDespesasControllerUpdate404 | CategoriaDespesasControllerUpdate409>, {id: CategoriaDespesasControllerUpdatePathParams["id"], data: CategoriaDespesasControllerUpdateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ id, data }) => {
+      return categoriaDespesasControllerUpdate(id, data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /categoria-despesas/:id}
  */
 export function useCategoriaDespesasControllerUpdate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<CategoriaDespesasControllerUpdateMutationResponse, ResponseErrorConfig<CategoriaDespesasControllerUpdate401 | CategoriaDespesasControllerUpdate404 | CategoriaDespesasControllerUpdate409>, {id: CategoriaDespesasControllerUpdatePathParams["id"], data: CategoriaDespesasControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<CategoriaDespesasControllerUpdateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? categoriaDespesasControllerUpdateMutationKey()
-  
-          return useMutation<CategoriaDespesasControllerUpdateMutationResponse, ResponseErrorConfig<CategoriaDespesasControllerUpdate401 | CategoriaDespesasControllerUpdate404 | CategoriaDespesasControllerUpdate409>, {id: CategoriaDespesasControllerUpdatePathParams["id"], data: CategoriaDespesasControllerUpdateMutationRequest}, TContext>({
-            mutationFn: async({ id, data }) => {
-              return categoriaDespesasControllerUpdate(id, data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<CategoriaDespesasControllerUpdateMutationResponse, ResponseErrorConfig<CategoriaDespesasControllerUpdate401 | CategoriaDespesasControllerUpdate404 | CategoriaDespesasControllerUpdate409>, {id: CategoriaDespesasControllerUpdatePathParams["id"], data: CategoriaDespesasControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<CategoriaDespesasControllerUpdateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? categoriaDespesasControllerUpdateMutationKey()
+
+  const baseOptions = categoriaDespesasControllerUpdateMutationOptions(config) as UseMutationOptions<CategoriaDespesasControllerUpdateMutationResponse, ResponseErrorConfig<CategoriaDespesasControllerUpdate401 | CategoriaDespesasControllerUpdate404 | CategoriaDespesasControllerUpdate409>, {id: CategoriaDespesasControllerUpdatePathParams["id"], data: CategoriaDespesasControllerUpdateMutationRequest}, TContext>
+
+  return useMutation<CategoriaDespesasControllerUpdateMutationResponse, ResponseErrorConfig<CategoriaDespesasControllerUpdate401 | CategoriaDespesasControllerUpdate404 | CategoriaDespesasControllerUpdate409>, {id: CategoriaDespesasControllerUpdatePathParams["id"], data: CategoriaDespesasControllerUpdateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<CategoriaDespesasControllerUpdateMutationResponse, ResponseErrorConfig<CategoriaDespesasControllerUpdate401 | CategoriaDespesasControllerUpdate404 | CategoriaDespesasControllerUpdate409>, {id: CategoriaDespesasControllerUpdatePathParams["id"], data: CategoriaDespesasControllerUpdateMutationRequest}, TContext>
 }

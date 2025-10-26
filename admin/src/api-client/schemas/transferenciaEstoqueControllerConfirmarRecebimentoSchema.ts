@@ -4,34 +4,33 @@
 */
 
 import type { TransferenciaEstoqueControllerConfirmarRecebimentoPathParams, TransferenciaEstoqueControllerConfirmarRecebimentoHeaderParams, TransferenciaEstoqueControllerConfirmarRecebimento200, TransferenciaEstoqueControllerConfirmarRecebimento404, TransferenciaEstoqueControllerConfirmarRecebimento409, TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest, TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse } from "../types/TransferenciaEstoqueControllerConfirmarRecebimento.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { confirmarRecebimentoDtoSchema } from "./confirmarRecebimentoDtoSchema.ts";
 import { transferenciaEstoqueResponseDtoSchema } from "./transferenciaEstoqueResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const transferenciaEstoqueControllerConfirmarRecebimentoPathParamsSchema = z.object({
-      "id": z.string().describe("ID da transferência")
-      }) as unknown as ToZod<TransferenciaEstoqueControllerConfirmarRecebimentoPathParams>
+    "id": z.string().describe("ID da transferência")
+    }) as unknown as z.ZodType<TransferenciaEstoqueControllerConfirmarRecebimentoPathParams>
 
 export const transferenciaEstoqueControllerConfirmarRecebimentoHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
-      }) as unknown as ToZod<TransferenciaEstoqueControllerConfirmarRecebimentoHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+    }) as unknown as z.ZodType<TransferenciaEstoqueControllerConfirmarRecebimentoHeaderParams>
 
 /**
  * @description Recebimento confirmado com sucesso
  */
-export const transferenciaEstoqueControllerConfirmarRecebimento200Schema = z.lazy(() => transferenciaEstoqueResponseDtoSchema) as unknown as ToZod<TransferenciaEstoqueControllerConfirmarRecebimento200>
+export const transferenciaEstoqueControllerConfirmarRecebimento200Schema = transferenciaEstoqueResponseDtoSchema as unknown as z.ZodType<TransferenciaEstoqueControllerConfirmarRecebimento200>
 
 /**
  * @description Transferência não encontrada
  */
-export const transferenciaEstoqueControllerConfirmarRecebimento404Schema = z.unknown() as unknown as ToZod<TransferenciaEstoqueControllerConfirmarRecebimento404>
+export const transferenciaEstoqueControllerConfirmarRecebimento404Schema = z.unknown() as unknown as z.ZodType<TransferenciaEstoqueControllerConfirmarRecebimento404>
 
 /**
  * @description Transferência já foi recebida
  */
-export const transferenciaEstoqueControllerConfirmarRecebimento409Schema = z.unknown() as unknown as ToZod<TransferenciaEstoqueControllerConfirmarRecebimento409>
+export const transferenciaEstoqueControllerConfirmarRecebimento409Schema = z.unknown() as unknown as z.ZodType<TransferenciaEstoqueControllerConfirmarRecebimento409>
 
-export const transferenciaEstoqueControllerConfirmarRecebimentoMutationRequestSchema = z.lazy(() => confirmarRecebimentoDtoSchema) as unknown as ToZod<TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest>
+export const transferenciaEstoqueControllerConfirmarRecebimentoMutationRequestSchema = confirmarRecebimentoDtoSchema as unknown as z.ZodType<TransferenciaEstoqueControllerConfirmarRecebimentoMutationRequest>
 
-export const transferenciaEstoqueControllerConfirmarRecebimentoMutationResponseSchema = z.lazy(() => transferenciaEstoqueControllerConfirmarRecebimento200Schema) as unknown as ToZod<TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse>
+export const transferenciaEstoqueControllerConfirmarRecebimentoMutationResponseSchema = transferenciaEstoqueControllerConfirmarRecebimento200Schema as unknown as z.ZodType<TransferenciaEstoqueControllerConfirmarRecebimentoMutationResponse>

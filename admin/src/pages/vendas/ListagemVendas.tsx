@@ -33,8 +33,10 @@ import { usePartner } from "@/hooks/usePartner";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useVendaControllerPaginate } from "@/api-client";
 import type { Venda } from "@/api-client/types";
-
-export const ListagemVendas: React.FC = () => {
+interface ListagemVendasProps {
+	tipo: "all" | "pedido" | "venda" | "condicional" | "parcelamento";
+}
+export const ListagemVendas: React.FC<ListagemVendasProps> = ({ tipo }) => {
 	const { t } = useTranslation("common");
 	const { selectedPartnerId, selectedPartnerLocale, selectedPartnerIsoCode } =
 		usePartner();
@@ -71,7 +73,43 @@ export const ListagemVendas: React.FC = () => {
 
 		let vendas = [...vendasData.data];
 
-		// Filtrar por tipo de venda
+		// Filtrar por tipo de página (parâmetro da rota)
+		if (tipo !== "all") {
+			switch (tipo) {
+				case "pedido":
+					// Pedidos em aberto: status PEDIDO ou ABERTA
+					vendas = vendas.filter(venda => venda.status === "PEDIDO");
+					break;
+				case "venda":
+					// Vendas realizadas: status CONFIRMADA, CONFIRMADA_PARCIAL ou CONFIRMADA_TOTAL
+					vendas = vendas.filter(
+						venda =>
+							venda.status === "CONFIRMADA" ||
+							venda.status === "CONFIRMADA_PARCIAL" ||
+							venda.status === "CONFIRMADA_TOTAL"
+					);
+					break;
+				case "condicional":
+					// Condicionais: tipo CONDICIONAL
+					vendas = vendas.filter(
+						venda => venda.tipo === "CONDICIONAL" && venda.status !== "PEDIDO"
+					);
+					break;
+				case "parcelamento":
+					// Parcelamentos: vendas que possuem parcelamento
+					// TODO: Implementar filtro quando houver relação com parcelamento
+					// Por enquanto, filtra vendas confirmadas
+					vendas = vendas.filter(
+						venda =>
+							venda.status === "CONFIRMADA" ||
+							venda.status === "CONFIRMADA_PARCIAL" ||
+							venda.status === "CONFIRMADA_TOTAL"
+					);
+					break;
+			}
+		}
+
+		// Filtrar por tipo de venda (select no formulário)
 		if (tipoVenda !== "all") {
 			vendas = vendas.filter(venda => venda.tipo === tipoVenda);
 		}
@@ -102,7 +140,7 @@ export const ListagemVendas: React.FC = () => {
 		}
 
 		return vendas;
-	}, [vendasData, debouncedSearchTerm, tipoVenda, sortByCliente]);
+	}, [vendasData, debouncedSearchTerm, tipoVenda, sortByCliente, tipo]);
 
 	// Calcular paginação
 	const totalItems = vendasData?.total || 0;
@@ -201,6 +239,22 @@ export const ListagemVendas: React.FC = () => {
 		);
 	}
 
+	// Determinar título da página baseado no tipo
+	const getPageTitle = () => {
+		switch (tipo) {
+			case "pedido":
+				return t("menu.openOrders");
+			case "venda":
+				return t("menu.completedSales");
+			case "condicional":
+				return t("menu.conditionals");
+			case "parcelamento":
+				return t("menu.installments");
+			default:
+				return t("salesOrders.breadcrumb.salesOrders");
+		}
+	};
+
 	return (
 		<DashboardLayout>
 			<div className="space-y-6">
@@ -215,9 +269,7 @@ export const ListagemVendas: React.FC = () => {
 							</BreadcrumbItem>
 							<BreadcrumbSeparator />
 							<BreadcrumbItem>
-								<BreadcrumbPage>
-									{t("salesOrders.breadcrumb.salesOrders")}
-								</BreadcrumbPage>
+								<BreadcrumbPage>{getPageTitle()}</BreadcrumbPage>
 							</BreadcrumbItem>
 						</BreadcrumbList>
 					</Breadcrumb>
@@ -350,14 +402,18 @@ export const ListagemVendas: React.FC = () => {
 															>
 																<Eye className="h-4 w-4" />
 															</Button>
-															<Button
-																variant="ghost"
-																size="icon"
-																onClick={() => handleEditVenda(venda.publicId)}
-																title={t("salesOrders.actions.edit")}
-															>
-																<Pencil className="h-4 w-4" />
-															</Button>
+															{venda.status === "PEDIDO" && (
+																<Button
+																	variant="ghost"
+																	size="icon"
+																	onClick={() =>
+																		handleEditVenda(venda.publicId)
+																	}
+																	title={t("salesOrders.actions.edit")}
+																>
+																	<Pencil className="h-4 w-4" />
+																</Button>
+															)}
 														</div>
 													</TableCell>
 												</TableRow>

@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const conferenciaEstoqueControllerFindAllQueryKey = () =>   [{ url: '/conferencia-estoque' }] as const
+export const conferenciaEstoqueControllerFindAllQueryKey = () => [{ url: '/conferencia-estoque' }] as const
 
 export type ConferenciaEstoqueControllerFindAllQueryKey = ReturnType<typeof conferenciaEstoqueControllerFindAllQueryKey>
 
@@ -18,25 +18,22 @@ export type ConferenciaEstoqueControllerFindAllQueryKey = ReturnType<typeof conf
  * {@link /conferencia-estoque}
  */
 export async function conferenciaEstoqueControllerFindAll(headers: ConferenciaEstoqueControllerFindAllHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ConferenciaEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/conferencia-estoque`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ConferenciaEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/conferencia-estoque`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function conferenciaEstoqueControllerFindAllQueryOptions(headers: ConferenciaEstoqueControllerFindAllHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = conferenciaEstoqueControllerFindAllQueryKey()
-        return queryOptions<ConferenciaEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, ConferenciaEstoqueControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return conferenciaEstoqueControllerFindAll(headers, config)
-         },
-        })
-  
+  const queryKey = conferenciaEstoqueControllerFindAllQueryKey()
+  return queryOptions<ConferenciaEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, ConferenciaEstoqueControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return conferenciaEstoqueControllerFindAll(headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function conferenciaEstoqueControllerFindAllQueryOptions(headers: Confere
  * {@link /conferencia-estoque}
  */
 export function useConferenciaEstoqueControllerFindAll<TData = ConferenciaEstoqueControllerFindAllQueryResponse, TQueryData = ConferenciaEstoqueControllerFindAllQueryResponse, TQueryKey extends QueryKey = ConferenciaEstoqueControllerFindAllQueryKey>(headers: ConferenciaEstoqueControllerFindAllHeaderParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<ConferenciaEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? conferenciaEstoqueControllerFindAllQueryKey()
-  
-         const query = useQuery({
-          ...conferenciaEstoqueControllerFindAllQueryOptions(headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<ConferenciaEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? conferenciaEstoqueControllerFindAllQueryKey()
+
+  const query = useQuery({
+   ...conferenciaEstoqueControllerFindAllQueryOptions(headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

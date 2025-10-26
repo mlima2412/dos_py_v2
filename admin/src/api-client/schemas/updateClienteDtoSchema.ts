@@ -4,29 +4,26 @@
 */
 
 import type { UpdateClienteDto } from "../types/UpdateClienteDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const updateClienteDtoSchema = z.object({
-      "id": z.coerce.number().describe("ID do cliente").optional(),
-  "publicId": z.coerce.string().describe("Public ID do cliente").optional(),
-  "nome": z.coerce.string().describe("Nome do cliente").optional(),
-  "sobrenome": z.coerce.string().describe("Sobrenome do cliente").optional(),
-  "email": z.coerce.string().describe("Email do cliente").optional(),
-  "redeSocial": z.coerce.string().describe("Rede social do cliente").optional(),
-  "celular": z.coerce.string().describe("Celular do cliente").optional(),
-  "ruccnpj": z.coerce.string().describe("RUC/CNPJ do cliente").optional(),
-  "ruccnpjSecundario": z.coerce.string().describe("RUC/CNPJ secundario do cliente").optional(),
-  "nomeFatura": z.coerce.string().describe("Nome da fatura do cliente").optional(),
-  "endereco": z.coerce.string().describe("Endereço do cliente").optional(),
-  "cidade": z.coerce.string().describe("Cidade do cliente").optional(),
-  "cep": z.coerce.string().describe("CEP do cliente").optional(),
-  "observacoes": z.coerce.string().describe("Observações sobre o cliente").optional(),
-  "linguagem": z.enum(["Espanol", "Portugues"]).default("Espanol").describe("Linguagem preferida do cliente"),
-  "ativo": z.boolean().default(true).describe("Status ativo do cliente"),
-  "parceiroId": z.coerce.number().describe("ID do parceiro associado").optional(),
-  "canalOrigemId": z.coerce.number().describe("ID do canal de origem").optional(),
-  "createdAt": z.string().datetime().describe("Data de criação do cliente").optional(),
-  "updatedAt": z.string().datetime().describe("Data de atualização do cliente").optional(),
-  "ultimaCompra": z.string().datetime().describe("Data da última compra do cliente").optional()
-      }) as unknown as ToZod<UpdateClienteDto>
+    "id": z.optional(z.coerce.number().describe("ID do cliente")),
+"publicId": z.optional(z.coerce.string().describe("Public ID do cliente")),
+"nome": z.optional(z.coerce.string().describe("Nome do cliente")),
+"sobrenome": z.optional(z.coerce.string().describe("Sobrenome do cliente")),
+"email": z.optional(z.coerce.string().describe("Email do cliente")),
+"redeSocial": z.optional(z.coerce.string().describe("Rede social do cliente")),
+"celular": z.optional(z.coerce.string().describe("Celular do cliente")),
+"ruccnpj": z.optional(z.coerce.string().describe("RUC/CNPJ do cliente")),
+"endereco": z.optional(z.coerce.string().describe("Endereço do cliente")),
+"cidade": z.optional(z.coerce.string().describe("Cidade do cliente")),
+"cep": z.optional(z.coerce.string().describe("CEP do cliente")),
+"observacoes": z.optional(z.coerce.string().describe("Observações sobre o cliente")),
+"linguagem": z.optional(z.enum(["Espanol", "Portugues"]).default("Espanol").describe("Linguagem preferida do cliente")),
+"ativo": z.optional(z.boolean().default(true).describe("Status ativo do cliente")),
+"parceiroId": z.optional(z.coerce.number().describe("ID do parceiro associado")),
+"canalOrigemId": z.optional(z.coerce.number().describe("ID do canal de origem")),
+"createdAt": z.optional(z.string().datetime().describe("Data de criação do cliente")),
+"updatedAt": z.optional(z.string().datetime().describe("Data de atualização do cliente")),
+"ultimaCompra": z.optional(z.string().datetime().describe("Data da última compra do cliente"))
+    }) as unknown as z.ZodType<UpdateClienteDto>

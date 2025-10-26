@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const produtoHistoricoPrecoControllerFindOneSuspenseQueryKey = (id: ProdutoHistoricoPrecoControllerFindOnePathParams["id"]) =>   [{ url: '/produto-historico-preco/:id', params: {id:id} }] as const
+export const produtoHistoricoPrecoControllerFindOneSuspenseQueryKey = (id: ProdutoHistoricoPrecoControllerFindOnePathParams["id"]) => [{ url: '/produto-historico-preco/:id', params: {id:id} }] as const
 
 export type ProdutoHistoricoPrecoControllerFindOneSuspenseQueryKey = ReturnType<typeof produtoHistoricoPrecoControllerFindOneSuspenseQueryKey>
 
@@ -19,25 +19,22 @@ export type ProdutoHistoricoPrecoControllerFindOneSuspenseQueryKey = ReturnType<
  * {@link /produto-historico-preco/:id}
  */
 export async function produtoHistoricoPrecoControllerFindOneSuspense(id: ProdutoHistoricoPrecoControllerFindOnePathParams["id"], headers: ProdutoHistoricoPrecoControllerFindOneHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ProdutoHistoricoPrecoControllerFindOneQueryResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerFindOne404>, unknown>({ method : "GET", url : `/produto-historico-preco/${id}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ProdutoHistoricoPrecoControllerFindOneQueryResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerFindOne404>, unknown>({ method : "GET", url : `/produto-historico-preco/${id}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function produtoHistoricoPrecoControllerFindOneSuspenseQueryOptions(id: ProdutoHistoricoPrecoControllerFindOnePathParams["id"], headers: ProdutoHistoricoPrecoControllerFindOneHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = produtoHistoricoPrecoControllerFindOneSuspenseQueryKey(id)
-        return queryOptions<ProdutoHistoricoPrecoControllerFindOneQueryResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerFindOne404>, ProdutoHistoricoPrecoControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(id),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return produtoHistoricoPrecoControllerFindOneSuspense(id, headers, config)
-         },
-        })
-  
+  const queryKey = produtoHistoricoPrecoControllerFindOneSuspenseQueryKey(id)
+  return queryOptions<ProdutoHistoricoPrecoControllerFindOneQueryResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerFindOne404>, ProdutoHistoricoPrecoControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(id),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return produtoHistoricoPrecoControllerFindOneSuspense(id, headers, config)
+   },
+  })
 }
 
 /**
@@ -46,23 +43,22 @@ export function produtoHistoricoPrecoControllerFindOneSuspenseQueryOptions(id: P
  * {@link /produto-historico-preco/:id}
  */
 export function useProdutoHistoricoPrecoControllerFindOneSuspense<TData = ProdutoHistoricoPrecoControllerFindOneQueryResponse, TQueryKey extends QueryKey = ProdutoHistoricoPrecoControllerFindOneSuspenseQueryKey>(id: ProdutoHistoricoPrecoControllerFindOnePathParams["id"], headers: ProdutoHistoricoPrecoControllerFindOneHeaderParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<ProdutoHistoricoPrecoControllerFindOneQueryResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? produtoHistoricoPrecoControllerFindOneSuspenseQueryKey(id)
-  
-         const query = useSuspenseQuery({
-          ...produtoHistoricoPrecoControllerFindOneSuspenseQueryOptions(id, headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<ProdutoHistoricoPrecoControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<ProdutoHistoricoPrecoControllerFindOneQueryResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? produtoHistoricoPrecoControllerFindOneSuspenseQueryKey(id)
+
+  const query = useSuspenseQuery({
+   ...produtoHistoricoPrecoControllerFindOneSuspenseQueryOptions(id, headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<ProdutoHistoricoPrecoControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

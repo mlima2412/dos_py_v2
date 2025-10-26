@@ -4,25 +4,32 @@
 */
 
 import type { ProdutosPorLocalResponseDto } from "../types/ProdutosPorLocalResponseDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { categoriaResponseDtoSchema } from "./categoriaResponseDtoSchema.ts";
 import { currencyResponseDtoSchema } from "./currencyResponseDtoSchema.ts";
 import { fornecedorResponseDtoSchema } from "./fornecedorResponseDtoSchema.ts";
 import { produtoSKUEstoqueResponseDtoSchema } from "./produtoSKUEstoqueResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const produtosPorLocalResponseDtoSchema = z.object({
-      "id": z.coerce.number().describe("ID do produto"),
-  "publicId": z.coerce.string().describe("ID público do produto"),
-  "nome": z.coerce.string().describe("Nome do produto"),
-  "descricao": z.coerce.string().describe("Descrição do produto").optional(),
-  "imgURL": z.coerce.string().describe("URL da imagem do produto").optional(),
-  "precoVenda": z.coerce.number().describe("Preço de venda"),
-  "precoCompra": z.coerce.number().describe("Preço de compra"),
-  "ativo": z.boolean().describe("Status ativo do produto"),
-  "consignado": z.boolean().describe("Produto consignado"),
-  "categoria": z.lazy(() => categoriaResponseDtoSchema).describe("Categoria do produto").optional(),
-  "fornecedor": z.lazy(() => fornecedorResponseDtoSchema).describe("Fornecedor do produto").optional(),
-  "currency": z.lazy(() => currencyResponseDtoSchema).describe("Moeda do produto").optional(),
-  "ProdutoSKU": z.array(z.lazy(() => produtoSKUEstoqueResponseDtoSchema)).describe("SKUs do produto com informações de estoque")
-      }) as unknown as ToZod<ProdutosPorLocalResponseDto>
+    "id": z.coerce.number().describe("ID do produto"),
+"publicId": z.coerce.string().describe("ID público do produto"),
+"nome": z.coerce.string().describe("Nome do produto"),
+"descricao": z.optional(z.coerce.string().describe("Descrição do produto")),
+"imgURL": z.optional(z.coerce.string().describe("URL da imagem do produto")),
+"precoVenda": z.coerce.number().describe("Preço de venda"),
+"precoCompra": z.coerce.number().describe("Preço de compra"),
+"ativo": z.boolean().describe("Status ativo do produto"),
+"consignado": z.boolean().describe("Produto consignado"),
+get "categoria"(){
+                return z.optional(categoriaResponseDtoSchema.describe("Categoria do produto"))
+              },
+get "fornecedor"(){
+                return z.optional(fornecedorResponseDtoSchema.describe("Fornecedor do produto"))
+              },
+get "currency"(){
+                return z.optional(currencyResponseDtoSchema.describe("Moeda do produto"))
+              },
+get "ProdutoSKU"(){
+                return z.array(produtoSKUEstoqueResponseDtoSchema).describe("SKUs do produto com informações de estoque")
+              }
+    }) as unknown as z.ZodType<ProdutosPorLocalResponseDto>

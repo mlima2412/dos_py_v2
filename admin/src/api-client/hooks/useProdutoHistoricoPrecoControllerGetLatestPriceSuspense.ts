@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const produtoHistoricoPrecoControllerGetLatestPriceSuspenseQueryKey = (produtoId: ProdutoHistoricoPrecoControllerGetLatestPricePathParams["produtoId"]) =>   [{ url: '/produto-historico-preco/produto/:produtoId/latest', params: {produtoId:produtoId} }] as const
+export const produtoHistoricoPrecoControllerGetLatestPriceSuspenseQueryKey = (produtoId: ProdutoHistoricoPrecoControllerGetLatestPricePathParams["produtoId"]) => [{ url: '/produto-historico-preco/produto/:produtoId/latest', params: {produtoId:produtoId} }] as const
 
 export type ProdutoHistoricoPrecoControllerGetLatestPriceSuspenseQueryKey = ReturnType<typeof produtoHistoricoPrecoControllerGetLatestPriceSuspenseQueryKey>
 
@@ -19,25 +19,22 @@ export type ProdutoHistoricoPrecoControllerGetLatestPriceSuspenseQueryKey = Retu
  * {@link /produto-historico-preco/produto/:produtoId/latest}
  */
 export async function produtoHistoricoPrecoControllerGetLatestPriceSuspense(produtoId: ProdutoHistoricoPrecoControllerGetLatestPricePathParams["produtoId"], headers: ProdutoHistoricoPrecoControllerGetLatestPriceHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ProdutoHistoricoPrecoControllerGetLatestPriceQueryResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerGetLatestPrice404>, unknown>({ method : "GET", url : `/produto-historico-preco/produto/${produtoId}/latest`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ProdutoHistoricoPrecoControllerGetLatestPriceQueryResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerGetLatestPrice404>, unknown>({ method : "GET", url : `/produto-historico-preco/produto/${produtoId}/latest`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function produtoHistoricoPrecoControllerGetLatestPriceSuspenseQueryOptions(produtoId: ProdutoHistoricoPrecoControllerGetLatestPricePathParams["produtoId"], headers: ProdutoHistoricoPrecoControllerGetLatestPriceHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = produtoHistoricoPrecoControllerGetLatestPriceSuspenseQueryKey(produtoId)
-        return queryOptions<ProdutoHistoricoPrecoControllerGetLatestPriceQueryResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerGetLatestPrice404>, ProdutoHistoricoPrecoControllerGetLatestPriceQueryResponse, typeof queryKey>({
-         enabled: !!(produtoId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return produtoHistoricoPrecoControllerGetLatestPriceSuspense(produtoId, headers, config)
-         },
-        })
-  
+  const queryKey = produtoHistoricoPrecoControllerGetLatestPriceSuspenseQueryKey(produtoId)
+  return queryOptions<ProdutoHistoricoPrecoControllerGetLatestPriceQueryResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerGetLatestPrice404>, ProdutoHistoricoPrecoControllerGetLatestPriceQueryResponse, typeof queryKey>({
+   enabled: !!(produtoId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return produtoHistoricoPrecoControllerGetLatestPriceSuspense(produtoId, headers, config)
+   },
+  })
 }
 
 /**
@@ -46,23 +43,22 @@ export function produtoHistoricoPrecoControllerGetLatestPriceSuspenseQueryOption
  * {@link /produto-historico-preco/produto/:produtoId/latest}
  */
 export function useProdutoHistoricoPrecoControllerGetLatestPriceSuspense<TData = ProdutoHistoricoPrecoControllerGetLatestPriceQueryResponse, TQueryKey extends QueryKey = ProdutoHistoricoPrecoControllerGetLatestPriceSuspenseQueryKey>(produtoId: ProdutoHistoricoPrecoControllerGetLatestPricePathParams["produtoId"], headers: ProdutoHistoricoPrecoControllerGetLatestPriceHeaderParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<ProdutoHistoricoPrecoControllerGetLatestPriceQueryResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerGetLatestPrice404>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? produtoHistoricoPrecoControllerGetLatestPriceSuspenseQueryKey(produtoId)
-  
-         const query = useSuspenseQuery({
-          ...produtoHistoricoPrecoControllerGetLatestPriceSuspenseQueryOptions(produtoId, headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<ProdutoHistoricoPrecoControllerGetLatestPrice404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<ProdutoHistoricoPrecoControllerGetLatestPriceQueryResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerGetLatestPrice404>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? produtoHistoricoPrecoControllerGetLatestPriceSuspenseQueryKey(produtoId)
+
+  const query = useSuspenseQuery({
+   ...produtoHistoricoPrecoControllerGetLatestPriceSuspenseQueryOptions(produtoId, headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<ProdutoHistoricoPrecoControllerGetLatestPrice404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

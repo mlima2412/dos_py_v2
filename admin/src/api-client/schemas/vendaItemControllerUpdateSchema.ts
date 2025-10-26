@@ -4,28 +4,27 @@
 */
 
 import type { VendaItemControllerUpdatePathParams, VendaItemControllerUpdateQueryParams, VendaItemControllerUpdateHeaderParams, VendaItemControllerUpdate200, VendaItemControllerUpdateMutationRequest, VendaItemControllerUpdateMutationResponse } from "../types/VendaItemControllerUpdate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { updateVendaItemDtoSchema } from "./updateVendaItemDtoSchema.ts";
 import { vendaItemEntitySchema } from "./vendaItemEntitySchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const vendaItemControllerUpdatePathParamsSchema = z.object({
-      "id": z.string().describe("ID do item")
-      }) as unknown as ToZod<VendaItemControllerUpdatePathParams>
+    "id": z.string().describe("ID do item")
+    }) as unknown as z.ZodType<VendaItemControllerUpdatePathParams>
 
 export const vendaItemControllerUpdateQueryParamsSchema = z.object({
-      "vendaId": z.string()
-      }) as unknown as ToZod<VendaItemControllerUpdateQueryParams>
+    "vendaId": z.string()
+    }) as unknown as z.ZodType<VendaItemControllerUpdateQueryParams>
 
 export const vendaItemControllerUpdateHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<VendaItemControllerUpdateHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<VendaItemControllerUpdateHeaderParams>
 
 /**
  * @description Item atualizado
  */
-export const vendaItemControllerUpdate200Schema = z.lazy(() => vendaItemEntitySchema) as unknown as ToZod<VendaItemControllerUpdate200>
+export const vendaItemControllerUpdate200Schema = vendaItemEntitySchema as unknown as z.ZodType<VendaItemControllerUpdate200>
 
-export const vendaItemControllerUpdateMutationRequestSchema = z.lazy(() => updateVendaItemDtoSchema) as unknown as ToZod<VendaItemControllerUpdateMutationRequest>
+export const vendaItemControllerUpdateMutationRequestSchema = updateVendaItemDtoSchema as unknown as z.ZodType<VendaItemControllerUpdateMutationRequest>
 
-export const vendaItemControllerUpdateMutationResponseSchema = z.lazy(() => vendaItemControllerUpdate200Schema) as unknown as ToZod<VendaItemControllerUpdateMutationResponse>
+export const vendaItemControllerUpdateMutationResponseSchema = vendaItemControllerUpdate200Schema as unknown as z.ZodType<VendaItemControllerUpdateMutationResponse>

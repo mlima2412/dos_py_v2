@@ -12,7 +12,7 @@ export const createConferenciaEstoqueDtoStatusEnum = {
     "CANCELADA": "CANCELADA"
 } as const;
 
-export type CreateConferenciaEstoqueDtoStatusEnum = (typeof createConferenciaEstoqueDtoStatusEnum)[keyof typeof createConferenciaEstoqueDtoStatusEnum];
+export type CreateConferenciaEstoqueDtoStatusEnumKey = (typeof createConferenciaEstoqueDtoStatusEnum)[keyof typeof createConferenciaEstoqueDtoStatusEnum];
 
 export type CreateConferenciaEstoqueDto = {
     /**
@@ -40,5 +40,5 @@ export type CreateConferenciaEstoqueDto = {
      * @default "PENDENTE"
      * @type string | undefined
     */
-    status?: CreateConferenciaEstoqueDtoStatusEnum;
+    status?: CreateConferenciaEstoqueDtoStatusEnumKey;
 };

@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const pedidoCompraControllerImprimeEtiquetasPedidoCompraSuspenseQueryKey = (publicId: PedidoCompraControllerImprimeEtiquetasPedidoCompraPathParams["publicId"]) =>   [{ url: '/pedido-compra/etiquetas/:publicId', params: {publicId:publicId} }] as const
+export const pedidoCompraControllerImprimeEtiquetasPedidoCompraSuspenseQueryKey = (publicId: PedidoCompraControllerImprimeEtiquetasPedidoCompraPathParams["publicId"]) => [{ url: '/pedido-compra/etiquetas/:publicId', params: {publicId:publicId} }] as const
 
 export type PedidoCompraControllerImprimeEtiquetasPedidoCompraSuspenseQueryKey = ReturnType<typeof pedidoCompraControllerImprimeEtiquetasPedidoCompraSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type PedidoCompraControllerImprimeEtiquetasPedidoCompraSuspenseQueryKey =
  * {@link /pedido-compra/etiquetas/:publicId}
  */
 export async function pedidoCompraControllerImprimeEtiquetasPedidoCompraSuspense(publicId: PedidoCompraControllerImprimeEtiquetasPedidoCompraPathParams["publicId"], headers: PedidoCompraControllerImprimeEtiquetasPedidoCompraHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<PedidoCompraControllerImprimeEtiquetasPedidoCompraQueryResponse, ResponseErrorConfig<PedidoCompraControllerImprimeEtiquetasPedidoCompra404>, unknown>({ method : "GET", url : `/pedido-compra/etiquetas/${publicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<PedidoCompraControllerImprimeEtiquetasPedidoCompraQueryResponse, ResponseErrorConfig<PedidoCompraControllerImprimeEtiquetasPedidoCompra404>, unknown>({ method : "GET", url : `/pedido-compra/etiquetas/${publicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function pedidoCompraControllerImprimeEtiquetasPedidoCompraSuspenseQueryOptions(publicId: PedidoCompraControllerImprimeEtiquetasPedidoCompraPathParams["publicId"], headers: PedidoCompraControllerImprimeEtiquetasPedidoCompraHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = pedidoCompraControllerImprimeEtiquetasPedidoCompraSuspenseQueryKey(publicId)
-        return queryOptions<PedidoCompraControllerImprimeEtiquetasPedidoCompraQueryResponse, ResponseErrorConfig<PedidoCompraControllerImprimeEtiquetasPedidoCompra404>, PedidoCompraControllerImprimeEtiquetasPedidoCompraQueryResponse, typeof queryKey>({
-         enabled: !!(publicId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return pedidoCompraControllerImprimeEtiquetasPedidoCompraSuspense(publicId, headers, config)
-         },
-        })
-  
+  const queryKey = pedidoCompraControllerImprimeEtiquetasPedidoCompraSuspenseQueryKey(publicId)
+  return queryOptions<PedidoCompraControllerImprimeEtiquetasPedidoCompraQueryResponse, ResponseErrorConfig<PedidoCompraControllerImprimeEtiquetasPedidoCompra404>, PedidoCompraControllerImprimeEtiquetasPedidoCompraQueryResponse, typeof queryKey>({
+   enabled: !!(publicId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return pedidoCompraControllerImprimeEtiquetasPedidoCompraSuspense(publicId, headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function pedidoCompraControllerImprimeEtiquetasPedidoCompraSuspenseQueryO
  * {@link /pedido-compra/etiquetas/:publicId}
  */
 export function usePedidoCompraControllerImprimeEtiquetasPedidoCompraSuspense<TData = PedidoCompraControllerImprimeEtiquetasPedidoCompraQueryResponse, TQueryKey extends QueryKey = PedidoCompraControllerImprimeEtiquetasPedidoCompraSuspenseQueryKey>(publicId: PedidoCompraControllerImprimeEtiquetasPedidoCompraPathParams["publicId"], headers: PedidoCompraControllerImprimeEtiquetasPedidoCompraHeaderParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<PedidoCompraControllerImprimeEtiquetasPedidoCompraQueryResponse, ResponseErrorConfig<PedidoCompraControllerImprimeEtiquetasPedidoCompra404>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? pedidoCompraControllerImprimeEtiquetasPedidoCompraSuspenseQueryKey(publicId)
-  
-         const query = useSuspenseQuery({
-          ...pedidoCompraControllerImprimeEtiquetasPedidoCompraSuspenseQueryOptions(publicId, headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<PedidoCompraControllerImprimeEtiquetasPedidoCompra404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<PedidoCompraControllerImprimeEtiquetasPedidoCompraQueryResponse, ResponseErrorConfig<PedidoCompraControllerImprimeEtiquetasPedidoCompra404>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? pedidoCompraControllerImprimeEtiquetasPedidoCompraSuspenseQueryKey(publicId)
+
+  const query = useSuspenseQuery({
+   ...pedidoCompraControllerImprimeEtiquetasPedidoCompraSuspenseQueryOptions(publicId, headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<PedidoCompraControllerImprimeEtiquetasPedidoCompra404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

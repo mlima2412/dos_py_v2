@@ -4,11 +4,10 @@
 */
 
 import type { CreateCanalOrigemDto } from "../types/CreateCanalOrigemDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const createCanalOrigemDtoSchema = z.object({
-      "nome": z.coerce.string().describe("Nome do canal de origem"),
-  "descricao": z.coerce.string().describe("Descrição do canal de origem").optional(),
-  "ativo": z.boolean().default(true).describe("Status ativo do canal de origem")
-      }) as unknown as ToZod<CreateCanalOrigemDto>
+    "nome": z.coerce.string().describe("Nome do canal de origem"),
+"descricao": z.optional(z.coerce.string().describe("Descrição do canal de origem")),
+"ativo": z.optional(z.boolean().default(true).describe("Status ativo do canal de origem"))
+    }) as unknown as z.ZodType<CreateCanalOrigemDto>

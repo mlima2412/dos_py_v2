@@ -25,8 +25,6 @@ export const createClienteFormSchema = (t: (key: string) => string) =>
 		cep: z.string().optional(),
 		observacoes: z.string().optional(),
 		ativo: z.boolean(),
-		ruccnpjSecundario: z.string().optional(),
-		nomeFatura: z.string().optional(),
 	});
 
 export type ClienteFormData = z.infer<

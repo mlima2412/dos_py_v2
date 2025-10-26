@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const clientesControllerFindByCanalOrigemSuspenseQueryKey = (canalOrigemId: ClientesControllerFindByCanalOrigemPathParams["canalOrigemId"]) =>   [{ url: '/clientes/canal-origem/:canalOrigemId', params: {canalOrigemId:canalOrigemId} }] as const
+export const clientesControllerFindByCanalOrigemSuspenseQueryKey = (canalOrigemId: ClientesControllerFindByCanalOrigemPathParams["canalOrigemId"]) => [{ url: '/clientes/canal-origem/:canalOrigemId', params: {canalOrigemId:canalOrigemId} }] as const
 
 export type ClientesControllerFindByCanalOrigemSuspenseQueryKey = ReturnType<typeof clientesControllerFindByCanalOrigemSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type ClientesControllerFindByCanalOrigemSuspenseQueryKey = ReturnType<typ
  * {@link /clientes/canal-origem/:canalOrigemId}
  */
 export async function clientesControllerFindByCanalOrigemSuspense(canalOrigemId: ClientesControllerFindByCanalOrigemPathParams["canalOrigemId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ClientesControllerFindByCanalOrigemQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/clientes/canal-origem/${canalOrigemId}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ClientesControllerFindByCanalOrigemQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/clientes/canal-origem/${canalOrigemId}`, ... requestConfig })  
+  return res.data
 }
 
 export function clientesControllerFindByCanalOrigemSuspenseQueryOptions(canalOrigemId: ClientesControllerFindByCanalOrigemPathParams["canalOrigemId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = clientesControllerFindByCanalOrigemSuspenseQueryKey(canalOrigemId)
-        return queryOptions<ClientesControllerFindByCanalOrigemQueryResponse, ResponseErrorConfig<Error>, ClientesControllerFindByCanalOrigemQueryResponse, typeof queryKey>({
-         enabled: !!(canalOrigemId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return clientesControllerFindByCanalOrigemSuspense(canalOrigemId, config)
-         },
-        })
-  
+  const queryKey = clientesControllerFindByCanalOrigemSuspenseQueryKey(canalOrigemId)
+  return queryOptions<ClientesControllerFindByCanalOrigemQueryResponse, ResponseErrorConfig<Error>, ClientesControllerFindByCanalOrigemQueryResponse, typeof queryKey>({
+   enabled: !!(canalOrigemId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return clientesControllerFindByCanalOrigemSuspense(canalOrigemId, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function clientesControllerFindByCanalOrigemSuspenseQueryOptions(canalOri
  * {@link /clientes/canal-origem/:canalOrigemId}
  */
 export function useClientesControllerFindByCanalOrigemSuspense<TData = ClientesControllerFindByCanalOrigemQueryResponse, TQueryKey extends QueryKey = ClientesControllerFindByCanalOrigemSuspenseQueryKey>(canalOrigemId: ClientesControllerFindByCanalOrigemPathParams["canalOrigemId"], options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<ClientesControllerFindByCanalOrigemQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? clientesControllerFindByCanalOrigemSuspenseQueryKey(canalOrigemId)
-  
-         const query = useSuspenseQuery({
-          ...clientesControllerFindByCanalOrigemSuspenseQueryOptions(canalOrigemId, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<ClientesControllerFindByCanalOrigemQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? clientesControllerFindByCanalOrigemSuspenseQueryKey(canalOrigemId)
+
+  const query = useSuspenseQuery({
+   ...clientesControllerFindByCanalOrigemSuspenseQueryOptions(canalOrigemId, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

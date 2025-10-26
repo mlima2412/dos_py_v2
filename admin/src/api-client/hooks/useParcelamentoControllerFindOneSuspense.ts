@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const parcelamentoControllerFindOneSuspenseQueryKey = (id: ParcelamentoControllerFindOnePathParams["id"]) =>   [{ url: '/parcelamento/:id', params: {id:id} }] as const
+export const parcelamentoControllerFindOneSuspenseQueryKey = (id: ParcelamentoControllerFindOnePathParams["id"]) => [{ url: '/parcelamento/:id', params: {id:id} }] as const
 
 export type ParcelamentoControllerFindOneSuspenseQueryKey = ReturnType<typeof parcelamentoControllerFindOneSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type ParcelamentoControllerFindOneSuspenseQueryKey = ReturnType<typeof pa
  * {@link /parcelamento/:id}
  */
 export async function parcelamentoControllerFindOneSuspense(id: ParcelamentoControllerFindOnePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ParcelamentoControllerFindOneQueryResponse, ResponseErrorConfig<ParcelamentoControllerFindOne404>, unknown>({ method : "GET", url : `/parcelamento/${id}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ParcelamentoControllerFindOneQueryResponse, ResponseErrorConfig<ParcelamentoControllerFindOne404>, unknown>({ method : "GET", url : `/parcelamento/${id}`, ... requestConfig })  
+  return res.data
 }
 
 export function parcelamentoControllerFindOneSuspenseQueryOptions(id: ParcelamentoControllerFindOnePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = parcelamentoControllerFindOneSuspenseQueryKey(id)
-        return queryOptions<ParcelamentoControllerFindOneQueryResponse, ResponseErrorConfig<ParcelamentoControllerFindOne404>, ParcelamentoControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(id),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return parcelamentoControllerFindOneSuspense(id, config)
-         },
-        })
-  
+  const queryKey = parcelamentoControllerFindOneSuspenseQueryKey(id)
+  return queryOptions<ParcelamentoControllerFindOneQueryResponse, ResponseErrorConfig<ParcelamentoControllerFindOne404>, ParcelamentoControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(id),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return parcelamentoControllerFindOneSuspense(id, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function parcelamentoControllerFindOneSuspenseQueryOptions(id: Parcelamen
  * {@link /parcelamento/:id}
  */
 export function useParcelamentoControllerFindOneSuspense<TData = ParcelamentoControllerFindOneQueryResponse, TQueryKey extends QueryKey = ParcelamentoControllerFindOneSuspenseQueryKey>(id: ParcelamentoControllerFindOnePathParams["id"], options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<ParcelamentoControllerFindOneQueryResponse, ResponseErrorConfig<ParcelamentoControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? parcelamentoControllerFindOneSuspenseQueryKey(id)
-  
-         const query = useSuspenseQuery({
-          ...parcelamentoControllerFindOneSuspenseQueryOptions(id, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<ParcelamentoControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<ParcelamentoControllerFindOneQueryResponse, ResponseErrorConfig<ParcelamentoControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? parcelamentoControllerFindOneSuspenseQueryKey(id)
+
+  const query = useSuspenseQuery({
+   ...parcelamentoControllerFindOneSuspenseQueryOptions(id, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<ParcelamentoControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

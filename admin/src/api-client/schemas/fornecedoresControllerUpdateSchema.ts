@@ -4,42 +4,41 @@
 */
 
 import type { FornecedoresControllerUpdatePathParams, FornecedoresControllerUpdateHeaderParams, FornecedoresControllerUpdate200, FornecedoresControllerUpdate400, FornecedoresControllerUpdate404, FornecedoresControllerUpdate409, FornecedoresControllerUpdateMutationRequest, FornecedoresControllerUpdateMutationResponse } from "../types/FornecedoresControllerUpdate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { fornecedorSchema } from "./fornecedorSchema.ts";
 import { updateFornecedorDtoSchema } from "./updateFornecedorDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const fornecedoresControllerUpdatePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do fornecedor (UUID v7)")
-      }) as unknown as ToZod<FornecedoresControllerUpdatePathParams>
+    "publicId": z.string().describe("ID público do fornecedor (UUID v7)")
+    }) as unknown as z.ZodType<FornecedoresControllerUpdatePathParams>
 
 export const fornecedoresControllerUpdateHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.string().describe("ID do parceiro")
-      }) as unknown as ToZod<FornecedoresControllerUpdateHeaderParams>
+    "x-parceiro-id": z.string().describe("ID do parceiro")
+    }) as unknown as z.ZodType<FornecedoresControllerUpdateHeaderParams>
 
 /**
  * @description Fornecedor atualizado com sucesso
  */
-export const fornecedoresControllerUpdate200Schema = z.lazy(() => fornecedorSchema) as unknown as ToZod<FornecedoresControllerUpdate200>
+export const fornecedoresControllerUpdate200Schema = fornecedorSchema as unknown as z.ZodType<FornecedoresControllerUpdate200>
 
 /**
  * @description Header x-parceiro-id é obrigatório
  */
-export const fornecedoresControllerUpdate400Schema = z.unknown() as unknown as ToZod<FornecedoresControllerUpdate400>
+export const fornecedoresControllerUpdate400Schema = z.unknown() as unknown as z.ZodType<FornecedoresControllerUpdate400>
 
 /**
  * @description Fornecedor não encontrado
  */
-export const fornecedoresControllerUpdate404Schema = z.unknown() as unknown as ToZod<FornecedoresControllerUpdate404>
+export const fornecedoresControllerUpdate404Schema = z.unknown() as unknown as z.ZodType<FornecedoresControllerUpdate404>
 
 /**
  * @description Email ou RUC/CNPJ já está em uso
  */
-export const fornecedoresControllerUpdate409Schema = z.unknown() as unknown as ToZod<FornecedoresControllerUpdate409>
+export const fornecedoresControllerUpdate409Schema = z.unknown() as unknown as z.ZodType<FornecedoresControllerUpdate409>
 
 /**
  * @description Dados para atualização do fornecedor
  */
-export const fornecedoresControllerUpdateMutationRequestSchema = z.lazy(() => updateFornecedorDtoSchema) as unknown as ToZod<FornecedoresControllerUpdateMutationRequest>
+export const fornecedoresControllerUpdateMutationRequestSchema = updateFornecedorDtoSchema as unknown as z.ZodType<FornecedoresControllerUpdateMutationRequest>
 
-export const fornecedoresControllerUpdateMutationResponseSchema = z.lazy(() => fornecedoresControllerUpdate200Schema) as unknown as ToZod<FornecedoresControllerUpdateMutationResponse>
+export const fornecedoresControllerUpdateMutationResponseSchema = fornecedoresControllerUpdate200Schema as unknown as z.ZodType<FornecedoresControllerUpdateMutationResponse>

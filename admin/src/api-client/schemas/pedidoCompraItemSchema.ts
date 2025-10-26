@@ -4,21 +4,22 @@
 */
 
 import type { PedidoCompraItem } from "../types/PedidoCompraItem.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { iSchema } from "./iSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const pedidoCompraItemSchema = z.object({
-      "id": z.coerce.number().describe("ID único do item do pedido de compra"),
-  "pedidoCompraId": z.coerce.number().describe("ID do pedido de compra"),
-  "skuId": z.coerce.number().describe("ID do SKU do produto"),
-  "qtd": z.coerce.number().describe("Quantidade do item"),
-  "precoCompra": z.lazy(() => iSchema).describe("Preço de compra unitário"),
-  "observacao": z.coerce.string().describe("Observações do item").optional(),
-  "pedidoCompra": z.object({
-      
-      }).describe("Dados do pedido de compra").optional(),
-  "ProdutoSKU": z.object({
-      
-      }).describe("Dados do produto SKU").optional()
-      }) as unknown as ToZod<PedidoCompraItem>
+    "id": z.coerce.number().describe("ID único do item do pedido de compra"),
+"pedidoCompraId": z.coerce.number().describe("ID do pedido de compra"),
+"skuId": z.coerce.number().describe("ID do SKU do produto"),
+"qtd": z.coerce.number().describe("Quantidade do item"),
+get "precoCompra"(){
+                return iSchema.describe("Preço de compra unitário")
+              },
+"observacao": z.optional(z.coerce.string().describe("Observações do item")),
+"pedidoCompra": z.optional(z.object({
+    
+    }).describe("Dados do pedido de compra")),
+"ProdutoSKU": z.optional(z.object({
+    
+    }).describe("Dados do produto SKU"))
+    }) as unknown as z.ZodType<PedidoCompraItem>

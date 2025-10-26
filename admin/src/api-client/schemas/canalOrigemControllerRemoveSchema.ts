@@ -4,26 +4,25 @@
 */
 
 import type { CanalOrigemControllerRemovePathParams, CanalOrigemControllerRemove204, CanalOrigemControllerRemove400, CanalOrigemControllerRemove404, CanalOrigemControllerRemoveMutationResponse } from "../types/CanalOrigemControllerRemove.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const canalOrigemControllerRemovePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do canal de origem")
-      }) as unknown as ToZod<CanalOrigemControllerRemovePathParams>
+    "publicId": z.string().describe("ID público do canal de origem")
+    }) as unknown as z.ZodType<CanalOrigemControllerRemovePathParams>
 
 /**
  * @description Canal de origem excluído com sucesso
  */
-export const canalOrigemControllerRemove204Schema = z.unknown() as unknown as ToZod<CanalOrigemControllerRemove204>
+export const canalOrigemControllerRemove204Schema = z.unknown() as unknown as z.ZodType<CanalOrigemControllerRemove204>
 
 /**
  * @description Canal de origem não pode ser removido pois possui clientes associados
  */
-export const canalOrigemControllerRemove400Schema = z.unknown() as unknown as ToZod<CanalOrigemControllerRemove400>
+export const canalOrigemControllerRemove400Schema = z.unknown() as unknown as z.ZodType<CanalOrigemControllerRemove400>
 
 /**
  * @description Canal de origem não encontrado
  */
-export const canalOrigemControllerRemove404Schema = z.unknown() as unknown as ToZod<CanalOrigemControllerRemove404>
+export const canalOrigemControllerRemove404Schema = z.unknown() as unknown as z.ZodType<CanalOrigemControllerRemove404>
 
-export const canalOrigemControllerRemoveMutationResponseSchema = z.lazy(() => canalOrigemControllerRemove204Schema) as unknown as ToZod<CanalOrigemControllerRemoveMutationResponse>
+export const canalOrigemControllerRemoveMutationResponseSchema = canalOrigemControllerRemove204Schema as unknown as z.ZodType<CanalOrigemControllerRemoveMutationResponse>

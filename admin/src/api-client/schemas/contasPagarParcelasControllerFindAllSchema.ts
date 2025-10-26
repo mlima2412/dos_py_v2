@@ -4,13 +4,12 @@
 */
 
 import type { ContasPagarParcelasControllerFindAll200, ContasPagarParcelasControllerFindAllQueryResponse } from "../types/ContasPagarParcelasControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { contasPagarParcelasSchema } from "./contasPagarParcelasSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Lista de parcelas.
  */
-export const contasPagarParcelasControllerFindAll200Schema = z.array(z.lazy(() => contasPagarParcelasSchema)) as unknown as ToZod<ContasPagarParcelasControllerFindAll200>
+export const contasPagarParcelasControllerFindAll200Schema = z.array(contasPagarParcelasSchema) as unknown as z.ZodType<ContasPagarParcelasControllerFindAll200>
 
-export const contasPagarParcelasControllerFindAllQueryResponseSchema = z.lazy(() => contasPagarParcelasControllerFindAll200Schema) as unknown as ToZod<ContasPagarParcelasControllerFindAllQueryResponse>
+export const contasPagarParcelasControllerFindAllQueryResponseSchema = contasPagarParcelasControllerFindAll200Schema as unknown as z.ZodType<ContasPagarParcelasControllerFindAllQueryResponse>

@@ -4,31 +4,30 @@
 */
 
 import type { UsuarioParceiroControllerCreate201, UsuarioParceiroControllerCreate400, UsuarioParceiroControllerCreate404, UsuarioParceiroControllerCreate409, UsuarioParceiroControllerCreateMutationRequest, UsuarioParceiroControllerCreateMutationResponse } from "../types/UsuarioParceiroControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createUsuarioParceiroDtoSchema } from "./createUsuarioParceiroDtoSchema.ts";
 import { usuarioParceiroSchema } from "./usuarioParceiroSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Relação usuário-parceiro criada com sucesso
  */
-export const usuarioParceiroControllerCreate201Schema = z.lazy(() => usuarioParceiroSchema) as unknown as ToZod<UsuarioParceiroControllerCreate201>
+export const usuarioParceiroControllerCreate201Schema = usuarioParceiroSchema as unknown as z.ZodType<UsuarioParceiroControllerCreate201>
 
 /**
  * @description Dados inválidos
  */
-export const usuarioParceiroControllerCreate400Schema = z.unknown() as unknown as ToZod<UsuarioParceiroControllerCreate400>
+export const usuarioParceiroControllerCreate400Schema = z.unknown() as unknown as z.ZodType<UsuarioParceiroControllerCreate400>
 
 /**
  * @description Usuário ou parceiro não encontrado
  */
-export const usuarioParceiroControllerCreate404Schema = z.unknown() as unknown as ToZod<UsuarioParceiroControllerCreate404>
+export const usuarioParceiroControllerCreate404Schema = z.unknown() as unknown as z.ZodType<UsuarioParceiroControllerCreate404>
 
 /**
  * @description Relação já existe
  */
-export const usuarioParceiroControllerCreate409Schema = z.unknown() as unknown as ToZod<UsuarioParceiroControllerCreate409>
+export const usuarioParceiroControllerCreate409Schema = z.unknown() as unknown as z.ZodType<UsuarioParceiroControllerCreate409>
 
-export const usuarioParceiroControllerCreateMutationRequestSchema = z.lazy(() => createUsuarioParceiroDtoSchema) as unknown as ToZod<UsuarioParceiroControllerCreateMutationRequest>
+export const usuarioParceiroControllerCreateMutationRequestSchema = createUsuarioParceiroDtoSchema as unknown as z.ZodType<UsuarioParceiroControllerCreateMutationRequest>
 
-export const usuarioParceiroControllerCreateMutationResponseSchema = z.lazy(() => usuarioParceiroControllerCreate201Schema) as unknown as ToZod<UsuarioParceiroControllerCreateMutationResponse>
+export const usuarioParceiroControllerCreateMutationResponseSchema = usuarioParceiroControllerCreate201Schema as unknown as z.ZodType<UsuarioParceiroControllerCreateMutationResponse>

@@ -4,26 +4,25 @@
 */
 
 import type { PedidoCompraControllerImprimeEtiquetasPedidoCompraPathParams, PedidoCompraControllerImprimeEtiquetasPedidoCompraHeaderParams, PedidoCompraControllerImprimeEtiquetasPedidoCompra200, PedidoCompraControllerImprimeEtiquetasPedidoCompra404, PedidoCompraControllerImprimeEtiquetasPedidoCompraQueryResponse } from "../types/PedidoCompraControllerImprimeEtiquetasPedidoCompra.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { etiquetaPedidoCompraDtoSchema } from "./etiquetaPedidoCompraDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const pedidoCompraControllerImprimeEtiquetasPedidoCompraPathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do pedido de compra (UUID v7)")
-      }) as unknown as ToZod<PedidoCompraControllerImprimeEtiquetasPedidoCompraPathParams>
+    "publicId": z.string().describe("ID público do pedido de compra (UUID v7)")
+    }) as unknown as z.ZodType<PedidoCompraControllerImprimeEtiquetasPedidoCompraPathParams>
 
 export const pedidoCompraControllerImprimeEtiquetasPedidoCompraHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
-      }) as unknown as ToZod<PedidoCompraControllerImprimeEtiquetasPedidoCompraHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+    }) as unknown as z.ZodType<PedidoCompraControllerImprimeEtiquetasPedidoCompraHeaderParams>
 
 /**
  * @description Pedido de compra encontrado com sucesso
  */
-export const pedidoCompraControllerImprimeEtiquetasPedidoCompra200Schema = z.array(z.lazy(() => etiquetaPedidoCompraDtoSchema)) as unknown as ToZod<PedidoCompraControllerImprimeEtiquetasPedidoCompra200>
+export const pedidoCompraControllerImprimeEtiquetasPedidoCompra200Schema = z.array(etiquetaPedidoCompraDtoSchema) as unknown as z.ZodType<PedidoCompraControllerImprimeEtiquetasPedidoCompra200>
 
 /**
  * @description Pedido de compra não encontrado
  */
-export const pedidoCompraControllerImprimeEtiquetasPedidoCompra404Schema = z.unknown() as unknown as ToZod<PedidoCompraControllerImprimeEtiquetasPedidoCompra404>
+export const pedidoCompraControllerImprimeEtiquetasPedidoCompra404Schema = z.unknown() as unknown as z.ZodType<PedidoCompraControllerImprimeEtiquetasPedidoCompra404>
 
-export const pedidoCompraControllerImprimeEtiquetasPedidoCompraQueryResponseSchema = z.lazy(() => pedidoCompraControllerImprimeEtiquetasPedidoCompra200Schema) as unknown as ToZod<PedidoCompraControllerImprimeEtiquetasPedidoCompraQueryResponse>
+export const pedidoCompraControllerImprimeEtiquetasPedidoCompraQueryResponseSchema = pedidoCompraControllerImprimeEtiquetasPedidoCompra200Schema as unknown as z.ZodType<PedidoCompraControllerImprimeEtiquetasPedidoCompraQueryResponse>

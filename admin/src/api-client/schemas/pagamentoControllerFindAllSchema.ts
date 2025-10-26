@@ -4,21 +4,20 @@
 */
 
 import type { PagamentoControllerFindAllQueryParams, PagamentoControllerFindAllHeaderParams, PagamentoControllerFindAll200, PagamentoControllerFindAllQueryResponse } from "../types/PagamentoControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { pagamentoSchema } from "./pagamentoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const pagamentoControllerFindAllQueryParamsSchema = z.object({
-      "vendaId": z.coerce.number().describe("ID da venda")
-      }) as unknown as ToZod<PagamentoControllerFindAllQueryParams>
+    "vendaId": z.coerce.number().describe("ID da venda")
+    }) as unknown as z.ZodType<PagamentoControllerFindAllQueryParams>
 
 export const pagamentoControllerFindAllHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<PagamentoControllerFindAllHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<PagamentoControllerFindAllHeaderParams>
 
 /**
  * @description Lista de pagamentos
  */
-export const pagamentoControllerFindAll200Schema = z.array(z.lazy(() => pagamentoSchema)) as unknown as ToZod<PagamentoControllerFindAll200>
+export const pagamentoControllerFindAll200Schema = z.array(pagamentoSchema) as unknown as z.ZodType<PagamentoControllerFindAll200>
 
-export const pagamentoControllerFindAllQueryResponseSchema = z.lazy(() => pagamentoControllerFindAll200Schema) as unknown as ToZod<PagamentoControllerFindAllQueryResponse>
+export const pagamentoControllerFindAllQueryResponseSchema = pagamentoControllerFindAll200Schema as unknown as z.ZodType<PagamentoControllerFindAllQueryResponse>

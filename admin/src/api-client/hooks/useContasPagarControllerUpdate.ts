@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ContasPagarControllerUpdateMutationRequest, ContasPagarControllerUpdateMutationResponse, ContasPagarControllerUpdatePathParams, ContasPagarControllerUpdate404 } from "../types/ContasPagarControllerUpdate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const contasPagarControllerUpdateMutationKey = () =>   [{"url":"/contas-pagar/{publicId}"}] as const
+export const contasPagarControllerUpdateMutationKey = () => [{ url: '/contas-pagar/:publicId' }] as const
 
 export type ContasPagarControllerUpdateMutationKey = ReturnType<typeof contasPagarControllerUpdateMutationKey>
 
@@ -18,11 +18,22 @@ export type ContasPagarControllerUpdateMutationKey = ReturnType<typeof contasPag
  * {@link /contas-pagar/:publicId}
  */
 export async function contasPagarControllerUpdate(publicId: ContasPagarControllerUpdatePathParams["publicId"], data?: ContasPagarControllerUpdateMutationRequest, config: Partial<RequestConfig<ContasPagarControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<ContasPagarControllerUpdateMutationResponse, ResponseErrorConfig<ContasPagarControllerUpdate404>, ContasPagarControllerUpdateMutationRequest>({ method : "PATCH", url : `/contas-pagar/${publicId}`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<ContasPagarControllerUpdateMutationResponse, ResponseErrorConfig<ContasPagarControllerUpdate404>, ContasPagarControllerUpdateMutationRequest>({ method : "PATCH", url : `/contas-pagar/${publicId}`, data : requestData, ... requestConfig })
-return res.data
+export function contasPagarControllerUpdateMutationOptions(config: Partial<RequestConfig<ContasPagarControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = contasPagarControllerUpdateMutationKey()
+  return mutationOptions<ContasPagarControllerUpdateMutationResponse, ResponseErrorConfig<ContasPagarControllerUpdate404>, {publicId: ContasPagarControllerUpdatePathParams["publicId"], data?: ContasPagarControllerUpdateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId, data }) => {
+      return contasPagarControllerUpdate(publicId, data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /contas-pagar/:publicId}
  */
 export function useContasPagarControllerUpdate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ContasPagarControllerUpdateMutationResponse, ResponseErrorConfig<ContasPagarControllerUpdate404>, {publicId: ContasPagarControllerUpdatePathParams["publicId"], data?: ContasPagarControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<ContasPagarControllerUpdateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? contasPagarControllerUpdateMutationKey()
-  
-          return useMutation<ContasPagarControllerUpdateMutationResponse, ResponseErrorConfig<ContasPagarControllerUpdate404>, {publicId: ContasPagarControllerUpdatePathParams["publicId"], data?: ContasPagarControllerUpdateMutationRequest}, TContext>({
-            mutationFn: async({ publicId, data }) => {
-              return contasPagarControllerUpdate(publicId, data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ContasPagarControllerUpdateMutationResponse, ResponseErrorConfig<ContasPagarControllerUpdate404>, {publicId: ContasPagarControllerUpdatePathParams["publicId"], data?: ContasPagarControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<ContasPagarControllerUpdateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? contasPagarControllerUpdateMutationKey()
+
+  const baseOptions = contasPagarControllerUpdateMutationOptions(config) as UseMutationOptions<ContasPagarControllerUpdateMutationResponse, ResponseErrorConfig<ContasPagarControllerUpdate404>, {publicId: ContasPagarControllerUpdatePathParams["publicId"], data?: ContasPagarControllerUpdateMutationRequest}, TContext>
+
+  return useMutation<ContasPagarControllerUpdateMutationResponse, ResponseErrorConfig<ContasPagarControllerUpdate404>, {publicId: ContasPagarControllerUpdatePathParams["publicId"], data?: ContasPagarControllerUpdateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ContasPagarControllerUpdateMutationResponse, ResponseErrorConfig<ContasPagarControllerUpdate404>, {publicId: ContasPagarControllerUpdatePathParams["publicId"], data?: ContasPagarControllerUpdateMutationRequest}, TContext>
 }

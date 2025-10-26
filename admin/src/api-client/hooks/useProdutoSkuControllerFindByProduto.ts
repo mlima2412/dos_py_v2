@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const produtoSkuControllerFindByProdutoQueryKey = (produtoPublicId: ProdutoSkuControllerFindByProdutoPathParams["produtoPublicId"]) =>   [{ url: '/produto-sku/produto/:produtoPublicId', params: {produtoPublicId:produtoPublicId} }] as const
+export const produtoSkuControllerFindByProdutoQueryKey = (produtoPublicId: ProdutoSkuControllerFindByProdutoPathParams["produtoPublicId"]) => [{ url: '/produto-sku/produto/:produtoPublicId', params: {produtoPublicId:produtoPublicId} }] as const
 
 export type ProdutoSkuControllerFindByProdutoQueryKey = ReturnType<typeof produtoSkuControllerFindByProdutoQueryKey>
 
@@ -18,25 +18,22 @@ export type ProdutoSkuControllerFindByProdutoQueryKey = ReturnType<typeof produt
  * {@link /produto-sku/produto/:produtoPublicId}
  */
 export async function produtoSkuControllerFindByProduto(produtoPublicId: ProdutoSkuControllerFindByProdutoPathParams["produtoPublicId"], headers: ProdutoSkuControllerFindByProdutoHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ProdutoSkuControllerFindByProdutoQueryResponse, ResponseErrorConfig<ProdutoSkuControllerFindByProduto404>, unknown>({ method : "GET", url : `/produto-sku/produto/${produtoPublicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ProdutoSkuControllerFindByProdutoQueryResponse, ResponseErrorConfig<ProdutoSkuControllerFindByProduto404>, unknown>({ method : "GET", url : `/produto-sku/produto/${produtoPublicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function produtoSkuControllerFindByProdutoQueryOptions(produtoPublicId: ProdutoSkuControllerFindByProdutoPathParams["produtoPublicId"], headers: ProdutoSkuControllerFindByProdutoHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = produtoSkuControllerFindByProdutoQueryKey(produtoPublicId)
-        return queryOptions<ProdutoSkuControllerFindByProdutoQueryResponse, ResponseErrorConfig<ProdutoSkuControllerFindByProduto404>, ProdutoSkuControllerFindByProdutoQueryResponse, typeof queryKey>({
-         enabled: !!(produtoPublicId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return produtoSkuControllerFindByProduto(produtoPublicId, headers, config)
-         },
-        })
-  
+  const queryKey = produtoSkuControllerFindByProdutoQueryKey(produtoPublicId)
+  return queryOptions<ProdutoSkuControllerFindByProdutoQueryResponse, ResponseErrorConfig<ProdutoSkuControllerFindByProduto404>, ProdutoSkuControllerFindByProdutoQueryResponse, typeof queryKey>({
+   enabled: !!(produtoPublicId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return produtoSkuControllerFindByProduto(produtoPublicId, headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function produtoSkuControllerFindByProdutoQueryOptions(produtoPublicId: P
  * {@link /produto-sku/produto/:produtoPublicId}
  */
 export function useProdutoSkuControllerFindByProduto<TData = ProdutoSkuControllerFindByProdutoQueryResponse, TQueryData = ProdutoSkuControllerFindByProdutoQueryResponse, TQueryKey extends QueryKey = ProdutoSkuControllerFindByProdutoQueryKey>(produtoPublicId: ProdutoSkuControllerFindByProdutoPathParams["produtoPublicId"], headers: ProdutoSkuControllerFindByProdutoHeaderParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<ProdutoSkuControllerFindByProdutoQueryResponse, ResponseErrorConfig<ProdutoSkuControllerFindByProduto404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? produtoSkuControllerFindByProdutoQueryKey(produtoPublicId)
-  
-         const query = useQuery({
-          ...produtoSkuControllerFindByProdutoQueryOptions(produtoPublicId, headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<ProdutoSkuControllerFindByProduto404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<ProdutoSkuControllerFindByProdutoQueryResponse, ResponseErrorConfig<ProdutoSkuControllerFindByProduto404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? produtoSkuControllerFindByProdutoQueryKey(produtoPublicId)
+
+  const query = useQuery({
+   ...produtoSkuControllerFindByProdutoQueryOptions(produtoPublicId, headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<ProdutoSkuControllerFindByProduto404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { VendaItemControllerUpdateMutationRequest, VendaItemControllerUpdateMutationResponse, VendaItemControllerUpdatePathParams, VendaItemControllerUpdateQueryParams, VendaItemControllerUpdateHeaderParams } from "../types/VendaItemControllerUpdate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const vendaItemControllerUpdateMutationKey = () =>   [{"url":"/venda-item/{id}"}] as const
+export const vendaItemControllerUpdateMutationKey = () => [{ url: '/venda-item/:id' }] as const
 
 export type VendaItemControllerUpdateMutationKey = ReturnType<typeof vendaItemControllerUpdateMutationKey>
 
@@ -18,11 +18,22 @@ export type VendaItemControllerUpdateMutationKey = ReturnType<typeof vendaItemCo
  * {@link /venda-item/:id}
  */
 export async function vendaItemControllerUpdate(id: VendaItemControllerUpdatePathParams["id"], params: VendaItemControllerUpdateQueryParams, headers: VendaItemControllerUpdateHeaderParams, data?: VendaItemControllerUpdateMutationRequest, config: Partial<RequestConfig<VendaItemControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<VendaItemControllerUpdateMutationResponse, ResponseErrorConfig<Error>, VendaItemControllerUpdateMutationRequest>({ method : "PATCH", url : `/venda-item/${id}`, params, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<VendaItemControllerUpdateMutationResponse, ResponseErrorConfig<Error>, VendaItemControllerUpdateMutationRequest>({ method : "PATCH", url : `/venda-item/${id}`, params, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function vendaItemControllerUpdateMutationOptions(config: Partial<RequestConfig<VendaItemControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = vendaItemControllerUpdateMutationKey()
+  return mutationOptions<VendaItemControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {id: VendaItemControllerUpdatePathParams["id"], params: VendaItemControllerUpdateQueryParams, headers: VendaItemControllerUpdateHeaderParams, data?: VendaItemControllerUpdateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ id, params, headers, data }) => {
+      return vendaItemControllerUpdate(id, params, headers, data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /venda-item/:id}
  */
 export function useVendaItemControllerUpdate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<VendaItemControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {id: VendaItemControllerUpdatePathParams["id"], params: VendaItemControllerUpdateQueryParams, headers: VendaItemControllerUpdateHeaderParams, data?: VendaItemControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<VendaItemControllerUpdateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? vendaItemControllerUpdateMutationKey()
-  
-          return useMutation<VendaItemControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {id: VendaItemControllerUpdatePathParams["id"], params: VendaItemControllerUpdateQueryParams, headers: VendaItemControllerUpdateHeaderParams, data?: VendaItemControllerUpdateMutationRequest}, TContext>({
-            mutationFn: async({ id, params, headers, data }) => {
-              return vendaItemControllerUpdate(id, params, headers, data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<VendaItemControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {id: VendaItemControllerUpdatePathParams["id"], params: VendaItemControllerUpdateQueryParams, headers: VendaItemControllerUpdateHeaderParams, data?: VendaItemControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<VendaItemControllerUpdateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? vendaItemControllerUpdateMutationKey()
+
+  const baseOptions = vendaItemControllerUpdateMutationOptions(config) as UseMutationOptions<VendaItemControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {id: VendaItemControllerUpdatePathParams["id"], params: VendaItemControllerUpdateQueryParams, headers: VendaItemControllerUpdateHeaderParams, data?: VendaItemControllerUpdateMutationRequest}, TContext>
+
+  return useMutation<VendaItemControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {id: VendaItemControllerUpdatePathParams["id"], params: VendaItemControllerUpdateQueryParams, headers: VendaItemControllerUpdateHeaderParams, data?: VendaItemControllerUpdateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<VendaItemControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {id: VendaItemControllerUpdatePathParams["id"], params: VendaItemControllerUpdateQueryParams, headers: VendaItemControllerUpdateHeaderParams, data?: VendaItemControllerUpdateMutationRequest}, TContext>
 }

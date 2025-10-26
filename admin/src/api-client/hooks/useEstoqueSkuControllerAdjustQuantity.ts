@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { EstoqueSkuControllerAdjustQuantityMutationResponse, EstoqueSkuControllerAdjustQuantityPathParams, EstoqueSkuControllerAdjustQuantity400, EstoqueSkuControllerAdjustQuantity404 } from "../types/EstoqueSkuControllerAdjustQuantity.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const estoqueSkuControllerAdjustQuantityMutationKey = () =>   [{"url":"/estoque-sku/{localId}/{skuId}/ajustar/{adjustment}"}] as const
+export const estoqueSkuControllerAdjustQuantityMutationKey = () => [{ url: '/estoque-sku/:localId/:skuId/ajustar/:adjustment' }] as const
 
 export type EstoqueSkuControllerAdjustQuantityMutationKey = ReturnType<typeof estoqueSkuControllerAdjustQuantityMutationKey>
 
@@ -18,11 +18,20 @@ export type EstoqueSkuControllerAdjustQuantityMutationKey = ReturnType<typeof es
  * {@link /estoque-sku/:localId/:skuId/ajustar/:adjustment}
  */
 export async function estoqueSkuControllerAdjustQuantity(localId: EstoqueSkuControllerAdjustQuantityPathParams["localId"], skuId: EstoqueSkuControllerAdjustQuantityPathParams["skuId"], adjustment: EstoqueSkuControllerAdjustQuantityPathParams["adjustment"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<EstoqueSkuControllerAdjustQuantityMutationResponse, ResponseErrorConfig<EstoqueSkuControllerAdjustQuantity400 | EstoqueSkuControllerAdjustQuantity404>, unknown>({ method : "PATCH", url : `/estoque-sku/${localId}/${skuId}/ajustar/${adjustment}`, ... requestConfig })  
+  return res.data
+}
 
-
-const res = await request<EstoqueSkuControllerAdjustQuantityMutationResponse, ResponseErrorConfig<EstoqueSkuControllerAdjustQuantity400 | EstoqueSkuControllerAdjustQuantity404>, unknown>({ method : "PATCH", url : `/estoque-sku/${localId}/${skuId}/ajustar/${adjustment}`, ... requestConfig })
-return res.data
+export function estoqueSkuControllerAdjustQuantityMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = estoqueSkuControllerAdjustQuantityMutationKey()
+  return mutationOptions<EstoqueSkuControllerAdjustQuantityMutationResponse, ResponseErrorConfig<EstoqueSkuControllerAdjustQuantity400 | EstoqueSkuControllerAdjustQuantity404>, {localId: EstoqueSkuControllerAdjustQuantityPathParams["localId"], skuId: EstoqueSkuControllerAdjustQuantityPathParams["skuId"], adjustment: EstoqueSkuControllerAdjustQuantityPathParams["adjustment"]}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ localId, skuId, adjustment }) => {
+      return estoqueSkuControllerAdjustQuantity(localId, skuId, adjustment, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /estoque-sku/:localId/:skuId/ajustar/:adjustment}
  */
 export function useEstoqueSkuControllerAdjustQuantity<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<EstoqueSkuControllerAdjustQuantityMutationResponse, ResponseErrorConfig<EstoqueSkuControllerAdjustQuantity400 | EstoqueSkuControllerAdjustQuantity404>, {localId: EstoqueSkuControllerAdjustQuantityPathParams["localId"], skuId: EstoqueSkuControllerAdjustQuantityPathParams["skuId"], adjustment: EstoqueSkuControllerAdjustQuantityPathParams["adjustment"]}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? estoqueSkuControllerAdjustQuantityMutationKey()
-  
-          return useMutation<EstoqueSkuControllerAdjustQuantityMutationResponse, ResponseErrorConfig<EstoqueSkuControllerAdjustQuantity400 | EstoqueSkuControllerAdjustQuantity404>, {localId: EstoqueSkuControllerAdjustQuantityPathParams["localId"], skuId: EstoqueSkuControllerAdjustQuantityPathParams["skuId"], adjustment: EstoqueSkuControllerAdjustQuantityPathParams["adjustment"]}, TContext>({
-            mutationFn: async({ localId, skuId, adjustment }) => {
-              return estoqueSkuControllerAdjustQuantity(localId, skuId, adjustment, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<EstoqueSkuControllerAdjustQuantityMutationResponse, ResponseErrorConfig<EstoqueSkuControllerAdjustQuantity400 | EstoqueSkuControllerAdjustQuantity404>, {localId: EstoqueSkuControllerAdjustQuantityPathParams["localId"], skuId: EstoqueSkuControllerAdjustQuantityPathParams["skuId"], adjustment: EstoqueSkuControllerAdjustQuantityPathParams["adjustment"]}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? estoqueSkuControllerAdjustQuantityMutationKey()
+
+  const baseOptions = estoqueSkuControllerAdjustQuantityMutationOptions(config) as UseMutationOptions<EstoqueSkuControllerAdjustQuantityMutationResponse, ResponseErrorConfig<EstoqueSkuControllerAdjustQuantity400 | EstoqueSkuControllerAdjustQuantity404>, {localId: EstoqueSkuControllerAdjustQuantityPathParams["localId"], skuId: EstoqueSkuControllerAdjustQuantityPathParams["skuId"], adjustment: EstoqueSkuControllerAdjustQuantityPathParams["adjustment"]}, TContext>
+
+  return useMutation<EstoqueSkuControllerAdjustQuantityMutationResponse, ResponseErrorConfig<EstoqueSkuControllerAdjustQuantity400 | EstoqueSkuControllerAdjustQuantity404>, {localId: EstoqueSkuControllerAdjustQuantityPathParams["localId"], skuId: EstoqueSkuControllerAdjustQuantityPathParams["skuId"], adjustment: EstoqueSkuControllerAdjustQuantityPathParams["adjustment"]}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<EstoqueSkuControllerAdjustQuantityMutationResponse, ResponseErrorConfig<EstoqueSkuControllerAdjustQuantity400 | EstoqueSkuControllerAdjustQuantity404>, {localId: EstoqueSkuControllerAdjustQuantityPathParams["localId"], skuId: EstoqueSkuControllerAdjustQuantityPathParams["skuId"], adjustment: EstoqueSkuControllerAdjustQuantityPathParams["adjustment"]}, TContext>
 }

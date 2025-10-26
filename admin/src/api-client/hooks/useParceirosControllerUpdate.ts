@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ParceirosControllerUpdateMutationRequest, ParceirosControllerUpdateMutationResponse, ParceirosControllerUpdatePathParams, ParceirosControllerUpdate404, ParceirosControllerUpdate409 } from "../types/ParceirosControllerUpdate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const parceirosControllerUpdateMutationKey = () =>   [{"url":"/parceiros/{publicId}"}] as const
+export const parceirosControllerUpdateMutationKey = () => [{ url: '/parceiros/:publicId' }] as const
 
 export type ParceirosControllerUpdateMutationKey = ReturnType<typeof parceirosControllerUpdateMutationKey>
 
@@ -18,11 +18,22 @@ export type ParceirosControllerUpdateMutationKey = ReturnType<typeof parceirosCo
  * {@link /parceiros/:publicId}
  */
 export async function parceirosControllerUpdate(publicId: ParceirosControllerUpdatePathParams["publicId"], data?: ParceirosControllerUpdateMutationRequest, config: Partial<RequestConfig<ParceirosControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<ParceirosControllerUpdateMutationResponse, ResponseErrorConfig<ParceirosControllerUpdate404 | ParceirosControllerUpdate409>, ParceirosControllerUpdateMutationRequest>({ method : "PATCH", url : `/parceiros/${publicId}`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<ParceirosControllerUpdateMutationResponse, ResponseErrorConfig<ParceirosControllerUpdate404 | ParceirosControllerUpdate409>, ParceirosControllerUpdateMutationRequest>({ method : "PATCH", url : `/parceiros/${publicId}`, data : requestData, ... requestConfig })
-return res.data
+export function parceirosControllerUpdateMutationOptions(config: Partial<RequestConfig<ParceirosControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = parceirosControllerUpdateMutationKey()
+  return mutationOptions<ParceirosControllerUpdateMutationResponse, ResponseErrorConfig<ParceirosControllerUpdate404 | ParceirosControllerUpdate409>, {publicId: ParceirosControllerUpdatePathParams["publicId"], data?: ParceirosControllerUpdateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId, data }) => {
+      return parceirosControllerUpdate(publicId, data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /parceiros/:publicId}
  */
 export function useParceirosControllerUpdate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ParceirosControllerUpdateMutationResponse, ResponseErrorConfig<ParceirosControllerUpdate404 | ParceirosControllerUpdate409>, {publicId: ParceirosControllerUpdatePathParams["publicId"], data?: ParceirosControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<ParceirosControllerUpdateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? parceirosControllerUpdateMutationKey()
-  
-          return useMutation<ParceirosControllerUpdateMutationResponse, ResponseErrorConfig<ParceirosControllerUpdate404 | ParceirosControllerUpdate409>, {publicId: ParceirosControllerUpdatePathParams["publicId"], data?: ParceirosControllerUpdateMutationRequest}, TContext>({
-            mutationFn: async({ publicId, data }) => {
-              return parceirosControllerUpdate(publicId, data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ParceirosControllerUpdateMutationResponse, ResponseErrorConfig<ParceirosControllerUpdate404 | ParceirosControllerUpdate409>, {publicId: ParceirosControllerUpdatePathParams["publicId"], data?: ParceirosControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<ParceirosControllerUpdateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? parceirosControllerUpdateMutationKey()
+
+  const baseOptions = parceirosControllerUpdateMutationOptions(config) as UseMutationOptions<ParceirosControllerUpdateMutationResponse, ResponseErrorConfig<ParceirosControllerUpdate404 | ParceirosControllerUpdate409>, {publicId: ParceirosControllerUpdatePathParams["publicId"], data?: ParceirosControllerUpdateMutationRequest}, TContext>
+
+  return useMutation<ParceirosControllerUpdateMutationResponse, ResponseErrorConfig<ParceirosControllerUpdate404 | ParceirosControllerUpdate409>, {publicId: ParceirosControllerUpdatePathParams["publicId"], data?: ParceirosControllerUpdateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ParceirosControllerUpdateMutationResponse, ResponseErrorConfig<ParceirosControllerUpdate404 | ParceirosControllerUpdate409>, {publicId: ParceirosControllerUpdatePathParams["publicId"], data?: ParceirosControllerUpdateMutationRequest}, TContext>
 }

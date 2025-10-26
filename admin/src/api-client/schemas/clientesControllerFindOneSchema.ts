@@ -4,22 +4,21 @@
 */
 
 import type { ClientesControllerFindOnePathParams, ClientesControllerFindOne200, ClientesControllerFindOne404, ClientesControllerFindOneQueryResponse } from "../types/ClientesControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { clienteSchema } from "./clienteSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const clientesControllerFindOnePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do cliente")
-      }) as unknown as ToZod<ClientesControllerFindOnePathParams>
+    "publicId": z.string().describe("ID público do cliente")
+    }) as unknown as z.ZodType<ClientesControllerFindOnePathParams>
 
 /**
  * @description Cliente encontrado
  */
-export const clientesControllerFindOne200Schema = z.lazy(() => clienteSchema) as unknown as ToZod<ClientesControllerFindOne200>
+export const clientesControllerFindOne200Schema = clienteSchema as unknown as z.ZodType<ClientesControllerFindOne200>
 
 /**
  * @description Cliente não encontrado
  */
-export const clientesControllerFindOne404Schema = z.unknown() as unknown as ToZod<ClientesControllerFindOne404>
+export const clientesControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<ClientesControllerFindOne404>
 
-export const clientesControllerFindOneQueryResponseSchema = z.lazy(() => clientesControllerFindOne200Schema) as unknown as ToZod<ClientesControllerFindOneQueryResponse>
+export const clientesControllerFindOneQueryResponseSchema = clientesControllerFindOne200Schema as unknown as z.ZodType<ClientesControllerFindOneQueryResponse>

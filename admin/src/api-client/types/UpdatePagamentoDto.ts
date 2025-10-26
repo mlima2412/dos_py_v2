@@ -11,7 +11,7 @@ export const updatePagamentoDtoTipoEnum = {
     "PARCELADO_FLEXIVEL": "PARCELADO_FLEXIVEL"
 } as const;
 
-export type UpdatePagamentoDtoTipoEnum = (typeof updatePagamentoDtoTipoEnum)[keyof typeof updatePagamentoDtoTipoEnum];
+export type UpdatePagamentoDtoTipoEnumKey = (typeof updatePagamentoDtoTipoEnum)[keyof typeof updatePagamentoDtoTipoEnum];
 
 export type UpdatePagamentoDto = {
     /**
@@ -28,7 +28,7 @@ export type UpdatePagamentoDto = {
      * @description Tipo da venda
      * @type string | undefined
     */
-    tipo?: UpdatePagamentoDtoTipoEnum;
+    tipo?: UpdatePagamentoDtoTipoEnumKey;
     /**
      * @description Valor pago
      * @type number | undefined

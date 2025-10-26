@@ -4,24 +4,23 @@
 */
 
 import type { VendaControllerUpdatePathParams, VendaControllerUpdateHeaderParams, VendaControllerUpdate200, VendaControllerUpdateMutationRequest, VendaControllerUpdateMutationResponse } from "../types/VendaControllerUpdate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { updateVendaDtoSchema } from "./updateVendaDtoSchema.ts";
 import { vendaSchema } from "./vendaSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const vendaControllerUpdatePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público da venda")
-      }) as unknown as ToZod<VendaControllerUpdatePathParams>
+    "publicId": z.string().describe("ID público da venda")
+    }) as unknown as z.ZodType<VendaControllerUpdatePathParams>
 
 export const vendaControllerUpdateHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<VendaControllerUpdateHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<VendaControllerUpdateHeaderParams>
 
 /**
  * @description Venda atualizada
  */
-export const vendaControllerUpdate200Schema = z.lazy(() => vendaSchema) as unknown as ToZod<VendaControllerUpdate200>
+export const vendaControllerUpdate200Schema = vendaSchema as unknown as z.ZodType<VendaControllerUpdate200>
 
-export const vendaControllerUpdateMutationRequestSchema = z.lazy(() => updateVendaDtoSchema) as unknown as ToZod<VendaControllerUpdateMutationRequest>
+export const vendaControllerUpdateMutationRequestSchema = updateVendaDtoSchema as unknown as z.ZodType<VendaControllerUpdateMutationRequest>
 
-export const vendaControllerUpdateMutationResponseSchema = z.lazy(() => vendaControllerUpdate200Schema) as unknown as ToZod<VendaControllerUpdateMutationResponse>
+export const vendaControllerUpdateMutationResponseSchema = vendaControllerUpdate200Schema as unknown as z.ZodType<VendaControllerUpdateMutationResponse>

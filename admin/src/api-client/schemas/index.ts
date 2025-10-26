@@ -119,7 +119,7 @@ export { currencySchema } from "./currencySchema.ts";
 export { despesaRecorrenteSchema } from "./despesaRecorrenteSchema.ts";
 export { despesaSchema } from "./despesaSchema.ts";
 export { despesasControllerCreateHeaderParamsSchema, despesasControllerCreate201Schema, despesasControllerCreate400Schema, despesasControllerCreateMutationRequestSchema, despesasControllerCreateMutationResponseSchema } from "./despesasControllerCreateSchema.ts";
-export { despesasControllerFindAllQueryParamsSchema, despesasControllerFindAllHeaderParamsSchema, despesasControllerFindAll200Schema, despesasControllerFindAllQueryResponseSchema } from "./despesasControllerFindAllSchema.ts";
+export { despesasControllerFindAllHeaderParamsSchema, despesasControllerFindAll200Schema, despesasControllerFindAllQueryResponseSchema } from "./despesasControllerFindAllSchema.ts";
 export { despesasControllerFindOnePathParamsSchema, despesasControllerFindOneHeaderParamsSchema, despesasControllerFindOne200Schema, despesasControllerFindOne404Schema, despesasControllerFindOneQueryResponseSchema } from "./despesasControllerFindOneSchema.ts";
 export { despesasControllerFindPaginatedQueryParamsSchema, despesasControllerFindPaginated200Schema, despesasControllerFindPaginatedQueryResponseSchema } from "./despesasControllerFindPaginatedSchema.ts";
 export { despesasControllerListYearsHeaderParamsSchema, despesasControllerListYears200Schema, despesasControllerListYearsQueryResponseSchema } from "./despesasControllerListYearsSchema.ts";
@@ -143,6 +143,7 @@ export { estoqueSkuControllerRemovePathParamsSchema, estoqueSkuControllerRemove2
 export { estoqueSkuControllerUpdatePathParamsSchema, estoqueSkuControllerUpdate200Schema, estoqueSkuControllerUpdate404Schema, estoqueSkuControllerUpdateMutationRequestSchema, estoqueSkuControllerUpdateMutationResponseSchema } from "./estoqueSkuControllerUpdateSchema.ts";
 export { estoqueSkuSchema } from "./estoqueSkuSchema.ts";
 export { etiquetaPedidoCompraDtoSchema } from "./etiquetaPedidoCompraDtoSchema.ts";
+export { finalizeVendaDiretaDtoSchema } from "./finalizeVendaDiretaDtoSchema.ts";
 export { formaPagamentoControllerAtivarPathParamsSchema, formaPagamentoControllerAtivarHeaderParamsSchema, formaPagamentoControllerAtivar200Schema, formaPagamentoControllerAtivar404Schema, formaPagamentoControllerAtivarMutationResponseSchema } from "./formaPagamentoControllerAtivarSchema.ts";
 export { formaPagamentoControllerCreateHeaderParamsSchema, formaPagamentoControllerCreate201Schema, formaPagamentoControllerCreate400Schema, formaPagamentoControllerCreateMutationRequestSchema, formaPagamentoControllerCreateMutationResponseSchema } from "./formaPagamentoControllerCreateSchema.ts";
 export { formaPagamentoControllerFindAllActiveHeaderParamsSchema, formaPagamentoControllerFindAllActive200Schema, formaPagamentoControllerFindAllActiveQueryResponseSchema } from "./formaPagamentoControllerFindAllActiveSchema.ts";
@@ -341,7 +342,9 @@ export { usuariosControllerFindPaginatedQueryParamsSchema, usuariosControllerFin
 export { usuariosControllerInitializeSystem201Schema, usuariosControllerInitializeSystemMutationResponseSchema } from "./usuariosControllerInitializeSystemSchema.ts";
 export { usuariosControllerUpdatePathParamsSchema, usuariosControllerUpdate200Schema, usuariosControllerUpdate400Schema, usuariosControllerUpdate404Schema, usuariosControllerUpdate409Schema, usuariosControllerUpdateMutationRequestSchema, usuariosControllerUpdateMutationResponseSchema } from "./usuariosControllerUpdateSchema.ts";
 export { vendaControllerCreateHeaderParamsSchema, vendaControllerCreate201Schema, vendaControllerCreate400Schema, vendaControllerCreateMutationRequestSchema, vendaControllerCreateMutationResponseSchema } from "./vendaControllerCreateSchema.ts";
+export { vendaControllerFinalizeDiretaPathParamsSchema, vendaControllerFinalizeDiretaHeaderParamsSchema, vendaControllerFinalizeDireta200Schema, vendaControllerFinalizeDiretaMutationRequestSchema, vendaControllerFinalizeDiretaMutationResponseSchema } from "./vendaControllerFinalizeDiretaSchema.ts";
 export { vendaControllerFindAllHeaderParamsSchema, vendaControllerFindAll200Schema, vendaControllerFindAllQueryResponseSchema } from "./vendaControllerFindAllSchema.ts";
+export { vendaControllerFindInvoiceNamesPathParamsSchema, vendaControllerFindInvoiceNamesHeaderParamsSchema, vendaControllerFindInvoiceNames200Schema, vendaControllerFindInvoiceNamesQueryResponseSchema } from "./vendaControllerFindInvoiceNamesSchema.ts";
 export { vendaControllerFindOnePathParamsSchema, vendaControllerFindOneHeaderParamsSchema, vendaControllerFindOne200Schema, vendaControllerFindOne404Schema, vendaControllerFindOneQueryResponseSchema } from "./vendaControllerFindOneSchema.ts";
 export { vendaControllerPaginateQueryParamsSchema, vendaControllerPaginateHeaderParamsSchema, vendaControllerPaginate200Schema, vendaControllerPaginateQueryResponseSchema } from "./vendaControllerPaginateSchema.ts";
 export { vendaControllerRemovePathParamsSchema, vendaControllerRemoveHeaderParamsSchema, vendaControllerRemove204Schema, vendaControllerRemove400Schema, vendaControllerRemove401Schema, vendaControllerRemove403Schema, vendaControllerRemove404Schema, vendaControllerRemoveMutationResponseSchema } from "./vendaControllerRemoveSchema.ts";

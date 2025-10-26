@@ -11,14 +11,14 @@ export const pedidoCompraControllerFindByStatusPathParamsStatusEnum = {
     "3": 3
 } as const;
 
-export type PedidoCompraControllerFindByStatusPathParamsStatusEnum = (typeof pedidoCompraControllerFindByStatusPathParamsStatusEnum)[keyof typeof pedidoCompraControllerFindByStatusPathParamsStatusEnum];
+export type PedidoCompraControllerFindByStatusPathParamsStatusEnumKey = (typeof pedidoCompraControllerFindByStatusPathParamsStatusEnum)[keyof typeof pedidoCompraControllerFindByStatusPathParamsStatusEnum];
 
 export type PedidoCompraControllerFindByStatusPathParams = {
     /**
      * @description Status do pedido de compra
      * @type number
     */
-    status: PedidoCompraControllerFindByStatusPathParamsStatusEnum;
+    status: PedidoCompraControllerFindByStatusPathParamsStatusEnumKey;
 };
 
 export type PedidoCompraControllerFindByStatusHeaderParams = {

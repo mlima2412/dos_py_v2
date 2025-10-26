@@ -4,11 +4,10 @@
 */
 
 import type { TransferenciaEstoqueItemResponseDto } from "../types/TransferenciaEstoqueItemResponseDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const transferenciaEstoqueItemResponseDtoSchema = z.object({
-      "id": z.coerce.number().describe("ID do item da transferência"),
-  "transferenciaId": z.coerce.number().describe("ID da transferência"),
-  "movimentoEstoqueId": z.coerce.number().describe("ID do movimento de estoque")
-      }) as unknown as ToZod<TransferenciaEstoqueItemResponseDto>
+    "id": z.coerce.number().describe("ID do item da transferência"),
+"transferenciaId": z.coerce.number().describe("ID da transferência"),
+"movimentoEstoqueId": z.coerce.number().describe("ID do movimento de estoque")
+    }) as unknown as z.ZodType<TransferenciaEstoqueItemResponseDto>

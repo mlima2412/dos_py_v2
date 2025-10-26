@@ -4,18 +4,19 @@
 */
 
 import type { ProdutoSKU } from "../types/ProdutoSKU.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { produtoSchema } from "./produtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const produtoSKUSchema = z.object({
-      "id": z.coerce.number().describe("ID único do SKU"),
-  "publicId": z.coerce.string().describe("ID público do SKU"),
-  "produtoId": z.coerce.number().describe("ID do produto pai"),
-  "cor": z.coerce.string().describe("Cor do produto").optional(),
-  "codCor": z.coerce.string().describe("Código hexadecimal da cor").optional(),
-  "tamanho": z.coerce.string().describe("Tamanho do produto").optional(),
-  "qtdMinima": z.coerce.number().describe("Quantidade mínima em estoque"),
-  "dataUltimaCompra": z.string().datetime().describe("Data da última compra").optional(),
-  "produto": z.lazy(() => produtoSchema).describe("Produto pai")
-      }) as unknown as ToZod<ProdutoSKU>
+    "id": z.coerce.number().describe("ID único do SKU"),
+"publicId": z.coerce.string().describe("ID público do SKU"),
+"produtoId": z.coerce.number().describe("ID do produto pai"),
+"cor": z.optional(z.coerce.string().describe("Cor do produto")),
+"codCor": z.optional(z.coerce.string().describe("Código hexadecimal da cor")),
+"tamanho": z.optional(z.coerce.string().describe("Tamanho do produto")),
+"qtdMinima": z.coerce.number().describe("Quantidade mínima em estoque"),
+"dataUltimaCompra": z.optional(z.string().datetime().describe("Data da última compra")),
+get "produto"(){
+                return produtoSchema.describe("Produto pai")
+              }
+    }) as unknown as z.ZodType<ProdutoSKU>

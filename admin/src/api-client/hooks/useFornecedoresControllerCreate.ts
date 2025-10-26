@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { FornecedoresControllerCreateMutationRequest, FornecedoresControllerCreateMutationResponse, FornecedoresControllerCreate409 } from "../types/FornecedoresControllerCreate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const fornecedoresControllerCreateMutationKey = () =>   [{"url":"/fornecedores"}] as const
+export const fornecedoresControllerCreateMutationKey = () => [{ url: '/fornecedores' }] as const
 
 export type FornecedoresControllerCreateMutationKey = ReturnType<typeof fornecedoresControllerCreateMutationKey>
 
@@ -18,11 +18,22 @@ export type FornecedoresControllerCreateMutationKey = ReturnType<typeof forneced
  * {@link /fornecedores}
  */
 export async function fornecedoresControllerCreate(data: FornecedoresControllerCreateMutationRequest, config: Partial<RequestConfig<FornecedoresControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<FornecedoresControllerCreateMutationResponse, ResponseErrorConfig<FornecedoresControllerCreate409>, FornecedoresControllerCreateMutationRequest>({ method : "POST", url : `/fornecedores`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<FornecedoresControllerCreateMutationResponse, ResponseErrorConfig<FornecedoresControllerCreate409>, FornecedoresControllerCreateMutationRequest>({ method : "POST", url : `/fornecedores`, data : requestData, ... requestConfig })
-return res.data
+export function fornecedoresControllerCreateMutationOptions(config: Partial<RequestConfig<FornecedoresControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = fornecedoresControllerCreateMutationKey()
+  return mutationOptions<FornecedoresControllerCreateMutationResponse, ResponseErrorConfig<FornecedoresControllerCreate409>, {data: FornecedoresControllerCreateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data }) => {
+      return fornecedoresControllerCreate(data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /fornecedores}
  */
 export function useFornecedoresControllerCreate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<FornecedoresControllerCreateMutationResponse, ResponseErrorConfig<FornecedoresControllerCreate409>, {data: FornecedoresControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<FornecedoresControllerCreateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? fornecedoresControllerCreateMutationKey()
-  
-          return useMutation<FornecedoresControllerCreateMutationResponse, ResponseErrorConfig<FornecedoresControllerCreate409>, {data: FornecedoresControllerCreateMutationRequest}, TContext>({
-            mutationFn: async({ data }) => {
-              return fornecedoresControllerCreate(data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<FornecedoresControllerCreateMutationResponse, ResponseErrorConfig<FornecedoresControllerCreate409>, {data: FornecedoresControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<FornecedoresControllerCreateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? fornecedoresControllerCreateMutationKey()
+
+  const baseOptions = fornecedoresControllerCreateMutationOptions(config) as UseMutationOptions<FornecedoresControllerCreateMutationResponse, ResponseErrorConfig<FornecedoresControllerCreate409>, {data: FornecedoresControllerCreateMutationRequest}, TContext>
+
+  return useMutation<FornecedoresControllerCreateMutationResponse, ResponseErrorConfig<FornecedoresControllerCreate409>, {data: FornecedoresControllerCreateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<FornecedoresControllerCreateMutationResponse, ResponseErrorConfig<FornecedoresControllerCreate409>, {data: FornecedoresControllerCreateMutationRequest}, TContext>
 }

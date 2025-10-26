@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const rollupControllerGetSummarySuspenseQueryKey = (params: RollupControllerGetSummaryQueryParams) =>   [{ url: '/dashboard/despesas/mes' }, ...(params ? [params] : [])] as const
+export const rollupControllerGetSummarySuspenseQueryKey = (params: RollupControllerGetSummaryQueryParams) => [{ url: '/dashboard/despesas/mes' }, ...(params ? [params] : [])] as const
 
 export type RollupControllerGetSummarySuspenseQueryKey = ReturnType<typeof rollupControllerGetSummarySuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type RollupControllerGetSummarySuspenseQueryKey = ReturnType<typeof rollu
  * {@link /dashboard/despesas/mes}
  */
 export async function rollupControllerGetSummarySuspense(params: RollupControllerGetSummaryQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<RollupControllerGetSummaryQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/dashboard/despesas/mes`, params, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<RollupControllerGetSummaryQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/dashboard/despesas/mes`, params, ... requestConfig })  
+  return res.data
 }
 
 export function rollupControllerGetSummarySuspenseQueryOptions(params: RollupControllerGetSummaryQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = rollupControllerGetSummarySuspenseQueryKey(params)
-        return queryOptions<RollupControllerGetSummaryQueryResponse, ResponseErrorConfig<Error>, RollupControllerGetSummaryQueryResponse, typeof queryKey>({
-         enabled: !!(params),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return rollupControllerGetSummarySuspense(params, config)
-         },
-        })
-  
+  const queryKey = rollupControllerGetSummarySuspenseQueryKey(params)
+  return queryOptions<RollupControllerGetSummaryQueryResponse, ResponseErrorConfig<Error>, RollupControllerGetSummaryQueryResponse, typeof queryKey>({
+   enabled: !!(params),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return rollupControllerGetSummarySuspense(params, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function rollupControllerGetSummarySuspenseQueryOptions(params: RollupCon
  * {@link /dashboard/despesas/mes}
  */
 export function useRollupControllerGetSummarySuspense<TData = RollupControllerGetSummaryQueryResponse, TQueryKey extends QueryKey = RollupControllerGetSummarySuspenseQueryKey>(params: RollupControllerGetSummaryQueryParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<RollupControllerGetSummaryQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? rollupControllerGetSummarySuspenseQueryKey(params)
-  
-         const query = useSuspenseQuery({
-          ...rollupControllerGetSummarySuspenseQueryOptions(params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<RollupControllerGetSummaryQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? rollupControllerGetSummarySuspenseQueryKey(params)
+
+  const query = useSuspenseQuery({
+   ...rollupControllerGetSummarySuspenseQueryOptions(params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

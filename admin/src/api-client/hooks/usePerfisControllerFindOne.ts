@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const perfisControllerFindOneQueryKey = (id: PerfisControllerFindOnePathParams["id"]) =>   [{ url: '/perfis/:id', params: {id:id} }] as const
+export const perfisControllerFindOneQueryKey = (id: PerfisControllerFindOnePathParams["id"]) => [{ url: '/perfis/:id', params: {id:id} }] as const
 
 export type PerfisControllerFindOneQueryKey = ReturnType<typeof perfisControllerFindOneQueryKey>
 
@@ -18,25 +18,22 @@ export type PerfisControllerFindOneQueryKey = ReturnType<typeof perfisController
  * {@link /perfis/:id}
  */
 export async function perfisControllerFindOne(id: PerfisControllerFindOnePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<PerfisControllerFindOneQueryResponse, ResponseErrorConfig<PerfisControllerFindOne404>, unknown>({ method : "GET", url : `/perfis/${id}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<PerfisControllerFindOneQueryResponse, ResponseErrorConfig<PerfisControllerFindOne404>, unknown>({ method : "GET", url : `/perfis/${id}`, ... requestConfig })  
+  return res.data
 }
 
 export function perfisControllerFindOneQueryOptions(id: PerfisControllerFindOnePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = perfisControllerFindOneQueryKey(id)
-        return queryOptions<PerfisControllerFindOneQueryResponse, ResponseErrorConfig<PerfisControllerFindOne404>, PerfisControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(id),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return perfisControllerFindOne(id, config)
-         },
-        })
-  
+  const queryKey = perfisControllerFindOneQueryKey(id)
+  return queryOptions<PerfisControllerFindOneQueryResponse, ResponseErrorConfig<PerfisControllerFindOne404>, PerfisControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(id),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return perfisControllerFindOne(id, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function perfisControllerFindOneQueryOptions(id: PerfisControllerFindOneP
  * {@link /perfis/:id}
  */
 export function usePerfisControllerFindOne<TData = PerfisControllerFindOneQueryResponse, TQueryData = PerfisControllerFindOneQueryResponse, TQueryKey extends QueryKey = PerfisControllerFindOneQueryKey>(id: PerfisControllerFindOnePathParams["id"], options: 
-  {
-    query?: Partial<QueryObserverOptions<PerfisControllerFindOneQueryResponse, ResponseErrorConfig<PerfisControllerFindOne404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? perfisControllerFindOneQueryKey(id)
-  
-         const query = useQuery({
-          ...perfisControllerFindOneQueryOptions(id, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<PerfisControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<PerfisControllerFindOneQueryResponse, ResponseErrorConfig<PerfisControllerFindOne404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? perfisControllerFindOneQueryKey(id)
+
+  const query = useQuery({
+   ...perfisControllerFindOneQueryOptions(id, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<PerfisControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

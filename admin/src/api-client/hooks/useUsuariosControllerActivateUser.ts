@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { UsuariosControllerActivateUserMutationResponse, UsuariosControllerActivateUserPathParams, UsuariosControllerActivateUser404 } from "../types/UsuariosControllerActivateUser.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const usuariosControllerActivateUserMutationKey = () =>   [{"url":"/usuarios/{publicId}/ativar"}] as const
+export const usuariosControllerActivateUserMutationKey = () => [{ url: '/usuarios/:publicId/ativar' }] as const
 
 export type UsuariosControllerActivateUserMutationKey = ReturnType<typeof usuariosControllerActivateUserMutationKey>
 
@@ -18,11 +18,20 @@ export type UsuariosControllerActivateUserMutationKey = ReturnType<typeof usuari
  * {@link /usuarios/:publicId/ativar}
  */
 export async function usuariosControllerActivateUser(publicId: UsuariosControllerActivateUserPathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<UsuariosControllerActivateUserMutationResponse, ResponseErrorConfig<UsuariosControllerActivateUser404>, unknown>({ method : "PATCH", url : `/usuarios/${publicId}/ativar`, ... requestConfig })  
+  return res.data
+}
 
-
-const res = await request<UsuariosControllerActivateUserMutationResponse, ResponseErrorConfig<UsuariosControllerActivateUser404>, unknown>({ method : "PATCH", url : `/usuarios/${publicId}/ativar`, ... requestConfig })
-return res.data
+export function usuariosControllerActivateUserMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = usuariosControllerActivateUserMutationKey()
+  return mutationOptions<UsuariosControllerActivateUserMutationResponse, ResponseErrorConfig<UsuariosControllerActivateUser404>, {publicId: UsuariosControllerActivateUserPathParams["publicId"]}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId }) => {
+      return usuariosControllerActivateUser(publicId, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /usuarios/:publicId/ativar}
  */
 export function useUsuariosControllerActivateUser<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<UsuariosControllerActivateUserMutationResponse, ResponseErrorConfig<UsuariosControllerActivateUser404>, {publicId: UsuariosControllerActivateUserPathParams["publicId"]}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? usuariosControllerActivateUserMutationKey()
-  
-          return useMutation<UsuariosControllerActivateUserMutationResponse, ResponseErrorConfig<UsuariosControllerActivateUser404>, {publicId: UsuariosControllerActivateUserPathParams["publicId"]}, TContext>({
-            mutationFn: async({ publicId }) => {
-              return usuariosControllerActivateUser(publicId, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<UsuariosControllerActivateUserMutationResponse, ResponseErrorConfig<UsuariosControllerActivateUser404>, {publicId: UsuariosControllerActivateUserPathParams["publicId"]}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? usuariosControllerActivateUserMutationKey()
+
+  const baseOptions = usuariosControllerActivateUserMutationOptions(config) as UseMutationOptions<UsuariosControllerActivateUserMutationResponse, ResponseErrorConfig<UsuariosControllerActivateUser404>, {publicId: UsuariosControllerActivateUserPathParams["publicId"]}, TContext>
+
+  return useMutation<UsuariosControllerActivateUserMutationResponse, ResponseErrorConfig<UsuariosControllerActivateUser404>, {publicId: UsuariosControllerActivateUserPathParams["publicId"]}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<UsuariosControllerActivateUserMutationResponse, ResponseErrorConfig<UsuariosControllerActivateUser404>, {publicId: UsuariosControllerActivateUserPathParams["publicId"]}, TContext>
 }

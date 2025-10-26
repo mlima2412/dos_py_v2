@@ -4,17 +4,16 @@
 */
 
 import type { FormaPagamentoControllerFindAllHeaderParams, FormaPagamentoControllerFindAll200, FormaPagamentoControllerFindAllQueryResponse } from "../types/FormaPagamentoControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { formaPagamentoResponseDtoSchema } from "./formaPagamentoResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const formaPagamentoControllerFindAllHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<FormaPagamentoControllerFindAllHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<FormaPagamentoControllerFindAllHeaderParams>
 
 /**
  * @description Lista de formas de pagamento
  */
-export const formaPagamentoControllerFindAll200Schema = z.array(z.lazy(() => formaPagamentoResponseDtoSchema)) as unknown as ToZod<FormaPagamentoControllerFindAll200>
+export const formaPagamentoControllerFindAll200Schema = z.array(formaPagamentoResponseDtoSchema) as unknown as z.ZodType<FormaPagamentoControllerFindAll200>
 
-export const formaPagamentoControllerFindAllQueryResponseSchema = z.lazy(() => formaPagamentoControllerFindAll200Schema) as unknown as ToZod<FormaPagamentoControllerFindAllQueryResponse>
+export const formaPagamentoControllerFindAllQueryResponseSchema = formaPagamentoControllerFindAll200Schema as unknown as z.ZodType<FormaPagamentoControllerFindAllQueryResponse>

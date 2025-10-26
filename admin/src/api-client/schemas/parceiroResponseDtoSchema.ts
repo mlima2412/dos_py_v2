@@ -4,12 +4,11 @@
 */
 
 import type { ParceiroResponseDto } from "../types/ParceiroResponseDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const parceiroResponseDtoSchema = z.object({
-      "id": z.coerce.number().describe("ID do parceiro"),
-  "publicId": z.coerce.string().describe("Public ID do parceiro"),
-  "nome": z.coerce.string().describe("Nome do parceiro"),
-  "email": z.coerce.string().describe("Email do parceiro")
-      }) as unknown as ToZod<ParceiroResponseDto>
+    "id": z.coerce.number().describe("ID do parceiro"),
+"publicId": z.coerce.string().describe("Public ID do parceiro"),
+"nome": z.coerce.string().describe("Nome do parceiro"),
+"email": z.coerce.string().describe("Email do parceiro")
+    }) as unknown as z.ZodType<ParceiroResponseDto>

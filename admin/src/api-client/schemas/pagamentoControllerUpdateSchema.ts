@@ -4,29 +4,28 @@
 */
 
 import type { PagamentoControllerUpdatePathParams, PagamentoControllerUpdateHeaderParams, PagamentoControllerUpdate200, PagamentoControllerUpdate404, PagamentoControllerUpdateMutationRequest, PagamentoControllerUpdateMutationResponse } from "../types/PagamentoControllerUpdate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { pagamentoSchema } from "./pagamentoSchema.ts";
 import { updatePagamentoDtoSchema } from "./updatePagamentoDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const pagamentoControllerUpdatePathParamsSchema = z.object({
-      "id": z.coerce.number().describe("ID do pagamento")
-      }) as unknown as ToZod<PagamentoControllerUpdatePathParams>
+    "id": z.coerce.number().describe("ID do pagamento")
+    }) as unknown as z.ZodType<PagamentoControllerUpdatePathParams>
 
 export const pagamentoControllerUpdateHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<PagamentoControllerUpdateHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<PagamentoControllerUpdateHeaderParams>
 
 /**
  * @description Pagamento atualizado com sucesso
  */
-export const pagamentoControllerUpdate200Schema = z.lazy(() => pagamentoSchema) as unknown as ToZod<PagamentoControllerUpdate200>
+export const pagamentoControllerUpdate200Schema = pagamentoSchema as unknown as z.ZodType<PagamentoControllerUpdate200>
 
 /**
  * @description Pagamento, venda ou forma de pagamento não encontrada
  */
-export const pagamentoControllerUpdate404Schema = z.unknown() as unknown as ToZod<PagamentoControllerUpdate404>
+export const pagamentoControllerUpdate404Schema = z.unknown() as unknown as z.ZodType<PagamentoControllerUpdate404>
 
-export const pagamentoControllerUpdateMutationRequestSchema = z.lazy(() => updatePagamentoDtoSchema) as unknown as ToZod<PagamentoControllerUpdateMutationRequest>
+export const pagamentoControllerUpdateMutationRequestSchema = updatePagamentoDtoSchema as unknown as z.ZodType<PagamentoControllerUpdateMutationRequest>
 
-export const pagamentoControllerUpdateMutationResponseSchema = z.lazy(() => pagamentoControllerUpdate200Schema) as unknown as ToZod<PagamentoControllerUpdateMutationResponse>
+export const pagamentoControllerUpdateMutationResponseSchema = pagamentoControllerUpdate200Schema as unknown as z.ZodType<PagamentoControllerUpdateMutationResponse>

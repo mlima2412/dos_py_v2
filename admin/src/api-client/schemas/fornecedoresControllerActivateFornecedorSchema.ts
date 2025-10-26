@@ -4,31 +4,30 @@
 */
 
 import type { FornecedoresControllerActivateFornecedorPathParams, FornecedoresControllerActivateFornecedorHeaderParams, FornecedoresControllerActivateFornecedor200, FornecedoresControllerActivateFornecedor400, FornecedoresControllerActivateFornecedor404, FornecedoresControllerActivateFornecedorMutationResponse } from "../types/FornecedoresControllerActivateFornecedor.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { fornecedorSchema } from "./fornecedorSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const fornecedoresControllerActivateFornecedorPathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do fornecedor (UUID v7)")
-      }) as unknown as ToZod<FornecedoresControllerActivateFornecedorPathParams>
+    "publicId": z.string().describe("ID público do fornecedor (UUID v7)")
+    }) as unknown as z.ZodType<FornecedoresControllerActivateFornecedorPathParams>
 
 export const fornecedoresControllerActivateFornecedorHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.string().describe("ID do parceiro")
-      }) as unknown as ToZod<FornecedoresControllerActivateFornecedorHeaderParams>
+    "x-parceiro-id": z.string().describe("ID do parceiro")
+    }) as unknown as z.ZodType<FornecedoresControllerActivateFornecedorHeaderParams>
 
 /**
  * @description Fornecedor ativado com sucesso
  */
-export const fornecedoresControllerActivateFornecedor200Schema = z.lazy(() => fornecedorSchema) as unknown as ToZod<FornecedoresControllerActivateFornecedor200>
+export const fornecedoresControllerActivateFornecedor200Schema = fornecedorSchema as unknown as z.ZodType<FornecedoresControllerActivateFornecedor200>
 
 /**
  * @description Header x-parceiro-id é obrigatório
  */
-export const fornecedoresControllerActivateFornecedor400Schema = z.unknown() as unknown as ToZod<FornecedoresControllerActivateFornecedor400>
+export const fornecedoresControllerActivateFornecedor400Schema = z.unknown() as unknown as z.ZodType<FornecedoresControllerActivateFornecedor400>
 
 /**
  * @description Fornecedor não encontrado
  */
-export const fornecedoresControllerActivateFornecedor404Schema = z.unknown() as unknown as ToZod<FornecedoresControllerActivateFornecedor404>
+export const fornecedoresControllerActivateFornecedor404Schema = z.unknown() as unknown as z.ZodType<FornecedoresControllerActivateFornecedor404>
 
-export const fornecedoresControllerActivateFornecedorMutationResponseSchema = z.lazy(() => fornecedoresControllerActivateFornecedor200Schema) as unknown as ToZod<FornecedoresControllerActivateFornecedorMutationResponse>
+export const fornecedoresControllerActivateFornecedorMutationResponseSchema = fornecedoresControllerActivateFornecedor200Schema as unknown as z.ZodType<FornecedoresControllerActivateFornecedorMutationResponse>

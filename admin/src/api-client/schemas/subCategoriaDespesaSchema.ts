@@ -4,15 +4,16 @@
 */
 
 import type { SubCategoriaDespesa } from "../types/SubCategoriaDespesa.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { categoriaDespesasSchema } from "./categoriaDespesasSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const subCategoriaDespesaSchema = z.object({
-      "idSubCategoria": z.coerce.number().describe("ID interno da subcategoria de despesas"),
-  "categoriaId": z.coerce.number().describe("ID da categoria de despesas"),
-  "descricao": z.coerce.string().describe("Descrição da subcategoria de despesas"),
-  "ativo": z.boolean().default(true).describe("Status ativo da subcategoria"),
-  "createdAt": z.string().datetime().describe("Data de criação da subcategoria"),
-  "categoria": z.lazy(() => categoriaDespesasSchema).describe("Categoria de despesas relacionada")
-      }) as unknown as ToZod<SubCategoriaDespesa>
+    "idSubCategoria": z.coerce.number().describe("ID interno da subcategoria de despesas"),
+"categoriaId": z.coerce.number().describe("ID da categoria de despesas"),
+"descricao": z.coerce.string().describe("Descrição da subcategoria de despesas"),
+"ativo": z.boolean().default(true).describe("Status ativo da subcategoria"),
+"createdAt": z.string().datetime().describe("Data de criação da subcategoria"),
+get "categoria"(){
+                return categoriaDespesasSchema.describe("Categoria de despesas relacionada")
+              }
+    }) as unknown as z.ZodType<SubCategoriaDespesa>

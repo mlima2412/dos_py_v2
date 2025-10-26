@@ -4,22 +4,21 @@
 */
 
 import type { DespesasRecorrentesControllerFindBySubCategoriaPathParams, DespesasRecorrentesControllerFindBySubCategoria200, DespesasRecorrentesControllerFindBySubCategoria401, DespesasRecorrentesControllerFindBySubCategoriaQueryResponse } from "../types/DespesasRecorrentesControllerFindBySubCategoria.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { despesaRecorrenteSchema } from "./despesaRecorrenteSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const despesasRecorrentesControllerFindBySubCategoriaPathParamsSchema = z.object({
-      "subCategoriaId": z.coerce.number().describe("ID da subcategoria")
-      }) as unknown as ToZod<DespesasRecorrentesControllerFindBySubCategoriaPathParams>
+    "subCategoriaId": z.coerce.number().describe("ID da subcategoria")
+    }) as unknown as z.ZodType<DespesasRecorrentesControllerFindBySubCategoriaPathParams>
 
 /**
  * @description Lista de despesas recorrentes da subcategoria
  */
-export const despesasRecorrentesControllerFindBySubCategoria200Schema = z.array(z.lazy(() => despesaRecorrenteSchema)) as unknown as ToZod<DespesasRecorrentesControllerFindBySubCategoria200>
+export const despesasRecorrentesControllerFindBySubCategoria200Schema = z.array(despesaRecorrenteSchema) as unknown as z.ZodType<DespesasRecorrentesControllerFindBySubCategoria200>
 
 /**
  * @description Não autorizado
  */
-export const despesasRecorrentesControllerFindBySubCategoria401Schema = z.unknown() as unknown as ToZod<DespesasRecorrentesControllerFindBySubCategoria401>
+export const despesasRecorrentesControllerFindBySubCategoria401Schema = z.unknown() as unknown as z.ZodType<DespesasRecorrentesControllerFindBySubCategoria401>
 
-export const despesasRecorrentesControllerFindBySubCategoriaQueryResponseSchema = z.lazy(() => despesasRecorrentesControllerFindBySubCategoria200Schema) as unknown as ToZod<DespesasRecorrentesControllerFindBySubCategoriaQueryResponse>
+export const despesasRecorrentesControllerFindBySubCategoriaQueryResponseSchema = despesasRecorrentesControllerFindBySubCategoria200Schema as unknown as z.ZodType<DespesasRecorrentesControllerFindBySubCategoriaQueryResponse>

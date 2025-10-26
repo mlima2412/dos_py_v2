@@ -4,27 +4,26 @@
 */
 
 import type { CurrencyControllerFindOnePathParams, CurrencyControllerFindOne200, CurrencyControllerFindOne401, CurrencyControllerFindOne404, CurrencyControllerFindOneQueryResponse } from "../types/CurrencyControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { currencySchema } from "./currencySchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const currencyControllerFindOnePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público da moeda")
-      }) as unknown as ToZod<CurrencyControllerFindOnePathParams>
+    "publicId": z.string().describe("ID público da moeda")
+    }) as unknown as z.ZodType<CurrencyControllerFindOnePathParams>
 
 /**
  * @description Moeda encontrada com sucesso
  */
-export const currencyControllerFindOne200Schema = z.lazy(() => currencySchema) as unknown as ToZod<CurrencyControllerFindOne200>
+export const currencyControllerFindOne200Schema = currencySchema as unknown as z.ZodType<CurrencyControllerFindOne200>
 
 /**
  * @description Não autorizado
  */
-export const currencyControllerFindOne401Schema = z.unknown() as unknown as ToZod<CurrencyControllerFindOne401>
+export const currencyControllerFindOne401Schema = z.unknown() as unknown as z.ZodType<CurrencyControllerFindOne401>
 
 /**
  * @description Moeda não encontrada
  */
-export const currencyControllerFindOne404Schema = z.unknown() as unknown as ToZod<CurrencyControllerFindOne404>
+export const currencyControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<CurrencyControllerFindOne404>
 
-export const currencyControllerFindOneQueryResponseSchema = z.lazy(() => currencyControllerFindOne200Schema) as unknown as ToZod<CurrencyControllerFindOneQueryResponse>
+export const currencyControllerFindOneQueryResponseSchema = currencyControllerFindOne200Schema as unknown as z.ZodType<CurrencyControllerFindOneQueryResponse>

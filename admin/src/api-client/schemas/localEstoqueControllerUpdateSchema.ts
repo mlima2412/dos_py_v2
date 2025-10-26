@@ -4,33 +4,32 @@
 */
 
 import type { LocalEstoqueControllerUpdatePathParams, LocalEstoqueControllerUpdate200, LocalEstoqueControllerUpdate404, LocalEstoqueControllerUpdate409, LocalEstoqueControllerUpdateMutationRequest, LocalEstoqueControllerUpdateMutationResponse } from "../types/LocalEstoqueControllerUpdate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { localEstoqueSchema } from "./localEstoqueSchema.ts";
 import { updateLocalEstoqueDtoSchema } from "./updateLocalEstoqueDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const localEstoqueControllerUpdatePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do local de estoque (UUID v7)")
-      }) as unknown as ToZod<LocalEstoqueControllerUpdatePathParams>
+    "publicId": z.string().describe("ID público do local de estoque (UUID v7)")
+    }) as unknown as z.ZodType<LocalEstoqueControllerUpdatePathParams>
 
 /**
  * @description Local de estoque atualizado com sucesso
  */
-export const localEstoqueControllerUpdate200Schema = z.lazy(() => localEstoqueSchema) as unknown as ToZod<LocalEstoqueControllerUpdate200>
+export const localEstoqueControllerUpdate200Schema = localEstoqueSchema as unknown as z.ZodType<LocalEstoqueControllerUpdate200>
 
 /**
  * @description Local de estoque não encontrado
  */
-export const localEstoqueControllerUpdate404Schema = z.unknown() as unknown as ToZod<LocalEstoqueControllerUpdate404>
+export const localEstoqueControllerUpdate404Schema = z.unknown() as unknown as z.ZodType<LocalEstoqueControllerUpdate404>
 
 /**
  * @description Nome já está em uso para este parceiro
  */
-export const localEstoqueControllerUpdate409Schema = z.unknown() as unknown as ToZod<LocalEstoqueControllerUpdate409>
+export const localEstoqueControllerUpdate409Schema = z.unknown() as unknown as z.ZodType<LocalEstoqueControllerUpdate409>
 
 /**
  * @description Dados para atualização do local de estoque
  */
-export const localEstoqueControllerUpdateMutationRequestSchema = z.lazy(() => updateLocalEstoqueDtoSchema) as unknown as ToZod<LocalEstoqueControllerUpdateMutationRequest>
+export const localEstoqueControllerUpdateMutationRequestSchema = updateLocalEstoqueDtoSchema as unknown as z.ZodType<LocalEstoqueControllerUpdateMutationRequest>
 
-export const localEstoqueControllerUpdateMutationResponseSchema = z.lazy(() => localEstoqueControllerUpdate200Schema) as unknown as ToZod<LocalEstoqueControllerUpdateMutationResponse>
+export const localEstoqueControllerUpdateMutationResponseSchema = localEstoqueControllerUpdate200Schema as unknown as z.ZodType<LocalEstoqueControllerUpdateMutationResponse>

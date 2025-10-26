@@ -4,9 +4,8 @@
 */
 
 import type { UpdateStatusPedidoCompraDto } from "../types/UpdateStatusPedidoCompraDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const updateStatusPedidoCompraDtoSchema = z.object({
-      "status": z.union([z.literal(1), z.literal(2), z.literal(3)]).describe("Novo status do pedido de compra")
-      }) as unknown as ToZod<UpdateStatusPedidoCompraDto>
+    "status": z.union([z.literal(1), z.literal(2), z.literal(3)]).describe("Novo status do pedido de compra")
+    }) as unknown as z.ZodType<UpdateStatusPedidoCompraDto>

@@ -76,6 +76,7 @@ export const SelecaoItens: React.FC<SelecaoItensProps> = ({
 	} | null>(null);
 
 	const handleEditDiscount = (skuId: number) => {
+		if (mode === "view") return;
 		const item = itensSelecionados.find(i => i.skuId === skuId);
 		if (item) {
 			setEditingSkuId(skuId);
@@ -132,53 +133,55 @@ export const SelecaoItens: React.FC<SelecaoItensProps> = ({
 				</Card>
 			)}
 			<div className="grid gap-4 lg:grid-cols-2">
-				<Card className="h-full">
-					<CardHeader>
-						<CardTitle>
-							{t("salesOrders.form.sections.availableProducts")}
-						</CardTitle>
-					</CardHeader>
-					<CardContent className="space-y-4">
-						<ProductSelector
-							products={produtosDisponiveis}
-							selectedProductId={selectedProductId}
-							onProductSelect={value => setSelectedProductId(value)}
-							isLoading={isLoadingProdutos}
-							error={produtosError}
-							disabled={mode === "view" || !selectedLocal}
-							placeholder={t("salesOrders.form.placeholders.product")}
-						/>
-						<ScrollArea className="h-[620px] rounded-md border">
-							<SkuListing
-								ref={skuListingRef}
-								selectedProduct={
-									produtosDisponiveis.find(
-										product => product.id === selectedProductId
-									) || null
-								}
+				{mode !== "view" && (
+					<Card className="h-full">
+						<CardHeader>
+							<CardTitle>
+								{t("salesOrders.form.sections.availableProducts")}
+							</CardTitle>
+						</CardHeader>
+						<CardContent className="space-y-4">
+							<ProductSelector
+								products={produtosDisponiveis}
 								selectedProductId={selectedProductId}
-								skus={
-									produtosDisponiveis.find(
-										product => product.id === selectedProductId
-									)?.ProdutoSKU || []
-								}
+								onProductSelect={value => setSelectedProductId(value)}
 								isLoading={isLoadingProdutos}
 								error={produtosError}
-								onDoubleClick={(sku: ProdutoSKUEstoqueResponseDto) => {
-									const product =
-										produtosDisponiveis.find(prod =>
-											prod.ProdutoSKU?.some(item => item.id === sku.id)
-										) || null;
-									if (product && mode !== "view") {
-										void handleAddSkuWithDiscount(sku, product);
-									}
-								}}
-								allowZeroStock={false}
-								showProductPrice={false}
+								disabled={mode === "view" || !selectedLocal}
+								placeholder={t("salesOrders.form.placeholders.product")}
 							/>
-						</ScrollArea>
-					</CardContent>
-				</Card>
+							<ScrollArea className="h-[620px] rounded-md border">
+								<SkuListing
+									ref={skuListingRef}
+									selectedProduct={
+										produtosDisponiveis.find(
+											product => product.id === selectedProductId
+										) || null
+									}
+									selectedProductId={selectedProductId}
+									skus={
+										produtosDisponiveis.find(
+											product => product.id === selectedProductId
+										)?.ProdutoSKU || []
+									}
+									isLoading={isLoadingProdutos}
+									error={produtosError}
+									onDoubleClick={(sku: ProdutoSKUEstoqueResponseDto) => {
+										const product =
+											produtosDisponiveis.find(prod =>
+												prod.ProdutoSKU?.some(item => item.id === sku.id)
+											) || null;
+										if (product) {
+											void handleAddSkuWithDiscount(sku, product);
+										}
+									}}
+									allowZeroStock={false}
+									showProductPrice={false}
+								/>
+							</ScrollArea>
+						</CardContent>
+					</Card>
+				)}
 
 				<Card className="h-full">
 					<CardHeader>
@@ -226,18 +229,18 @@ export const SelecaoItens: React.FC<SelecaoItensProps> = ({
 							onEditDiscount={handleEditDiscount}
 						/>
 						<div className="flex flex-row justify-between space-x-4">
-							<div className="text-sm font-semibold border rounded-md border-red-400 p-1">
-								{t("salesOrders.form.labels.subtotal")}:{" "}
-								{formatCurrency(totals.itensSubtotal)}
+							<div className="text-sm font-semibold border rounded-md border-red-400 p-1 w-[150px]">
+								<p>{t("salesOrders.form.labels.subtotal")}: </p>
+								<p>{formatCurrency(totals.itensSubtotal)}</p>
 							</div>
-							<div className="text-sm font-semibold border rounded-md border-red-400 p-1">
-								{t("salesOrders.form.labels.discountItems")}:{" "}
-								{formatCurrency(totals.descontoItens)}
+							<div className="text-sm font-semibold border rounded-md border-red-400 p-1 w-[150px]">
+								<p>{t("salesOrders.form.labels.discountItems")} </p>
+								<p>{formatCurrency(totals.descontoItens)}</p>
 							</div>
 
-							<div className="text-sm font-semibold border rounded-md border-red-400 p-1">
-								{t("salesOrders.form.labels.total")}:{" "}
-								{formatCurrency(totals.total)}
+							<div className="text-sm font-semibold border rounded-md border-red-400 p-1 w-[150px]">
+								<p>{t("salesOrders.form.labels.total")}: </p>
+								<p>{formatCurrency(totals.total)}</p>
 							</div>
 						</div>
 					</CardContent>

@@ -4,19 +4,18 @@
 */
 
 import type { PerfisControllerFindAll200, PerfisControllerFindAllQueryResponse } from "../types/PerfisControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Lista de perfis retornada com sucesso
  */
 export const perfisControllerFindAll200Schema = z.array(z.object({
-      "id": z.coerce.number().optional(),
-  "nome": z.coerce.string().optional(),
-  "descricao": z.coerce.string().optional(),
-  "ativo": z.boolean().optional(),
-  "createdAt": z.string().datetime().optional(),
-  "updatedAt": z.string().datetime().optional()
-      })) as unknown as ToZod<PerfisControllerFindAll200>
+    "id": z.optional(z.coerce.number()),
+"nome": z.optional(z.coerce.string()),
+"descricao": z.optional(z.coerce.string()),
+"ativo": z.optional(z.boolean()),
+"createdAt": z.optional(z.string().datetime()),
+"updatedAt": z.optional(z.string().datetime())
+    })) as unknown as z.ZodType<PerfisControllerFindAll200>
 
-export const perfisControllerFindAllQueryResponseSchema = z.lazy(() => perfisControllerFindAll200Schema) as unknown as ToZod<PerfisControllerFindAllQueryResponse>
+export const perfisControllerFindAllQueryResponseSchema = perfisControllerFindAll200Schema as unknown as z.ZodType<PerfisControllerFindAllQueryResponse>

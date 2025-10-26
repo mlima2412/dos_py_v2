@@ -4,26 +4,25 @@
 */
 
 import type { MovimentoEstoqueControllerAjusteEstoque201, MovimentoEstoqueControllerAjusteEstoque400, MovimentoEstoqueControllerAjusteEstoque404, MovimentoEstoqueControllerAjusteEstoqueMutationRequest, MovimentoEstoqueControllerAjusteEstoqueMutationResponse } from "../types/MovimentoEstoqueControllerAjusteEstoque.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { ajusteEstoqueDtoSchema } from "./ajusteEstoqueDtoSchema.ts";
 import { movimentoEstoqueResponseDtoSchema } from "./movimentoEstoqueResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Ajuste realizado com sucesso
  */
-export const movimentoEstoqueControllerAjusteEstoque201Schema = z.lazy(() => movimentoEstoqueResponseDtoSchema) as unknown as ToZod<MovimentoEstoqueControllerAjusteEstoque201>
+export const movimentoEstoqueControllerAjusteEstoque201Schema = movimentoEstoqueResponseDtoSchema as unknown as z.ZodType<MovimentoEstoqueControllerAjusteEstoque201>
 
 /**
  * @description Dados inválidos ou estoque insuficiente para ajuste negativo
  */
-export const movimentoEstoqueControllerAjusteEstoque400Schema = z.unknown() as unknown as ToZod<MovimentoEstoqueControllerAjusteEstoque400>
+export const movimentoEstoqueControllerAjusteEstoque400Schema = z.unknown() as unknown as z.ZodType<MovimentoEstoqueControllerAjusteEstoque400>
 
 /**
  * @description SKU ou local não encontrado
  */
-export const movimentoEstoqueControllerAjusteEstoque404Schema = z.unknown() as unknown as ToZod<MovimentoEstoqueControllerAjusteEstoque404>
+export const movimentoEstoqueControllerAjusteEstoque404Schema = z.unknown() as unknown as z.ZodType<MovimentoEstoqueControllerAjusteEstoque404>
 
-export const movimentoEstoqueControllerAjusteEstoqueMutationRequestSchema = z.lazy(() => ajusteEstoqueDtoSchema) as unknown as ToZod<MovimentoEstoqueControllerAjusteEstoqueMutationRequest>
+export const movimentoEstoqueControllerAjusteEstoqueMutationRequestSchema = ajusteEstoqueDtoSchema as unknown as z.ZodType<MovimentoEstoqueControllerAjusteEstoqueMutationRequest>
 
-export const movimentoEstoqueControllerAjusteEstoqueMutationResponseSchema = z.lazy(() => movimentoEstoqueControllerAjusteEstoque201Schema) as unknown as ToZod<MovimentoEstoqueControllerAjusteEstoqueMutationResponse>
+export const movimentoEstoqueControllerAjusteEstoqueMutationResponseSchema = movimentoEstoqueControllerAjusteEstoque201Schema as unknown as z.ZodType<MovimentoEstoqueControllerAjusteEstoqueMutationResponse>

@@ -4,11 +4,10 @@
 */
 
 import type { CreateProdutoHistoricoPrecoDto } from "../types/CreateProdutoHistoricoPrecoDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const createProdutoHistoricoPrecoDtoSchema = z.object({
-      "produtoId": z.coerce.number().describe("ID do produto"),
-  "preco": z.coerce.number().describe("Preço do produto"),
-  "data": z.string().datetime().describe("Data do registro do preço").optional()
-      }) as unknown as ToZod<CreateProdutoHistoricoPrecoDto>
+    "produtoId": z.coerce.number().describe("ID do produto"),
+"preco": z.coerce.number().describe("Preço do produto"),
+"data": z.optional(z.string().datetime().describe("Data do registro do preço"))
+    }) as unknown as z.ZodType<CreateProdutoHistoricoPrecoDto>

@@ -4,14 +4,13 @@
 */
 
 import type { CreateParcelaDto } from "../types/CreateParcelaDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const createParcelaDtoSchema = z.object({
-      "parcelamentoId": z.coerce.number().describe("ID do parcelamento associado"),
-  "numero": z.coerce.number().describe("Número da parcela"),
-  "valor": z.coerce.number().describe("Valor da parcela"),
-  "vencimento": z.coerce.string().describe("Data de vencimento (ISO 8601)").optional(),
-  "recebidoEm": z.coerce.string().describe("Data de recebimento (ISO 8601)").optional(),
-  "status": z.enum(["PENDENTE", "PAGO", "PAGO_ATRASADO"]).describe("Status da parcela").optional()
-      }) as unknown as ToZod<CreateParcelaDto>
+    "parcelamentoId": z.coerce.number().describe("ID do parcelamento associado"),
+"numero": z.coerce.number().describe("Número da parcela"),
+"valor": z.coerce.number().describe("Valor da parcela"),
+"vencimento": z.optional(z.coerce.string().describe("Data de vencimento (ISO 8601)")),
+"recebidoEm": z.optional(z.coerce.string().describe("Data de recebimento (ISO 8601)")),
+"status": z.optional(z.enum(["PENDENTE", "PAGO", "PAGO_ATRASADO"]).describe("Status da parcela"))
+    }) as unknown as z.ZodType<CreateParcelaDto>

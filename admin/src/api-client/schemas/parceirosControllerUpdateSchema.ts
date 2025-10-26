@@ -4,30 +4,29 @@
 */
 
 import type { ParceirosControllerUpdatePathParams, ParceirosControllerUpdate200, ParceirosControllerUpdate404, ParceirosControllerUpdate409, ParceirosControllerUpdateMutationRequest, ParceirosControllerUpdateMutationResponse } from "../types/ParceirosControllerUpdate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { parceiroSchema } from "./parceiroSchema.ts";
 import { updateParceiroDtoSchema } from "./updateParceiroDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const parceirosControllerUpdatePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do parceiro")
-      }) as unknown as ToZod<ParceirosControllerUpdatePathParams>
+    "publicId": z.string().describe("ID público do parceiro")
+    }) as unknown as z.ZodType<ParceirosControllerUpdatePathParams>
 
 /**
  * @description Parceiro atualizado com sucesso
  */
-export const parceirosControllerUpdate200Schema = z.lazy(() => parceiroSchema) as unknown as ToZod<ParceirosControllerUpdate200>
+export const parceirosControllerUpdate200Schema = parceiroSchema as unknown as z.ZodType<ParceirosControllerUpdate200>
 
 /**
  * @description Parceiro não encontrado
  */
-export const parceirosControllerUpdate404Schema = z.unknown() as unknown as ToZod<ParceirosControllerUpdate404>
+export const parceirosControllerUpdate404Schema = z.unknown() as unknown as z.ZodType<ParceirosControllerUpdate404>
 
 /**
  * @description Email ou RUC/CNPJ já existe
  */
-export const parceirosControllerUpdate409Schema = z.unknown() as unknown as ToZod<ParceirosControllerUpdate409>
+export const parceirosControllerUpdate409Schema = z.unknown() as unknown as z.ZodType<ParceirosControllerUpdate409>
 
-export const parceirosControllerUpdateMutationRequestSchema = z.lazy(() => updateParceiroDtoSchema) as unknown as ToZod<ParceirosControllerUpdateMutationRequest>
+export const parceirosControllerUpdateMutationRequestSchema = updateParceiroDtoSchema as unknown as z.ZodType<ParceirosControllerUpdateMutationRequest>
 
-export const parceirosControllerUpdateMutationResponseSchema = z.lazy(() => parceirosControllerUpdate200Schema) as unknown as ToZod<ParceirosControllerUpdateMutationResponse>
+export const parceirosControllerUpdateMutationResponseSchema = parceirosControllerUpdate200Schema as unknown as z.ZodType<ParceirosControllerUpdateMutationResponse>

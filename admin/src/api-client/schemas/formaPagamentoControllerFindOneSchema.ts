@@ -4,26 +4,25 @@
 */
 
 import type { FormaPagamentoControllerFindOnePathParams, FormaPagamentoControllerFindOneHeaderParams, FormaPagamentoControllerFindOne200, FormaPagamentoControllerFindOne404, FormaPagamentoControllerFindOneQueryResponse } from "../types/FormaPagamentoControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { formaPagamentoResponseDtoSchema } from "./formaPagamentoResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const formaPagamentoControllerFindOnePathParamsSchema = z.object({
-      "id": z.coerce.number().describe("ID da forma de pagamento")
-      }) as unknown as ToZod<FormaPagamentoControllerFindOnePathParams>
+    "id": z.coerce.number().describe("ID da forma de pagamento")
+    }) as unknown as z.ZodType<FormaPagamentoControllerFindOnePathParams>
 
 export const formaPagamentoControllerFindOneHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<FormaPagamentoControllerFindOneHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<FormaPagamentoControllerFindOneHeaderParams>
 
 /**
  * @description Forma de pagamento encontrada
  */
-export const formaPagamentoControllerFindOne200Schema = z.lazy(() => formaPagamentoResponseDtoSchema) as unknown as ToZod<FormaPagamentoControllerFindOne200>
+export const formaPagamentoControllerFindOne200Schema = formaPagamentoResponseDtoSchema as unknown as z.ZodType<FormaPagamentoControllerFindOne200>
 
 /**
  * @description Forma de pagamento não encontrada
  */
-export const formaPagamentoControllerFindOne404Schema = z.unknown() as unknown as ToZod<FormaPagamentoControllerFindOne404>
+export const formaPagamentoControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<FormaPagamentoControllerFindOne404>
 
-export const formaPagamentoControllerFindOneQueryResponseSchema = z.lazy(() => formaPagamentoControllerFindOne200Schema) as unknown as ToZod<FormaPagamentoControllerFindOneQueryResponse>
+export const formaPagamentoControllerFindOneQueryResponseSchema = formaPagamentoControllerFindOne200Schema as unknown as z.ZodType<FormaPagamentoControllerFindOneQueryResponse>

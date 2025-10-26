@@ -4,22 +4,21 @@
 */
 
 import type { ClientesControllerActivatePathParams, ClientesControllerActivate200, ClientesControllerActivate404, ClientesControllerActivateMutationResponse } from "../types/ClientesControllerActivate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { clienteSchema } from "./clienteSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const clientesControllerActivatePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do cliente")
-      }) as unknown as ToZod<ClientesControllerActivatePathParams>
+    "publicId": z.string().describe("ID público do cliente")
+    }) as unknown as z.ZodType<ClientesControllerActivatePathParams>
 
 /**
  * @description Cliente ativado com sucesso
  */
-export const clientesControllerActivate200Schema = z.lazy(() => clienteSchema) as unknown as ToZod<ClientesControllerActivate200>
+export const clientesControllerActivate200Schema = clienteSchema as unknown as z.ZodType<ClientesControllerActivate200>
 
 /**
  * @description Cliente não encontrado
  */
-export const clientesControllerActivate404Schema = z.unknown() as unknown as ToZod<ClientesControllerActivate404>
+export const clientesControllerActivate404Schema = z.unknown() as unknown as z.ZodType<ClientesControllerActivate404>
 
-export const clientesControllerActivateMutationResponseSchema = z.lazy(() => clientesControllerActivate200Schema) as unknown as ToZod<ClientesControllerActivateMutationResponse>
+export const clientesControllerActivateMutationResponseSchema = clientesControllerActivate200Schema as unknown as z.ZodType<ClientesControllerActivateMutationResponse>

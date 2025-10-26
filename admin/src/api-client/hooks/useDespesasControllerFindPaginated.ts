@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const despesasControllerFindPaginatedQueryKey = (params?: DespesasControllerFindPaginatedQueryParams) =>   [{ url: '/despesas/paginated' }, ...(params ? [params] : [])] as const
+export const despesasControllerFindPaginatedQueryKey = (params?: DespesasControllerFindPaginatedQueryParams) => [{ url: '/despesas/paginated' }, ...(params ? [params] : [])] as const
 
 export type DespesasControllerFindPaginatedQueryKey = ReturnType<typeof despesasControllerFindPaginatedQueryKey>
 
@@ -18,25 +18,22 @@ export type DespesasControllerFindPaginatedQueryKey = ReturnType<typeof despesas
  * {@link /despesas/paginated}
  */
 export async function despesasControllerFindPaginated(params?: DespesasControllerFindPaginatedQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<DespesasControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/despesas/paginated`, params, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<DespesasControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/despesas/paginated`, params, ... requestConfig })  
+  return res.data
 }
 
 export function despesasControllerFindPaginatedQueryOptions(params?: DespesasControllerFindPaginatedQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = despesasControllerFindPaginatedQueryKey(params)
-        return queryOptions<DespesasControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, DespesasControllerFindPaginatedQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return despesasControllerFindPaginated(params, config)
-         },
-        })
-  
+  const queryKey = despesasControllerFindPaginatedQueryKey(params)
+  return queryOptions<DespesasControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, DespesasControllerFindPaginatedQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return despesasControllerFindPaginated(params, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function despesasControllerFindPaginatedQueryOptions(params?: DespesasCon
  * {@link /despesas/paginated}
  */
 export function useDespesasControllerFindPaginated<TData = DespesasControllerFindPaginatedQueryResponse, TQueryData = DespesasControllerFindPaginatedQueryResponse, TQueryKey extends QueryKey = DespesasControllerFindPaginatedQueryKey>(params?: DespesasControllerFindPaginatedQueryParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<DespesasControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? despesasControllerFindPaginatedQueryKey(params)
-  
-         const query = useQuery({
-          ...despesasControllerFindPaginatedQueryOptions(params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<DespesasControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? despesasControllerFindPaginatedQueryKey(params)
+
+  const query = useQuery({
+   ...despesasControllerFindPaginatedQueryOptions(params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

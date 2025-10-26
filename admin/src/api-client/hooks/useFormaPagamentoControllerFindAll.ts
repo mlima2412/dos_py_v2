@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const formaPagamentoControllerFindAllQueryKey = () =>   [{ url: '/forma-pagamento' }] as const
+export const formaPagamentoControllerFindAllQueryKey = () => [{ url: '/forma-pagamento' }] as const
 
 export type FormaPagamentoControllerFindAllQueryKey = ReturnType<typeof formaPagamentoControllerFindAllQueryKey>
 
@@ -18,25 +18,22 @@ export type FormaPagamentoControllerFindAllQueryKey = ReturnType<typeof formaPag
  * {@link /forma-pagamento}
  */
 export async function formaPagamentoControllerFindAll(headers: FormaPagamentoControllerFindAllHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<FormaPagamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/forma-pagamento`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<FormaPagamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/forma-pagamento`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function formaPagamentoControllerFindAllQueryOptions(headers: FormaPagamentoControllerFindAllHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = formaPagamentoControllerFindAllQueryKey()
-        return queryOptions<FormaPagamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, FormaPagamentoControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return formaPagamentoControllerFindAll(headers, config)
-         },
-        })
-  
+  const queryKey = formaPagamentoControllerFindAllQueryKey()
+  return queryOptions<FormaPagamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, FormaPagamentoControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return formaPagamentoControllerFindAll(headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function formaPagamentoControllerFindAllQueryOptions(headers: FormaPagame
  * {@link /forma-pagamento}
  */
 export function useFormaPagamentoControllerFindAll<TData = FormaPagamentoControllerFindAllQueryResponse, TQueryData = FormaPagamentoControllerFindAllQueryResponse, TQueryKey extends QueryKey = FormaPagamentoControllerFindAllQueryKey>(headers: FormaPagamentoControllerFindAllHeaderParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<FormaPagamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? formaPagamentoControllerFindAllQueryKey()
-  
-         const query = useQuery({
-          ...formaPagamentoControllerFindAllQueryOptions(headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<FormaPagamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? formaPagamentoControllerFindAllQueryKey()
+
+  const query = useQuery({
+   ...formaPagamentoControllerFindAllQueryOptions(headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

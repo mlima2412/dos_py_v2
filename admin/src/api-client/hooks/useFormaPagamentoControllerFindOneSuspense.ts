@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const formaPagamentoControllerFindOneSuspenseQueryKey = (id: FormaPagamentoControllerFindOnePathParams["id"]) =>   [{ url: '/forma-pagamento/:id', params: {id:id} }] as const
+export const formaPagamentoControllerFindOneSuspenseQueryKey = (id: FormaPagamentoControllerFindOnePathParams["id"]) => [{ url: '/forma-pagamento/:id', params: {id:id} }] as const
 
 export type FormaPagamentoControllerFindOneSuspenseQueryKey = ReturnType<typeof formaPagamentoControllerFindOneSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type FormaPagamentoControllerFindOneSuspenseQueryKey = ReturnType<typeof 
  * {@link /forma-pagamento/:id}
  */
 export async function formaPagamentoControllerFindOneSuspense(id: FormaPagamentoControllerFindOnePathParams["id"], headers: FormaPagamentoControllerFindOneHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<FormaPagamentoControllerFindOneQueryResponse, ResponseErrorConfig<FormaPagamentoControllerFindOne404>, unknown>({ method : "GET", url : `/forma-pagamento/${id}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<FormaPagamentoControllerFindOneQueryResponse, ResponseErrorConfig<FormaPagamentoControllerFindOne404>, unknown>({ method : "GET", url : `/forma-pagamento/${id}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function formaPagamentoControllerFindOneSuspenseQueryOptions(id: FormaPagamentoControllerFindOnePathParams["id"], headers: FormaPagamentoControllerFindOneHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = formaPagamentoControllerFindOneSuspenseQueryKey(id)
-        return queryOptions<FormaPagamentoControllerFindOneQueryResponse, ResponseErrorConfig<FormaPagamentoControllerFindOne404>, FormaPagamentoControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(id),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return formaPagamentoControllerFindOneSuspense(id, headers, config)
-         },
-        })
-  
+  const queryKey = formaPagamentoControllerFindOneSuspenseQueryKey(id)
+  return queryOptions<FormaPagamentoControllerFindOneQueryResponse, ResponseErrorConfig<FormaPagamentoControllerFindOne404>, FormaPagamentoControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(id),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return formaPagamentoControllerFindOneSuspense(id, headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function formaPagamentoControllerFindOneSuspenseQueryOptions(id: FormaPag
  * {@link /forma-pagamento/:id}
  */
 export function useFormaPagamentoControllerFindOneSuspense<TData = FormaPagamentoControllerFindOneQueryResponse, TQueryKey extends QueryKey = FormaPagamentoControllerFindOneSuspenseQueryKey>(id: FormaPagamentoControllerFindOnePathParams["id"], headers: FormaPagamentoControllerFindOneHeaderParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<FormaPagamentoControllerFindOneQueryResponse, ResponseErrorConfig<FormaPagamentoControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? formaPagamentoControllerFindOneSuspenseQueryKey(id)
-  
-         const query = useSuspenseQuery({
-          ...formaPagamentoControllerFindOneSuspenseQueryOptions(id, headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<FormaPagamentoControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<FormaPagamentoControllerFindOneQueryResponse, ResponseErrorConfig<FormaPagamentoControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? formaPagamentoControllerFindOneSuspenseQueryKey(id)
+
+  const query = useSuspenseQuery({
+   ...formaPagamentoControllerFindOneSuspenseQueryOptions(id, headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<FormaPagamentoControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

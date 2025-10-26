@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ConferenciaEstoqueControllerUpdateMutationRequest, ConferenciaEstoqueControllerUpdateMutationResponse, ConferenciaEstoqueControllerUpdatePathParams, ConferenciaEstoqueControllerUpdateHeaderParams, ConferenciaEstoqueControllerUpdate400, ConferenciaEstoqueControllerUpdate404 } from "../types/ConferenciaEstoqueControllerUpdate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const conferenciaEstoqueControllerUpdateMutationKey = () =>   [{"url":"/conferencia-estoque/{publicId}"}] as const
+export const conferenciaEstoqueControllerUpdateMutationKey = () => [{ url: '/conferencia-estoque/:publicId' }] as const
 
 export type ConferenciaEstoqueControllerUpdateMutationKey = ReturnType<typeof conferenciaEstoqueControllerUpdateMutationKey>
 
@@ -18,11 +18,22 @@ export type ConferenciaEstoqueControllerUpdateMutationKey = ReturnType<typeof co
  * {@link /conferencia-estoque/:publicId}
  */
 export async function conferenciaEstoqueControllerUpdate(publicId: ConferenciaEstoqueControllerUpdatePathParams["publicId"], headers: ConferenciaEstoqueControllerUpdateHeaderParams, data?: ConferenciaEstoqueControllerUpdateMutationRequest, config: Partial<RequestConfig<ConferenciaEstoqueControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<ConferenciaEstoqueControllerUpdateMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerUpdate400 | ConferenciaEstoqueControllerUpdate404>, ConferenciaEstoqueControllerUpdateMutationRequest>({ method : "PATCH", url : `/conferencia-estoque/${publicId}`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<ConferenciaEstoqueControllerUpdateMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerUpdate400 | ConferenciaEstoqueControllerUpdate404>, ConferenciaEstoqueControllerUpdateMutationRequest>({ method : "PATCH", url : `/conferencia-estoque/${publicId}`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function conferenciaEstoqueControllerUpdateMutationOptions(config: Partial<RequestConfig<ConferenciaEstoqueControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = conferenciaEstoqueControllerUpdateMutationKey()
+  return mutationOptions<ConferenciaEstoqueControllerUpdateMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerUpdate400 | ConferenciaEstoqueControllerUpdate404>, {publicId: ConferenciaEstoqueControllerUpdatePathParams["publicId"], headers: ConferenciaEstoqueControllerUpdateHeaderParams, data?: ConferenciaEstoqueControllerUpdateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId, headers, data }) => {
+      return conferenciaEstoqueControllerUpdate(publicId, headers, data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /conferencia-estoque/:publicId}
  */
 export function useConferenciaEstoqueControllerUpdate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ConferenciaEstoqueControllerUpdateMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerUpdate400 | ConferenciaEstoqueControllerUpdate404>, {publicId: ConferenciaEstoqueControllerUpdatePathParams["publicId"], headers: ConferenciaEstoqueControllerUpdateHeaderParams, data?: ConferenciaEstoqueControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<ConferenciaEstoqueControllerUpdateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? conferenciaEstoqueControllerUpdateMutationKey()
-  
-          return useMutation<ConferenciaEstoqueControllerUpdateMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerUpdate400 | ConferenciaEstoqueControllerUpdate404>, {publicId: ConferenciaEstoqueControllerUpdatePathParams["publicId"], headers: ConferenciaEstoqueControllerUpdateHeaderParams, data?: ConferenciaEstoqueControllerUpdateMutationRequest}, TContext>({
-            mutationFn: async({ publicId, headers, data }) => {
-              return conferenciaEstoqueControllerUpdate(publicId, headers, data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ConferenciaEstoqueControllerUpdateMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerUpdate400 | ConferenciaEstoqueControllerUpdate404>, {publicId: ConferenciaEstoqueControllerUpdatePathParams["publicId"], headers: ConferenciaEstoqueControllerUpdateHeaderParams, data?: ConferenciaEstoqueControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<ConferenciaEstoqueControllerUpdateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? conferenciaEstoqueControllerUpdateMutationKey()
+
+  const baseOptions = conferenciaEstoqueControllerUpdateMutationOptions(config) as UseMutationOptions<ConferenciaEstoqueControllerUpdateMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerUpdate400 | ConferenciaEstoqueControllerUpdate404>, {publicId: ConferenciaEstoqueControllerUpdatePathParams["publicId"], headers: ConferenciaEstoqueControllerUpdateHeaderParams, data?: ConferenciaEstoqueControllerUpdateMutationRequest}, TContext>
+
+  return useMutation<ConferenciaEstoqueControllerUpdateMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerUpdate400 | ConferenciaEstoqueControllerUpdate404>, {publicId: ConferenciaEstoqueControllerUpdatePathParams["publicId"], headers: ConferenciaEstoqueControllerUpdateHeaderParams, data?: ConferenciaEstoqueControllerUpdateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ConferenciaEstoqueControllerUpdateMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerUpdate400 | ConferenciaEstoqueControllerUpdate404>, {publicId: ConferenciaEstoqueControllerUpdatePathParams["publicId"], headers: ConferenciaEstoqueControllerUpdateHeaderParams, data?: ConferenciaEstoqueControllerUpdateMutationRequest}, TContext>
 }

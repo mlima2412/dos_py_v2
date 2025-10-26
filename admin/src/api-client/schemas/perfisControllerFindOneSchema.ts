@@ -4,28 +4,27 @@
 */
 
 import type { PerfisControllerFindOnePathParams, PerfisControllerFindOne200, PerfisControllerFindOne404, PerfisControllerFindOneQueryResponse } from "../types/PerfisControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const perfisControllerFindOnePathParamsSchema = z.object({
-      "id": z.coerce.number().describe("ID do perfil")
-      }) as unknown as ToZod<PerfisControllerFindOnePathParams>
+    "id": z.coerce.number().describe("ID do perfil")
+    }) as unknown as z.ZodType<PerfisControllerFindOnePathParams>
 
 /**
  * @description Perfil encontrado com sucesso
  */
 export const perfisControllerFindOne200Schema = z.object({
-      "id": z.coerce.number().optional(),
-  "nome": z.coerce.string().optional(),
-  "descricao": z.coerce.string().optional(),
-  "ativo": z.boolean().optional(),
-  "createdAt": z.string().datetime().optional(),
-  "updatedAt": z.string().datetime().optional()
-      }) as unknown as ToZod<PerfisControllerFindOne200>
+    "id": z.optional(z.coerce.number()),
+"nome": z.optional(z.coerce.string()),
+"descricao": z.optional(z.coerce.string()),
+"ativo": z.optional(z.boolean()),
+"createdAt": z.optional(z.string().datetime()),
+"updatedAt": z.optional(z.string().datetime())
+    }) as unknown as z.ZodType<PerfisControllerFindOne200>
 
 /**
  * @description Perfil não encontrado
  */
-export const perfisControllerFindOne404Schema = z.unknown() as unknown as ToZod<PerfisControllerFindOne404>
+export const perfisControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<PerfisControllerFindOne404>
 
-export const perfisControllerFindOneQueryResponseSchema = z.lazy(() => perfisControllerFindOne200Schema) as unknown as ToZod<PerfisControllerFindOneQueryResponse>
+export const perfisControllerFindOneQueryResponseSchema = perfisControllerFindOne200Schema as unknown as z.ZodType<PerfisControllerFindOneQueryResponse>

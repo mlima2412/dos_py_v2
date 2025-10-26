@@ -4,20 +4,19 @@
 */
 
 import type { CreatePedidoCompraDto } from "../types/CreatePedidoCompraDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const createPedidoCompraDtoSchema = z.object({
-      "localEntradaId": z.coerce.number().describe("ID do local de entrada do estoque"),
-  "fornecedorId": z.coerce.number().describe("ID do fornecedor"),
-  "dataPedido": z.coerce.string().describe("Data do pedido").optional(),
-  "dataEntrega": z.coerce.string().describe("Data de entrega prevista").optional(),
-  "valorFrete": z.coerce.number().describe("Valor do frete").optional(),
-  "valorTotal": z.coerce.number().describe("Valor total do pedido").optional(),
-  "observacao": z.coerce.string().describe("Observações do pedido").optional(),
-  "valorComissao": z.coerce.number().describe("Valor da comissão").optional(),
-  "cotacao": z.coerce.number().describe("Cotação da moeda").optional(),
-  "currencyId": z.coerce.number().describe("ID da moeda").optional(),
-  "consignado": z.boolean().describe("Indica se o pedido é consignado").optional(),
-  "status": z.coerce.number().describe("Status do pedido (1 a 3)").optional()
-      }) as unknown as ToZod<CreatePedidoCompraDto>
+    "localEntradaId": z.coerce.number().describe("ID do local de entrada do estoque"),
+"fornecedorId": z.coerce.number().describe("ID do fornecedor"),
+"dataPedido": z.optional(z.coerce.string().describe("Data do pedido")),
+"dataEntrega": z.optional(z.coerce.string().describe("Data de entrega prevista")),
+"valorFrete": z.optional(z.coerce.number().describe("Valor do frete")),
+"valorTotal": z.optional(z.coerce.number().describe("Valor total do pedido")),
+"observacao": z.optional(z.coerce.string().describe("Observações do pedido")),
+"valorComissao": z.optional(z.coerce.number().describe("Valor da comissão")),
+"cotacao": z.optional(z.coerce.number().describe("Cotação da moeda")),
+"currencyId": z.optional(z.coerce.number().describe("ID da moeda")),
+"consignado": z.optional(z.boolean().describe("Indica se o pedido é consignado")),
+"status": z.optional(z.coerce.number().describe("Status do pedido (1 a 3)"))
+    }) as unknown as z.ZodType<CreatePedidoCompraDto>

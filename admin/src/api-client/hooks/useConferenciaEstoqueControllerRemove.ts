@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ConferenciaEstoqueControllerRemoveMutationResponse, ConferenciaEstoqueControllerRemovePathParams, ConferenciaEstoqueControllerRemoveHeaderParams, ConferenciaEstoqueControllerRemove400, ConferenciaEstoqueControllerRemove404 } from "../types/ConferenciaEstoqueControllerRemove.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const conferenciaEstoqueControllerRemoveMutationKey = () =>   [{"url":"/conferencia-estoque/{publicId}"}] as const
+export const conferenciaEstoqueControllerRemoveMutationKey = () => [{ url: '/conferencia-estoque/:publicId' }] as const
 
 export type ConferenciaEstoqueControllerRemoveMutationKey = ReturnType<typeof conferenciaEstoqueControllerRemoveMutationKey>
 
@@ -18,11 +18,20 @@ export type ConferenciaEstoqueControllerRemoveMutationKey = ReturnType<typeof co
  * {@link /conferencia-estoque/:publicId}
  */
 export async function conferenciaEstoqueControllerRemove(publicId: ConferenciaEstoqueControllerRemovePathParams["publicId"], headers: ConferenciaEstoqueControllerRemoveHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ConferenciaEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerRemove400 | ConferenciaEstoqueControllerRemove404>, unknown>({ method : "DELETE", url : `/conferencia-estoque/${publicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-
-const res = await request<ConferenciaEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerRemove400 | ConferenciaEstoqueControllerRemove404>, unknown>({ method : "DELETE", url : `/conferencia-estoque/${publicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function conferenciaEstoqueControllerRemoveMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = conferenciaEstoqueControllerRemoveMutationKey()
+  return mutationOptions<ConferenciaEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerRemove400 | ConferenciaEstoqueControllerRemove404>, {publicId: ConferenciaEstoqueControllerRemovePathParams["publicId"], headers: ConferenciaEstoqueControllerRemoveHeaderParams}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId, headers }) => {
+      return conferenciaEstoqueControllerRemove(publicId, headers, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /conferencia-estoque/:publicId}
  */
 export function useConferenciaEstoqueControllerRemove<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ConferenciaEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerRemove400 | ConferenciaEstoqueControllerRemove404>, {publicId: ConferenciaEstoqueControllerRemovePathParams["publicId"], headers: ConferenciaEstoqueControllerRemoveHeaderParams}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? conferenciaEstoqueControllerRemoveMutationKey()
-  
-          return useMutation<ConferenciaEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerRemove400 | ConferenciaEstoqueControllerRemove404>, {publicId: ConferenciaEstoqueControllerRemovePathParams["publicId"], headers: ConferenciaEstoqueControllerRemoveHeaderParams}, TContext>({
-            mutationFn: async({ publicId, headers }) => {
-              return conferenciaEstoqueControllerRemove(publicId, headers, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ConferenciaEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerRemove400 | ConferenciaEstoqueControllerRemove404>, {publicId: ConferenciaEstoqueControllerRemovePathParams["publicId"], headers: ConferenciaEstoqueControllerRemoveHeaderParams}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? conferenciaEstoqueControllerRemoveMutationKey()
+
+  const baseOptions = conferenciaEstoqueControllerRemoveMutationOptions(config) as UseMutationOptions<ConferenciaEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerRemove400 | ConferenciaEstoqueControllerRemove404>, {publicId: ConferenciaEstoqueControllerRemovePathParams["publicId"], headers: ConferenciaEstoqueControllerRemoveHeaderParams}, TContext>
+
+  return useMutation<ConferenciaEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerRemove400 | ConferenciaEstoqueControllerRemove404>, {publicId: ConferenciaEstoqueControllerRemovePathParams["publicId"], headers: ConferenciaEstoqueControllerRemoveHeaderParams}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ConferenciaEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerRemove400 | ConferenciaEstoqueControllerRemove404>, {publicId: ConferenciaEstoqueControllerRemovePathParams["publicId"], headers: ConferenciaEstoqueControllerRemoveHeaderParams}, TContext>
 }

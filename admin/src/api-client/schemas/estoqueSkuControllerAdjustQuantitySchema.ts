@@ -4,29 +4,28 @@
 */
 
 import type { EstoqueSkuControllerAdjustQuantityPathParams, EstoqueSkuControllerAdjustQuantity200, EstoqueSkuControllerAdjustQuantity400, EstoqueSkuControllerAdjustQuantity404, EstoqueSkuControllerAdjustQuantityMutationResponse } from "../types/EstoqueSkuControllerAdjustQuantity.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { estoqueSkuSchema } from "./estoqueSkuSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const estoqueSkuControllerAdjustQuantityPathParamsSchema = z.object({
-      "localId": z.coerce.number().describe("ID do local de estoque"),
-  "skuId": z.coerce.number().describe("ID do SKU"),
-  "adjustment": z.coerce.number().describe("Valor do ajuste (positivo para adicionar, negativo para subtrair)")
-      }) as unknown as ToZod<EstoqueSkuControllerAdjustQuantityPathParams>
+    "localId": z.coerce.number().describe("ID do local de estoque"),
+"skuId": z.coerce.number().describe("ID do SKU"),
+"adjustment": z.coerce.number().describe("Valor do ajuste (positivo para adicionar, negativo para subtrair)")
+    }) as unknown as z.ZodType<EstoqueSkuControllerAdjustQuantityPathParams>
 
 /**
  * @description Estoque ajustado com sucesso
  */
-export const estoqueSkuControllerAdjustQuantity200Schema = z.lazy(() => estoqueSkuSchema) as unknown as ToZod<EstoqueSkuControllerAdjustQuantity200>
+export const estoqueSkuControllerAdjustQuantity200Schema = estoqueSkuSchema as unknown as z.ZodType<EstoqueSkuControllerAdjustQuantity200>
 
 /**
  * @description Ajuste resultaria em quantidade negativa
  */
-export const estoqueSkuControllerAdjustQuantity400Schema = z.unknown() as unknown as ToZod<EstoqueSkuControllerAdjustQuantity400>
+export const estoqueSkuControllerAdjustQuantity400Schema = z.unknown() as unknown as z.ZodType<EstoqueSkuControllerAdjustQuantity400>
 
 /**
  * @description Registro de estoque não encontrado
  */
-export const estoqueSkuControllerAdjustQuantity404Schema = z.unknown() as unknown as ToZod<EstoqueSkuControllerAdjustQuantity404>
+export const estoqueSkuControllerAdjustQuantity404Schema = z.unknown() as unknown as z.ZodType<EstoqueSkuControllerAdjustQuantity404>
 
-export const estoqueSkuControllerAdjustQuantityMutationResponseSchema = z.lazy(() => estoqueSkuControllerAdjustQuantity200Schema) as unknown as ToZod<EstoqueSkuControllerAdjustQuantityMutationResponse>
+export const estoqueSkuControllerAdjustQuantityMutationResponseSchema = estoqueSkuControllerAdjustQuantity200Schema as unknown as z.ZodType<EstoqueSkuControllerAdjustQuantityMutationResponse>

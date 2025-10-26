@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const rollupControllerGetYearSummarySuspenseQueryKey = (params: RollupControllerGetYearSummaryQueryParams) =>   [{ url: '/dashboard/despesas/ano' }, ...(params ? [params] : [])] as const
+export const rollupControllerGetYearSummarySuspenseQueryKey = (params: RollupControllerGetYearSummaryQueryParams) => [{ url: '/dashboard/despesas/ano' }, ...(params ? [params] : [])] as const
 
 export type RollupControllerGetYearSummarySuspenseQueryKey = ReturnType<typeof rollupControllerGetYearSummarySuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type RollupControllerGetYearSummarySuspenseQueryKey = ReturnType<typeof r
  * {@link /dashboard/despesas/ano}
  */
 export async function rollupControllerGetYearSummarySuspense(params: RollupControllerGetYearSummaryQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<RollupControllerGetYearSummaryQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/dashboard/despesas/ano`, params, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<RollupControllerGetYearSummaryQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/dashboard/despesas/ano`, params, ... requestConfig })  
+  return res.data
 }
 
 export function rollupControllerGetYearSummarySuspenseQueryOptions(params: RollupControllerGetYearSummaryQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = rollupControllerGetYearSummarySuspenseQueryKey(params)
-        return queryOptions<RollupControllerGetYearSummaryQueryResponse, ResponseErrorConfig<Error>, RollupControllerGetYearSummaryQueryResponse, typeof queryKey>({
-         enabled: !!(params),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return rollupControllerGetYearSummarySuspense(params, config)
-         },
-        })
-  
+  const queryKey = rollupControllerGetYearSummarySuspenseQueryKey(params)
+  return queryOptions<RollupControllerGetYearSummaryQueryResponse, ResponseErrorConfig<Error>, RollupControllerGetYearSummaryQueryResponse, typeof queryKey>({
+   enabled: !!(params),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return rollupControllerGetYearSummarySuspense(params, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function rollupControllerGetYearSummarySuspenseQueryOptions(params: Rollu
  * {@link /dashboard/despesas/ano}
  */
 export function useRollupControllerGetYearSummarySuspense<TData = RollupControllerGetYearSummaryQueryResponse, TQueryKey extends QueryKey = RollupControllerGetYearSummarySuspenseQueryKey>(params: RollupControllerGetYearSummaryQueryParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<RollupControllerGetYearSummaryQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? rollupControllerGetYearSummarySuspenseQueryKey(params)
-  
-         const query = useSuspenseQuery({
-          ...rollupControllerGetYearSummarySuspenseQueryOptions(params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<RollupControllerGetYearSummaryQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? rollupControllerGetYearSummarySuspenseQueryKey(params)
+
+  const query = useSuspenseQuery({
+   ...rollupControllerGetYearSummarySuspenseQueryOptions(params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

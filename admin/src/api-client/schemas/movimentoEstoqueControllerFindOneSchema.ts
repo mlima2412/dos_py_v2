@@ -4,22 +4,21 @@
 */
 
 import type { MovimentoEstoqueControllerFindOnePathParams, MovimentoEstoqueControllerFindOne200, MovimentoEstoqueControllerFindOne404, MovimentoEstoqueControllerFindOneQueryResponse } from "../types/MovimentoEstoqueControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { movimentoEstoqueResponseDtoSchema } from "./movimentoEstoqueResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const movimentoEstoqueControllerFindOnePathParamsSchema = z.object({
-      "id": z.string().describe("ID do movimento")
-      }) as unknown as ToZod<MovimentoEstoqueControllerFindOnePathParams>
+    "id": z.string().describe("ID do movimento")
+    }) as unknown as z.ZodType<MovimentoEstoqueControllerFindOnePathParams>
 
 /**
  * @description Movimento encontrado com sucesso
  */
-export const movimentoEstoqueControllerFindOne200Schema = z.lazy(() => movimentoEstoqueResponseDtoSchema) as unknown as ToZod<MovimentoEstoqueControllerFindOne200>
+export const movimentoEstoqueControllerFindOne200Schema = movimentoEstoqueResponseDtoSchema as unknown as z.ZodType<MovimentoEstoqueControllerFindOne200>
 
 /**
  * @description Movimento não encontrado
  */
-export const movimentoEstoqueControllerFindOne404Schema = z.unknown() as unknown as ToZod<MovimentoEstoqueControllerFindOne404>
+export const movimentoEstoqueControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<MovimentoEstoqueControllerFindOne404>
 
-export const movimentoEstoqueControllerFindOneQueryResponseSchema = z.lazy(() => movimentoEstoqueControllerFindOne200Schema) as unknown as ToZod<MovimentoEstoqueControllerFindOneQueryResponse>
+export const movimentoEstoqueControllerFindOneQueryResponseSchema = movimentoEstoqueControllerFindOne200Schema as unknown as z.ZodType<MovimentoEstoqueControllerFindOneQueryResponse>

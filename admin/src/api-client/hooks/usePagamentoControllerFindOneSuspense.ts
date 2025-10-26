@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const pagamentoControllerFindOneSuspenseQueryKey = (id: PagamentoControllerFindOnePathParams["id"]) =>   [{ url: '/pagamento/:id', params: {id:id} }] as const
+export const pagamentoControllerFindOneSuspenseQueryKey = (id: PagamentoControllerFindOnePathParams["id"]) => [{ url: '/pagamento/:id', params: {id:id} }] as const
 
 export type PagamentoControllerFindOneSuspenseQueryKey = ReturnType<typeof pagamentoControllerFindOneSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type PagamentoControllerFindOneSuspenseQueryKey = ReturnType<typeof pagam
  * {@link /pagamento/:id}
  */
 export async function pagamentoControllerFindOneSuspense(id: PagamentoControllerFindOnePathParams["id"], headers: PagamentoControllerFindOneHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<PagamentoControllerFindOneQueryResponse, ResponseErrorConfig<PagamentoControllerFindOne404>, unknown>({ method : "GET", url : `/pagamento/${id}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<PagamentoControllerFindOneQueryResponse, ResponseErrorConfig<PagamentoControllerFindOne404>, unknown>({ method : "GET", url : `/pagamento/${id}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function pagamentoControllerFindOneSuspenseQueryOptions(id: PagamentoControllerFindOnePathParams["id"], headers: PagamentoControllerFindOneHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = pagamentoControllerFindOneSuspenseQueryKey(id)
-        return queryOptions<PagamentoControllerFindOneQueryResponse, ResponseErrorConfig<PagamentoControllerFindOne404>, PagamentoControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(id),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return pagamentoControllerFindOneSuspense(id, headers, config)
-         },
-        })
-  
+  const queryKey = pagamentoControllerFindOneSuspenseQueryKey(id)
+  return queryOptions<PagamentoControllerFindOneQueryResponse, ResponseErrorConfig<PagamentoControllerFindOne404>, PagamentoControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(id),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return pagamentoControllerFindOneSuspense(id, headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function pagamentoControllerFindOneSuspenseQueryOptions(id: PagamentoCont
  * {@link /pagamento/:id}
  */
 export function usePagamentoControllerFindOneSuspense<TData = PagamentoControllerFindOneQueryResponse, TQueryKey extends QueryKey = PagamentoControllerFindOneSuspenseQueryKey>(id: PagamentoControllerFindOnePathParams["id"], headers: PagamentoControllerFindOneHeaderParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<PagamentoControllerFindOneQueryResponse, ResponseErrorConfig<PagamentoControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? pagamentoControllerFindOneSuspenseQueryKey(id)
-  
-         const query = useSuspenseQuery({
-          ...pagamentoControllerFindOneSuspenseQueryOptions(id, headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<PagamentoControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<PagamentoControllerFindOneQueryResponse, ResponseErrorConfig<PagamentoControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? pagamentoControllerFindOneSuspenseQueryKey(id)
+
+  const query = useSuspenseQuery({
+   ...pagamentoControllerFindOneSuspenseQueryOptions(id, headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<PagamentoControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

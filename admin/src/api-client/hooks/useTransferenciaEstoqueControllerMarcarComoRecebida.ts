@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { TransferenciaEstoqueControllerMarcarComoRecebidaMutationResponse, TransferenciaEstoqueControllerMarcarComoRecebidaPathParams, TransferenciaEstoqueControllerMarcarComoRecebidaHeaderParams, TransferenciaEstoqueControllerMarcarComoRecebida404, TransferenciaEstoqueControllerMarcarComoRecebida409 } from "../types/TransferenciaEstoqueControllerMarcarComoRecebida.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const transferenciaEstoqueControllerMarcarComoRecebidaMutationKey = () =>   [{"url":"/transferencia-estoque/receber/{publicId}"}] as const
+export const transferenciaEstoqueControllerMarcarComoRecebidaMutationKey = () => [{ url: '/transferencia-estoque/receber/:publicId' }] as const
 
 export type TransferenciaEstoqueControllerMarcarComoRecebidaMutationKey = ReturnType<typeof transferenciaEstoqueControllerMarcarComoRecebidaMutationKey>
 
@@ -19,11 +19,20 @@ export type TransferenciaEstoqueControllerMarcarComoRecebidaMutationKey = Return
  * {@link /transferencia-estoque/receber/:publicId}
  */
 export async function transferenciaEstoqueControllerMarcarComoRecebida(publicId: TransferenciaEstoqueControllerMarcarComoRecebidaPathParams["publicId"], headers: TransferenciaEstoqueControllerMarcarComoRecebidaHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<TransferenciaEstoqueControllerMarcarComoRecebidaMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerMarcarComoRecebida404 | TransferenciaEstoqueControllerMarcarComoRecebida409>, unknown>({ method : "PATCH", url : `/transferencia-estoque/receber/${publicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-
-const res = await request<TransferenciaEstoqueControllerMarcarComoRecebidaMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerMarcarComoRecebida404 | TransferenciaEstoqueControllerMarcarComoRecebida409>, unknown>({ method : "PATCH", url : `/transferencia-estoque/receber/${publicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function transferenciaEstoqueControllerMarcarComoRecebidaMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = transferenciaEstoqueControllerMarcarComoRecebidaMutationKey()
+  return mutationOptions<TransferenciaEstoqueControllerMarcarComoRecebidaMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerMarcarComoRecebida404 | TransferenciaEstoqueControllerMarcarComoRecebida409>, {publicId: TransferenciaEstoqueControllerMarcarComoRecebidaPathParams["publicId"], headers: TransferenciaEstoqueControllerMarcarComoRecebidaHeaderParams}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId, headers }) => {
+      return transferenciaEstoqueControllerMarcarComoRecebida(publicId, headers, config)
+    },
+  })
 }
 
 /**
@@ -32,22 +41,20 @@ return res.data
  * {@link /transferencia-estoque/receber/:publicId}
  */
 export function useTransferenciaEstoqueControllerMarcarComoRecebida<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<TransferenciaEstoqueControllerMarcarComoRecebidaMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerMarcarComoRecebida404 | TransferenciaEstoqueControllerMarcarComoRecebida409>, {publicId: TransferenciaEstoqueControllerMarcarComoRecebidaPathParams["publicId"], headers: TransferenciaEstoqueControllerMarcarComoRecebidaHeaderParams}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? transferenciaEstoqueControllerMarcarComoRecebidaMutationKey()
-  
-          return useMutation<TransferenciaEstoqueControllerMarcarComoRecebidaMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerMarcarComoRecebida404 | TransferenciaEstoqueControllerMarcarComoRecebida409>, {publicId: TransferenciaEstoqueControllerMarcarComoRecebidaPathParams["publicId"], headers: TransferenciaEstoqueControllerMarcarComoRecebidaHeaderParams}, TContext>({
-            mutationFn: async({ publicId, headers }) => {
-              return transferenciaEstoqueControllerMarcarComoRecebida(publicId, headers, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<TransferenciaEstoqueControllerMarcarComoRecebidaMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerMarcarComoRecebida404 | TransferenciaEstoqueControllerMarcarComoRecebida409>, {publicId: TransferenciaEstoqueControllerMarcarComoRecebidaPathParams["publicId"], headers: TransferenciaEstoqueControllerMarcarComoRecebidaHeaderParams}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? transferenciaEstoqueControllerMarcarComoRecebidaMutationKey()
+
+  const baseOptions = transferenciaEstoqueControllerMarcarComoRecebidaMutationOptions(config) as UseMutationOptions<TransferenciaEstoqueControllerMarcarComoRecebidaMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerMarcarComoRecebida404 | TransferenciaEstoqueControllerMarcarComoRecebida409>, {publicId: TransferenciaEstoqueControllerMarcarComoRecebidaPathParams["publicId"], headers: TransferenciaEstoqueControllerMarcarComoRecebidaHeaderParams}, TContext>
+
+  return useMutation<TransferenciaEstoqueControllerMarcarComoRecebidaMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerMarcarComoRecebida404 | TransferenciaEstoqueControllerMarcarComoRecebida409>, {publicId: TransferenciaEstoqueControllerMarcarComoRecebidaPathParams["publicId"], headers: TransferenciaEstoqueControllerMarcarComoRecebidaHeaderParams}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<TransferenciaEstoqueControllerMarcarComoRecebidaMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerMarcarComoRecebida404 | TransferenciaEstoqueControllerMarcarComoRecebida409>, {publicId: TransferenciaEstoqueControllerMarcarComoRecebidaPathParams["publicId"], headers: TransferenciaEstoqueControllerMarcarComoRecebidaHeaderParams}, TContext>
 }

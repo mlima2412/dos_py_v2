@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const usuariosControllerFindAllQueryKey = () =>   [{ url: '/usuarios' }] as const
+export const usuariosControllerFindAllQueryKey = () => [{ url: '/usuarios' }] as const
 
 export type UsuariosControllerFindAllQueryKey = ReturnType<typeof usuariosControllerFindAllQueryKey>
 
@@ -18,25 +18,22 @@ export type UsuariosControllerFindAllQueryKey = ReturnType<typeof usuariosContro
  * {@link /usuarios}
  */
 export async function usuariosControllerFindAll(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<UsuariosControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/usuarios`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<UsuariosControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/usuarios`, ... requestConfig })  
+  return res.data
 }
 
 export function usuariosControllerFindAllQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = usuariosControllerFindAllQueryKey()
-        return queryOptions<UsuariosControllerFindAllQueryResponse, ResponseErrorConfig<Error>, UsuariosControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return usuariosControllerFindAll(config)
-         },
-        })
-  
+  const queryKey = usuariosControllerFindAllQueryKey()
+  return queryOptions<UsuariosControllerFindAllQueryResponse, ResponseErrorConfig<Error>, UsuariosControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return usuariosControllerFindAll(config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function usuariosControllerFindAllQueryOptions(config: Partial<RequestCon
  * {@link /usuarios}
  */
 export function useUsuariosControllerFindAll<TData = UsuariosControllerFindAllQueryResponse, TQueryData = UsuariosControllerFindAllQueryResponse, TQueryKey extends QueryKey = UsuariosControllerFindAllQueryKey>(options: 
-  {
-    query?: Partial<QueryObserverOptions<UsuariosControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? usuariosControllerFindAllQueryKey()
-  
-         const query = useQuery({
-          ...usuariosControllerFindAllQueryOptions(config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<UsuariosControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? usuariosControllerFindAllQueryKey()
+
+  const query = useQuery({
+   ...usuariosControllerFindAllQueryOptions(config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

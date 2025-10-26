@@ -17,7 +17,7 @@ export const despesaRecorrenteFrequenciaEnum = {
     "ANUAL": "ANUAL"
 } as const;
 
-export type DespesaRecorrenteFrequenciaEnum = (typeof despesaRecorrenteFrequenciaEnum)[keyof typeof despesaRecorrenteFrequenciaEnum];
+export type DespesaRecorrenteFrequenciaEnumKey = (typeof despesaRecorrenteFrequenciaEnum)[keyof typeof despesaRecorrenteFrequenciaEnum];
 
 export type DespesaRecorrente = {
     /**
@@ -44,7 +44,7 @@ export type DespesaRecorrente = {
      * @description Frequência da despesa recorrente
      * @type string
     */
-    frequencia: DespesaRecorrenteFrequenciaEnum;
+    frequencia: DespesaRecorrenteFrequenciaEnumKey;
     /**
      * @description Dia do vencimento da despesa recorrente
      * @type number

@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const transferenciaEstoqueControllerFindAllSuspenseQueryKey = () =>   [{ url: '/transferencia-estoque' }] as const
+export const transferenciaEstoqueControllerFindAllSuspenseQueryKey = () => [{ url: '/transferencia-estoque' }] as const
 
 export type TransferenciaEstoqueControllerFindAllSuspenseQueryKey = ReturnType<typeof transferenciaEstoqueControllerFindAllSuspenseQueryKey>
 
@@ -19,25 +19,22 @@ export type TransferenciaEstoqueControllerFindAllSuspenseQueryKey = ReturnType<t
  * {@link /transferencia-estoque}
  */
 export async function transferenciaEstoqueControllerFindAllSuspense(headers: TransferenciaEstoqueControllerFindAllHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<TransferenciaEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/transferencia-estoque`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<TransferenciaEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/transferencia-estoque`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function transferenciaEstoqueControllerFindAllSuspenseQueryOptions(headers: TransferenciaEstoqueControllerFindAllHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = transferenciaEstoqueControllerFindAllSuspenseQueryKey()
-        return queryOptions<TransferenciaEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TransferenciaEstoqueControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return transferenciaEstoqueControllerFindAllSuspense(headers, config)
-         },
-        })
-  
+  const queryKey = transferenciaEstoqueControllerFindAllSuspenseQueryKey()
+  return queryOptions<TransferenciaEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TransferenciaEstoqueControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return transferenciaEstoqueControllerFindAllSuspense(headers, config)
+   },
+  })
 }
 
 /**
@@ -46,23 +43,22 @@ export function transferenciaEstoqueControllerFindAllSuspenseQueryOptions(header
  * {@link /transferencia-estoque}
  */
 export function useTransferenciaEstoqueControllerFindAllSuspense<TData = TransferenciaEstoqueControllerFindAllQueryResponse, TQueryKey extends QueryKey = TransferenciaEstoqueControllerFindAllSuspenseQueryKey>(headers: TransferenciaEstoqueControllerFindAllHeaderParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<TransferenciaEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? transferenciaEstoqueControllerFindAllSuspenseQueryKey()
-  
-         const query = useSuspenseQuery({
-          ...transferenciaEstoqueControllerFindAllSuspenseQueryOptions(headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<TransferenciaEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? transferenciaEstoqueControllerFindAllSuspenseQueryKey()
+
+  const query = useSuspenseQuery({
+   ...transferenciaEstoqueControllerFindAllSuspenseQueryOptions(headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

@@ -4,27 +4,26 @@
 */
 
 import type { ConferenciaEstoqueControllerCheckLocalEmConferenciaPathParams, ConferenciaEstoqueControllerCheckLocalEmConferenciaHeaderParams, ConferenciaEstoqueControllerCheckLocalEmConferencia200, ConferenciaEstoqueControllerCheckLocalEmConferencia404, ConferenciaEstoqueControllerCheckLocalEmConferenciaQueryResponse } from "../types/ConferenciaEstoqueControllerCheckLocalEmConferencia.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const conferenciaEstoqueControllerCheckLocalEmConferenciaPathParamsSchema = z.object({
-      "localPublicId": z.string().describe("ID público do local de estoque")
-      }) as unknown as ToZod<ConferenciaEstoqueControllerCheckLocalEmConferenciaPathParams>
+    "localPublicId": z.string().describe("ID público do local de estoque")
+    }) as unknown as z.ZodType<ConferenciaEstoqueControllerCheckLocalEmConferenciaPathParams>
 
 export const conferenciaEstoqueControllerCheckLocalEmConferenciaHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<ConferenciaEstoqueControllerCheckLocalEmConferenciaHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<ConferenciaEstoqueControllerCheckLocalEmConferenciaHeaderParams>
 
 /**
  * @description Status da conferência do local de estoque
  */
 export const conferenciaEstoqueControllerCheckLocalEmConferencia200Schema = z.object({
-      "emConferencia": z.boolean().describe("True se existe conferência pendente, false caso contrário").optional()
-      }) as unknown as ToZod<ConferenciaEstoqueControllerCheckLocalEmConferencia200>
+    "emConferencia": z.optional(z.boolean().describe("True se existe conferência pendente, false caso contrário"))
+    }) as unknown as z.ZodType<ConferenciaEstoqueControllerCheckLocalEmConferencia200>
 
 /**
  * @description Local de estoque não encontrado
  */
-export const conferenciaEstoqueControllerCheckLocalEmConferencia404Schema = z.unknown() as unknown as ToZod<ConferenciaEstoqueControllerCheckLocalEmConferencia404>
+export const conferenciaEstoqueControllerCheckLocalEmConferencia404Schema = z.unknown() as unknown as z.ZodType<ConferenciaEstoqueControllerCheckLocalEmConferencia404>
 
-export const conferenciaEstoqueControllerCheckLocalEmConferenciaQueryResponseSchema = z.lazy(() => conferenciaEstoqueControllerCheckLocalEmConferencia200Schema) as unknown as ToZod<ConferenciaEstoqueControllerCheckLocalEmConferenciaQueryResponse>
+export const conferenciaEstoqueControllerCheckLocalEmConferenciaQueryResponseSchema = conferenciaEstoqueControllerCheckLocalEmConferencia200Schema as unknown as z.ZodType<ConferenciaEstoqueControllerCheckLocalEmConferenciaQueryResponse>

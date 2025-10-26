@@ -4,26 +4,25 @@
 */
 
 import type { PedidoCompraItemControllerFindOnePathParams, PedidoCompraItemControllerFindOneHeaderParams, PedidoCompraItemControllerFindOne200, PedidoCompraItemControllerFindOne404, PedidoCompraItemControllerFindOneQueryResponse } from "../types/PedidoCompraItemControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { pedidoCompraItemSchema } from "./pedidoCompraItemSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const pedidoCompraItemControllerFindOnePathParamsSchema = z.object({
-      "id": z.string().describe("ID do item de pedido de compra")
-      }) as unknown as ToZod<PedidoCompraItemControllerFindOnePathParams>
+    "id": z.string().describe("ID do item de pedido de compra")
+    }) as unknown as z.ZodType<PedidoCompraItemControllerFindOnePathParams>
 
 export const pedidoCompraItemControllerFindOneHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
-      }) as unknown as ToZod<PedidoCompraItemControllerFindOneHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+    }) as unknown as z.ZodType<PedidoCompraItemControllerFindOneHeaderParams>
 
 /**
  * @description Item de pedido de compra encontrado com sucesso
  */
-export const pedidoCompraItemControllerFindOne200Schema = z.lazy(() => pedidoCompraItemSchema) as unknown as ToZod<PedidoCompraItemControllerFindOne200>
+export const pedidoCompraItemControllerFindOne200Schema = pedidoCompraItemSchema as unknown as z.ZodType<PedidoCompraItemControllerFindOne200>
 
 /**
  * @description Item de pedido de compra não encontrado
  */
-export const pedidoCompraItemControllerFindOne404Schema = z.unknown() as unknown as ToZod<PedidoCompraItemControllerFindOne404>
+export const pedidoCompraItemControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<PedidoCompraItemControllerFindOne404>
 
-export const pedidoCompraItemControllerFindOneQueryResponseSchema = z.lazy(() => pedidoCompraItemControllerFindOne200Schema) as unknown as ToZod<PedidoCompraItemControllerFindOneQueryResponse>
+export const pedidoCompraItemControllerFindOneQueryResponseSchema = pedidoCompraItemControllerFindOne200Schema as unknown as z.ZodType<PedidoCompraItemControllerFindOneQueryResponse>

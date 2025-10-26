@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { PagamentoControllerRemoveMutationResponse, PagamentoControllerRemovePathParams, PagamentoControllerRemoveHeaderParams, PagamentoControllerRemove404 } from "../types/PagamentoControllerRemove.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const pagamentoControllerRemoveMutationKey = () =>   [{"url":"/pagamento/{id}"}] as const
+export const pagamentoControllerRemoveMutationKey = () => [{ url: '/pagamento/:id' }] as const
 
 export type PagamentoControllerRemoveMutationKey = ReturnType<typeof pagamentoControllerRemoveMutationKey>
 
@@ -18,11 +18,20 @@ export type PagamentoControllerRemoveMutationKey = ReturnType<typeof pagamentoCo
  * {@link /pagamento/:id}
  */
 export async function pagamentoControllerRemove(id: PagamentoControllerRemovePathParams["id"], headers: PagamentoControllerRemoveHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<PagamentoControllerRemoveMutationResponse, ResponseErrorConfig<PagamentoControllerRemove404>, unknown>({ method : "DELETE", url : `/pagamento/${id}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-
-const res = await request<PagamentoControllerRemoveMutationResponse, ResponseErrorConfig<PagamentoControllerRemove404>, unknown>({ method : "DELETE", url : `/pagamento/${id}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function pagamentoControllerRemoveMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = pagamentoControllerRemoveMutationKey()
+  return mutationOptions<PagamentoControllerRemoveMutationResponse, ResponseErrorConfig<PagamentoControllerRemove404>, {id: PagamentoControllerRemovePathParams["id"], headers: PagamentoControllerRemoveHeaderParams}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ id, headers }) => {
+      return pagamentoControllerRemove(id, headers, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /pagamento/:id}
  */
 export function usePagamentoControllerRemove<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<PagamentoControllerRemoveMutationResponse, ResponseErrorConfig<PagamentoControllerRemove404>, {id: PagamentoControllerRemovePathParams["id"], headers: PagamentoControllerRemoveHeaderParams}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? pagamentoControllerRemoveMutationKey()
-  
-          return useMutation<PagamentoControllerRemoveMutationResponse, ResponseErrorConfig<PagamentoControllerRemove404>, {id: PagamentoControllerRemovePathParams["id"], headers: PagamentoControllerRemoveHeaderParams}, TContext>({
-            mutationFn: async({ id, headers }) => {
-              return pagamentoControllerRemove(id, headers, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<PagamentoControllerRemoveMutationResponse, ResponseErrorConfig<PagamentoControllerRemove404>, {id: PagamentoControllerRemovePathParams["id"], headers: PagamentoControllerRemoveHeaderParams}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? pagamentoControllerRemoveMutationKey()
+
+  const baseOptions = pagamentoControllerRemoveMutationOptions(config) as UseMutationOptions<PagamentoControllerRemoveMutationResponse, ResponseErrorConfig<PagamentoControllerRemove404>, {id: PagamentoControllerRemovePathParams["id"], headers: PagamentoControllerRemoveHeaderParams}, TContext>
+
+  return useMutation<PagamentoControllerRemoveMutationResponse, ResponseErrorConfig<PagamentoControllerRemove404>, {id: PagamentoControllerRemovePathParams["id"], headers: PagamentoControllerRemoveHeaderParams}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<PagamentoControllerRemoveMutationResponse, ResponseErrorConfig<PagamentoControllerRemove404>, {id: PagamentoControllerRemovePathParams["id"], headers: PagamentoControllerRemoveHeaderParams}, TContext>
 }

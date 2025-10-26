@@ -4,26 +4,25 @@
 */
 
 import type { PagamentoControllerFindOnePathParams, PagamentoControllerFindOneHeaderParams, PagamentoControllerFindOne200, PagamentoControllerFindOne404, PagamentoControllerFindOneQueryResponse } from "../types/PagamentoControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { pagamentoSchema } from "./pagamentoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const pagamentoControllerFindOnePathParamsSchema = z.object({
-      "id": z.coerce.number().describe("ID do pagamento")
-      }) as unknown as ToZod<PagamentoControllerFindOnePathParams>
+    "id": z.coerce.number().describe("ID do pagamento")
+    }) as unknown as z.ZodType<PagamentoControllerFindOnePathParams>
 
 export const pagamentoControllerFindOneHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<PagamentoControllerFindOneHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<PagamentoControllerFindOneHeaderParams>
 
 /**
  * @description Pagamento encontrado
  */
-export const pagamentoControllerFindOne200Schema = z.lazy(() => pagamentoSchema) as unknown as ToZod<PagamentoControllerFindOne200>
+export const pagamentoControllerFindOne200Schema = pagamentoSchema as unknown as z.ZodType<PagamentoControllerFindOne200>
 
 /**
  * @description Pagamento não encontrado
  */
-export const pagamentoControllerFindOne404Schema = z.unknown() as unknown as ToZod<PagamentoControllerFindOne404>
+export const pagamentoControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<PagamentoControllerFindOne404>
 
-export const pagamentoControllerFindOneQueryResponseSchema = z.lazy(() => pagamentoControllerFindOne200Schema) as unknown as ToZod<PagamentoControllerFindOneQueryResponse>
+export const pagamentoControllerFindOneQueryResponseSchema = pagamentoControllerFindOne200Schema as unknown as z.ZodType<PagamentoControllerFindOneQueryResponse>

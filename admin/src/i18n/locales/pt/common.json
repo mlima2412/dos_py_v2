@@ -1638,6 +1638,7 @@
 			"steps": {
 				"basic": "Dados básicos",
 				"items": "Itens",
+				"billing": "Faturamento",
 				"review": "Pagamento"
 			},
 			"sections": {
@@ -1645,6 +1646,7 @@
 				"availableProducts": "Produtos disponíveis",
 				"selectedItems": "Itens selecionados",
 				"itemsTable": "Detalhes dos itens",
+				"billing": "Dados de faturamento",
 				"review": "Revisão e confirmação",
 				"itemsSummary": "Resumo dos itens"
 			},
@@ -1696,7 +1698,21 @@
 				"valueSituation": "Situação dos Valores",
 				"adjustments": "Ajustes",
 				"actions": "Ações",
-				"paymentDialogDescription": "Preencha os dados da forma de pagamento"
+				"normalPayment": "Pagamento normal",
+				"paymentDialogDescription": "Preencha os dados da forma de pagamento",
+				"wantsInvoice": "Deseja emitir nota fiscal?",
+				"invoiceInNameOf": "A nota fiscal será em nome de:",
+				"customerName": "Cliente",
+				"invoiceInCustomerName": "Nota fiscal em nome do cliente",
+				"invoiceInThirdPartyName": "Nota fiscal em nome de terceiro",
+				"customerAlreadyHasRucCnpj": "O cliente já possui RUC/CNPJ cadastrado",
+				"customerRucCnpj": "RUC/CNPJ do cliente",
+				"thirdPartyName": "Terceiro",
+				"thirdPartyRucCnpj": "RUC/CNPJ (terceiro)",
+				"rucCnpj": "RUC/CNPJ",
+				"invoiceName": "Nome para fatura",
+				"previousInvoiceNames": "Nomes usados anteriormente",
+				"newInvoiceName": "Novo nome"
 			},
 			"paymentTypes": {
 				"A_VISTA_IMEDIATA": "À vista",
@@ -1714,7 +1730,12 @@
 				"invoiceNumber": "Informe o número da fatura",
 				"observation": "Adicione observações gerais",
 				"product": "Busque um produto",
-				"barcode": "Código de barras ou SKU"
+				"barcode": "Código de barras ou SKU",
+				"thirdPartyName": "Informe o nome completo",
+				"thirdPartyRucCnpj": "Informe o RUC/CNPJ",
+				"customerRucCnpj": "Informe o RUC/CNPJ do cliente",
+				"fullName": "Digite o nome completo",
+				"selectPreviousName": "Selecione um nome anterior ou crie novo"
 			},
 			"actions": {
 				"saveAndContinue": "Salvar e avançar",
@@ -1744,7 +1765,8 @@
 				"itemsSaveError": "Não foi possível salvar os itens da venda.",
 				"finalizeSuccess": "Venda finalizada com sucesso!",
 				"finalizeError": "Não foi possível finalizar a venda.",
-				"noPaymentsAdded": "Nenhuma forma de pagamento adicionada"
+				"noPaymentsAdded": "Nenhuma forma de pagamento adicionada",
+				"customerNeedsRucCnpj": "O cliente não possui RUC/CNPJ cadastrado. Por favor, informe o RUC/CNPJ para emitir a nota fiscal."
 			},
 			"discount": {
 				"title": "Desconto",

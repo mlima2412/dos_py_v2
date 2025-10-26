@@ -3,22 +3,17 @@
 * Do not edit manually.
 */
 
-import type { DespesasControllerFindAllQueryParams, DespesasControllerFindAllHeaderParams, DespesasControllerFindAll200, DespesasControllerFindAllQueryResponse } from "../types/DespesasControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
+import type { DespesasControllerFindAllHeaderParams, DespesasControllerFindAll200, DespesasControllerFindAllQueryResponse } from "../types/DespesasControllerFindAll.ts";
 import { despesaSchema } from "./despesaSchema.ts";
-import { z } from "zod";
-
-export const despesasControllerFindAllQueryParamsSchema = z.object({
-      "search": z.string()
-      }) as unknown as ToZod<DespesasControllerFindAllQueryParams>
+import { z } from "zod/v4";
 
 export const despesasControllerFindAllHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<DespesasControllerFindAllHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<DespesasControllerFindAllHeaderParams>
 
 /**
  * @description Lista de despesas do parceiro
  */
-export const despesasControllerFindAll200Schema = z.array(z.lazy(() => despesaSchema)) as unknown as ToZod<DespesasControllerFindAll200>
+export const despesasControllerFindAll200Schema = z.array(despesaSchema) as unknown as z.ZodType<DespesasControllerFindAll200>
 
-export const despesasControllerFindAllQueryResponseSchema = z.lazy(() => despesasControllerFindAll200Schema) as unknown as ToZod<DespesasControllerFindAllQueryResponse>
+export const despesasControllerFindAllQueryResponseSchema = despesasControllerFindAll200Schema as unknown as z.ZodType<DespesasControllerFindAllQueryResponse>

@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationRequest, MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationResponse, MovimentoEstoqueControllerProcessarAjustesConferenciaLote400, MovimentoEstoqueControllerProcessarAjustesConferenciaLote404, MovimentoEstoqueControllerProcessarAjustesConferenciaLote409 } from "../types/MovimentoEstoqueControllerProcessarAjustesConferenciaLote.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const movimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationKey = () =>   [{"url":"/movimento-estoque/ajuste-conferencia-lote"}] as const
+export const movimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationKey = () => [{ url: '/movimento-estoque/ajuste-conferencia-lote' }] as const
 
 export type MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationKey = ReturnType<typeof movimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationKey>
 
@@ -19,11 +19,22 @@ export type MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationKey
  * {@link /movimento-estoque/ajuste-conferencia-lote}
  */
 export async function movimentoEstoqueControllerProcessarAjustesConferenciaLote(data: MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationRequest, config: Partial<RequestConfig<MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationResponse, ResponseErrorConfig<MovimentoEstoqueControllerProcessarAjustesConferenciaLote400 | MovimentoEstoqueControllerProcessarAjustesConferenciaLote404 | MovimentoEstoqueControllerProcessarAjustesConferenciaLote409>, MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationRequest>({ method : "POST", url : `/movimento-estoque/ajuste-conferencia-lote`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationResponse, ResponseErrorConfig<MovimentoEstoqueControllerProcessarAjustesConferenciaLote400 | MovimentoEstoqueControllerProcessarAjustesConferenciaLote404 | MovimentoEstoqueControllerProcessarAjustesConferenciaLote409>, MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationRequest>({ method : "POST", url : `/movimento-estoque/ajuste-conferencia-lote`, data : requestData, ... requestConfig })
-return res.data
+export function movimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationOptions(config: Partial<RequestConfig<MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = movimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationKey()
+  return mutationOptions<MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationResponse, ResponseErrorConfig<MovimentoEstoqueControllerProcessarAjustesConferenciaLote400 | MovimentoEstoqueControllerProcessarAjustesConferenciaLote404 | MovimentoEstoqueControllerProcessarAjustesConferenciaLote409>, {data: MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data }) => {
+      return movimentoEstoqueControllerProcessarAjustesConferenciaLote(data, config)
+    },
+  })
 }
 
 /**
@@ -32,22 +43,20 @@ return res.data
  * {@link /movimento-estoque/ajuste-conferencia-lote}
  */
 export function useMovimentoEstoqueControllerProcessarAjustesConferenciaLote<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationResponse, ResponseErrorConfig<MovimentoEstoqueControllerProcessarAjustesConferenciaLote400 | MovimentoEstoqueControllerProcessarAjustesConferenciaLote404 | MovimentoEstoqueControllerProcessarAjustesConferenciaLote409>, {data: MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? movimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationKey()
-  
-          return useMutation<MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationResponse, ResponseErrorConfig<MovimentoEstoqueControllerProcessarAjustesConferenciaLote400 | MovimentoEstoqueControllerProcessarAjustesConferenciaLote404 | MovimentoEstoqueControllerProcessarAjustesConferenciaLote409>, {data: MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationRequest}, TContext>({
-            mutationFn: async({ data }) => {
-              return movimentoEstoqueControllerProcessarAjustesConferenciaLote(data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationResponse, ResponseErrorConfig<MovimentoEstoqueControllerProcessarAjustesConferenciaLote400 | MovimentoEstoqueControllerProcessarAjustesConferenciaLote404 | MovimentoEstoqueControllerProcessarAjustesConferenciaLote409>, {data: MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? movimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationKey()
+
+  const baseOptions = movimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationOptions(config) as UseMutationOptions<MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationResponse, ResponseErrorConfig<MovimentoEstoqueControllerProcessarAjustesConferenciaLote400 | MovimentoEstoqueControllerProcessarAjustesConferenciaLote404 | MovimentoEstoqueControllerProcessarAjustesConferenciaLote409>, {data: MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationRequest}, TContext>
+
+  return useMutation<MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationResponse, ResponseErrorConfig<MovimentoEstoqueControllerProcessarAjustesConferenciaLote400 | MovimentoEstoqueControllerProcessarAjustesConferenciaLote404 | MovimentoEstoqueControllerProcessarAjustesConferenciaLote409>, {data: MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationResponse, ResponseErrorConfig<MovimentoEstoqueControllerProcessarAjustesConferenciaLote400 | MovimentoEstoqueControllerProcessarAjustesConferenciaLote404 | MovimentoEstoqueControllerProcessarAjustesConferenciaLote409>, {data: MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationRequest}, TContext>
 }

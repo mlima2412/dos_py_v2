@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const despesasRecorrentesControllerFindByParceiroQueryKey = (parceiroId: DespesasRecorrentesControllerFindByParceiroPathParams["parceiroId"]) =>   [{ url: '/despesas-recorrentes/parceiro/:parceiroId', params: {parceiroId:parceiroId} }] as const
+export const despesasRecorrentesControllerFindByParceiroQueryKey = (parceiroId: DespesasRecorrentesControllerFindByParceiroPathParams["parceiroId"]) => [{ url: '/despesas-recorrentes/parceiro/:parceiroId', params: {parceiroId:parceiroId} }] as const
 
 export type DespesasRecorrentesControllerFindByParceiroQueryKey = ReturnType<typeof despesasRecorrentesControllerFindByParceiroQueryKey>
 
@@ -18,25 +18,22 @@ export type DespesasRecorrentesControllerFindByParceiroQueryKey = ReturnType<typ
  * {@link /despesas-recorrentes/parceiro/:parceiroId}
  */
 export async function despesasRecorrentesControllerFindByParceiro(parceiroId: DespesasRecorrentesControllerFindByParceiroPathParams["parceiroId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<DespesasRecorrentesControllerFindByParceiroQueryResponse, ResponseErrorConfig<DespesasRecorrentesControllerFindByParceiro401>, unknown>({ method : "GET", url : `/despesas-recorrentes/parceiro/${parceiroId}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<DespesasRecorrentesControllerFindByParceiroQueryResponse, ResponseErrorConfig<DespesasRecorrentesControllerFindByParceiro401>, unknown>({ method : "GET", url : `/despesas-recorrentes/parceiro/${parceiroId}`, ... requestConfig })  
+  return res.data
 }
 
 export function despesasRecorrentesControllerFindByParceiroQueryOptions(parceiroId: DespesasRecorrentesControllerFindByParceiroPathParams["parceiroId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = despesasRecorrentesControllerFindByParceiroQueryKey(parceiroId)
-        return queryOptions<DespesasRecorrentesControllerFindByParceiroQueryResponse, ResponseErrorConfig<DespesasRecorrentesControllerFindByParceiro401>, DespesasRecorrentesControllerFindByParceiroQueryResponse, typeof queryKey>({
-         enabled: !!(parceiroId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return despesasRecorrentesControllerFindByParceiro(parceiroId, config)
-         },
-        })
-  
+  const queryKey = despesasRecorrentesControllerFindByParceiroQueryKey(parceiroId)
+  return queryOptions<DespesasRecorrentesControllerFindByParceiroQueryResponse, ResponseErrorConfig<DespesasRecorrentesControllerFindByParceiro401>, DespesasRecorrentesControllerFindByParceiroQueryResponse, typeof queryKey>({
+   enabled: !!(parceiroId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return despesasRecorrentesControllerFindByParceiro(parceiroId, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function despesasRecorrentesControllerFindByParceiroQueryOptions(parceiro
  * {@link /despesas-recorrentes/parceiro/:parceiroId}
  */
 export function useDespesasRecorrentesControllerFindByParceiro<TData = DespesasRecorrentesControllerFindByParceiroQueryResponse, TQueryData = DespesasRecorrentesControllerFindByParceiroQueryResponse, TQueryKey extends QueryKey = DespesasRecorrentesControllerFindByParceiroQueryKey>(parceiroId: DespesasRecorrentesControllerFindByParceiroPathParams["parceiroId"], options: 
-  {
-    query?: Partial<QueryObserverOptions<DespesasRecorrentesControllerFindByParceiroQueryResponse, ResponseErrorConfig<DespesasRecorrentesControllerFindByParceiro401>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? despesasRecorrentesControllerFindByParceiroQueryKey(parceiroId)
-  
-         const query = useQuery({
-          ...despesasRecorrentesControllerFindByParceiroQueryOptions(parceiroId, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<DespesasRecorrentesControllerFindByParceiro401>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<DespesasRecorrentesControllerFindByParceiroQueryResponse, ResponseErrorConfig<DespesasRecorrentesControllerFindByParceiro401>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? despesasRecorrentesControllerFindByParceiroQueryKey(parceiroId)
+
+  const query = useQuery({
+   ...despesasRecorrentesControllerFindByParceiroQueryOptions(parceiroId, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<DespesasRecorrentesControllerFindByParceiro401>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

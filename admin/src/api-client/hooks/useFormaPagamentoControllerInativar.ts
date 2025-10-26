@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { FormaPagamentoControllerInativarMutationResponse, FormaPagamentoControllerInativarPathParams, FormaPagamentoControllerInativarHeaderParams, FormaPagamentoControllerInativar404 } from "../types/FormaPagamentoControllerInativar.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const formaPagamentoControllerInativarMutationKey = () =>   [{"url":"/forma-pagamento/{id}/inativar"}] as const
+export const formaPagamentoControllerInativarMutationKey = () => [{ url: '/forma-pagamento/:id/inativar' }] as const
 
 export type FormaPagamentoControllerInativarMutationKey = ReturnType<typeof formaPagamentoControllerInativarMutationKey>
 
@@ -18,11 +18,20 @@ export type FormaPagamentoControllerInativarMutationKey = ReturnType<typeof form
  * {@link /forma-pagamento/:id/inativar}
  */
 export async function formaPagamentoControllerInativar(id: FormaPagamentoControllerInativarPathParams["id"], headers: FormaPagamentoControllerInativarHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<FormaPagamentoControllerInativarMutationResponse, ResponseErrorConfig<FormaPagamentoControllerInativar404>, unknown>({ method : "PATCH", url : `/forma-pagamento/${id}/inativar`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-
-const res = await request<FormaPagamentoControllerInativarMutationResponse, ResponseErrorConfig<FormaPagamentoControllerInativar404>, unknown>({ method : "PATCH", url : `/forma-pagamento/${id}/inativar`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function formaPagamentoControllerInativarMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = formaPagamentoControllerInativarMutationKey()
+  return mutationOptions<FormaPagamentoControllerInativarMutationResponse, ResponseErrorConfig<FormaPagamentoControllerInativar404>, {id: FormaPagamentoControllerInativarPathParams["id"], headers: FormaPagamentoControllerInativarHeaderParams}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ id, headers }) => {
+      return formaPagamentoControllerInativar(id, headers, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /forma-pagamento/:id/inativar}
  */
 export function useFormaPagamentoControllerInativar<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<FormaPagamentoControllerInativarMutationResponse, ResponseErrorConfig<FormaPagamentoControllerInativar404>, {id: FormaPagamentoControllerInativarPathParams["id"], headers: FormaPagamentoControllerInativarHeaderParams}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? formaPagamentoControllerInativarMutationKey()
-  
-          return useMutation<FormaPagamentoControllerInativarMutationResponse, ResponseErrorConfig<FormaPagamentoControllerInativar404>, {id: FormaPagamentoControllerInativarPathParams["id"], headers: FormaPagamentoControllerInativarHeaderParams}, TContext>({
-            mutationFn: async({ id, headers }) => {
-              return formaPagamentoControllerInativar(id, headers, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<FormaPagamentoControllerInativarMutationResponse, ResponseErrorConfig<FormaPagamentoControllerInativar404>, {id: FormaPagamentoControllerInativarPathParams["id"], headers: FormaPagamentoControllerInativarHeaderParams}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? formaPagamentoControllerInativarMutationKey()
+
+  const baseOptions = formaPagamentoControllerInativarMutationOptions(config) as UseMutationOptions<FormaPagamentoControllerInativarMutationResponse, ResponseErrorConfig<FormaPagamentoControllerInativar404>, {id: FormaPagamentoControllerInativarPathParams["id"], headers: FormaPagamentoControllerInativarHeaderParams}, TContext>
+
+  return useMutation<FormaPagamentoControllerInativarMutationResponse, ResponseErrorConfig<FormaPagamentoControllerInativar404>, {id: FormaPagamentoControllerInativarPathParams["id"], headers: FormaPagamentoControllerInativarHeaderParams}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<FormaPagamentoControllerInativarMutationResponse, ResponseErrorConfig<FormaPagamentoControllerInativar404>, {id: FormaPagamentoControllerInativarPathParams["id"], headers: FormaPagamentoControllerInativarHeaderParams}, TContext>
 }

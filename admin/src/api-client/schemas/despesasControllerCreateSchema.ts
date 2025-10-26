@@ -4,25 +4,24 @@
 */
 
 import type { DespesasControllerCreateHeaderParams, DespesasControllerCreate201, DespesasControllerCreate400, DespesasControllerCreateMutationRequest, DespesasControllerCreateMutationResponse } from "../types/DespesasControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createDespesaDtoSchema } from "./createDespesaDtoSchema.ts";
 import { despesaSchema } from "./despesaSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const despesasControllerCreateHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<DespesasControllerCreateHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<DespesasControllerCreateHeaderParams>
 
 /**
  * @description Despesa criada com sucesso
  */
-export const despesasControllerCreate201Schema = z.lazy(() => despesaSchema) as unknown as ToZod<DespesasControllerCreate201>
+export const despesasControllerCreate201Schema = despesaSchema as unknown as z.ZodType<DespesasControllerCreate201>
 
 /**
  * @description Dados inválidos
  */
-export const despesasControllerCreate400Schema = z.unknown() as unknown as ToZod<DespesasControllerCreate400>
+export const despesasControllerCreate400Schema = z.unknown() as unknown as z.ZodType<DespesasControllerCreate400>
 
-export const despesasControllerCreateMutationRequestSchema = z.lazy(() => createDespesaDtoSchema) as unknown as ToZod<DespesasControllerCreateMutationRequest>
+export const despesasControllerCreateMutationRequestSchema = createDespesaDtoSchema as unknown as z.ZodType<DespesasControllerCreateMutationRequest>
 
-export const despesasControllerCreateMutationResponseSchema = z.lazy(() => despesasControllerCreate201Schema) as unknown as ToZod<DespesasControllerCreateMutationResponse>
+export const despesasControllerCreateMutationResponseSchema = despesasControllerCreate201Schema as unknown as z.ZodType<DespesasControllerCreateMutationResponse>

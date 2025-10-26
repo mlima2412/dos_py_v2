@@ -4,20 +4,19 @@
 */
 
 import type { DespesasControllerFindPaginatedQueryParams, DespesasControllerFindPaginated200, DespesasControllerFindPaginatedQueryResponse } from "../types/DespesasControllerFindPaginated.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const despesasControllerFindPaginatedQueryParamsSchema = z.object({
-      "page": z.string().default("1").describe("Número da página"),
-  "limit": z.string().default("20").describe("Número de itens por página"),
-  "search": z.string().describe("Termo de busca para filtrar por descrição").optional(),
-  "fornecedorId": z.string().describe("ID do fornecedor para filtrar").optional(),
-  "subCategoriaId": z.string().describe("ID da subcategoria para filtrar").optional()
-      }) as unknown as ToZod<DespesasControllerFindPaginatedQueryParams>
+    "page": z.optional(z.string().default("1").describe("Número da página")),
+"limit": z.optional(z.string().default("20").describe("Número de itens por página")),
+"search": z.optional(z.string().describe("Termo de busca para filtrar por descrição")),
+"fornecedorId": z.optional(z.string().describe("ID do fornecedor para filtrar")),
+"subCategoriaId": z.optional(z.string().describe("ID da subcategoria para filtrar"))
+    }) as unknown as z.ZodType<DespesasControllerFindPaginatedQueryParams>
 
 /**
  * @description Lista paginada de despesas
  */
-export const despesasControllerFindPaginated200Schema = z.unknown() as unknown as ToZod<DespesasControllerFindPaginated200>
+export const despesasControllerFindPaginated200Schema = z.unknown() as unknown as z.ZodType<DespesasControllerFindPaginated200>
 
-export const despesasControllerFindPaginatedQueryResponseSchema = z.lazy(() => despesasControllerFindPaginated200Schema) as unknown as ToZod<DespesasControllerFindPaginatedQueryResponse>
+export const despesasControllerFindPaginatedQueryResponseSchema = despesasControllerFindPaginated200Schema as unknown as z.ZodType<DespesasControllerFindPaginatedQueryResponse>

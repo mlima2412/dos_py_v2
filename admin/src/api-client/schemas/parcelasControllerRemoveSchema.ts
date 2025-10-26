@@ -4,16 +4,15 @@
 */
 
 import type { ParcelasControllerRemovePathParams, ParcelasControllerRemove204, ParcelasControllerRemoveMutationResponse } from "../types/ParcelasControllerRemove.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const parcelasControllerRemovePathParamsSchema = z.object({
-      "id": z.coerce.number()
-      }) as unknown as ToZod<ParcelasControllerRemovePathParams>
+    "id": z.coerce.number()
+    }) as unknown as z.ZodType<ParcelasControllerRemovePathParams>
 
 /**
  * @description Parcela removida
  */
-export const parcelasControllerRemove204Schema = z.unknown() as unknown as ToZod<ParcelasControllerRemove204>
+export const parcelasControllerRemove204Schema = z.unknown() as unknown as z.ZodType<ParcelasControllerRemove204>
 
-export const parcelasControllerRemoveMutationResponseSchema = z.lazy(() => parcelasControllerRemove204Schema) as unknown as ToZod<ParcelasControllerRemoveMutationResponse>
+export const parcelasControllerRemoveMutationResponseSchema = parcelasControllerRemove204Schema as unknown as z.ZodType<ParcelasControllerRemoveMutationResponse>

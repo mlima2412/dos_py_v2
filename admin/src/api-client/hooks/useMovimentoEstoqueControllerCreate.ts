@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { MovimentoEstoqueControllerCreateMutationRequest, MovimentoEstoqueControllerCreateMutationResponse, MovimentoEstoqueControllerCreate400, MovimentoEstoqueControllerCreate404 } from "../types/MovimentoEstoqueControllerCreate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const movimentoEstoqueControllerCreateMutationKey = () =>   [{"url":"/movimento-estoque"}] as const
+export const movimentoEstoqueControllerCreateMutationKey = () => [{ url: '/movimento-estoque' }] as const
 
 export type MovimentoEstoqueControllerCreateMutationKey = ReturnType<typeof movimentoEstoqueControllerCreateMutationKey>
 
@@ -19,11 +19,22 @@ export type MovimentoEstoqueControllerCreateMutationKey = ReturnType<typeof movi
  * {@link /movimento-estoque}
  */
 export async function movimentoEstoqueControllerCreate(data: MovimentoEstoqueControllerCreateMutationRequest, config: Partial<RequestConfig<MovimentoEstoqueControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<MovimentoEstoqueControllerCreateMutationResponse, ResponseErrorConfig<MovimentoEstoqueControllerCreate400 | MovimentoEstoqueControllerCreate404>, MovimentoEstoqueControllerCreateMutationRequest>({ method : "POST", url : `/movimento-estoque`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<MovimentoEstoqueControllerCreateMutationResponse, ResponseErrorConfig<MovimentoEstoqueControllerCreate400 | MovimentoEstoqueControllerCreate404>, MovimentoEstoqueControllerCreateMutationRequest>({ method : "POST", url : `/movimento-estoque`, data : requestData, ... requestConfig })
-return res.data
+export function movimentoEstoqueControllerCreateMutationOptions(config: Partial<RequestConfig<MovimentoEstoqueControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = movimentoEstoqueControllerCreateMutationKey()
+  return mutationOptions<MovimentoEstoqueControllerCreateMutationResponse, ResponseErrorConfig<MovimentoEstoqueControllerCreate400 | MovimentoEstoqueControllerCreate404>, {data: MovimentoEstoqueControllerCreateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data }) => {
+      return movimentoEstoqueControllerCreate(data, config)
+    },
+  })
 }
 
 /**
@@ -32,22 +43,20 @@ return res.data
  * {@link /movimento-estoque}
  */
 export function useMovimentoEstoqueControllerCreate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<MovimentoEstoqueControllerCreateMutationResponse, ResponseErrorConfig<MovimentoEstoqueControllerCreate400 | MovimentoEstoqueControllerCreate404>, {data: MovimentoEstoqueControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<MovimentoEstoqueControllerCreateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? movimentoEstoqueControllerCreateMutationKey()
-  
-          return useMutation<MovimentoEstoqueControllerCreateMutationResponse, ResponseErrorConfig<MovimentoEstoqueControllerCreate400 | MovimentoEstoqueControllerCreate404>, {data: MovimentoEstoqueControllerCreateMutationRequest}, TContext>({
-            mutationFn: async({ data }) => {
-              return movimentoEstoqueControllerCreate(data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<MovimentoEstoqueControllerCreateMutationResponse, ResponseErrorConfig<MovimentoEstoqueControllerCreate400 | MovimentoEstoqueControllerCreate404>, {data: MovimentoEstoqueControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<MovimentoEstoqueControllerCreateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? movimentoEstoqueControllerCreateMutationKey()
+
+  const baseOptions = movimentoEstoqueControllerCreateMutationOptions(config) as UseMutationOptions<MovimentoEstoqueControllerCreateMutationResponse, ResponseErrorConfig<MovimentoEstoqueControllerCreate400 | MovimentoEstoqueControllerCreate404>, {data: MovimentoEstoqueControllerCreateMutationRequest}, TContext>
+
+  return useMutation<MovimentoEstoqueControllerCreateMutationResponse, ResponseErrorConfig<MovimentoEstoqueControllerCreate400 | MovimentoEstoqueControllerCreate404>, {data: MovimentoEstoqueControllerCreateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<MovimentoEstoqueControllerCreateMutationResponse, ResponseErrorConfig<MovimentoEstoqueControllerCreate400 | MovimentoEstoqueControllerCreate404>, {data: MovimentoEstoqueControllerCreateMutationRequest}, TContext>
 }

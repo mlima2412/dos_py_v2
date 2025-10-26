@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const vendaControllerPaginateQueryKey = (params?: VendaControllerPaginateQueryParams) =>   [{ url: '/venda/paginate' }, ...(params ? [params] : [])] as const
+export const vendaControllerPaginateQueryKey = (params?: VendaControllerPaginateQueryParams) => [{ url: '/venda/paginate' }, ...(params ? [params] : [])] as const
 
 export type VendaControllerPaginateQueryKey = ReturnType<typeof vendaControllerPaginateQueryKey>
 
@@ -18,25 +18,22 @@ export type VendaControllerPaginateQueryKey = ReturnType<typeof vendaControllerP
  * {@link /venda/paginate}
  */
 export async function vendaControllerPaginate(headers: VendaControllerPaginateHeaderParams, params?: VendaControllerPaginateQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<VendaControllerPaginateQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/venda/paginate`, params, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<VendaControllerPaginateQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/venda/paginate`, params, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function vendaControllerPaginateQueryOptions(headers: VendaControllerPaginateHeaderParams, params?: VendaControllerPaginateQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = vendaControllerPaginateQueryKey(params)
-        return queryOptions<VendaControllerPaginateQueryResponse, ResponseErrorConfig<Error>, VendaControllerPaginateQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return vendaControllerPaginate(headers, params, config)
-         },
-        })
-  
+  const queryKey = vendaControllerPaginateQueryKey(params)
+  return queryOptions<VendaControllerPaginateQueryResponse, ResponseErrorConfig<Error>, VendaControllerPaginateQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return vendaControllerPaginate(headers, params, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function vendaControllerPaginateQueryOptions(headers: VendaControllerPagi
  * {@link /venda/paginate}
  */
 export function useVendaControllerPaginate<TData = VendaControllerPaginateQueryResponse, TQueryData = VendaControllerPaginateQueryResponse, TQueryKey extends QueryKey = VendaControllerPaginateQueryKey>(headers: VendaControllerPaginateHeaderParams, params?: VendaControllerPaginateQueryParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<VendaControllerPaginateQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? vendaControllerPaginateQueryKey(params)
-  
-         const query = useQuery({
-          ...vendaControllerPaginateQueryOptions(headers, params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<VendaControllerPaginateQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? vendaControllerPaginateQueryKey(params)
+
+  const query = useQuery({
+   ...vendaControllerPaginateQueryOptions(headers, params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

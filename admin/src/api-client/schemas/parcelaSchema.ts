@@ -4,15 +4,14 @@
 */
 
 import type { Parcela } from "../types/Parcela.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const parcelaSchema = z.object({
-      "id": z.coerce.number().describe("ID da parcela"),
-  "parcelamentoId": z.coerce.number().describe("ID do parcelamento associado"),
-  "numero": z.coerce.number().describe("Número da parcela"),
-  "valor": z.coerce.number().describe("Valor da parcela"),
-  "vencimento": z.string().datetime().describe("Data de vencimento").optional(),
-  "recebidoEm": z.string().datetime().describe("Data de recebimento").optional(),
-  "status": z.coerce.string().describe("Status da parcela")
-      }) as unknown as ToZod<Parcela>
+    "id": z.coerce.number().describe("ID da parcela"),
+"parcelamentoId": z.coerce.number().describe("ID do parcelamento associado"),
+"numero": z.coerce.number().describe("Número da parcela"),
+"valor": z.coerce.number().describe("Valor da parcela"),
+"vencimento": z.optional(z.string().datetime().describe("Data de vencimento")),
+"recebidoEm": z.optional(z.string().datetime().describe("Data de recebimento")),
+"status": z.coerce.string().describe("Status da parcela")
+    }) as unknown as z.ZodType<Parcela>

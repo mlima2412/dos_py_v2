@@ -4,14 +4,13 @@
 */
 
 import type { EtiquetaPedidoCompraDto } from "../types/EtiquetaPedidoCompraDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const etiquetaPedidoCompraDtoSchema = z.object({
-      "nome": z.coerce.string().describe("Nome do produto"),
-  "id_produto": z.coerce.number().describe("ID do produto"),
-  "id_sku": z.coerce.number().describe("ID do SKU do produto"),
-  "cor": z.coerce.string().describe("Cor do produto").optional(),
-  "tamanho": z.coerce.string().describe("Tamanho do produto").optional(),
-  "preco": z.coerce.number().describe("Preço do produto")
-      }) as unknown as ToZod<EtiquetaPedidoCompraDto>
+    "nome": z.coerce.string().describe("Nome do produto"),
+"id_produto": z.coerce.number().describe("ID do produto"),
+"id_sku": z.coerce.number().describe("ID do SKU do produto"),
+"cor": z.optional(z.coerce.string().describe("Cor do produto")),
+"tamanho": z.optional(z.coerce.string().describe("Tamanho do produto")),
+"preco": z.coerce.number().describe("Preço do produto")
+    }) as unknown as z.ZodType<EtiquetaPedidoCompraDto>

@@ -4,26 +4,25 @@
 */
 
 import type { DespesasControllerFindOnePathParams, DespesasControllerFindOneHeaderParams, DespesasControllerFindOne200, DespesasControllerFindOne404, DespesasControllerFindOneQueryResponse } from "../types/DespesasControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { despesaSchema } from "./despesaSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const despesasControllerFindOnePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público da despesa")
-      }) as unknown as ToZod<DespesasControllerFindOnePathParams>
+    "publicId": z.string().describe("ID público da despesa")
+    }) as unknown as z.ZodType<DespesasControllerFindOnePathParams>
 
 export const despesasControllerFindOneHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<DespesasControllerFindOneHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<DespesasControllerFindOneHeaderParams>
 
 /**
  * @description Dados da despesa
  */
-export const despesasControllerFindOne200Schema = z.lazy(() => despesaSchema) as unknown as ToZod<DespesasControllerFindOne200>
+export const despesasControllerFindOne200Schema = despesaSchema as unknown as z.ZodType<DespesasControllerFindOne200>
 
 /**
  * @description Despesa não encontrada
  */
-export const despesasControllerFindOne404Schema = z.unknown() as unknown as ToZod<DespesasControllerFindOne404>
+export const despesasControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<DespesasControllerFindOne404>
 
-export const despesasControllerFindOneQueryResponseSchema = z.lazy(() => despesasControllerFindOne200Schema) as unknown as ToZod<DespesasControllerFindOneQueryResponse>
+export const despesasControllerFindOneQueryResponseSchema = despesasControllerFindOne200Schema as unknown as z.ZodType<DespesasControllerFindOneQueryResponse>

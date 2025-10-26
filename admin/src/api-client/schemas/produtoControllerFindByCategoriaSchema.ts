@@ -4,21 +4,20 @@
 */
 
 import type { ProdutoControllerFindByCategoriaPathParams, ProdutoControllerFindByCategoriaHeaderParams, ProdutoControllerFindByCategoria200, ProdutoControllerFindByCategoriaQueryResponse } from "../types/ProdutoControllerFindByCategoria.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { produtoSchema } from "./produtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const produtoControllerFindByCategoriaPathParamsSchema = z.object({
-      "categoriaId": z.string().describe("ID da categoria")
-      }) as unknown as ToZod<ProdutoControllerFindByCategoriaPathParams>
+    "categoriaId": z.string().describe("ID da categoria")
+    }) as unknown as z.ZodType<ProdutoControllerFindByCategoriaPathParams>
 
 export const produtoControllerFindByCategoriaHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<ProdutoControllerFindByCategoriaHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<ProdutoControllerFindByCategoriaHeaderParams>
 
 /**
  * @description Lista de produtos da categoria
  */
-export const produtoControllerFindByCategoria200Schema = z.array(z.lazy(() => produtoSchema)) as unknown as ToZod<ProdutoControllerFindByCategoria200>
+export const produtoControllerFindByCategoria200Schema = z.array(produtoSchema) as unknown as z.ZodType<ProdutoControllerFindByCategoria200>
 
-export const produtoControllerFindByCategoriaQueryResponseSchema = z.lazy(() => produtoControllerFindByCategoria200Schema) as unknown as ToZod<ProdutoControllerFindByCategoriaQueryResponse>
+export const produtoControllerFindByCategoriaQueryResponseSchema = produtoControllerFindByCategoria200Schema as unknown as z.ZodType<ProdutoControllerFindByCategoriaQueryResponse>

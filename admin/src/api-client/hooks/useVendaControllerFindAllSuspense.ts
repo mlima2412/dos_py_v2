@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const vendaControllerFindAllSuspenseQueryKey = () =>   [{ url: '/venda' }] as const
+export const vendaControllerFindAllSuspenseQueryKey = () => [{ url: '/venda' }] as const
 
 export type VendaControllerFindAllSuspenseQueryKey = ReturnType<typeof vendaControllerFindAllSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type VendaControllerFindAllSuspenseQueryKey = ReturnType<typeof vendaCont
  * {@link /venda}
  */
 export async function vendaControllerFindAllSuspense(headers: VendaControllerFindAllHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<VendaControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/venda`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<VendaControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/venda`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function vendaControllerFindAllSuspenseQueryOptions(headers: VendaControllerFindAllHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = vendaControllerFindAllSuspenseQueryKey()
-        return queryOptions<VendaControllerFindAllQueryResponse, ResponseErrorConfig<Error>, VendaControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return vendaControllerFindAllSuspense(headers, config)
-         },
-        })
-  
+  const queryKey = vendaControllerFindAllSuspenseQueryKey()
+  return queryOptions<VendaControllerFindAllQueryResponse, ResponseErrorConfig<Error>, VendaControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return vendaControllerFindAllSuspense(headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function vendaControllerFindAllSuspenseQueryOptions(headers: VendaControl
  * {@link /venda}
  */
 export function useVendaControllerFindAllSuspense<TData = VendaControllerFindAllQueryResponse, TQueryKey extends QueryKey = VendaControllerFindAllSuspenseQueryKey>(headers: VendaControllerFindAllHeaderParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<VendaControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? vendaControllerFindAllSuspenseQueryKey()
-  
-         const query = useSuspenseQuery({
-          ...vendaControllerFindAllSuspenseQueryOptions(headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<VendaControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? vendaControllerFindAllSuspenseQueryKey()
+
+  const query = useSuspenseQuery({
+   ...vendaControllerFindAllSuspenseQueryOptions(headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

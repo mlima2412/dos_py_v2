@@ -4,20 +4,23 @@
 */
 
 import type { ContasPagarParcelas } from "../types/ContasPagarParcelas.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { contasPagarSchema } from "./contasPagarSchema.ts";
 import { currencySchema } from "./currencySchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const contasPagarParcelasSchema = z.object({
-      "id": z.coerce.number().describe("ID único da parcela"),
-  "publicId": z.coerce.string().describe("ID público da parcela"),
-  "dataPagamento": z.string().datetime().describe("Data do pagamento da parcela"),
-  "dataVencimento": z.string().datetime().describe("Data de vencimento da parcela"),
-  "valor": z.coerce.number().describe("Valor da parcela"),
-  "pago": z.boolean().describe("Indica se a parcela foi paga"),
-  "contasPagarId": z.coerce.number().describe("ID da conta a pagar relacionada"),
-  "contasPagar": z.lazy(() => contasPagarSchema).describe("Conta a pagar relacionada").optional(),
-  "currency": z.lazy(() => currencySchema).describe("Moeda da parcela").optional(),
-  "currencyId": z.coerce.number().describe("ID da moeda")
-      }) as unknown as ToZod<ContasPagarParcelas>
+    "id": z.coerce.number().describe("ID único da parcela"),
+"publicId": z.coerce.string().describe("ID público da parcela"),
+"dataPagamento": z.string().datetime().describe("Data do pagamento da parcela"),
+"dataVencimento": z.string().datetime().describe("Data de vencimento da parcela"),
+"valor": z.coerce.number().describe("Valor da parcela"),
+"pago": z.boolean().describe("Indica se a parcela foi paga"),
+"contasPagarId": z.coerce.number().describe("ID da conta a pagar relacionada"),
+get "contasPagar"(){
+                return z.optional(contasPagarSchema.describe("Conta a pagar relacionada"))
+              },
+get "currency"(){
+                return z.optional(currencySchema.describe("Moeda da parcela"))
+              },
+"currencyId": z.coerce.number().describe("ID da moeda")
+    }) as unknown as z.ZodType<ContasPagarParcelas>

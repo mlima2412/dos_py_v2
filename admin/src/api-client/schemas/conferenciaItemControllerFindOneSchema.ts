@@ -4,22 +4,21 @@
 */
 
 import type { ConferenciaItemControllerFindOnePathParams, ConferenciaItemControllerFindOne200, ConferenciaItemControllerFindOne404, ConferenciaItemControllerFindOneQueryResponse } from "../types/ConferenciaItemControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { conferenciaItemResponseDtoSchema } from "./conferenciaItemResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const conferenciaItemControllerFindOnePathParamsSchema = z.object({
-      "id": z.coerce.number().describe("ID do item de conferência")
-      }) as unknown as ToZod<ConferenciaItemControllerFindOnePathParams>
+    "id": z.coerce.number().describe("ID do item de conferência")
+    }) as unknown as z.ZodType<ConferenciaItemControllerFindOnePathParams>
 
 /**
  * @description Item de conferência encontrado com dados completos do produto
  */
-export const conferenciaItemControllerFindOne200Schema = z.lazy(() => conferenciaItemResponseDtoSchema) as unknown as ToZod<ConferenciaItemControllerFindOne200>
+export const conferenciaItemControllerFindOne200Schema = conferenciaItemResponseDtoSchema as unknown as z.ZodType<ConferenciaItemControllerFindOne200>
 
 /**
  * @description Item de conferência não encontrado
  */
-export const conferenciaItemControllerFindOne404Schema = z.unknown() as unknown as ToZod<ConferenciaItemControllerFindOne404>
+export const conferenciaItemControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<ConferenciaItemControllerFindOne404>
 
-export const conferenciaItemControllerFindOneQueryResponseSchema = z.lazy(() => conferenciaItemControllerFindOne200Schema) as unknown as ToZod<ConferenciaItemControllerFindOneQueryResponse>
+export const conferenciaItemControllerFindOneQueryResponseSchema = conferenciaItemControllerFindOne200Schema as unknown as z.ZodType<ConferenciaItemControllerFindOneQueryResponse>

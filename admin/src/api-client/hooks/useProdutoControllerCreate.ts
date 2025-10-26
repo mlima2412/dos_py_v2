@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ProdutoControllerCreateMutationRequest, ProdutoControllerCreateMutationResponse, ProdutoControllerCreateHeaderParams, ProdutoControllerCreate400, ProdutoControllerCreate409 } from "../types/ProdutoControllerCreate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const produtoControllerCreateMutationKey = () =>   [{"url":"/produto"}] as const
+export const produtoControllerCreateMutationKey = () => [{ url: '/produto' }] as const
 
 export type ProdutoControllerCreateMutationKey = ReturnType<typeof produtoControllerCreateMutationKey>
 
@@ -18,11 +18,22 @@ export type ProdutoControllerCreateMutationKey = ReturnType<typeof produtoContro
  * {@link /produto}
  */
 export async function produtoControllerCreate(data: ProdutoControllerCreateMutationRequest, headers: ProdutoControllerCreateHeaderParams, config: Partial<RequestConfig<ProdutoControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<ProdutoControllerCreateMutationResponse, ResponseErrorConfig<ProdutoControllerCreate400 | ProdutoControllerCreate409>, ProdutoControllerCreateMutationRequest>({ method : "POST", url : `/produto`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<ProdutoControllerCreateMutationResponse, ResponseErrorConfig<ProdutoControllerCreate400 | ProdutoControllerCreate409>, ProdutoControllerCreateMutationRequest>({ method : "POST", url : `/produto`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function produtoControllerCreateMutationOptions(config: Partial<RequestConfig<ProdutoControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = produtoControllerCreateMutationKey()
+  return mutationOptions<ProdutoControllerCreateMutationResponse, ResponseErrorConfig<ProdutoControllerCreate400 | ProdutoControllerCreate409>, {data: ProdutoControllerCreateMutationRequest, headers: ProdutoControllerCreateHeaderParams}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data, headers }) => {
+      return produtoControllerCreate(data, headers, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /produto}
  */
 export function useProdutoControllerCreate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ProdutoControllerCreateMutationResponse, ResponseErrorConfig<ProdutoControllerCreate400 | ProdutoControllerCreate409>, {data: ProdutoControllerCreateMutationRequest, headers: ProdutoControllerCreateHeaderParams}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<ProdutoControllerCreateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? produtoControllerCreateMutationKey()
-  
-          return useMutation<ProdutoControllerCreateMutationResponse, ResponseErrorConfig<ProdutoControllerCreate400 | ProdutoControllerCreate409>, {data: ProdutoControllerCreateMutationRequest, headers: ProdutoControllerCreateHeaderParams}, TContext>({
-            mutationFn: async({ data, headers }) => {
-              return produtoControllerCreate(data, headers, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ProdutoControllerCreateMutationResponse, ResponseErrorConfig<ProdutoControllerCreate400 | ProdutoControllerCreate409>, {data: ProdutoControllerCreateMutationRequest, headers: ProdutoControllerCreateHeaderParams}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<ProdutoControllerCreateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? produtoControllerCreateMutationKey()
+
+  const baseOptions = produtoControllerCreateMutationOptions(config) as UseMutationOptions<ProdutoControllerCreateMutationResponse, ResponseErrorConfig<ProdutoControllerCreate400 | ProdutoControllerCreate409>, {data: ProdutoControllerCreateMutationRequest, headers: ProdutoControllerCreateHeaderParams}, TContext>
+
+  return useMutation<ProdutoControllerCreateMutationResponse, ResponseErrorConfig<ProdutoControllerCreate400 | ProdutoControllerCreate409>, {data: ProdutoControllerCreateMutationRequest, headers: ProdutoControllerCreateHeaderParams}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ProdutoControllerCreateMutationResponse, ResponseErrorConfig<ProdutoControllerCreate400 | ProdutoControllerCreate409>, {data: ProdutoControllerCreateMutationRequest, headers: ProdutoControllerCreateHeaderParams}, TContext>
 }

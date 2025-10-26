@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ClientesControllerUpdateMutationRequest, ClientesControllerUpdateMutationResponse, ClientesControllerUpdatePathParams, ClientesControllerUpdate400, ClientesControllerUpdate404, ClientesControllerUpdate409 } from "../types/ClientesControllerUpdate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const clientesControllerUpdateMutationKey = () =>   [{"url":"/clientes/{publicId}"}] as const
+export const clientesControllerUpdateMutationKey = () => [{ url: '/clientes/:publicId' }] as const
 
 export type ClientesControllerUpdateMutationKey = ReturnType<typeof clientesControllerUpdateMutationKey>
 
@@ -18,11 +18,22 @@ export type ClientesControllerUpdateMutationKey = ReturnType<typeof clientesCont
  * {@link /clientes/:publicId}
  */
 export async function clientesControllerUpdate(publicId: ClientesControllerUpdatePathParams["publicId"], data?: ClientesControllerUpdateMutationRequest, config: Partial<RequestConfig<ClientesControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<ClientesControllerUpdateMutationResponse, ResponseErrorConfig<ClientesControllerUpdate400 | ClientesControllerUpdate404 | ClientesControllerUpdate409>, ClientesControllerUpdateMutationRequest>({ method : "PATCH", url : `/clientes/${publicId}`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<ClientesControllerUpdateMutationResponse, ResponseErrorConfig<ClientesControllerUpdate400 | ClientesControllerUpdate404 | ClientesControllerUpdate409>, ClientesControllerUpdateMutationRequest>({ method : "PATCH", url : `/clientes/${publicId}`, data : requestData, ... requestConfig })
-return res.data
+export function clientesControllerUpdateMutationOptions(config: Partial<RequestConfig<ClientesControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = clientesControllerUpdateMutationKey()
+  return mutationOptions<ClientesControllerUpdateMutationResponse, ResponseErrorConfig<ClientesControllerUpdate400 | ClientesControllerUpdate404 | ClientesControllerUpdate409>, {publicId: ClientesControllerUpdatePathParams["publicId"], data?: ClientesControllerUpdateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId, data }) => {
+      return clientesControllerUpdate(publicId, data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /clientes/:publicId}
  */
 export function useClientesControllerUpdate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ClientesControllerUpdateMutationResponse, ResponseErrorConfig<ClientesControllerUpdate400 | ClientesControllerUpdate404 | ClientesControllerUpdate409>, {publicId: ClientesControllerUpdatePathParams["publicId"], data?: ClientesControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<ClientesControllerUpdateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? clientesControllerUpdateMutationKey()
-  
-          return useMutation<ClientesControllerUpdateMutationResponse, ResponseErrorConfig<ClientesControllerUpdate400 | ClientesControllerUpdate404 | ClientesControllerUpdate409>, {publicId: ClientesControllerUpdatePathParams["publicId"], data?: ClientesControllerUpdateMutationRequest}, TContext>({
-            mutationFn: async({ publicId, data }) => {
-              return clientesControllerUpdate(publicId, data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ClientesControllerUpdateMutationResponse, ResponseErrorConfig<ClientesControllerUpdate400 | ClientesControllerUpdate404 | ClientesControllerUpdate409>, {publicId: ClientesControllerUpdatePathParams["publicId"], data?: ClientesControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<ClientesControllerUpdateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? clientesControllerUpdateMutationKey()
+
+  const baseOptions = clientesControllerUpdateMutationOptions(config) as UseMutationOptions<ClientesControllerUpdateMutationResponse, ResponseErrorConfig<ClientesControllerUpdate400 | ClientesControllerUpdate404 | ClientesControllerUpdate409>, {publicId: ClientesControllerUpdatePathParams["publicId"], data?: ClientesControllerUpdateMutationRequest}, TContext>
+
+  return useMutation<ClientesControllerUpdateMutationResponse, ResponseErrorConfig<ClientesControllerUpdate400 | ClientesControllerUpdate404 | ClientesControllerUpdate409>, {publicId: ClientesControllerUpdatePathParams["publicId"], data?: ClientesControllerUpdateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ClientesControllerUpdateMutationResponse, ResponseErrorConfig<ClientesControllerUpdate400 | ClientesControllerUpdate404 | ClientesControllerUpdate409>, {publicId: ClientesControllerUpdatePathParams["publicId"], data?: ClientesControllerUpdateMutationRequest}, TContext>
 }

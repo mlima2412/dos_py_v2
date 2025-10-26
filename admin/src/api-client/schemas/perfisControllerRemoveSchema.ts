@@ -4,26 +4,25 @@
 */
 
 import type { PerfisControllerRemovePathParams, PerfisControllerRemove200, PerfisControllerRemove400, PerfisControllerRemove404, PerfisControllerRemoveMutationResponse } from "../types/PerfisControllerRemove.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const perfisControllerRemovePathParamsSchema = z.object({
-      "id": z.coerce.number().describe("ID do perfil")
-      }) as unknown as ToZod<PerfisControllerRemovePathParams>
+    "id": z.coerce.number().describe("ID do perfil")
+    }) as unknown as z.ZodType<PerfisControllerRemovePathParams>
 
 /**
  * @description Perfil removido com sucesso
  */
-export const perfisControllerRemove200Schema = z.unknown() as unknown as ToZod<PerfisControllerRemove200>
+export const perfisControllerRemove200Schema = z.unknown() as unknown as z.ZodType<PerfisControllerRemove200>
 
 /**
  * @description Não é possível remover perfil em uso
  */
-export const perfisControllerRemove400Schema = z.unknown() as unknown as ToZod<PerfisControllerRemove400>
+export const perfisControllerRemove400Schema = z.unknown() as unknown as z.ZodType<PerfisControllerRemove400>
 
 /**
  * @description Perfil não encontrado
  */
-export const perfisControllerRemove404Schema = z.unknown() as unknown as ToZod<PerfisControllerRemove404>
+export const perfisControllerRemove404Schema = z.unknown() as unknown as z.ZodType<PerfisControllerRemove404>
 
-export const perfisControllerRemoveMutationResponseSchema = z.lazy(() => perfisControllerRemove200Schema) as unknown as ToZod<PerfisControllerRemoveMutationResponse>
+export const perfisControllerRemoveMutationResponseSchema = perfisControllerRemove200Schema as unknown as z.ZodType<PerfisControllerRemoveMutationResponse>

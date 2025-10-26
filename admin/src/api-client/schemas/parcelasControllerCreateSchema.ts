@@ -4,16 +4,15 @@
 */
 
 import type { ParcelasControllerCreate201, ParcelasControllerCreateMutationRequest, ParcelasControllerCreateMutationResponse } from "../types/ParcelasControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createParcelaDtoSchema } from "./createParcelaDtoSchema.ts";
 import { parcelaSchema } from "./parcelaSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Parcela criada
  */
-export const parcelasControllerCreate201Schema = z.lazy(() => parcelaSchema) as unknown as ToZod<ParcelasControllerCreate201>
+export const parcelasControllerCreate201Schema = parcelaSchema as unknown as z.ZodType<ParcelasControllerCreate201>
 
-export const parcelasControllerCreateMutationRequestSchema = z.lazy(() => createParcelaDtoSchema) as unknown as ToZod<ParcelasControllerCreateMutationRequest>
+export const parcelasControllerCreateMutationRequestSchema = createParcelaDtoSchema as unknown as z.ZodType<ParcelasControllerCreateMutationRequest>
 
-export const parcelasControllerCreateMutationResponseSchema = z.lazy(() => parcelasControllerCreate201Schema) as unknown as ToZod<ParcelasControllerCreateMutationResponse>
+export const parcelasControllerCreateMutationResponseSchema = parcelasControllerCreate201Schema as unknown as z.ZodType<ParcelasControllerCreateMutationResponse>

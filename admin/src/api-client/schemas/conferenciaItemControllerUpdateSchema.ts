@@ -4,30 +4,29 @@
 */
 
 import type { ConferenciaItemControllerUpdatePathParams, ConferenciaItemControllerUpdate200, ConferenciaItemControllerUpdate400, ConferenciaItemControllerUpdate404, ConferenciaItemControllerUpdateMutationRequest, ConferenciaItemControllerUpdateMutationResponse } from "../types/ConferenciaItemControllerUpdate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { conferenciaItemResponseDtoSchema } from "./conferenciaItemResponseDtoSchema.ts";
 import { updateConferenciaItemDtoSchema } from "./updateConferenciaItemDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const conferenciaItemControllerUpdatePathParamsSchema = z.object({
-      "id": z.coerce.number().describe("ID do item de conferência")
-      }) as unknown as ToZod<ConferenciaItemControllerUpdatePathParams>
+    "id": z.coerce.number().describe("ID do item de conferência")
+    }) as unknown as z.ZodType<ConferenciaItemControllerUpdatePathParams>
 
 /**
  * @description Item de conferência atualizado com sucesso
  */
-export const conferenciaItemControllerUpdate200Schema = z.lazy(() => conferenciaItemResponseDtoSchema) as unknown as ToZod<ConferenciaItemControllerUpdate200>
+export const conferenciaItemControllerUpdate200Schema = conferenciaItemResponseDtoSchema as unknown as z.ZodType<ConferenciaItemControllerUpdate200>
 
 /**
  * @description Dados inválidos ou conferência finalizada
  */
-export const conferenciaItemControllerUpdate400Schema = z.unknown() as unknown as ToZod<ConferenciaItemControllerUpdate400>
+export const conferenciaItemControllerUpdate400Schema = z.unknown() as unknown as z.ZodType<ConferenciaItemControllerUpdate400>
 
 /**
  * @description Item de conferência não encontrado
  */
-export const conferenciaItemControllerUpdate404Schema = z.unknown() as unknown as ToZod<ConferenciaItemControllerUpdate404>
+export const conferenciaItemControllerUpdate404Schema = z.unknown() as unknown as z.ZodType<ConferenciaItemControllerUpdate404>
 
-export const conferenciaItemControllerUpdateMutationRequestSchema = z.lazy(() => updateConferenciaItemDtoSchema) as unknown as ToZod<ConferenciaItemControllerUpdateMutationRequest>
+export const conferenciaItemControllerUpdateMutationRequestSchema = updateConferenciaItemDtoSchema as unknown as z.ZodType<ConferenciaItemControllerUpdateMutationRequest>
 
-export const conferenciaItemControllerUpdateMutationResponseSchema = z.lazy(() => conferenciaItemControllerUpdate200Schema) as unknown as ToZod<ConferenciaItemControllerUpdateMutationResponse>
+export const conferenciaItemControllerUpdateMutationResponseSchema = conferenciaItemControllerUpdate200Schema as unknown as z.ZodType<ConferenciaItemControllerUpdateMutationResponse>

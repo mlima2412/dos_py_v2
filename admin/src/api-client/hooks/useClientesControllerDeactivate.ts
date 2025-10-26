@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ClientesControllerDeactivateMutationResponse, ClientesControllerDeactivatePathParams, ClientesControllerDeactivate404 } from "../types/ClientesControllerDeactivate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const clientesControllerDeactivateMutationKey = () =>   [{"url":"/clientes/{publicId}/desativar"}] as const
+export const clientesControllerDeactivateMutationKey = () => [{ url: '/clientes/:publicId/desativar' }] as const
 
 export type ClientesControllerDeactivateMutationKey = ReturnType<typeof clientesControllerDeactivateMutationKey>
 
@@ -18,11 +18,20 @@ export type ClientesControllerDeactivateMutationKey = ReturnType<typeof clientes
  * {@link /clientes/:publicId/desativar}
  */
 export async function clientesControllerDeactivate(publicId: ClientesControllerDeactivatePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ClientesControllerDeactivateMutationResponse, ResponseErrorConfig<ClientesControllerDeactivate404>, unknown>({ method : "PATCH", url : `/clientes/${publicId}/desativar`, ... requestConfig })  
+  return res.data
+}
 
-
-const res = await request<ClientesControllerDeactivateMutationResponse, ResponseErrorConfig<ClientesControllerDeactivate404>, unknown>({ method : "PATCH", url : `/clientes/${publicId}/desativar`, ... requestConfig })
-return res.data
+export function clientesControllerDeactivateMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = clientesControllerDeactivateMutationKey()
+  return mutationOptions<ClientesControllerDeactivateMutationResponse, ResponseErrorConfig<ClientesControllerDeactivate404>, {publicId: ClientesControllerDeactivatePathParams["publicId"]}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId }) => {
+      return clientesControllerDeactivate(publicId, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /clientes/:publicId/desativar}
  */
 export function useClientesControllerDeactivate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ClientesControllerDeactivateMutationResponse, ResponseErrorConfig<ClientesControllerDeactivate404>, {publicId: ClientesControllerDeactivatePathParams["publicId"]}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? clientesControllerDeactivateMutationKey()
-  
-          return useMutation<ClientesControllerDeactivateMutationResponse, ResponseErrorConfig<ClientesControllerDeactivate404>, {publicId: ClientesControllerDeactivatePathParams["publicId"]}, TContext>({
-            mutationFn: async({ publicId }) => {
-              return clientesControllerDeactivate(publicId, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ClientesControllerDeactivateMutationResponse, ResponseErrorConfig<ClientesControllerDeactivate404>, {publicId: ClientesControllerDeactivatePathParams["publicId"]}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? clientesControllerDeactivateMutationKey()
+
+  const baseOptions = clientesControllerDeactivateMutationOptions(config) as UseMutationOptions<ClientesControllerDeactivateMutationResponse, ResponseErrorConfig<ClientesControllerDeactivate404>, {publicId: ClientesControllerDeactivatePathParams["publicId"]}, TContext>
+
+  return useMutation<ClientesControllerDeactivateMutationResponse, ResponseErrorConfig<ClientesControllerDeactivate404>, {publicId: ClientesControllerDeactivatePathParams["publicId"]}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ClientesControllerDeactivateMutationResponse, ResponseErrorConfig<ClientesControllerDeactivate404>, {publicId: ClientesControllerDeactivatePathParams["publicId"]}, TContext>
 }

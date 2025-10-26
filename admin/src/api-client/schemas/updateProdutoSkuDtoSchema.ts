@@ -4,14 +4,13 @@
 */
 
 import type { UpdateProdutoSkuDto } from "../types/UpdateProdutoSkuDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const updateProdutoSkuDtoSchema = z.object({
-      "id": z.coerce.number().describe("ID do produto SKU").optional(),
-  "cor": z.coerce.string().max(50).describe("Cor do produto").optional(),
-  "codCor": z.coerce.string().describe("Código hexadecimal da cor").optional(),
-  "tamanho": z.coerce.string().max(10).describe("Tamanho do produto").optional(),
-  "qtdMinima": z.coerce.number().default(0).describe("Quantidade mínima em estoque"),
-  "dataUltimaCompra": z.string().datetime().describe("Data da última compra").optional()
-      }) as unknown as ToZod<UpdateProdutoSkuDto>
+    "id": z.optional(z.coerce.number().describe("ID do produto SKU")),
+"cor": z.optional(z.coerce.string().max(50).describe("Cor do produto")),
+"codCor": z.optional(z.coerce.string().describe("Código hexadecimal da cor")),
+"tamanho": z.optional(z.coerce.string().max(10).describe("Tamanho do produto")),
+"qtdMinima": z.optional(z.coerce.number().default(0).describe("Quantidade mínima em estoque")),
+"dataUltimaCompra": z.optional(z.string().datetime().describe("Data da última compra"))
+    }) as unknown as z.ZodType<UpdateProdutoSkuDto>

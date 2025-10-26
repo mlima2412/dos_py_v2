@@ -4,35 +4,34 @@
 */
 
 import type { UsuariosControllerUpdatePathParams, UsuariosControllerUpdate200, UsuariosControllerUpdate400, UsuariosControllerUpdate404, UsuariosControllerUpdate409, UsuariosControllerUpdateMutationRequest, UsuariosControllerUpdateMutationResponse } from "../types/UsuariosControllerUpdate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { updateUsuarioDtoSchema } from "./updateUsuarioDtoSchema.ts";
 import { usuarioSchema } from "./usuarioSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const usuariosControllerUpdatePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do usuário (UUID v7)")
-      }) as unknown as ToZod<UsuariosControllerUpdatePathParams>
+    "publicId": z.string().describe("ID público do usuário (UUID v7)")
+    }) as unknown as z.ZodType<UsuariosControllerUpdatePathParams>
 
 /**
  * @description Usuário atualizado com sucesso
  */
-export const usuariosControllerUpdate200Schema = z.lazy(() => usuarioSchema) as unknown as ToZod<UsuariosControllerUpdate200>
+export const usuariosControllerUpdate200Schema = usuarioSchema as unknown as z.ZodType<UsuariosControllerUpdate200>
 
 /**
  * @description Dados de entrada inválidos
  */
-export const usuariosControllerUpdate400Schema = z.unknown() as unknown as ToZod<UsuariosControllerUpdate400>
+export const usuariosControllerUpdate400Schema = z.unknown() as unknown as z.ZodType<UsuariosControllerUpdate400>
 
 /**
  * @description Usuário não encontrado
  */
-export const usuariosControllerUpdate404Schema = z.unknown() as unknown as ToZod<UsuariosControllerUpdate404>
+export const usuariosControllerUpdate404Schema = z.unknown() as unknown as z.ZodType<UsuariosControllerUpdate404>
 
 /**
  * @description Email já está em uso
  */
-export const usuariosControllerUpdate409Schema = z.unknown() as unknown as ToZod<UsuariosControllerUpdate409>
+export const usuariosControllerUpdate409Schema = z.unknown() as unknown as z.ZodType<UsuariosControllerUpdate409>
 
-export const usuariosControllerUpdateMutationRequestSchema = z.lazy(() => updateUsuarioDtoSchema) as unknown as ToZod<UsuariosControllerUpdateMutationRequest>
+export const usuariosControllerUpdateMutationRequestSchema = updateUsuarioDtoSchema as unknown as z.ZodType<UsuariosControllerUpdateMutationRequest>
 
-export const usuariosControllerUpdateMutationResponseSchema = z.lazy(() => usuariosControllerUpdate200Schema) as unknown as ToZod<UsuariosControllerUpdateMutationResponse>
+export const usuariosControllerUpdateMutationResponseSchema = usuariosControllerUpdate200Schema as unknown as z.ZodType<UsuariosControllerUpdateMutationResponse>

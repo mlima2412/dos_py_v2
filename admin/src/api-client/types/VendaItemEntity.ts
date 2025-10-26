@@ -9,7 +9,7 @@ export const vendaItemEntityTipoEnum = {
     "BRINDE": "BRINDE"
 } as const;
 
-export type VendaItemEntityTipoEnum = (typeof vendaItemEntityTipoEnum)[keyof typeof vendaItemEntityTipoEnum];
+export type VendaItemEntityTipoEnumKey = (typeof vendaItemEntityTipoEnum)[keyof typeof vendaItemEntityTipoEnum];
 
 export type VendaItemEntity = {
     /**
@@ -31,7 +31,7 @@ export type VendaItemEntity = {
      * @description Tipo do item
      * @type string
     */
-    tipo: VendaItemEntityTipoEnum;
+    tipo: VendaItemEntityTipoEnumKey;
     /**
      * @description Quantidade reservada
      * @type number

@@ -4,22 +4,21 @@
 */
 
 import type { ClientesControllerDeactivatePathParams, ClientesControllerDeactivate200, ClientesControllerDeactivate404, ClientesControllerDeactivateMutationResponse } from "../types/ClientesControllerDeactivate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { clienteSchema } from "./clienteSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const clientesControllerDeactivatePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do cliente")
-      }) as unknown as ToZod<ClientesControllerDeactivatePathParams>
+    "publicId": z.string().describe("ID público do cliente")
+    }) as unknown as z.ZodType<ClientesControllerDeactivatePathParams>
 
 /**
  * @description Cliente desativado com sucesso
  */
-export const clientesControllerDeactivate200Schema = z.lazy(() => clienteSchema) as unknown as ToZod<ClientesControllerDeactivate200>
+export const clientesControllerDeactivate200Schema = clienteSchema as unknown as z.ZodType<ClientesControllerDeactivate200>
 
 /**
  * @description Cliente não encontrado
  */
-export const clientesControllerDeactivate404Schema = z.unknown() as unknown as ToZod<ClientesControllerDeactivate404>
+export const clientesControllerDeactivate404Schema = z.unknown() as unknown as z.ZodType<ClientesControllerDeactivate404>
 
-export const clientesControllerDeactivateMutationResponseSchema = z.lazy(() => clientesControllerDeactivate200Schema) as unknown as ToZod<ClientesControllerDeactivateMutationResponse>
+export const clientesControllerDeactivateMutationResponseSchema = clientesControllerDeactivate200Schema as unknown as z.ZodType<ClientesControllerDeactivateMutationResponse>

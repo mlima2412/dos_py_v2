@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const clientesControllerFindAllQueryKey = (params?: ClientesControllerFindAllQueryParams) =>   [{ url: '/clientes' }, ...(params ? [params] : [])] as const
+export const clientesControllerFindAllQueryKey = (params?: ClientesControllerFindAllQueryParams) => [{ url: '/clientes' }, ...(params ? [params] : [])] as const
 
 export type ClientesControllerFindAllQueryKey = ReturnType<typeof clientesControllerFindAllQueryKey>
 
@@ -18,25 +18,22 @@ export type ClientesControllerFindAllQueryKey = ReturnType<typeof clientesContro
  * {@link /clientes}
  */
 export async function clientesControllerFindAll(params?: ClientesControllerFindAllQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ClientesControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/clientes`, params, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ClientesControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/clientes`, params, ... requestConfig })  
+  return res.data
 }
 
 export function clientesControllerFindAllQueryOptions(params?: ClientesControllerFindAllQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = clientesControllerFindAllQueryKey(params)
-        return queryOptions<ClientesControllerFindAllQueryResponse, ResponseErrorConfig<Error>, ClientesControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return clientesControllerFindAll(params, config)
-         },
-        })
-  
+  const queryKey = clientesControllerFindAllQueryKey(params)
+  return queryOptions<ClientesControllerFindAllQueryResponse, ResponseErrorConfig<Error>, ClientesControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return clientesControllerFindAll(params, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function clientesControllerFindAllQueryOptions(params?: ClientesControlle
  * {@link /clientes}
  */
 export function useClientesControllerFindAll<TData = ClientesControllerFindAllQueryResponse, TQueryData = ClientesControllerFindAllQueryResponse, TQueryKey extends QueryKey = ClientesControllerFindAllQueryKey>(params?: ClientesControllerFindAllQueryParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<ClientesControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? clientesControllerFindAllQueryKey(params)
-  
-         const query = useQuery({
-          ...clientesControllerFindAllQueryOptions(params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<ClientesControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? clientesControllerFindAllQueryKey(params)
+
+  const query = useQuery({
+   ...clientesControllerFindAllQueryOptions(params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

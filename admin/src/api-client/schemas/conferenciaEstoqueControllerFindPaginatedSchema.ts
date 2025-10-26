@@ -4,31 +4,32 @@
 */
 
 import type { ConferenciaEstoqueControllerFindPaginatedQueryParams, ConferenciaEstoqueControllerFindPaginatedHeaderParams, ConferenciaEstoqueControllerFindPaginated200, ConferenciaEstoqueControllerFindPaginatedQueryResponse } from "../types/ConferenciaEstoqueControllerFindPaginated.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { conferenciaEstoqueResponseDtoSchema } from "./conferenciaEstoqueResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const conferenciaEstoqueControllerFindPaginatedQueryParamsSchema = z.object({
-      "page": z.coerce.number().default(1).describe("Número da página"),
-  "limit": z.coerce.number().default(20).describe("Número de itens por página"),
-  "search": z.string().describe("Termo de busca").optional(),
-  "status": z.enum(["PENDENTE", "EM_ANDAMENTO", "CONCLUIDA", "FINALIZADA", "CANCELADA"]).describe("Filtrar por status").optional(),
-  "localEstoqueId": z.coerce.number().describe("ID do local de estoque").optional()
-      }) as unknown as ToZod<ConferenciaEstoqueControllerFindPaginatedQueryParams>
+    "page": z.optional(z.coerce.number().default(1).describe("Número da página")),
+"limit": z.optional(z.coerce.number().default(20).describe("Número de itens por página")),
+"search": z.optional(z.string().describe("Termo de busca")),
+"status": z.optional(z.enum(["PENDENTE", "EM_ANDAMENTO", "CONCLUIDA", "FINALIZADA", "CANCELADA"]).describe("Filtrar por status")),
+"localEstoqueId": z.optional(z.coerce.number().describe("ID do local de estoque"))
+    }) as unknown as z.ZodType<ConferenciaEstoqueControllerFindPaginatedQueryParams>
 
 export const conferenciaEstoqueControllerFindPaginatedHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<ConferenciaEstoqueControllerFindPaginatedHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<ConferenciaEstoqueControllerFindPaginatedHeaderParams>
 
 /**
  * @description Lista paginada de conferências de estoque
  */
 export const conferenciaEstoqueControllerFindPaginated200Schema = z.object({
-      "data": z.array(z.lazy(() => conferenciaEstoqueResponseDtoSchema)).optional(),
-  "total": z.coerce.number().optional(),
-  "page": z.coerce.number().optional(),
-  "limit": z.coerce.number().optional(),
-  "totalPages": z.coerce.number().optional()
-      }) as unknown as ToZod<ConferenciaEstoqueControllerFindPaginated200>
+    get "data"(){
+                return z.optional(z.array(conferenciaEstoqueResponseDtoSchema))
+              },
+"total": z.optional(z.coerce.number()),
+"page": z.optional(z.coerce.number()),
+"limit": z.optional(z.coerce.number()),
+"totalPages": z.optional(z.coerce.number())
+    }) as unknown as z.ZodType<ConferenciaEstoqueControllerFindPaginated200>
 
-export const conferenciaEstoqueControllerFindPaginatedQueryResponseSchema = z.lazy(() => conferenciaEstoqueControllerFindPaginated200Schema) as unknown as ToZod<ConferenciaEstoqueControllerFindPaginatedQueryResponse>
+export const conferenciaEstoqueControllerFindPaginatedQueryResponseSchema = conferenciaEstoqueControllerFindPaginated200Schema as unknown as z.ZodType<ConferenciaEstoqueControllerFindPaginatedQueryResponse>

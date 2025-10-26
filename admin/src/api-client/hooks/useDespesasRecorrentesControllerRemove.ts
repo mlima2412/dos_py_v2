@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { DespesasRecorrentesControllerRemoveMutationResponse, DespesasRecorrentesControllerRemovePathParams, DespesasRecorrentesControllerRemove401, DespesasRecorrentesControllerRemove404 } from "../types/DespesasRecorrentesControllerRemove.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const despesasRecorrentesControllerRemoveMutationKey = () =>   [{"url":"/despesas-recorrentes/{publicId}"}] as const
+export const despesasRecorrentesControllerRemoveMutationKey = () => [{ url: '/despesas-recorrentes/:publicId' }] as const
 
 export type DespesasRecorrentesControllerRemoveMutationKey = ReturnType<typeof despesasRecorrentesControllerRemoveMutationKey>
 
@@ -18,11 +18,20 @@ export type DespesasRecorrentesControllerRemoveMutationKey = ReturnType<typeof d
  * {@link /despesas-recorrentes/:publicId}
  */
 export async function despesasRecorrentesControllerRemove(publicId: DespesasRecorrentesControllerRemovePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<DespesasRecorrentesControllerRemoveMutationResponse, ResponseErrorConfig<DespesasRecorrentesControllerRemove401 | DespesasRecorrentesControllerRemove404>, unknown>({ method : "DELETE", url : `/despesas-recorrentes/${publicId}`, ... requestConfig })  
+  return res.data
+}
 
-
-const res = await request<DespesasRecorrentesControllerRemoveMutationResponse, ResponseErrorConfig<DespesasRecorrentesControllerRemove401 | DespesasRecorrentesControllerRemove404>, unknown>({ method : "DELETE", url : `/despesas-recorrentes/${publicId}`, ... requestConfig })
-return res.data
+export function despesasRecorrentesControllerRemoveMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = despesasRecorrentesControllerRemoveMutationKey()
+  return mutationOptions<DespesasRecorrentesControllerRemoveMutationResponse, ResponseErrorConfig<DespesasRecorrentesControllerRemove401 | DespesasRecorrentesControllerRemove404>, {publicId: DespesasRecorrentesControllerRemovePathParams["publicId"]}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId }) => {
+      return despesasRecorrentesControllerRemove(publicId, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /despesas-recorrentes/:publicId}
  */
 export function useDespesasRecorrentesControllerRemove<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<DespesasRecorrentesControllerRemoveMutationResponse, ResponseErrorConfig<DespesasRecorrentesControllerRemove401 | DespesasRecorrentesControllerRemove404>, {publicId: DespesasRecorrentesControllerRemovePathParams["publicId"]}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? despesasRecorrentesControllerRemoveMutationKey()
-  
-          return useMutation<DespesasRecorrentesControllerRemoveMutationResponse, ResponseErrorConfig<DespesasRecorrentesControllerRemove401 | DespesasRecorrentesControllerRemove404>, {publicId: DespesasRecorrentesControllerRemovePathParams["publicId"]}, TContext>({
-            mutationFn: async({ publicId }) => {
-              return despesasRecorrentesControllerRemove(publicId, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<DespesasRecorrentesControllerRemoveMutationResponse, ResponseErrorConfig<DespesasRecorrentesControllerRemove401 | DespesasRecorrentesControllerRemove404>, {publicId: DespesasRecorrentesControllerRemovePathParams["publicId"]}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? despesasRecorrentesControllerRemoveMutationKey()
+
+  const baseOptions = despesasRecorrentesControllerRemoveMutationOptions(config) as UseMutationOptions<DespesasRecorrentesControllerRemoveMutationResponse, ResponseErrorConfig<DespesasRecorrentesControllerRemove401 | DespesasRecorrentesControllerRemove404>, {publicId: DespesasRecorrentesControllerRemovePathParams["publicId"]}, TContext>
+
+  return useMutation<DespesasRecorrentesControllerRemoveMutationResponse, ResponseErrorConfig<DespesasRecorrentesControllerRemove401 | DespesasRecorrentesControllerRemove404>, {publicId: DespesasRecorrentesControllerRemovePathParams["publicId"]}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<DespesasRecorrentesControllerRemoveMutationResponse, ResponseErrorConfig<DespesasRecorrentesControllerRemove401 | DespesasRecorrentesControllerRemove404>, {publicId: DespesasRecorrentesControllerRemovePathParams["publicId"]}, TContext>
 }

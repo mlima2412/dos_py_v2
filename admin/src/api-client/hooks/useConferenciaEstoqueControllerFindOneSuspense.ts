@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const conferenciaEstoqueControllerFindOneSuspenseQueryKey = (publicId: ConferenciaEstoqueControllerFindOnePathParams["publicId"]) =>   [{ url: '/conferencia-estoque/:publicId', params: {publicId:publicId} }] as const
+export const conferenciaEstoqueControllerFindOneSuspenseQueryKey = (publicId: ConferenciaEstoqueControllerFindOnePathParams["publicId"]) => [{ url: '/conferencia-estoque/:publicId', params: {publicId:publicId} }] as const
 
 export type ConferenciaEstoqueControllerFindOneSuspenseQueryKey = ReturnType<typeof conferenciaEstoqueControllerFindOneSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type ConferenciaEstoqueControllerFindOneSuspenseQueryKey = ReturnType<typ
  * {@link /conferencia-estoque/:publicId}
  */
 export async function conferenciaEstoqueControllerFindOneSuspense(publicId: ConferenciaEstoqueControllerFindOnePathParams["publicId"], headers: ConferenciaEstoqueControllerFindOneHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ConferenciaEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaEstoqueControllerFindOne404>, unknown>({ method : "GET", url : `/conferencia-estoque/${publicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ConferenciaEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaEstoqueControllerFindOne404>, unknown>({ method : "GET", url : `/conferencia-estoque/${publicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function conferenciaEstoqueControllerFindOneSuspenseQueryOptions(publicId: ConferenciaEstoqueControllerFindOnePathParams["publicId"], headers: ConferenciaEstoqueControllerFindOneHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = conferenciaEstoqueControllerFindOneSuspenseQueryKey(publicId)
-        return queryOptions<ConferenciaEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaEstoqueControllerFindOne404>, ConferenciaEstoqueControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(publicId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return conferenciaEstoqueControllerFindOneSuspense(publicId, headers, config)
-         },
-        })
-  
+  const queryKey = conferenciaEstoqueControllerFindOneSuspenseQueryKey(publicId)
+  return queryOptions<ConferenciaEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaEstoqueControllerFindOne404>, ConferenciaEstoqueControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(publicId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return conferenciaEstoqueControllerFindOneSuspense(publicId, headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function conferenciaEstoqueControllerFindOneSuspenseQueryOptions(publicId
  * {@link /conferencia-estoque/:publicId}
  */
 export function useConferenciaEstoqueControllerFindOneSuspense<TData = ConferenciaEstoqueControllerFindOneQueryResponse, TQueryKey extends QueryKey = ConferenciaEstoqueControllerFindOneSuspenseQueryKey>(publicId: ConferenciaEstoqueControllerFindOnePathParams["publicId"], headers: ConferenciaEstoqueControllerFindOneHeaderParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<ConferenciaEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaEstoqueControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? conferenciaEstoqueControllerFindOneSuspenseQueryKey(publicId)
-  
-         const query = useSuspenseQuery({
-          ...conferenciaEstoqueControllerFindOneSuspenseQueryOptions(publicId, headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<ConferenciaEstoqueControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<ConferenciaEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaEstoqueControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? conferenciaEstoqueControllerFindOneSuspenseQueryKey(publicId)
+
+  const query = useSuspenseQuery({
+   ...conferenciaEstoqueControllerFindOneSuspenseQueryOptions(publicId, headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<ConferenciaEstoqueControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

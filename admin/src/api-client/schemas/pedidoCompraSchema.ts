@@ -4,36 +4,41 @@
 */
 
 import type { PedidoCompra } from "../types/PedidoCompra.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { iSchema } from "./iSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const pedidoCompraSchema = z.object({
-      "id": z.coerce.number().describe("ID único do pedido de compra"),
-  "publicId": z.coerce.string().describe("ID público do pedido de compra (UUID v7)"),
-  "parceiroId": z.coerce.number().describe("ID do parceiro"),
-  "localEntradaId": z.coerce.number().describe("ID do local de entrada do estoque"),
-  "fornecedorId": z.coerce.number().describe("ID do fornecedor"),
-  "dataPedido": z.string().datetime().describe("Data do pedido"),
-  "dataEntrega": z.string().datetime().describe("Data de entrega prevista").optional(),
-  "valorFrete": z.lazy(() => iSchema).describe("Valor do frete").optional(),
-  "valorTotal": z.lazy(() => iSchema).describe("Valor total do pedido").optional(),
-  "observacao": z.coerce.string().describe("Observações do pedido").optional(),
-  "valorComissao": z.lazy(() => iSchema).describe("Valor da comissão").optional(),
-  "cotacao": z.coerce.number().describe("Cotação da moeda").optional(),
-  "currencyId": z.coerce.number().describe("ID da moeda").optional(),
-  "consignado": z.boolean().describe("Indica se o pedido é consignado"),
-  "status": z.union([z.literal(1), z.literal(2), z.literal(3)]).describe("Status do pedido"),
-  "fornecedor": z.object({
-      
-      }).describe("Dados do fornecedor").optional(),
-  "currency": z.object({
-      
-      }).describe("Dados da moeda").optional(),
-  "Parceiro": z.object({
-      
-      }).describe("Dados do parceiro").optional(),
-  "LocalEntrada": z.object({
-      
-      }).describe("Dados do local de entrada").optional()
-      }) as unknown as ToZod<PedidoCompra>
+    "id": z.coerce.number().describe("ID único do pedido de compra"),
+"publicId": z.coerce.string().describe("ID público do pedido de compra (UUID v7)"),
+"parceiroId": z.coerce.number().describe("ID do parceiro"),
+"localEntradaId": z.coerce.number().describe("ID do local de entrada do estoque"),
+"fornecedorId": z.coerce.number().describe("ID do fornecedor"),
+"dataPedido": z.string().datetime().describe("Data do pedido"),
+"dataEntrega": z.optional(z.string().datetime().describe("Data de entrega prevista")),
+get "valorFrete"(){
+                return z.optional(iSchema.describe("Valor do frete"))
+              },
+get "valorTotal"(){
+                return z.optional(iSchema.describe("Valor total do pedido"))
+              },
+"observacao": z.optional(z.coerce.string().describe("Observações do pedido")),
+get "valorComissao"(){
+                return z.optional(iSchema.describe("Valor da comissão"))
+              },
+"cotacao": z.optional(z.coerce.number().describe("Cotação da moeda")),
+"currencyId": z.optional(z.coerce.number().describe("ID da moeda")),
+"consignado": z.boolean().describe("Indica se o pedido é consignado"),
+"status": z.union([z.literal(1), z.literal(2), z.literal(3)]).describe("Status do pedido"),
+"fornecedor": z.optional(z.object({
+    
+    }).describe("Dados do fornecedor")),
+"currency": z.optional(z.object({
+    
+    }).describe("Dados da moeda")),
+"Parceiro": z.optional(z.object({
+    
+    }).describe("Dados do parceiro")),
+"LocalEntrada": z.optional(z.object({
+    
+    }).describe("Dados do local de entrada"))
+    }) as unknown as z.ZodType<PedidoCompra>

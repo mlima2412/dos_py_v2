@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const formaPagamentoControllerFindOneQueryKey = (id: FormaPagamentoControllerFindOnePathParams["id"]) =>   [{ url: '/forma-pagamento/:id', params: {id:id} }] as const
+export const formaPagamentoControllerFindOneQueryKey = (id: FormaPagamentoControllerFindOnePathParams["id"]) => [{ url: '/forma-pagamento/:id', params: {id:id} }] as const
 
 export type FormaPagamentoControllerFindOneQueryKey = ReturnType<typeof formaPagamentoControllerFindOneQueryKey>
 
@@ -18,25 +18,22 @@ export type FormaPagamentoControllerFindOneQueryKey = ReturnType<typeof formaPag
  * {@link /forma-pagamento/:id}
  */
 export async function formaPagamentoControllerFindOne(id: FormaPagamentoControllerFindOnePathParams["id"], headers: FormaPagamentoControllerFindOneHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<FormaPagamentoControllerFindOneQueryResponse, ResponseErrorConfig<FormaPagamentoControllerFindOne404>, unknown>({ method : "GET", url : `/forma-pagamento/${id}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<FormaPagamentoControllerFindOneQueryResponse, ResponseErrorConfig<FormaPagamentoControllerFindOne404>, unknown>({ method : "GET", url : `/forma-pagamento/${id}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function formaPagamentoControllerFindOneQueryOptions(id: FormaPagamentoControllerFindOnePathParams["id"], headers: FormaPagamentoControllerFindOneHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = formaPagamentoControllerFindOneQueryKey(id)
-        return queryOptions<FormaPagamentoControllerFindOneQueryResponse, ResponseErrorConfig<FormaPagamentoControllerFindOne404>, FormaPagamentoControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(id),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return formaPagamentoControllerFindOne(id, headers, config)
-         },
-        })
-  
+  const queryKey = formaPagamentoControllerFindOneQueryKey(id)
+  return queryOptions<FormaPagamentoControllerFindOneQueryResponse, ResponseErrorConfig<FormaPagamentoControllerFindOne404>, FormaPagamentoControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(id),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return formaPagamentoControllerFindOne(id, headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function formaPagamentoControllerFindOneQueryOptions(id: FormaPagamentoCo
  * {@link /forma-pagamento/:id}
  */
 export function useFormaPagamentoControllerFindOne<TData = FormaPagamentoControllerFindOneQueryResponse, TQueryData = FormaPagamentoControllerFindOneQueryResponse, TQueryKey extends QueryKey = FormaPagamentoControllerFindOneQueryKey>(id: FormaPagamentoControllerFindOnePathParams["id"], headers: FormaPagamentoControllerFindOneHeaderParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<FormaPagamentoControllerFindOneQueryResponse, ResponseErrorConfig<FormaPagamentoControllerFindOne404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? formaPagamentoControllerFindOneQueryKey(id)
-  
-         const query = useQuery({
-          ...formaPagamentoControllerFindOneQueryOptions(id, headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<FormaPagamentoControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<FormaPagamentoControllerFindOneQueryResponse, ResponseErrorConfig<FormaPagamentoControllerFindOne404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? formaPagamentoControllerFindOneQueryKey(id)
+
+  const query = useQuery({
+   ...formaPagamentoControllerFindOneQueryOptions(id, headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<FormaPagamentoControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

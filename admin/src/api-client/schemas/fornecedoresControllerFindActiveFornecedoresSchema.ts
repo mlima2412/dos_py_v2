@@ -4,22 +4,21 @@
 */
 
 import type { FornecedoresControllerFindActiveFornecedoresHeaderParams, FornecedoresControllerFindActiveFornecedores200, FornecedoresControllerFindActiveFornecedores400, FornecedoresControllerFindActiveFornecedoresQueryResponse } from "../types/FornecedoresControllerFindActiveFornecedores.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { fornecedorSchema } from "./fornecedorSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const fornecedoresControllerFindActiveFornecedoresHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.string().describe("ID do parceiro")
-      }) as unknown as ToZod<FornecedoresControllerFindActiveFornecedoresHeaderParams>
+    "x-parceiro-id": z.string().describe("ID do parceiro")
+    }) as unknown as z.ZodType<FornecedoresControllerFindActiveFornecedoresHeaderParams>
 
 /**
  * @description Lista de fornecedores ativos retornada com sucesso
  */
-export const fornecedoresControllerFindActiveFornecedores200Schema = z.array(z.lazy(() => fornecedorSchema)) as unknown as ToZod<FornecedoresControllerFindActiveFornecedores200>
+export const fornecedoresControllerFindActiveFornecedores200Schema = z.array(fornecedorSchema) as unknown as z.ZodType<FornecedoresControllerFindActiveFornecedores200>
 
 /**
  * @description Header x-parceiro-id é obrigatório
  */
-export const fornecedoresControllerFindActiveFornecedores400Schema = z.unknown() as unknown as ToZod<FornecedoresControllerFindActiveFornecedores400>
+export const fornecedoresControllerFindActiveFornecedores400Schema = z.unknown() as unknown as z.ZodType<FornecedoresControllerFindActiveFornecedores400>
 
-export const fornecedoresControllerFindActiveFornecedoresQueryResponseSchema = z.lazy(() => fornecedoresControllerFindActiveFornecedores200Schema) as unknown as ToZod<FornecedoresControllerFindActiveFornecedoresQueryResponse>
+export const fornecedoresControllerFindActiveFornecedoresQueryResponseSchema = fornecedoresControllerFindActiveFornecedores200Schema as unknown as z.ZodType<FornecedoresControllerFindActiveFornecedoresQueryResponse>

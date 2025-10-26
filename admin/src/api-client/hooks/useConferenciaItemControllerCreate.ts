@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ConferenciaItemControllerCreateMutationRequest, ConferenciaItemControllerCreateMutationResponse, ConferenciaItemControllerCreate400, ConferenciaItemControllerCreate404, ConferenciaItemControllerCreate409 } from "../types/ConferenciaItemControllerCreate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const conferenciaItemControllerCreateMutationKey = () =>   [{"url":"/conferencia-item"}] as const
+export const conferenciaItemControllerCreateMutationKey = () => [{ url: '/conferencia-item' }] as const
 
 export type ConferenciaItemControllerCreateMutationKey = ReturnType<typeof conferenciaItemControllerCreateMutationKey>
 
@@ -18,11 +18,22 @@ export type ConferenciaItemControllerCreateMutationKey = ReturnType<typeof confe
  * {@link /conferencia-item}
  */
 export async function conferenciaItemControllerCreate(data: ConferenciaItemControllerCreateMutationRequest, config: Partial<RequestConfig<ConferenciaItemControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<ConferenciaItemControllerCreateMutationResponse, ResponseErrorConfig<ConferenciaItemControllerCreate400 | ConferenciaItemControllerCreate404 | ConferenciaItemControllerCreate409>, ConferenciaItemControllerCreateMutationRequest>({ method : "POST", url : `/conferencia-item`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<ConferenciaItemControllerCreateMutationResponse, ResponseErrorConfig<ConferenciaItemControllerCreate400 | ConferenciaItemControllerCreate404 | ConferenciaItemControllerCreate409>, ConferenciaItemControllerCreateMutationRequest>({ method : "POST", url : `/conferencia-item`, data : requestData, ... requestConfig })
-return res.data
+export function conferenciaItemControllerCreateMutationOptions(config: Partial<RequestConfig<ConferenciaItemControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = conferenciaItemControllerCreateMutationKey()
+  return mutationOptions<ConferenciaItemControllerCreateMutationResponse, ResponseErrorConfig<ConferenciaItemControllerCreate400 | ConferenciaItemControllerCreate404 | ConferenciaItemControllerCreate409>, {data: ConferenciaItemControllerCreateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data }) => {
+      return conferenciaItemControllerCreate(data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /conferencia-item}
  */
 export function useConferenciaItemControllerCreate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ConferenciaItemControllerCreateMutationResponse, ResponseErrorConfig<ConferenciaItemControllerCreate400 | ConferenciaItemControllerCreate404 | ConferenciaItemControllerCreate409>, {data: ConferenciaItemControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<ConferenciaItemControllerCreateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? conferenciaItemControllerCreateMutationKey()
-  
-          return useMutation<ConferenciaItemControllerCreateMutationResponse, ResponseErrorConfig<ConferenciaItemControllerCreate400 | ConferenciaItemControllerCreate404 | ConferenciaItemControllerCreate409>, {data: ConferenciaItemControllerCreateMutationRequest}, TContext>({
-            mutationFn: async({ data }) => {
-              return conferenciaItemControllerCreate(data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ConferenciaItemControllerCreateMutationResponse, ResponseErrorConfig<ConferenciaItemControllerCreate400 | ConferenciaItemControllerCreate404 | ConferenciaItemControllerCreate409>, {data: ConferenciaItemControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<ConferenciaItemControllerCreateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? conferenciaItemControllerCreateMutationKey()
+
+  const baseOptions = conferenciaItemControllerCreateMutationOptions(config) as UseMutationOptions<ConferenciaItemControllerCreateMutationResponse, ResponseErrorConfig<ConferenciaItemControllerCreate400 | ConferenciaItemControllerCreate404 | ConferenciaItemControllerCreate409>, {data: ConferenciaItemControllerCreateMutationRequest}, TContext>
+
+  return useMutation<ConferenciaItemControllerCreateMutationResponse, ResponseErrorConfig<ConferenciaItemControllerCreate400 | ConferenciaItemControllerCreate404 | ConferenciaItemControllerCreate409>, {data: ConferenciaItemControllerCreateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ConferenciaItemControllerCreateMutationResponse, ResponseErrorConfig<ConferenciaItemControllerCreate400 | ConferenciaItemControllerCreate404 | ConferenciaItemControllerCreate409>, {data: ConferenciaItemControllerCreateMutationRequest}, TContext>
 }

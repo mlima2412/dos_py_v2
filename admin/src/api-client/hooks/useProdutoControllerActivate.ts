@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ProdutoControllerActivateMutationResponse, ProdutoControllerActivatePathParams, ProdutoControllerActivateHeaderParams, ProdutoControllerActivate404 } from "../types/ProdutoControllerActivate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const produtoControllerActivateMutationKey = () =>   [{"url":"/produto/{publicId}/ativar"}] as const
+export const produtoControllerActivateMutationKey = () => [{ url: '/produto/:publicId/ativar' }] as const
 
 export type ProdutoControllerActivateMutationKey = ReturnType<typeof produtoControllerActivateMutationKey>
 
@@ -18,11 +18,20 @@ export type ProdutoControllerActivateMutationKey = ReturnType<typeof produtoCont
  * {@link /produto/:publicId/ativar}
  */
 export async function produtoControllerActivate(publicId: ProdutoControllerActivatePathParams["publicId"], headers: ProdutoControllerActivateHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ProdutoControllerActivateMutationResponse, ResponseErrorConfig<ProdutoControllerActivate404>, unknown>({ method : "PATCH", url : `/produto/${publicId}/ativar`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-
-const res = await request<ProdutoControllerActivateMutationResponse, ResponseErrorConfig<ProdutoControllerActivate404>, unknown>({ method : "PATCH", url : `/produto/${publicId}/ativar`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function produtoControllerActivateMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = produtoControllerActivateMutationKey()
+  return mutationOptions<ProdutoControllerActivateMutationResponse, ResponseErrorConfig<ProdutoControllerActivate404>, {publicId: ProdutoControllerActivatePathParams["publicId"], headers: ProdutoControllerActivateHeaderParams}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId, headers }) => {
+      return produtoControllerActivate(publicId, headers, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /produto/:publicId/ativar}
  */
 export function useProdutoControllerActivate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ProdutoControllerActivateMutationResponse, ResponseErrorConfig<ProdutoControllerActivate404>, {publicId: ProdutoControllerActivatePathParams["publicId"], headers: ProdutoControllerActivateHeaderParams}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? produtoControllerActivateMutationKey()
-  
-          return useMutation<ProdutoControllerActivateMutationResponse, ResponseErrorConfig<ProdutoControllerActivate404>, {publicId: ProdutoControllerActivatePathParams["publicId"], headers: ProdutoControllerActivateHeaderParams}, TContext>({
-            mutationFn: async({ publicId, headers }) => {
-              return produtoControllerActivate(publicId, headers, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ProdutoControllerActivateMutationResponse, ResponseErrorConfig<ProdutoControllerActivate404>, {publicId: ProdutoControllerActivatePathParams["publicId"], headers: ProdutoControllerActivateHeaderParams}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? produtoControllerActivateMutationKey()
+
+  const baseOptions = produtoControllerActivateMutationOptions(config) as UseMutationOptions<ProdutoControllerActivateMutationResponse, ResponseErrorConfig<ProdutoControllerActivate404>, {publicId: ProdutoControllerActivatePathParams["publicId"], headers: ProdutoControllerActivateHeaderParams}, TContext>
+
+  return useMutation<ProdutoControllerActivateMutationResponse, ResponseErrorConfig<ProdutoControllerActivate404>, {publicId: ProdutoControllerActivatePathParams["publicId"], headers: ProdutoControllerActivateHeaderParams}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ProdutoControllerActivateMutationResponse, ResponseErrorConfig<ProdutoControllerActivate404>, {publicId: ProdutoControllerActivatePathParams["publicId"], headers: ProdutoControllerActivateHeaderParams}, TContext>
 }

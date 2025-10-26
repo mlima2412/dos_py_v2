@@ -4,26 +4,25 @@
 */
 
 import type { PedidoCompraItemControllerFindByPedidoCompraPathParams, PedidoCompraItemControllerFindByPedidoCompraHeaderParams, PedidoCompraItemControllerFindByPedidoCompra200, PedidoCompraItemControllerFindByPedidoCompra404, PedidoCompraItemControllerFindByPedidoCompraQueryResponse } from "../types/PedidoCompraItemControllerFindByPedidoCompra.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { pedidoCompraItemSchema } from "./pedidoCompraItemSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const pedidoCompraItemControllerFindByPedidoCompraPathParamsSchema = z.object({
-      "pedidoCompraId": z.string().describe("ID do pedido de compra")
-      }) as unknown as ToZod<PedidoCompraItemControllerFindByPedidoCompraPathParams>
+    "pedidoCompraId": z.string().describe("ID do pedido de compra")
+    }) as unknown as z.ZodType<PedidoCompraItemControllerFindByPedidoCompraPathParams>
 
 export const pedidoCompraItemControllerFindByPedidoCompraHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
-      }) as unknown as ToZod<PedidoCompraItemControllerFindByPedidoCompraHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+    }) as unknown as z.ZodType<PedidoCompraItemControllerFindByPedidoCompraHeaderParams>
 
 /**
  * @description Lista de itens do pedido de compra retornada com sucesso
  */
-export const pedidoCompraItemControllerFindByPedidoCompra200Schema = z.array(z.lazy(() => pedidoCompraItemSchema)) as unknown as ToZod<PedidoCompraItemControllerFindByPedidoCompra200>
+export const pedidoCompraItemControllerFindByPedidoCompra200Schema = z.array(pedidoCompraItemSchema) as unknown as z.ZodType<PedidoCompraItemControllerFindByPedidoCompra200>
 
 /**
  * @description Pedido de compra não encontrado
  */
-export const pedidoCompraItemControllerFindByPedidoCompra404Schema = z.unknown() as unknown as ToZod<PedidoCompraItemControllerFindByPedidoCompra404>
+export const pedidoCompraItemControllerFindByPedidoCompra404Schema = z.unknown() as unknown as z.ZodType<PedidoCompraItemControllerFindByPedidoCompra404>
 
-export const pedidoCompraItemControllerFindByPedidoCompraQueryResponseSchema = z.lazy(() => pedidoCompraItemControllerFindByPedidoCompra200Schema) as unknown as ToZod<PedidoCompraItemControllerFindByPedidoCompraQueryResponse>
+export const pedidoCompraItemControllerFindByPedidoCompraQueryResponseSchema = pedidoCompraItemControllerFindByPedidoCompra200Schema as unknown as z.ZodType<PedidoCompraItemControllerFindByPedidoCompraQueryResponse>

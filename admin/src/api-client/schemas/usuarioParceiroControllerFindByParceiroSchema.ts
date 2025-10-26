@@ -4,17 +4,16 @@
 */
 
 import type { UsuarioParceiroControllerFindByParceiroPathParams, UsuarioParceiroControllerFindByParceiro200, UsuarioParceiroControllerFindByParceiroQueryResponse } from "../types/UsuarioParceiroControllerFindByParceiro.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { usuarioParceiroSchema } from "./usuarioParceiroSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const usuarioParceiroControllerFindByParceiroPathParamsSchema = z.object({
-      "parceiroId": z.coerce.number().describe("ID do parceiro")
-      }) as unknown as ToZod<UsuarioParceiroControllerFindByParceiroPathParams>
+    "parceiroId": z.coerce.number().describe("ID do parceiro")
+    }) as unknown as z.ZodType<UsuarioParceiroControllerFindByParceiroPathParams>
 
 /**
  * @description Lista de relações do parceiro
  */
-export const usuarioParceiroControllerFindByParceiro200Schema = z.array(z.lazy(() => usuarioParceiroSchema)) as unknown as ToZod<UsuarioParceiroControllerFindByParceiro200>
+export const usuarioParceiroControllerFindByParceiro200Schema = z.array(usuarioParceiroSchema) as unknown as z.ZodType<UsuarioParceiroControllerFindByParceiro200>
 
-export const usuarioParceiroControllerFindByParceiroQueryResponseSchema = z.lazy(() => usuarioParceiroControllerFindByParceiro200Schema) as unknown as ToZod<UsuarioParceiroControllerFindByParceiroQueryResponse>
+export const usuarioParceiroControllerFindByParceiroQueryResponseSchema = usuarioParceiroControllerFindByParceiro200Schema as unknown as z.ZodType<UsuarioParceiroControllerFindByParceiroQueryResponse>

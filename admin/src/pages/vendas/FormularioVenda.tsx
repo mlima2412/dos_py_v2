@@ -25,6 +25,7 @@ import { usePartnerContext } from "@/hooks/usePartnerContext";
 import {
 	vendaControllerFindOneQueryKey,
 	vendaControllerPaginateQueryKey,
+	useVendaControllerFinalizeDireta,
 } from "@/api-client";
 import type { SkuListingRef } from "@/components/SkuListing";
 import type { SelectedSkusListRef } from "@/components/SelectedSkusList";
@@ -39,10 +40,10 @@ import { useVendaForm } from "./hooks/useVendaForm";
 import { useVendaData } from "./hooks/useVendaData";
 import { useVendaMutations } from "./hooks/useVendaMutations";
 import { useVendaTotals } from "./hooks/useVendaTotals";
-import { useVendaFinalization } from "./hooks/useVendaFinalization";
 import { NavigationSteps } from "./components/NavigationSteps";
 import { DadosBasicos } from "./components/DadosBasicos";
 import { SelecaoItens } from "./components/SelecaoItens";
+import { FaturamentoForm } from "./components/FaturamentoForm";
 import { Pagamento } from "./components/Pagamento";
 
 interface FormularioVendaProps {
@@ -63,6 +64,9 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 
 	const [activeStep, setActiveStep] = useState<VendaFormStep>("basic");
 	const [canAccessItems, setCanAccessItems] = useState<boolean>(
+		mode !== "create"
+	);
+	const [canAccessBilling, setCanAccessBilling] = useState<boolean>(
 		mode !== "create"
 	);
 	const [canAccessReview, setCanAccessReview] = useState<boolean>(
@@ -101,6 +105,7 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 		publicId,
 		setVendaResumo,
 		setCanAccessItems,
+		setCanAccessBilling,
 		setCanAccessReview,
 	});
 
@@ -149,7 +154,16 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 			itens,
 			valorFrete: vendaExistente.valorFrete ?? 0,
 			descontoTotal: vendaExistente.desconto ?? 0,
-			comissao: vendaExistente.comissao ?? 0,
+			comissao: vendaExistente.valorComissao ?? 0,
+			numeroFatura: vendaExistente.numeroFatura ?? null,
+			desejaFatura: !!(
+				vendaExistente.numeroFatura ||
+				vendaExistente.ruccnpj ||
+				vendaExistente.nomeFatura
+			),
+			faturaEmNomeCliente: !vendaExistente.nomeFatura,
+			nomeFatura: vendaExistente.nomeFatura ?? null,
+			ruccnpjFatura: vendaExistente.ruccnpj ?? null,
 		});
 
 		setVendaResumo({
@@ -161,6 +175,7 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 			clienteSobrenome: vendaExistente.clienteSobrenome,
 		});
 		setCanAccessItems(true);
+		setCanAccessBilling(itens.length > 0);
 		setCanAccessReview(mode === "view" || itens.length > 0);
 		hasInitializedVendaRef.current = true;
 	}, [vendaExistente, mapVendaItemToFormData, mode, formMethods]);
@@ -219,10 +234,26 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 	});
 
 	// Finalization hook
-	const { finalizarVendaComPagamentos } = useVendaFinalization({
-		parceiroIdNumber,
-		vendaId: vendaResumo?.id,
-		clienteId: vendaResumo?.clienteId,
+	const finalizacaoMutation = useVendaControllerFinalizeDireta({
+		mutation: {
+			onSuccess: () => {
+				showSuccess(t("salesOrders.form.messages.finalizeSuccess"));
+				if (vendaResumo?.publicId) {
+					queryClient.invalidateQueries({
+						queryKey: vendaControllerFindOneQueryKey(vendaResumo.publicId),
+					});
+				}
+				queryClient.invalidateQueries({
+					queryKey: vendaControllerPaginateQueryKey(),
+				});
+				navigate("/pedidoVendas");
+			},
+			onError: (error) => {
+				console.error("Erro ao finalizar venda:", error);
+				const mensagem = error?.data?.message ?? t("salesOrders.form.messages.finalizeError");
+				showError(mensagem);
+			},
+		},
 	});
 
 	// Reset selected product when location changes
@@ -231,22 +262,26 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 		setSkuSearchCode("");
 	}, [selectedLocal?.publicId]);
 
-	// Update review access based on items
+	// Update billing and review access based on items
 	useEffect(() => {
 		if (mode === "view") {
+			setCanAccessBilling(true);
 			setCanAccessReview(true);
 			return;
 		}
-		setCanAccessReview(itensSelecionados.length > 0);
+		const hasItems = itensSelecionados.length > 0;
+		setCanAccessBilling(hasItems);
+		setCanAccessReview(hasItems);
 	}, [itensSelecionados.length, mode]);
 
 	const handleStepChange = useCallback(
 		(nextStep: VendaFormStep) => {
 			if (nextStep === "items" && !canAccessItems) return;
+			if (nextStep === "billing" && !canAccessBilling) return;
 			if (nextStep === "review" && !canAccessReview) return;
 			setActiveStep(nextStep);
 		},
-		[canAccessItems, canAccessReview]
+		[canAccessItems, canAccessBilling, canAccessReview]
 	);
 
 	const handleStepOneSave = useCallback(async () => {
@@ -325,49 +360,71 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 	]);
 
 	const handleFinalize = useCallback(async () => {
-		if (!parceiroIdNumber || !vendaResumo?.publicId) return;
+		if (!parceiroIdNumber || !vendaResumo?.publicId) {
+			showError("Salve os dados básicos da venda antes de finalizar.");
+			return;
+		}
 
 		setIsFinalizing(true);
 		try {
-			// 1. Salvar dados básicos da venda (desconto, frete)
+			// 1. Salvar dados básicos da venda (desconto, frete, comissão, fatura)
 			await handleCreateOrUpdateVenda({
 				clienteId: getValues("clienteId")!,
 				localSaidaId: getValues("localSaidaId")!,
 				tipo: getValues("tipo"),
 				dataEntrega: getValues("dataEntrega"),
 				observacao: getValues("observacao") || null,
+				valorFrete: getValues("valorFrete"),
+				descontoTotal: getValues("descontoTotal"),
+				comissao: getValues("comissao"),
+				numeroFatura: getValues("numeroFatura"),
+				nomeFatura: getValues("nomeFatura"),
+				ruccnpjFatura: getValues("ruccnpjFatura"),
 			});
 
-			// 2. Processar pagamentos, parcelamentos e parcelas
-			const tipoVenda = getValues("tipoVenda");
+			// 2. Validar e processar pagamentos
 			const pagamentos = getValues("pagamentos") || [];
 
-			if (tipoVenda && pagamentos.length > 0) {
-				const sucesso = await finalizarVendaComPagamentos(
-					tipoVenda,
-					pagamentos
-				);
-				if (!sucesso) {
-					setIsFinalizing(false);
-					return;
-				}
+			if (pagamentos.length === 0) {
+				showError("Adicione ao menos uma forma de pagamento");
+				return;
 			}
 
-			// TODO: Integrar chamada para PATCH /vendas/:id/finalizar quando o contrato estiver disponível.
+			// 3. Preparar payload de finalização
+			const pagamentosPayload = pagamentos.map(pagamento => ({
+				formaPagamentoId: pagamento.formaPagamentoId,
+				tipo: pagamento.tipo,
+				valor: pagamento.valor,
+				entrada: pagamento.entrada,
+				valorDelivery: pagamento.valorDelivery,
+				vencimento: pagamento.vencimento
+					? pagamento.vencimento.toISOString()
+					: undefined,
+				numeroParcelas: pagamento.numeroParcelas,
+				primeiraParcelaData: pagamento.primeiraParcelaData
+					? pagamento.primeiraParcelaData.toISOString()
+					: undefined,
+			}));
 
-			showSuccess(t("salesOrders.form.messages.finalizeSuccess"));
-			if (vendaResumo.publicId) {
-				await queryClient.invalidateQueries({
-					queryKey: vendaControllerFindOneQueryKey(vendaResumo.publicId),
-				});
-			}
-			await queryClient.invalidateQueries({
-				queryKey: vendaControllerPaginateQueryKey(),
+			// 4. Chamar endpoint de finalização
+			await finalizacaoMutation.mutateAsync({
+				publicId: vendaResumo.publicId,
+				headers: {
+					"x-parceiro-id": parceiroIdNumber,
+				},
+				data: {
+					valorFrete: getValues("valorFrete") ?? undefined,
+					descontoTotal: getValues("descontoTotal") ?? undefined,
+					valorComissao: getValues("comissao") ?? undefined,
+					numeroFatura: getValues("numeroFatura") ?? undefined,
+					nomeFatura: getValues("nomeFatura") ?? undefined,
+					ruccnpj: getValues("ruccnpjFatura") ?? undefined,
+					pagamentos: pagamentosPayload,
+				},
 			});
-			navigate("/pedidoVendas");
 		} catch (error) {
-			console.error(error);
-			showError(t("salesOrders.form.messages.finalizeError"));
+			// Erro já tratado no onError do mutation
+			console.error("Erro ao finalizar venda:", error);
 		} finally {
 			setIsFinalizing(false);
 		}
@@ -376,12 +433,8 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 		vendaResumo,
 		handleCreateOrUpdateVenda,
 		getValues,
-		finalizarVendaComPagamentos,
-		showSuccess,
+		finalizacaoMutation,
 		showError,
-		t,
-		queryClient,
-		navigate,
 	]);
 
 	const handlers: VendaFormHandlers = {
@@ -436,6 +489,7 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 						<NavigationSteps
 							activeStep={activeStep}
 							canAccessItems={canAccessItems}
+							canAccessBilling={canAccessBilling}
 							canAccessReview={canAccessReview}
 							onStepChange={handleStepChange}
 						/>
@@ -473,6 +527,16 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 								selectedSkusRef={selectedSkusRef}
 								findSkuByCode={findSkuByCode}
 								onBack={() => setActiveStep("basic")}
+								onNext={() => setActiveStep("billing")}
+							/>
+						)}
+
+						{activeStep === "billing" && (
+							<FaturamentoForm
+								mode={mode}
+								setValue={setValue}
+								watch={watch}
+								onBack={() => setActiveStep("items")}
 								onNext={() => setActiveStep("review")}
 							/>
 						)}
@@ -492,9 +556,9 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 								onSave={handleSavePayment}
 								onFinalize={handleFinalize}
 								isSaving={isSavingPayment}
-								isFinalizing={isFinalizing}
+								isFinalizing={isFinalizing || finalizacaoMutation.isPending}
 								isSubmitting={isSubmitting}
-								onBack={() => setActiveStep("items")}
+								onBack={() => setActiveStep("billing")}
 							/>
 						)}
 					</div>

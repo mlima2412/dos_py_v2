@@ -4,31 +4,30 @@
 */
 
 import type { ConferenciaItemControllerCreate201, ConferenciaItemControllerCreate400, ConferenciaItemControllerCreate404, ConferenciaItemControllerCreate409, ConferenciaItemControllerCreateMutationRequest, ConferenciaItemControllerCreateMutationResponse } from "../types/ConferenciaItemControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { conferenciaItemResponseDtoSchema } from "./conferenciaItemResponseDtoSchema.ts";
 import { createConferenciaItemDtoSchema } from "./createConferenciaItemDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Item de conferência criado com sucesso
  */
-export const conferenciaItemControllerCreate201Schema = z.lazy(() => conferenciaItemResponseDtoSchema) as unknown as ToZod<ConferenciaItemControllerCreate201>
+export const conferenciaItemControllerCreate201Schema = conferenciaItemResponseDtoSchema as unknown as z.ZodType<ConferenciaItemControllerCreate201>
 
 /**
  * @description Dados inválidos
  */
-export const conferenciaItemControllerCreate400Schema = z.unknown() as unknown as ToZod<ConferenciaItemControllerCreate400>
+export const conferenciaItemControllerCreate400Schema = z.unknown() as unknown as z.ZodType<ConferenciaItemControllerCreate400>
 
 /**
  * @description Conferência ou SKU não encontrado
  */
-export const conferenciaItemControllerCreate404Schema = z.unknown() as unknown as ToZod<ConferenciaItemControllerCreate404>
+export const conferenciaItemControllerCreate404Schema = z.unknown() as unknown as z.ZodType<ConferenciaItemControllerCreate404>
 
 /**
  * @description Já existe item para este SKU nesta conferência
  */
-export const conferenciaItemControllerCreate409Schema = z.unknown() as unknown as ToZod<ConferenciaItemControllerCreate409>
+export const conferenciaItemControllerCreate409Schema = z.unknown() as unknown as z.ZodType<ConferenciaItemControllerCreate409>
 
-export const conferenciaItemControllerCreateMutationRequestSchema = z.lazy(() => createConferenciaItemDtoSchema) as unknown as ToZod<ConferenciaItemControllerCreateMutationRequest>
+export const conferenciaItemControllerCreateMutationRequestSchema = createConferenciaItemDtoSchema as unknown as z.ZodType<ConferenciaItemControllerCreateMutationRequest>
 
-export const conferenciaItemControllerCreateMutationResponseSchema = z.lazy(() => conferenciaItemControllerCreate201Schema) as unknown as ToZod<ConferenciaItemControllerCreateMutationResponse>
+export const conferenciaItemControllerCreateMutationResponseSchema = conferenciaItemControllerCreate201Schema as unknown as z.ZodType<ConferenciaItemControllerCreateMutationResponse>

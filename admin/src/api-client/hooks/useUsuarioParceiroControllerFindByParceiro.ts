@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const usuarioParceiroControllerFindByParceiroQueryKey = (parceiroId: UsuarioParceiroControllerFindByParceiroPathParams["parceiroId"]) =>   [{ url: '/usuario-parceiro/parceiro/:parceiroId', params: {parceiroId:parceiroId} }] as const
+export const usuarioParceiroControllerFindByParceiroQueryKey = (parceiroId: UsuarioParceiroControllerFindByParceiroPathParams["parceiroId"]) => [{ url: '/usuario-parceiro/parceiro/:parceiroId', params: {parceiroId:parceiroId} }] as const
 
 export type UsuarioParceiroControllerFindByParceiroQueryKey = ReturnType<typeof usuarioParceiroControllerFindByParceiroQueryKey>
 
@@ -18,25 +18,22 @@ export type UsuarioParceiroControllerFindByParceiroQueryKey = ReturnType<typeof 
  * {@link /usuario-parceiro/parceiro/:parceiroId}
  */
 export async function usuarioParceiroControllerFindByParceiro(parceiroId: UsuarioParceiroControllerFindByParceiroPathParams["parceiroId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<UsuarioParceiroControllerFindByParceiroQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/usuario-parceiro/parceiro/${parceiroId}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<UsuarioParceiroControllerFindByParceiroQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/usuario-parceiro/parceiro/${parceiroId}`, ... requestConfig })  
+  return res.data
 }
 
 export function usuarioParceiroControllerFindByParceiroQueryOptions(parceiroId: UsuarioParceiroControllerFindByParceiroPathParams["parceiroId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = usuarioParceiroControllerFindByParceiroQueryKey(parceiroId)
-        return queryOptions<UsuarioParceiroControllerFindByParceiroQueryResponse, ResponseErrorConfig<Error>, UsuarioParceiroControllerFindByParceiroQueryResponse, typeof queryKey>({
-         enabled: !!(parceiroId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return usuarioParceiroControllerFindByParceiro(parceiroId, config)
-         },
-        })
-  
+  const queryKey = usuarioParceiroControllerFindByParceiroQueryKey(parceiroId)
+  return queryOptions<UsuarioParceiroControllerFindByParceiroQueryResponse, ResponseErrorConfig<Error>, UsuarioParceiroControllerFindByParceiroQueryResponse, typeof queryKey>({
+   enabled: !!(parceiroId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return usuarioParceiroControllerFindByParceiro(parceiroId, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function usuarioParceiroControllerFindByParceiroQueryOptions(parceiroId: 
  * {@link /usuario-parceiro/parceiro/:parceiroId}
  */
 export function useUsuarioParceiroControllerFindByParceiro<TData = UsuarioParceiroControllerFindByParceiroQueryResponse, TQueryData = UsuarioParceiroControllerFindByParceiroQueryResponse, TQueryKey extends QueryKey = UsuarioParceiroControllerFindByParceiroQueryKey>(parceiroId: UsuarioParceiroControllerFindByParceiroPathParams["parceiroId"], options: 
-  {
-    query?: Partial<QueryObserverOptions<UsuarioParceiroControllerFindByParceiroQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? usuarioParceiroControllerFindByParceiroQueryKey(parceiroId)
-  
-         const query = useQuery({
-          ...usuarioParceiroControllerFindByParceiroQueryOptions(parceiroId, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<UsuarioParceiroControllerFindByParceiroQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? usuarioParceiroControllerFindByParceiroQueryKey(parceiroId)
+
+  const query = useQuery({
+   ...usuarioParceiroControllerFindByParceiroQueryOptions(parceiroId, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

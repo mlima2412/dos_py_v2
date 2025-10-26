@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const parcelamentoControllerFindOneQueryKey = (id: ParcelamentoControllerFindOnePathParams["id"]) =>   [{ url: '/parcelamento/:id', params: {id:id} }] as const
+export const parcelamentoControllerFindOneQueryKey = (id: ParcelamentoControllerFindOnePathParams["id"]) => [{ url: '/parcelamento/:id', params: {id:id} }] as const
 
 export type ParcelamentoControllerFindOneQueryKey = ReturnType<typeof parcelamentoControllerFindOneQueryKey>
 
@@ -18,25 +18,22 @@ export type ParcelamentoControllerFindOneQueryKey = ReturnType<typeof parcelamen
  * {@link /parcelamento/:id}
  */
 export async function parcelamentoControllerFindOne(id: ParcelamentoControllerFindOnePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ParcelamentoControllerFindOneQueryResponse, ResponseErrorConfig<ParcelamentoControllerFindOne404>, unknown>({ method : "GET", url : `/parcelamento/${id}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ParcelamentoControllerFindOneQueryResponse, ResponseErrorConfig<ParcelamentoControllerFindOne404>, unknown>({ method : "GET", url : `/parcelamento/${id}`, ... requestConfig })  
+  return res.data
 }
 
 export function parcelamentoControllerFindOneQueryOptions(id: ParcelamentoControllerFindOnePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = parcelamentoControllerFindOneQueryKey(id)
-        return queryOptions<ParcelamentoControllerFindOneQueryResponse, ResponseErrorConfig<ParcelamentoControllerFindOne404>, ParcelamentoControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(id),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return parcelamentoControllerFindOne(id, config)
-         },
-        })
-  
+  const queryKey = parcelamentoControllerFindOneQueryKey(id)
+  return queryOptions<ParcelamentoControllerFindOneQueryResponse, ResponseErrorConfig<ParcelamentoControllerFindOne404>, ParcelamentoControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(id),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return parcelamentoControllerFindOne(id, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function parcelamentoControllerFindOneQueryOptions(id: ParcelamentoContro
  * {@link /parcelamento/:id}
  */
 export function useParcelamentoControllerFindOne<TData = ParcelamentoControllerFindOneQueryResponse, TQueryData = ParcelamentoControllerFindOneQueryResponse, TQueryKey extends QueryKey = ParcelamentoControllerFindOneQueryKey>(id: ParcelamentoControllerFindOnePathParams["id"], options: 
-  {
-    query?: Partial<QueryObserverOptions<ParcelamentoControllerFindOneQueryResponse, ResponseErrorConfig<ParcelamentoControllerFindOne404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? parcelamentoControllerFindOneQueryKey(id)
-  
-         const query = useQuery({
-          ...parcelamentoControllerFindOneQueryOptions(id, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<ParcelamentoControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<ParcelamentoControllerFindOneQueryResponse, ResponseErrorConfig<ParcelamentoControllerFindOne404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? parcelamentoControllerFindOneQueryKey(id)
+
+  const query = useQuery({
+   ...parcelamentoControllerFindOneQueryOptions(id, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<ParcelamentoControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

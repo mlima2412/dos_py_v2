@@ -4,18 +4,17 @@
 */
 
 import type { ClientesControllerFindAllQueryParams, ClientesControllerFindAll200, ClientesControllerFindAllQueryResponse } from "../types/ClientesControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { clienteSchema } from "./clienteSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const clientesControllerFindAllQueryParamsSchema = z.object({
-      "parceiroId": z.string().describe("Filtrar por ID do parceiro").optional(),
-  "canalOrigemId": z.string().describe("Filtrar por ID do canal de origem").optional()
-      }).optional() as unknown as ToZod<ClientesControllerFindAllQueryParams>
+    "parceiroId": z.optional(z.string().describe("Filtrar por ID do parceiro")),
+"canalOrigemId": z.optional(z.string().describe("Filtrar por ID do canal de origem"))
+    }).optional() as unknown as z.ZodType<ClientesControllerFindAllQueryParams>
 
 /**
  * @description Lista de clientes
  */
-export const clientesControllerFindAll200Schema = z.array(z.lazy(() => clienteSchema)) as unknown as ToZod<ClientesControllerFindAll200>
+export const clientesControllerFindAll200Schema = z.array(clienteSchema) as unknown as z.ZodType<ClientesControllerFindAll200>
 
-export const clientesControllerFindAllQueryResponseSchema = z.lazy(() => clientesControllerFindAll200Schema) as unknown as ToZod<ClientesControllerFindAllQueryResponse>
+export const clientesControllerFindAllQueryResponseSchema = clientesControllerFindAll200Schema as unknown as z.ZodType<ClientesControllerFindAllQueryResponse>

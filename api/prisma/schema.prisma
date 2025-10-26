@@ -133,32 +133,30 @@ model CanalOrigem {
 }
 
 model Cliente {
-  id                Int            @id @default(autoincrement())
-  publicId          String         @unique @map("public_id")
-  nome              String
-  sobrenome         String?
-  email             String?
-  redeSocial        String?        @map("rede_social")
-  celular           String?
-  ruccnpj           String?        @unique
-  ruccnpjSecundario String?        @map("ruccnpj_secundario")
-  nomeFatura        String?        @map("nome_fatura")
-  endereco          String?
-  cidade            String?
-  cep               String?
-  observacoes       String?
-  linguagem         Linguagem      @default(Espanol)
-  ativo             Boolean        @default(true)
-  ultimaCompra      DateTime?      @map("ultima_compra")
-  qtdCompras        Int            @default(0) @map("qtd_compras")
-  parceiroId        Int            @map("parceiro_id")
-  canalOrigemId     Int?           @map("canal_origem_id")
-  createdAt         DateTime       @default(now()) @map("created_at")
-  updatedAt         DateTime       @updatedAt @map("updated_at")
-  CanalOrigem       CanalOrigem?   @relation(fields: [canalOrigemId], references: [id])
-  Parceiro          Parceiro       @relation(fields: [parceiroId], references: [id])
-  Parcelamento      Parcelamento[]
-  Venda             Venda[]
+  id            Int            @id @default(autoincrement())
+  publicId      String         @unique @map("public_id")
+  nome          String
+  sobrenome     String?
+  email         String?
+  redeSocial    String?        @map("rede_social")
+  celular       String?
+  ruccnpj       String?        @unique
+  endereco      String?
+  cidade        String?
+  cep           String?
+  observacoes   String?
+  linguagem     Linguagem      @default(Espanol)
+  ativo         Boolean        @default(true)
+  ultimaCompra  DateTime?      @map("ultima_compra")
+  qtdCompras    Int            @default(0) @map("qtd_compras")
+  parceiroId    Int            @map("parceiro_id")
+  canalOrigemId Int?           @map("canal_origem_id")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  CanalOrigem   CanalOrigem?   @relation(fields: [canalOrigemId], references: [id])
+  Parceiro      Parceiro       @relation(fields: [parceiroId], references: [id])
+  Parcelamento  Parcelamento[]
+  Venda         Venda[]
 
   @@map("cliente")
 }
@@ -603,6 +601,7 @@ enum VendaTipo {
   DIRETA
   CONDICIONAL
   BRINDE
+  PERMUTA
 }
 
 enum VendaStatus {
@@ -691,7 +690,8 @@ model Venda {
   valorFrete    Decimal?     @default(0) @map("valor_frete") @db.Decimal(12, 3)
   valorTotal    Decimal?     @default(0) @map("valor_total") @db.Decimal(12, 3)
   desconto      Decimal?     @default(0) @map("desconto") @db.Decimal(12, 3) // desconto da venda
-  ruccnpj       String?      @map("ruccnpj")
+  ruccnpj       String?      @map("ruccnpj") // Caso a fatura seja emitida em nome de outra pessoa que não o cliente
+  nomeFatura    String?      @map("nome_fatura") // pode não ser o mesmo do cliente
   numeroFatura  String?      @map("numero_fatura") // pode não ser o mesmo do cliente
   observacao    String?      @map("observacao")
   valorComissao Decimal?     @default(0) @map("valor_comissao") @db.Decimal(12, 3)
@@ -702,6 +702,7 @@ model Venda {
   Parceiro      Parceiro     @relation(fields: [parceiroId], references: [id])
   LocalSaida    LocalEstoque @relation(fields: [localSaidaId], references: [id])
 
+  @@index([parceiroId, clienteId])
   @@map("venda")
 }
 

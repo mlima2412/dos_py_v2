@@ -4,31 +4,30 @@
 */
 
 import type { AuthControllerGetUserParceiros200, AuthControllerGetUserParceirosQueryResponse } from "../types/AuthControllerGetUserParceiros.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Lista de parceiros do usuário
  */
 export const authControllerGetUserParceiros200Schema = z.array(z.object({
-      "id": z.coerce.number().optional(),
-  "parceiroId": z.coerce.number().optional(),
-  "Parceiro": z.object({
-      "id": z.coerce.number().optional(),
-  "publicId": z.coerce.string().optional(),
-  "nome": z.coerce.string().optional(),
-  "logourl": z.coerce.string().optional(),
-  "currencyId": z.coerce.number().optional(),
-  "currency": z.object({
-      "id": z.coerce.number().optional(),
-  "locale": z.coerce.string().optional(),
-  "isoCode": z.coerce.string().optional()
-      }).optional()
-      }).optional(),
-  "perfil": z.object({
-      "id": z.coerce.number().optional(),
-  "nome": z.coerce.string().optional()
-      }).optional()
-      })) as unknown as ToZod<AuthControllerGetUserParceiros200>
+    "id": z.optional(z.coerce.number()),
+"parceiroId": z.optional(z.coerce.number()),
+"Parceiro": z.optional(z.object({
+    "id": z.optional(z.coerce.number()),
+"publicId": z.optional(z.coerce.string()),
+"nome": z.optional(z.coerce.string()),
+"logourl": z.optional(z.coerce.string()),
+"currencyId": z.optional(z.coerce.number()),
+"currency": z.optional(z.object({
+    "id": z.optional(z.coerce.number()),
+"locale": z.optional(z.coerce.string()),
+"isoCode": z.optional(z.coerce.string())
+    }))
+    })),
+"perfil": z.optional(z.object({
+    "id": z.optional(z.coerce.number()),
+"nome": z.optional(z.coerce.string())
+    }))
+    })) as unknown as z.ZodType<AuthControllerGetUserParceiros200>
 
-export const authControllerGetUserParceirosQueryResponseSchema = z.lazy(() => authControllerGetUserParceiros200Schema) as unknown as ToZod<AuthControllerGetUserParceirosQueryResponse>
+export const authControllerGetUserParceirosQueryResponseSchema = authControllerGetUserParceiros200Schema as unknown as z.ZodType<AuthControllerGetUserParceirosQueryResponse>

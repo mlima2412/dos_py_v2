@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const currencyControllerFindOneQueryKey = (publicId: CurrencyControllerFindOnePathParams["publicId"]) =>   [{ url: '/currency/:publicId', params: {publicId:publicId} }] as const
+export const currencyControllerFindOneQueryKey = (publicId: CurrencyControllerFindOnePathParams["publicId"]) => [{ url: '/currency/:publicId', params: {publicId:publicId} }] as const
 
 export type CurrencyControllerFindOneQueryKey = ReturnType<typeof currencyControllerFindOneQueryKey>
 
@@ -18,25 +18,22 @@ export type CurrencyControllerFindOneQueryKey = ReturnType<typeof currencyContro
  * {@link /currency/:publicId}
  */
 export async function currencyControllerFindOne(publicId: CurrencyControllerFindOnePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<CurrencyControllerFindOneQueryResponse, ResponseErrorConfig<CurrencyControllerFindOne401 | CurrencyControllerFindOne404>, unknown>({ method : "GET", url : `/currency/${publicId}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<CurrencyControllerFindOneQueryResponse, ResponseErrorConfig<CurrencyControllerFindOne401 | CurrencyControllerFindOne404>, unknown>({ method : "GET", url : `/currency/${publicId}`, ... requestConfig })  
+  return res.data
 }
 
 export function currencyControllerFindOneQueryOptions(publicId: CurrencyControllerFindOnePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = currencyControllerFindOneQueryKey(publicId)
-        return queryOptions<CurrencyControllerFindOneQueryResponse, ResponseErrorConfig<CurrencyControllerFindOne401 | CurrencyControllerFindOne404>, CurrencyControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(publicId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return currencyControllerFindOne(publicId, config)
-         },
-        })
-  
+  const queryKey = currencyControllerFindOneQueryKey(publicId)
+  return queryOptions<CurrencyControllerFindOneQueryResponse, ResponseErrorConfig<CurrencyControllerFindOne401 | CurrencyControllerFindOne404>, CurrencyControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(publicId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return currencyControllerFindOne(publicId, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function currencyControllerFindOneQueryOptions(publicId: CurrencyControll
  * {@link /currency/:publicId}
  */
 export function useCurrencyControllerFindOne<TData = CurrencyControllerFindOneQueryResponse, TQueryData = CurrencyControllerFindOneQueryResponse, TQueryKey extends QueryKey = CurrencyControllerFindOneQueryKey>(publicId: CurrencyControllerFindOnePathParams["publicId"], options: 
-  {
-    query?: Partial<QueryObserverOptions<CurrencyControllerFindOneQueryResponse, ResponseErrorConfig<CurrencyControllerFindOne401 | CurrencyControllerFindOne404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? currencyControllerFindOneQueryKey(publicId)
-  
-         const query = useQuery({
-          ...currencyControllerFindOneQueryOptions(publicId, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<CurrencyControllerFindOne401 | CurrencyControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<CurrencyControllerFindOneQueryResponse, ResponseErrorConfig<CurrencyControllerFindOne401 | CurrencyControllerFindOne404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? currencyControllerFindOneQueryKey(publicId)
+
+  const query = useQuery({
+   ...currencyControllerFindOneQueryOptions(publicId, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<CurrencyControllerFindOne401 | CurrencyControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

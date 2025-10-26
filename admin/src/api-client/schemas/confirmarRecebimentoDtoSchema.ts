@@ -4,9 +4,8 @@
 */
 
 import type { ConfirmarRecebimentoDto } from "../types/ConfirmarRecebimentoDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const confirmarRecebimentoDtoSchema = z.object({
-      "observacao": z.coerce.string().describe("Observação sobre o recebimento").optional()
-      }) as unknown as ToZod<ConfirmarRecebimentoDto>
+    "observacao": z.optional(z.coerce.string().describe("Observação sobre o recebimento"))
+    }) as unknown as z.ZodType<ConfirmarRecebimentoDto>

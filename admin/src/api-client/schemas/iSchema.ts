@@ -4,9 +4,8 @@
 */
 
 import type { I } from "../types/I.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const iSchema = z.object({
-      
-      }) as unknown as ToZod<I>
+    
+    }) as unknown as z.ZodType<I>

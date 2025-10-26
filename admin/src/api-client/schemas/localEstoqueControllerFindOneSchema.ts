@@ -4,22 +4,21 @@
 */
 
 import type { LocalEstoqueControllerFindOnePathParams, LocalEstoqueControllerFindOne200, LocalEstoqueControllerFindOne404, LocalEstoqueControllerFindOneQueryResponse } from "../types/LocalEstoqueControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { localEstoqueSchema } from "./localEstoqueSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const localEstoqueControllerFindOnePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do local de estoque (UUID v7)")
-      }) as unknown as ToZod<LocalEstoqueControllerFindOnePathParams>
+    "publicId": z.string().describe("ID público do local de estoque (UUID v7)")
+    }) as unknown as z.ZodType<LocalEstoqueControllerFindOnePathParams>
 
 /**
  * @description Local de estoque encontrado com sucesso
  */
-export const localEstoqueControllerFindOne200Schema = z.lazy(() => localEstoqueSchema) as unknown as ToZod<LocalEstoqueControllerFindOne200>
+export const localEstoqueControllerFindOne200Schema = localEstoqueSchema as unknown as z.ZodType<LocalEstoqueControllerFindOne200>
 
 /**
  * @description Local de estoque não encontrado
  */
-export const localEstoqueControllerFindOne404Schema = z.unknown() as unknown as ToZod<LocalEstoqueControllerFindOne404>
+export const localEstoqueControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<LocalEstoqueControllerFindOne404>
 
-export const localEstoqueControllerFindOneQueryResponseSchema = z.lazy(() => localEstoqueControllerFindOne200Schema) as unknown as ToZod<LocalEstoqueControllerFindOneQueryResponse>
+export const localEstoqueControllerFindOneQueryResponseSchema = localEstoqueControllerFindOne200Schema as unknown as z.ZodType<LocalEstoqueControllerFindOneQueryResponse>

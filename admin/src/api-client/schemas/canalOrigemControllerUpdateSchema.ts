@@ -4,30 +4,29 @@
 */
 
 import type { CanalOrigemControllerUpdatePathParams, CanalOrigemControllerUpdate200, CanalOrigemControllerUpdate400, CanalOrigemControllerUpdate404, CanalOrigemControllerUpdateMutationRequest, CanalOrigemControllerUpdateMutationResponse } from "../types/CanalOrigemControllerUpdate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { canalOrigemSchema } from "./canalOrigemSchema.ts";
 import { updateCanalOrigemDtoSchema } from "./updateCanalOrigemDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const canalOrigemControllerUpdatePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do canal de origem")
-      }) as unknown as ToZod<CanalOrigemControllerUpdatePathParams>
+    "publicId": z.string().describe("ID público do canal de origem")
+    }) as unknown as z.ZodType<CanalOrigemControllerUpdatePathParams>
 
 /**
  * @description Canal de origem atualizado com sucesso
  */
-export const canalOrigemControllerUpdate200Schema = z.lazy(() => canalOrigemSchema) as unknown as ToZod<CanalOrigemControllerUpdate200>
+export const canalOrigemControllerUpdate200Schema = canalOrigemSchema as unknown as z.ZodType<CanalOrigemControllerUpdate200>
 
 /**
  * @description Dados inválidos ou regras de negócio violadas
  */
-export const canalOrigemControllerUpdate400Schema = z.unknown() as unknown as ToZod<CanalOrigemControllerUpdate400>
+export const canalOrigemControllerUpdate400Schema = z.unknown() as unknown as z.ZodType<CanalOrigemControllerUpdate400>
 
 /**
  * @description Canal de origem não encontrado
  */
-export const canalOrigemControllerUpdate404Schema = z.unknown() as unknown as ToZod<CanalOrigemControllerUpdate404>
+export const canalOrigemControllerUpdate404Schema = z.unknown() as unknown as z.ZodType<CanalOrigemControllerUpdate404>
 
-export const canalOrigemControllerUpdateMutationRequestSchema = z.lazy(() => updateCanalOrigemDtoSchema) as unknown as ToZod<CanalOrigemControllerUpdateMutationRequest>
+export const canalOrigemControllerUpdateMutationRequestSchema = updateCanalOrigemDtoSchema as unknown as z.ZodType<CanalOrigemControllerUpdateMutationRequest>
 
-export const canalOrigemControllerUpdateMutationResponseSchema = z.lazy(() => canalOrigemControllerUpdate200Schema) as unknown as ToZod<CanalOrigemControllerUpdateMutationResponse>
+export const canalOrigemControllerUpdateMutationResponseSchema = canalOrigemControllerUpdate200Schema as unknown as z.ZodType<CanalOrigemControllerUpdateMutationResponse>

@@ -4,22 +4,21 @@
 */
 
 import type { ParcelamentoControllerFindOnePathParams, ParcelamentoControllerFindOne200, ParcelamentoControllerFindOne404, ParcelamentoControllerFindOneQueryResponse } from "../types/ParcelamentoControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { parcelamentoSchema } from "./parcelamentoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const parcelamentoControllerFindOnePathParamsSchema = z.object({
-      "id": z.coerce.number()
-      }) as unknown as ToZod<ParcelamentoControllerFindOnePathParams>
+    "id": z.coerce.number()
+    }) as unknown as z.ZodType<ParcelamentoControllerFindOnePathParams>
 
 /**
  * @description Parcelamento encontrado
  */
-export const parcelamentoControllerFindOne200Schema = z.lazy(() => parcelamentoSchema) as unknown as ToZod<ParcelamentoControllerFindOne200>
+export const parcelamentoControllerFindOne200Schema = parcelamentoSchema as unknown as z.ZodType<ParcelamentoControllerFindOne200>
 
 /**
  * @description Parcelamento não encontrado
  */
-export const parcelamentoControllerFindOne404Schema = z.unknown() as unknown as ToZod<ParcelamentoControllerFindOne404>
+export const parcelamentoControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<ParcelamentoControllerFindOne404>
 
-export const parcelamentoControllerFindOneQueryResponseSchema = z.lazy(() => parcelamentoControllerFindOne200Schema) as unknown as ToZod<ParcelamentoControllerFindOneQueryResponse>
+export const parcelamentoControllerFindOneQueryResponseSchema = parcelamentoControllerFindOne200Schema as unknown as z.ZodType<ParcelamentoControllerFindOneQueryResponse>

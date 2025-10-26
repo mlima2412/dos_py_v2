@@ -4,22 +4,21 @@
 */
 
 import type { DespesasRecorrentesControllerFindByParceiroPathParams, DespesasRecorrentesControllerFindByParceiro200, DespesasRecorrentesControllerFindByParceiro401, DespesasRecorrentesControllerFindByParceiroQueryResponse } from "../types/DespesasRecorrentesControllerFindByParceiro.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { despesaRecorrenteSchema } from "./despesaRecorrenteSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const despesasRecorrentesControllerFindByParceiroPathParamsSchema = z.object({
-      "parceiroId": z.coerce.number().describe("ID do parceiro")
-      }) as unknown as ToZod<DespesasRecorrentesControllerFindByParceiroPathParams>
+    "parceiroId": z.coerce.number().describe("ID do parceiro")
+    }) as unknown as z.ZodType<DespesasRecorrentesControllerFindByParceiroPathParams>
 
 /**
  * @description Lista de despesas recorrentes do parceiro
  */
-export const despesasRecorrentesControllerFindByParceiro200Schema = z.array(z.lazy(() => despesaRecorrenteSchema)) as unknown as ToZod<DespesasRecorrentesControllerFindByParceiro200>
+export const despesasRecorrentesControllerFindByParceiro200Schema = z.array(despesaRecorrenteSchema) as unknown as z.ZodType<DespesasRecorrentesControllerFindByParceiro200>
 
 /**
  * @description Não autorizado
  */
-export const despesasRecorrentesControllerFindByParceiro401Schema = z.unknown() as unknown as ToZod<DespesasRecorrentesControllerFindByParceiro401>
+export const despesasRecorrentesControllerFindByParceiro401Schema = z.unknown() as unknown as z.ZodType<DespesasRecorrentesControllerFindByParceiro401>
 
-export const despesasRecorrentesControllerFindByParceiroQueryResponseSchema = z.lazy(() => despesasRecorrentesControllerFindByParceiro200Schema) as unknown as ToZod<DespesasRecorrentesControllerFindByParceiroQueryResponse>
+export const despesasRecorrentesControllerFindByParceiroQueryResponseSchema = despesasRecorrentesControllerFindByParceiro200Schema as unknown as z.ZodType<DespesasRecorrentesControllerFindByParceiroQueryResponse>

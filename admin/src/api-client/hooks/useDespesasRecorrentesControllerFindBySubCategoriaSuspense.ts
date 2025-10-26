@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const despesasRecorrentesControllerFindBySubCategoriaSuspenseQueryKey = (subCategoriaId: DespesasRecorrentesControllerFindBySubCategoriaPathParams["subCategoriaId"]) =>   [{ url: '/despesas-recorrentes/subcategoria/:subCategoriaId', params: {subCategoriaId:subCategoriaId} }] as const
+export const despesasRecorrentesControllerFindBySubCategoriaSuspenseQueryKey = (subCategoriaId: DespesasRecorrentesControllerFindBySubCategoriaPathParams["subCategoriaId"]) => [{ url: '/despesas-recorrentes/subcategoria/:subCategoriaId', params: {subCategoriaId:subCategoriaId} }] as const
 
 export type DespesasRecorrentesControllerFindBySubCategoriaSuspenseQueryKey = ReturnType<typeof despesasRecorrentesControllerFindBySubCategoriaSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type DespesasRecorrentesControllerFindBySubCategoriaSuspenseQueryKey = Re
  * {@link /despesas-recorrentes/subcategoria/:subCategoriaId}
  */
 export async function despesasRecorrentesControllerFindBySubCategoriaSuspense(subCategoriaId: DespesasRecorrentesControllerFindBySubCategoriaPathParams["subCategoriaId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<DespesasRecorrentesControllerFindBySubCategoriaQueryResponse, ResponseErrorConfig<DespesasRecorrentesControllerFindBySubCategoria401>, unknown>({ method : "GET", url : `/despesas-recorrentes/subcategoria/${subCategoriaId}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<DespesasRecorrentesControllerFindBySubCategoriaQueryResponse, ResponseErrorConfig<DespesasRecorrentesControllerFindBySubCategoria401>, unknown>({ method : "GET", url : `/despesas-recorrentes/subcategoria/${subCategoriaId}`, ... requestConfig })  
+  return res.data
 }
 
 export function despesasRecorrentesControllerFindBySubCategoriaSuspenseQueryOptions(subCategoriaId: DespesasRecorrentesControllerFindBySubCategoriaPathParams["subCategoriaId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = despesasRecorrentesControllerFindBySubCategoriaSuspenseQueryKey(subCategoriaId)
-        return queryOptions<DespesasRecorrentesControllerFindBySubCategoriaQueryResponse, ResponseErrorConfig<DespesasRecorrentesControllerFindBySubCategoria401>, DespesasRecorrentesControllerFindBySubCategoriaQueryResponse, typeof queryKey>({
-         enabled: !!(subCategoriaId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return despesasRecorrentesControllerFindBySubCategoriaSuspense(subCategoriaId, config)
-         },
-        })
-  
+  const queryKey = despesasRecorrentesControllerFindBySubCategoriaSuspenseQueryKey(subCategoriaId)
+  return queryOptions<DespesasRecorrentesControllerFindBySubCategoriaQueryResponse, ResponseErrorConfig<DespesasRecorrentesControllerFindBySubCategoria401>, DespesasRecorrentesControllerFindBySubCategoriaQueryResponse, typeof queryKey>({
+   enabled: !!(subCategoriaId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return despesasRecorrentesControllerFindBySubCategoriaSuspense(subCategoriaId, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function despesasRecorrentesControllerFindBySubCategoriaSuspenseQueryOpti
  * {@link /despesas-recorrentes/subcategoria/:subCategoriaId}
  */
 export function useDespesasRecorrentesControllerFindBySubCategoriaSuspense<TData = DespesasRecorrentesControllerFindBySubCategoriaQueryResponse, TQueryKey extends QueryKey = DespesasRecorrentesControllerFindBySubCategoriaSuspenseQueryKey>(subCategoriaId: DespesasRecorrentesControllerFindBySubCategoriaPathParams["subCategoriaId"], options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<DespesasRecorrentesControllerFindBySubCategoriaQueryResponse, ResponseErrorConfig<DespesasRecorrentesControllerFindBySubCategoria401>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? despesasRecorrentesControllerFindBySubCategoriaSuspenseQueryKey(subCategoriaId)
-  
-         const query = useSuspenseQuery({
-          ...despesasRecorrentesControllerFindBySubCategoriaSuspenseQueryOptions(subCategoriaId, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<DespesasRecorrentesControllerFindBySubCategoria401>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<DespesasRecorrentesControllerFindBySubCategoriaQueryResponse, ResponseErrorConfig<DespesasRecorrentesControllerFindBySubCategoria401>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? despesasRecorrentesControllerFindBySubCategoriaSuspenseQueryKey(subCategoriaId)
+
+  const query = useSuspenseQuery({
+   ...despesasRecorrentesControllerFindBySubCategoriaSuspenseQueryOptions(subCategoriaId, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<DespesasRecorrentesControllerFindBySubCategoria401>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

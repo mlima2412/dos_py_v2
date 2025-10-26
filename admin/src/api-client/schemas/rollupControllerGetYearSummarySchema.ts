@@ -4,14 +4,13 @@
 */
 
 import type { RollupControllerGetYearSummaryQueryParams, RollupControllerGetYearSummary200, RollupControllerGetYearSummaryQueryResponse } from "../types/RollupControllerGetYearSummary.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const rollupControllerGetYearSummaryQueryParamsSchema = z.object({
-      "parceiroId": z.string(),
-  "year": z.string()
-      }) as unknown as ToZod<RollupControllerGetYearSummaryQueryParams>
+    "parceiroId": z.string(),
+"year": z.string()
+    }) as unknown as z.ZodType<RollupControllerGetYearSummaryQueryParams>
 
-export const rollupControllerGetYearSummary200Schema = z.unknown() as unknown as ToZod<RollupControllerGetYearSummary200>
+export const rollupControllerGetYearSummary200Schema = z.unknown() as unknown as z.ZodType<RollupControllerGetYearSummary200>
 
-export const rollupControllerGetYearSummaryQueryResponseSchema = z.lazy(() => rollupControllerGetYearSummary200Schema) as unknown as ToZod<RollupControllerGetYearSummaryQueryResponse>
+export const rollupControllerGetYearSummaryQueryResponseSchema = rollupControllerGetYearSummary200Schema as unknown as z.ZodType<RollupControllerGetYearSummaryQueryResponse>

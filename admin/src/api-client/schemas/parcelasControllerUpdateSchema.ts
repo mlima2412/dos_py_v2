@@ -4,20 +4,19 @@
 */
 
 import type { ParcelasControllerUpdatePathParams, ParcelasControllerUpdate200, ParcelasControllerUpdateMutationRequest, ParcelasControllerUpdateMutationResponse } from "../types/ParcelasControllerUpdate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { parcelaSchema } from "./parcelaSchema.ts";
 import { updateParcelaDtoSchema } from "./updateParcelaDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const parcelasControllerUpdatePathParamsSchema = z.object({
-      "id": z.coerce.number()
-      }) as unknown as ToZod<ParcelasControllerUpdatePathParams>
+    "id": z.coerce.number()
+    }) as unknown as z.ZodType<ParcelasControllerUpdatePathParams>
 
 /**
  * @description Parcela atualizada
  */
-export const parcelasControllerUpdate200Schema = z.lazy(() => parcelaSchema) as unknown as ToZod<ParcelasControllerUpdate200>
+export const parcelasControllerUpdate200Schema = parcelaSchema as unknown as z.ZodType<ParcelasControllerUpdate200>
 
-export const parcelasControllerUpdateMutationRequestSchema = z.lazy(() => updateParcelaDtoSchema) as unknown as ToZod<ParcelasControllerUpdateMutationRequest>
+export const parcelasControllerUpdateMutationRequestSchema = updateParcelaDtoSchema as unknown as z.ZodType<ParcelasControllerUpdateMutationRequest>
 
-export const parcelasControllerUpdateMutationResponseSchema = z.lazy(() => parcelasControllerUpdate200Schema) as unknown as ToZod<ParcelasControllerUpdateMutationResponse>
+export const parcelasControllerUpdateMutationResponseSchema = parcelasControllerUpdate200Schema as unknown as z.ZodType<ParcelasControllerUpdateMutationResponse>

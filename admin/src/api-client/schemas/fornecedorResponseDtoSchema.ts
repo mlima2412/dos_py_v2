@@ -4,11 +4,10 @@
 */
 
 import type { FornecedorResponseDto } from "../types/FornecedorResponseDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const fornecedorResponseDtoSchema = z.object({
-      "id": z.coerce.number().describe("ID do fornecedor"),
-  "publicId": z.coerce.string().describe("ID público do fornecedor"),
-  "nome": z.coerce.string().describe("Nome do fornecedor")
-      }) as unknown as ToZod<FornecedorResponseDto>
+    "id": z.coerce.number().describe("ID do fornecedor"),
+"publicId": z.coerce.string().describe("ID público do fornecedor"),
+"nome": z.coerce.string().describe("Nome do fornecedor")
+    }) as unknown as z.ZodType<FornecedorResponseDto>

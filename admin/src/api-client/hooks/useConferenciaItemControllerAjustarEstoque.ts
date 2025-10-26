@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ConferenciaItemControllerAjustarEstoqueMutationRequest, ConferenciaItemControllerAjustarEstoqueMutationResponse, ConferenciaItemControllerAjustarEstoquePathParams, ConferenciaItemControllerAjustarEstoque400, ConferenciaItemControllerAjustarEstoque404 } from "../types/ConferenciaItemControllerAjustarEstoque.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const conferenciaItemControllerAjustarEstoqueMutationKey = () =>   [{"url":"/conferencia-item/{id}/ajustar"}] as const
+export const conferenciaItemControllerAjustarEstoqueMutationKey = () => [{ url: '/conferencia-item/:id/ajustar' }] as const
 
 export type ConferenciaItemControllerAjustarEstoqueMutationKey = ReturnType<typeof conferenciaItemControllerAjustarEstoqueMutationKey>
 
@@ -19,11 +19,22 @@ export type ConferenciaItemControllerAjustarEstoqueMutationKey = ReturnType<type
  * {@link /conferencia-item/:id/ajustar}
  */
 export async function conferenciaItemControllerAjustarEstoque(id: ConferenciaItemControllerAjustarEstoquePathParams["id"], data: ConferenciaItemControllerAjustarEstoqueMutationRequest, config: Partial<RequestConfig<ConferenciaItemControllerAjustarEstoqueMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<ConferenciaItemControllerAjustarEstoqueMutationResponse, ResponseErrorConfig<ConferenciaItemControllerAjustarEstoque400 | ConferenciaItemControllerAjustarEstoque404>, ConferenciaItemControllerAjustarEstoqueMutationRequest>({ method : "PATCH", url : `/conferencia-item/${id}/ajustar`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<ConferenciaItemControllerAjustarEstoqueMutationResponse, ResponseErrorConfig<ConferenciaItemControllerAjustarEstoque400 | ConferenciaItemControllerAjustarEstoque404>, ConferenciaItemControllerAjustarEstoqueMutationRequest>({ method : "PATCH", url : `/conferencia-item/${id}/ajustar`, data : requestData, ... requestConfig })
-return res.data
+export function conferenciaItemControllerAjustarEstoqueMutationOptions(config: Partial<RequestConfig<ConferenciaItemControllerAjustarEstoqueMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = conferenciaItemControllerAjustarEstoqueMutationKey()
+  return mutationOptions<ConferenciaItemControllerAjustarEstoqueMutationResponse, ResponseErrorConfig<ConferenciaItemControllerAjustarEstoque400 | ConferenciaItemControllerAjustarEstoque404>, {id: ConferenciaItemControllerAjustarEstoquePathParams["id"], data: ConferenciaItemControllerAjustarEstoqueMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ id, data }) => {
+      return conferenciaItemControllerAjustarEstoque(id, data, config)
+    },
+  })
 }
 
 /**
@@ -32,22 +43,20 @@ return res.data
  * {@link /conferencia-item/:id/ajustar}
  */
 export function useConferenciaItemControllerAjustarEstoque<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ConferenciaItemControllerAjustarEstoqueMutationResponse, ResponseErrorConfig<ConferenciaItemControllerAjustarEstoque400 | ConferenciaItemControllerAjustarEstoque404>, {id: ConferenciaItemControllerAjustarEstoquePathParams["id"], data: ConferenciaItemControllerAjustarEstoqueMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<ConferenciaItemControllerAjustarEstoqueMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? conferenciaItemControllerAjustarEstoqueMutationKey()
-  
-          return useMutation<ConferenciaItemControllerAjustarEstoqueMutationResponse, ResponseErrorConfig<ConferenciaItemControllerAjustarEstoque400 | ConferenciaItemControllerAjustarEstoque404>, {id: ConferenciaItemControllerAjustarEstoquePathParams["id"], data: ConferenciaItemControllerAjustarEstoqueMutationRequest}, TContext>({
-            mutationFn: async({ id, data }) => {
-              return conferenciaItemControllerAjustarEstoque(id, data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ConferenciaItemControllerAjustarEstoqueMutationResponse, ResponseErrorConfig<ConferenciaItemControllerAjustarEstoque400 | ConferenciaItemControllerAjustarEstoque404>, {id: ConferenciaItemControllerAjustarEstoquePathParams["id"], data: ConferenciaItemControllerAjustarEstoqueMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<ConferenciaItemControllerAjustarEstoqueMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? conferenciaItemControllerAjustarEstoqueMutationKey()
+
+  const baseOptions = conferenciaItemControllerAjustarEstoqueMutationOptions(config) as UseMutationOptions<ConferenciaItemControllerAjustarEstoqueMutationResponse, ResponseErrorConfig<ConferenciaItemControllerAjustarEstoque400 | ConferenciaItemControllerAjustarEstoque404>, {id: ConferenciaItemControllerAjustarEstoquePathParams["id"], data: ConferenciaItemControllerAjustarEstoqueMutationRequest}, TContext>
+
+  return useMutation<ConferenciaItemControllerAjustarEstoqueMutationResponse, ResponseErrorConfig<ConferenciaItemControllerAjustarEstoque400 | ConferenciaItemControllerAjustarEstoque404>, {id: ConferenciaItemControllerAjustarEstoquePathParams["id"], data: ConferenciaItemControllerAjustarEstoqueMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ConferenciaItemControllerAjustarEstoqueMutationResponse, ResponseErrorConfig<ConferenciaItemControllerAjustarEstoque400 | ConferenciaItemControllerAjustarEstoque404>, {id: ConferenciaItemControllerAjustarEstoquePathParams["id"], data: ConferenciaItemControllerAjustarEstoqueMutationRequest}, TContext>
 }

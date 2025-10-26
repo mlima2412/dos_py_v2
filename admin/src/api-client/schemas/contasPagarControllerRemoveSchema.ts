@@ -4,21 +4,20 @@
 */
 
 import type { ContasPagarControllerRemovePathParams, ContasPagarControllerRemove200, ContasPagarControllerRemove404, ContasPagarControllerRemoveMutationResponse } from "../types/ContasPagarControllerRemove.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const contasPagarControllerRemovePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público da conta a pagar")
-      }) as unknown as ToZod<ContasPagarControllerRemovePathParams>
+    "publicId": z.string().describe("ID público da conta a pagar")
+    }) as unknown as z.ZodType<ContasPagarControllerRemovePathParams>
 
 /**
  * @description Conta a pagar removida com sucesso.
  */
-export const contasPagarControllerRemove200Schema = z.unknown() as unknown as ToZod<ContasPagarControllerRemove200>
+export const contasPagarControllerRemove200Schema = z.unknown() as unknown as z.ZodType<ContasPagarControllerRemove200>
 
 /**
  * @description Conta a pagar não encontrada.
  */
-export const contasPagarControllerRemove404Schema = z.unknown() as unknown as ToZod<ContasPagarControllerRemove404>
+export const contasPagarControllerRemove404Schema = z.unknown() as unknown as z.ZodType<ContasPagarControllerRemove404>
 
-export const contasPagarControllerRemoveMutationResponseSchema = z.lazy(() => contasPagarControllerRemove200Schema) as unknown as ToZod<ContasPagarControllerRemoveMutationResponse>
+export const contasPagarControllerRemoveMutationResponseSchema = contasPagarControllerRemove200Schema as unknown as z.ZodType<ContasPagarControllerRemoveMutationResponse>

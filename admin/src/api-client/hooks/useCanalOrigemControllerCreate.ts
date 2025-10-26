@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { CanalOrigemControllerCreateMutationRequest, CanalOrigemControllerCreateMutationResponse, CanalOrigemControllerCreate400 } from "../types/CanalOrigemControllerCreate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const canalOrigemControllerCreateMutationKey = () =>   [{"url":"/canal-origem"}] as const
+export const canalOrigemControllerCreateMutationKey = () => [{ url: '/canal-origem' }] as const
 
 export type CanalOrigemControllerCreateMutationKey = ReturnType<typeof canalOrigemControllerCreateMutationKey>
 
@@ -18,11 +18,22 @@ export type CanalOrigemControllerCreateMutationKey = ReturnType<typeof canalOrig
  * {@link /canal-origem}
  */
 export async function canalOrigemControllerCreate(data: CanalOrigemControllerCreateMutationRequest, config: Partial<RequestConfig<CanalOrigemControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<CanalOrigemControllerCreateMutationResponse, ResponseErrorConfig<CanalOrigemControllerCreate400>, CanalOrigemControllerCreateMutationRequest>({ method : "POST", url : `/canal-origem`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<CanalOrigemControllerCreateMutationResponse, ResponseErrorConfig<CanalOrigemControllerCreate400>, CanalOrigemControllerCreateMutationRequest>({ method : "POST", url : `/canal-origem`, data : requestData, ... requestConfig })
-return res.data
+export function canalOrigemControllerCreateMutationOptions(config: Partial<RequestConfig<CanalOrigemControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = canalOrigemControllerCreateMutationKey()
+  return mutationOptions<CanalOrigemControllerCreateMutationResponse, ResponseErrorConfig<CanalOrigemControllerCreate400>, {data: CanalOrigemControllerCreateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data }) => {
+      return canalOrigemControllerCreate(data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /canal-origem}
  */
 export function useCanalOrigemControllerCreate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<CanalOrigemControllerCreateMutationResponse, ResponseErrorConfig<CanalOrigemControllerCreate400>, {data: CanalOrigemControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<CanalOrigemControllerCreateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? canalOrigemControllerCreateMutationKey()
-  
-          return useMutation<CanalOrigemControllerCreateMutationResponse, ResponseErrorConfig<CanalOrigemControllerCreate400>, {data: CanalOrigemControllerCreateMutationRequest}, TContext>({
-            mutationFn: async({ data }) => {
-              return canalOrigemControllerCreate(data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<CanalOrigemControllerCreateMutationResponse, ResponseErrorConfig<CanalOrigemControllerCreate400>, {data: CanalOrigemControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<CanalOrigemControllerCreateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? canalOrigemControllerCreateMutationKey()
+
+  const baseOptions = canalOrigemControllerCreateMutationOptions(config) as UseMutationOptions<CanalOrigemControllerCreateMutationResponse, ResponseErrorConfig<CanalOrigemControllerCreate400>, {data: CanalOrigemControllerCreateMutationRequest}, TContext>
+
+  return useMutation<CanalOrigemControllerCreateMutationResponse, ResponseErrorConfig<CanalOrigemControllerCreate400>, {data: CanalOrigemControllerCreateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<CanalOrigemControllerCreateMutationResponse, ResponseErrorConfig<CanalOrigemControllerCreate400>, {data: CanalOrigemControllerCreateMutationRequest}, TContext>
 }

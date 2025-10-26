@@ -4,13 +4,12 @@
 */
 
 import type { UpdateConferenciaItemDto } from "../types/UpdateConferenciaItemDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const updateConferenciaItemDtoSchema = z.object({
-      "conferenciaId": z.coerce.number().describe("ID da conferência de estoque").optional(),
-  "skuId": z.coerce.number().describe("ID do SKU do produto").optional(),
-  "qtdSistema": z.coerce.number().default(0).describe("Quantidade no sistema"),
-  "qtdConferencia": z.coerce.number().default(0).describe("Quantidade conferida"),
-  "ajustado": z.boolean().default(false).describe("Se o item foi ajustado")
-      }) as unknown as ToZod<UpdateConferenciaItemDto>
+    "conferenciaId": z.optional(z.coerce.number().describe("ID da conferência de estoque")),
+"skuId": z.optional(z.coerce.number().describe("ID do SKU do produto")),
+"qtdSistema": z.optional(z.coerce.number().default(0).describe("Quantidade no sistema")),
+"qtdConferencia": z.optional(z.coerce.number().default(0).describe("Quantidade conferida")),
+"ajustado": z.optional(z.boolean().default(false).describe("Se o item foi ajustado"))
+    }) as unknown as z.ZodType<UpdateConferenciaItemDto>

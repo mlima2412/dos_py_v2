@@ -4,13 +4,12 @@
 */
 
 import type { ContasPagarControllerFindAll200, ContasPagarControllerFindAllQueryResponse } from "../types/ContasPagarControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { contasPagarSchema } from "./contasPagarSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Lista de contas a pagar.
  */
-export const contasPagarControllerFindAll200Schema = z.array(z.lazy(() => contasPagarSchema)) as unknown as ToZod<ContasPagarControllerFindAll200>
+export const contasPagarControllerFindAll200Schema = z.array(contasPagarSchema) as unknown as z.ZodType<ContasPagarControllerFindAll200>
 
-export const contasPagarControllerFindAllQueryResponseSchema = z.lazy(() => contasPagarControllerFindAll200Schema) as unknown as ToZod<ContasPagarControllerFindAllQueryResponse>
+export const contasPagarControllerFindAllQueryResponseSchema = contasPagarControllerFindAll200Schema as unknown as z.ZodType<ContasPagarControllerFindAllQueryResponse>

@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { PasswordResetControllerRequestPasswordResetMutationRequest, PasswordResetControllerRequestPasswordResetMutationResponse, PasswordResetControllerRequestPasswordReset404 } from "../types/PasswordResetControllerRequestPasswordReset.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const passwordResetControllerRequestPasswordResetMutationKey = () =>   [{"url":"/password-reset/request"}] as const
+export const passwordResetControllerRequestPasswordResetMutationKey = () => [{ url: '/password-reset/request' }] as const
 
 export type PasswordResetControllerRequestPasswordResetMutationKey = ReturnType<typeof passwordResetControllerRequestPasswordResetMutationKey>
 
@@ -18,11 +18,22 @@ export type PasswordResetControllerRequestPasswordResetMutationKey = ReturnType<
  * {@link /password-reset/request}
  */
 export async function passwordResetControllerRequestPasswordReset(data: PasswordResetControllerRequestPasswordResetMutationRequest, config: Partial<RequestConfig<PasswordResetControllerRequestPasswordResetMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<PasswordResetControllerRequestPasswordResetMutationResponse, ResponseErrorConfig<PasswordResetControllerRequestPasswordReset404>, PasswordResetControllerRequestPasswordResetMutationRequest>({ method : "POST", url : `/password-reset/request`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<PasswordResetControllerRequestPasswordResetMutationResponse, ResponseErrorConfig<PasswordResetControllerRequestPasswordReset404>, PasswordResetControllerRequestPasswordResetMutationRequest>({ method : "POST", url : `/password-reset/request`, data : requestData, ... requestConfig })
-return res.data
+export function passwordResetControllerRequestPasswordResetMutationOptions(config: Partial<RequestConfig<PasswordResetControllerRequestPasswordResetMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = passwordResetControllerRequestPasswordResetMutationKey()
+  return mutationOptions<PasswordResetControllerRequestPasswordResetMutationResponse, ResponseErrorConfig<PasswordResetControllerRequestPasswordReset404>, {data: PasswordResetControllerRequestPasswordResetMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data }) => {
+      return passwordResetControllerRequestPasswordReset(data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /password-reset/request}
  */
 export function usePasswordResetControllerRequestPasswordReset<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<PasswordResetControllerRequestPasswordResetMutationResponse, ResponseErrorConfig<PasswordResetControllerRequestPasswordReset404>, {data: PasswordResetControllerRequestPasswordResetMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<PasswordResetControllerRequestPasswordResetMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? passwordResetControllerRequestPasswordResetMutationKey()
-  
-          return useMutation<PasswordResetControllerRequestPasswordResetMutationResponse, ResponseErrorConfig<PasswordResetControllerRequestPasswordReset404>, {data: PasswordResetControllerRequestPasswordResetMutationRequest}, TContext>({
-            mutationFn: async({ data }) => {
-              return passwordResetControllerRequestPasswordReset(data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<PasswordResetControllerRequestPasswordResetMutationResponse, ResponseErrorConfig<PasswordResetControllerRequestPasswordReset404>, {data: PasswordResetControllerRequestPasswordResetMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<PasswordResetControllerRequestPasswordResetMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? passwordResetControllerRequestPasswordResetMutationKey()
+
+  const baseOptions = passwordResetControllerRequestPasswordResetMutationOptions(config) as UseMutationOptions<PasswordResetControllerRequestPasswordResetMutationResponse, ResponseErrorConfig<PasswordResetControllerRequestPasswordReset404>, {data: PasswordResetControllerRequestPasswordResetMutationRequest}, TContext>
+
+  return useMutation<PasswordResetControllerRequestPasswordResetMutationResponse, ResponseErrorConfig<PasswordResetControllerRequestPasswordReset404>, {data: PasswordResetControllerRequestPasswordResetMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<PasswordResetControllerRequestPasswordResetMutationResponse, ResponseErrorConfig<PasswordResetControllerRequestPasswordReset404>, {data: PasswordResetControllerRequestPasswordResetMutationRequest}, TContext>
 }

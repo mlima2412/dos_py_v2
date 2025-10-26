@@ -4,22 +4,21 @@
 */
 
 import type { CanalOrigemControllerActivatePathParams, CanalOrigemControllerActivate200, CanalOrigemControllerActivate404, CanalOrigemControllerActivateMutationResponse } from "../types/CanalOrigemControllerActivate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { canalOrigemSchema } from "./canalOrigemSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const canalOrigemControllerActivatePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do canal de origem")
-      }) as unknown as ToZod<CanalOrigemControllerActivatePathParams>
+    "publicId": z.string().describe("ID público do canal de origem")
+    }) as unknown as z.ZodType<CanalOrigemControllerActivatePathParams>
 
 /**
  * @description Canal de origem ativado com sucesso
  */
-export const canalOrigemControllerActivate200Schema = z.lazy(() => canalOrigemSchema) as unknown as ToZod<CanalOrigemControllerActivate200>
+export const canalOrigemControllerActivate200Schema = canalOrigemSchema as unknown as z.ZodType<CanalOrigemControllerActivate200>
 
 /**
  * @description Canal de origem não encontrado
  */
-export const canalOrigemControllerActivate404Schema = z.unknown() as unknown as ToZod<CanalOrigemControllerActivate404>
+export const canalOrigemControllerActivate404Schema = z.unknown() as unknown as z.ZodType<CanalOrigemControllerActivate404>
 
-export const canalOrigemControllerActivateMutationResponseSchema = z.lazy(() => canalOrigemControllerActivate200Schema) as unknown as ToZod<CanalOrigemControllerActivateMutationResponse>
+export const canalOrigemControllerActivateMutationResponseSchema = canalOrigemControllerActivate200Schema as unknown as z.ZodType<CanalOrigemControllerActivateMutationResponse>

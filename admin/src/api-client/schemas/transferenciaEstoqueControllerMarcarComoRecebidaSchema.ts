@@ -4,32 +4,31 @@
 */
 
 import type { TransferenciaEstoqueControllerMarcarComoRecebidaPathParams, TransferenciaEstoqueControllerMarcarComoRecebidaHeaderParams, TransferenciaEstoqueControllerMarcarComoRecebida200, TransferenciaEstoqueControllerMarcarComoRecebida404, TransferenciaEstoqueControllerMarcarComoRecebida409, TransferenciaEstoqueControllerMarcarComoRecebidaMutationResponse } from "../types/TransferenciaEstoqueControllerMarcarComoRecebida.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const transferenciaEstoqueControllerMarcarComoRecebidaPathParamsSchema = z.object({
-      "publicId": z.string().describe("Public ID da transferência")
-      }) as unknown as ToZod<TransferenciaEstoqueControllerMarcarComoRecebidaPathParams>
+    "publicId": z.string().describe("Public ID da transferência")
+    }) as unknown as z.ZodType<TransferenciaEstoqueControllerMarcarComoRecebidaPathParams>
 
 export const transferenciaEstoqueControllerMarcarComoRecebidaHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
-      }) as unknown as ToZod<TransferenciaEstoqueControllerMarcarComoRecebidaHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+    }) as unknown as z.ZodType<TransferenciaEstoqueControllerMarcarComoRecebidaHeaderParams>
 
 /**
  * @description Transferência marcada como recebida com sucesso
  */
 export const transferenciaEstoqueControllerMarcarComoRecebida200Schema = z.object({
-      "publicId": z.coerce.string().optional()
-      }) as unknown as ToZod<TransferenciaEstoqueControllerMarcarComoRecebida200>
+    "publicId": z.optional(z.coerce.string())
+    }) as unknown as z.ZodType<TransferenciaEstoqueControllerMarcarComoRecebida200>
 
 /**
  * @description Transferência não encontrada
  */
-export const transferenciaEstoqueControllerMarcarComoRecebida404Schema = z.unknown() as unknown as ToZod<TransferenciaEstoqueControllerMarcarComoRecebida404>
+export const transferenciaEstoqueControllerMarcarComoRecebida404Schema = z.unknown() as unknown as z.ZodType<TransferenciaEstoqueControllerMarcarComoRecebida404>
 
 /**
  * @description Transferência já foi recebida
  */
-export const transferenciaEstoqueControllerMarcarComoRecebida409Schema = z.unknown() as unknown as ToZod<TransferenciaEstoqueControllerMarcarComoRecebida409>
+export const transferenciaEstoqueControllerMarcarComoRecebida409Schema = z.unknown() as unknown as z.ZodType<TransferenciaEstoqueControllerMarcarComoRecebida409>
 
-export const transferenciaEstoqueControllerMarcarComoRecebidaMutationResponseSchema = z.lazy(() => transferenciaEstoqueControllerMarcarComoRecebida200Schema) as unknown as ToZod<TransferenciaEstoqueControllerMarcarComoRecebidaMutationResponse>
+export const transferenciaEstoqueControllerMarcarComoRecebidaMutationResponseSchema = transferenciaEstoqueControllerMarcarComoRecebida200Schema as unknown as z.ZodType<TransferenciaEstoqueControllerMarcarComoRecebidaMutationResponse>

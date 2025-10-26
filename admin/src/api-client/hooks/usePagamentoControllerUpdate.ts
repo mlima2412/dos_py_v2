@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { PagamentoControllerUpdateMutationRequest, PagamentoControllerUpdateMutationResponse, PagamentoControllerUpdatePathParams, PagamentoControllerUpdateHeaderParams, PagamentoControllerUpdate404 } from "../types/PagamentoControllerUpdate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const pagamentoControllerUpdateMutationKey = () =>   [{"url":"/pagamento/{id}"}] as const
+export const pagamentoControllerUpdateMutationKey = () => [{ url: '/pagamento/:id' }] as const
 
 export type PagamentoControllerUpdateMutationKey = ReturnType<typeof pagamentoControllerUpdateMutationKey>
 
@@ -18,11 +18,22 @@ export type PagamentoControllerUpdateMutationKey = ReturnType<typeof pagamentoCo
  * {@link /pagamento/:id}
  */
 export async function pagamentoControllerUpdate(id: PagamentoControllerUpdatePathParams["id"], headers: PagamentoControllerUpdateHeaderParams, data?: PagamentoControllerUpdateMutationRequest, config: Partial<RequestConfig<PagamentoControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<PagamentoControllerUpdateMutationResponse, ResponseErrorConfig<PagamentoControllerUpdate404>, PagamentoControllerUpdateMutationRequest>({ method : "PATCH", url : `/pagamento/${id}`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<PagamentoControllerUpdateMutationResponse, ResponseErrorConfig<PagamentoControllerUpdate404>, PagamentoControllerUpdateMutationRequest>({ method : "PATCH", url : `/pagamento/${id}`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function pagamentoControllerUpdateMutationOptions(config: Partial<RequestConfig<PagamentoControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = pagamentoControllerUpdateMutationKey()
+  return mutationOptions<PagamentoControllerUpdateMutationResponse, ResponseErrorConfig<PagamentoControllerUpdate404>, {id: PagamentoControllerUpdatePathParams["id"], headers: PagamentoControllerUpdateHeaderParams, data?: PagamentoControllerUpdateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ id, headers, data }) => {
+      return pagamentoControllerUpdate(id, headers, data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /pagamento/:id}
  */
 export function usePagamentoControllerUpdate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<PagamentoControllerUpdateMutationResponse, ResponseErrorConfig<PagamentoControllerUpdate404>, {id: PagamentoControllerUpdatePathParams["id"], headers: PagamentoControllerUpdateHeaderParams, data?: PagamentoControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<PagamentoControllerUpdateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? pagamentoControllerUpdateMutationKey()
-  
-          return useMutation<PagamentoControllerUpdateMutationResponse, ResponseErrorConfig<PagamentoControllerUpdate404>, {id: PagamentoControllerUpdatePathParams["id"], headers: PagamentoControllerUpdateHeaderParams, data?: PagamentoControllerUpdateMutationRequest}, TContext>({
-            mutationFn: async({ id, headers, data }) => {
-              return pagamentoControllerUpdate(id, headers, data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<PagamentoControllerUpdateMutationResponse, ResponseErrorConfig<PagamentoControllerUpdate404>, {id: PagamentoControllerUpdatePathParams["id"], headers: PagamentoControllerUpdateHeaderParams, data?: PagamentoControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<PagamentoControllerUpdateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? pagamentoControllerUpdateMutationKey()
+
+  const baseOptions = pagamentoControllerUpdateMutationOptions(config) as UseMutationOptions<PagamentoControllerUpdateMutationResponse, ResponseErrorConfig<PagamentoControllerUpdate404>, {id: PagamentoControllerUpdatePathParams["id"], headers: PagamentoControllerUpdateHeaderParams, data?: PagamentoControllerUpdateMutationRequest}, TContext>
+
+  return useMutation<PagamentoControllerUpdateMutationResponse, ResponseErrorConfig<PagamentoControllerUpdate404>, {id: PagamentoControllerUpdatePathParams["id"], headers: PagamentoControllerUpdateHeaderParams, data?: PagamentoControllerUpdateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<PagamentoControllerUpdateMutationResponse, ResponseErrorConfig<PagamentoControllerUpdate404>, {id: PagamentoControllerUpdatePathParams["id"], headers: PagamentoControllerUpdateHeaderParams, data?: PagamentoControllerUpdateMutationRequest}, TContext>
 }

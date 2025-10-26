@@ -4,12 +4,11 @@
 */
 
 import type { UpdateSubCategoriaDespesaDto } from "../types/UpdateSubCategoriaDespesaDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const updateSubCategoriaDespesaDtoSchema = z.object({
-      "idSubCategoria": z.coerce.number().describe("ID da subcategoria de despesa").optional(),
-  "categoriaId": z.coerce.number().describe("ID da categoria de despesa").optional(),
-  "descricao": z.coerce.string().describe("Descrição da subcategoria de despesa").optional(),
-  "ativo": z.boolean().describe("Status ativo da subcategoria").optional()
-      }) as unknown as ToZod<UpdateSubCategoriaDespesaDto>
+    "idSubCategoria": z.optional(z.coerce.number().describe("ID da subcategoria de despesa")),
+"categoriaId": z.optional(z.coerce.number().describe("ID da categoria de despesa")),
+"descricao": z.optional(z.coerce.string().describe("Descrição da subcategoria de despesa")),
+"ativo": z.optional(z.boolean().describe("Status ativo da subcategoria"))
+    }) as unknown as z.ZodType<UpdateSubCategoriaDespesaDto>

@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const pedidoCompraControllerFindPaginatedSuspenseQueryKey = (params?: PedidoCompraControllerFindPaginatedQueryParams) =>   [{ url: '/pedido-compra/paginated' }, ...(params ? [params] : [])] as const
+export const pedidoCompraControllerFindPaginatedSuspenseQueryKey = (params?: PedidoCompraControllerFindPaginatedQueryParams) => [{ url: '/pedido-compra/paginated' }, ...(params ? [params] : [])] as const
 
 export type PedidoCompraControllerFindPaginatedSuspenseQueryKey = ReturnType<typeof pedidoCompraControllerFindPaginatedSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type PedidoCompraControllerFindPaginatedSuspenseQueryKey = ReturnType<typ
  * {@link /pedido-compra/paginated}
  */
 export async function pedidoCompraControllerFindPaginatedSuspense(headers: PedidoCompraControllerFindPaginatedHeaderParams, params?: PedidoCompraControllerFindPaginatedQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<PedidoCompraControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/pedido-compra/paginated`, params, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<PedidoCompraControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/pedido-compra/paginated`, params, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function pedidoCompraControllerFindPaginatedSuspenseQueryOptions(headers: PedidoCompraControllerFindPaginatedHeaderParams, params?: PedidoCompraControllerFindPaginatedQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = pedidoCompraControllerFindPaginatedSuspenseQueryKey(params)
-        return queryOptions<PedidoCompraControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, PedidoCompraControllerFindPaginatedQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return pedidoCompraControllerFindPaginatedSuspense(headers, params, config)
-         },
-        })
-  
+  const queryKey = pedidoCompraControllerFindPaginatedSuspenseQueryKey(params)
+  return queryOptions<PedidoCompraControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, PedidoCompraControllerFindPaginatedQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return pedidoCompraControllerFindPaginatedSuspense(headers, params, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function pedidoCompraControllerFindPaginatedSuspenseQueryOptions(headers:
  * {@link /pedido-compra/paginated}
  */
 export function usePedidoCompraControllerFindPaginatedSuspense<TData = PedidoCompraControllerFindPaginatedQueryResponse, TQueryKey extends QueryKey = PedidoCompraControllerFindPaginatedSuspenseQueryKey>(headers: PedidoCompraControllerFindPaginatedHeaderParams, params?: PedidoCompraControllerFindPaginatedQueryParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<PedidoCompraControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? pedidoCompraControllerFindPaginatedSuspenseQueryKey(params)
-  
-         const query = useSuspenseQuery({
-          ...pedidoCompraControllerFindPaginatedSuspenseQueryOptions(headers, params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<PedidoCompraControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? pedidoCompraControllerFindPaginatedSuspenseQueryKey(params)
+
+  const query = useSuspenseQuery({
+   ...pedidoCompraControllerFindPaginatedSuspenseQueryOptions(headers, params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

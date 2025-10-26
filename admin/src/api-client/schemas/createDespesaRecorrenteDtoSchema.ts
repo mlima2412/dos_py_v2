@@ -4,19 +4,18 @@
 */
 
 import type { CreateDespesaRecorrenteDto } from "../types/CreateDespesaRecorrenteDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const createDespesaRecorrenteDtoSchema = z.object({
-      "descricao": z.coerce.string().describe("Descrição da despesa recorrente"),
-  "valor": z.coerce.number().describe("Valor da despesa recorrente"),
-  "frequencia": z.enum(["SEMANAL", "QUINZENAL", "MENSAL", "TRIMESTRAL", "SEMESTRAL", "ANUAL"]).describe("Frequência da despesa recorrente").optional(),
-  "diaVencimento": z.coerce.number().describe("Dia do vencimento da despesa recorrente (1-31)"),
-  "dataInicio": z.coerce.string().describe("Data de início da despesa recorrente").optional(),
-  "dataFim": z.coerce.string().describe("Data de fim da despesa recorrente").optional(),
-  "subCategoriaId": z.coerce.number().describe("ID da subcategoria da despesa"),
-  "parceiroId": z.coerce.number().describe("ID do parceiro responsável pela despesa"),
-  "fornecedorId": z.coerce.number().describe("ID do fornecedor da despesa").optional(),
-  "currencyId": z.coerce.number().describe("ID da moeda da despesa").optional(),
-  "cotacao": z.coerce.number().describe("Cotação da moeda no momento da despesa").optional()
-      }) as unknown as ToZod<CreateDespesaRecorrenteDto>
+    "descricao": z.coerce.string().describe("Descrição da despesa recorrente"),
+"valor": z.coerce.number().describe("Valor da despesa recorrente"),
+"frequencia": z.optional(z.enum(["SEMANAL", "QUINZENAL", "MENSAL", "TRIMESTRAL", "SEMESTRAL", "ANUAL"]).describe("Frequência da despesa recorrente")),
+"diaVencimento": z.coerce.number().describe("Dia do vencimento da despesa recorrente (1-31)"),
+"dataInicio": z.optional(z.coerce.string().describe("Data de início da despesa recorrente")),
+"dataFim": z.optional(z.coerce.string().describe("Data de fim da despesa recorrente")),
+"subCategoriaId": z.coerce.number().describe("ID da subcategoria da despesa"),
+"parceiroId": z.coerce.number().describe("ID do parceiro responsável pela despesa"),
+"fornecedorId": z.optional(z.coerce.number().describe("ID do fornecedor da despesa")),
+"currencyId": z.optional(z.coerce.number().describe("ID da moeda da despesa")),
+"cotacao": z.optional(z.coerce.number().describe("Cotação da moeda no momento da despesa"))
+    }) as unknown as z.ZodType<CreateDespesaRecorrenteDto>

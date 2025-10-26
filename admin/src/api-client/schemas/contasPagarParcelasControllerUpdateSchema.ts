@@ -4,29 +4,28 @@
 */
 
 import type { ContasPagarParcelasControllerUpdatePathParams, ContasPagarParcelasControllerUpdateHeaderParams, ContasPagarParcelasControllerUpdate200, ContasPagarParcelasControllerUpdate404, ContasPagarParcelasControllerUpdateMutationRequest, ContasPagarParcelasControllerUpdateMutationResponse } from "../types/ContasPagarParcelasControllerUpdate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { contasPagarParcelasSchema } from "./contasPagarParcelasSchema.ts";
 import { updateContasPagarParcelasDtoSchema } from "./updateContasPagarParcelasDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const contasPagarParcelasControllerUpdatePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público da parcela")
-      }) as unknown as ToZod<ContasPagarParcelasControllerUpdatePathParams>
+    "publicId": z.string().describe("ID público da parcela")
+    }) as unknown as z.ZodType<ContasPagarParcelasControllerUpdatePathParams>
 
 export const contasPagarParcelasControllerUpdateHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.string()
-      }) as unknown as ToZod<ContasPagarParcelasControllerUpdateHeaderParams>
+    "x-parceiro-id": z.string()
+    }) as unknown as z.ZodType<ContasPagarParcelasControllerUpdateHeaderParams>
 
 /**
  * @description Parcela atualizada com sucesso.
  */
-export const contasPagarParcelasControllerUpdate200Schema = z.lazy(() => contasPagarParcelasSchema) as unknown as ToZod<ContasPagarParcelasControllerUpdate200>
+export const contasPagarParcelasControllerUpdate200Schema = contasPagarParcelasSchema as unknown as z.ZodType<ContasPagarParcelasControllerUpdate200>
 
 /**
  * @description Parcela não encontrada.
  */
-export const contasPagarParcelasControllerUpdate404Schema = z.unknown() as unknown as ToZod<ContasPagarParcelasControllerUpdate404>
+export const contasPagarParcelasControllerUpdate404Schema = z.unknown() as unknown as z.ZodType<ContasPagarParcelasControllerUpdate404>
 
-export const contasPagarParcelasControllerUpdateMutationRequestSchema = z.lazy(() => updateContasPagarParcelasDtoSchema) as unknown as ToZod<ContasPagarParcelasControllerUpdateMutationRequest>
+export const contasPagarParcelasControllerUpdateMutationRequestSchema = updateContasPagarParcelasDtoSchema as unknown as z.ZodType<ContasPagarParcelasControllerUpdateMutationRequest>
 
-export const contasPagarParcelasControllerUpdateMutationResponseSchema = z.lazy(() => contasPagarParcelasControllerUpdate200Schema) as unknown as ToZod<ContasPagarParcelasControllerUpdateMutationResponse>
+export const contasPagarParcelasControllerUpdateMutationResponseSchema = contasPagarParcelasControllerUpdate200Schema as unknown as z.ZodType<ContasPagarParcelasControllerUpdateMutationResponse>

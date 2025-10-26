@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const pedidoCompraControllerFindByStatusSuspenseQueryKey = (status: PedidoCompraControllerFindByStatusPathParams["status"]) =>   [{ url: '/pedido-compra/status/:status', params: {status:status} }] as const
+export const pedidoCompraControllerFindByStatusSuspenseQueryKey = (status: PedidoCompraControllerFindByStatusPathParams["status"]) => [{ url: '/pedido-compra/status/:status', params: {status:status} }] as const
 
 export type PedidoCompraControllerFindByStatusSuspenseQueryKey = ReturnType<typeof pedidoCompraControllerFindByStatusSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type PedidoCompraControllerFindByStatusSuspenseQueryKey = ReturnType<type
  * {@link /pedido-compra/status/:status}
  */
 export async function pedidoCompraControllerFindByStatusSuspense(status: PedidoCompraControllerFindByStatusPathParams["status"], headers: PedidoCompraControllerFindByStatusHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<PedidoCompraControllerFindByStatusQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/pedido-compra/status/${status}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<PedidoCompraControllerFindByStatusQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/pedido-compra/status/${status}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function pedidoCompraControllerFindByStatusSuspenseQueryOptions(status: PedidoCompraControllerFindByStatusPathParams["status"], headers: PedidoCompraControllerFindByStatusHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = pedidoCompraControllerFindByStatusSuspenseQueryKey(status)
-        return queryOptions<PedidoCompraControllerFindByStatusQueryResponse, ResponseErrorConfig<Error>, PedidoCompraControllerFindByStatusQueryResponse, typeof queryKey>({
-         enabled: !!(status),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return pedidoCompraControllerFindByStatusSuspense(status, headers, config)
-         },
-        })
-  
+  const queryKey = pedidoCompraControllerFindByStatusSuspenseQueryKey(status)
+  return queryOptions<PedidoCompraControllerFindByStatusQueryResponse, ResponseErrorConfig<Error>, PedidoCompraControllerFindByStatusQueryResponse, typeof queryKey>({
+   enabled: !!(status),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return pedidoCompraControllerFindByStatusSuspense(status, headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function pedidoCompraControllerFindByStatusSuspenseQueryOptions(status: P
  * {@link /pedido-compra/status/:status}
  */
 export function usePedidoCompraControllerFindByStatusSuspense<TData = PedidoCompraControllerFindByStatusQueryResponse, TQueryKey extends QueryKey = PedidoCompraControllerFindByStatusSuspenseQueryKey>(status: PedidoCompraControllerFindByStatusPathParams["status"], headers: PedidoCompraControllerFindByStatusHeaderParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<PedidoCompraControllerFindByStatusQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? pedidoCompraControllerFindByStatusSuspenseQueryKey(status)
-  
-         const query = useSuspenseQuery({
-          ...pedidoCompraControllerFindByStatusSuspenseQueryOptions(status, headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<PedidoCompraControllerFindByStatusQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? pedidoCompraControllerFindByStatusSuspenseQueryKey(status)
+
+  const query = useSuspenseQuery({
+   ...pedidoCompraControllerFindByStatusSuspenseQueryOptions(status, headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

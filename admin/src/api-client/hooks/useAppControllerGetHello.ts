@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const appControllerGetHelloQueryKey = () =>   [{ url: '/' }] as const
+export const appControllerGetHelloQueryKey = () => [{ url: '/' }] as const
 
 export type AppControllerGetHelloQueryKey = ReturnType<typeof appControllerGetHelloQueryKey>
 
@@ -17,48 +17,44 @@ export type AppControllerGetHelloQueryKey = ReturnType<typeof appControllerGetHe
  * {@link /}
  */
 export async function appControllerGetHello(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<AppControllerGetHelloQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<AppControllerGetHelloQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/`, ... requestConfig })  
+  return res.data
 }
 
 export function appControllerGetHelloQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = appControllerGetHelloQueryKey()
-        return queryOptions<AppControllerGetHelloQueryResponse, ResponseErrorConfig<Error>, AppControllerGetHelloQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return appControllerGetHello(config)
-         },
-        })
-  
+  const queryKey = appControllerGetHelloQueryKey()
+  return queryOptions<AppControllerGetHelloQueryResponse, ResponseErrorConfig<Error>, AppControllerGetHelloQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return appControllerGetHello(config)
+   },
+  })
 }
 
 /**
  * {@link /}
  */
 export function useAppControllerGetHello<TData = AppControllerGetHelloQueryResponse, TQueryData = AppControllerGetHelloQueryResponse, TQueryKey extends QueryKey = AppControllerGetHelloQueryKey>(options: 
-  {
-    query?: Partial<QueryObserverOptions<AppControllerGetHelloQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? appControllerGetHelloQueryKey()
-  
-         const query = useQuery({
-          ...appControllerGetHelloQueryOptions(config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<AppControllerGetHelloQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? appControllerGetHelloQueryKey()
+
+  const query = useQuery({
+   ...appControllerGetHelloQueryOptions(config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

@@ -4,35 +4,34 @@
 */
 
 import type { ClientesControllerUpdatePathParams, ClientesControllerUpdate200, ClientesControllerUpdate400, ClientesControllerUpdate404, ClientesControllerUpdate409, ClientesControllerUpdateMutationRequest, ClientesControllerUpdateMutationResponse } from "../types/ClientesControllerUpdate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { clienteSchema } from "./clienteSchema.ts";
 import { updateClienteDtoSchema } from "./updateClienteDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const clientesControllerUpdatePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do cliente")
-      }) as unknown as ToZod<ClientesControllerUpdatePathParams>
+    "publicId": z.string().describe("ID público do cliente")
+    }) as unknown as z.ZodType<ClientesControllerUpdatePathParams>
 
 /**
  * @description Cliente atualizado com sucesso
  */
-export const clientesControllerUpdate200Schema = z.lazy(() => clienteSchema) as unknown as ToZod<ClientesControllerUpdate200>
+export const clientesControllerUpdate200Schema = clienteSchema as unknown as z.ZodType<ClientesControllerUpdate200>
 
 /**
  * @description Dados inválidos
  */
-export const clientesControllerUpdate400Schema = z.unknown() as unknown as ToZod<ClientesControllerUpdate400>
+export const clientesControllerUpdate400Schema = z.unknown() as unknown as z.ZodType<ClientesControllerUpdate400>
 
 /**
  * @description Cliente não encontrado
  */
-export const clientesControllerUpdate404Schema = z.unknown() as unknown as ToZod<ClientesControllerUpdate404>
+export const clientesControllerUpdate404Schema = z.unknown() as unknown as z.ZodType<ClientesControllerUpdate404>
 
 /**
  * @description Email já está em uso
  */
-export const clientesControllerUpdate409Schema = z.unknown() as unknown as ToZod<ClientesControllerUpdate409>
+export const clientesControllerUpdate409Schema = z.unknown() as unknown as z.ZodType<ClientesControllerUpdate409>
 
-export const clientesControllerUpdateMutationRequestSchema = z.lazy(() => updateClienteDtoSchema) as unknown as ToZod<ClientesControllerUpdateMutationRequest>
+export const clientesControllerUpdateMutationRequestSchema = updateClienteDtoSchema as unknown as z.ZodType<ClientesControllerUpdateMutationRequest>
 
-export const clientesControllerUpdateMutationResponseSchema = z.lazy(() => clientesControllerUpdate200Schema) as unknown as ToZod<ClientesControllerUpdateMutationResponse>
+export const clientesControllerUpdateMutationResponseSchema = clientesControllerUpdate200Schema as unknown as z.ZodType<ClientesControllerUpdateMutationResponse>

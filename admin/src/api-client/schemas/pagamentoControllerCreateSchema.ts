@@ -4,25 +4,24 @@
 */
 
 import type { PagamentoControllerCreateHeaderParams, PagamentoControllerCreate201, PagamentoControllerCreate404, PagamentoControllerCreateMutationRequest, PagamentoControllerCreateMutationResponse } from "../types/PagamentoControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createPagamentoDtoSchema } from "./createPagamentoDtoSchema.ts";
 import { pagamentoSchema } from "./pagamentoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const pagamentoControllerCreateHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<PagamentoControllerCreateHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<PagamentoControllerCreateHeaderParams>
 
 /**
  * @description Pagamento criado com sucesso
  */
-export const pagamentoControllerCreate201Schema = z.lazy(() => pagamentoSchema) as unknown as ToZod<PagamentoControllerCreate201>
+export const pagamentoControllerCreate201Schema = pagamentoSchema as unknown as z.ZodType<PagamentoControllerCreate201>
 
 /**
  * @description Venda ou forma de pagamento não encontrada
  */
-export const pagamentoControllerCreate404Schema = z.unknown() as unknown as ToZod<PagamentoControllerCreate404>
+export const pagamentoControllerCreate404Schema = z.unknown() as unknown as z.ZodType<PagamentoControllerCreate404>
 
-export const pagamentoControllerCreateMutationRequestSchema = z.lazy(() => createPagamentoDtoSchema) as unknown as ToZod<PagamentoControllerCreateMutationRequest>
+export const pagamentoControllerCreateMutationRequestSchema = createPagamentoDtoSchema as unknown as z.ZodType<PagamentoControllerCreateMutationRequest>
 
-export const pagamentoControllerCreateMutationResponseSchema = z.lazy(() => pagamentoControllerCreate201Schema) as unknown as ToZod<PagamentoControllerCreateMutationResponse>
+export const pagamentoControllerCreateMutationResponseSchema = pagamentoControllerCreate201Schema as unknown as z.ZodType<PagamentoControllerCreateMutationResponse>

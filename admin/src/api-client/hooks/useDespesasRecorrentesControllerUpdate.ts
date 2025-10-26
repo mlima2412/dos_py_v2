@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { DespesasRecorrentesControllerUpdateMutationRequest, DespesasRecorrentesControllerUpdateMutationResponse, DespesasRecorrentesControllerUpdatePathParams, DespesasRecorrentesControllerUpdate400, DespesasRecorrentesControllerUpdate401, DespesasRecorrentesControllerUpdate404 } from "../types/DespesasRecorrentesControllerUpdate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const despesasRecorrentesControllerUpdateMutationKey = () =>   [{"url":"/despesas-recorrentes/{publicId}"}] as const
+export const despesasRecorrentesControllerUpdateMutationKey = () => [{ url: '/despesas-recorrentes/:publicId' }] as const
 
 export type DespesasRecorrentesControllerUpdateMutationKey = ReturnType<typeof despesasRecorrentesControllerUpdateMutationKey>
 
@@ -18,11 +18,22 @@ export type DespesasRecorrentesControllerUpdateMutationKey = ReturnType<typeof d
  * {@link /despesas-recorrentes/:publicId}
  */
 export async function despesasRecorrentesControllerUpdate(publicId: DespesasRecorrentesControllerUpdatePathParams["publicId"], data?: DespesasRecorrentesControllerUpdateMutationRequest, config: Partial<RequestConfig<DespesasRecorrentesControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<DespesasRecorrentesControllerUpdateMutationResponse, ResponseErrorConfig<DespesasRecorrentesControllerUpdate400 | DespesasRecorrentesControllerUpdate401 | DespesasRecorrentesControllerUpdate404>, DespesasRecorrentesControllerUpdateMutationRequest>({ method : "PATCH", url : `/despesas-recorrentes/${publicId}`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<DespesasRecorrentesControllerUpdateMutationResponse, ResponseErrorConfig<DespesasRecorrentesControllerUpdate400 | DespesasRecorrentesControllerUpdate401 | DespesasRecorrentesControllerUpdate404>, DespesasRecorrentesControllerUpdateMutationRequest>({ method : "PATCH", url : `/despesas-recorrentes/${publicId}`, data : requestData, ... requestConfig })
-return res.data
+export function despesasRecorrentesControllerUpdateMutationOptions(config: Partial<RequestConfig<DespesasRecorrentesControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = despesasRecorrentesControllerUpdateMutationKey()
+  return mutationOptions<DespesasRecorrentesControllerUpdateMutationResponse, ResponseErrorConfig<DespesasRecorrentesControllerUpdate400 | DespesasRecorrentesControllerUpdate401 | DespesasRecorrentesControllerUpdate404>, {publicId: DespesasRecorrentesControllerUpdatePathParams["publicId"], data?: DespesasRecorrentesControllerUpdateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId, data }) => {
+      return despesasRecorrentesControllerUpdate(publicId, data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /despesas-recorrentes/:publicId}
  */
 export function useDespesasRecorrentesControllerUpdate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<DespesasRecorrentesControllerUpdateMutationResponse, ResponseErrorConfig<DespesasRecorrentesControllerUpdate400 | DespesasRecorrentesControllerUpdate401 | DespesasRecorrentesControllerUpdate404>, {publicId: DespesasRecorrentesControllerUpdatePathParams["publicId"], data?: DespesasRecorrentesControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<DespesasRecorrentesControllerUpdateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? despesasRecorrentesControllerUpdateMutationKey()
-  
-          return useMutation<DespesasRecorrentesControllerUpdateMutationResponse, ResponseErrorConfig<DespesasRecorrentesControllerUpdate400 | DespesasRecorrentesControllerUpdate401 | DespesasRecorrentesControllerUpdate404>, {publicId: DespesasRecorrentesControllerUpdatePathParams["publicId"], data?: DespesasRecorrentesControllerUpdateMutationRequest}, TContext>({
-            mutationFn: async({ publicId, data }) => {
-              return despesasRecorrentesControllerUpdate(publicId, data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<DespesasRecorrentesControllerUpdateMutationResponse, ResponseErrorConfig<DespesasRecorrentesControllerUpdate400 | DespesasRecorrentesControllerUpdate401 | DespesasRecorrentesControllerUpdate404>, {publicId: DespesasRecorrentesControllerUpdatePathParams["publicId"], data?: DespesasRecorrentesControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<DespesasRecorrentesControllerUpdateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? despesasRecorrentesControllerUpdateMutationKey()
+
+  const baseOptions = despesasRecorrentesControllerUpdateMutationOptions(config) as UseMutationOptions<DespesasRecorrentesControllerUpdateMutationResponse, ResponseErrorConfig<DespesasRecorrentesControllerUpdate400 | DespesasRecorrentesControllerUpdate401 | DespesasRecorrentesControllerUpdate404>, {publicId: DespesasRecorrentesControllerUpdatePathParams["publicId"], data?: DespesasRecorrentesControllerUpdateMutationRequest}, TContext>
+
+  return useMutation<DespesasRecorrentesControllerUpdateMutationResponse, ResponseErrorConfig<DespesasRecorrentesControllerUpdate400 | DespesasRecorrentesControllerUpdate401 | DespesasRecorrentesControllerUpdate404>, {publicId: DespesasRecorrentesControllerUpdatePathParams["publicId"], data?: DespesasRecorrentesControllerUpdateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<DespesasRecorrentesControllerUpdateMutationResponse, ResponseErrorConfig<DespesasRecorrentesControllerUpdate400 | DespesasRecorrentesControllerUpdate401 | DespesasRecorrentesControllerUpdate404>, {publicId: DespesasRecorrentesControllerUpdatePathParams["publicId"], data?: DespesasRecorrentesControllerUpdateMutationRequest}, TContext>
 }

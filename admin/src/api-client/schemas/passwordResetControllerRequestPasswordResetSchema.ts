@@ -4,22 +4,21 @@
 */
 
 import type { PasswordResetControllerRequestPasswordReset200, PasswordResetControllerRequestPasswordReset404, PasswordResetControllerRequestPasswordResetMutationRequest, PasswordResetControllerRequestPasswordResetMutationResponse } from "../types/PasswordResetControllerRequestPasswordReset.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { requestPasswordResetDtoSchema } from "./requestPasswordResetDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Email de recuperação enviado com sucesso
  */
 export const passwordResetControllerRequestPasswordReset200Schema = z.object({
-      "message": z.coerce.string().optional()
-      }) as unknown as ToZod<PasswordResetControllerRequestPasswordReset200>
+    "message": z.optional(z.coerce.string())
+    }) as unknown as z.ZodType<PasswordResetControllerRequestPasswordReset200>
 
 /**
  * @description Usuário não encontrado ou inativo
  */
-export const passwordResetControllerRequestPasswordReset404Schema = z.unknown() as unknown as ToZod<PasswordResetControllerRequestPasswordReset404>
+export const passwordResetControllerRequestPasswordReset404Schema = z.unknown() as unknown as z.ZodType<PasswordResetControllerRequestPasswordReset404>
 
-export const passwordResetControllerRequestPasswordResetMutationRequestSchema = z.lazy(() => requestPasswordResetDtoSchema) as unknown as ToZod<PasswordResetControllerRequestPasswordResetMutationRequest>
+export const passwordResetControllerRequestPasswordResetMutationRequestSchema = requestPasswordResetDtoSchema as unknown as z.ZodType<PasswordResetControllerRequestPasswordResetMutationRequest>
 
-export const passwordResetControllerRequestPasswordResetMutationResponseSchema = z.lazy(() => passwordResetControllerRequestPasswordReset200Schema) as unknown as ToZod<PasswordResetControllerRequestPasswordResetMutationResponse>
+export const passwordResetControllerRequestPasswordResetMutationResponseSchema = passwordResetControllerRequestPasswordReset200Schema as unknown as z.ZodType<PasswordResetControllerRequestPasswordResetMutationResponse>

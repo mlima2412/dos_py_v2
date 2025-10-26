@@ -4,14 +4,13 @@
 */
 
 import type { TransferenciaSkuSimplesDto } from "../types/TransferenciaSkuSimplesDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const transferenciaSkuSimplesDtoSchema = z.object({
-      "id": z.coerce.number().describe("ID do item da transferência"),
-  "produto": z.coerce.string().describe("Nome do produto"),
-  "precoVenda": z.coerce.number().describe("Preço de venda do produto"),
-  "cor": z.coerce.string().describe("Cor do SKU"),
-  "tamanho": z.coerce.string().describe("Tamanho do SKU"),
-  "quantidade": z.coerce.number().describe("Quantidade transferida")
-      }) as unknown as ToZod<TransferenciaSkuSimplesDto>
+    "id": z.coerce.number().describe("ID do item da transferência"),
+"produto": z.coerce.string().describe("Nome do produto"),
+"precoVenda": z.coerce.number().describe("Preço de venda do produto"),
+"cor": z.coerce.string().describe("Cor do SKU"),
+"tamanho": z.coerce.string().describe("Tamanho do SKU"),
+"quantidade": z.coerce.number().describe("Quantidade transferida")
+    }) as unknown as z.ZodType<TransferenciaSkuSimplesDto>

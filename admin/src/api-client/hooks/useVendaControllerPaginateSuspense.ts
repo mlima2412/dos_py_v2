@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const vendaControllerPaginateSuspenseQueryKey = (params?: VendaControllerPaginateQueryParams) =>   [{ url: '/venda/paginate' }, ...(params ? [params] : [])] as const
+export const vendaControllerPaginateSuspenseQueryKey = (params?: VendaControllerPaginateQueryParams) => [{ url: '/venda/paginate' }, ...(params ? [params] : [])] as const
 
 export type VendaControllerPaginateSuspenseQueryKey = ReturnType<typeof vendaControllerPaginateSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type VendaControllerPaginateSuspenseQueryKey = ReturnType<typeof vendaCon
  * {@link /venda/paginate}
  */
 export async function vendaControllerPaginateSuspense(headers: VendaControllerPaginateHeaderParams, params?: VendaControllerPaginateQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<VendaControllerPaginateQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/venda/paginate`, params, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<VendaControllerPaginateQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/venda/paginate`, params, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function vendaControllerPaginateSuspenseQueryOptions(headers: VendaControllerPaginateHeaderParams, params?: VendaControllerPaginateQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = vendaControllerPaginateSuspenseQueryKey(params)
-        return queryOptions<VendaControllerPaginateQueryResponse, ResponseErrorConfig<Error>, VendaControllerPaginateQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return vendaControllerPaginateSuspense(headers, params, config)
-         },
-        })
-  
+  const queryKey = vendaControllerPaginateSuspenseQueryKey(params)
+  return queryOptions<VendaControllerPaginateQueryResponse, ResponseErrorConfig<Error>, VendaControllerPaginateQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return vendaControllerPaginateSuspense(headers, params, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function vendaControllerPaginateSuspenseQueryOptions(headers: VendaContro
  * {@link /venda/paginate}
  */
 export function useVendaControllerPaginateSuspense<TData = VendaControllerPaginateQueryResponse, TQueryKey extends QueryKey = VendaControllerPaginateSuspenseQueryKey>(headers: VendaControllerPaginateHeaderParams, params?: VendaControllerPaginateQueryParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<VendaControllerPaginateQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? vendaControllerPaginateSuspenseQueryKey(params)
-  
-         const query = useSuspenseQuery({
-          ...vendaControllerPaginateSuspenseQueryOptions(headers, params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<VendaControllerPaginateQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? vendaControllerPaginateSuspenseQueryKey(params)
+
+  const query = useSuspenseQuery({
+   ...vendaControllerPaginateSuspenseQueryOptions(headers, params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

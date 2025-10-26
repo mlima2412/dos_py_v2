@@ -4,24 +4,23 @@
 */
 
 import type { FornecedoresControllerCreate201, FornecedoresControllerCreate409, FornecedoresControllerCreateMutationRequest, FornecedoresControllerCreateMutationResponse } from "../types/FornecedoresControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createFornecedorDtoSchema } from "./createFornecedorDtoSchema.ts";
 import { fornecedorSchema } from "./fornecedorSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Fornecedor criado com sucesso
  */
-export const fornecedoresControllerCreate201Schema = z.lazy(() => fornecedorSchema) as unknown as ToZod<FornecedoresControllerCreate201>
+export const fornecedoresControllerCreate201Schema = fornecedorSchema as unknown as z.ZodType<FornecedoresControllerCreate201>
 
 /**
  * @description Email ou RUC/CNPJ já está em uso
  */
-export const fornecedoresControllerCreate409Schema = z.unknown() as unknown as ToZod<FornecedoresControllerCreate409>
+export const fornecedoresControllerCreate409Schema = z.unknown() as unknown as z.ZodType<FornecedoresControllerCreate409>
 
 /**
  * @description Dados para criação do fornecedor
  */
-export const fornecedoresControllerCreateMutationRequestSchema = z.lazy(() => createFornecedorDtoSchema) as unknown as ToZod<FornecedoresControllerCreateMutationRequest>
+export const fornecedoresControllerCreateMutationRequestSchema = createFornecedorDtoSchema as unknown as z.ZodType<FornecedoresControllerCreateMutationRequest>
 
-export const fornecedoresControllerCreateMutationResponseSchema = z.lazy(() => fornecedoresControllerCreate201Schema) as unknown as ToZod<FornecedoresControllerCreateMutationResponse>
+export const fornecedoresControllerCreateMutationResponseSchema = fornecedoresControllerCreate201Schema as unknown as z.ZodType<FornecedoresControllerCreateMutationResponse>

@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const despesasRecorrentesControllerFindByFrequenciaQueryKey = (frequencia: DespesasRecorrentesControllerFindByFrequenciaPathParams["frequencia"]) =>   [{ url: '/despesas-recorrentes/frequencia/:frequencia', params: {frequencia:frequencia} }] as const
+export const despesasRecorrentesControllerFindByFrequenciaQueryKey = (frequencia: DespesasRecorrentesControllerFindByFrequenciaPathParams["frequencia"]) => [{ url: '/despesas-recorrentes/frequencia/:frequencia', params: {frequencia:frequencia} }] as const
 
 export type DespesasRecorrentesControllerFindByFrequenciaQueryKey = ReturnType<typeof despesasRecorrentesControllerFindByFrequenciaQueryKey>
 
@@ -18,25 +18,22 @@ export type DespesasRecorrentesControllerFindByFrequenciaQueryKey = ReturnType<t
  * {@link /despesas-recorrentes/frequencia/:frequencia}
  */
 export async function despesasRecorrentesControllerFindByFrequencia(frequencia: DespesasRecorrentesControllerFindByFrequenciaPathParams["frequencia"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<DespesasRecorrentesControllerFindByFrequenciaQueryResponse, ResponseErrorConfig<DespesasRecorrentesControllerFindByFrequencia401>, unknown>({ method : "GET", url : `/despesas-recorrentes/frequencia/${frequencia}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<DespesasRecorrentesControllerFindByFrequenciaQueryResponse, ResponseErrorConfig<DespesasRecorrentesControllerFindByFrequencia401>, unknown>({ method : "GET", url : `/despesas-recorrentes/frequencia/${frequencia}`, ... requestConfig })  
+  return res.data
 }
 
 export function despesasRecorrentesControllerFindByFrequenciaQueryOptions(frequencia: DespesasRecorrentesControllerFindByFrequenciaPathParams["frequencia"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = despesasRecorrentesControllerFindByFrequenciaQueryKey(frequencia)
-        return queryOptions<DespesasRecorrentesControllerFindByFrequenciaQueryResponse, ResponseErrorConfig<DespesasRecorrentesControllerFindByFrequencia401>, DespesasRecorrentesControllerFindByFrequenciaQueryResponse, typeof queryKey>({
-         enabled: !!(frequencia),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return despesasRecorrentesControllerFindByFrequencia(frequencia, config)
-         },
-        })
-  
+  const queryKey = despesasRecorrentesControllerFindByFrequenciaQueryKey(frequencia)
+  return queryOptions<DespesasRecorrentesControllerFindByFrequenciaQueryResponse, ResponseErrorConfig<DespesasRecorrentesControllerFindByFrequencia401>, DespesasRecorrentesControllerFindByFrequenciaQueryResponse, typeof queryKey>({
+   enabled: !!(frequencia),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return despesasRecorrentesControllerFindByFrequencia(frequencia, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function despesasRecorrentesControllerFindByFrequenciaQueryOptions(freque
  * {@link /despesas-recorrentes/frequencia/:frequencia}
  */
 export function useDespesasRecorrentesControllerFindByFrequencia<TData = DespesasRecorrentesControllerFindByFrequenciaQueryResponse, TQueryData = DespesasRecorrentesControllerFindByFrequenciaQueryResponse, TQueryKey extends QueryKey = DespesasRecorrentesControllerFindByFrequenciaQueryKey>(frequencia: DespesasRecorrentesControllerFindByFrequenciaPathParams["frequencia"], options: 
-  {
-    query?: Partial<QueryObserverOptions<DespesasRecorrentesControllerFindByFrequenciaQueryResponse, ResponseErrorConfig<DespesasRecorrentesControllerFindByFrequencia401>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? despesasRecorrentesControllerFindByFrequenciaQueryKey(frequencia)
-  
-         const query = useQuery({
-          ...despesasRecorrentesControllerFindByFrequenciaQueryOptions(frequencia, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<DespesasRecorrentesControllerFindByFrequencia401>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<DespesasRecorrentesControllerFindByFrequenciaQueryResponse, ResponseErrorConfig<DespesasRecorrentesControllerFindByFrequencia401>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? despesasRecorrentesControllerFindByFrequenciaQueryKey(frequencia)
+
+  const query = useQuery({
+   ...despesasRecorrentesControllerFindByFrequenciaQueryOptions(frequencia, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<DespesasRecorrentesControllerFindByFrequencia401>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

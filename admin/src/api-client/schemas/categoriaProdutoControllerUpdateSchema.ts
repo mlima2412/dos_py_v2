@@ -4,37 +4,36 @@
 */
 
 import type { CategoriaProdutoControllerUpdatePathParams, CategoriaProdutoControllerUpdate200, CategoriaProdutoControllerUpdate400, CategoriaProdutoControllerUpdate404, CategoriaProdutoControllerUpdate409, CategoriaProdutoControllerUpdateMutationRequest, CategoriaProdutoControllerUpdateMutationResponse } from "../types/CategoriaProdutoControllerUpdate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { updateCategoriaProdutoDtoSchema } from "./updateCategoriaProdutoDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const categoriaProdutoControllerUpdatePathParamsSchema = z.object({
-      "id": z.coerce.number().describe("ID da categoria de produto")
-      }) as unknown as ToZod<CategoriaProdutoControllerUpdatePathParams>
+    "id": z.coerce.number().describe("ID da categoria de produto")
+    }) as unknown as z.ZodType<CategoriaProdutoControllerUpdatePathParams>
 
 /**
  * @description Categoria de produto atualizada com sucesso
  */
 export const categoriaProdutoControllerUpdate200Schema = z.object({
-      "id": z.coerce.number().optional(),
-  "descricao": z.coerce.string().optional()
-      }) as unknown as ToZod<CategoriaProdutoControllerUpdate200>
+    "id": z.optional(z.coerce.number()),
+"descricao": z.optional(z.coerce.string())
+    }) as unknown as z.ZodType<CategoriaProdutoControllerUpdate200>
 
 /**
  * @description Dados de entrada inválidos
  */
-export const categoriaProdutoControllerUpdate400Schema = z.unknown() as unknown as ToZod<CategoriaProdutoControllerUpdate400>
+export const categoriaProdutoControllerUpdate400Schema = z.unknown() as unknown as z.ZodType<CategoriaProdutoControllerUpdate400>
 
 /**
  * @description Categoria de produto não encontrada
  */
-export const categoriaProdutoControllerUpdate404Schema = z.unknown() as unknown as ToZod<CategoriaProdutoControllerUpdate404>
+export const categoriaProdutoControllerUpdate404Schema = z.unknown() as unknown as z.ZodType<CategoriaProdutoControllerUpdate404>
 
 /**
  * @description Categoria com esta descrição já existe
  */
-export const categoriaProdutoControllerUpdate409Schema = z.unknown() as unknown as ToZod<CategoriaProdutoControllerUpdate409>
+export const categoriaProdutoControllerUpdate409Schema = z.unknown() as unknown as z.ZodType<CategoriaProdutoControllerUpdate409>
 
-export const categoriaProdutoControllerUpdateMutationRequestSchema = z.lazy(() => updateCategoriaProdutoDtoSchema) as unknown as ToZod<CategoriaProdutoControllerUpdateMutationRequest>
+export const categoriaProdutoControllerUpdateMutationRequestSchema = updateCategoriaProdutoDtoSchema as unknown as z.ZodType<CategoriaProdutoControllerUpdateMutationRequest>
 
-export const categoriaProdutoControllerUpdateMutationResponseSchema = z.lazy(() => categoriaProdutoControllerUpdate200Schema) as unknown as ToZod<CategoriaProdutoControllerUpdateMutationResponse>
+export const categoriaProdutoControllerUpdateMutationResponseSchema = categoriaProdutoControllerUpdate200Schema as unknown as z.ZodType<CategoriaProdutoControllerUpdateMutationResponse>

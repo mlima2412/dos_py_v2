@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const passwordResetControllerValidateTokenSuspenseQueryKey = (params: PasswordResetControllerValidateTokenQueryParams) =>   [{ url: '/password-reset/validate-token' }, ...(params ? [params] : [])] as const
+export const passwordResetControllerValidateTokenSuspenseQueryKey = (params: PasswordResetControllerValidateTokenQueryParams) => [{ url: '/password-reset/validate-token' }, ...(params ? [params] : [])] as const
 
 export type PasswordResetControllerValidateTokenSuspenseQueryKey = ReturnType<typeof passwordResetControllerValidateTokenSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type PasswordResetControllerValidateTokenSuspenseQueryKey = ReturnType<ty
  * {@link /password-reset/validate-token}
  */
 export async function passwordResetControllerValidateTokenSuspense(params: PasswordResetControllerValidateTokenQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<PasswordResetControllerValidateTokenQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/password-reset/validate-token`, params, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<PasswordResetControllerValidateTokenQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/password-reset/validate-token`, params, ... requestConfig })  
+  return res.data
 }
 
 export function passwordResetControllerValidateTokenSuspenseQueryOptions(params: PasswordResetControllerValidateTokenQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = passwordResetControllerValidateTokenSuspenseQueryKey(params)
-        return queryOptions<PasswordResetControllerValidateTokenQueryResponse, ResponseErrorConfig<Error>, PasswordResetControllerValidateTokenQueryResponse, typeof queryKey>({
-         enabled: !!(params),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return passwordResetControllerValidateTokenSuspense(params, config)
-         },
-        })
-  
+  const queryKey = passwordResetControllerValidateTokenSuspenseQueryKey(params)
+  return queryOptions<PasswordResetControllerValidateTokenQueryResponse, ResponseErrorConfig<Error>, PasswordResetControllerValidateTokenQueryResponse, typeof queryKey>({
+   enabled: !!(params),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return passwordResetControllerValidateTokenSuspense(params, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function passwordResetControllerValidateTokenSuspenseQueryOptions(params:
  * {@link /password-reset/validate-token}
  */
 export function usePasswordResetControllerValidateTokenSuspense<TData = PasswordResetControllerValidateTokenQueryResponse, TQueryKey extends QueryKey = PasswordResetControllerValidateTokenSuspenseQueryKey>(params: PasswordResetControllerValidateTokenQueryParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<PasswordResetControllerValidateTokenQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? passwordResetControllerValidateTokenSuspenseQueryKey(params)
-  
-         const query = useSuspenseQuery({
-          ...passwordResetControllerValidateTokenSuspenseQueryOptions(params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<PasswordResetControllerValidateTokenQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? passwordResetControllerValidateTokenSuspenseQueryKey(params)
+
+  const query = useSuspenseQuery({
+   ...passwordResetControllerValidateTokenSuspenseQueryOptions(params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

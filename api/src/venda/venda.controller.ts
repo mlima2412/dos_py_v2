@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { HttpCode, HttpStatus } from '@nestjs/common';
 import {
@@ -28,6 +29,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ParceiroId } from '../auth/decorators/parceiro-id.decorator';
 import { UserId } from '../auth/decorators/user-id.decorator';
 import { Venda } from './entities/venda.entity';
+import { FinalizeVendaDiretaDto } from './dto/finalize-venda-direta.dto';
 import { VendaStatus } from '@prisma/client';
 
 @ApiTags('Venda')
@@ -75,6 +77,31 @@ export class VendaController {
   @ApiResponse({ status: 200, description: 'Lista de vendas', type: [Venda] })
   findAll(@ParceiroId() parceiroId: number): Promise<Venda[]> {
     return this.vendaService.findAll(parceiroId);
+  }
+
+  @Get('fatura-nomes/:clienteId')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro logado',
+    required: true,
+    schema: { type: 'integer', example: 1 },
+  })
+  @ApiOperation({
+    summary:
+      'Listar nomes de fatura e RUC/CNPJ usados anteriormente pelo cliente do parceiro',
+  })
+  @ApiParam({ name: 'clienteId', description: 'ID do cliente', type: Number })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de objetos contendo nomeFatura e ruccnpj',
+  })
+  findInvoiceNames(
+    @Param('clienteId', ParseIntPipe) clienteId: number,
+    @ParceiroId() parceiroId: number,
+  ): Promise<{ nomeFatura: string | null; ruccnpj: string | null }[]> {
+    return this.vendaService.getInvoiceNames(parceiroId, clienteId);
   }
 
   @Get('paginate')
@@ -145,6 +172,27 @@ export class VendaController {
     @ParceiroId() parceiroId: number,
   ): Promise<Venda> {
     return this.vendaService.update(publicId, updateVendaDto, parceiroId);
+  }
+
+  @Patch(':publicId/finalizar')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro logado',
+    required: true,
+    schema: { type: 'integer', example: 1 },
+  })
+  @ApiOperation({ summary: 'Finalizar venda direta com pagamentos e baixa de estoque' })
+  @ApiParam({ name: 'publicId', description: 'ID público da venda' })
+  @ApiResponse({ status: 200, description: 'Venda finalizada', type: Venda })
+  finalizeDireta(
+    @Param('publicId') publicId: string,
+    @Body() finalizeDto: FinalizeVendaDiretaDto,
+    @ParceiroId() parceiroId: number,
+    @UserId() usuarioId: number,
+  ): Promise<Venda> {
+    return this.vendaService.finalizarDireta(publicId, finalizeDto, parceiroId, usuarioId);
   }
 
   @Delete(':publicId')

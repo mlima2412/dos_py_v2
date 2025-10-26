@@ -13,6 +13,7 @@ import type { VendaFormStep } from "../types";
 interface NavigationStepsProps {
 	activeStep: VendaFormStep;
 	canAccessItems: boolean;
+	canAccessBilling: boolean;
 	canAccessReview: boolean;
 	onStepChange: (step: VendaFormStep) => void;
 }
@@ -20,6 +21,7 @@ interface NavigationStepsProps {
 export const NavigationSteps: React.FC<NavigationStepsProps> = ({
 	activeStep,
 	canAccessItems,
+	canAccessBilling,
 	canAccessReview,
 	onStepChange,
 }) => {
@@ -52,6 +54,21 @@ export const NavigationSteps: React.FC<NavigationStepsProps> = ({
 						)}
 					>
 						{t("salesOrders.form.steps.items")}
+						{canAccessBilling && (
+							<ChevronRight className="ml-2 h-4 w-4 opacity-80" />
+						)}
+					</NavigationMenuTrigger>
+				</NavigationMenuItem>
+				<NavigationMenuItem>
+					<NavigationMenuTrigger
+						onClick={() => onStepChange("billing")}
+						disabled={!canAccessBilling}
+						className={cn(
+							"min-w-[140px] justify-between",
+							activeStep === "billing" && "bg-primary text-primary-foreground"
+						)}
+					>
+						{t("salesOrders.form.steps.billing")}
 						{canAccessReview && (
 							<ChevronRight className="ml-2 h-4 w-4 opacity-80" />
 						)}

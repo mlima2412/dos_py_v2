@@ -4,30 +4,29 @@
 */
 
 import type { ProdutoHistoricoPrecoControllerCreateHeaderParams, ProdutoHistoricoPrecoControllerCreate201, ProdutoHistoricoPrecoControllerCreate400, ProdutoHistoricoPrecoControllerCreate404, ProdutoHistoricoPrecoControllerCreateMutationRequest, ProdutoHistoricoPrecoControllerCreateMutationResponse } from "../types/ProdutoHistoricoPrecoControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createProdutoHistoricoPrecoDtoSchema } from "./createProdutoHistoricoPrecoDtoSchema.ts";
 import { produtoHistoricoPrecoSchema } from "./produtoHistoricoPrecoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const produtoHistoricoPrecoControllerCreateHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<ProdutoHistoricoPrecoControllerCreateHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<ProdutoHistoricoPrecoControllerCreateHeaderParams>
 
 /**
  * @description Histórico de preço criado com sucesso
  */
-export const produtoHistoricoPrecoControllerCreate201Schema = z.lazy(() => produtoHistoricoPrecoSchema) as unknown as ToZod<ProdutoHistoricoPrecoControllerCreate201>
+export const produtoHistoricoPrecoControllerCreate201Schema = produtoHistoricoPrecoSchema as unknown as z.ZodType<ProdutoHistoricoPrecoControllerCreate201>
 
 /**
  * @description Dados inválidos
  */
-export const produtoHistoricoPrecoControllerCreate400Schema = z.unknown() as unknown as ToZod<ProdutoHistoricoPrecoControllerCreate400>
+export const produtoHistoricoPrecoControllerCreate400Schema = z.unknown() as unknown as z.ZodType<ProdutoHistoricoPrecoControllerCreate400>
 
 /**
  * @description Produto não encontrado
  */
-export const produtoHistoricoPrecoControllerCreate404Schema = z.unknown() as unknown as ToZod<ProdutoHistoricoPrecoControllerCreate404>
+export const produtoHistoricoPrecoControllerCreate404Schema = z.unknown() as unknown as z.ZodType<ProdutoHistoricoPrecoControllerCreate404>
 
-export const produtoHistoricoPrecoControllerCreateMutationRequestSchema = z.lazy(() => createProdutoHistoricoPrecoDtoSchema) as unknown as ToZod<ProdutoHistoricoPrecoControllerCreateMutationRequest>
+export const produtoHistoricoPrecoControllerCreateMutationRequestSchema = createProdutoHistoricoPrecoDtoSchema as unknown as z.ZodType<ProdutoHistoricoPrecoControllerCreateMutationRequest>
 
-export const produtoHistoricoPrecoControllerCreateMutationResponseSchema = z.lazy(() => produtoHistoricoPrecoControllerCreate201Schema) as unknown as ToZod<ProdutoHistoricoPrecoControllerCreateMutationResponse>
+export const produtoHistoricoPrecoControllerCreateMutationResponseSchema = produtoHistoricoPrecoControllerCreate201Schema as unknown as z.ZodType<ProdutoHistoricoPrecoControllerCreateMutationResponse>

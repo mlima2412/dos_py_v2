@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const movimentoEstoqueControllerFindOneQueryKey = (id: MovimentoEstoqueControllerFindOnePathParams["id"]) =>   [{ url: '/movimento-estoque/:id', params: {id:id} }] as const
+export const movimentoEstoqueControllerFindOneQueryKey = (id: MovimentoEstoqueControllerFindOnePathParams["id"]) => [{ url: '/movimento-estoque/:id', params: {id:id} }] as const
 
 export type MovimentoEstoqueControllerFindOneQueryKey = ReturnType<typeof movimentoEstoqueControllerFindOneQueryKey>
 
@@ -19,25 +19,22 @@ export type MovimentoEstoqueControllerFindOneQueryKey = ReturnType<typeof movime
  * {@link /movimento-estoque/:id}
  */
 export async function movimentoEstoqueControllerFindOne(id: MovimentoEstoqueControllerFindOnePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<MovimentoEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<MovimentoEstoqueControllerFindOne404>, unknown>({ method : "GET", url : `/movimento-estoque/${id}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<MovimentoEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<MovimentoEstoqueControllerFindOne404>, unknown>({ method : "GET", url : `/movimento-estoque/${id}`, ... requestConfig })  
+  return res.data
 }
 
 export function movimentoEstoqueControllerFindOneQueryOptions(id: MovimentoEstoqueControllerFindOnePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = movimentoEstoqueControllerFindOneQueryKey(id)
-        return queryOptions<MovimentoEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<MovimentoEstoqueControllerFindOne404>, MovimentoEstoqueControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(id),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return movimentoEstoqueControllerFindOne(id, config)
-         },
-        })
-  
+  const queryKey = movimentoEstoqueControllerFindOneQueryKey(id)
+  return queryOptions<MovimentoEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<MovimentoEstoqueControllerFindOne404>, MovimentoEstoqueControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(id),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return movimentoEstoqueControllerFindOne(id, config)
+   },
+  })
 }
 
 /**
@@ -46,23 +43,22 @@ export function movimentoEstoqueControllerFindOneQueryOptions(id: MovimentoEstoq
  * {@link /movimento-estoque/:id}
  */
 export function useMovimentoEstoqueControllerFindOne<TData = MovimentoEstoqueControllerFindOneQueryResponse, TQueryData = MovimentoEstoqueControllerFindOneQueryResponse, TQueryKey extends QueryKey = MovimentoEstoqueControllerFindOneQueryKey>(id: MovimentoEstoqueControllerFindOnePathParams["id"], options: 
-  {
-    query?: Partial<QueryObserverOptions<MovimentoEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<MovimentoEstoqueControllerFindOne404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? movimentoEstoqueControllerFindOneQueryKey(id)
-  
-         const query = useQuery({
-          ...movimentoEstoqueControllerFindOneQueryOptions(id, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<MovimentoEstoqueControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<MovimentoEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<MovimentoEstoqueControllerFindOne404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? movimentoEstoqueControllerFindOneQueryKey(id)
+
+  const query = useQuery({
+   ...movimentoEstoqueControllerFindOneQueryOptions(id, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<MovimentoEstoqueControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

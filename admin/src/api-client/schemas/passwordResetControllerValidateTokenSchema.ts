@@ -4,19 +4,18 @@
 */
 
 import type { PasswordResetControllerValidateTokenQueryParams, PasswordResetControllerValidateToken200, PasswordResetControllerValidateTokenQueryResponse } from "../types/PasswordResetControllerValidateToken.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const passwordResetControllerValidateTokenQueryParamsSchema = z.object({
-      "token": z.string().describe("Token de recuperação de senha")
-      }) as unknown as ToZod<PasswordResetControllerValidateTokenQueryParams>
+    "token": z.string().describe("Token de recuperação de senha")
+    }) as unknown as z.ZodType<PasswordResetControllerValidateTokenQueryParams>
 
 /**
  * @description Status de validação do token
  */
 export const passwordResetControllerValidateToken200Schema = z.object({
-      "valid": z.boolean().optional(),
-  "message": z.coerce.string().optional()
-      }) as unknown as ToZod<PasswordResetControllerValidateToken200>
+    "valid": z.optional(z.boolean()),
+"message": z.optional(z.coerce.string())
+    }) as unknown as z.ZodType<PasswordResetControllerValidateToken200>
 
-export const passwordResetControllerValidateTokenQueryResponseSchema = z.lazy(() => passwordResetControllerValidateToken200Schema) as unknown as ToZod<PasswordResetControllerValidateTokenQueryResponse>
+export const passwordResetControllerValidateTokenQueryResponseSchema = passwordResetControllerValidateToken200Schema as unknown as z.ZodType<PasswordResetControllerValidateTokenQueryResponse>

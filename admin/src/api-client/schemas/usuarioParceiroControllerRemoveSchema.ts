@@ -4,21 +4,20 @@
 */
 
 import type { UsuarioParceiroControllerRemovePathParams, UsuarioParceiroControllerRemove204, UsuarioParceiroControllerRemove404, UsuarioParceiroControllerRemoveMutationResponse } from "../types/UsuarioParceiroControllerRemove.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const usuarioParceiroControllerRemovePathParamsSchema = z.object({
-      "id": z.coerce.number().describe("ID da relação usuário-parceiro")
-      }) as unknown as ToZod<UsuarioParceiroControllerRemovePathParams>
+    "id": z.coerce.number().describe("ID da relação usuário-parceiro")
+    }) as unknown as z.ZodType<UsuarioParceiroControllerRemovePathParams>
 
 /**
  * @description Relação removida com sucesso
  */
-export const usuarioParceiroControllerRemove204Schema = z.unknown() as unknown as ToZod<UsuarioParceiroControllerRemove204>
+export const usuarioParceiroControllerRemove204Schema = z.unknown() as unknown as z.ZodType<UsuarioParceiroControllerRemove204>
 
 /**
  * @description Relação não encontrada
  */
-export const usuarioParceiroControllerRemove404Schema = z.unknown() as unknown as ToZod<UsuarioParceiroControllerRemove404>
+export const usuarioParceiroControllerRemove404Schema = z.unknown() as unknown as z.ZodType<UsuarioParceiroControllerRemove404>
 
-export const usuarioParceiroControllerRemoveMutationResponseSchema = z.lazy(() => usuarioParceiroControllerRemove204Schema) as unknown as ToZod<UsuarioParceiroControllerRemoveMutationResponse>
+export const usuarioParceiroControllerRemoveMutationResponseSchema = usuarioParceiroControllerRemove204Schema as unknown as z.ZodType<UsuarioParceiroControllerRemoveMutationResponse>

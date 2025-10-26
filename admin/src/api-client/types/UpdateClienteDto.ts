@@ -9,7 +9,7 @@ export const updateClienteDtoLinguagemEnum = {
     "Portugues": "Portugues"
 } as const;
 
-export type UpdateClienteDtoLinguagemEnum = (typeof updateClienteDtoLinguagemEnum)[keyof typeof updateClienteDtoLinguagemEnum];
+export type UpdateClienteDtoLinguagemEnumKey = (typeof updateClienteDtoLinguagemEnum)[keyof typeof updateClienteDtoLinguagemEnum];
 
 export type UpdateClienteDto = {
     /**
@@ -53,16 +53,6 @@ export type UpdateClienteDto = {
     */
     ruccnpj?: string;
     /**
-     * @description RUC/CNPJ secundario do cliente
-     * @type string | undefined
-    */
-    ruccnpjSecundario?: string;
-    /**
-     * @description Nome da fatura do cliente
-     * @type string | undefined
-    */
-    nomeFatura?: string;
-    /**
      * @description Endereço do cliente
      * @type string | undefined
     */
@@ -87,7 +77,7 @@ export type UpdateClienteDto = {
      * @default "Espanol"
      * @type string | undefined
     */
-    linguagem?: UpdateClienteDtoLinguagemEnum;
+    linguagem?: UpdateClienteDtoLinguagemEnumKey;
     /**
      * @description Status ativo do cliente
      * @default true

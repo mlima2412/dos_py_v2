@@ -4,18 +4,18 @@
 */
 
 import type { UpdateVendaDto } from "../types/UpdateVendaDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const updateVendaDtoSchema = z.object({
-      "clienteId": z.coerce.number().describe("ID do cliente").optional(),
-  "localSaidaId": z.coerce.number().describe("ID do local de saída").optional(),
-  "tipo": z.enum(["DIRETA", "CONDICIONAL", "BRINDE"]).default("DIRETA").describe("Tipo da venda"),
-  "dataEntrega": z.coerce.string().describe("Data de entrega").optional(),
-  "valorFrete": z.coerce.number().describe("Valor do frete").optional(),
-  "desconto": z.coerce.number().describe("Desconto total da venda").optional(),
-  "ruccnpj": z.coerce.string().describe("RUC/CNPJ da fatura da venda").optional(),
-  "numeroFatura": z.coerce.string().describe("Número da fatura").optional(),
-  "observacao": z.coerce.string().describe("Observação da venda").optional(),
-  "valorComissao": z.coerce.number().describe("Valor da comissão").optional()
-      }) as unknown as ToZod<UpdateVendaDto>
+    "clienteId": z.optional(z.coerce.number().describe("ID do cliente")),
+"localSaidaId": z.optional(z.coerce.number().describe("ID do local de saída")),
+"tipo": z.optional(z.enum(["DIRETA", "CONDICIONAL", "BRINDE", "PERMUTA"]).default("DIRETA").describe("Tipo da venda")),
+"dataEntrega": z.optional(z.coerce.string().describe("Data de entrega")),
+"valorFrete": z.optional(z.coerce.number().describe("Valor do frete")),
+"desconto": z.optional(z.coerce.number().describe("Desconto total da venda")),
+"ruccnpj": z.optional(z.coerce.string().describe("RUC/CNPJ da fatura da venda")),
+"nomeFatura": z.optional(z.coerce.string().describe("Nome para a fatura da venda")),
+"numeroFatura": z.optional(z.coerce.string().describe("Número da fatura")),
+"observacao": z.optional(z.coerce.string().describe("Observação da venda")),
+"valorComissao": z.optional(z.coerce.number().describe("Valor da comissão"))
+    }) as unknown as z.ZodType<UpdateVendaDto>

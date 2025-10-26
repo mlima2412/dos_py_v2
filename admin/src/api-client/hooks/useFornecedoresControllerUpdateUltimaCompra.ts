@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { FornecedoresControllerUpdateUltimaCompraMutationResponse, FornecedoresControllerUpdateUltimaCompraPathParams, FornecedoresControllerUpdateUltimaCompraHeaderParams, FornecedoresControllerUpdateUltimaCompra400, FornecedoresControllerUpdateUltimaCompra404 } from "../types/FornecedoresControllerUpdateUltimaCompra.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const fornecedoresControllerUpdateUltimaCompraMutationKey = () =>   [{"url":"/fornecedores/{publicId}/ultima-compra"}] as const
+export const fornecedoresControllerUpdateUltimaCompraMutationKey = () => [{ url: '/fornecedores/:publicId/ultima-compra' }] as const
 
 export type FornecedoresControllerUpdateUltimaCompraMutationKey = ReturnType<typeof fornecedoresControllerUpdateUltimaCompraMutationKey>
 
@@ -18,11 +18,20 @@ export type FornecedoresControllerUpdateUltimaCompraMutationKey = ReturnType<typ
  * {@link /fornecedores/:publicId/ultima-compra}
  */
 export async function fornecedoresControllerUpdateUltimaCompra(publicId: FornecedoresControllerUpdateUltimaCompraPathParams["publicId"], headers: FornecedoresControllerUpdateUltimaCompraHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<FornecedoresControllerUpdateUltimaCompraMutationResponse, ResponseErrorConfig<FornecedoresControllerUpdateUltimaCompra400 | FornecedoresControllerUpdateUltimaCompra404>, unknown>({ method : "PATCH", url : `/fornecedores/${publicId}/ultima-compra`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-
-const res = await request<FornecedoresControllerUpdateUltimaCompraMutationResponse, ResponseErrorConfig<FornecedoresControllerUpdateUltimaCompra400 | FornecedoresControllerUpdateUltimaCompra404>, unknown>({ method : "PATCH", url : `/fornecedores/${publicId}/ultima-compra`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function fornecedoresControllerUpdateUltimaCompraMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = fornecedoresControllerUpdateUltimaCompraMutationKey()
+  return mutationOptions<FornecedoresControllerUpdateUltimaCompraMutationResponse, ResponseErrorConfig<FornecedoresControllerUpdateUltimaCompra400 | FornecedoresControllerUpdateUltimaCompra404>, {publicId: FornecedoresControllerUpdateUltimaCompraPathParams["publicId"], headers: FornecedoresControllerUpdateUltimaCompraHeaderParams}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId, headers }) => {
+      return fornecedoresControllerUpdateUltimaCompra(publicId, headers, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /fornecedores/:publicId/ultima-compra}
  */
 export function useFornecedoresControllerUpdateUltimaCompra<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<FornecedoresControllerUpdateUltimaCompraMutationResponse, ResponseErrorConfig<FornecedoresControllerUpdateUltimaCompra400 | FornecedoresControllerUpdateUltimaCompra404>, {publicId: FornecedoresControllerUpdateUltimaCompraPathParams["publicId"], headers: FornecedoresControllerUpdateUltimaCompraHeaderParams}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? fornecedoresControllerUpdateUltimaCompraMutationKey()
-  
-          return useMutation<FornecedoresControllerUpdateUltimaCompraMutationResponse, ResponseErrorConfig<FornecedoresControllerUpdateUltimaCompra400 | FornecedoresControllerUpdateUltimaCompra404>, {publicId: FornecedoresControllerUpdateUltimaCompraPathParams["publicId"], headers: FornecedoresControllerUpdateUltimaCompraHeaderParams}, TContext>({
-            mutationFn: async({ publicId, headers }) => {
-              return fornecedoresControllerUpdateUltimaCompra(publicId, headers, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<FornecedoresControllerUpdateUltimaCompraMutationResponse, ResponseErrorConfig<FornecedoresControllerUpdateUltimaCompra400 | FornecedoresControllerUpdateUltimaCompra404>, {publicId: FornecedoresControllerUpdateUltimaCompraPathParams["publicId"], headers: FornecedoresControllerUpdateUltimaCompraHeaderParams}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? fornecedoresControllerUpdateUltimaCompraMutationKey()
+
+  const baseOptions = fornecedoresControllerUpdateUltimaCompraMutationOptions(config) as UseMutationOptions<FornecedoresControllerUpdateUltimaCompraMutationResponse, ResponseErrorConfig<FornecedoresControllerUpdateUltimaCompra400 | FornecedoresControllerUpdateUltimaCompra404>, {publicId: FornecedoresControllerUpdateUltimaCompraPathParams["publicId"], headers: FornecedoresControllerUpdateUltimaCompraHeaderParams}, TContext>
+
+  return useMutation<FornecedoresControllerUpdateUltimaCompraMutationResponse, ResponseErrorConfig<FornecedoresControllerUpdateUltimaCompra400 | FornecedoresControllerUpdateUltimaCompra404>, {publicId: FornecedoresControllerUpdateUltimaCompraPathParams["publicId"], headers: FornecedoresControllerUpdateUltimaCompraHeaderParams}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<FornecedoresControllerUpdateUltimaCompraMutationResponse, ResponseErrorConfig<FornecedoresControllerUpdateUltimaCompra400 | FornecedoresControllerUpdateUltimaCompra404>, {publicId: FornecedoresControllerUpdateUltimaCompraPathParams["publicId"], headers: FornecedoresControllerUpdateUltimaCompraHeaderParams}, TContext>
 }

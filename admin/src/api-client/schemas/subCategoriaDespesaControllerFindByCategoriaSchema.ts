@@ -4,32 +4,31 @@
 */
 
 import type { SubCategoriaDespesaControllerFindByCategoriaPathParams, SubCategoriaDespesaControllerFindByCategoria200, SubCategoriaDespesaControllerFindByCategoria401, SubCategoriaDespesaControllerFindByCategoriaQueryResponse } from "../types/SubCategoriaDespesaControllerFindByCategoria.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const subCategoriaDespesaControllerFindByCategoriaPathParamsSchema = z.object({
-      "categoriaId": z.coerce.number().describe("ID da categoria de despesas")
-      }) as unknown as ToZod<SubCategoriaDespesaControllerFindByCategoriaPathParams>
+    "categoriaId": z.coerce.number().describe("ID da categoria de despesas")
+    }) as unknown as z.ZodType<SubCategoriaDespesaControllerFindByCategoriaPathParams>
 
 /**
  * @description Lista de subcategorias da categoria retornada com sucesso
  */
 export const subCategoriaDespesaControllerFindByCategoria200Schema = z.array(z.object({
-      "idSubCategoria": z.coerce.number().optional(),
-  "categoriaId": z.coerce.number().optional(),
-  "descricao": z.coerce.string().optional(),
-  "ativo": z.boolean().optional(),
-  "createdAt": z.coerce.string().optional(),
-  "categoria": z.object({
-      "idCategoria": z.coerce.number().optional(),
-  "descricao": z.coerce.string().optional(),
-  "ativo": z.boolean().optional()
-      }).optional()
-      })) as unknown as ToZod<SubCategoriaDespesaControllerFindByCategoria200>
+    "idSubCategoria": z.optional(z.coerce.number()),
+"categoriaId": z.optional(z.coerce.number()),
+"descricao": z.optional(z.coerce.string()),
+"ativo": z.optional(z.boolean()),
+"createdAt": z.optional(z.coerce.string()),
+"categoria": z.optional(z.object({
+    "idCategoria": z.optional(z.coerce.number()),
+"descricao": z.optional(z.coerce.string()),
+"ativo": z.optional(z.boolean())
+    }))
+    })) as unknown as z.ZodType<SubCategoriaDespesaControllerFindByCategoria200>
 
 /**
  * @description Não autorizado
  */
-export const subCategoriaDespesaControllerFindByCategoria401Schema = z.unknown() as unknown as ToZod<SubCategoriaDespesaControllerFindByCategoria401>
+export const subCategoriaDespesaControllerFindByCategoria401Schema = z.unknown() as unknown as z.ZodType<SubCategoriaDespesaControllerFindByCategoria401>
 
-export const subCategoriaDespesaControllerFindByCategoriaQueryResponseSchema = z.lazy(() => subCategoriaDespesaControllerFindByCategoria200Schema) as unknown as ToZod<SubCategoriaDespesaControllerFindByCategoriaQueryResponse>
+export const subCategoriaDespesaControllerFindByCategoriaQueryResponseSchema = subCategoriaDespesaControllerFindByCategoria200Schema as unknown as z.ZodType<SubCategoriaDespesaControllerFindByCategoriaQueryResponse>

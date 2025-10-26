@@ -4,41 +4,40 @@
 */
 
 import type { SubCategoriaDespesaControllerCreate201, SubCategoriaDespesaControllerCreate401, SubCategoriaDespesaControllerCreate404, SubCategoriaDespesaControllerCreate409, SubCategoriaDespesaControllerCreateMutationRequest, SubCategoriaDespesaControllerCreateMutationResponse } from "../types/SubCategoriaDespesaControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createSubCategoriaDespesaDtoSchema } from "./createSubCategoriaDespesaDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Subcategoria de despesas criada com sucesso
  */
 export const subCategoriaDespesaControllerCreate201Schema = z.object({
-      "idSubCategoria": z.coerce.number().optional(),
-  "categoriaId": z.coerce.number().optional(),
-  "descricao": z.coerce.string().optional(),
-  "ativo": z.boolean().optional(),
-  "createdAt": z.coerce.string().optional(),
-  "categoria": z.object({
-      "idCategoria": z.coerce.number().optional(),
-  "descricao": z.coerce.string().optional(),
-  "ativo": z.boolean().optional()
-      }).optional()
-      }) as unknown as ToZod<SubCategoriaDespesaControllerCreate201>
+    "idSubCategoria": z.optional(z.coerce.number()),
+"categoriaId": z.optional(z.coerce.number()),
+"descricao": z.optional(z.coerce.string()),
+"ativo": z.optional(z.boolean()),
+"createdAt": z.optional(z.coerce.string()),
+"categoria": z.optional(z.object({
+    "idCategoria": z.optional(z.coerce.number()),
+"descricao": z.optional(z.coerce.string()),
+"ativo": z.optional(z.boolean())
+    }))
+    }) as unknown as z.ZodType<SubCategoriaDespesaControllerCreate201>
 
 /**
  * @description Não autorizado
  */
-export const subCategoriaDespesaControllerCreate401Schema = z.unknown() as unknown as ToZod<SubCategoriaDespesaControllerCreate401>
+export const subCategoriaDespesaControllerCreate401Schema = z.unknown() as unknown as z.ZodType<SubCategoriaDespesaControllerCreate401>
 
 /**
  * @description Categoria de despesas não encontrada
  */
-export const subCategoriaDespesaControllerCreate404Schema = z.unknown() as unknown as ToZod<SubCategoriaDespesaControllerCreate404>
+export const subCategoriaDespesaControllerCreate404Schema = z.unknown() as unknown as z.ZodType<SubCategoriaDespesaControllerCreate404>
 
 /**
  * @description Descrição da subcategoria já existe nesta categoria
  */
-export const subCategoriaDespesaControllerCreate409Schema = z.unknown() as unknown as ToZod<SubCategoriaDespesaControllerCreate409>
+export const subCategoriaDespesaControllerCreate409Schema = z.unknown() as unknown as z.ZodType<SubCategoriaDespesaControllerCreate409>
 
-export const subCategoriaDespesaControllerCreateMutationRequestSchema = z.lazy(() => createSubCategoriaDespesaDtoSchema) as unknown as ToZod<SubCategoriaDespesaControllerCreateMutationRequest>
+export const subCategoriaDespesaControllerCreateMutationRequestSchema = createSubCategoriaDespesaDtoSchema as unknown as z.ZodType<SubCategoriaDespesaControllerCreateMutationRequest>
 
-export const subCategoriaDespesaControllerCreateMutationResponseSchema = z.lazy(() => subCategoriaDespesaControllerCreate201Schema) as unknown as ToZod<SubCategoriaDespesaControllerCreateMutationResponse>
+export const subCategoriaDespesaControllerCreateMutationResponseSchema = subCategoriaDespesaControllerCreate201Schema as unknown as z.ZodType<SubCategoriaDespesaControllerCreateMutationResponse>

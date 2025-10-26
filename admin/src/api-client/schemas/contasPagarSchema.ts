@@ -4,20 +4,23 @@
 */
 
 import type { ContasPagar } from "../types/ContasPagar.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { contasPagarParcelasSchema } from "./contasPagarParcelasSchema.ts";
 import { despesaSchema } from "./despesaSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const contasPagarSchema = z.object({
-      "id": z.coerce.number().describe("ID único da conta a pagar"),
-  "publicId": z.coerce.string().describe("ID público da conta a pagar"),
-  "despesaId": z.coerce.number().describe("ID da despesa relacionada").optional(),
-  "dataCriacao": z.string().datetime().describe("Data de criação da conta"),
-  "dataPagamento": z.string().datetime().describe("Data do pagamento da conta").optional(),
-  "valorTotal": z.coerce.number().describe("Valor total da conta a pagar"),
-  "saldo": z.coerce.number().describe("Saldo atual da conta (soma dos valores pagos)"),
-  "pago": z.boolean().describe("Indica se a conta foi totalmente paga"),
-  "contasPagarParcelas": z.array(z.lazy(() => contasPagarParcelasSchema)).describe("Parcelas da conta a pagar").optional(),
-  "despesa": z.lazy(() => despesaSchema).describe("Despesa relacionada").optional()
-      }) as unknown as ToZod<ContasPagar>
+    "id": z.coerce.number().describe("ID único da conta a pagar"),
+"publicId": z.coerce.string().describe("ID público da conta a pagar"),
+"despesaId": z.optional(z.coerce.number().describe("ID da despesa relacionada")),
+"dataCriacao": z.string().datetime().describe("Data de criação da conta"),
+"dataPagamento": z.optional(z.string().datetime().describe("Data do pagamento da conta")),
+"valorTotal": z.coerce.number().describe("Valor total da conta a pagar"),
+"saldo": z.coerce.number().describe("Saldo atual da conta (soma dos valores pagos)"),
+"pago": z.boolean().describe("Indica se a conta foi totalmente paga"),
+get "contasPagarParcelas"(){
+                return z.optional(z.array(contasPagarParcelasSchema).describe("Parcelas da conta a pagar"))
+              },
+get "despesa"(){
+                return z.optional(despesaSchema.describe("Despesa relacionada"))
+              }
+    }) as unknown as z.ZodType<ContasPagar>

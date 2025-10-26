@@ -4,17 +4,16 @@
 */
 
 import type { UpdateUsuarioDto } from "../types/UpdateUsuarioDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const updateUsuarioDtoSchema = z.object({
-      "nome": z.coerce.string().min(2).max(100).describe("Nome completo do usuário").optional(),
-  "email": z.coerce.string().describe("Email do usuário").optional(),
-  "telefone": z.coerce.string().describe("Telefone do usuário para SMS ou WhatsApp").optional(),
-  "provider": z.coerce.string().default("LOCAL").describe("Provedor de autenticação"),
-  "googleId": z.coerce.string().describe("ID do Google para autenticação OAuth").optional(),
-  "senha": z.coerce.string().min(6).describe("Senha do usuário").optional(),
-  "ativo": z.boolean().default(true).describe("Status ativo do usuário"),
-  "avatar": z.coerce.string().describe("URL do avatar do usuário").optional(),
-  "publicId": z.coerce.string().describe("ID público do usuário para identificação")
-      }) as unknown as ToZod<UpdateUsuarioDto>
+    "nome": z.optional(z.coerce.string().min(2).max(100).describe("Nome completo do usuário")),
+"email": z.optional(z.coerce.string().describe("Email do usuário")),
+"telefone": z.optional(z.coerce.string().describe("Telefone do usuário para SMS ou WhatsApp")),
+"provider": z.optional(z.coerce.string().default("LOCAL").describe("Provedor de autenticação")),
+"googleId": z.optional(z.coerce.string().describe("ID do Google para autenticação OAuth")),
+"senha": z.optional(z.coerce.string().min(6).describe("Senha do usuário")),
+"ativo": z.optional(z.boolean().default(true).describe("Status ativo do usuário")),
+"avatar": z.optional(z.coerce.string().describe("URL do avatar do usuário")),
+"publicId": z.coerce.string().describe("ID público do usuário para identificação")
+    }) as unknown as z.ZodType<UpdateUsuarioDto>

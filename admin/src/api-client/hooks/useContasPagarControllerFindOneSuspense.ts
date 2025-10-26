@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const contasPagarControllerFindOneSuspenseQueryKey = (publicId: ContasPagarControllerFindOnePathParams["publicId"]) =>   [{ url: '/contas-pagar/:publicId', params: {publicId:publicId} }] as const
+export const contasPagarControllerFindOneSuspenseQueryKey = (publicId: ContasPagarControllerFindOnePathParams["publicId"]) => [{ url: '/contas-pagar/:publicId', params: {publicId:publicId} }] as const
 
 export type ContasPagarControllerFindOneSuspenseQueryKey = ReturnType<typeof contasPagarControllerFindOneSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type ContasPagarControllerFindOneSuspenseQueryKey = ReturnType<typeof con
  * {@link /contas-pagar/:publicId}
  */
 export async function contasPagarControllerFindOneSuspense(publicId: ContasPagarControllerFindOnePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ContasPagarControllerFindOneQueryResponse, ResponseErrorConfig<ContasPagarControllerFindOne404>, unknown>({ method : "GET", url : `/contas-pagar/${publicId}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ContasPagarControllerFindOneQueryResponse, ResponseErrorConfig<ContasPagarControllerFindOne404>, unknown>({ method : "GET", url : `/contas-pagar/${publicId}`, ... requestConfig })  
+  return res.data
 }
 
 export function contasPagarControllerFindOneSuspenseQueryOptions(publicId: ContasPagarControllerFindOnePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = contasPagarControllerFindOneSuspenseQueryKey(publicId)
-        return queryOptions<ContasPagarControllerFindOneQueryResponse, ResponseErrorConfig<ContasPagarControllerFindOne404>, ContasPagarControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(publicId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return contasPagarControllerFindOneSuspense(publicId, config)
-         },
-        })
-  
+  const queryKey = contasPagarControllerFindOneSuspenseQueryKey(publicId)
+  return queryOptions<ContasPagarControllerFindOneQueryResponse, ResponseErrorConfig<ContasPagarControllerFindOne404>, ContasPagarControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(publicId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return contasPagarControllerFindOneSuspense(publicId, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function contasPagarControllerFindOneSuspenseQueryOptions(publicId: Conta
  * {@link /contas-pagar/:publicId}
  */
 export function useContasPagarControllerFindOneSuspense<TData = ContasPagarControllerFindOneQueryResponse, TQueryKey extends QueryKey = ContasPagarControllerFindOneSuspenseQueryKey>(publicId: ContasPagarControllerFindOnePathParams["publicId"], options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<ContasPagarControllerFindOneQueryResponse, ResponseErrorConfig<ContasPagarControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? contasPagarControllerFindOneSuspenseQueryKey(publicId)
-  
-         const query = useSuspenseQuery({
-          ...contasPagarControllerFindOneSuspenseQueryOptions(publicId, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<ContasPagarControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<ContasPagarControllerFindOneQueryResponse, ResponseErrorConfig<ContasPagarControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? contasPagarControllerFindOneSuspenseQueryKey(publicId)
+
+  const query = useSuspenseQuery({
+   ...contasPagarControllerFindOneSuspenseQueryOptions(publicId, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<ContasPagarControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

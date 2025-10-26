@@ -4,34 +4,33 @@
 */
 
 import type { ProdutoSkuControllerUpdatePathParams, ProdutoSkuControllerUpdateHeaderParams, ProdutoSkuControllerUpdate200, ProdutoSkuControllerUpdate400, ProdutoSkuControllerUpdate404, ProdutoSkuControllerUpdateMutationRequest, ProdutoSkuControllerUpdateMutationResponse } from "../types/ProdutoSkuControllerUpdate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { produtoSKUSchema } from "./produtoSKUSchema.ts";
 import { updateProdutoSkuDtoSchema } from "./updateProdutoSkuDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const produtoSkuControllerUpdatePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do SKU")
-      }) as unknown as ToZod<ProdutoSkuControllerUpdatePathParams>
+    "publicId": z.string().describe("ID público do SKU")
+    }) as unknown as z.ZodType<ProdutoSkuControllerUpdatePathParams>
 
 export const produtoSkuControllerUpdateHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<ProdutoSkuControllerUpdateHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<ProdutoSkuControllerUpdateHeaderParams>
 
 /**
  * @description SKU do produto atualizado com sucesso
  */
-export const produtoSkuControllerUpdate200Schema = z.lazy(() => produtoSKUSchema) as unknown as ToZod<ProdutoSkuControllerUpdate200>
+export const produtoSkuControllerUpdate200Schema = produtoSKUSchema as unknown as z.ZodType<ProdutoSkuControllerUpdate200>
 
 /**
  * @description Dados inválidos
  */
-export const produtoSkuControllerUpdate400Schema = z.unknown() as unknown as ToZod<ProdutoSkuControllerUpdate400>
+export const produtoSkuControllerUpdate400Schema = z.unknown() as unknown as z.ZodType<ProdutoSkuControllerUpdate400>
 
 /**
  * @description SKU do produto não encontrado
  */
-export const produtoSkuControllerUpdate404Schema = z.unknown() as unknown as ToZod<ProdutoSkuControllerUpdate404>
+export const produtoSkuControllerUpdate404Schema = z.unknown() as unknown as z.ZodType<ProdutoSkuControllerUpdate404>
 
-export const produtoSkuControllerUpdateMutationRequestSchema = z.lazy(() => updateProdutoSkuDtoSchema) as unknown as ToZod<ProdutoSkuControllerUpdateMutationRequest>
+export const produtoSkuControllerUpdateMutationRequestSchema = updateProdutoSkuDtoSchema as unknown as z.ZodType<ProdutoSkuControllerUpdateMutationRequest>
 
-export const produtoSkuControllerUpdateMutationResponseSchema = z.lazy(() => produtoSkuControllerUpdate200Schema) as unknown as ToZod<ProdutoSkuControllerUpdateMutationResponse>
+export const produtoSkuControllerUpdateMutationResponseSchema = produtoSkuControllerUpdate200Schema as unknown as z.ZodType<ProdutoSkuControllerUpdateMutationResponse>

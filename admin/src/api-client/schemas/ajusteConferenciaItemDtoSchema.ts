@@ -4,11 +4,10 @@
 */
 
 import type { AjusteConferenciaItemDto } from "../types/AjusteConferenciaItemDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const ajusteConferenciaItemDtoSchema = z.object({
-      "skuId": z.coerce.number().describe("ID do SKU"),
-  "localId": z.coerce.number().describe("ID do local de estoque"),
-  "diferenca": z.coerce.number().describe("Diferença entre estoque físico e sistema (positivo = excesso, negativo = falta, zero = sem ajuste)")
-      }) as unknown as ToZod<AjusteConferenciaItemDto>
+    "skuId": z.coerce.number().describe("ID do SKU"),
+"localId": z.coerce.number().describe("ID do local de estoque"),
+"diferenca": z.coerce.number().describe("Diferença entre estoque físico e sistema (positivo = excesso, negativo = falta, zero = sem ajuste)")
+    }) as unknown as z.ZodType<AjusteConferenciaItemDto>

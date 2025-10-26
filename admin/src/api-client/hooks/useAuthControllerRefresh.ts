@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { AuthControllerRefreshMutationRequest, AuthControllerRefreshMutationResponse, AuthControllerRefresh401 } from "../types/AuthControllerRefresh.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const authControllerRefreshMutationKey = () =>   [{"url":"/auth/refresh"}] as const
+export const authControllerRefreshMutationKey = () => [{ url: '/auth/refresh' }] as const
 
 export type AuthControllerRefreshMutationKey = ReturnType<typeof authControllerRefreshMutationKey>
 
@@ -18,11 +18,22 @@ export type AuthControllerRefreshMutationKey = ReturnType<typeof authControllerR
  * {@link /auth/refresh}
  */
 export async function authControllerRefresh(data?: AuthControllerRefreshMutationRequest, config: Partial<RequestConfig<AuthControllerRefreshMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<AuthControllerRefreshMutationResponse, ResponseErrorConfig<AuthControllerRefresh401>, AuthControllerRefreshMutationRequest>({ method : "POST", url : `/auth/refresh`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<AuthControllerRefreshMutationResponse, ResponseErrorConfig<AuthControllerRefresh401>, AuthControllerRefreshMutationRequest>({ method : "POST", url : `/auth/refresh`, data : requestData, ... requestConfig })
-return res.data
+export function authControllerRefreshMutationOptions(config: Partial<RequestConfig<AuthControllerRefreshMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = authControllerRefreshMutationKey()
+  return mutationOptions<AuthControllerRefreshMutationResponse, ResponseErrorConfig<AuthControllerRefresh401>, {data?: AuthControllerRefreshMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data }) => {
+      return authControllerRefresh(data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /auth/refresh}
  */
 export function useAuthControllerRefresh<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<AuthControllerRefreshMutationResponse, ResponseErrorConfig<AuthControllerRefresh401>, {data?: AuthControllerRefreshMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<AuthControllerRefreshMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? authControllerRefreshMutationKey()
-  
-          return useMutation<AuthControllerRefreshMutationResponse, ResponseErrorConfig<AuthControllerRefresh401>, {data?: AuthControllerRefreshMutationRequest}, TContext>({
-            mutationFn: async({ data }) => {
-              return authControllerRefresh(data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<AuthControllerRefreshMutationResponse, ResponseErrorConfig<AuthControllerRefresh401>, {data?: AuthControllerRefreshMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<AuthControllerRefreshMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? authControllerRefreshMutationKey()
+
+  const baseOptions = authControllerRefreshMutationOptions(config) as UseMutationOptions<AuthControllerRefreshMutationResponse, ResponseErrorConfig<AuthControllerRefresh401>, {data?: AuthControllerRefreshMutationRequest}, TContext>
+
+  return useMutation<AuthControllerRefreshMutationResponse, ResponseErrorConfig<AuthControllerRefresh401>, {data?: AuthControllerRefreshMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<AuthControllerRefreshMutationResponse, ResponseErrorConfig<AuthControllerRefresh401>, {data?: AuthControllerRefreshMutationRequest}, TContext>
 }

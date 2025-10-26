@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { LocalEstoqueControllerUpdateMutationRequest, LocalEstoqueControllerUpdateMutationResponse, LocalEstoqueControllerUpdatePathParams, LocalEstoqueControllerUpdate404, LocalEstoqueControllerUpdate409 } from "../types/LocalEstoqueControllerUpdate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const localEstoqueControllerUpdateMutationKey = () =>   [{"url":"/local-estoque/{publicId}"}] as const
+export const localEstoqueControllerUpdateMutationKey = () => [{ url: '/local-estoque/:publicId' }] as const
 
 export type LocalEstoqueControllerUpdateMutationKey = ReturnType<typeof localEstoqueControllerUpdateMutationKey>
 
@@ -18,11 +18,22 @@ export type LocalEstoqueControllerUpdateMutationKey = ReturnType<typeof localEst
  * {@link /local-estoque/:publicId}
  */
 export async function localEstoqueControllerUpdate(publicId: LocalEstoqueControllerUpdatePathParams["publicId"], data?: LocalEstoqueControllerUpdateMutationRequest, config: Partial<RequestConfig<LocalEstoqueControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<LocalEstoqueControllerUpdateMutationResponse, ResponseErrorConfig<LocalEstoqueControllerUpdate404 | LocalEstoqueControllerUpdate409>, LocalEstoqueControllerUpdateMutationRequest>({ method : "PATCH", url : `/local-estoque/${publicId}`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<LocalEstoqueControllerUpdateMutationResponse, ResponseErrorConfig<LocalEstoqueControllerUpdate404 | LocalEstoqueControllerUpdate409>, LocalEstoqueControllerUpdateMutationRequest>({ method : "PATCH", url : `/local-estoque/${publicId}`, data : requestData, ... requestConfig })
-return res.data
+export function localEstoqueControllerUpdateMutationOptions(config: Partial<RequestConfig<LocalEstoqueControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = localEstoqueControllerUpdateMutationKey()
+  return mutationOptions<LocalEstoqueControllerUpdateMutationResponse, ResponseErrorConfig<LocalEstoqueControllerUpdate404 | LocalEstoqueControllerUpdate409>, {publicId: LocalEstoqueControllerUpdatePathParams["publicId"], data?: LocalEstoqueControllerUpdateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId, data }) => {
+      return localEstoqueControllerUpdate(publicId, data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /local-estoque/:publicId}
  */
 export function useLocalEstoqueControllerUpdate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<LocalEstoqueControllerUpdateMutationResponse, ResponseErrorConfig<LocalEstoqueControllerUpdate404 | LocalEstoqueControllerUpdate409>, {publicId: LocalEstoqueControllerUpdatePathParams["publicId"], data?: LocalEstoqueControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<LocalEstoqueControllerUpdateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? localEstoqueControllerUpdateMutationKey()
-  
-          return useMutation<LocalEstoqueControllerUpdateMutationResponse, ResponseErrorConfig<LocalEstoqueControllerUpdate404 | LocalEstoqueControllerUpdate409>, {publicId: LocalEstoqueControllerUpdatePathParams["publicId"], data?: LocalEstoqueControllerUpdateMutationRequest}, TContext>({
-            mutationFn: async({ publicId, data }) => {
-              return localEstoqueControllerUpdate(publicId, data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<LocalEstoqueControllerUpdateMutationResponse, ResponseErrorConfig<LocalEstoqueControllerUpdate404 | LocalEstoqueControllerUpdate409>, {publicId: LocalEstoqueControllerUpdatePathParams["publicId"], data?: LocalEstoqueControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<LocalEstoqueControllerUpdateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? localEstoqueControllerUpdateMutationKey()
+
+  const baseOptions = localEstoqueControllerUpdateMutationOptions(config) as UseMutationOptions<LocalEstoqueControllerUpdateMutationResponse, ResponseErrorConfig<LocalEstoqueControllerUpdate404 | LocalEstoqueControllerUpdate409>, {publicId: LocalEstoqueControllerUpdatePathParams["publicId"], data?: LocalEstoqueControllerUpdateMutationRequest}, TContext>
+
+  return useMutation<LocalEstoqueControllerUpdateMutationResponse, ResponseErrorConfig<LocalEstoqueControllerUpdate404 | LocalEstoqueControllerUpdate409>, {publicId: LocalEstoqueControllerUpdatePathParams["publicId"], data?: LocalEstoqueControllerUpdateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<LocalEstoqueControllerUpdateMutationResponse, ResponseErrorConfig<LocalEstoqueControllerUpdate404 | LocalEstoqueControllerUpdate409>, {publicId: LocalEstoqueControllerUpdatePathParams["publicId"], data?: LocalEstoqueControllerUpdateMutationRequest}, TContext>
 }

@@ -4,26 +4,25 @@
 */
 
 import type { ProdutoControllerDeactivatePathParams, ProdutoControllerDeactivateHeaderParams, ProdutoControllerDeactivate200, ProdutoControllerDeactivate404, ProdutoControllerDeactivateMutationResponse } from "../types/ProdutoControllerDeactivate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { produtoSchema } from "./produtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const produtoControllerDeactivatePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do produto")
-      }) as unknown as ToZod<ProdutoControllerDeactivatePathParams>
+    "publicId": z.string().describe("ID público do produto")
+    }) as unknown as z.ZodType<ProdutoControllerDeactivatePathParams>
 
 export const produtoControllerDeactivateHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<ProdutoControllerDeactivateHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<ProdutoControllerDeactivateHeaderParams>
 
 /**
  * @description Produto desativado com sucesso
  */
-export const produtoControllerDeactivate200Schema = z.lazy(() => produtoSchema) as unknown as ToZod<ProdutoControllerDeactivate200>
+export const produtoControllerDeactivate200Schema = produtoSchema as unknown as z.ZodType<ProdutoControllerDeactivate200>
 
 /**
  * @description Produto não encontrado
  */
-export const produtoControllerDeactivate404Schema = z.unknown() as unknown as ToZod<ProdutoControllerDeactivate404>
+export const produtoControllerDeactivate404Schema = z.unknown() as unknown as z.ZodType<ProdutoControllerDeactivate404>
 
-export const produtoControllerDeactivateMutationResponseSchema = z.lazy(() => produtoControllerDeactivate200Schema) as unknown as ToZod<ProdutoControllerDeactivateMutationResponse>
+export const produtoControllerDeactivateMutationResponseSchema = produtoControllerDeactivate200Schema as unknown as z.ZodType<ProdutoControllerDeactivateMutationResponse>

@@ -4,10 +4,9 @@
 */
 
 import type { LoginDto } from "../types/LoginDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const loginDtoSchema = z.object({
-      "email": z.coerce.string().describe("Email do usuário"),
-  "senha": z.coerce.string().min(6).describe("Senha do usuário")
-      }) as unknown as ToZod<LoginDto>
+    "email": z.coerce.string().describe("Email do usuário"),
+"senha": z.coerce.string().min(6).describe("Senha do usuário")
+    }) as unknown as z.ZodType<LoginDto>

@@ -16,7 +16,7 @@ export const movimentoEstoqueResponseDtoTipoEnum = {
     "AJUSTE": "AJUSTE"
 } as const;
 
-export type MovimentoEstoqueResponseDtoTipoEnum = (typeof movimentoEstoqueResponseDtoTipoEnum)[keyof typeof movimentoEstoqueResponseDtoTipoEnum];
+export type MovimentoEstoqueResponseDtoTipoEnumKey = (typeof movimentoEstoqueResponseDtoTipoEnum)[keyof typeof movimentoEstoqueResponseDtoTipoEnum];
 
 export type MovimentoEstoqueResponseDto = {
     /**
@@ -28,7 +28,7 @@ export type MovimentoEstoqueResponseDto = {
      * @description Tipo de movimento
      * @type string
     */
-    tipo: MovimentoEstoqueResponseDtoTipoEnum;
+    tipo: MovimentoEstoqueResponseDtoTipoEnumKey;
     /**
      * @description Quantidade movimentada
      * @type number

@@ -4,26 +4,25 @@
 */
 
 import type { CategoriaDespesasControllerRemovePathParams, CategoriaDespesasControllerRemove200, CategoriaDespesasControllerRemove401, CategoriaDespesasControllerRemove404, CategoriaDespesasControllerRemoveMutationResponse } from "../types/CategoriaDespesasControllerRemove.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const categoriaDespesasControllerRemovePathParamsSchema = z.object({
-      "id": z.coerce.number().describe("ID da categoria de despesas")
-      }) as unknown as ToZod<CategoriaDespesasControllerRemovePathParams>
+    "id": z.coerce.number().describe("ID da categoria de despesas")
+    }) as unknown as z.ZodType<CategoriaDespesasControllerRemovePathParams>
 
 /**
  * @description Categoria de despesas removida com sucesso
  */
-export const categoriaDespesasControllerRemove200Schema = z.unknown() as unknown as ToZod<CategoriaDespesasControllerRemove200>
+export const categoriaDespesasControllerRemove200Schema = z.unknown() as unknown as z.ZodType<CategoriaDespesasControllerRemove200>
 
 /**
  * @description Não autorizado
  */
-export const categoriaDespesasControllerRemove401Schema = z.unknown() as unknown as ToZod<CategoriaDespesasControllerRemove401>
+export const categoriaDespesasControllerRemove401Schema = z.unknown() as unknown as z.ZodType<CategoriaDespesasControllerRemove401>
 
 /**
  * @description Categoria de despesas não encontrada
  */
-export const categoriaDespesasControllerRemove404Schema = z.unknown() as unknown as ToZod<CategoriaDespesasControllerRemove404>
+export const categoriaDespesasControllerRemove404Schema = z.unknown() as unknown as z.ZodType<CategoriaDespesasControllerRemove404>
 
-export const categoriaDespesasControllerRemoveMutationResponseSchema = z.lazy(() => categoriaDespesasControllerRemove200Schema) as unknown as ToZod<CategoriaDespesasControllerRemoveMutationResponse>
+export const categoriaDespesasControllerRemoveMutationResponseSchema = categoriaDespesasControllerRemove200Schema as unknown as z.ZodType<CategoriaDespesasControllerRemoveMutationResponse>

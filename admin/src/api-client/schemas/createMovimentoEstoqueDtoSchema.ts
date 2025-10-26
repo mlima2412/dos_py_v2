@@ -4,14 +4,13 @@
 */
 
 import type { CreateMovimentoEstoqueDto } from "../types/CreateMovimentoEstoqueDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const createMovimentoEstoqueDtoSchema = z.object({
-      "skuId": z.coerce.number().describe("ID do SKU a ser movimentado"),
-  "tipo": z.enum(["ENTRADA", "SAIDA", "TRANSFERENCIA", "CONDICIONAL", "DEVOLUCAO", "AJUSTE"]).describe("Tipo de movimento do estoque"),
-  "qtd": z.coerce.number().describe("Quantidade a ser movimentada. Para AJUSTE, pode ser positiva (aumentar estoque) ou negativa (diminuir estoque)"),
-  "localOrigemId": z.coerce.number().describe("ID do local de origem (obrigatório para SAIDA, TRANSFERENCIA, CONDICIONAL)").optional(),
-  "localDestinoId": z.coerce.number().describe("ID do local de destino (obrigatório para ENTRADA, TRANSFERENCIA, AJUSTE)").optional(),
-  "observacao": z.coerce.string().describe("Observação sobre o movimento").optional()
-      }) as unknown as ToZod<CreateMovimentoEstoqueDto>
+    "skuId": z.coerce.number().describe("ID do SKU a ser movimentado"),
+"tipo": z.enum(["ENTRADA", "SAIDA", "TRANSFERENCIA", "CONDICIONAL", "DEVOLUCAO", "AJUSTE"]).describe("Tipo de movimento do estoque"),
+"qtd": z.coerce.number().describe("Quantidade a ser movimentada. Para AJUSTE, pode ser positiva (aumentar estoque) ou negativa (diminuir estoque)"),
+"localOrigemId": z.optional(z.coerce.number().describe("ID do local de origem (obrigatório para SAIDA, TRANSFERENCIA, CONDICIONAL)")),
+"localDestinoId": z.optional(z.coerce.number().describe("ID do local de destino (obrigatório para ENTRADA, TRANSFERENCIA, AJUSTE)")),
+"observacao": z.optional(z.coerce.string().describe("Observação sobre o movimento"))
+    }) as unknown as z.ZodType<CreateMovimentoEstoqueDto>

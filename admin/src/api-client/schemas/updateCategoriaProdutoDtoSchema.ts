@@ -4,9 +4,8 @@
 */
 
 import type { UpdateCategoriaProdutoDto } from "../types/UpdateCategoriaProdutoDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const updateCategoriaProdutoDtoSchema = z.object({
-      "descricao": z.coerce.string().max(255).describe("Descrição da categoria do produto").optional()
-      }) as unknown as ToZod<UpdateCategoriaProdutoDto>
+    "descricao": z.optional(z.coerce.string().max(255).describe("Descrição da categoria do produto"))
+    }) as unknown as z.ZodType<UpdateCategoriaProdutoDto>

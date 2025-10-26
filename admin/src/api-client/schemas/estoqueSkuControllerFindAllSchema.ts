@@ -4,13 +4,12 @@
 */
 
 import type { EstoqueSkuControllerFindAll200, EstoqueSkuControllerFindAllQueryResponse } from "../types/EstoqueSkuControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { estoqueSkuSchema } from "./estoqueSkuSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Lista de registros de estoque retornada com sucesso
  */
-export const estoqueSkuControllerFindAll200Schema = z.array(z.lazy(() => estoqueSkuSchema)) as unknown as ToZod<EstoqueSkuControllerFindAll200>
+export const estoqueSkuControllerFindAll200Schema = z.array(estoqueSkuSchema) as unknown as z.ZodType<EstoqueSkuControllerFindAll200>
 
-export const estoqueSkuControllerFindAllQueryResponseSchema = z.lazy(() => estoqueSkuControllerFindAll200Schema) as unknown as ToZod<EstoqueSkuControllerFindAllQueryResponse>
+export const estoqueSkuControllerFindAllQueryResponseSchema = estoqueSkuControllerFindAll200Schema as unknown as z.ZodType<EstoqueSkuControllerFindAllQueryResponse>

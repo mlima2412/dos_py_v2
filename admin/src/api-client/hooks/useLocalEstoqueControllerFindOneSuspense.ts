@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const localEstoqueControllerFindOneSuspenseQueryKey = (publicId: LocalEstoqueControllerFindOnePathParams["publicId"]) =>   [{ url: '/local-estoque/:publicId', params: {publicId:publicId} }] as const
+export const localEstoqueControllerFindOneSuspenseQueryKey = (publicId: LocalEstoqueControllerFindOnePathParams["publicId"]) => [{ url: '/local-estoque/:publicId', params: {publicId:publicId} }] as const
 
 export type LocalEstoqueControllerFindOneSuspenseQueryKey = ReturnType<typeof localEstoqueControllerFindOneSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type LocalEstoqueControllerFindOneSuspenseQueryKey = ReturnType<typeof lo
  * {@link /local-estoque/:publicId}
  */
 export async function localEstoqueControllerFindOneSuspense(publicId: LocalEstoqueControllerFindOnePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<LocalEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<LocalEstoqueControllerFindOne404>, unknown>({ method : "GET", url : `/local-estoque/${publicId}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<LocalEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<LocalEstoqueControllerFindOne404>, unknown>({ method : "GET", url : `/local-estoque/${publicId}`, ... requestConfig })  
+  return res.data
 }
 
 export function localEstoqueControllerFindOneSuspenseQueryOptions(publicId: LocalEstoqueControllerFindOnePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = localEstoqueControllerFindOneSuspenseQueryKey(publicId)
-        return queryOptions<LocalEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<LocalEstoqueControllerFindOne404>, LocalEstoqueControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(publicId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return localEstoqueControllerFindOneSuspense(publicId, config)
-         },
-        })
-  
+  const queryKey = localEstoqueControllerFindOneSuspenseQueryKey(publicId)
+  return queryOptions<LocalEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<LocalEstoqueControllerFindOne404>, LocalEstoqueControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(publicId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return localEstoqueControllerFindOneSuspense(publicId, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function localEstoqueControllerFindOneSuspenseQueryOptions(publicId: Loca
  * {@link /local-estoque/:publicId}
  */
 export function useLocalEstoqueControllerFindOneSuspense<TData = LocalEstoqueControllerFindOneQueryResponse, TQueryKey extends QueryKey = LocalEstoqueControllerFindOneSuspenseQueryKey>(publicId: LocalEstoqueControllerFindOnePathParams["publicId"], options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<LocalEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<LocalEstoqueControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? localEstoqueControllerFindOneSuspenseQueryKey(publicId)
-  
-         const query = useSuspenseQuery({
-          ...localEstoqueControllerFindOneSuspenseQueryOptions(publicId, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<LocalEstoqueControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<LocalEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<LocalEstoqueControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? localEstoqueControllerFindOneSuspenseQueryKey(publicId)
+
+  const query = useSuspenseQuery({
+   ...localEstoqueControllerFindOneSuspenseQueryOptions(publicId, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<LocalEstoqueControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

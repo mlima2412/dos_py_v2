@@ -4,37 +4,36 @@
 */
 
 import type { PedidoCompraControllerUpdateStatusPathParams, PedidoCompraControllerUpdateStatusHeaderParams, PedidoCompraControllerUpdateStatus200, PedidoCompraControllerUpdateStatus404, PedidoCompraControllerUpdateStatus409, PedidoCompraControllerUpdateStatusMutationRequest, PedidoCompraControllerUpdateStatusMutationResponse } from "../types/PedidoCompraControllerUpdateStatus.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { pedidoCompraSchema } from "./pedidoCompraSchema.ts";
 import { updateStatusPedidoCompraDtoSchema } from "./updateStatusPedidoCompraDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const pedidoCompraControllerUpdateStatusPathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do pedido de compra (UUID v7)")
-      }) as unknown as ToZod<PedidoCompraControllerUpdateStatusPathParams>
+    "publicId": z.string().describe("ID público do pedido de compra (UUID v7)")
+    }) as unknown as z.ZodType<PedidoCompraControllerUpdateStatusPathParams>
 
 export const pedidoCompraControllerUpdateStatusHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
-      }) as unknown as ToZod<PedidoCompraControllerUpdateStatusHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+    }) as unknown as z.ZodType<PedidoCompraControllerUpdateStatusHeaderParams>
 
 /**
  * @description Status do pedido de compra atualizado com sucesso
  */
-export const pedidoCompraControllerUpdateStatus200Schema = z.lazy(() => pedidoCompraSchema) as unknown as ToZod<PedidoCompraControllerUpdateStatus200>
+export const pedidoCompraControllerUpdateStatus200Schema = pedidoCompraSchema as unknown as z.ZodType<PedidoCompraControllerUpdateStatus200>
 
 /**
  * @description Pedido de compra não encontrado
  */
-export const pedidoCompraControllerUpdateStatus404Schema = z.unknown() as unknown as ToZod<PedidoCompraControllerUpdateStatus404>
+export const pedidoCompraControllerUpdateStatus404Schema = z.unknown() as unknown as z.ZodType<PedidoCompraControllerUpdateStatus404>
 
 /**
  * @description Transição de status inválida
  */
-export const pedidoCompraControllerUpdateStatus409Schema = z.unknown() as unknown as ToZod<PedidoCompraControllerUpdateStatus409>
+export const pedidoCompraControllerUpdateStatus409Schema = z.unknown() as unknown as z.ZodType<PedidoCompraControllerUpdateStatus409>
 
 /**
  * @description Novo status do pedido de compra
  */
-export const pedidoCompraControllerUpdateStatusMutationRequestSchema = z.lazy(() => updateStatusPedidoCompraDtoSchema) as unknown as ToZod<PedidoCompraControllerUpdateStatusMutationRequest>
+export const pedidoCompraControllerUpdateStatusMutationRequestSchema = updateStatusPedidoCompraDtoSchema as unknown as z.ZodType<PedidoCompraControllerUpdateStatusMutationRequest>
 
-export const pedidoCompraControllerUpdateStatusMutationResponseSchema = z.lazy(() => pedidoCompraControllerUpdateStatus200Schema) as unknown as ToZod<PedidoCompraControllerUpdateStatusMutationResponse>
+export const pedidoCompraControllerUpdateStatusMutationResponseSchema = pedidoCompraControllerUpdateStatus200Schema as unknown as z.ZodType<PedidoCompraControllerUpdateStatusMutationResponse>

@@ -4,12 +4,11 @@
 */
 
 import type { AuthControllerGetProfile200, AuthControllerGetProfileQueryResponse } from "../types/AuthControllerGetProfile.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Dados do usuário
  */
-export const authControllerGetProfile200Schema = z.unknown() as unknown as ToZod<AuthControllerGetProfile200>
+export const authControllerGetProfile200Schema = z.unknown() as unknown as z.ZodType<AuthControllerGetProfile200>
 
-export const authControllerGetProfileQueryResponseSchema = z.lazy(() => authControllerGetProfile200Schema) as unknown as ToZod<AuthControllerGetProfileQueryResponse>
+export const authControllerGetProfileQueryResponseSchema = authControllerGetProfile200Schema as unknown as z.ZodType<AuthControllerGetProfileQueryResponse>

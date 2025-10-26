@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const estoqueSkuControllerFindAllQueryKey = () =>   [{ url: '/estoque-sku' }] as const
+export const estoqueSkuControllerFindAllQueryKey = () => [{ url: '/estoque-sku' }] as const
 
 export type EstoqueSkuControllerFindAllQueryKey = ReturnType<typeof estoqueSkuControllerFindAllQueryKey>
 
@@ -18,25 +18,22 @@ export type EstoqueSkuControllerFindAllQueryKey = ReturnType<typeof estoqueSkuCo
  * {@link /estoque-sku}
  */
 export async function estoqueSkuControllerFindAll(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<EstoqueSkuControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/estoque-sku`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<EstoqueSkuControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/estoque-sku`, ... requestConfig })  
+  return res.data
 }
 
 export function estoqueSkuControllerFindAllQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = estoqueSkuControllerFindAllQueryKey()
-        return queryOptions<EstoqueSkuControllerFindAllQueryResponse, ResponseErrorConfig<Error>, EstoqueSkuControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return estoqueSkuControllerFindAll(config)
-         },
-        })
-  
+  const queryKey = estoqueSkuControllerFindAllQueryKey()
+  return queryOptions<EstoqueSkuControllerFindAllQueryResponse, ResponseErrorConfig<Error>, EstoqueSkuControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return estoqueSkuControllerFindAll(config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function estoqueSkuControllerFindAllQueryOptions(config: Partial<RequestC
  * {@link /estoque-sku}
  */
 export function useEstoqueSkuControllerFindAll<TData = EstoqueSkuControllerFindAllQueryResponse, TQueryData = EstoqueSkuControllerFindAllQueryResponse, TQueryKey extends QueryKey = EstoqueSkuControllerFindAllQueryKey>(options: 
-  {
-    query?: Partial<QueryObserverOptions<EstoqueSkuControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? estoqueSkuControllerFindAllQueryKey()
-  
-         const query = useQuery({
-          ...estoqueSkuControllerFindAllQueryOptions(config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<EstoqueSkuControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? estoqueSkuControllerFindAllQueryKey()
+
+  const query = useQuery({
+   ...estoqueSkuControllerFindAllQueryOptions(config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

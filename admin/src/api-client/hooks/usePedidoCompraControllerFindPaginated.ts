@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const pedidoCompraControllerFindPaginatedQueryKey = (params?: PedidoCompraControllerFindPaginatedQueryParams) =>   [{ url: '/pedido-compra/paginated' }, ...(params ? [params] : [])] as const
+export const pedidoCompraControllerFindPaginatedQueryKey = (params?: PedidoCompraControllerFindPaginatedQueryParams) => [{ url: '/pedido-compra/paginated' }, ...(params ? [params] : [])] as const
 
 export type PedidoCompraControllerFindPaginatedQueryKey = ReturnType<typeof pedidoCompraControllerFindPaginatedQueryKey>
 
@@ -18,25 +18,22 @@ export type PedidoCompraControllerFindPaginatedQueryKey = ReturnType<typeof pedi
  * {@link /pedido-compra/paginated}
  */
 export async function pedidoCompraControllerFindPaginated(headers: PedidoCompraControllerFindPaginatedHeaderParams, params?: PedidoCompraControllerFindPaginatedQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<PedidoCompraControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/pedido-compra/paginated`, params, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<PedidoCompraControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/pedido-compra/paginated`, params, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function pedidoCompraControllerFindPaginatedQueryOptions(headers: PedidoCompraControllerFindPaginatedHeaderParams, params?: PedidoCompraControllerFindPaginatedQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = pedidoCompraControllerFindPaginatedQueryKey(params)
-        return queryOptions<PedidoCompraControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, PedidoCompraControllerFindPaginatedQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return pedidoCompraControllerFindPaginated(headers, params, config)
-         },
-        })
-  
+  const queryKey = pedidoCompraControllerFindPaginatedQueryKey(params)
+  return queryOptions<PedidoCompraControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, PedidoCompraControllerFindPaginatedQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return pedidoCompraControllerFindPaginated(headers, params, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function pedidoCompraControllerFindPaginatedQueryOptions(headers: PedidoC
  * {@link /pedido-compra/paginated}
  */
 export function usePedidoCompraControllerFindPaginated<TData = PedidoCompraControllerFindPaginatedQueryResponse, TQueryData = PedidoCompraControllerFindPaginatedQueryResponse, TQueryKey extends QueryKey = PedidoCompraControllerFindPaginatedQueryKey>(headers: PedidoCompraControllerFindPaginatedHeaderParams, params?: PedidoCompraControllerFindPaginatedQueryParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<PedidoCompraControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? pedidoCompraControllerFindPaginatedQueryKey(params)
-  
-         const query = useQuery({
-          ...pedidoCompraControllerFindPaginatedQueryOptions(headers, params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<PedidoCompraControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? pedidoCompraControllerFindPaginatedQueryKey(params)
+
+  const query = useQuery({
+   ...pedidoCompraControllerFindPaginatedQueryOptions(headers, params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

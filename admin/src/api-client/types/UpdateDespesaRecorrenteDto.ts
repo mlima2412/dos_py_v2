@@ -13,7 +13,7 @@ export const updateDespesaRecorrenteDtoFrequenciaEnum = {
     "ANUAL": "ANUAL"
 } as const;
 
-export type UpdateDespesaRecorrenteDtoFrequenciaEnum = (typeof updateDespesaRecorrenteDtoFrequenciaEnum)[keyof typeof updateDespesaRecorrenteDtoFrequenciaEnum];
+export type UpdateDespesaRecorrenteDtoFrequenciaEnumKey = (typeof updateDespesaRecorrenteDtoFrequenciaEnum)[keyof typeof updateDespesaRecorrenteDtoFrequenciaEnum];
 
 export type UpdateDespesaRecorrenteDto = {
     /**
@@ -30,7 +30,7 @@ export type UpdateDespesaRecorrenteDto = {
      * @description Frequência da despesa recorrente
      * @type string | undefined
     */
-    frequencia?: UpdateDespesaRecorrenteDtoFrequenciaEnum;
+    frequencia?: UpdateDespesaRecorrenteDtoFrequenciaEnumKey;
     /**
      * @description Dia do vencimento da despesa recorrente (1-31)
      * @type number | undefined

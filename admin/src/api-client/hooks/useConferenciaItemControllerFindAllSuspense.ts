@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const conferenciaItemControllerFindAllSuspenseQueryKey = () =>   [{ url: '/conferencia-item' }] as const
+export const conferenciaItemControllerFindAllSuspenseQueryKey = () => [{ url: '/conferencia-item' }] as const
 
 export type ConferenciaItemControllerFindAllSuspenseQueryKey = ReturnType<typeof conferenciaItemControllerFindAllSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type ConferenciaItemControllerFindAllSuspenseQueryKey = ReturnType<typeof
  * {@link /conferencia-item}
  */
 export async function conferenciaItemControllerFindAllSuspense(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ConferenciaItemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/conferencia-item`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ConferenciaItemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/conferencia-item`, ... requestConfig })  
+  return res.data
 }
 
 export function conferenciaItemControllerFindAllSuspenseQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = conferenciaItemControllerFindAllSuspenseQueryKey()
-        return queryOptions<ConferenciaItemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, ConferenciaItemControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return conferenciaItemControllerFindAllSuspense(config)
-         },
-        })
-  
+  const queryKey = conferenciaItemControllerFindAllSuspenseQueryKey()
+  return queryOptions<ConferenciaItemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, ConferenciaItemControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return conferenciaItemControllerFindAllSuspense(config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function conferenciaItemControllerFindAllSuspenseQueryOptions(config: Par
  * {@link /conferencia-item}
  */
 export function useConferenciaItemControllerFindAllSuspense<TData = ConferenciaItemControllerFindAllQueryResponse, TQueryKey extends QueryKey = ConferenciaItemControllerFindAllSuspenseQueryKey>(options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<ConferenciaItemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? conferenciaItemControllerFindAllSuspenseQueryKey()
-  
-         const query = useSuspenseQuery({
-          ...conferenciaItemControllerFindAllSuspenseQueryOptions(config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<ConferenciaItemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? conferenciaItemControllerFindAllSuspenseQueryKey()
+
+  const query = useSuspenseQuery({
+   ...conferenciaItemControllerFindAllSuspenseQueryOptions(config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

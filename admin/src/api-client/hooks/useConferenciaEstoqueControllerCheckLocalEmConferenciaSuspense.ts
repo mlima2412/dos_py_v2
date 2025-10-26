@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const conferenciaEstoqueControllerCheckLocalEmConferenciaSuspenseQueryKey = (localPublicId: ConferenciaEstoqueControllerCheckLocalEmConferenciaPathParams["localPublicId"]) =>   [{ url: '/conferencia-estoque/local/:localPublicId/em-conferencia', params: {localPublicId:localPublicId} }] as const
+export const conferenciaEstoqueControllerCheckLocalEmConferenciaSuspenseQueryKey = (localPublicId: ConferenciaEstoqueControllerCheckLocalEmConferenciaPathParams["localPublicId"]) => [{ url: '/conferencia-estoque/local/:localPublicId/em-conferencia', params: {localPublicId:localPublicId} }] as const
 
 export type ConferenciaEstoqueControllerCheckLocalEmConferenciaSuspenseQueryKey = ReturnType<typeof conferenciaEstoqueControllerCheckLocalEmConferenciaSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type ConferenciaEstoqueControllerCheckLocalEmConferenciaSuspenseQueryKey 
  * {@link /conferencia-estoque/local/:localPublicId/em-conferencia}
  */
 export async function conferenciaEstoqueControllerCheckLocalEmConferenciaSuspense(localPublicId: ConferenciaEstoqueControllerCheckLocalEmConferenciaPathParams["localPublicId"], headers: ConferenciaEstoqueControllerCheckLocalEmConferenciaHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ConferenciaEstoqueControllerCheckLocalEmConferenciaQueryResponse, ResponseErrorConfig<ConferenciaEstoqueControllerCheckLocalEmConferencia404>, unknown>({ method : "GET", url : `/conferencia-estoque/local/${localPublicId}/em-conferencia`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ConferenciaEstoqueControllerCheckLocalEmConferenciaQueryResponse, ResponseErrorConfig<ConferenciaEstoqueControllerCheckLocalEmConferencia404>, unknown>({ method : "GET", url : `/conferencia-estoque/local/${localPublicId}/em-conferencia`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function conferenciaEstoqueControllerCheckLocalEmConferenciaSuspenseQueryOptions(localPublicId: ConferenciaEstoqueControllerCheckLocalEmConferenciaPathParams["localPublicId"], headers: ConferenciaEstoqueControllerCheckLocalEmConferenciaHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = conferenciaEstoqueControllerCheckLocalEmConferenciaSuspenseQueryKey(localPublicId)
-        return queryOptions<ConferenciaEstoqueControllerCheckLocalEmConferenciaQueryResponse, ResponseErrorConfig<ConferenciaEstoqueControllerCheckLocalEmConferencia404>, ConferenciaEstoqueControllerCheckLocalEmConferenciaQueryResponse, typeof queryKey>({
-         enabled: !!(localPublicId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return conferenciaEstoqueControllerCheckLocalEmConferenciaSuspense(localPublicId, headers, config)
-         },
-        })
-  
+  const queryKey = conferenciaEstoqueControllerCheckLocalEmConferenciaSuspenseQueryKey(localPublicId)
+  return queryOptions<ConferenciaEstoqueControllerCheckLocalEmConferenciaQueryResponse, ResponseErrorConfig<ConferenciaEstoqueControllerCheckLocalEmConferencia404>, ConferenciaEstoqueControllerCheckLocalEmConferenciaQueryResponse, typeof queryKey>({
+   enabled: !!(localPublicId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return conferenciaEstoqueControllerCheckLocalEmConferenciaSuspense(localPublicId, headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function conferenciaEstoqueControllerCheckLocalEmConferenciaSuspenseQuery
  * {@link /conferencia-estoque/local/:localPublicId/em-conferencia}
  */
 export function useConferenciaEstoqueControllerCheckLocalEmConferenciaSuspense<TData = ConferenciaEstoqueControllerCheckLocalEmConferenciaQueryResponse, TQueryKey extends QueryKey = ConferenciaEstoqueControllerCheckLocalEmConferenciaSuspenseQueryKey>(localPublicId: ConferenciaEstoqueControllerCheckLocalEmConferenciaPathParams["localPublicId"], headers: ConferenciaEstoqueControllerCheckLocalEmConferenciaHeaderParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<ConferenciaEstoqueControllerCheckLocalEmConferenciaQueryResponse, ResponseErrorConfig<ConferenciaEstoqueControllerCheckLocalEmConferencia404>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? conferenciaEstoqueControllerCheckLocalEmConferenciaSuspenseQueryKey(localPublicId)
-  
-         const query = useSuspenseQuery({
-          ...conferenciaEstoqueControllerCheckLocalEmConferenciaSuspenseQueryOptions(localPublicId, headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<ConferenciaEstoqueControllerCheckLocalEmConferencia404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<ConferenciaEstoqueControllerCheckLocalEmConferenciaQueryResponse, ResponseErrorConfig<ConferenciaEstoqueControllerCheckLocalEmConferencia404>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? conferenciaEstoqueControllerCheckLocalEmConferenciaSuspenseQueryKey(localPublicId)
+
+  const query = useSuspenseQuery({
+   ...conferenciaEstoqueControllerCheckLocalEmConferenciaSuspenseQueryOptions(localPublicId, headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<ConferenciaEstoqueControllerCheckLocalEmConferencia404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

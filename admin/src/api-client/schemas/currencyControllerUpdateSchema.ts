@@ -4,40 +4,39 @@
 */
 
 import type { CurrencyControllerUpdatePathParams, CurrencyControllerUpdate200, CurrencyControllerUpdate400, CurrencyControllerUpdate401, CurrencyControllerUpdate404, CurrencyControllerUpdate409, CurrencyControllerUpdateMutationRequest, CurrencyControllerUpdateMutationResponse } from "../types/CurrencyControllerUpdate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { currencySchema } from "./currencySchema.ts";
 import { updateCurrencyDtoSchema } from "./updateCurrencyDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const currencyControllerUpdatePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público da moeda")
-      }) as unknown as ToZod<CurrencyControllerUpdatePathParams>
+    "publicId": z.string().describe("ID público da moeda")
+    }) as unknown as z.ZodType<CurrencyControllerUpdatePathParams>
 
 /**
  * @description Moeda atualizada com sucesso
  */
-export const currencyControllerUpdate200Schema = z.lazy(() => currencySchema) as unknown as ToZod<CurrencyControllerUpdate200>
+export const currencyControllerUpdate200Schema = currencySchema as unknown as z.ZodType<CurrencyControllerUpdate200>
 
 /**
  * @description Dados inválidos
  */
-export const currencyControllerUpdate400Schema = z.unknown() as unknown as ToZod<CurrencyControllerUpdate400>
+export const currencyControllerUpdate400Schema = z.unknown() as unknown as z.ZodType<CurrencyControllerUpdate400>
 
 /**
  * @description Não autorizado
  */
-export const currencyControllerUpdate401Schema = z.unknown() as unknown as ToZod<CurrencyControllerUpdate401>
+export const currencyControllerUpdate401Schema = z.unknown() as unknown as z.ZodType<CurrencyControllerUpdate401>
 
 /**
  * @description Moeda não encontrada
  */
-export const currencyControllerUpdate404Schema = z.unknown() as unknown as ToZod<CurrencyControllerUpdate404>
+export const currencyControllerUpdate404Schema = z.unknown() as unknown as z.ZodType<CurrencyControllerUpdate404>
 
 /**
  * @description Código ISO já existe
  */
-export const currencyControllerUpdate409Schema = z.unknown() as unknown as ToZod<CurrencyControllerUpdate409>
+export const currencyControllerUpdate409Schema = z.unknown() as unknown as z.ZodType<CurrencyControllerUpdate409>
 
-export const currencyControllerUpdateMutationRequestSchema = z.lazy(() => updateCurrencyDtoSchema) as unknown as ToZod<CurrencyControllerUpdateMutationRequest>
+export const currencyControllerUpdateMutationRequestSchema = updateCurrencyDtoSchema as unknown as z.ZodType<CurrencyControllerUpdateMutationRequest>
 
-export const currencyControllerUpdateMutationResponseSchema = z.lazy(() => currencyControllerUpdate200Schema) as unknown as ToZod<CurrencyControllerUpdateMutationResponse>
+export const currencyControllerUpdateMutationResponseSchema = currencyControllerUpdate200Schema as unknown as z.ZodType<CurrencyControllerUpdateMutationResponse>

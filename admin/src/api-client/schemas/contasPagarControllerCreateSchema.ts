@@ -4,21 +4,20 @@
 */
 
 import type { ContasPagarControllerCreate201, ContasPagarControllerCreate400, ContasPagarControllerCreateMutationRequest, ContasPagarControllerCreateMutationResponse } from "../types/ContasPagarControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { contasPagarSchema } from "./contasPagarSchema.ts";
 import { createContasPagarDtoSchema } from "./createContasPagarDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Conta a pagar criada com sucesso.
  */
-export const contasPagarControllerCreate201Schema = z.lazy(() => contasPagarSchema) as unknown as ToZod<ContasPagarControllerCreate201>
+export const contasPagarControllerCreate201Schema = contasPagarSchema as unknown as z.ZodType<ContasPagarControllerCreate201>
 
 /**
  * @description Dados inválidos.
  */
-export const contasPagarControllerCreate400Schema = z.unknown() as unknown as ToZod<ContasPagarControllerCreate400>
+export const contasPagarControllerCreate400Schema = z.unknown() as unknown as z.ZodType<ContasPagarControllerCreate400>
 
-export const contasPagarControllerCreateMutationRequestSchema = z.lazy(() => createContasPagarDtoSchema) as unknown as ToZod<ContasPagarControllerCreateMutationRequest>
+export const contasPagarControllerCreateMutationRequestSchema = createContasPagarDtoSchema as unknown as z.ZodType<ContasPagarControllerCreateMutationRequest>
 
-export const contasPagarControllerCreateMutationResponseSchema = z.lazy(() => contasPagarControllerCreate201Schema) as unknown as ToZod<ContasPagarControllerCreateMutationResponse>
+export const contasPagarControllerCreateMutationResponseSchema = contasPagarControllerCreate201Schema as unknown as z.ZodType<ContasPagarControllerCreateMutationResponse>

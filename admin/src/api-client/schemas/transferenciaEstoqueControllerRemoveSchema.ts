@@ -4,30 +4,29 @@
 */
 
 import type { TransferenciaEstoqueControllerRemovePathParams, TransferenciaEstoqueControllerRemoveHeaderParams, TransferenciaEstoqueControllerRemove200, TransferenciaEstoqueControllerRemove404, TransferenciaEstoqueControllerRemove409, TransferenciaEstoqueControllerRemoveMutationResponse } from "../types/TransferenciaEstoqueControllerRemove.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const transferenciaEstoqueControllerRemovePathParamsSchema = z.object({
-      "id": z.string().describe("ID da transferência")
-      }) as unknown as ToZod<TransferenciaEstoqueControllerRemovePathParams>
+    "id": z.string().describe("ID da transferência")
+    }) as unknown as z.ZodType<TransferenciaEstoqueControllerRemovePathParams>
 
 export const transferenciaEstoqueControllerRemoveHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
-      }) as unknown as ToZod<TransferenciaEstoqueControllerRemoveHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+    }) as unknown as z.ZodType<TransferenciaEstoqueControllerRemoveHeaderParams>
 
 /**
  * @description Transferência excluída com sucesso
  */
-export const transferenciaEstoqueControllerRemove200Schema = z.unknown() as unknown as ToZod<TransferenciaEstoqueControllerRemove200>
+export const transferenciaEstoqueControllerRemove200Schema = z.unknown() as unknown as z.ZodType<TransferenciaEstoqueControllerRemove200>
 
 /**
  * @description Transferência não encontrada
  */
-export const transferenciaEstoqueControllerRemove404Schema = z.unknown() as unknown as ToZod<TransferenciaEstoqueControllerRemove404>
+export const transferenciaEstoqueControllerRemove404Schema = z.unknown() as unknown as z.ZodType<TransferenciaEstoqueControllerRemove404>
 
 /**
  * @description Não é possível excluir uma transferência já recebida
  */
-export const transferenciaEstoqueControllerRemove409Schema = z.unknown() as unknown as ToZod<TransferenciaEstoqueControllerRemove409>
+export const transferenciaEstoqueControllerRemove409Schema = z.unknown() as unknown as z.ZodType<TransferenciaEstoqueControllerRemove409>
 
-export const transferenciaEstoqueControllerRemoveMutationResponseSchema = z.lazy(() => transferenciaEstoqueControllerRemove200Schema) as unknown as ToZod<TransferenciaEstoqueControllerRemoveMutationResponse>
+export const transferenciaEstoqueControllerRemoveMutationResponseSchema = transferenciaEstoqueControllerRemove200Schema as unknown as z.ZodType<TransferenciaEstoqueControllerRemoveMutationResponse>

@@ -4,17 +4,16 @@
 */
 
 import type { EstoqueSku } from "../types/EstoqueSku.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const estoqueSkuSchema = z.object({
-      "skuId": z.coerce.number().describe("ID do SKU do produto"),
-  "localId": z.coerce.number().describe("ID do local de estoque"),
-  "qtd": z.coerce.number().describe("Quantidade em estoque"),
-  "sku": z.object({
-      
-      }).describe("Informações do SKU").optional(),
-  "local": z.object({
-      
-      }).describe("Informações do local de estoque").optional()
-      }) as unknown as ToZod<EstoqueSku>
+    "skuId": z.coerce.number().describe("ID do SKU do produto"),
+"localId": z.coerce.number().describe("ID do local de estoque"),
+"qtd": z.coerce.number().describe("Quantidade em estoque"),
+"sku": z.optional(z.object({
+    
+    }).describe("Informações do SKU")),
+"local": z.optional(z.object({
+    
+    }).describe("Informações do local de estoque"))
+    }) as unknown as z.ZodType<EstoqueSku>

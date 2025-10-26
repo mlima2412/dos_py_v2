@@ -4,17 +4,16 @@
 */
 
 import type { TransferenciaEstoqueControllerFindAllHeaderParams, TransferenciaEstoqueControllerFindAll200, TransferenciaEstoqueControllerFindAllQueryResponse } from "../types/TransferenciaEstoqueControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { transferenciaEstoqueResponseDtoSchema } from "./transferenciaEstoqueResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const transferenciaEstoqueControllerFindAllHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
-      }) as unknown as ToZod<TransferenciaEstoqueControllerFindAllHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+    }) as unknown as z.ZodType<TransferenciaEstoqueControllerFindAllHeaderParams>
 
 /**
  * @description Lista de transferências retornada com sucesso
  */
-export const transferenciaEstoqueControllerFindAll200Schema = z.array(z.lazy(() => transferenciaEstoqueResponseDtoSchema)) as unknown as ToZod<TransferenciaEstoqueControllerFindAll200>
+export const transferenciaEstoqueControllerFindAll200Schema = z.array(transferenciaEstoqueResponseDtoSchema) as unknown as z.ZodType<TransferenciaEstoqueControllerFindAll200>
 
-export const transferenciaEstoqueControllerFindAllQueryResponseSchema = z.lazy(() => transferenciaEstoqueControllerFindAll200Schema) as unknown as ToZod<TransferenciaEstoqueControllerFindAllQueryResponse>
+export const transferenciaEstoqueControllerFindAllQueryResponseSchema = transferenciaEstoqueControllerFindAll200Schema as unknown as z.ZodType<TransferenciaEstoqueControllerFindAllQueryResponse>

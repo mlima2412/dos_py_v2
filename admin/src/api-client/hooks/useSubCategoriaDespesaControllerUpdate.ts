@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { SubCategoriaDespesaControllerUpdateMutationRequest, SubCategoriaDespesaControllerUpdateMutationResponse, SubCategoriaDespesaControllerUpdatePathParams, SubCategoriaDespesaControllerUpdate401, SubCategoriaDespesaControllerUpdate404, SubCategoriaDespesaControllerUpdate409 } from "../types/SubCategoriaDespesaControllerUpdate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const subCategoriaDespesaControllerUpdateMutationKey = () =>   [{"url":"/subcategoria-despesa/{id}"}] as const
+export const subCategoriaDespesaControllerUpdateMutationKey = () => [{ url: '/subcategoria-despesa/:id' }] as const
 
 export type SubCategoriaDespesaControllerUpdateMutationKey = ReturnType<typeof subCategoriaDespesaControllerUpdateMutationKey>
 
@@ -18,11 +18,22 @@ export type SubCategoriaDespesaControllerUpdateMutationKey = ReturnType<typeof s
  * {@link /subcategoria-despesa/:id}
  */
 export async function subCategoriaDespesaControllerUpdate(id: SubCategoriaDespesaControllerUpdatePathParams["id"], data?: SubCategoriaDespesaControllerUpdateMutationRequest, config: Partial<RequestConfig<SubCategoriaDespesaControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<SubCategoriaDespesaControllerUpdateMutationResponse, ResponseErrorConfig<SubCategoriaDespesaControllerUpdate401 | SubCategoriaDespesaControllerUpdate404 | SubCategoriaDespesaControllerUpdate409>, SubCategoriaDespesaControllerUpdateMutationRequest>({ method : "PATCH", url : `/subcategoria-despesa/${id}`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<SubCategoriaDespesaControllerUpdateMutationResponse, ResponseErrorConfig<SubCategoriaDespesaControllerUpdate401 | SubCategoriaDespesaControllerUpdate404 | SubCategoriaDespesaControllerUpdate409>, SubCategoriaDespesaControllerUpdateMutationRequest>({ method : "PATCH", url : `/subcategoria-despesa/${id}`, data : requestData, ... requestConfig })
-return res.data
+export function subCategoriaDespesaControllerUpdateMutationOptions(config: Partial<RequestConfig<SubCategoriaDespesaControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = subCategoriaDespesaControllerUpdateMutationKey()
+  return mutationOptions<SubCategoriaDespesaControllerUpdateMutationResponse, ResponseErrorConfig<SubCategoriaDespesaControllerUpdate401 | SubCategoriaDespesaControllerUpdate404 | SubCategoriaDespesaControllerUpdate409>, {id: SubCategoriaDespesaControllerUpdatePathParams["id"], data?: SubCategoriaDespesaControllerUpdateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ id, data }) => {
+      return subCategoriaDespesaControllerUpdate(id, data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /subcategoria-despesa/:id}
  */
 export function useSubCategoriaDespesaControllerUpdate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<SubCategoriaDespesaControllerUpdateMutationResponse, ResponseErrorConfig<SubCategoriaDespesaControllerUpdate401 | SubCategoriaDespesaControllerUpdate404 | SubCategoriaDespesaControllerUpdate409>, {id: SubCategoriaDespesaControllerUpdatePathParams["id"], data?: SubCategoriaDespesaControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<SubCategoriaDespesaControllerUpdateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? subCategoriaDespesaControllerUpdateMutationKey()
-  
-          return useMutation<SubCategoriaDespesaControllerUpdateMutationResponse, ResponseErrorConfig<SubCategoriaDespesaControllerUpdate401 | SubCategoriaDespesaControllerUpdate404 | SubCategoriaDespesaControllerUpdate409>, {id: SubCategoriaDespesaControllerUpdatePathParams["id"], data?: SubCategoriaDespesaControllerUpdateMutationRequest}, TContext>({
-            mutationFn: async({ id, data }) => {
-              return subCategoriaDespesaControllerUpdate(id, data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<SubCategoriaDespesaControllerUpdateMutationResponse, ResponseErrorConfig<SubCategoriaDespesaControllerUpdate401 | SubCategoriaDespesaControllerUpdate404 | SubCategoriaDespesaControllerUpdate409>, {id: SubCategoriaDespesaControllerUpdatePathParams["id"], data?: SubCategoriaDespesaControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<SubCategoriaDespesaControllerUpdateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? subCategoriaDespesaControllerUpdateMutationKey()
+
+  const baseOptions = subCategoriaDespesaControllerUpdateMutationOptions(config) as UseMutationOptions<SubCategoriaDespesaControllerUpdateMutationResponse, ResponseErrorConfig<SubCategoriaDespesaControllerUpdate401 | SubCategoriaDespesaControllerUpdate404 | SubCategoriaDespesaControllerUpdate409>, {id: SubCategoriaDespesaControllerUpdatePathParams["id"], data?: SubCategoriaDespesaControllerUpdateMutationRequest}, TContext>
+
+  return useMutation<SubCategoriaDespesaControllerUpdateMutationResponse, ResponseErrorConfig<SubCategoriaDespesaControllerUpdate401 | SubCategoriaDespesaControllerUpdate404 | SubCategoriaDespesaControllerUpdate409>, {id: SubCategoriaDespesaControllerUpdatePathParams["id"], data?: SubCategoriaDespesaControllerUpdateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<SubCategoriaDespesaControllerUpdateMutationResponse, ResponseErrorConfig<SubCategoriaDespesaControllerUpdate401 | SubCategoriaDespesaControllerUpdate404 | SubCategoriaDespesaControllerUpdate409>, {id: SubCategoriaDespesaControllerUpdatePathParams["id"], data?: SubCategoriaDespesaControllerUpdateMutationRequest}, TContext>
 }

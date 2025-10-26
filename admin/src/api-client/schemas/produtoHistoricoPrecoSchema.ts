@@ -4,14 +4,15 @@
 */
 
 import type { ProdutoHistoricoPreco } from "../types/ProdutoHistoricoPreco.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { produtoSchema } from "./produtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const produtoHistoricoPrecoSchema = z.object({
-      "id": z.coerce.number().describe("ID único do histórico de preço"),
-  "produtoId": z.coerce.number().describe("ID do produto"),
-  "preco": z.coerce.number().describe("Preço do produto"),
-  "data": z.string().datetime().describe("Data do registro do preço"),
-  "Produto": z.lazy(() => produtoSchema).describe("Produto relacionado").optional()
-      }) as unknown as ToZod<ProdutoHistoricoPreco>
+    "id": z.coerce.number().describe("ID único do histórico de preço"),
+"produtoId": z.coerce.number().describe("ID do produto"),
+"preco": z.coerce.number().describe("Preço do produto"),
+"data": z.string().datetime().describe("Data do registro do preço"),
+get "Produto"(){
+                return z.optional(produtoSchema.describe("Produto relacionado"))
+              }
+    }) as unknown as z.ZodType<ProdutoHistoricoPreco>

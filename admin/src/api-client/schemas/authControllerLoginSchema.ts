@@ -4,34 +4,33 @@
 */
 
 import type { AuthControllerLogin200, AuthControllerLogin401, AuthControllerLoginMutationRequest, AuthControllerLoginMutationResponse } from "../types/AuthControllerLogin.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { loginDtoSchema } from "./loginDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Login realizado com sucesso
  */
 export const authControllerLogin200Schema = z.object({
-      "accessToken": z.coerce.string().optional(),
-  "user": z.object({
-      "id": z.coerce.number().optional(),
-  "publicId": z.coerce.string().optional(),
-  "nome": z.coerce.string().optional(),
-  "email": z.coerce.string().optional(),
-  "telefone": z.coerce.string().optional(),
-  "ativo": z.boolean().optional(),
-  "perfil": z.object({
-      "id": z.coerce.number().optional(),
-  "nome": z.coerce.string().optional()
-      }).optional()
-      }).optional()
-      }) as unknown as ToZod<AuthControllerLogin200>
+    "accessToken": z.optional(z.coerce.string()),
+"user": z.optional(z.object({
+    "id": z.optional(z.coerce.number()),
+"publicId": z.optional(z.coerce.string()),
+"nome": z.optional(z.coerce.string()),
+"email": z.optional(z.coerce.string()),
+"telefone": z.optional(z.coerce.string()),
+"ativo": z.optional(z.boolean()),
+"perfil": z.optional(z.object({
+    "id": z.optional(z.coerce.number()),
+"nome": z.optional(z.coerce.string())
+    }))
+    }))
+    }) as unknown as z.ZodType<AuthControllerLogin200>
 
 /**
  * @description Credenciais inválidas
  */
-export const authControllerLogin401Schema = z.unknown() as unknown as ToZod<AuthControllerLogin401>
+export const authControllerLogin401Schema = z.unknown() as unknown as z.ZodType<AuthControllerLogin401>
 
-export const authControllerLoginMutationRequestSchema = z.lazy(() => loginDtoSchema) as unknown as ToZod<AuthControllerLoginMutationRequest>
+export const authControllerLoginMutationRequestSchema = loginDtoSchema as unknown as z.ZodType<AuthControllerLoginMutationRequest>
 
-export const authControllerLoginMutationResponseSchema = z.lazy(() => authControllerLogin200Schema) as unknown as ToZod<AuthControllerLoginMutationResponse>
+export const authControllerLoginMutationResponseSchema = authControllerLogin200Schema as unknown as z.ZodType<AuthControllerLoginMutationResponse>

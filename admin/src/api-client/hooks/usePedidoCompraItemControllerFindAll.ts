@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const pedidoCompraItemControllerFindAllQueryKey = () =>   [{ url: '/pedido-compra-item' }] as const
+export const pedidoCompraItemControllerFindAllQueryKey = () => [{ url: '/pedido-compra-item' }] as const
 
 export type PedidoCompraItemControllerFindAllQueryKey = ReturnType<typeof pedidoCompraItemControllerFindAllQueryKey>
 
@@ -18,25 +18,22 @@ export type PedidoCompraItemControllerFindAllQueryKey = ReturnType<typeof pedido
  * {@link /pedido-compra-item}
  */
 export async function pedidoCompraItemControllerFindAll(headers: PedidoCompraItemControllerFindAllHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<PedidoCompraItemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/pedido-compra-item`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<PedidoCompraItemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/pedido-compra-item`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function pedidoCompraItemControllerFindAllQueryOptions(headers: PedidoCompraItemControllerFindAllHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = pedidoCompraItemControllerFindAllQueryKey()
-        return queryOptions<PedidoCompraItemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, PedidoCompraItemControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return pedidoCompraItemControllerFindAll(headers, config)
-         },
-        })
-  
+  const queryKey = pedidoCompraItemControllerFindAllQueryKey()
+  return queryOptions<PedidoCompraItemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, PedidoCompraItemControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return pedidoCompraItemControllerFindAll(headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function pedidoCompraItemControllerFindAllQueryOptions(headers: PedidoCom
  * {@link /pedido-compra-item}
  */
 export function usePedidoCompraItemControllerFindAll<TData = PedidoCompraItemControllerFindAllQueryResponse, TQueryData = PedidoCompraItemControllerFindAllQueryResponse, TQueryKey extends QueryKey = PedidoCompraItemControllerFindAllQueryKey>(headers: PedidoCompraItemControllerFindAllHeaderParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<PedidoCompraItemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? pedidoCompraItemControllerFindAllQueryKey()
-  
-         const query = useQuery({
-          ...pedidoCompraItemControllerFindAllQueryOptions(headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<PedidoCompraItemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? pedidoCompraItemControllerFindAllQueryKey()
+
+  const query = useQuery({
+   ...pedidoCompraItemControllerFindAllQueryOptions(headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

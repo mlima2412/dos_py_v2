@@ -9,12 +9,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useFormaPagamentoControllerFindAllActive } from "@/api-client";
 import { usePartnerContext } from "@/hooks/usePartnerContext";
 import { cn } from "@/lib/utils";
@@ -27,7 +26,6 @@ import type {
 	VendaTotals,
 	PagamentoFormData,
 } from "../types";
-import type { PagamentoTipoEnum } from "@/api-client/types";
 
 interface PagamentoProps {
 	mode: VendaFormMode;
@@ -90,22 +88,33 @@ export const Pagamento: React.FC<PagamentoProps> = ({
 
 	const formasPagamento = formasPagamentoData || [];
 
-	const tipoVenda = watch("tipoVenda");
 	const pagamentos = watch("pagamentos") || [];
 
 	const totalAlocado = pagamentos.reduce((sum, pag) => sum + pag.valor, 0);
 	const faltaAlocar = totals.total - totalAlocado;
 	const totalmenteAlocado = Math.abs(faltaAlocar) < 0.01;
-
-	const handleTipoVendaChange = (tipo: PagamentoTipoEnum) => {
-		setValue("tipoVenda", tipo, { shouldValidate: true, shouldDirty: true });
-		// Limpar pagamentos quando tipo muda
-		setValue("pagamentos", [], { shouldValidate: true, shouldDirty: true });
-	};
+	const jaTemEntrada = pagamentos.some(p => p.entrada);
 
 	const handleOpenDialog = () => {
 		setEditingPaymentIndex(null);
 		setDialogOpen(true);
+	};
+
+	const handleAddFlexivelPayment = () => {
+		// Adicionar pagamento flexível automaticamente
+		const formaPagamentoPadrao = formasPagamento[0]?.idFormaPag || 0;
+
+		const pagamento: PagamentoFormData = {
+			tipo: "PARCELADO_FLEXIVEL",
+			formaPagamentoId: formaPagamentoPadrao,
+			valor: faltaAlocar,
+			entrada: false,
+		};
+
+		setValue("pagamentos", [...pagamentos, pagamento], {
+			shouldValidate: true,
+			shouldDirty: true,
+		});
 	};
 
 	const handleEditPayment = (index: number) => {
@@ -290,6 +299,7 @@ export const Pagamento: React.FC<PagamentoProps> = ({
 									/>
 								)}
 							</div>
+
 						</CardContent>
 					</Card>
 				</div>
@@ -303,57 +313,32 @@ export const Pagamento: React.FC<PagamentoProps> = ({
 							<CardTitle className="text-base">
 								{t("salesOrders.form.labels.paymentMethods")}
 							</CardTitle>
-							<div className="flex items-center gap-2">
-								<div className="w-64">
-									{mode === "view" ? (
-										<div className="text-sm font-medium">
-											{tipoVenda
-												? t(`salesOrders.form.paymentTypes.${tipoVenda}`)
-												: "-"}
-										</div>
-									) : (
-										<Select
-											value={tipoVenda || ""}
-											onValueChange={value =>
-												handleTipoVendaChange(value as PagamentoTipoEnum)
-											}
-										>
-											<SelectTrigger>
-												<SelectValue placeholder="Selecione o tipo de pagamento" />
-											</SelectTrigger>
-											<SelectContent>
-												{[
-													"A_VISTA_IMEDIATA",
-													"A_PRAZO_SEM_PARCELAS",
-													"PARCELADO",
-													"PARCELADO_FLEXIVEL",
-												].map(tipo => (
-													<SelectItem key={tipo} value={tipo}>
-														{t(`salesOrders.form.paymentTypes.${tipo}`)}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
-									)}
-								</div>
-								{!mode?.includes("view") && tipoVenda && (
-									<Button
-										type="button"
-										variant="outline"
-										size="sm"
-										onClick={handleOpenDialog}
-									>
-										<Plus className="h-4 w-4" />
-									</Button>
-								)}
-							</div>
+							{!mode?.includes("view") && (
+								<DropdownMenu>
+									<DropdownMenuTrigger asChild>
+										<Button type="button" variant="outline" size="sm">
+											<Plus className="h-4 w-4 mr-1" />
+											{t("salesOrders.form.labels.addPayment")}
+										</Button>
+									</DropdownMenuTrigger>
+									<DropdownMenuContent align="end">
+										<DropdownMenuItem onClick={handleOpenDialog}>
+											{t("salesOrders.form.labels.normalPayment")}
+										</DropdownMenuItem>
+										{faltaAlocar > 0 && (
+											<DropdownMenuItem onClick={handleAddFlexivelPayment}>
+												{t("salesOrders.form.paymentTypes.PARCELADO_FLEXIVEL")}
+											</DropdownMenuItem>
+										)}
+									</DropdownMenuContent>
+								</DropdownMenu>
+							)}
 						</div>
 					</CardHeader>
 					<CardContent>
 						<PagamentosTable
 							pagamentos={pagamentos}
 							formasPagamento={formasPagamento}
-							tipoVenda={tipoVenda}
 							onEdit={handleEditPayment}
 							onRemove={handleRemovePayment}
 							formatCurrency={formatCurrency}
@@ -380,7 +365,17 @@ export const Pagamento: React.FC<PagamentoProps> = ({
 							</Button>
 							<Button
 								onClick={onFinalize}
-								disabled={isSaving || isFinalizing || isSubmitting}
+								disabled={
+									isSaving ||
+									isFinalizing ||
+									isSubmitting ||
+									!totalmenteAlocado
+								}
+								title={
+									!totalmenteAlocado
+										? t("salesOrders.form.messages.completePaymentFirst")
+										: ""
+								}
 							>
 								{isFinalizing && (
 									<Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -403,13 +398,14 @@ export const Pagamento: React.FC<PagamentoProps> = ({
 				open={dialogOpen}
 				onOpenChange={setDialogOpen}
 				onSave={handleSavePayment}
-				tipoVenda={tipoVenda}
 				formasPagamento={formasPagamento}
 				editingPayment={
 					editingPaymentIndex !== null ? pagamentos[editingPaymentIndex] : null
 				}
 				locale={locale}
 				currencyCode={currencyCode}
+				faltaAlocar={faltaAlocar}
+				jaTemEntrada={jaTemEntrada}
 			/>
 		</Card>
 	);

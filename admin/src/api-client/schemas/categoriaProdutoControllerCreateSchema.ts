@@ -4,28 +4,27 @@
 */
 
 import type { CategoriaProdutoControllerCreate201, CategoriaProdutoControllerCreate400, CategoriaProdutoControllerCreate409, CategoriaProdutoControllerCreateMutationRequest, CategoriaProdutoControllerCreateMutationResponse } from "../types/CategoriaProdutoControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createCategoriaProdutoDtoSchema } from "./createCategoriaProdutoDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Categoria de produto criada com sucesso
  */
 export const categoriaProdutoControllerCreate201Schema = z.object({
-      "id": z.coerce.number().optional(),
-  "descricao": z.coerce.string().optional()
-      }) as unknown as ToZod<CategoriaProdutoControllerCreate201>
+    "id": z.optional(z.coerce.number()),
+"descricao": z.optional(z.coerce.string())
+    }) as unknown as z.ZodType<CategoriaProdutoControllerCreate201>
 
 /**
  * @description Dados de entrada inválidos
  */
-export const categoriaProdutoControllerCreate400Schema = z.unknown() as unknown as ToZod<CategoriaProdutoControllerCreate400>
+export const categoriaProdutoControllerCreate400Schema = z.unknown() as unknown as z.ZodType<CategoriaProdutoControllerCreate400>
 
 /**
  * @description Categoria com esta descrição já existe
  */
-export const categoriaProdutoControllerCreate409Schema = z.unknown() as unknown as ToZod<CategoriaProdutoControllerCreate409>
+export const categoriaProdutoControllerCreate409Schema = z.unknown() as unknown as z.ZodType<CategoriaProdutoControllerCreate409>
 
-export const categoriaProdutoControllerCreateMutationRequestSchema = z.lazy(() => createCategoriaProdutoDtoSchema) as unknown as ToZod<CategoriaProdutoControllerCreateMutationRequest>
+export const categoriaProdutoControllerCreateMutationRequestSchema = createCategoriaProdutoDtoSchema as unknown as z.ZodType<CategoriaProdutoControllerCreateMutationRequest>
 
-export const categoriaProdutoControllerCreateMutationResponseSchema = z.lazy(() => categoriaProdutoControllerCreate201Schema) as unknown as ToZod<CategoriaProdutoControllerCreateMutationResponse>
+export const categoriaProdutoControllerCreateMutationResponseSchema = categoriaProdutoControllerCreate201Schema as unknown as z.ZodType<CategoriaProdutoControllerCreateMutationResponse>

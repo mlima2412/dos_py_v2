@@ -4,26 +4,25 @@
 */
 
 import type { ProdutoSkuControllerFindByProdutoPathParams, ProdutoSkuControllerFindByProdutoHeaderParams, ProdutoSkuControllerFindByProduto200, ProdutoSkuControllerFindByProduto404, ProdutoSkuControllerFindByProdutoQueryResponse } from "../types/ProdutoSkuControllerFindByProduto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { produtoSKUSchema } from "./produtoSKUSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const produtoSkuControllerFindByProdutoPathParamsSchema = z.object({
-      "produtoPublicId": z.string().describe("ID público do produto")
-      }) as unknown as ToZod<ProdutoSkuControllerFindByProdutoPathParams>
+    "produtoPublicId": z.string().describe("ID público do produto")
+    }) as unknown as z.ZodType<ProdutoSkuControllerFindByProdutoPathParams>
 
 export const produtoSkuControllerFindByProdutoHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<ProdutoSkuControllerFindByProdutoHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<ProdutoSkuControllerFindByProdutoHeaderParams>
 
 /**
  * @description Lista de SKUs do produto
  */
-export const produtoSkuControllerFindByProduto200Schema = z.array(z.lazy(() => produtoSKUSchema)) as unknown as ToZod<ProdutoSkuControllerFindByProduto200>
+export const produtoSkuControllerFindByProduto200Schema = z.array(produtoSKUSchema) as unknown as z.ZodType<ProdutoSkuControllerFindByProduto200>
 
 /**
  * @description Produto não encontrado
  */
-export const produtoSkuControllerFindByProduto404Schema = z.unknown() as unknown as ToZod<ProdutoSkuControllerFindByProduto404>
+export const produtoSkuControllerFindByProduto404Schema = z.unknown() as unknown as z.ZodType<ProdutoSkuControllerFindByProduto404>
 
-export const produtoSkuControllerFindByProdutoQueryResponseSchema = z.lazy(() => produtoSkuControllerFindByProduto200Schema) as unknown as ToZod<ProdutoSkuControllerFindByProdutoQueryResponse>
+export const produtoSkuControllerFindByProdutoQueryResponseSchema = produtoSkuControllerFindByProduto200Schema as unknown as z.ZodType<ProdutoSkuControllerFindByProdutoQueryResponse>

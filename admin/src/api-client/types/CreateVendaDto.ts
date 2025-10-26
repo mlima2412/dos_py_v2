@@ -7,10 +7,11 @@
 export const createVendaDtoTipoEnum = {
     "DIRETA": "DIRETA",
     "CONDICIONAL": "CONDICIONAL",
-    "BRINDE": "BRINDE"
+    "BRINDE": "BRINDE",
+    "PERMUTA": "PERMUTA"
 } as const;
 
-export type CreateVendaDtoTipoEnum = (typeof createVendaDtoTipoEnum)[keyof typeof createVendaDtoTipoEnum];
+export type CreateVendaDtoTipoEnumKey = (typeof createVendaDtoTipoEnum)[keyof typeof createVendaDtoTipoEnum];
 
 export type CreateVendaDto = {
     /**
@@ -28,7 +29,7 @@ export type CreateVendaDto = {
      * @default "DIRETA"
      * @type string | undefined
     */
-    tipo?: CreateVendaDtoTipoEnum;
+    tipo?: CreateVendaDtoTipoEnumKey;
     /**
      * @description Data de entrega
      * @type string | undefined
@@ -49,6 +50,11 @@ export type CreateVendaDto = {
      * @type string | undefined
     */
     ruccnpj?: string;
+    /**
+     * @description Nome para a fatura da venda
+     * @type string | undefined
+    */
+    nomeFatura?: string;
     /**
      * @description Número da fatura
      * @type string | undefined

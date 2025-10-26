@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ProdutoSkuControllerRemoveMutationResponse, ProdutoSkuControllerRemovePathParams, ProdutoSkuControllerRemoveHeaderParams, ProdutoSkuControllerRemove404 } from "../types/ProdutoSkuControllerRemove.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const produtoSkuControllerRemoveMutationKey = () =>   [{"url":"/produto-sku/{publicId}"}] as const
+export const produtoSkuControllerRemoveMutationKey = () => [{ url: '/produto-sku/:publicId' }] as const
 
 export type ProdutoSkuControllerRemoveMutationKey = ReturnType<typeof produtoSkuControllerRemoveMutationKey>
 
@@ -18,11 +18,20 @@ export type ProdutoSkuControllerRemoveMutationKey = ReturnType<typeof produtoSku
  * {@link /produto-sku/:publicId}
  */
 export async function produtoSkuControllerRemove(publicId: ProdutoSkuControllerRemovePathParams["publicId"], headers: ProdutoSkuControllerRemoveHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ProdutoSkuControllerRemoveMutationResponse, ResponseErrorConfig<ProdutoSkuControllerRemove404>, unknown>({ method : "DELETE", url : `/produto-sku/${publicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-
-const res = await request<ProdutoSkuControllerRemoveMutationResponse, ResponseErrorConfig<ProdutoSkuControllerRemove404>, unknown>({ method : "DELETE", url : `/produto-sku/${publicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function produtoSkuControllerRemoveMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = produtoSkuControllerRemoveMutationKey()
+  return mutationOptions<ProdutoSkuControllerRemoveMutationResponse, ResponseErrorConfig<ProdutoSkuControllerRemove404>, {publicId: ProdutoSkuControllerRemovePathParams["publicId"], headers: ProdutoSkuControllerRemoveHeaderParams}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId, headers }) => {
+      return produtoSkuControllerRemove(publicId, headers, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /produto-sku/:publicId}
  */
 export function useProdutoSkuControllerRemove<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ProdutoSkuControllerRemoveMutationResponse, ResponseErrorConfig<ProdutoSkuControllerRemove404>, {publicId: ProdutoSkuControllerRemovePathParams["publicId"], headers: ProdutoSkuControllerRemoveHeaderParams}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? produtoSkuControllerRemoveMutationKey()
-  
-          return useMutation<ProdutoSkuControllerRemoveMutationResponse, ResponseErrorConfig<ProdutoSkuControllerRemove404>, {publicId: ProdutoSkuControllerRemovePathParams["publicId"], headers: ProdutoSkuControllerRemoveHeaderParams}, TContext>({
-            mutationFn: async({ publicId, headers }) => {
-              return produtoSkuControllerRemove(publicId, headers, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ProdutoSkuControllerRemoveMutationResponse, ResponseErrorConfig<ProdutoSkuControllerRemove404>, {publicId: ProdutoSkuControllerRemovePathParams["publicId"], headers: ProdutoSkuControllerRemoveHeaderParams}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? produtoSkuControllerRemoveMutationKey()
+
+  const baseOptions = produtoSkuControllerRemoveMutationOptions(config) as UseMutationOptions<ProdutoSkuControllerRemoveMutationResponse, ResponseErrorConfig<ProdutoSkuControllerRemove404>, {publicId: ProdutoSkuControllerRemovePathParams["publicId"], headers: ProdutoSkuControllerRemoveHeaderParams}, TContext>
+
+  return useMutation<ProdutoSkuControllerRemoveMutationResponse, ResponseErrorConfig<ProdutoSkuControllerRemove404>, {publicId: ProdutoSkuControllerRemovePathParams["publicId"], headers: ProdutoSkuControllerRemoveHeaderParams}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ProdutoSkuControllerRemoveMutationResponse, ResponseErrorConfig<ProdutoSkuControllerRemove404>, {publicId: ProdutoSkuControllerRemovePathParams["publicId"], headers: ProdutoSkuControllerRemoveHeaderParams}, TContext>
 }

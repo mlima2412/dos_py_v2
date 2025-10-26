@@ -4,30 +4,29 @@
 */
 
 import type { CategoriaDespesasControllerCreate201, CategoriaDespesasControllerCreate401, CategoriaDespesasControllerCreate409, CategoriaDespesasControllerCreateMutationRequest, CategoriaDespesasControllerCreateMutationResponse } from "../types/CategoriaDespesasControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createCategoriaDespesasDtoSchema } from "./createCategoriaDespesasDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Categoria de despesas criada com sucesso
  */
 export const categoriaDespesasControllerCreate201Schema = z.object({
-      "idCategoria": z.coerce.number().optional(),
-  "descricao": z.coerce.string().optional(),
-  "ativo": z.boolean().optional(),
-  "createdAt": z.coerce.string().optional()
-      }) as unknown as ToZod<CategoriaDespesasControllerCreate201>
+    "idCategoria": z.optional(z.coerce.number()),
+"descricao": z.optional(z.coerce.string()),
+"ativo": z.optional(z.boolean()),
+"createdAt": z.optional(z.coerce.string())
+    }) as unknown as z.ZodType<CategoriaDespesasControllerCreate201>
 
 /**
  * @description Não autorizado
  */
-export const categoriaDespesasControllerCreate401Schema = z.unknown() as unknown as ToZod<CategoriaDespesasControllerCreate401>
+export const categoriaDespesasControllerCreate401Schema = z.unknown() as unknown as z.ZodType<CategoriaDespesasControllerCreate401>
 
 /**
  * @description Descrição da categoria já está em uso
  */
-export const categoriaDespesasControllerCreate409Schema = z.unknown() as unknown as ToZod<CategoriaDespesasControllerCreate409>
+export const categoriaDespesasControllerCreate409Schema = z.unknown() as unknown as z.ZodType<CategoriaDespesasControllerCreate409>
 
-export const categoriaDespesasControllerCreateMutationRequestSchema = z.lazy(() => createCategoriaDespesasDtoSchema) as unknown as ToZod<CategoriaDespesasControllerCreateMutationRequest>
+export const categoriaDespesasControllerCreateMutationRequestSchema = createCategoriaDespesasDtoSchema as unknown as z.ZodType<CategoriaDespesasControllerCreateMutationRequest>
 
-export const categoriaDespesasControllerCreateMutationResponseSchema = z.lazy(() => categoriaDespesasControllerCreate201Schema) as unknown as ToZod<CategoriaDespesasControllerCreateMutationResponse>
+export const categoriaDespesasControllerCreateMutationResponseSchema = categoriaDespesasControllerCreate201Schema as unknown as z.ZodType<CategoriaDespesasControllerCreateMutationResponse>

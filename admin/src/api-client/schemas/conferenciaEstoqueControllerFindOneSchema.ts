@@ -4,26 +4,25 @@
 */
 
 import type { ConferenciaEstoqueControllerFindOnePathParams, ConferenciaEstoqueControllerFindOneHeaderParams, ConferenciaEstoqueControllerFindOne200, ConferenciaEstoqueControllerFindOne404, ConferenciaEstoqueControllerFindOneQueryResponse } from "../types/ConferenciaEstoqueControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { conferenciaEstoqueResponseDtoSchema } from "./conferenciaEstoqueResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const conferenciaEstoqueControllerFindOnePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público da conferência de estoque")
-      }) as unknown as ToZod<ConferenciaEstoqueControllerFindOnePathParams>
+    "publicId": z.string().describe("ID público da conferência de estoque")
+    }) as unknown as z.ZodType<ConferenciaEstoqueControllerFindOnePathParams>
 
 export const conferenciaEstoqueControllerFindOneHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<ConferenciaEstoqueControllerFindOneHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<ConferenciaEstoqueControllerFindOneHeaderParams>
 
 /**
  * @description Conferência de estoque encontrada
  */
-export const conferenciaEstoqueControllerFindOne200Schema = z.lazy(() => conferenciaEstoqueResponseDtoSchema) as unknown as ToZod<ConferenciaEstoqueControllerFindOne200>
+export const conferenciaEstoqueControllerFindOne200Schema = conferenciaEstoqueResponseDtoSchema as unknown as z.ZodType<ConferenciaEstoqueControllerFindOne200>
 
 /**
  * @description Conferência de estoque não encontrada
  */
-export const conferenciaEstoqueControllerFindOne404Schema = z.unknown() as unknown as ToZod<ConferenciaEstoqueControllerFindOne404>
+export const conferenciaEstoqueControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<ConferenciaEstoqueControllerFindOne404>
 
-export const conferenciaEstoqueControllerFindOneQueryResponseSchema = z.lazy(() => conferenciaEstoqueControllerFindOne200Schema) as unknown as ToZod<ConferenciaEstoqueControllerFindOneQueryResponse>
+export const conferenciaEstoqueControllerFindOneQueryResponseSchema = conferenciaEstoqueControllerFindOne200Schema as unknown as z.ZodType<ConferenciaEstoqueControllerFindOneQueryResponse>

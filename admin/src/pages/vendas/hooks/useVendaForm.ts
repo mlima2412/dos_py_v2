@@ -20,6 +20,12 @@ const vendaItemSchema = z.object({
 });
 
 const pagamentoFormSchema = z.object({
+	tipo: z.enum([
+		"A_VISTA_IMEDIATA",
+		"A_PRAZO_SEM_PARCELAS",
+		"PARCELADO",
+		"PARCELADO_FLEXIVEL",
+	] as const),
 	formaPagamentoId: z.number().positive("Forma de pagamento obrigatória"),
 	valor: z.number().min(0, "Valor deve ser maior ou igual a zero"),
 	entrada: z.boolean().default(false),
@@ -52,14 +58,13 @@ const vendaFormSchema = z.object({
 	itens: z.array(vendaItemSchema).default([]),
 	valorFrete: z.number().min(0).nullable().optional(),
 	descontoTotal: z.number().min(0).nullable().optional(),
-	tipoVenda: z
-		.enum([
-			"A_VISTA_IMEDIATA",
-			"A_PRAZO_SEM_PARCELAS",
-			"PARCELADO",
-			"PARCELADO_FLEXIVEL",
-		] as const)
-		.optional(),
+	comissao: z.number().min(0).nullable().optional(),
+	// Dados de faturamento
+	desejaFatura: z.boolean().default(false),
+	faturaEmNomeCliente: z.boolean().default(true),
+	nomeFatura: z.string().nullable().optional(),
+	ruccnpjFatura: z.string().nullable().optional(),
+	numeroFatura: z.string().nullable().optional(),
 	pagamentos: z.array(pagamentoFormSchema).default([]),
 });
 
@@ -73,7 +78,13 @@ const defaultValues: VendaFormValues = {
 	itens: [],
 	valorFrete: null,
 	descontoTotal: null,
-	tipoVenda: undefined,
+	comissao: null,
+	// Dados de faturamento
+	desejaFatura: false,
+	faturaEmNomeCliente: true,
+	nomeFatura: null,
+	ruccnpjFatura: null,
+	numeroFatura: null,
 	pagamentos: [],
 };
 
@@ -84,6 +95,7 @@ interface UseVendaFormProps {
 		resumo: VendaSummary | ((prev: VendaSummary | undefined) => VendaSummary)
 	) => void;
 	setCanAccessItems: (value: boolean) => void;
+	setCanAccessBilling: (value: boolean) => void;
 	setCanAccessReview: (value: boolean) => void;
 }
 

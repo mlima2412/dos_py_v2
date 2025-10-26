@@ -4,18 +4,17 @@
 */
 
 import type { CurrencyControllerFindAllActive200, CurrencyControllerFindAllActive401, CurrencyControllerFindAllActiveQueryResponse } from "../types/CurrencyControllerFindAllActive.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { currencySchema } from "./currencySchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Lista de moedas ativas retornada com sucesso
  */
-export const currencyControllerFindAllActive200Schema = z.array(z.lazy(() => currencySchema)) as unknown as ToZod<CurrencyControllerFindAllActive200>
+export const currencyControllerFindAllActive200Schema = z.array(currencySchema) as unknown as z.ZodType<CurrencyControllerFindAllActive200>
 
 /**
  * @description Não autorizado
  */
-export const currencyControllerFindAllActive401Schema = z.unknown() as unknown as ToZod<CurrencyControllerFindAllActive401>
+export const currencyControllerFindAllActive401Schema = z.unknown() as unknown as z.ZodType<CurrencyControllerFindAllActive401>
 
-export const currencyControllerFindAllActiveQueryResponseSchema = z.lazy(() => currencyControllerFindAllActive200Schema) as unknown as ToZod<CurrencyControllerFindAllActiveQueryResponse>
+export const currencyControllerFindAllActiveQueryResponseSchema = currencyControllerFindAllActive200Schema as unknown as z.ZodType<CurrencyControllerFindAllActiveQueryResponse>

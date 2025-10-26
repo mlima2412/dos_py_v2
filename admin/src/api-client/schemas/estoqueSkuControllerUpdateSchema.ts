@@ -4,29 +4,28 @@
 */
 
 import type { EstoqueSkuControllerUpdatePathParams, EstoqueSkuControllerUpdate200, EstoqueSkuControllerUpdate404, EstoqueSkuControllerUpdateMutationRequest, EstoqueSkuControllerUpdateMutationResponse } from "../types/EstoqueSkuControllerUpdate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { estoqueSkuSchema } from "./estoqueSkuSchema.ts";
 import { updateEstoqueSkuDtoSchema } from "./updateEstoqueSkuDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const estoqueSkuControllerUpdatePathParamsSchema = z.object({
-      "localId": z.coerce.number().describe("ID do local de estoque"),
-  "skuId": z.coerce.number().describe("ID do SKU")
-      }) as unknown as ToZod<EstoqueSkuControllerUpdatePathParams>
+    "localId": z.coerce.number().describe("ID do local de estoque"),
+"skuId": z.coerce.number().describe("ID do SKU")
+    }) as unknown as z.ZodType<EstoqueSkuControllerUpdatePathParams>
 
 /**
  * @description Estoque atualizado com sucesso
  */
-export const estoqueSkuControllerUpdate200Schema = z.lazy(() => estoqueSkuSchema) as unknown as ToZod<EstoqueSkuControllerUpdate200>
+export const estoqueSkuControllerUpdate200Schema = estoqueSkuSchema as unknown as z.ZodType<EstoqueSkuControllerUpdate200>
 
 /**
  * @description Registro de estoque não encontrado
  */
-export const estoqueSkuControllerUpdate404Schema = z.unknown() as unknown as ToZod<EstoqueSkuControllerUpdate404>
+export const estoqueSkuControllerUpdate404Schema = z.unknown() as unknown as z.ZodType<EstoqueSkuControllerUpdate404>
 
 /**
  * @description Dados para atualização do estoque
  */
-export const estoqueSkuControllerUpdateMutationRequestSchema = z.lazy(() => updateEstoqueSkuDtoSchema) as unknown as ToZod<EstoqueSkuControllerUpdateMutationRequest>
+export const estoqueSkuControllerUpdateMutationRequestSchema = updateEstoqueSkuDtoSchema as unknown as z.ZodType<EstoqueSkuControllerUpdateMutationRequest>
 
-export const estoqueSkuControllerUpdateMutationResponseSchema = z.lazy(() => estoqueSkuControllerUpdate200Schema) as unknown as ToZod<EstoqueSkuControllerUpdateMutationResponse>
+export const estoqueSkuControllerUpdateMutationResponseSchema = estoqueSkuControllerUpdate200Schema as unknown as z.ZodType<EstoqueSkuControllerUpdateMutationResponse>

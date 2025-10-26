@@ -4,32 +4,31 @@
 */
 
 import type { PerfisControllerCreate201, PerfisControllerCreate400, PerfisControllerCreate409, PerfisControllerCreateMutationRequest, PerfisControllerCreateMutationResponse } from "../types/PerfisControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createPerfilDtoSchema } from "./createPerfilDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Perfil criado com sucesso
  */
 export const perfisControllerCreate201Schema = z.object({
-      "id": z.coerce.number().optional(),
-  "nome": z.coerce.string().optional(),
-  "descricao": z.coerce.string().optional(),
-  "ativo": z.boolean().optional(),
-  "createdAt": z.string().datetime().optional(),
-  "updatedAt": z.string().datetime().optional()
-      }) as unknown as ToZod<PerfisControllerCreate201>
+    "id": z.optional(z.coerce.number()),
+"nome": z.optional(z.coerce.string()),
+"descricao": z.optional(z.coerce.string()),
+"ativo": z.optional(z.boolean()),
+"createdAt": z.optional(z.string().datetime()),
+"updatedAt": z.optional(z.string().datetime())
+    }) as unknown as z.ZodType<PerfisControllerCreate201>
 
 /**
  * @description Dados de entrada inválidos
  */
-export const perfisControllerCreate400Schema = z.unknown() as unknown as ToZod<PerfisControllerCreate400>
+export const perfisControllerCreate400Schema = z.unknown() as unknown as z.ZodType<PerfisControllerCreate400>
 
 /**
  * @description Perfil com este nome já existe
  */
-export const perfisControllerCreate409Schema = z.unknown() as unknown as ToZod<PerfisControllerCreate409>
+export const perfisControllerCreate409Schema = z.unknown() as unknown as z.ZodType<PerfisControllerCreate409>
 
-export const perfisControllerCreateMutationRequestSchema = z.lazy(() => createPerfilDtoSchema) as unknown as ToZod<PerfisControllerCreateMutationRequest>
+export const perfisControllerCreateMutationRequestSchema = createPerfilDtoSchema as unknown as z.ZodType<PerfisControllerCreateMutationRequest>
 
-export const perfisControllerCreateMutationResponseSchema = z.lazy(() => perfisControllerCreate201Schema) as unknown as ToZod<PerfisControllerCreateMutationResponse>
+export const perfisControllerCreateMutationResponseSchema = perfisControllerCreate201Schema as unknown as z.ZodType<PerfisControllerCreateMutationResponse>

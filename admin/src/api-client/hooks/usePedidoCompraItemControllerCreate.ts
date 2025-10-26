@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { PedidoCompraItemControllerCreateMutationRequest, PedidoCompraItemControllerCreateMutationResponse, PedidoCompraItemControllerCreateHeaderParams, PedidoCompraItemControllerCreate400, PedidoCompraItemControllerCreate404, PedidoCompraItemControllerCreate409 } from "../types/PedidoCompraItemControllerCreate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const pedidoCompraItemControllerCreateMutationKey = () =>   [{"url":"/pedido-compra-item"}] as const
+export const pedidoCompraItemControllerCreateMutationKey = () => [{ url: '/pedido-compra-item' }] as const
 
 export type PedidoCompraItemControllerCreateMutationKey = ReturnType<typeof pedidoCompraItemControllerCreateMutationKey>
 
@@ -18,11 +18,22 @@ export type PedidoCompraItemControllerCreateMutationKey = ReturnType<typeof pedi
  * {@link /pedido-compra-item}
  */
 export async function pedidoCompraItemControllerCreate(data: PedidoCompraItemControllerCreateMutationRequest, headers: PedidoCompraItemControllerCreateHeaderParams, config: Partial<RequestConfig<PedidoCompraItemControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<PedidoCompraItemControllerCreateMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerCreate400 | PedidoCompraItemControllerCreate404 | PedidoCompraItemControllerCreate409>, PedidoCompraItemControllerCreateMutationRequest>({ method : "POST", url : `/pedido-compra-item`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<PedidoCompraItemControllerCreateMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerCreate400 | PedidoCompraItemControllerCreate404 | PedidoCompraItemControllerCreate409>, PedidoCompraItemControllerCreateMutationRequest>({ method : "POST", url : `/pedido-compra-item`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function pedidoCompraItemControllerCreateMutationOptions(config: Partial<RequestConfig<PedidoCompraItemControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = pedidoCompraItemControllerCreateMutationKey()
+  return mutationOptions<PedidoCompraItemControllerCreateMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerCreate400 | PedidoCompraItemControllerCreate404 | PedidoCompraItemControllerCreate409>, {data: PedidoCompraItemControllerCreateMutationRequest, headers: PedidoCompraItemControllerCreateHeaderParams}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data, headers }) => {
+      return pedidoCompraItemControllerCreate(data, headers, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /pedido-compra-item}
  */
 export function usePedidoCompraItemControllerCreate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<PedidoCompraItemControllerCreateMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerCreate400 | PedidoCompraItemControllerCreate404 | PedidoCompraItemControllerCreate409>, {data: PedidoCompraItemControllerCreateMutationRequest, headers: PedidoCompraItemControllerCreateHeaderParams}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<PedidoCompraItemControllerCreateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? pedidoCompraItemControllerCreateMutationKey()
-  
-          return useMutation<PedidoCompraItemControllerCreateMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerCreate400 | PedidoCompraItemControllerCreate404 | PedidoCompraItemControllerCreate409>, {data: PedidoCompraItemControllerCreateMutationRequest, headers: PedidoCompraItemControllerCreateHeaderParams}, TContext>({
-            mutationFn: async({ data, headers }) => {
-              return pedidoCompraItemControllerCreate(data, headers, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<PedidoCompraItemControllerCreateMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerCreate400 | PedidoCompraItemControllerCreate404 | PedidoCompraItemControllerCreate409>, {data: PedidoCompraItemControllerCreateMutationRequest, headers: PedidoCompraItemControllerCreateHeaderParams}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<PedidoCompraItemControllerCreateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? pedidoCompraItemControllerCreateMutationKey()
+
+  const baseOptions = pedidoCompraItemControllerCreateMutationOptions(config) as UseMutationOptions<PedidoCompraItemControllerCreateMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerCreate400 | PedidoCompraItemControllerCreate404 | PedidoCompraItemControllerCreate409>, {data: PedidoCompraItemControllerCreateMutationRequest, headers: PedidoCompraItemControllerCreateHeaderParams}, TContext>
+
+  return useMutation<PedidoCompraItemControllerCreateMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerCreate400 | PedidoCompraItemControllerCreate404 | PedidoCompraItemControllerCreate409>, {data: PedidoCompraItemControllerCreateMutationRequest, headers: PedidoCompraItemControllerCreateHeaderParams}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<PedidoCompraItemControllerCreateMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerCreate400 | PedidoCompraItemControllerCreate404 | PedidoCompraItemControllerCreate409>, {data: PedidoCompraItemControllerCreateMutationRequest, headers: PedidoCompraItemControllerCreateHeaderParams}, TContext>
 }

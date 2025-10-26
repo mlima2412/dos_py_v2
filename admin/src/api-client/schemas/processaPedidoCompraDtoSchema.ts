@@ -4,14 +4,13 @@
 */
 
 import type { ProcessaPedidoCompraDto } from "../types/ProcessaPedidoCompraDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const processaPedidoCompraDtoSchema = z.object({
-      "publicId": z.coerce.string().describe("ID público do pedido de compra"),
-  "paymentType": z.enum(["A_VISTA_IMEDIATA", "A_PRAZO_SEM_PARCELAS", "PARCELADO"]).describe("Tipo de pagamento do pedido"),
-  "dueDate": z.coerce.string().describe("Data de vencimento (obrigatório para A_PRAZO_SEM_PARCELAS)").optional(),
-  "entryValue": z.coerce.number().default(0).describe("Valor de entrada (obrigatório para PARCELADO)"),
-  "installments": z.coerce.number().default(1).describe("Número de parcelas"),
-  "firstInstallmentDate": z.coerce.string().describe("Data da primeira parcela (obrigatório para PARCELADO)").optional()
-      }) as unknown as ToZod<ProcessaPedidoCompraDto>
+    "publicId": z.coerce.string().describe("ID público do pedido de compra"),
+"paymentType": z.enum(["A_VISTA_IMEDIATA", "A_PRAZO_SEM_PARCELAS", "PARCELADO"]).describe("Tipo de pagamento do pedido"),
+"dueDate": z.optional(z.coerce.string().describe("Data de vencimento (obrigatório para A_PRAZO_SEM_PARCELAS)")),
+"entryValue": z.optional(z.coerce.number().default(0).describe("Valor de entrada (obrigatório para PARCELADO)")),
+"installments": z.coerce.number().default(1).describe("Número de parcelas"),
+"firstInstallmentDate": z.optional(z.coerce.string().describe("Data da primeira parcela (obrigatório para PARCELADO)"))
+    }) as unknown as z.ZodType<ProcessaPedidoCompraDto>

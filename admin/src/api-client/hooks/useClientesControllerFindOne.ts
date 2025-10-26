@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const clientesControllerFindOneQueryKey = (publicId: ClientesControllerFindOnePathParams["publicId"]) =>   [{ url: '/clientes/:publicId', params: {publicId:publicId} }] as const
+export const clientesControllerFindOneQueryKey = (publicId: ClientesControllerFindOnePathParams["publicId"]) => [{ url: '/clientes/:publicId', params: {publicId:publicId} }] as const
 
 export type ClientesControllerFindOneQueryKey = ReturnType<typeof clientesControllerFindOneQueryKey>
 
@@ -18,25 +18,22 @@ export type ClientesControllerFindOneQueryKey = ReturnType<typeof clientesContro
  * {@link /clientes/:publicId}
  */
 export async function clientesControllerFindOne(publicId: ClientesControllerFindOnePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ClientesControllerFindOneQueryResponse, ResponseErrorConfig<ClientesControllerFindOne404>, unknown>({ method : "GET", url : `/clientes/${publicId}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ClientesControllerFindOneQueryResponse, ResponseErrorConfig<ClientesControllerFindOne404>, unknown>({ method : "GET", url : `/clientes/${publicId}`, ... requestConfig })  
+  return res.data
 }
 
 export function clientesControllerFindOneQueryOptions(publicId: ClientesControllerFindOnePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = clientesControllerFindOneQueryKey(publicId)
-        return queryOptions<ClientesControllerFindOneQueryResponse, ResponseErrorConfig<ClientesControllerFindOne404>, ClientesControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(publicId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return clientesControllerFindOne(publicId, config)
-         },
-        })
-  
+  const queryKey = clientesControllerFindOneQueryKey(publicId)
+  return queryOptions<ClientesControllerFindOneQueryResponse, ResponseErrorConfig<ClientesControllerFindOne404>, ClientesControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(publicId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return clientesControllerFindOne(publicId, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function clientesControllerFindOneQueryOptions(publicId: ClientesControll
  * {@link /clientes/:publicId}
  */
 export function useClientesControllerFindOne<TData = ClientesControllerFindOneQueryResponse, TQueryData = ClientesControllerFindOneQueryResponse, TQueryKey extends QueryKey = ClientesControllerFindOneQueryKey>(publicId: ClientesControllerFindOnePathParams["publicId"], options: 
-  {
-    query?: Partial<QueryObserverOptions<ClientesControllerFindOneQueryResponse, ResponseErrorConfig<ClientesControllerFindOne404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? clientesControllerFindOneQueryKey(publicId)
-  
-         const query = useQuery({
-          ...clientesControllerFindOneQueryOptions(publicId, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<ClientesControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<ClientesControllerFindOneQueryResponse, ResponseErrorConfig<ClientesControllerFindOne404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? clientesControllerFindOneQueryKey(publicId)
+
+  const query = useQuery({
+   ...clientesControllerFindOneQueryOptions(publicId, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<ClientesControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

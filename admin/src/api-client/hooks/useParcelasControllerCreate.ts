@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ParcelasControllerCreateMutationRequest, ParcelasControllerCreateMutationResponse } from "../types/ParcelasControllerCreate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const parcelasControllerCreateMutationKey = () =>   [{"url":"/parcelas"}] as const
+export const parcelasControllerCreateMutationKey = () => [{ url: '/parcelas' }] as const
 
 export type ParcelasControllerCreateMutationKey = ReturnType<typeof parcelasControllerCreateMutationKey>
 
@@ -18,11 +18,22 @@ export type ParcelasControllerCreateMutationKey = ReturnType<typeof parcelasCont
  * {@link /parcelas}
  */
 export async function parcelasControllerCreate(data: ParcelasControllerCreateMutationRequest, config: Partial<RequestConfig<ParcelasControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<ParcelasControllerCreateMutationResponse, ResponseErrorConfig<Error>, ParcelasControllerCreateMutationRequest>({ method : "POST", url : `/parcelas`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<ParcelasControllerCreateMutationResponse, ResponseErrorConfig<Error>, ParcelasControllerCreateMutationRequest>({ method : "POST", url : `/parcelas`, data : requestData, ... requestConfig })
-return res.data
+export function parcelasControllerCreateMutationOptions(config: Partial<RequestConfig<ParcelasControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = parcelasControllerCreateMutationKey()
+  return mutationOptions<ParcelasControllerCreateMutationResponse, ResponseErrorConfig<Error>, {data: ParcelasControllerCreateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data }) => {
+      return parcelasControllerCreate(data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /parcelas}
  */
 export function useParcelasControllerCreate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ParcelasControllerCreateMutationResponse, ResponseErrorConfig<Error>, {data: ParcelasControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<ParcelasControllerCreateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? parcelasControllerCreateMutationKey()
-  
-          return useMutation<ParcelasControllerCreateMutationResponse, ResponseErrorConfig<Error>, {data: ParcelasControllerCreateMutationRequest}, TContext>({
-            mutationFn: async({ data }) => {
-              return parcelasControllerCreate(data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ParcelasControllerCreateMutationResponse, ResponseErrorConfig<Error>, {data: ParcelasControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<ParcelasControllerCreateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? parcelasControllerCreateMutationKey()
+
+  const baseOptions = parcelasControllerCreateMutationOptions(config) as UseMutationOptions<ParcelasControllerCreateMutationResponse, ResponseErrorConfig<Error>, {data: ParcelasControllerCreateMutationRequest}, TContext>
+
+  return useMutation<ParcelasControllerCreateMutationResponse, ResponseErrorConfig<Error>, {data: ParcelasControllerCreateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ParcelasControllerCreateMutationResponse, ResponseErrorConfig<Error>, {data: ParcelasControllerCreateMutationRequest}, TContext>
 }

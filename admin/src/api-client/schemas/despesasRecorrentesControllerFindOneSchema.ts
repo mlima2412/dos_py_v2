@@ -4,27 +4,26 @@
 */
 
 import type { DespesasRecorrentesControllerFindOnePathParams, DespesasRecorrentesControllerFindOne200, DespesasRecorrentesControllerFindOne401, DespesasRecorrentesControllerFindOne404, DespesasRecorrentesControllerFindOneQueryResponse } from "../types/DespesasRecorrentesControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { despesaRecorrenteSchema } from "./despesaRecorrenteSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const despesasRecorrentesControllerFindOnePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público da despesa recorrente")
-      }) as unknown as ToZod<DespesasRecorrentesControllerFindOnePathParams>
+    "publicId": z.string().describe("ID público da despesa recorrente")
+    }) as unknown as z.ZodType<DespesasRecorrentesControllerFindOnePathParams>
 
 /**
  * @description Despesa recorrente encontrada
  */
-export const despesasRecorrentesControllerFindOne200Schema = z.lazy(() => despesaRecorrenteSchema) as unknown as ToZod<DespesasRecorrentesControllerFindOne200>
+export const despesasRecorrentesControllerFindOne200Schema = despesaRecorrenteSchema as unknown as z.ZodType<DespesasRecorrentesControllerFindOne200>
 
 /**
  * @description Não autorizado
  */
-export const despesasRecorrentesControllerFindOne401Schema = z.unknown() as unknown as ToZod<DespesasRecorrentesControllerFindOne401>
+export const despesasRecorrentesControllerFindOne401Schema = z.unknown() as unknown as z.ZodType<DespesasRecorrentesControllerFindOne401>
 
 /**
  * @description Despesa recorrente não encontrada
  */
-export const despesasRecorrentesControllerFindOne404Schema = z.unknown() as unknown as ToZod<DespesasRecorrentesControllerFindOne404>
+export const despesasRecorrentesControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<DespesasRecorrentesControllerFindOne404>
 
-export const despesasRecorrentesControllerFindOneQueryResponseSchema = z.lazy(() => despesasRecorrentesControllerFindOne200Schema) as unknown as ToZod<DespesasRecorrentesControllerFindOneQueryResponse>
+export const despesasRecorrentesControllerFindOneQueryResponseSchema = despesasRecorrentesControllerFindOne200Schema as unknown as z.ZodType<DespesasRecorrentesControllerFindOneQueryResponse>

@@ -8,10 +8,11 @@ import type { VendaItemEntity } from "./VendaItemEntity.ts";
 export const vendaTipoEnum = {
     "DIRETA": "DIRETA",
     "CONDICIONAL": "CONDICIONAL",
-    "BRINDE": "BRINDE"
+    "BRINDE": "BRINDE",
+    "PERMUTA": "PERMUTA"
 } as const;
 
-export type VendaTipoEnum = (typeof vendaTipoEnum)[keyof typeof vendaTipoEnum];
+export type VendaTipoEnumKey = (typeof vendaTipoEnum)[keyof typeof vendaTipoEnum];
 
 export const vendaStatusEnum = {
     "PEDIDO": "PEDIDO",
@@ -22,7 +23,7 @@ export const vendaStatusEnum = {
     "CANCELADA": "CANCELADA"
 } as const;
 
-export type VendaStatusEnum = (typeof vendaStatusEnum)[keyof typeof vendaStatusEnum];
+export type VendaStatusEnumKey = (typeof vendaStatusEnum)[keyof typeof vendaStatusEnum];
 
 export type Venda = {
     /**
@@ -59,12 +60,12 @@ export type Venda = {
      * @description Tipo da venda
      * @type string
     */
-    tipo: VendaTipoEnum;
+    tipo: VendaTipoEnumKey;
     /**
      * @description Status da venda
      * @type string
     */
-    status: VendaStatusEnum;
+    status: VendaStatusEnumKey;
     /**
      * @description Data da venda
      * @type string, date-time
@@ -86,10 +87,20 @@ export type Venda = {
     */
     desconto?: number;
     /**
+     * @description Valor total da venda
+     * @type number | undefined
+    */
+    valorTotal?: number;
+    /**
      * @description RUC/CNPJ da fatura da venda
      * @type string | undefined
     */
     ruccnpj?: string;
+    /**
+     * @description Nome para a fatura da venda
+     * @type string | undefined
+    */
+    nomeFatura?: string;
     /**
      * @description Número da fatura
      * @type string | undefined

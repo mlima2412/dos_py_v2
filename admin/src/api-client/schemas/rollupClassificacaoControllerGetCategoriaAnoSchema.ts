@@ -4,14 +4,13 @@
 */
 
 import type { RollupClassificacaoControllerGetCategoriaAnoQueryParams, RollupClassificacaoControllerGetCategoriaAno200, RollupClassificacaoControllerGetCategoriaAnoQueryResponse } from "../types/RollupClassificacaoControllerGetCategoriaAno.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const rollupClassificacaoControllerGetCategoriaAnoQueryParamsSchema = z.object({
-      "parceiroId": z.string(),
-  "yyyy": z.string()
-      }) as unknown as ToZod<RollupClassificacaoControllerGetCategoriaAnoQueryParams>
+    "parceiroId": z.string(),
+"yyyy": z.string()
+    }) as unknown as z.ZodType<RollupClassificacaoControllerGetCategoriaAnoQueryParams>
 
-export const rollupClassificacaoControllerGetCategoriaAno200Schema = z.unknown() as unknown as ToZod<RollupClassificacaoControllerGetCategoriaAno200>
+export const rollupClassificacaoControllerGetCategoriaAno200Schema = z.unknown() as unknown as z.ZodType<RollupClassificacaoControllerGetCategoriaAno200>
 
-export const rollupClassificacaoControllerGetCategoriaAnoQueryResponseSchema = z.lazy(() => rollupClassificacaoControllerGetCategoriaAno200Schema) as unknown as ToZod<RollupClassificacaoControllerGetCategoriaAnoQueryResponse>
+export const rollupClassificacaoControllerGetCategoriaAnoQueryResponseSchema = rollupClassificacaoControllerGetCategoriaAno200Schema as unknown as z.ZodType<RollupClassificacaoControllerGetCategoriaAnoQueryResponse>

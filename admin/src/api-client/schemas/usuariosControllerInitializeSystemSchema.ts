@@ -4,12 +4,11 @@
 */
 
 import type { UsuariosControllerInitializeSystem201, UsuariosControllerInitializeSystemMutationResponse } from "../types/UsuariosControllerInitializeSystem.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Sistema inicializado com sucesso
  */
-export const usuariosControllerInitializeSystem201Schema = z.unknown() as unknown as ToZod<UsuariosControllerInitializeSystem201>
+export const usuariosControllerInitializeSystem201Schema = z.unknown() as unknown as z.ZodType<UsuariosControllerInitializeSystem201>
 
-export const usuariosControllerInitializeSystemMutationResponseSchema = z.lazy(() => usuariosControllerInitializeSystem201Schema) as unknown as ToZod<UsuariosControllerInitializeSystemMutationResponse>
+export const usuariosControllerInitializeSystemMutationResponseSchema = usuariosControllerInitializeSystem201Schema as unknown as z.ZodType<UsuariosControllerInitializeSystemMutationResponse>

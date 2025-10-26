@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const subCategoriaDespesaControllerFindOneSuspenseQueryKey = (id: SubCategoriaDespesaControllerFindOnePathParams["id"]) =>   [{ url: '/subcategoria-despesa/:id', params: {id:id} }] as const
+export const subCategoriaDespesaControllerFindOneSuspenseQueryKey = (id: SubCategoriaDespesaControllerFindOnePathParams["id"]) => [{ url: '/subcategoria-despesa/:id', params: {id:id} }] as const
 
 export type SubCategoriaDespesaControllerFindOneSuspenseQueryKey = ReturnType<typeof subCategoriaDespesaControllerFindOneSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type SubCategoriaDespesaControllerFindOneSuspenseQueryKey = ReturnType<ty
  * {@link /subcategoria-despesa/:id}
  */
 export async function subCategoriaDespesaControllerFindOneSuspense(id: SubCategoriaDespesaControllerFindOnePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<SubCategoriaDespesaControllerFindOneQueryResponse, ResponseErrorConfig<SubCategoriaDespesaControllerFindOne401 | SubCategoriaDespesaControllerFindOne404>, unknown>({ method : "GET", url : `/subcategoria-despesa/${id}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<SubCategoriaDespesaControllerFindOneQueryResponse, ResponseErrorConfig<SubCategoriaDespesaControllerFindOne401 | SubCategoriaDespesaControllerFindOne404>, unknown>({ method : "GET", url : `/subcategoria-despesa/${id}`, ... requestConfig })  
+  return res.data
 }
 
 export function subCategoriaDespesaControllerFindOneSuspenseQueryOptions(id: SubCategoriaDespesaControllerFindOnePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = subCategoriaDespesaControllerFindOneSuspenseQueryKey(id)
-        return queryOptions<SubCategoriaDespesaControllerFindOneQueryResponse, ResponseErrorConfig<SubCategoriaDespesaControllerFindOne401 | SubCategoriaDespesaControllerFindOne404>, SubCategoriaDespesaControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(id),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return subCategoriaDespesaControllerFindOneSuspense(id, config)
-         },
-        })
-  
+  const queryKey = subCategoriaDespesaControllerFindOneSuspenseQueryKey(id)
+  return queryOptions<SubCategoriaDespesaControllerFindOneQueryResponse, ResponseErrorConfig<SubCategoriaDespesaControllerFindOne401 | SubCategoriaDespesaControllerFindOne404>, SubCategoriaDespesaControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(id),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return subCategoriaDespesaControllerFindOneSuspense(id, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function subCategoriaDespesaControllerFindOneSuspenseQueryOptions(id: Sub
  * {@link /subcategoria-despesa/:id}
  */
 export function useSubCategoriaDespesaControllerFindOneSuspense<TData = SubCategoriaDespesaControllerFindOneQueryResponse, TQueryKey extends QueryKey = SubCategoriaDespesaControllerFindOneSuspenseQueryKey>(id: SubCategoriaDespesaControllerFindOnePathParams["id"], options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<SubCategoriaDespesaControllerFindOneQueryResponse, ResponseErrorConfig<SubCategoriaDespesaControllerFindOne401 | SubCategoriaDespesaControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? subCategoriaDespesaControllerFindOneSuspenseQueryKey(id)
-  
-         const query = useSuspenseQuery({
-          ...subCategoriaDespesaControllerFindOneSuspenseQueryOptions(id, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<SubCategoriaDespesaControllerFindOne401 | SubCategoriaDespesaControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<SubCategoriaDespesaControllerFindOneQueryResponse, ResponseErrorConfig<SubCategoriaDespesaControllerFindOne401 | SubCategoriaDespesaControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? subCategoriaDespesaControllerFindOneSuspenseQueryKey(id)
+
+  const query = useSuspenseQuery({
+   ...subCategoriaDespesaControllerFindOneSuspenseQueryOptions(id, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<SubCategoriaDespesaControllerFindOne401 | SubCategoriaDespesaControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

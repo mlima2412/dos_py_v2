@@ -4,25 +4,24 @@
 */
 
 import type { VendaControllerCreateHeaderParams, VendaControllerCreate201, VendaControllerCreate400, VendaControllerCreateMutationRequest, VendaControllerCreateMutationResponse } from "../types/VendaControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createVendaDtoSchema } from "./createVendaDtoSchema.ts";
 import { vendaSchema } from "./vendaSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const vendaControllerCreateHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<VendaControllerCreateHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<VendaControllerCreateHeaderParams>
 
 /**
  * @description Venda criada com sucesso
  */
-export const vendaControllerCreate201Schema = z.lazy(() => vendaSchema) as unknown as ToZod<VendaControllerCreate201>
+export const vendaControllerCreate201Schema = vendaSchema as unknown as z.ZodType<VendaControllerCreate201>
 
 /**
  * @description Parâmetros inválidos
  */
-export const vendaControllerCreate400Schema = z.unknown() as unknown as ToZod<VendaControllerCreate400>
+export const vendaControllerCreate400Schema = z.unknown() as unknown as z.ZodType<VendaControllerCreate400>
 
-export const vendaControllerCreateMutationRequestSchema = z.lazy(() => createVendaDtoSchema) as unknown as ToZod<VendaControllerCreateMutationRequest>
+export const vendaControllerCreateMutationRequestSchema = createVendaDtoSchema as unknown as z.ZodType<VendaControllerCreateMutationRequest>
 
-export const vendaControllerCreateMutationResponseSchema = z.lazy(() => vendaControllerCreate201Schema) as unknown as ToZod<VendaControllerCreateMutationResponse>
+export const vendaControllerCreateMutationResponseSchema = vendaControllerCreate201Schema as unknown as z.ZodType<VendaControllerCreateMutationResponse>

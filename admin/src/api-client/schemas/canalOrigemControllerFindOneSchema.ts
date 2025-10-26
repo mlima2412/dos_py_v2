@@ -4,22 +4,21 @@
 */
 
 import type { CanalOrigemControllerFindOnePathParams, CanalOrigemControllerFindOne200, CanalOrigemControllerFindOne404, CanalOrigemControllerFindOneQueryResponse } from "../types/CanalOrigemControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { canalOrigemSchema } from "./canalOrigemSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const canalOrigemControllerFindOnePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do canal de origem")
-      }) as unknown as ToZod<CanalOrigemControllerFindOnePathParams>
+    "publicId": z.string().describe("ID público do canal de origem")
+    }) as unknown as z.ZodType<CanalOrigemControllerFindOnePathParams>
 
 /**
  * @description Canal de origem encontrado
  */
-export const canalOrigemControllerFindOne200Schema = z.lazy(() => canalOrigemSchema) as unknown as ToZod<CanalOrigemControllerFindOne200>
+export const canalOrigemControllerFindOne200Schema = canalOrigemSchema as unknown as z.ZodType<CanalOrigemControllerFindOne200>
 
 /**
  * @description Canal de origem não encontrado
  */
-export const canalOrigemControllerFindOne404Schema = z.unknown() as unknown as ToZod<CanalOrigemControllerFindOne404>
+export const canalOrigemControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<CanalOrigemControllerFindOne404>
 
-export const canalOrigemControllerFindOneQueryResponseSchema = z.lazy(() => canalOrigemControllerFindOne200Schema) as unknown as ToZod<CanalOrigemControllerFindOneQueryResponse>
+export const canalOrigemControllerFindOneQueryResponseSchema = canalOrigemControllerFindOne200Schema as unknown as z.ZodType<CanalOrigemControllerFindOneQueryResponse>

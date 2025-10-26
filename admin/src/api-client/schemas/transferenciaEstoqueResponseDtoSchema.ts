@@ -4,24 +4,35 @@
 */
 
 import type { TransferenciaEstoqueResponseDto } from "../types/TransferenciaEstoqueResponseDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { localEstoqueResponseDtoSchema } from "./localEstoqueResponseDtoSchema.ts";
 import { parceiroResponseDtoSchema } from "./parceiroResponseDtoSchema.ts";
 import { transferenciaEstoqueItemResponseDtoSchema } from "./transferenciaEstoqueItemResponseDtoSchema.ts";
 import { usuarioResponseDtoSchema } from "./usuarioResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const transferenciaEstoqueResponseDtoSchema = z.object({
-      "id": z.coerce.number().describe("ID da transferência"),
-  "publicId": z.coerce.string().describe("Public ID da transferência"),
-  "qtd": z.coerce.number().describe("Quantidade total de itens transferidos"),
-  "valorTotal": z.coerce.number().describe("Valor total da transferência"),
-  "dataTransferencia": z.string().datetime().describe("Data da transferência"),
-  "dataRecebimento": z.string().datetime().describe("Data do recebimento").optional(),
-  "parceiro": z.lazy(() => parceiroResponseDtoSchema).describe("Parceiro responsável pela transferência"),
-  "localOrigem": z.lazy(() => localEstoqueResponseDtoSchema).describe("Local de origem"),
-  "localDestino": z.lazy(() => localEstoqueResponseDtoSchema).describe("Local de destino"),
-  "enviadoPorUsuario": z.lazy(() => usuarioResponseDtoSchema).describe("Usuário que enviou"),
-  "recebidoPorUsuario": z.lazy(() => usuarioResponseDtoSchema).describe("Usuário que recebeu").optional(),
-  "TransferenciaEstoqueItem": z.array(z.lazy(() => transferenciaEstoqueItemResponseDtoSchema)).describe("Itens da transferência")
-      }) as unknown as ToZod<TransferenciaEstoqueResponseDto>
+    "id": z.coerce.number().describe("ID da transferência"),
+"publicId": z.coerce.string().describe("Public ID da transferência"),
+"qtd": z.coerce.number().describe("Quantidade total de itens transferidos"),
+"valorTotal": z.coerce.number().describe("Valor total da transferência"),
+"dataTransferencia": z.string().datetime().describe("Data da transferência"),
+"dataRecebimento": z.optional(z.string().datetime().describe("Data do recebimento")),
+get "parceiro"(){
+                return parceiroResponseDtoSchema.describe("Parceiro responsável pela transferência")
+              },
+get "localOrigem"(){
+                return localEstoqueResponseDtoSchema.describe("Local de origem")
+              },
+get "localDestino"(){
+                return localEstoqueResponseDtoSchema.describe("Local de destino")
+              },
+get "enviadoPorUsuario"(){
+                return usuarioResponseDtoSchema.describe("Usuário que enviou")
+              },
+get "recebidoPorUsuario"(){
+                return z.optional(usuarioResponseDtoSchema.describe("Usuário que recebeu"))
+              },
+get "TransferenciaEstoqueItem"(){
+                return z.array(transferenciaEstoqueItemResponseDtoSchema).describe("Itens da transferência")
+              }
+    }) as unknown as z.ZodType<TransferenciaEstoqueResponseDto>

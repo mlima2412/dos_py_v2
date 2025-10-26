@@ -4,25 +4,24 @@
 */
 
 import type { ProdutoSkuControllerRemovePathParams, ProdutoSkuControllerRemoveHeaderParams, ProdutoSkuControllerRemove204, ProdutoSkuControllerRemove404, ProdutoSkuControllerRemoveMutationResponse } from "../types/ProdutoSkuControllerRemove.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const produtoSkuControllerRemovePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do SKU")
-      }) as unknown as ToZod<ProdutoSkuControllerRemovePathParams>
+    "publicId": z.string().describe("ID público do SKU")
+    }) as unknown as z.ZodType<ProdutoSkuControllerRemovePathParams>
 
 export const produtoSkuControllerRemoveHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<ProdutoSkuControllerRemoveHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<ProdutoSkuControllerRemoveHeaderParams>
 
 /**
  * @description SKU do produto removido com sucesso
  */
-export const produtoSkuControllerRemove204Schema = z.unknown() as unknown as ToZod<ProdutoSkuControllerRemove204>
+export const produtoSkuControllerRemove204Schema = z.unknown() as unknown as z.ZodType<ProdutoSkuControllerRemove204>
 
 /**
  * @description SKU do produto não encontrado
  */
-export const produtoSkuControllerRemove404Schema = z.unknown() as unknown as ToZod<ProdutoSkuControllerRemove404>
+export const produtoSkuControllerRemove404Schema = z.unknown() as unknown as z.ZodType<ProdutoSkuControllerRemove404>
 
-export const produtoSkuControllerRemoveMutationResponseSchema = z.lazy(() => produtoSkuControllerRemove204Schema) as unknown as ToZod<ProdutoSkuControllerRemoveMutationResponse>
+export const produtoSkuControllerRemoveMutationResponseSchema = produtoSkuControllerRemove204Schema as unknown as z.ZodType<ProdutoSkuControllerRemoveMutationResponse>

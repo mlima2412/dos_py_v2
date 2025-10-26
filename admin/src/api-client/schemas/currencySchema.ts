@@ -4,18 +4,17 @@
 */
 
 import type { Currency } from "../types/Currency.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const currencySchema = z.object({
-      "id": z.coerce.number().describe("ID único da moeda"),
-  "publicId": z.coerce.string().describe("ID público da moeda"),
-  "nome": z.coerce.string().describe("Nome da moeda"),
-  "prefixo": z.coerce.string().describe("Prefixo da moeda"),
-  "isoCode": z.coerce.string().describe("Código ISO da moeda"),
-  "precision": z.coerce.number().describe("Precisão decimal da moeda"),
-  "locale": z.coerce.string().describe("Locale para formatação"),
-  "defaultRate": z.coerce.number().describe("Taxa de câmbio padrão"),
-  "ativo": z.boolean().describe("Status ativo da moeda"),
-  "createdAt": z.string().datetime().describe("Data de criação da moeda")
-      }) as unknown as ToZod<Currency>
+    "id": z.coerce.number().describe("ID único da moeda"),
+"publicId": z.coerce.string().describe("ID público da moeda"),
+"nome": z.coerce.string().describe("Nome da moeda"),
+"prefixo": z.coerce.string().describe("Prefixo da moeda"),
+"isoCode": z.coerce.string().describe("Código ISO da moeda"),
+"precision": z.coerce.number().describe("Precisão decimal da moeda"),
+"locale": z.coerce.string().describe("Locale para formatação"),
+"defaultRate": z.coerce.number().describe("Taxa de câmbio padrão"),
+"ativo": z.boolean().describe("Status ativo da moeda"),
+"createdAt": z.string().datetime().describe("Data de criação da moeda")
+    }) as unknown as z.ZodType<Currency>

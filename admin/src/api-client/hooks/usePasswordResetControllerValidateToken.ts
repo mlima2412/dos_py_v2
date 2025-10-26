@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const passwordResetControllerValidateTokenQueryKey = (params: PasswordResetControllerValidateTokenQueryParams) =>   [{ url: '/password-reset/validate-token' }, ...(params ? [params] : [])] as const
+export const passwordResetControllerValidateTokenQueryKey = (params: PasswordResetControllerValidateTokenQueryParams) => [{ url: '/password-reset/validate-token' }, ...(params ? [params] : [])] as const
 
 export type PasswordResetControllerValidateTokenQueryKey = ReturnType<typeof passwordResetControllerValidateTokenQueryKey>
 
@@ -18,25 +18,22 @@ export type PasswordResetControllerValidateTokenQueryKey = ReturnType<typeof pas
  * {@link /password-reset/validate-token}
  */
 export async function passwordResetControllerValidateToken(params: PasswordResetControllerValidateTokenQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<PasswordResetControllerValidateTokenQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/password-reset/validate-token`, params, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<PasswordResetControllerValidateTokenQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/password-reset/validate-token`, params, ... requestConfig })  
+  return res.data
 }
 
 export function passwordResetControllerValidateTokenQueryOptions(params: PasswordResetControllerValidateTokenQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = passwordResetControllerValidateTokenQueryKey(params)
-        return queryOptions<PasswordResetControllerValidateTokenQueryResponse, ResponseErrorConfig<Error>, PasswordResetControllerValidateTokenQueryResponse, typeof queryKey>({
-         enabled: !!(params),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return passwordResetControllerValidateToken(params, config)
-         },
-        })
-  
+  const queryKey = passwordResetControllerValidateTokenQueryKey(params)
+  return queryOptions<PasswordResetControllerValidateTokenQueryResponse, ResponseErrorConfig<Error>, PasswordResetControllerValidateTokenQueryResponse, typeof queryKey>({
+   enabled: !!(params),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return passwordResetControllerValidateToken(params, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function passwordResetControllerValidateTokenQueryOptions(params: Passwor
  * {@link /password-reset/validate-token}
  */
 export function usePasswordResetControllerValidateToken<TData = PasswordResetControllerValidateTokenQueryResponse, TQueryData = PasswordResetControllerValidateTokenQueryResponse, TQueryKey extends QueryKey = PasswordResetControllerValidateTokenQueryKey>(params: PasswordResetControllerValidateTokenQueryParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<PasswordResetControllerValidateTokenQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? passwordResetControllerValidateTokenQueryKey(params)
-  
-         const query = useQuery({
-          ...passwordResetControllerValidateTokenQueryOptions(params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<PasswordResetControllerValidateTokenQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? passwordResetControllerValidateTokenQueryKey(params)
+
+  const query = useQuery({
+   ...passwordResetControllerValidateTokenQueryOptions(params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

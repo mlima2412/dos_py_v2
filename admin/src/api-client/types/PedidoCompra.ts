@@ -11,7 +11,7 @@ export const pedidoCompraStatusEnum = {
     "3": 3
 } as const;
 
-export type PedidoCompraStatusEnum = (typeof pedidoCompraStatusEnum)[keyof typeof pedidoCompraStatusEnum];
+export type PedidoCompraStatusEnumKey = (typeof pedidoCompraStatusEnum)[keyof typeof pedidoCompraStatusEnum];
 
 export type PedidoCompra = {
     /**
@@ -85,7 +85,7 @@ export type PedidoCompra = {
      * @description Status do pedido
      * @type number
     */
-    status: PedidoCompraStatusEnum;
+    status: PedidoCompraStatusEnumKey;
     /**
      * @description Dados do fornecedor
      * @type object | undefined

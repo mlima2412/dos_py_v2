@@ -4,13 +4,12 @@
 */
 
 import type { CanalOrigemControllerFindAll200, CanalOrigemControllerFindAllQueryResponse } from "../types/CanalOrigemControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { canalOrigemSchema } from "./canalOrigemSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Lista de canais de origem
  */
-export const canalOrigemControllerFindAll200Schema = z.array(z.lazy(() => canalOrigemSchema)) as unknown as ToZod<CanalOrigemControllerFindAll200>
+export const canalOrigemControllerFindAll200Schema = z.array(canalOrigemSchema) as unknown as z.ZodType<CanalOrigemControllerFindAll200>
 
-export const canalOrigemControllerFindAllQueryResponseSchema = z.lazy(() => canalOrigemControllerFindAll200Schema) as unknown as ToZod<CanalOrigemControllerFindAllQueryResponse>
+export const canalOrigemControllerFindAllQueryResponseSchema = canalOrigemControllerFindAll200Schema as unknown as z.ZodType<CanalOrigemControllerFindAllQueryResponse>

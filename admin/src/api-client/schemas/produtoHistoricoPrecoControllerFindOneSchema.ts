@@ -4,26 +4,25 @@
 */
 
 import type { ProdutoHistoricoPrecoControllerFindOnePathParams, ProdutoHistoricoPrecoControllerFindOneHeaderParams, ProdutoHistoricoPrecoControllerFindOne200, ProdutoHistoricoPrecoControllerFindOne404, ProdutoHistoricoPrecoControllerFindOneQueryResponse } from "../types/ProdutoHistoricoPrecoControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { produtoHistoricoPrecoSchema } from "./produtoHistoricoPrecoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const produtoHistoricoPrecoControllerFindOnePathParamsSchema = z.object({
-      "id": z.coerce.number().int().describe("ID do histórico de preço")
-      }) as unknown as ToZod<ProdutoHistoricoPrecoControllerFindOnePathParams>
+    "id": z.coerce.number().int().describe("ID do histórico de preço")
+    }) as unknown as z.ZodType<ProdutoHistoricoPrecoControllerFindOnePathParams>
 
 export const produtoHistoricoPrecoControllerFindOneHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<ProdutoHistoricoPrecoControllerFindOneHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<ProdutoHistoricoPrecoControllerFindOneHeaderParams>
 
 /**
  * @description Histórico de preço encontrado
  */
-export const produtoHistoricoPrecoControllerFindOne200Schema = z.lazy(() => produtoHistoricoPrecoSchema) as unknown as ToZod<ProdutoHistoricoPrecoControllerFindOne200>
+export const produtoHistoricoPrecoControllerFindOne200Schema = produtoHistoricoPrecoSchema as unknown as z.ZodType<ProdutoHistoricoPrecoControllerFindOne200>
 
 /**
  * @description Histórico de preço não encontrado
  */
-export const produtoHistoricoPrecoControllerFindOne404Schema = z.unknown() as unknown as ToZod<ProdutoHistoricoPrecoControllerFindOne404>
+export const produtoHistoricoPrecoControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<ProdutoHistoricoPrecoControllerFindOne404>
 
-export const produtoHistoricoPrecoControllerFindOneQueryResponseSchema = z.lazy(() => produtoHistoricoPrecoControllerFindOne200Schema) as unknown as ToZod<ProdutoHistoricoPrecoControllerFindOneQueryResponse>
+export const produtoHistoricoPrecoControllerFindOneQueryResponseSchema = produtoHistoricoPrecoControllerFindOne200Schema as unknown as z.ZodType<ProdutoHistoricoPrecoControllerFindOneQueryResponse>

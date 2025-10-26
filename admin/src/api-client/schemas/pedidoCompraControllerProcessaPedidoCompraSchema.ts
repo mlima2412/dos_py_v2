@@ -4,38 +4,37 @@
 */
 
 import type { PedidoCompraControllerProcessaPedidoCompraHeaderParams, PedidoCompraControllerProcessaPedidoCompra200, PedidoCompraControllerProcessaPedidoCompra400, PedidoCompraControllerProcessaPedidoCompra404, PedidoCompraControllerProcessaPedidoCompra409, PedidoCompraControllerProcessaPedidoCompraMutationRequest, PedidoCompraControllerProcessaPedidoCompraMutationResponse } from "../types/PedidoCompraControllerProcessaPedidoCompra.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { pedidoCompraSchema } from "./pedidoCompraSchema.ts";
 import { processaPedidoCompraDtoSchema } from "./processaPedidoCompraDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const pedidoCompraControllerProcessaPedidoCompraHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
-      }) as unknown as ToZod<PedidoCompraControllerProcessaPedidoCompraHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+    }) as unknown as z.ZodType<PedidoCompraControllerProcessaPedidoCompraHeaderParams>
 
 /**
  * @description Pedido de compra processado com sucesso
  */
-export const pedidoCompraControllerProcessaPedidoCompra200Schema = z.lazy(() => pedidoCompraSchema) as unknown as ToZod<PedidoCompraControllerProcessaPedidoCompra200>
+export const pedidoCompraControllerProcessaPedidoCompra200Schema = pedidoCompraSchema as unknown as z.ZodType<PedidoCompraControllerProcessaPedidoCompra200>
 
 /**
  * @description Dados inválidos ou pedido já processado
  */
-export const pedidoCompraControllerProcessaPedidoCompra400Schema = z.unknown() as unknown as ToZod<PedidoCompraControllerProcessaPedidoCompra400>
+export const pedidoCompraControllerProcessaPedidoCompra400Schema = z.unknown() as unknown as z.ZodType<PedidoCompraControllerProcessaPedidoCompra400>
 
 /**
  * @description Pedido de compra não encontrado
  */
-export const pedidoCompraControllerProcessaPedidoCompra404Schema = z.unknown() as unknown as ToZod<PedidoCompraControllerProcessaPedidoCompra404>
+export const pedidoCompraControllerProcessaPedidoCompra404Schema = z.unknown() as unknown as z.ZodType<PedidoCompraControllerProcessaPedidoCompra404>
 
 /**
  * @description Pedido de compra já foi processado
  */
-export const pedidoCompraControllerProcessaPedidoCompra409Schema = z.unknown() as unknown as ToZod<PedidoCompraControllerProcessaPedidoCompra409>
+export const pedidoCompraControllerProcessaPedidoCompra409Schema = z.unknown() as unknown as z.ZodType<PedidoCompraControllerProcessaPedidoCompra409>
 
 /**
  * @description Dados para processamento do pedido de compra
  */
-export const pedidoCompraControllerProcessaPedidoCompraMutationRequestSchema = z.lazy(() => processaPedidoCompraDtoSchema) as unknown as ToZod<PedidoCompraControllerProcessaPedidoCompraMutationRequest>
+export const pedidoCompraControllerProcessaPedidoCompraMutationRequestSchema = processaPedidoCompraDtoSchema as unknown as z.ZodType<PedidoCompraControllerProcessaPedidoCompraMutationRequest>
 
-export const pedidoCompraControllerProcessaPedidoCompraMutationResponseSchema = z.lazy(() => pedidoCompraControllerProcessaPedidoCompra200Schema) as unknown as ToZod<PedidoCompraControllerProcessaPedidoCompraMutationResponse>
+export const pedidoCompraControllerProcessaPedidoCompraMutationResponseSchema = pedidoCompraControllerProcessaPedidoCompra200Schema as unknown as z.ZodType<PedidoCompraControllerProcessaPedidoCompraMutationResponse>

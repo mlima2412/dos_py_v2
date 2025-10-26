@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const subCategoriaDespesaControllerFindOneQueryKey = (id: SubCategoriaDespesaControllerFindOnePathParams["id"]) =>   [{ url: '/subcategoria-despesa/:id', params: {id:id} }] as const
+export const subCategoriaDespesaControllerFindOneQueryKey = (id: SubCategoriaDespesaControllerFindOnePathParams["id"]) => [{ url: '/subcategoria-despesa/:id', params: {id:id} }] as const
 
 export type SubCategoriaDespesaControllerFindOneQueryKey = ReturnType<typeof subCategoriaDespesaControllerFindOneQueryKey>
 
@@ -18,25 +18,22 @@ export type SubCategoriaDespesaControllerFindOneQueryKey = ReturnType<typeof sub
  * {@link /subcategoria-despesa/:id}
  */
 export async function subCategoriaDespesaControllerFindOne(id: SubCategoriaDespesaControllerFindOnePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<SubCategoriaDespesaControllerFindOneQueryResponse, ResponseErrorConfig<SubCategoriaDespesaControllerFindOne401 | SubCategoriaDespesaControllerFindOne404>, unknown>({ method : "GET", url : `/subcategoria-despesa/${id}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<SubCategoriaDespesaControllerFindOneQueryResponse, ResponseErrorConfig<SubCategoriaDespesaControllerFindOne401 | SubCategoriaDespesaControllerFindOne404>, unknown>({ method : "GET", url : `/subcategoria-despesa/${id}`, ... requestConfig })  
+  return res.data
 }
 
 export function subCategoriaDespesaControllerFindOneQueryOptions(id: SubCategoriaDespesaControllerFindOnePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = subCategoriaDespesaControllerFindOneQueryKey(id)
-        return queryOptions<SubCategoriaDespesaControllerFindOneQueryResponse, ResponseErrorConfig<SubCategoriaDespesaControllerFindOne401 | SubCategoriaDespesaControllerFindOne404>, SubCategoriaDespesaControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(id),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return subCategoriaDespesaControllerFindOne(id, config)
-         },
-        })
-  
+  const queryKey = subCategoriaDespesaControllerFindOneQueryKey(id)
+  return queryOptions<SubCategoriaDespesaControllerFindOneQueryResponse, ResponseErrorConfig<SubCategoriaDespesaControllerFindOne401 | SubCategoriaDespesaControllerFindOne404>, SubCategoriaDespesaControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(id),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return subCategoriaDespesaControllerFindOne(id, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function subCategoriaDespesaControllerFindOneQueryOptions(id: SubCategori
  * {@link /subcategoria-despesa/:id}
  */
 export function useSubCategoriaDespesaControllerFindOne<TData = SubCategoriaDespesaControllerFindOneQueryResponse, TQueryData = SubCategoriaDespesaControllerFindOneQueryResponse, TQueryKey extends QueryKey = SubCategoriaDespesaControllerFindOneQueryKey>(id: SubCategoriaDespesaControllerFindOnePathParams["id"], options: 
-  {
-    query?: Partial<QueryObserverOptions<SubCategoriaDespesaControllerFindOneQueryResponse, ResponseErrorConfig<SubCategoriaDespesaControllerFindOne401 | SubCategoriaDespesaControllerFindOne404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? subCategoriaDespesaControllerFindOneQueryKey(id)
-  
-         const query = useQuery({
-          ...subCategoriaDespesaControllerFindOneQueryOptions(id, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<SubCategoriaDespesaControllerFindOne401 | SubCategoriaDespesaControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<SubCategoriaDespesaControllerFindOneQueryResponse, ResponseErrorConfig<SubCategoriaDespesaControllerFindOne401 | SubCategoriaDespesaControllerFindOne404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? subCategoriaDespesaControllerFindOneQueryKey(id)
+
+  const query = useQuery({
+   ...subCategoriaDespesaControllerFindOneQueryOptions(id, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<SubCategoriaDespesaControllerFindOne401 | SubCategoriaDespesaControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

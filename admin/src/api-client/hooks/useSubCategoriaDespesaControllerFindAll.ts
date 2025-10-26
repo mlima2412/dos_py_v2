@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const subCategoriaDespesaControllerFindAllQueryKey = () =>   [{ url: '/subcategoria-despesa' }] as const
+export const subCategoriaDespesaControllerFindAllQueryKey = () => [{ url: '/subcategoria-despesa' }] as const
 
 export type SubCategoriaDespesaControllerFindAllQueryKey = ReturnType<typeof subCategoriaDespesaControllerFindAllQueryKey>
 
@@ -18,25 +18,22 @@ export type SubCategoriaDespesaControllerFindAllQueryKey = ReturnType<typeof sub
  * {@link /subcategoria-despesa}
  */
 export async function subCategoriaDespesaControllerFindAll(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<SubCategoriaDespesaControllerFindAllQueryResponse, ResponseErrorConfig<SubCategoriaDespesaControllerFindAll401>, unknown>({ method : "GET", url : `/subcategoria-despesa`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<SubCategoriaDespesaControllerFindAllQueryResponse, ResponseErrorConfig<SubCategoriaDespesaControllerFindAll401>, unknown>({ method : "GET", url : `/subcategoria-despesa`, ... requestConfig })  
+  return res.data
 }
 
 export function subCategoriaDespesaControllerFindAllQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = subCategoriaDespesaControllerFindAllQueryKey()
-        return queryOptions<SubCategoriaDespesaControllerFindAllQueryResponse, ResponseErrorConfig<SubCategoriaDespesaControllerFindAll401>, SubCategoriaDespesaControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return subCategoriaDespesaControllerFindAll(config)
-         },
-        })
-  
+  const queryKey = subCategoriaDespesaControllerFindAllQueryKey()
+  return queryOptions<SubCategoriaDespesaControllerFindAllQueryResponse, ResponseErrorConfig<SubCategoriaDespesaControllerFindAll401>, SubCategoriaDespesaControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return subCategoriaDespesaControllerFindAll(config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function subCategoriaDespesaControllerFindAllQueryOptions(config: Partial
  * {@link /subcategoria-despesa}
  */
 export function useSubCategoriaDespesaControllerFindAll<TData = SubCategoriaDespesaControllerFindAllQueryResponse, TQueryData = SubCategoriaDespesaControllerFindAllQueryResponse, TQueryKey extends QueryKey = SubCategoriaDespesaControllerFindAllQueryKey>(options: 
-  {
-    query?: Partial<QueryObserverOptions<SubCategoriaDespesaControllerFindAllQueryResponse, ResponseErrorConfig<SubCategoriaDespesaControllerFindAll401>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? subCategoriaDespesaControllerFindAllQueryKey()
-  
-         const query = useQuery({
-          ...subCategoriaDespesaControllerFindAllQueryOptions(config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<SubCategoriaDespesaControllerFindAll401>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<SubCategoriaDespesaControllerFindAllQueryResponse, ResponseErrorConfig<SubCategoriaDespesaControllerFindAll401>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? subCategoriaDespesaControllerFindAllQueryKey()
+
+  const query = useQuery({
+   ...subCategoriaDespesaControllerFindAllQueryOptions(config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<SubCategoriaDespesaControllerFindAll401>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

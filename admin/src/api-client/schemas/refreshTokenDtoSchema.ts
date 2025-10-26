@@ -4,9 +4,8 @@
 */
 
 import type { RefreshTokenDto } from "../types/RefreshTokenDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const refreshTokenDtoSchema = z.object({
-      
-      }) as unknown as ToZod<RefreshTokenDto>
+    
+    }) as unknown as z.ZodType<RefreshTokenDto>

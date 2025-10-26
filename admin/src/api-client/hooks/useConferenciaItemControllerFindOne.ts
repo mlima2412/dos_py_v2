@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const conferenciaItemControllerFindOneQueryKey = (id: ConferenciaItemControllerFindOnePathParams["id"]) =>   [{ url: '/conferencia-item/:id', params: {id:id} }] as const
+export const conferenciaItemControllerFindOneQueryKey = (id: ConferenciaItemControllerFindOnePathParams["id"]) => [{ url: '/conferencia-item/:id', params: {id:id} }] as const
 
 export type ConferenciaItemControllerFindOneQueryKey = ReturnType<typeof conferenciaItemControllerFindOneQueryKey>
 
@@ -18,25 +18,22 @@ export type ConferenciaItemControllerFindOneQueryKey = ReturnType<typeof confere
  * {@link /conferencia-item/:id}
  */
 export async function conferenciaItemControllerFindOne(id: ConferenciaItemControllerFindOnePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ConferenciaItemControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaItemControllerFindOne404>, unknown>({ method : "GET", url : `/conferencia-item/${id}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ConferenciaItemControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaItemControllerFindOne404>, unknown>({ method : "GET", url : `/conferencia-item/${id}`, ... requestConfig })  
+  return res.data
 }
 
 export function conferenciaItemControllerFindOneQueryOptions(id: ConferenciaItemControllerFindOnePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = conferenciaItemControllerFindOneQueryKey(id)
-        return queryOptions<ConferenciaItemControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaItemControllerFindOne404>, ConferenciaItemControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(id),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return conferenciaItemControllerFindOne(id, config)
-         },
-        })
-  
+  const queryKey = conferenciaItemControllerFindOneQueryKey(id)
+  return queryOptions<ConferenciaItemControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaItemControllerFindOne404>, ConferenciaItemControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(id),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return conferenciaItemControllerFindOne(id, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function conferenciaItemControllerFindOneQueryOptions(id: ConferenciaItem
  * {@link /conferencia-item/:id}
  */
 export function useConferenciaItemControllerFindOne<TData = ConferenciaItemControllerFindOneQueryResponse, TQueryData = ConferenciaItemControllerFindOneQueryResponse, TQueryKey extends QueryKey = ConferenciaItemControllerFindOneQueryKey>(id: ConferenciaItemControllerFindOnePathParams["id"], options: 
-  {
-    query?: Partial<QueryObserverOptions<ConferenciaItemControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaItemControllerFindOne404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? conferenciaItemControllerFindOneQueryKey(id)
-  
-         const query = useQuery({
-          ...conferenciaItemControllerFindOneQueryOptions(id, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<ConferenciaItemControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<ConferenciaItemControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaItemControllerFindOne404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? conferenciaItemControllerFindOneQueryKey(id)
+
+  const query = useQuery({
+   ...conferenciaItemControllerFindOneQueryOptions(id, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<ConferenciaItemControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

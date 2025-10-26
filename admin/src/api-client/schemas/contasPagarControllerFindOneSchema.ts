@@ -4,22 +4,21 @@
 */
 
 import type { ContasPagarControllerFindOnePathParams, ContasPagarControllerFindOne200, ContasPagarControllerFindOne404, ContasPagarControllerFindOneQueryResponse } from "../types/ContasPagarControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { contasPagarSchema } from "./contasPagarSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const contasPagarControllerFindOnePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público da conta a pagar")
-      }) as unknown as ToZod<ContasPagarControllerFindOnePathParams>
+    "publicId": z.string().describe("ID público da conta a pagar")
+    }) as unknown as z.ZodType<ContasPagarControllerFindOnePathParams>
 
 /**
  * @description Conta a pagar encontrada.
  */
-export const contasPagarControllerFindOne200Schema = z.lazy(() => contasPagarSchema) as unknown as ToZod<ContasPagarControllerFindOne200>
+export const contasPagarControllerFindOne200Schema = contasPagarSchema as unknown as z.ZodType<ContasPagarControllerFindOne200>
 
 /**
  * @description Conta a pagar não encontrada.
  */
-export const contasPagarControllerFindOne404Schema = z.unknown() as unknown as ToZod<ContasPagarControllerFindOne404>
+export const contasPagarControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<ContasPagarControllerFindOne404>
 
-export const contasPagarControllerFindOneQueryResponseSchema = z.lazy(() => contasPagarControllerFindOne200Schema) as unknown as ToZod<ContasPagarControllerFindOneQueryResponse>
+export const contasPagarControllerFindOneQueryResponseSchema = contasPagarControllerFindOne200Schema as unknown as z.ZodType<ContasPagarControllerFindOneQueryResponse>

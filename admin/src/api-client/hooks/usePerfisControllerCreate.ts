@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { PerfisControllerCreateMutationRequest, PerfisControllerCreateMutationResponse, PerfisControllerCreate400, PerfisControllerCreate409 } from "../types/PerfisControllerCreate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const perfisControllerCreateMutationKey = () =>   [{"url":"/perfis"}] as const
+export const perfisControllerCreateMutationKey = () => [{ url: '/perfis' }] as const
 
 export type PerfisControllerCreateMutationKey = ReturnType<typeof perfisControllerCreateMutationKey>
 
@@ -18,11 +18,22 @@ export type PerfisControllerCreateMutationKey = ReturnType<typeof perfisControll
  * {@link /perfis}
  */
 export async function perfisControllerCreate(data?: PerfisControllerCreateMutationRequest, config: Partial<RequestConfig<PerfisControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<PerfisControllerCreateMutationResponse, ResponseErrorConfig<PerfisControllerCreate400 | PerfisControllerCreate409>, PerfisControllerCreateMutationRequest>({ method : "POST", url : `/perfis`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<PerfisControllerCreateMutationResponse, ResponseErrorConfig<PerfisControllerCreate400 | PerfisControllerCreate409>, PerfisControllerCreateMutationRequest>({ method : "POST", url : `/perfis`, data : requestData, ... requestConfig })
-return res.data
+export function perfisControllerCreateMutationOptions(config: Partial<RequestConfig<PerfisControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = perfisControllerCreateMutationKey()
+  return mutationOptions<PerfisControllerCreateMutationResponse, ResponseErrorConfig<PerfisControllerCreate400 | PerfisControllerCreate409>, {data?: PerfisControllerCreateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data }) => {
+      return perfisControllerCreate(data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /perfis}
  */
 export function usePerfisControllerCreate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<PerfisControllerCreateMutationResponse, ResponseErrorConfig<PerfisControllerCreate400 | PerfisControllerCreate409>, {data?: PerfisControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<PerfisControllerCreateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? perfisControllerCreateMutationKey()
-  
-          return useMutation<PerfisControllerCreateMutationResponse, ResponseErrorConfig<PerfisControllerCreate400 | PerfisControllerCreate409>, {data?: PerfisControllerCreateMutationRequest}, TContext>({
-            mutationFn: async({ data }) => {
-              return perfisControllerCreate(data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<PerfisControllerCreateMutationResponse, ResponseErrorConfig<PerfisControllerCreate400 | PerfisControllerCreate409>, {data?: PerfisControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<PerfisControllerCreateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? perfisControllerCreateMutationKey()
+
+  const baseOptions = perfisControllerCreateMutationOptions(config) as UseMutationOptions<PerfisControllerCreateMutationResponse, ResponseErrorConfig<PerfisControllerCreate400 | PerfisControllerCreate409>, {data?: PerfisControllerCreateMutationRequest}, TContext>
+
+  return useMutation<PerfisControllerCreateMutationResponse, ResponseErrorConfig<PerfisControllerCreate400 | PerfisControllerCreate409>, {data?: PerfisControllerCreateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<PerfisControllerCreateMutationResponse, ResponseErrorConfig<PerfisControllerCreate400 | PerfisControllerCreate409>, {data?: PerfisControllerCreateMutationRequest}, TContext>
 }

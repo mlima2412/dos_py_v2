@@ -4,22 +4,21 @@
 */
 
 import type { DespesasRecorrentesControllerFindByFrequenciaPathParams, DespesasRecorrentesControllerFindByFrequencia200, DespesasRecorrentesControllerFindByFrequencia401, DespesasRecorrentesControllerFindByFrequenciaQueryResponse } from "../types/DespesasRecorrentesControllerFindByFrequencia.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { despesaRecorrenteSchema } from "./despesaRecorrenteSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const despesasRecorrentesControllerFindByFrequenciaPathParamsSchema = z.object({
-      "frequencia": z.string().describe("Frequência da despesa recorrente")
-      }) as unknown as ToZod<DespesasRecorrentesControllerFindByFrequenciaPathParams>
+    "frequencia": z.string().describe("Frequência da despesa recorrente")
+    }) as unknown as z.ZodType<DespesasRecorrentesControllerFindByFrequenciaPathParams>
 
 /**
  * @description Lista de despesas recorrentes da frequência
  */
-export const despesasRecorrentesControllerFindByFrequencia200Schema = z.array(z.lazy(() => despesaRecorrenteSchema)) as unknown as ToZod<DespesasRecorrentesControllerFindByFrequencia200>
+export const despesasRecorrentesControllerFindByFrequencia200Schema = z.array(despesaRecorrenteSchema) as unknown as z.ZodType<DespesasRecorrentesControllerFindByFrequencia200>
 
 /**
  * @description Não autorizado
  */
-export const despesasRecorrentesControllerFindByFrequencia401Schema = z.unknown() as unknown as ToZod<DespesasRecorrentesControllerFindByFrequencia401>
+export const despesasRecorrentesControllerFindByFrequencia401Schema = z.unknown() as unknown as z.ZodType<DespesasRecorrentesControllerFindByFrequencia401>
 
-export const despesasRecorrentesControllerFindByFrequenciaQueryResponseSchema = z.lazy(() => despesasRecorrentesControllerFindByFrequencia200Schema) as unknown as ToZod<DespesasRecorrentesControllerFindByFrequenciaQueryResponse>
+export const despesasRecorrentesControllerFindByFrequenciaQueryResponseSchema = despesasRecorrentesControllerFindByFrequencia200Schema as unknown as z.ZodType<DespesasRecorrentesControllerFindByFrequenciaQueryResponse>

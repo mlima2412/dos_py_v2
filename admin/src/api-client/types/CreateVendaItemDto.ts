@@ -9,7 +9,7 @@ export const createVendaItemDtoTipoEnum = {
     "BRINDE": "BRINDE"
 } as const;
 
-export type CreateVendaItemDtoTipoEnum = (typeof createVendaItemDtoTipoEnum)[keyof typeof createVendaItemDtoTipoEnum];
+export type CreateVendaItemDtoTipoEnumKey = (typeof createVendaItemDtoTipoEnum)[keyof typeof createVendaItemDtoTipoEnum];
 
 export type CreateVendaItemDto = {
     /**
@@ -26,7 +26,7 @@ export type CreateVendaItemDto = {
      * @description Tipo do item
      * @type string | undefined
     */
-    tipo?: CreateVendaItemDtoTipoEnum;
+    tipo?: CreateVendaItemDtoTipoEnumKey;
     /**
      * @description Quantidade reservada
      * @type number

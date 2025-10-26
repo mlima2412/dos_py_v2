@@ -4,40 +4,39 @@
 */
 
 import type { VendaControllerRemovePathParams, VendaControllerRemoveHeaderParams, VendaControllerRemove204, VendaControllerRemove400, VendaControllerRemove401, VendaControllerRemove403, VendaControllerRemove404, VendaControllerRemoveMutationResponse } from "../types/VendaControllerRemove.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const vendaControllerRemovePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público da venda")
-      }) as unknown as ToZod<VendaControllerRemovePathParams>
+    "publicId": z.string().describe("ID público da venda")
+    }) as unknown as z.ZodType<VendaControllerRemovePathParams>
 
 export const vendaControllerRemoveHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<VendaControllerRemoveHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<VendaControllerRemoveHeaderParams>
 
 /**
  * @description Venda removida com sucesso
  */
-export const vendaControllerRemove204Schema = z.unknown() as unknown as ToZod<VendaControllerRemove204>
+export const vendaControllerRemove204Schema = z.unknown() as unknown as z.ZodType<VendaControllerRemove204>
 
 /**
  * @description Exclusão permitida apenas com status PEDIDO
  */
-export const vendaControllerRemove400Schema = z.unknown() as unknown as ToZod<VendaControllerRemove400>
+export const vendaControllerRemove400Schema = z.unknown() as unknown as z.ZodType<VendaControllerRemove400>
 
 /**
  * @description Não autorizado
  */
-export const vendaControllerRemove401Schema = z.unknown() as unknown as ToZod<VendaControllerRemove401>
+export const vendaControllerRemove401Schema = z.unknown() as unknown as z.ZodType<VendaControllerRemove401>
 
 /**
  * @description Acesso negado
  */
-export const vendaControllerRemove403Schema = z.unknown() as unknown as ToZod<VendaControllerRemove403>
+export const vendaControllerRemove403Schema = z.unknown() as unknown as z.ZodType<VendaControllerRemove403>
 
 /**
  * @description Venda não encontrada
  */
-export const vendaControllerRemove404Schema = z.unknown() as unknown as ToZod<VendaControllerRemove404>
+export const vendaControllerRemove404Schema = z.unknown() as unknown as z.ZodType<VendaControllerRemove404>
 
-export const vendaControllerRemoveMutationResponseSchema = z.lazy(() => vendaControllerRemove204Schema) as unknown as ToZod<VendaControllerRemoveMutationResponse>
+export const vendaControllerRemoveMutationResponseSchema = vendaControllerRemove204Schema as unknown as z.ZodType<VendaControllerRemoveMutationResponse>

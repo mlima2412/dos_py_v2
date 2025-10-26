@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ConferenciaEstoqueControllerCreateMutationRequest, ConferenciaEstoqueControllerCreateMutationResponse, ConferenciaEstoqueControllerCreateHeaderParams, ConferenciaEstoqueControllerCreate400, ConferenciaEstoqueControllerCreate404, ConferenciaEstoqueControllerCreate409 } from "../types/ConferenciaEstoqueControllerCreate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const conferenciaEstoqueControllerCreateMutationKey = () =>   [{"url":"/conferencia-estoque"}] as const
+export const conferenciaEstoqueControllerCreateMutationKey = () => [{ url: '/conferencia-estoque' }] as const
 
 export type ConferenciaEstoqueControllerCreateMutationKey = ReturnType<typeof conferenciaEstoqueControllerCreateMutationKey>
 
@@ -18,11 +18,22 @@ export type ConferenciaEstoqueControllerCreateMutationKey = ReturnType<typeof co
  * {@link /conferencia-estoque}
  */
 export async function conferenciaEstoqueControllerCreate(data: ConferenciaEstoqueControllerCreateMutationRequest, headers: ConferenciaEstoqueControllerCreateHeaderParams, config: Partial<RequestConfig<ConferenciaEstoqueControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<ConferenciaEstoqueControllerCreateMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerCreate400 | ConferenciaEstoqueControllerCreate404 | ConferenciaEstoqueControllerCreate409>, ConferenciaEstoqueControllerCreateMutationRequest>({ method : "POST", url : `/conferencia-estoque`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<ConferenciaEstoqueControllerCreateMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerCreate400 | ConferenciaEstoqueControllerCreate404 | ConferenciaEstoqueControllerCreate409>, ConferenciaEstoqueControllerCreateMutationRequest>({ method : "POST", url : `/conferencia-estoque`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function conferenciaEstoqueControllerCreateMutationOptions(config: Partial<RequestConfig<ConferenciaEstoqueControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = conferenciaEstoqueControllerCreateMutationKey()
+  return mutationOptions<ConferenciaEstoqueControllerCreateMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerCreate400 | ConferenciaEstoqueControllerCreate404 | ConferenciaEstoqueControllerCreate409>, {data: ConferenciaEstoqueControllerCreateMutationRequest, headers: ConferenciaEstoqueControllerCreateHeaderParams}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data, headers }) => {
+      return conferenciaEstoqueControllerCreate(data, headers, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /conferencia-estoque}
  */
 export function useConferenciaEstoqueControllerCreate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ConferenciaEstoqueControllerCreateMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerCreate400 | ConferenciaEstoqueControllerCreate404 | ConferenciaEstoqueControllerCreate409>, {data: ConferenciaEstoqueControllerCreateMutationRequest, headers: ConferenciaEstoqueControllerCreateHeaderParams}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<ConferenciaEstoqueControllerCreateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? conferenciaEstoqueControllerCreateMutationKey()
-  
-          return useMutation<ConferenciaEstoqueControllerCreateMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerCreate400 | ConferenciaEstoqueControllerCreate404 | ConferenciaEstoqueControllerCreate409>, {data: ConferenciaEstoqueControllerCreateMutationRequest, headers: ConferenciaEstoqueControllerCreateHeaderParams}, TContext>({
-            mutationFn: async({ data, headers }) => {
-              return conferenciaEstoqueControllerCreate(data, headers, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ConferenciaEstoqueControllerCreateMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerCreate400 | ConferenciaEstoqueControllerCreate404 | ConferenciaEstoqueControllerCreate409>, {data: ConferenciaEstoqueControllerCreateMutationRequest, headers: ConferenciaEstoqueControllerCreateHeaderParams}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<ConferenciaEstoqueControllerCreateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? conferenciaEstoqueControllerCreateMutationKey()
+
+  const baseOptions = conferenciaEstoqueControllerCreateMutationOptions(config) as UseMutationOptions<ConferenciaEstoqueControllerCreateMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerCreate400 | ConferenciaEstoqueControllerCreate404 | ConferenciaEstoqueControllerCreate409>, {data: ConferenciaEstoqueControllerCreateMutationRequest, headers: ConferenciaEstoqueControllerCreateHeaderParams}, TContext>
+
+  return useMutation<ConferenciaEstoqueControllerCreateMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerCreate400 | ConferenciaEstoqueControllerCreate404 | ConferenciaEstoqueControllerCreate409>, {data: ConferenciaEstoqueControllerCreateMutationRequest, headers: ConferenciaEstoqueControllerCreateHeaderParams}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ConferenciaEstoqueControllerCreateMutationResponse, ResponseErrorConfig<ConferenciaEstoqueControllerCreate400 | ConferenciaEstoqueControllerCreate404 | ConferenciaEstoqueControllerCreate409>, {data: ConferenciaEstoqueControllerCreateMutationRequest, headers: ConferenciaEstoqueControllerCreateHeaderParams}, TContext>
 }

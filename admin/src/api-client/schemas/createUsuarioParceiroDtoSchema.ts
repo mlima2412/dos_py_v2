@@ -4,11 +4,10 @@
 */
 
 import type { CreateUsuarioParceiroDto } from "../types/CreateUsuarioParceiroDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const createUsuarioParceiroDtoSchema = z.object({
-      "perfilId": z.coerce.number().describe("ID do perfil"),
-  "usuarioId": z.coerce.number().describe("ID do usuário"),
-  "parceiroId": z.coerce.number().describe("ID do parceiro")
-      }) as unknown as ToZod<CreateUsuarioParceiroDto>
+    "perfilId": z.coerce.number().describe("ID do perfil"),
+"usuarioId": z.coerce.number().describe("ID do usuário"),
+"parceiroId": z.coerce.number().describe("ID do parceiro")
+    }) as unknown as z.ZodType<CreateUsuarioParceiroDto>

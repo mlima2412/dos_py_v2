@@ -4,12 +4,11 @@
 */
 
 import type { AuthControllerLogout200, AuthControllerLogoutMutationResponse } from "../types/AuthControllerLogout.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Logout realizado com sucesso
  */
-export const authControllerLogout200Schema = z.unknown() as unknown as ToZod<AuthControllerLogout200>
+export const authControllerLogout200Schema = z.unknown() as unknown as z.ZodType<AuthControllerLogout200>
 
-export const authControllerLogoutMutationResponseSchema = z.lazy(() => authControllerLogout200Schema) as unknown as ToZod<AuthControllerLogoutMutationResponse>
+export const authControllerLogoutMutationResponseSchema = authControllerLogout200Schema as unknown as z.ZodType<AuthControllerLogoutMutationResponse>

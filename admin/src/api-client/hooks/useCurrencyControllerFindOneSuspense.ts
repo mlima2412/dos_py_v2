@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const currencyControllerFindOneSuspenseQueryKey = (publicId: CurrencyControllerFindOnePathParams["publicId"]) =>   [{ url: '/currency/:publicId', params: {publicId:publicId} }] as const
+export const currencyControllerFindOneSuspenseQueryKey = (publicId: CurrencyControllerFindOnePathParams["publicId"]) => [{ url: '/currency/:publicId', params: {publicId:publicId} }] as const
 
 export type CurrencyControllerFindOneSuspenseQueryKey = ReturnType<typeof currencyControllerFindOneSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type CurrencyControllerFindOneSuspenseQueryKey = ReturnType<typeof curren
  * {@link /currency/:publicId}
  */
 export async function currencyControllerFindOneSuspense(publicId: CurrencyControllerFindOnePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<CurrencyControllerFindOneQueryResponse, ResponseErrorConfig<CurrencyControllerFindOne401 | CurrencyControllerFindOne404>, unknown>({ method : "GET", url : `/currency/${publicId}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<CurrencyControllerFindOneQueryResponse, ResponseErrorConfig<CurrencyControllerFindOne401 | CurrencyControllerFindOne404>, unknown>({ method : "GET", url : `/currency/${publicId}`, ... requestConfig })  
+  return res.data
 }
 
 export function currencyControllerFindOneSuspenseQueryOptions(publicId: CurrencyControllerFindOnePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = currencyControllerFindOneSuspenseQueryKey(publicId)
-        return queryOptions<CurrencyControllerFindOneQueryResponse, ResponseErrorConfig<CurrencyControllerFindOne401 | CurrencyControllerFindOne404>, CurrencyControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(publicId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return currencyControllerFindOneSuspense(publicId, config)
-         },
-        })
-  
+  const queryKey = currencyControllerFindOneSuspenseQueryKey(publicId)
+  return queryOptions<CurrencyControllerFindOneQueryResponse, ResponseErrorConfig<CurrencyControllerFindOne401 | CurrencyControllerFindOne404>, CurrencyControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(publicId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return currencyControllerFindOneSuspense(publicId, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function currencyControllerFindOneSuspenseQueryOptions(publicId: Currency
  * {@link /currency/:publicId}
  */
 export function useCurrencyControllerFindOneSuspense<TData = CurrencyControllerFindOneQueryResponse, TQueryKey extends QueryKey = CurrencyControllerFindOneSuspenseQueryKey>(publicId: CurrencyControllerFindOnePathParams["publicId"], options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<CurrencyControllerFindOneQueryResponse, ResponseErrorConfig<CurrencyControllerFindOne401 | CurrencyControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? currencyControllerFindOneSuspenseQueryKey(publicId)
-  
-         const query = useSuspenseQuery({
-          ...currencyControllerFindOneSuspenseQueryOptions(publicId, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<CurrencyControllerFindOne401 | CurrencyControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<CurrencyControllerFindOneQueryResponse, ResponseErrorConfig<CurrencyControllerFindOne401 | CurrencyControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? currencyControllerFindOneSuspenseQueryKey(publicId)
+
+  const query = useSuspenseQuery({
+   ...currencyControllerFindOneSuspenseQueryOptions(publicId, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<CurrencyControllerFindOne401 | CurrencyControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

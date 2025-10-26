@@ -4,26 +4,25 @@
 */
 
 import type { CategoriaProdutoControllerRemovePathParams, CategoriaProdutoControllerRemove200, CategoriaProdutoControllerRemove400, CategoriaProdutoControllerRemove404, CategoriaProdutoControllerRemoveMutationResponse } from "../types/CategoriaProdutoControllerRemove.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const categoriaProdutoControllerRemovePathParamsSchema = z.object({
-      "id": z.coerce.number().describe("ID da categoria de produto")
-      }) as unknown as ToZod<CategoriaProdutoControllerRemovePathParams>
+    "id": z.coerce.number().describe("ID da categoria de produto")
+    }) as unknown as z.ZodType<CategoriaProdutoControllerRemovePathParams>
 
 /**
  * @description Categoria de produto removida com sucesso
  */
-export const categoriaProdutoControllerRemove200Schema = z.unknown() as unknown as ToZod<CategoriaProdutoControllerRemove200>
+export const categoriaProdutoControllerRemove200Schema = z.unknown() as unknown as z.ZodType<CategoriaProdutoControllerRemove200>
 
 /**
  * @description Não é possível remover categoria em uso por produtos
  */
-export const categoriaProdutoControllerRemove400Schema = z.unknown() as unknown as ToZod<CategoriaProdutoControllerRemove400>
+export const categoriaProdutoControllerRemove400Schema = z.unknown() as unknown as z.ZodType<CategoriaProdutoControllerRemove400>
 
 /**
  * @description Categoria de produto não encontrada
  */
-export const categoriaProdutoControllerRemove404Schema = z.unknown() as unknown as ToZod<CategoriaProdutoControllerRemove404>
+export const categoriaProdutoControllerRemove404Schema = z.unknown() as unknown as z.ZodType<CategoriaProdutoControllerRemove404>
 
-export const categoriaProdutoControllerRemoveMutationResponseSchema = z.lazy(() => categoriaProdutoControllerRemove200Schema) as unknown as ToZod<CategoriaProdutoControllerRemoveMutationResponse>
+export const categoriaProdutoControllerRemoveMutationResponseSchema = categoriaProdutoControllerRemove200Schema as unknown as z.ZodType<CategoriaProdutoControllerRemoveMutationResponse>

@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const produtoHistoricoPrecoControllerFindByProdutoPublicIdQueryKey = (produtoPublicId: ProdutoHistoricoPrecoControllerFindByProdutoPublicIdPathParams["produtoPublicId"], params?: ProdutoHistoricoPrecoControllerFindByProdutoPublicIdQueryParams) =>   [{ url: '/produto-historico-preco/produto/public/:produtoPublicId', params: {produtoPublicId:produtoPublicId} }, ...(params ? [params] : [])] as const
+export const produtoHistoricoPrecoControllerFindByProdutoPublicIdQueryKey = (produtoPublicId: ProdutoHistoricoPrecoControllerFindByProdutoPublicIdPathParams["produtoPublicId"], params?: ProdutoHistoricoPrecoControllerFindByProdutoPublicIdQueryParams) => [{ url: '/produto-historico-preco/produto/public/:produtoPublicId', params: {produtoPublicId:produtoPublicId} }, ...(params ? [params] : [])] as const
 
 export type ProdutoHistoricoPrecoControllerFindByProdutoPublicIdQueryKey = ReturnType<typeof produtoHistoricoPrecoControllerFindByProdutoPublicIdQueryKey>
 
@@ -19,25 +19,22 @@ export type ProdutoHistoricoPrecoControllerFindByProdutoPublicIdQueryKey = Retur
  * {@link /produto-historico-preco/produto/public/:produtoPublicId}
  */
 export async function produtoHistoricoPrecoControllerFindByProdutoPublicId(produtoPublicId: ProdutoHistoricoPrecoControllerFindByProdutoPublicIdPathParams["produtoPublicId"], headers: ProdutoHistoricoPrecoControllerFindByProdutoPublicIdHeaderParams, params?: ProdutoHistoricoPrecoControllerFindByProdutoPublicIdQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ProdutoHistoricoPrecoControllerFindByProdutoPublicIdQueryResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerFindByProdutoPublicId404>, unknown>({ method : "GET", url : `/produto-historico-preco/produto/public/${produtoPublicId}`, params, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ProdutoHistoricoPrecoControllerFindByProdutoPublicIdQueryResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerFindByProdutoPublicId404>, unknown>({ method : "GET", url : `/produto-historico-preco/produto/public/${produtoPublicId}`, params, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function produtoHistoricoPrecoControllerFindByProdutoPublicIdQueryOptions(produtoPublicId: ProdutoHistoricoPrecoControllerFindByProdutoPublicIdPathParams["produtoPublicId"], headers: ProdutoHistoricoPrecoControllerFindByProdutoPublicIdHeaderParams, params?: ProdutoHistoricoPrecoControllerFindByProdutoPublicIdQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = produtoHistoricoPrecoControllerFindByProdutoPublicIdQueryKey(produtoPublicId, params)
-        return queryOptions<ProdutoHistoricoPrecoControllerFindByProdutoPublicIdQueryResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerFindByProdutoPublicId404>, ProdutoHistoricoPrecoControllerFindByProdutoPublicIdQueryResponse, typeof queryKey>({
-         enabled: !!(produtoPublicId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return produtoHistoricoPrecoControllerFindByProdutoPublicId(produtoPublicId, headers, params, config)
-         },
-        })
-  
+  const queryKey = produtoHistoricoPrecoControllerFindByProdutoPublicIdQueryKey(produtoPublicId, params)
+  return queryOptions<ProdutoHistoricoPrecoControllerFindByProdutoPublicIdQueryResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerFindByProdutoPublicId404>, ProdutoHistoricoPrecoControllerFindByProdutoPublicIdQueryResponse, typeof queryKey>({
+   enabled: !!(produtoPublicId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return produtoHistoricoPrecoControllerFindByProdutoPublicId(produtoPublicId, headers, params, config)
+   },
+  })
 }
 
 /**
@@ -46,23 +43,22 @@ export function produtoHistoricoPrecoControllerFindByProdutoPublicIdQueryOptions
  * {@link /produto-historico-preco/produto/public/:produtoPublicId}
  */
 export function useProdutoHistoricoPrecoControllerFindByProdutoPublicId<TData = ProdutoHistoricoPrecoControllerFindByProdutoPublicIdQueryResponse, TQueryData = ProdutoHistoricoPrecoControllerFindByProdutoPublicIdQueryResponse, TQueryKey extends QueryKey = ProdutoHistoricoPrecoControllerFindByProdutoPublicIdQueryKey>(produtoPublicId: ProdutoHistoricoPrecoControllerFindByProdutoPublicIdPathParams["produtoPublicId"], headers: ProdutoHistoricoPrecoControllerFindByProdutoPublicIdHeaderParams, params?: ProdutoHistoricoPrecoControllerFindByProdutoPublicIdQueryParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<ProdutoHistoricoPrecoControllerFindByProdutoPublicIdQueryResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerFindByProdutoPublicId404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? produtoHistoricoPrecoControllerFindByProdutoPublicIdQueryKey(produtoPublicId, params)
-  
-         const query = useQuery({
-          ...produtoHistoricoPrecoControllerFindByProdutoPublicIdQueryOptions(produtoPublicId, headers, params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<ProdutoHistoricoPrecoControllerFindByProdutoPublicId404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<ProdutoHistoricoPrecoControllerFindByProdutoPublicIdQueryResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerFindByProdutoPublicId404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? produtoHistoricoPrecoControllerFindByProdutoPublicIdQueryKey(produtoPublicId, params)
+
+  const query = useQuery({
+   ...produtoHistoricoPrecoControllerFindByProdutoPublicIdQueryOptions(produtoPublicId, headers, params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<ProdutoHistoricoPrecoControllerFindByProdutoPublicId404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

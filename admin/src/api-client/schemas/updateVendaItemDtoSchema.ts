@@ -4,16 +4,15 @@
 */
 
 import type { UpdateVendaItemDto } from "../types/UpdateVendaItemDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const updateVendaItemDtoSchema = z.object({
-      "vendaId": z.coerce.number().describe("ID da venda").optional(),
-  "skuId": z.coerce.number().describe("ID do SKU").optional(),
-  "tipo": z.enum(["NORMAL", "BRINDE"]).describe("Tipo do item").optional(),
-  "qtdReservada": z.coerce.number().describe("Quantidade reservada").optional(),
-  "qtdAceita": z.coerce.number().describe("Quantidade aceita (cliente ficou)").optional(),
-  "qtdDevolvida": z.coerce.number().describe("Quantidade devolvida").optional(),
-  "desconto": z.coerce.number().describe("Desconto por item").optional(),
-  "precoUnit": z.coerce.number().describe("Preço unitário").optional()
-      }) as unknown as ToZod<UpdateVendaItemDto>
+    "vendaId": z.optional(z.coerce.number().describe("ID da venda")),
+"skuId": z.optional(z.coerce.number().describe("ID do SKU")),
+"tipo": z.optional(z.enum(["NORMAL", "BRINDE"]).describe("Tipo do item")),
+"qtdReservada": z.optional(z.coerce.number().describe("Quantidade reservada")),
+"qtdAceita": z.optional(z.coerce.number().describe("Quantidade aceita (cliente ficou)")),
+"qtdDevolvida": z.optional(z.coerce.number().describe("Quantidade devolvida")),
+"desconto": z.optional(z.coerce.number().describe("Desconto por item")),
+"precoUnit": z.optional(z.coerce.number().describe("Preço unitário"))
+    }) as unknown as z.ZodType<UpdateVendaItemDto>

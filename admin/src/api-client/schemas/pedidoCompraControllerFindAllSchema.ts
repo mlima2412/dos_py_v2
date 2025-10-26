@@ -4,17 +4,16 @@
 */
 
 import type { PedidoCompraControllerFindAllHeaderParams, PedidoCompraControllerFindAll200, PedidoCompraControllerFindAllQueryResponse } from "../types/PedidoCompraControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { pedidoCompraSchema } from "./pedidoCompraSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const pedidoCompraControllerFindAllHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
-      }) as unknown as ToZod<PedidoCompraControllerFindAllHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+    }) as unknown as z.ZodType<PedidoCompraControllerFindAllHeaderParams>
 
 /**
  * @description Lista de pedidos de compra retornada com sucesso
  */
-export const pedidoCompraControllerFindAll200Schema = z.array(z.lazy(() => pedidoCompraSchema)) as unknown as ToZod<PedidoCompraControllerFindAll200>
+export const pedidoCompraControllerFindAll200Schema = z.array(pedidoCompraSchema) as unknown as z.ZodType<PedidoCompraControllerFindAll200>
 
-export const pedidoCompraControllerFindAllQueryResponseSchema = z.lazy(() => pedidoCompraControllerFindAll200Schema) as unknown as ToZod<PedidoCompraControllerFindAllQueryResponse>
+export const pedidoCompraControllerFindAllQueryResponseSchema = pedidoCompraControllerFindAll200Schema as unknown as z.ZodType<PedidoCompraControllerFindAllQueryResponse>

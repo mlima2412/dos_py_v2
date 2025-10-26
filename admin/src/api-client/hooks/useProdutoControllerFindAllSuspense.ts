@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const produtoControllerFindAllSuspenseQueryKey = () =>   [{ url: '/produto' }] as const
+export const produtoControllerFindAllSuspenseQueryKey = () => [{ url: '/produto' }] as const
 
 export type ProdutoControllerFindAllSuspenseQueryKey = ReturnType<typeof produtoControllerFindAllSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type ProdutoControllerFindAllSuspenseQueryKey = ReturnType<typeof produto
  * {@link /produto}
  */
 export async function produtoControllerFindAllSuspense(headers: ProdutoControllerFindAllHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ProdutoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/produto`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ProdutoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/produto`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function produtoControllerFindAllSuspenseQueryOptions(headers: ProdutoControllerFindAllHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = produtoControllerFindAllSuspenseQueryKey()
-        return queryOptions<ProdutoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, ProdutoControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return produtoControllerFindAllSuspense(headers, config)
-         },
-        })
-  
+  const queryKey = produtoControllerFindAllSuspenseQueryKey()
+  return queryOptions<ProdutoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, ProdutoControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return produtoControllerFindAllSuspense(headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function produtoControllerFindAllSuspenseQueryOptions(headers: ProdutoCon
  * {@link /produto}
  */
 export function useProdutoControllerFindAllSuspense<TData = ProdutoControllerFindAllQueryResponse, TQueryKey extends QueryKey = ProdutoControllerFindAllSuspenseQueryKey>(headers: ProdutoControllerFindAllHeaderParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<ProdutoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? produtoControllerFindAllSuspenseQueryKey()
-  
-         const query = useSuspenseQuery({
-          ...produtoControllerFindAllSuspenseQueryOptions(headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<ProdutoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? produtoControllerFindAllSuspenseQueryKey()
+
+  const query = useSuspenseQuery({
+   ...produtoControllerFindAllSuspenseQueryOptions(headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

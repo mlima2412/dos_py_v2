@@ -4,16 +4,17 @@
 */
 
 import type { CanalOrigem } from "../types/CanalOrigem.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { clienteSchema } from "./clienteSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const canalOrigemSchema = z.object({
-      "id": z.coerce.number().describe("ID único do canal de origem"),
-  "publicId": z.coerce.string().describe("ID público do canal de origem"),
-  "nome": z.coerce.string().describe("Nome do canal de origem"),
-  "descricao": z.coerce.string().describe("Descrição do canal de origem").optional(),
-  "ativo": z.boolean().describe("Status ativo do canal de origem"),
-  "createdAt": z.string().datetime().describe("Data de criação do canal de origem"),
-  "clientes": z.array(z.lazy(() => clienteSchema)).describe("Clientes associados ao canal de origem").optional()
-      }) as unknown as ToZod<CanalOrigem>
+    "id": z.coerce.number().describe("ID único do canal de origem"),
+"publicId": z.coerce.string().describe("ID público do canal de origem"),
+"nome": z.coerce.string().describe("Nome do canal de origem"),
+"descricao": z.optional(z.coerce.string().describe("Descrição do canal de origem")),
+"ativo": z.boolean().describe("Status ativo do canal de origem"),
+"createdAt": z.string().datetime().describe("Data de criação do canal de origem"),
+get "clientes"(){
+                return z.optional(z.array(clienteSchema).describe("Clientes associados ao canal de origem"))
+              }
+    }) as unknown as z.ZodType<CanalOrigem>

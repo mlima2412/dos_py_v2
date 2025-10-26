@@ -4,26 +4,25 @@
 */
 
 import type { TransferenciaEstoqueControllerFindOnePathParams, TransferenciaEstoqueControllerFindOneHeaderParams, TransferenciaEstoqueControllerFindOne200, TransferenciaEstoqueControllerFindOne404, TransferenciaEstoqueControllerFindOneQueryResponse } from "../types/TransferenciaEstoqueControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { transferenciaEstoqueResponseDtoSchema } from "./transferenciaEstoqueResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const transferenciaEstoqueControllerFindOnePathParamsSchema = z.object({
-      "publicId": z.string().describe("Public ID da transferência")
-      }) as unknown as ToZod<TransferenciaEstoqueControllerFindOnePathParams>
+    "publicId": z.string().describe("Public ID da transferência")
+    }) as unknown as z.ZodType<TransferenciaEstoqueControllerFindOnePathParams>
 
 export const transferenciaEstoqueControllerFindOneHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
-      }) as unknown as ToZod<TransferenciaEstoqueControllerFindOneHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+    }) as unknown as z.ZodType<TransferenciaEstoqueControllerFindOneHeaderParams>
 
 /**
  * @description Transferência encontrada com sucesso
  */
-export const transferenciaEstoqueControllerFindOne200Schema = z.lazy(() => transferenciaEstoqueResponseDtoSchema) as unknown as ToZod<TransferenciaEstoqueControllerFindOne200>
+export const transferenciaEstoqueControllerFindOne200Schema = transferenciaEstoqueResponseDtoSchema as unknown as z.ZodType<TransferenciaEstoqueControllerFindOne200>
 
 /**
  * @description Transferência não encontrada
  */
-export const transferenciaEstoqueControllerFindOne404Schema = z.unknown() as unknown as ToZod<TransferenciaEstoqueControllerFindOne404>
+export const transferenciaEstoqueControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<TransferenciaEstoqueControllerFindOne404>
 
-export const transferenciaEstoqueControllerFindOneQueryResponseSchema = z.lazy(() => transferenciaEstoqueControllerFindOne200Schema) as unknown as ToZod<TransferenciaEstoqueControllerFindOneQueryResponse>
+export const transferenciaEstoqueControllerFindOneQueryResponseSchema = transferenciaEstoqueControllerFindOne200Schema as unknown as z.ZodType<TransferenciaEstoqueControllerFindOneQueryResponse>

@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ParcelamentoControllerUpdateMutationRequest, ParcelamentoControllerUpdateMutationResponse, ParcelamentoControllerUpdatePathParams } from "../types/ParcelamentoControllerUpdate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const parcelamentoControllerUpdateMutationKey = () =>   [{"url":"/parcelamento/{id}"}] as const
+export const parcelamentoControllerUpdateMutationKey = () => [{ url: '/parcelamento/:id' }] as const
 
 export type ParcelamentoControllerUpdateMutationKey = ReturnType<typeof parcelamentoControllerUpdateMutationKey>
 
@@ -18,11 +18,22 @@ export type ParcelamentoControllerUpdateMutationKey = ReturnType<typeof parcelam
  * {@link /parcelamento/:id}
  */
 export async function parcelamentoControllerUpdate(id: ParcelamentoControllerUpdatePathParams["id"], data?: ParcelamentoControllerUpdateMutationRequest, config: Partial<RequestConfig<ParcelamentoControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<ParcelamentoControllerUpdateMutationResponse, ResponseErrorConfig<Error>, ParcelamentoControllerUpdateMutationRequest>({ method : "PATCH", url : `/parcelamento/${id}`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<ParcelamentoControllerUpdateMutationResponse, ResponseErrorConfig<Error>, ParcelamentoControllerUpdateMutationRequest>({ method : "PATCH", url : `/parcelamento/${id}`, data : requestData, ... requestConfig })
-return res.data
+export function parcelamentoControllerUpdateMutationOptions(config: Partial<RequestConfig<ParcelamentoControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = parcelamentoControllerUpdateMutationKey()
+  return mutationOptions<ParcelamentoControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {id: ParcelamentoControllerUpdatePathParams["id"], data?: ParcelamentoControllerUpdateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ id, data }) => {
+      return parcelamentoControllerUpdate(id, data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /parcelamento/:id}
  */
 export function useParcelamentoControllerUpdate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ParcelamentoControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {id: ParcelamentoControllerUpdatePathParams["id"], data?: ParcelamentoControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<ParcelamentoControllerUpdateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? parcelamentoControllerUpdateMutationKey()
-  
-          return useMutation<ParcelamentoControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {id: ParcelamentoControllerUpdatePathParams["id"], data?: ParcelamentoControllerUpdateMutationRequest}, TContext>({
-            mutationFn: async({ id, data }) => {
-              return parcelamentoControllerUpdate(id, data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ParcelamentoControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {id: ParcelamentoControllerUpdatePathParams["id"], data?: ParcelamentoControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<ParcelamentoControllerUpdateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? parcelamentoControllerUpdateMutationKey()
+
+  const baseOptions = parcelamentoControllerUpdateMutationOptions(config) as UseMutationOptions<ParcelamentoControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {id: ParcelamentoControllerUpdatePathParams["id"], data?: ParcelamentoControllerUpdateMutationRequest}, TContext>
+
+  return useMutation<ParcelamentoControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {id: ParcelamentoControllerUpdatePathParams["id"], data?: ParcelamentoControllerUpdateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ParcelamentoControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {id: ParcelamentoControllerUpdatePathParams["id"], data?: ParcelamentoControllerUpdateMutationRequest}, TContext>
 }

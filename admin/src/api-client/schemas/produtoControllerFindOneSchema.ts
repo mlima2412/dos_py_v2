@@ -4,26 +4,25 @@
 */
 
 import type { ProdutoControllerFindOnePathParams, ProdutoControllerFindOneHeaderParams, ProdutoControllerFindOne200, ProdutoControllerFindOne404, ProdutoControllerFindOneQueryResponse } from "../types/ProdutoControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { produtoSchema } from "./produtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const produtoControllerFindOnePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do produto")
-      }) as unknown as ToZod<ProdutoControllerFindOnePathParams>
+    "publicId": z.string().describe("ID público do produto")
+    }) as unknown as z.ZodType<ProdutoControllerFindOnePathParams>
 
 export const produtoControllerFindOneHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<ProdutoControllerFindOneHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<ProdutoControllerFindOneHeaderParams>
 
 /**
  * @description Produto encontrado
  */
-export const produtoControllerFindOne200Schema = z.lazy(() => produtoSchema) as unknown as ToZod<ProdutoControllerFindOne200>
+export const produtoControllerFindOne200Schema = produtoSchema as unknown as z.ZodType<ProdutoControllerFindOne200>
 
 /**
  * @description Produto não encontrado
  */
-export const produtoControllerFindOne404Schema = z.unknown() as unknown as ToZod<ProdutoControllerFindOne404>
+export const produtoControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<ProdutoControllerFindOne404>
 
-export const produtoControllerFindOneQueryResponseSchema = z.lazy(() => produtoControllerFindOne200Schema) as unknown as ToZod<ProdutoControllerFindOneQueryResponse>
+export const produtoControllerFindOneQueryResponseSchema = produtoControllerFindOne200Schema as unknown as z.ZodType<ProdutoControllerFindOneQueryResponse>

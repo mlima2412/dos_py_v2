@@ -4,13 +4,12 @@
 */
 
 import type { UpdatePedidoCompraItemDto } from "../types/UpdatePedidoCompraItemDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const updatePedidoCompraItemDtoSchema = z.object({
-      "pedidoCompraId": z.coerce.number().describe("ID do pedido de compra").optional(),
-  "skuId": z.coerce.number().describe("ID do SKU do produto").optional(),
-  "qtd": z.coerce.number().describe("Quantidade do item").optional(),
-  "precoCompra": z.coerce.number().describe("Preço de compra unitário").optional(),
-  "observacao": z.coerce.string().describe("Observações do item").optional()
-      }) as unknown as ToZod<UpdatePedidoCompraItemDto>
+    "pedidoCompraId": z.optional(z.coerce.number().describe("ID do pedido de compra")),
+"skuId": z.optional(z.coerce.number().describe("ID do SKU do produto")),
+"qtd": z.optional(z.coerce.number().describe("Quantidade do item")),
+"precoCompra": z.optional(z.coerce.number().describe("Preço de compra unitário")),
+"observacao": z.optional(z.coerce.string().describe("Observações do item"))
+    }) as unknown as z.ZodType<UpdatePedidoCompraItemDto>

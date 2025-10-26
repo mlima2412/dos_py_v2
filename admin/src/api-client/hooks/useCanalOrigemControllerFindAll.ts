@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const canalOrigemControllerFindAllQueryKey = () =>   [{ url: '/canal-origem' }] as const
+export const canalOrigemControllerFindAllQueryKey = () => [{ url: '/canal-origem' }] as const
 
 export type CanalOrigemControllerFindAllQueryKey = ReturnType<typeof canalOrigemControllerFindAllQueryKey>
 
@@ -18,25 +18,22 @@ export type CanalOrigemControllerFindAllQueryKey = ReturnType<typeof canalOrigem
  * {@link /canal-origem}
  */
 export async function canalOrigemControllerFindAll(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<CanalOrigemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/canal-origem`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<CanalOrigemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/canal-origem`, ... requestConfig })  
+  return res.data
 }
 
 export function canalOrigemControllerFindAllQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = canalOrigemControllerFindAllQueryKey()
-        return queryOptions<CanalOrigemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, CanalOrigemControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return canalOrigemControllerFindAll(config)
-         },
-        })
-  
+  const queryKey = canalOrigemControllerFindAllQueryKey()
+  return queryOptions<CanalOrigemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, CanalOrigemControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return canalOrigemControllerFindAll(config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function canalOrigemControllerFindAllQueryOptions(config: Partial<Request
  * {@link /canal-origem}
  */
 export function useCanalOrigemControllerFindAll<TData = CanalOrigemControllerFindAllQueryResponse, TQueryData = CanalOrigemControllerFindAllQueryResponse, TQueryKey extends QueryKey = CanalOrigemControllerFindAllQueryKey>(options: 
-  {
-    query?: Partial<QueryObserverOptions<CanalOrigemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? canalOrigemControllerFindAllQueryKey()
-  
-         const query = useQuery({
-          ...canalOrigemControllerFindAllQueryOptions(config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<CanalOrigemControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? canalOrigemControllerFindAllQueryKey()
+
+  const query = useQuery({
+   ...canalOrigemControllerFindAllQueryOptions(config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

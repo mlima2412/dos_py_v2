@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const rollupClassificacaoControllerGetCategoriaAnoSuspenseQueryKey = (params: RollupClassificacaoControllerGetCategoriaAnoQueryParams) =>   [{ url: '/dashboard/despesas/classificacao/categoria-ano' }, ...(params ? [params] : [])] as const
+export const rollupClassificacaoControllerGetCategoriaAnoSuspenseQueryKey = (params: RollupClassificacaoControllerGetCategoriaAnoQueryParams) => [{ url: '/dashboard/despesas/classificacao/categoria-ano' }, ...(params ? [params] : [])] as const
 
 export type RollupClassificacaoControllerGetCategoriaAnoSuspenseQueryKey = ReturnType<typeof rollupClassificacaoControllerGetCategoriaAnoSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type RollupClassificacaoControllerGetCategoriaAnoSuspenseQueryKey = Retur
  * {@link /dashboard/despesas/classificacao/categoria-ano}
  */
 export async function rollupClassificacaoControllerGetCategoriaAnoSuspense(params: RollupClassificacaoControllerGetCategoriaAnoQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<RollupClassificacaoControllerGetCategoriaAnoQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/dashboard/despesas/classificacao/categoria-ano`, params, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<RollupClassificacaoControllerGetCategoriaAnoQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/dashboard/despesas/classificacao/categoria-ano`, params, ... requestConfig })  
+  return res.data
 }
 
 export function rollupClassificacaoControllerGetCategoriaAnoSuspenseQueryOptions(params: RollupClassificacaoControllerGetCategoriaAnoQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = rollupClassificacaoControllerGetCategoriaAnoSuspenseQueryKey(params)
-        return queryOptions<RollupClassificacaoControllerGetCategoriaAnoQueryResponse, ResponseErrorConfig<Error>, RollupClassificacaoControllerGetCategoriaAnoQueryResponse, typeof queryKey>({
-         enabled: !!(params),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return rollupClassificacaoControllerGetCategoriaAnoSuspense(params, config)
-         },
-        })
-  
+  const queryKey = rollupClassificacaoControllerGetCategoriaAnoSuspenseQueryKey(params)
+  return queryOptions<RollupClassificacaoControllerGetCategoriaAnoQueryResponse, ResponseErrorConfig<Error>, RollupClassificacaoControllerGetCategoriaAnoQueryResponse, typeof queryKey>({
+   enabled: !!(params),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return rollupClassificacaoControllerGetCategoriaAnoSuspense(params, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function rollupClassificacaoControllerGetCategoriaAnoSuspenseQueryOptions
  * {@link /dashboard/despesas/classificacao/categoria-ano}
  */
 export function useRollupClassificacaoControllerGetCategoriaAnoSuspense<TData = RollupClassificacaoControllerGetCategoriaAnoQueryResponse, TQueryKey extends QueryKey = RollupClassificacaoControllerGetCategoriaAnoSuspenseQueryKey>(params: RollupClassificacaoControllerGetCategoriaAnoQueryParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<RollupClassificacaoControllerGetCategoriaAnoQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? rollupClassificacaoControllerGetCategoriaAnoSuspenseQueryKey(params)
-  
-         const query = useSuspenseQuery({
-          ...rollupClassificacaoControllerGetCategoriaAnoSuspenseQueryOptions(params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<RollupClassificacaoControllerGetCategoriaAnoQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? rollupClassificacaoControllerGetCategoriaAnoSuspenseQueryKey(params)
+
+  const query = useSuspenseQuery({
+   ...rollupClassificacaoControllerGetCategoriaAnoSuspenseQueryOptions(params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

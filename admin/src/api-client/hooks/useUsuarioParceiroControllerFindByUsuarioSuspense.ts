@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const usuarioParceiroControllerFindByUsuarioSuspenseQueryKey = (usuarioId: UsuarioParceiroControllerFindByUsuarioPathParams["usuarioId"]) =>   [{ url: '/usuario-parceiro/usuario/:usuarioId', params: {usuarioId:usuarioId} }] as const
+export const usuarioParceiroControllerFindByUsuarioSuspenseQueryKey = (usuarioId: UsuarioParceiroControllerFindByUsuarioPathParams["usuarioId"]) => [{ url: '/usuario-parceiro/usuario/:usuarioId', params: {usuarioId:usuarioId} }] as const
 
 export type UsuarioParceiroControllerFindByUsuarioSuspenseQueryKey = ReturnType<typeof usuarioParceiroControllerFindByUsuarioSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type UsuarioParceiroControllerFindByUsuarioSuspenseQueryKey = ReturnType<
  * {@link /usuario-parceiro/usuario/:usuarioId}
  */
 export async function usuarioParceiroControllerFindByUsuarioSuspense(usuarioId: UsuarioParceiroControllerFindByUsuarioPathParams["usuarioId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<UsuarioParceiroControllerFindByUsuarioQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/usuario-parceiro/usuario/${usuarioId}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<UsuarioParceiroControllerFindByUsuarioQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/usuario-parceiro/usuario/${usuarioId}`, ... requestConfig })  
+  return res.data
 }
 
 export function usuarioParceiroControllerFindByUsuarioSuspenseQueryOptions(usuarioId: UsuarioParceiroControllerFindByUsuarioPathParams["usuarioId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = usuarioParceiroControllerFindByUsuarioSuspenseQueryKey(usuarioId)
-        return queryOptions<UsuarioParceiroControllerFindByUsuarioQueryResponse, ResponseErrorConfig<Error>, UsuarioParceiroControllerFindByUsuarioQueryResponse, typeof queryKey>({
-         enabled: !!(usuarioId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return usuarioParceiroControllerFindByUsuarioSuspense(usuarioId, config)
-         },
-        })
-  
+  const queryKey = usuarioParceiroControllerFindByUsuarioSuspenseQueryKey(usuarioId)
+  return queryOptions<UsuarioParceiroControllerFindByUsuarioQueryResponse, ResponseErrorConfig<Error>, UsuarioParceiroControllerFindByUsuarioQueryResponse, typeof queryKey>({
+   enabled: !!(usuarioId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return usuarioParceiroControllerFindByUsuarioSuspense(usuarioId, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function usuarioParceiroControllerFindByUsuarioSuspenseQueryOptions(usuar
  * {@link /usuario-parceiro/usuario/:usuarioId}
  */
 export function useUsuarioParceiroControllerFindByUsuarioSuspense<TData = UsuarioParceiroControllerFindByUsuarioQueryResponse, TQueryKey extends QueryKey = UsuarioParceiroControllerFindByUsuarioSuspenseQueryKey>(usuarioId: UsuarioParceiroControllerFindByUsuarioPathParams["usuarioId"], options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<UsuarioParceiroControllerFindByUsuarioQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? usuarioParceiroControllerFindByUsuarioSuspenseQueryKey(usuarioId)
-  
-         const query = useSuspenseQuery({
-          ...usuarioParceiroControllerFindByUsuarioSuspenseQueryOptions(usuarioId, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<UsuarioParceiroControllerFindByUsuarioQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? usuarioParceiroControllerFindByUsuarioSuspenseQueryKey(usuarioId)
+
+  const query = useSuspenseQuery({
+   ...usuarioParceiroControllerFindByUsuarioSuspenseQueryOptions(usuarioId, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

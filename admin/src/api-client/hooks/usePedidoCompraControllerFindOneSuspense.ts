@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const pedidoCompraControllerFindOneSuspenseQueryKey = (publicId: PedidoCompraControllerFindOnePathParams["publicId"]) =>   [{ url: '/pedido-compra/:publicId', params: {publicId:publicId} }] as const
+export const pedidoCompraControllerFindOneSuspenseQueryKey = (publicId: PedidoCompraControllerFindOnePathParams["publicId"]) => [{ url: '/pedido-compra/:publicId', params: {publicId:publicId} }] as const
 
 export type PedidoCompraControllerFindOneSuspenseQueryKey = ReturnType<typeof pedidoCompraControllerFindOneSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type PedidoCompraControllerFindOneSuspenseQueryKey = ReturnType<typeof pe
  * {@link /pedido-compra/:publicId}
  */
 export async function pedidoCompraControllerFindOneSuspense(publicId: PedidoCompraControllerFindOnePathParams["publicId"], headers: PedidoCompraControllerFindOneHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<PedidoCompraControllerFindOneQueryResponse, ResponseErrorConfig<PedidoCompraControllerFindOne404>, unknown>({ method : "GET", url : `/pedido-compra/${publicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<PedidoCompraControllerFindOneQueryResponse, ResponseErrorConfig<PedidoCompraControllerFindOne404>, unknown>({ method : "GET", url : `/pedido-compra/${publicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function pedidoCompraControllerFindOneSuspenseQueryOptions(publicId: PedidoCompraControllerFindOnePathParams["publicId"], headers: PedidoCompraControllerFindOneHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = pedidoCompraControllerFindOneSuspenseQueryKey(publicId)
-        return queryOptions<PedidoCompraControllerFindOneQueryResponse, ResponseErrorConfig<PedidoCompraControllerFindOne404>, PedidoCompraControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(publicId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return pedidoCompraControllerFindOneSuspense(publicId, headers, config)
-         },
-        })
-  
+  const queryKey = pedidoCompraControllerFindOneSuspenseQueryKey(publicId)
+  return queryOptions<PedidoCompraControllerFindOneQueryResponse, ResponseErrorConfig<PedidoCompraControllerFindOne404>, PedidoCompraControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(publicId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return pedidoCompraControllerFindOneSuspense(publicId, headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function pedidoCompraControllerFindOneSuspenseQueryOptions(publicId: Pedi
  * {@link /pedido-compra/:publicId}
  */
 export function usePedidoCompraControllerFindOneSuspense<TData = PedidoCompraControllerFindOneQueryResponse, TQueryKey extends QueryKey = PedidoCompraControllerFindOneSuspenseQueryKey>(publicId: PedidoCompraControllerFindOnePathParams["publicId"], headers: PedidoCompraControllerFindOneHeaderParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<PedidoCompraControllerFindOneQueryResponse, ResponseErrorConfig<PedidoCompraControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? pedidoCompraControllerFindOneSuspenseQueryKey(publicId)
-  
-         const query = useSuspenseQuery({
-          ...pedidoCompraControllerFindOneSuspenseQueryOptions(publicId, headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<PedidoCompraControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<PedidoCompraControllerFindOneQueryResponse, ResponseErrorConfig<PedidoCompraControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? pedidoCompraControllerFindOneSuspenseQueryKey(publicId)
+
+  const query = useSuspenseQuery({
+   ...pedidoCompraControllerFindOneSuspenseQueryOptions(publicId, headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<PedidoCompraControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

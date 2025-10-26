@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const conferenciaItemControllerFindOneSuspenseQueryKey = (id: ConferenciaItemControllerFindOnePathParams["id"]) =>   [{ url: '/conferencia-item/:id', params: {id:id} }] as const
+export const conferenciaItemControllerFindOneSuspenseQueryKey = (id: ConferenciaItemControllerFindOnePathParams["id"]) => [{ url: '/conferencia-item/:id', params: {id:id} }] as const
 
 export type ConferenciaItemControllerFindOneSuspenseQueryKey = ReturnType<typeof conferenciaItemControllerFindOneSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type ConferenciaItemControllerFindOneSuspenseQueryKey = ReturnType<typeof
  * {@link /conferencia-item/:id}
  */
 export async function conferenciaItemControllerFindOneSuspense(id: ConferenciaItemControllerFindOnePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ConferenciaItemControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaItemControllerFindOne404>, unknown>({ method : "GET", url : `/conferencia-item/${id}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ConferenciaItemControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaItemControllerFindOne404>, unknown>({ method : "GET", url : `/conferencia-item/${id}`, ... requestConfig })  
+  return res.data
 }
 
 export function conferenciaItemControllerFindOneSuspenseQueryOptions(id: ConferenciaItemControllerFindOnePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = conferenciaItemControllerFindOneSuspenseQueryKey(id)
-        return queryOptions<ConferenciaItemControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaItemControllerFindOne404>, ConferenciaItemControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(id),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return conferenciaItemControllerFindOneSuspense(id, config)
-         },
-        })
-  
+  const queryKey = conferenciaItemControllerFindOneSuspenseQueryKey(id)
+  return queryOptions<ConferenciaItemControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaItemControllerFindOne404>, ConferenciaItemControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(id),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return conferenciaItemControllerFindOneSuspense(id, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function conferenciaItemControllerFindOneSuspenseQueryOptions(id: Confere
  * {@link /conferencia-item/:id}
  */
 export function useConferenciaItemControllerFindOneSuspense<TData = ConferenciaItemControllerFindOneQueryResponse, TQueryKey extends QueryKey = ConferenciaItemControllerFindOneSuspenseQueryKey>(id: ConferenciaItemControllerFindOnePathParams["id"], options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<ConferenciaItemControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaItemControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? conferenciaItemControllerFindOneSuspenseQueryKey(id)
-  
-         const query = useSuspenseQuery({
-          ...conferenciaItemControllerFindOneSuspenseQueryOptions(id, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<ConferenciaItemControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<ConferenciaItemControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaItemControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? conferenciaItemControllerFindOneSuspenseQueryKey(id)
+
+  const query = useSuspenseQuery({
+   ...conferenciaItemControllerFindOneSuspenseQueryOptions(id, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<ConferenciaItemControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

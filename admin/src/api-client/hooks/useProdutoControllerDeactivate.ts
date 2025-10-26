@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ProdutoControllerDeactivateMutationResponse, ProdutoControllerDeactivatePathParams, ProdutoControllerDeactivateHeaderParams, ProdutoControllerDeactivate404 } from "../types/ProdutoControllerDeactivate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const produtoControllerDeactivateMutationKey = () =>   [{"url":"/produto/{publicId}/desativar"}] as const
+export const produtoControllerDeactivateMutationKey = () => [{ url: '/produto/:publicId/desativar' }] as const
 
 export type ProdutoControllerDeactivateMutationKey = ReturnType<typeof produtoControllerDeactivateMutationKey>
 
@@ -18,11 +18,20 @@ export type ProdutoControllerDeactivateMutationKey = ReturnType<typeof produtoCo
  * {@link /produto/:publicId/desativar}
  */
 export async function produtoControllerDeactivate(publicId: ProdutoControllerDeactivatePathParams["publicId"], headers: ProdutoControllerDeactivateHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ProdutoControllerDeactivateMutationResponse, ResponseErrorConfig<ProdutoControllerDeactivate404>, unknown>({ method : "PATCH", url : `/produto/${publicId}/desativar`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-
-const res = await request<ProdutoControllerDeactivateMutationResponse, ResponseErrorConfig<ProdutoControllerDeactivate404>, unknown>({ method : "PATCH", url : `/produto/${publicId}/desativar`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function produtoControllerDeactivateMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = produtoControllerDeactivateMutationKey()
+  return mutationOptions<ProdutoControllerDeactivateMutationResponse, ResponseErrorConfig<ProdutoControllerDeactivate404>, {publicId: ProdutoControllerDeactivatePathParams["publicId"], headers: ProdutoControllerDeactivateHeaderParams}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId, headers }) => {
+      return produtoControllerDeactivate(publicId, headers, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /produto/:publicId/desativar}
  */
 export function useProdutoControllerDeactivate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ProdutoControllerDeactivateMutationResponse, ResponseErrorConfig<ProdutoControllerDeactivate404>, {publicId: ProdutoControllerDeactivatePathParams["publicId"], headers: ProdutoControllerDeactivateHeaderParams}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? produtoControllerDeactivateMutationKey()
-  
-          return useMutation<ProdutoControllerDeactivateMutationResponse, ResponseErrorConfig<ProdutoControllerDeactivate404>, {publicId: ProdutoControllerDeactivatePathParams["publicId"], headers: ProdutoControllerDeactivateHeaderParams}, TContext>({
-            mutationFn: async({ publicId, headers }) => {
-              return produtoControllerDeactivate(publicId, headers, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ProdutoControllerDeactivateMutationResponse, ResponseErrorConfig<ProdutoControllerDeactivate404>, {publicId: ProdutoControllerDeactivatePathParams["publicId"], headers: ProdutoControllerDeactivateHeaderParams}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? produtoControllerDeactivateMutationKey()
+
+  const baseOptions = produtoControllerDeactivateMutationOptions(config) as UseMutationOptions<ProdutoControllerDeactivateMutationResponse, ResponseErrorConfig<ProdutoControllerDeactivate404>, {publicId: ProdutoControllerDeactivatePathParams["publicId"], headers: ProdutoControllerDeactivateHeaderParams}, TContext>
+
+  return useMutation<ProdutoControllerDeactivateMutationResponse, ResponseErrorConfig<ProdutoControllerDeactivate404>, {publicId: ProdutoControllerDeactivatePathParams["publicId"], headers: ProdutoControllerDeactivateHeaderParams}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ProdutoControllerDeactivateMutationResponse, ResponseErrorConfig<ProdutoControllerDeactivate404>, {publicId: ProdutoControllerDeactivatePathParams["publicId"], headers: ProdutoControllerDeactivateHeaderParams}, TContext>
 }

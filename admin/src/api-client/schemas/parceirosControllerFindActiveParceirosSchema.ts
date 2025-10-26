@@ -4,13 +4,12 @@
 */
 
 import type { ParceirosControllerFindActiveParceiros200, ParceirosControllerFindActiveParceirosQueryResponse } from "../types/ParceirosControllerFindActiveParceiros.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { parceiroSchema } from "./parceiroSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Lista de parceiros ativos
  */
-export const parceirosControllerFindActiveParceiros200Schema = z.array(z.lazy(() => parceiroSchema)) as unknown as ToZod<ParceirosControllerFindActiveParceiros200>
+export const parceirosControllerFindActiveParceiros200Schema = z.array(parceiroSchema) as unknown as z.ZodType<ParceirosControllerFindActiveParceiros200>
 
-export const parceirosControllerFindActiveParceirosQueryResponseSchema = z.lazy(() => parceirosControllerFindActiveParceiros200Schema) as unknown as ToZod<ParceirosControllerFindActiveParceirosQueryResponse>
+export const parceirosControllerFindActiveParceirosQueryResponseSchema = parceirosControllerFindActiveParceiros200Schema as unknown as z.ZodType<ParceirosControllerFindActiveParceirosQueryResponse>

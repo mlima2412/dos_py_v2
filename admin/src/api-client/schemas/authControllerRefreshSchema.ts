@@ -4,22 +4,21 @@
 */
 
 import type { AuthControllerRefresh200, AuthControllerRefresh401, AuthControllerRefreshMutationRequest, AuthControllerRefreshMutationResponse } from "../types/AuthControllerRefresh.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { refreshTokenDtoSchema } from "./refreshTokenDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Token renovado com sucesso
  */
 export const authControllerRefresh200Schema = z.object({
-      "accessToken": z.coerce.string().optional()
-      }) as unknown as ToZod<AuthControllerRefresh200>
+    "accessToken": z.optional(z.coerce.string())
+    }) as unknown as z.ZodType<AuthControllerRefresh200>
 
 /**
  * @description Refresh token inválido
  */
-export const authControllerRefresh401Schema = z.unknown() as unknown as ToZod<AuthControllerRefresh401>
+export const authControllerRefresh401Schema = z.unknown() as unknown as z.ZodType<AuthControllerRefresh401>
 
-export const authControllerRefreshMutationRequestSchema = z.lazy(() => refreshTokenDtoSchema) as unknown as ToZod<AuthControllerRefreshMutationRequest>
+export const authControllerRefreshMutationRequestSchema = refreshTokenDtoSchema as unknown as z.ZodType<AuthControllerRefreshMutationRequest>
 
-export const authControllerRefreshMutationResponseSchema = z.lazy(() => authControllerRefresh200Schema) as unknown as ToZod<AuthControllerRefreshMutationResponse>
+export const authControllerRefreshMutationResponseSchema = authControllerRefresh200Schema as unknown as z.ZodType<AuthControllerRefreshMutationResponse>

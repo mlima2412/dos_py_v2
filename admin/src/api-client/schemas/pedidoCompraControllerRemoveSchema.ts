@@ -4,30 +4,29 @@
 */
 
 import type { PedidoCompraControllerRemovePathParams, PedidoCompraControllerRemoveHeaderParams, PedidoCompraControllerRemove200, PedidoCompraControllerRemove404, PedidoCompraControllerRemove409, PedidoCompraControllerRemoveMutationResponse } from "../types/PedidoCompraControllerRemove.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const pedidoCompraControllerRemovePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do pedido de compra (UUID v7)")
-      }) as unknown as ToZod<PedidoCompraControllerRemovePathParams>
+    "publicId": z.string().describe("ID público do pedido de compra (UUID v7)")
+    }) as unknown as z.ZodType<PedidoCompraControllerRemovePathParams>
 
 export const pedidoCompraControllerRemoveHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
-      }) as unknown as ToZod<PedidoCompraControllerRemoveHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+    }) as unknown as z.ZodType<PedidoCompraControllerRemoveHeaderParams>
 
 /**
  * @description Pedido de compra removido com sucesso
  */
-export const pedidoCompraControllerRemove200Schema = z.unknown() as unknown as ToZod<PedidoCompraControllerRemove200>
+export const pedidoCompraControllerRemove200Schema = z.unknown() as unknown as z.ZodType<PedidoCompraControllerRemove200>
 
 /**
  * @description Pedido de compra não encontrado
  */
-export const pedidoCompraControllerRemove404Schema = z.unknown() as unknown as ToZod<PedidoCompraControllerRemove404>
+export const pedidoCompraControllerRemove404Schema = z.unknown() as unknown as z.ZodType<PedidoCompraControllerRemove404>
 
 /**
  * @description Não é possível remover um pedido finalizado
  */
-export const pedidoCompraControllerRemove409Schema = z.unknown() as unknown as ToZod<PedidoCompraControllerRemove409>
+export const pedidoCompraControllerRemove409Schema = z.unknown() as unknown as z.ZodType<PedidoCompraControllerRemove409>
 
-export const pedidoCompraControllerRemoveMutationResponseSchema = z.lazy(() => pedidoCompraControllerRemove200Schema) as unknown as ToZod<PedidoCompraControllerRemoveMutationResponse>
+export const pedidoCompraControllerRemoveMutationResponseSchema = pedidoCompraControllerRemove200Schema as unknown as z.ZodType<PedidoCompraControllerRemoveMutationResponse>

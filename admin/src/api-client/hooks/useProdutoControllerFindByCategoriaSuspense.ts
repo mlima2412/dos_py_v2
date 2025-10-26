@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const produtoControllerFindByCategoriaSuspenseQueryKey = (categoriaId: ProdutoControllerFindByCategoriaPathParams["categoriaId"]) =>   [{ url: '/produto/categoria/:categoriaId', params: {categoriaId:categoriaId} }] as const
+export const produtoControllerFindByCategoriaSuspenseQueryKey = (categoriaId: ProdutoControllerFindByCategoriaPathParams["categoriaId"]) => [{ url: '/produto/categoria/:categoriaId', params: {categoriaId:categoriaId} }] as const
 
 export type ProdutoControllerFindByCategoriaSuspenseQueryKey = ReturnType<typeof produtoControllerFindByCategoriaSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type ProdutoControllerFindByCategoriaSuspenseQueryKey = ReturnType<typeof
  * {@link /produto/categoria/:categoriaId}
  */
 export async function produtoControllerFindByCategoriaSuspense(categoriaId: ProdutoControllerFindByCategoriaPathParams["categoriaId"], headers: ProdutoControllerFindByCategoriaHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ProdutoControllerFindByCategoriaQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/produto/categoria/${categoriaId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ProdutoControllerFindByCategoriaQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/produto/categoria/${categoriaId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function produtoControllerFindByCategoriaSuspenseQueryOptions(categoriaId: ProdutoControllerFindByCategoriaPathParams["categoriaId"], headers: ProdutoControllerFindByCategoriaHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = produtoControllerFindByCategoriaSuspenseQueryKey(categoriaId)
-        return queryOptions<ProdutoControllerFindByCategoriaQueryResponse, ResponseErrorConfig<Error>, ProdutoControllerFindByCategoriaQueryResponse, typeof queryKey>({
-         enabled: !!(categoriaId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return produtoControllerFindByCategoriaSuspense(categoriaId, headers, config)
-         },
-        })
-  
+  const queryKey = produtoControllerFindByCategoriaSuspenseQueryKey(categoriaId)
+  return queryOptions<ProdutoControllerFindByCategoriaQueryResponse, ResponseErrorConfig<Error>, ProdutoControllerFindByCategoriaQueryResponse, typeof queryKey>({
+   enabled: !!(categoriaId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return produtoControllerFindByCategoriaSuspense(categoriaId, headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function produtoControllerFindByCategoriaSuspenseQueryOptions(categoriaId
  * {@link /produto/categoria/:categoriaId}
  */
 export function useProdutoControllerFindByCategoriaSuspense<TData = ProdutoControllerFindByCategoriaQueryResponse, TQueryKey extends QueryKey = ProdutoControllerFindByCategoriaSuspenseQueryKey>(categoriaId: ProdutoControllerFindByCategoriaPathParams["categoriaId"], headers: ProdutoControllerFindByCategoriaHeaderParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<ProdutoControllerFindByCategoriaQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? produtoControllerFindByCategoriaSuspenseQueryKey(categoriaId)
-  
-         const query = useSuspenseQuery({
-          ...produtoControllerFindByCategoriaSuspenseQueryOptions(categoriaId, headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<ProdutoControllerFindByCategoriaQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? produtoControllerFindByCategoriaSuspenseQueryKey(categoriaId)
+
+  const query = useSuspenseQuery({
+   ...produtoControllerFindByCategoriaSuspenseQueryOptions(categoriaId, headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

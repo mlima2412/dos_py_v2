@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ProdutoControllerUpdateMutationRequest, ProdutoControllerUpdateMutationResponse, ProdutoControllerUpdatePathParams, ProdutoControllerUpdateHeaderParams, ProdutoControllerUpdate400, ProdutoControllerUpdate404, ProdutoControllerUpdate409 } from "../types/ProdutoControllerUpdate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const produtoControllerUpdateMutationKey = () =>   [{"url":"/produto/{publicId}"}] as const
+export const produtoControllerUpdateMutationKey = () => [{ url: '/produto/:publicId' }] as const
 
 export type ProdutoControllerUpdateMutationKey = ReturnType<typeof produtoControllerUpdateMutationKey>
 
@@ -18,11 +18,22 @@ export type ProdutoControllerUpdateMutationKey = ReturnType<typeof produtoContro
  * {@link /produto/:publicId}
  */
 export async function produtoControllerUpdate(publicId: ProdutoControllerUpdatePathParams["publicId"], headers: ProdutoControllerUpdateHeaderParams, data?: ProdutoControllerUpdateMutationRequest, config: Partial<RequestConfig<ProdutoControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<ProdutoControllerUpdateMutationResponse, ResponseErrorConfig<ProdutoControllerUpdate400 | ProdutoControllerUpdate404 | ProdutoControllerUpdate409>, ProdutoControllerUpdateMutationRequest>({ method : "PATCH", url : `/produto/${publicId}`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<ProdutoControllerUpdateMutationResponse, ResponseErrorConfig<ProdutoControllerUpdate400 | ProdutoControllerUpdate404 | ProdutoControllerUpdate409>, ProdutoControllerUpdateMutationRequest>({ method : "PATCH", url : `/produto/${publicId}`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function produtoControllerUpdateMutationOptions(config: Partial<RequestConfig<ProdutoControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = produtoControllerUpdateMutationKey()
+  return mutationOptions<ProdutoControllerUpdateMutationResponse, ResponseErrorConfig<ProdutoControllerUpdate400 | ProdutoControllerUpdate404 | ProdutoControllerUpdate409>, {publicId: ProdutoControllerUpdatePathParams["publicId"], headers: ProdutoControllerUpdateHeaderParams, data?: ProdutoControllerUpdateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId, headers, data }) => {
+      return produtoControllerUpdate(publicId, headers, data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /produto/:publicId}
  */
 export function useProdutoControllerUpdate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ProdutoControllerUpdateMutationResponse, ResponseErrorConfig<ProdutoControllerUpdate400 | ProdutoControllerUpdate404 | ProdutoControllerUpdate409>, {publicId: ProdutoControllerUpdatePathParams["publicId"], headers: ProdutoControllerUpdateHeaderParams, data?: ProdutoControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<ProdutoControllerUpdateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? produtoControllerUpdateMutationKey()
-  
-          return useMutation<ProdutoControllerUpdateMutationResponse, ResponseErrorConfig<ProdutoControllerUpdate400 | ProdutoControllerUpdate404 | ProdutoControllerUpdate409>, {publicId: ProdutoControllerUpdatePathParams["publicId"], headers: ProdutoControllerUpdateHeaderParams, data?: ProdutoControllerUpdateMutationRequest}, TContext>({
-            mutationFn: async({ publicId, headers, data }) => {
-              return produtoControllerUpdate(publicId, headers, data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ProdutoControllerUpdateMutationResponse, ResponseErrorConfig<ProdutoControllerUpdate400 | ProdutoControllerUpdate404 | ProdutoControllerUpdate409>, {publicId: ProdutoControllerUpdatePathParams["publicId"], headers: ProdutoControllerUpdateHeaderParams, data?: ProdutoControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<ProdutoControllerUpdateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? produtoControllerUpdateMutationKey()
+
+  const baseOptions = produtoControllerUpdateMutationOptions(config) as UseMutationOptions<ProdutoControllerUpdateMutationResponse, ResponseErrorConfig<ProdutoControllerUpdate400 | ProdutoControllerUpdate404 | ProdutoControllerUpdate409>, {publicId: ProdutoControllerUpdatePathParams["publicId"], headers: ProdutoControllerUpdateHeaderParams, data?: ProdutoControllerUpdateMutationRequest}, TContext>
+
+  return useMutation<ProdutoControllerUpdateMutationResponse, ResponseErrorConfig<ProdutoControllerUpdate400 | ProdutoControllerUpdate404 | ProdutoControllerUpdate409>, {publicId: ProdutoControllerUpdatePathParams["publicId"], headers: ProdutoControllerUpdateHeaderParams, data?: ProdutoControllerUpdateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ProdutoControllerUpdateMutationResponse, ResponseErrorConfig<ProdutoControllerUpdate400 | ProdutoControllerUpdate404 | ProdutoControllerUpdate409>, {publicId: ProdutoControllerUpdatePathParams["publicId"], headers: ProdutoControllerUpdateHeaderParams, data?: ProdutoControllerUpdateMutationRequest}, TContext>
 }

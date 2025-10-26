@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ContasPagarControllerRemoveMutationResponse, ContasPagarControllerRemovePathParams, ContasPagarControllerRemove404 } from "../types/ContasPagarControllerRemove.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const contasPagarControllerRemoveMutationKey = () =>   [{"url":"/contas-pagar/{publicId}"}] as const
+export const contasPagarControllerRemoveMutationKey = () => [{ url: '/contas-pagar/:publicId' }] as const
 
 export type ContasPagarControllerRemoveMutationKey = ReturnType<typeof contasPagarControllerRemoveMutationKey>
 
@@ -18,11 +18,20 @@ export type ContasPagarControllerRemoveMutationKey = ReturnType<typeof contasPag
  * {@link /contas-pagar/:publicId}
  */
 export async function contasPagarControllerRemove(publicId: ContasPagarControllerRemovePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ContasPagarControllerRemoveMutationResponse, ResponseErrorConfig<ContasPagarControllerRemove404>, unknown>({ method : "DELETE", url : `/contas-pagar/${publicId}`, ... requestConfig })  
+  return res.data
+}
 
-
-const res = await request<ContasPagarControllerRemoveMutationResponse, ResponseErrorConfig<ContasPagarControllerRemove404>, unknown>({ method : "DELETE", url : `/contas-pagar/${publicId}`, ... requestConfig })
-return res.data
+export function contasPagarControllerRemoveMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = contasPagarControllerRemoveMutationKey()
+  return mutationOptions<ContasPagarControllerRemoveMutationResponse, ResponseErrorConfig<ContasPagarControllerRemove404>, {publicId: ContasPagarControllerRemovePathParams["publicId"]}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId }) => {
+      return contasPagarControllerRemove(publicId, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /contas-pagar/:publicId}
  */
 export function useContasPagarControllerRemove<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ContasPagarControllerRemoveMutationResponse, ResponseErrorConfig<ContasPagarControllerRemove404>, {publicId: ContasPagarControllerRemovePathParams["publicId"]}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? contasPagarControllerRemoveMutationKey()
-  
-          return useMutation<ContasPagarControllerRemoveMutationResponse, ResponseErrorConfig<ContasPagarControllerRemove404>, {publicId: ContasPagarControllerRemovePathParams["publicId"]}, TContext>({
-            mutationFn: async({ publicId }) => {
-              return contasPagarControllerRemove(publicId, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ContasPagarControllerRemoveMutationResponse, ResponseErrorConfig<ContasPagarControllerRemove404>, {publicId: ContasPagarControllerRemovePathParams["publicId"]}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? contasPagarControllerRemoveMutationKey()
+
+  const baseOptions = contasPagarControllerRemoveMutationOptions(config) as UseMutationOptions<ContasPagarControllerRemoveMutationResponse, ResponseErrorConfig<ContasPagarControllerRemove404>, {publicId: ContasPagarControllerRemovePathParams["publicId"]}, TContext>
+
+  return useMutation<ContasPagarControllerRemoveMutationResponse, ResponseErrorConfig<ContasPagarControllerRemove404>, {publicId: ContasPagarControllerRemovePathParams["publicId"]}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ContasPagarControllerRemoveMutationResponse, ResponseErrorConfig<ContasPagarControllerRemove404>, {publicId: ContasPagarControllerRemovePathParams["publicId"]}, TContext>
 }

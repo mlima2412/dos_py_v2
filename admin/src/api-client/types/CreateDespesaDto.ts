@@ -10,7 +10,7 @@ export const createDespesaDtoTipoPagamentoEnum = {
     "PARCELADO": "PARCELADO"
 } as const;
 
-export type CreateDespesaDtoTipoPagamentoEnum = (typeof createDespesaDtoTipoPagamentoEnum)[keyof typeof createDespesaDtoTipoPagamentoEnum];
+export type CreateDespesaDtoTipoPagamentoEnumKey = (typeof createDespesaDtoTipoPagamentoEnum)[keyof typeof createDespesaDtoTipoPagamentoEnum];
 
 export type CreateDespesaDto = {
     /**
@@ -47,7 +47,7 @@ export type CreateDespesaDto = {
      * @description Tipo de pagamento da despesa
      * @type string
     */
-    tipoPagamento: CreateDespesaDtoTipoPagamentoEnum;
+    tipoPagamento: CreateDespesaDtoTipoPagamentoEnumKey;
     /**
      * @description Valor da entrada (apenas para pagamento parcelado)
      * @type number | undefined

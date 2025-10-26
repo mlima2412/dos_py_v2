@@ -4,22 +4,25 @@
 */
 
 import type { ConferenciaItemResponseDto } from "../types/ConferenciaItemResponseDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { produtoSimplificadoDtoSchema } from "./produtoSimplificadoDtoSchema.ts";
 import { skuSimplificadoDtoSchema } from "./skuSimplificadoDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const conferenciaItemResponseDtoSchema = z.object({
-      "id": z.coerce.number().describe("ID único do item de conferência"),
-  "conferenciaId": z.coerce.number().describe("ID da conferência de estoque"),
-  "skuId": z.coerce.number().describe("ID do SKU do produto"),
-  "qtdSistema": z.coerce.number().describe("Quantidade no sistema"),
-  "qtdConferencia": z.coerce.number().describe("Quantidade conferida"),
-  "diferenca": z.coerce.number().describe("Diferença entre sistema e conferência"),
-  "ajustado": z.boolean().describe("Se o item foi ajustado"),
-  "sku": z.lazy(() => skuSimplificadoDtoSchema).describe("Dados simplificados do SKU (cor e tamanho)"),
-  "produto": z.lazy(() => produtoSimplificadoDtoSchema).describe("Dados simplificados do produto (apenas nome)"),
-  "ConferenciaEstoque": z.object({
-      
-      }).describe("Dados básicos da conferência de estoque").optional()
-      }) as unknown as ToZod<ConferenciaItemResponseDto>
+    "id": z.coerce.number().describe("ID único do item de conferência"),
+"conferenciaId": z.coerce.number().describe("ID da conferência de estoque"),
+"skuId": z.coerce.number().describe("ID do SKU do produto"),
+"qtdSistema": z.coerce.number().describe("Quantidade no sistema"),
+"qtdConferencia": z.coerce.number().describe("Quantidade conferida"),
+"diferenca": z.coerce.number().describe("Diferença entre sistema e conferência"),
+"ajustado": z.boolean().describe("Se o item foi ajustado"),
+get "sku"(){
+                return skuSimplificadoDtoSchema.describe("Dados simplificados do SKU (cor e tamanho)")
+              },
+get "produto"(){
+                return produtoSimplificadoDtoSchema.describe("Dados simplificados do produto (apenas nome)")
+              },
+"ConferenciaEstoque": z.optional(z.object({
+    
+    }).describe("Dados básicos da conferência de estoque"))
+    }) as unknown as z.ZodType<ConferenciaItemResponseDto>

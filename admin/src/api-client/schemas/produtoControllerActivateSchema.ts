@@ -4,26 +4,25 @@
 */
 
 import type { ProdutoControllerActivatePathParams, ProdutoControllerActivateHeaderParams, ProdutoControllerActivate200, ProdutoControllerActivate404, ProdutoControllerActivateMutationResponse } from "../types/ProdutoControllerActivate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { produtoSchema } from "./produtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const produtoControllerActivatePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do produto")
-      }) as unknown as ToZod<ProdutoControllerActivatePathParams>
+    "publicId": z.string().describe("ID público do produto")
+    }) as unknown as z.ZodType<ProdutoControllerActivatePathParams>
 
 export const produtoControllerActivateHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<ProdutoControllerActivateHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<ProdutoControllerActivateHeaderParams>
 
 /**
  * @description Produto ativado com sucesso
  */
-export const produtoControllerActivate200Schema = z.lazy(() => produtoSchema) as unknown as ToZod<ProdutoControllerActivate200>
+export const produtoControllerActivate200Schema = produtoSchema as unknown as z.ZodType<ProdutoControllerActivate200>
 
 /**
  * @description Produto não encontrado
  */
-export const produtoControllerActivate404Schema = z.unknown() as unknown as ToZod<ProdutoControllerActivate404>
+export const produtoControllerActivate404Schema = z.unknown() as unknown as z.ZodType<ProdutoControllerActivate404>
 
-export const produtoControllerActivateMutationResponseSchema = z.lazy(() => produtoControllerActivate200Schema) as unknown as ToZod<ProdutoControllerActivateMutationResponse>
+export const produtoControllerActivateMutationResponseSchema = produtoControllerActivate200Schema as unknown as z.ZodType<ProdutoControllerActivateMutationResponse>

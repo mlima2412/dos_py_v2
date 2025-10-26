@@ -9,7 +9,7 @@ export const createClienteDtoLinguagemEnum = {
     "Portugues": "Portugues"
 } as const;
 
-export type CreateClienteDtoLinguagemEnum = (typeof createClienteDtoLinguagemEnum)[keyof typeof createClienteDtoLinguagemEnum];
+export type CreateClienteDtoLinguagemEnumKey = (typeof createClienteDtoLinguagemEnum)[keyof typeof createClienteDtoLinguagemEnum];
 
 export type CreateClienteDto = {
     /**
@@ -53,16 +53,6 @@ export type CreateClienteDto = {
     */
     ruccnpj?: string;
     /**
-     * @description RUC/CNPJ secundario do cliente
-     * @type string | undefined
-    */
-    ruccnpjSecundario?: string;
-    /**
-     * @description Nome da fatura do cliente
-     * @type string | undefined
-    */
-    nomeFatura?: string;
-    /**
      * @description Endereço do cliente
      * @type string | undefined
     */
@@ -87,7 +77,7 @@ export type CreateClienteDto = {
      * @default "Espanol"
      * @type string | undefined
     */
-    linguagem?: CreateClienteDtoLinguagemEnum;
+    linguagem?: CreateClienteDtoLinguagemEnumKey;
     /**
      * @description Status ativo do cliente
      * @default true

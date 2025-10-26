@@ -4,31 +4,30 @@
 */
 
 import type { ProdutoHistoricoPrecoControllerGetLatestPricePathParams, ProdutoHistoricoPrecoControllerGetLatestPriceHeaderParams, ProdutoHistoricoPrecoControllerGetLatestPrice200, ProdutoHistoricoPrecoControllerGetLatestPrice204, ProdutoHistoricoPrecoControllerGetLatestPrice404, ProdutoHistoricoPrecoControllerGetLatestPriceQueryResponse } from "../types/ProdutoHistoricoPrecoControllerGetLatestPrice.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { produtoHistoricoPrecoResponseDtoSchema } from "./produtoHistoricoPrecoResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const produtoHistoricoPrecoControllerGetLatestPricePathParamsSchema = z.object({
-      "produtoId": z.coerce.number().int().describe("ID numérico do produto")
-      }) as unknown as ToZod<ProdutoHistoricoPrecoControllerGetLatestPricePathParams>
+    "produtoId": z.coerce.number().int().describe("ID numérico do produto")
+    }) as unknown as z.ZodType<ProdutoHistoricoPrecoControllerGetLatestPricePathParams>
 
 export const produtoHistoricoPrecoControllerGetLatestPriceHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<ProdutoHistoricoPrecoControllerGetLatestPriceHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<ProdutoHistoricoPrecoControllerGetLatestPriceHeaderParams>
 
 /**
  * @description Último preço registrado do produto
  */
-export const produtoHistoricoPrecoControllerGetLatestPrice200Schema = z.lazy(() => produtoHistoricoPrecoResponseDtoSchema) as unknown as ToZod<ProdutoHistoricoPrecoControllerGetLatestPrice200>
+export const produtoHistoricoPrecoControllerGetLatestPrice200Schema = produtoHistoricoPrecoResponseDtoSchema as unknown as z.ZodType<ProdutoHistoricoPrecoControllerGetLatestPrice200>
 
 /**
  * @description Nenhum histórico de preço encontrado para o produto
  */
-export const produtoHistoricoPrecoControllerGetLatestPrice204Schema = z.unknown() as unknown as ToZod<ProdutoHistoricoPrecoControllerGetLatestPrice204>
+export const produtoHistoricoPrecoControllerGetLatestPrice204Schema = z.unknown() as unknown as z.ZodType<ProdutoHistoricoPrecoControllerGetLatestPrice204>
 
 /**
  * @description Produto não encontrado
  */
-export const produtoHistoricoPrecoControllerGetLatestPrice404Schema = z.unknown() as unknown as ToZod<ProdutoHistoricoPrecoControllerGetLatestPrice404>
+export const produtoHistoricoPrecoControllerGetLatestPrice404Schema = z.unknown() as unknown as z.ZodType<ProdutoHistoricoPrecoControllerGetLatestPrice404>
 
-export const produtoHistoricoPrecoControllerGetLatestPriceQueryResponseSchema = z.union([z.lazy(() => produtoHistoricoPrecoControllerGetLatestPrice200Schema), z.lazy(() => produtoHistoricoPrecoControllerGetLatestPrice204Schema)]) as unknown as ToZod<ProdutoHistoricoPrecoControllerGetLatestPriceQueryResponse>
+export const produtoHistoricoPrecoControllerGetLatestPriceQueryResponseSchema = z.union([produtoHistoricoPrecoControllerGetLatestPrice200Schema, produtoHistoricoPrecoControllerGetLatestPrice204Schema]) as unknown as z.ZodType<ProdutoHistoricoPrecoControllerGetLatestPriceQueryResponse>

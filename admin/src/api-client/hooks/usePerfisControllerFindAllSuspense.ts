@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const perfisControllerFindAllSuspenseQueryKey = () =>   [{ url: '/perfis' }] as const
+export const perfisControllerFindAllSuspenseQueryKey = () => [{ url: '/perfis' }] as const
 
 export type PerfisControllerFindAllSuspenseQueryKey = ReturnType<typeof perfisControllerFindAllSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type PerfisControllerFindAllSuspenseQueryKey = ReturnType<typeof perfisCo
  * {@link /perfis}
  */
 export async function perfisControllerFindAllSuspense(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<PerfisControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/perfis`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<PerfisControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/perfis`, ... requestConfig })  
+  return res.data
 }
 
 export function perfisControllerFindAllSuspenseQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = perfisControllerFindAllSuspenseQueryKey()
-        return queryOptions<PerfisControllerFindAllQueryResponse, ResponseErrorConfig<Error>, PerfisControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return perfisControllerFindAllSuspense(config)
-         },
-        })
-  
+  const queryKey = perfisControllerFindAllSuspenseQueryKey()
+  return queryOptions<PerfisControllerFindAllQueryResponse, ResponseErrorConfig<Error>, PerfisControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return perfisControllerFindAllSuspense(config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function perfisControllerFindAllSuspenseQueryOptions(config: Partial<Requ
  * {@link /perfis}
  */
 export function usePerfisControllerFindAllSuspense<TData = PerfisControllerFindAllQueryResponse, TQueryKey extends QueryKey = PerfisControllerFindAllSuspenseQueryKey>(options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<PerfisControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? perfisControllerFindAllSuspenseQueryKey()
-  
-         const query = useSuspenseQuery({
-          ...perfisControllerFindAllSuspenseQueryOptions(config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<PerfisControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? perfisControllerFindAllSuspenseQueryKey()
+
+  const query = useSuspenseQuery({
+   ...perfisControllerFindAllSuspenseQueryOptions(config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

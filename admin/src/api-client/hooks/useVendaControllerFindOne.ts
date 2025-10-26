@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const vendaControllerFindOneQueryKey = (publicId: VendaControllerFindOnePathParams["publicId"]) =>   [{ url: '/venda/:publicId', params: {publicId:publicId} }] as const
+export const vendaControllerFindOneQueryKey = (publicId: VendaControllerFindOnePathParams["publicId"]) => [{ url: '/venda/:publicId', params: {publicId:publicId} }] as const
 
 export type VendaControllerFindOneQueryKey = ReturnType<typeof vendaControllerFindOneQueryKey>
 
@@ -18,25 +18,22 @@ export type VendaControllerFindOneQueryKey = ReturnType<typeof vendaControllerFi
  * {@link /venda/:publicId}
  */
 export async function vendaControllerFindOne(publicId: VendaControllerFindOnePathParams["publicId"], headers: VendaControllerFindOneHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<VendaControllerFindOneQueryResponse, ResponseErrorConfig<VendaControllerFindOne404>, unknown>({ method : "GET", url : `/venda/${publicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<VendaControllerFindOneQueryResponse, ResponseErrorConfig<VendaControllerFindOne404>, unknown>({ method : "GET", url : `/venda/${publicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function vendaControllerFindOneQueryOptions(publicId: VendaControllerFindOnePathParams["publicId"], headers: VendaControllerFindOneHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = vendaControllerFindOneQueryKey(publicId)
-        return queryOptions<VendaControllerFindOneQueryResponse, ResponseErrorConfig<VendaControllerFindOne404>, VendaControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(publicId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return vendaControllerFindOne(publicId, headers, config)
-         },
-        })
-  
+  const queryKey = vendaControllerFindOneQueryKey(publicId)
+  return queryOptions<VendaControllerFindOneQueryResponse, ResponseErrorConfig<VendaControllerFindOne404>, VendaControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(publicId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return vendaControllerFindOne(publicId, headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function vendaControllerFindOneQueryOptions(publicId: VendaControllerFind
  * {@link /venda/:publicId}
  */
 export function useVendaControllerFindOne<TData = VendaControllerFindOneQueryResponse, TQueryData = VendaControllerFindOneQueryResponse, TQueryKey extends QueryKey = VendaControllerFindOneQueryKey>(publicId: VendaControllerFindOnePathParams["publicId"], headers: VendaControllerFindOneHeaderParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<VendaControllerFindOneQueryResponse, ResponseErrorConfig<VendaControllerFindOne404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? vendaControllerFindOneQueryKey(publicId)
-  
-         const query = useQuery({
-          ...vendaControllerFindOneQueryOptions(publicId, headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<VendaControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<VendaControllerFindOneQueryResponse, ResponseErrorConfig<VendaControllerFindOne404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? vendaControllerFindOneQueryKey(publicId)
+
+  const query = useQuery({
+   ...vendaControllerFindOneQueryOptions(publicId, headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<VendaControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

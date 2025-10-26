@@ -4,15 +4,14 @@
 */
 
 import type { ProdutoSKUResponseDto } from "../types/ProdutoSKUResponseDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const produtoSKUResponseDtoSchema = z.object({
-      "id": z.coerce.number().describe("ID do SKU"),
-  "publicId": z.coerce.string().describe("Public ID do SKU"),
-  "cor": z.coerce.string().describe("Cor do produto").optional(),
-  "tamanho": z.coerce.string().describe("Tamanho do produto").optional(),
-  "produto": z.object({
-      
-      }).describe("Informações do produto")
-      }) as unknown as ToZod<ProdutoSKUResponseDto>
+    "id": z.coerce.number().describe("ID do SKU"),
+"publicId": z.coerce.string().describe("Public ID do SKU"),
+"cor": z.optional(z.coerce.string().describe("Cor do produto")),
+"tamanho": z.optional(z.coerce.string().describe("Tamanho do produto")),
+"produto": z.object({
+    
+    }).describe("Informações do produto")
+    }) as unknown as z.ZodType<ProdutoSKUResponseDto>

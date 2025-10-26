@@ -4,23 +4,22 @@
 */
 
 import type { EstoqueSkuControllerFindOnePathParams, EstoqueSkuControllerFindOne200, EstoqueSkuControllerFindOne404, EstoqueSkuControllerFindOneQueryResponse } from "../types/EstoqueSkuControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { estoqueSkuSchema } from "./estoqueSkuSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const estoqueSkuControllerFindOnePathParamsSchema = z.object({
-      "localId": z.coerce.number().describe("ID do local de estoque"),
-  "skuId": z.coerce.number().describe("ID do SKU")
-      }) as unknown as ToZod<EstoqueSkuControllerFindOnePathParams>
+    "localId": z.coerce.number().describe("ID do local de estoque"),
+"skuId": z.coerce.number().describe("ID do SKU")
+    }) as unknown as z.ZodType<EstoqueSkuControllerFindOnePathParams>
 
 /**
  * @description Registro de estoque encontrado com sucesso
  */
-export const estoqueSkuControllerFindOne200Schema = z.lazy(() => estoqueSkuSchema) as unknown as ToZod<EstoqueSkuControllerFindOne200>
+export const estoqueSkuControllerFindOne200Schema = estoqueSkuSchema as unknown as z.ZodType<EstoqueSkuControllerFindOne200>
 
 /**
  * @description Registro de estoque não encontrado
  */
-export const estoqueSkuControllerFindOne404Schema = z.unknown() as unknown as ToZod<EstoqueSkuControllerFindOne404>
+export const estoqueSkuControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<EstoqueSkuControllerFindOne404>
 
-export const estoqueSkuControllerFindOneQueryResponseSchema = z.lazy(() => estoqueSkuControllerFindOne200Schema) as unknown as ToZod<EstoqueSkuControllerFindOneQueryResponse>
+export const estoqueSkuControllerFindOneQueryResponseSchema = estoqueSkuControllerFindOne200Schema as unknown as z.ZodType<EstoqueSkuControllerFindOneQueryResponse>

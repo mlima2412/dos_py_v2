@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const estoqueSkuControllerFindByLocalSuspenseQueryKey = (localId: EstoqueSkuControllerFindByLocalPathParams["localId"]) =>   [{ url: '/estoque-sku/local/:localId', params: {localId:localId} }] as const
+export const estoqueSkuControllerFindByLocalSuspenseQueryKey = (localId: EstoqueSkuControllerFindByLocalPathParams["localId"]) => [{ url: '/estoque-sku/local/:localId', params: {localId:localId} }] as const
 
 export type EstoqueSkuControllerFindByLocalSuspenseQueryKey = ReturnType<typeof estoqueSkuControllerFindByLocalSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type EstoqueSkuControllerFindByLocalSuspenseQueryKey = ReturnType<typeof 
  * {@link /estoque-sku/local/:localId}
  */
 export async function estoqueSkuControllerFindByLocalSuspense(localId: EstoqueSkuControllerFindByLocalPathParams["localId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<EstoqueSkuControllerFindByLocalQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/estoque-sku/local/${localId}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<EstoqueSkuControllerFindByLocalQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/estoque-sku/local/${localId}`, ... requestConfig })  
+  return res.data
 }
 
 export function estoqueSkuControllerFindByLocalSuspenseQueryOptions(localId: EstoqueSkuControllerFindByLocalPathParams["localId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = estoqueSkuControllerFindByLocalSuspenseQueryKey(localId)
-        return queryOptions<EstoqueSkuControllerFindByLocalQueryResponse, ResponseErrorConfig<Error>, EstoqueSkuControllerFindByLocalQueryResponse, typeof queryKey>({
-         enabled: !!(localId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return estoqueSkuControllerFindByLocalSuspense(localId, config)
-         },
-        })
-  
+  const queryKey = estoqueSkuControllerFindByLocalSuspenseQueryKey(localId)
+  return queryOptions<EstoqueSkuControllerFindByLocalQueryResponse, ResponseErrorConfig<Error>, EstoqueSkuControllerFindByLocalQueryResponse, typeof queryKey>({
+   enabled: !!(localId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return estoqueSkuControllerFindByLocalSuspense(localId, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function estoqueSkuControllerFindByLocalSuspenseQueryOptions(localId: Est
  * {@link /estoque-sku/local/:localId}
  */
 export function useEstoqueSkuControllerFindByLocalSuspense<TData = EstoqueSkuControllerFindByLocalQueryResponse, TQueryKey extends QueryKey = EstoqueSkuControllerFindByLocalSuspenseQueryKey>(localId: EstoqueSkuControllerFindByLocalPathParams["localId"], options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<EstoqueSkuControllerFindByLocalQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? estoqueSkuControllerFindByLocalSuspenseQueryKey(localId)
-  
-         const query = useSuspenseQuery({
-          ...estoqueSkuControllerFindByLocalSuspenseQueryOptions(localId, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<EstoqueSkuControllerFindByLocalQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? estoqueSkuControllerFindByLocalSuspenseQueryKey(localId)
+
+  const query = useSuspenseQuery({
+   ...estoqueSkuControllerFindByLocalSuspenseQueryOptions(localId, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

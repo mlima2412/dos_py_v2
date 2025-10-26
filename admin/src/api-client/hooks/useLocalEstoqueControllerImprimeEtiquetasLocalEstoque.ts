@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const localEstoqueControllerImprimeEtiquetasLocalEstoqueQueryKey = (publicId: LocalEstoqueControllerImprimeEtiquetasLocalEstoquePathParams["publicId"]) =>   [{ url: '/local-estoque/etiquetas/:publicId', params: {publicId:publicId} }] as const
+export const localEstoqueControllerImprimeEtiquetasLocalEstoqueQueryKey = (publicId: LocalEstoqueControllerImprimeEtiquetasLocalEstoquePathParams["publicId"]) => [{ url: '/local-estoque/etiquetas/:publicId', params: {publicId:publicId} }] as const
 
 export type LocalEstoqueControllerImprimeEtiquetasLocalEstoqueQueryKey = ReturnType<typeof localEstoqueControllerImprimeEtiquetasLocalEstoqueQueryKey>
 
@@ -18,25 +18,22 @@ export type LocalEstoqueControllerImprimeEtiquetasLocalEstoqueQueryKey = ReturnT
  * {@link /local-estoque/etiquetas/:publicId}
  */
 export async function localEstoqueControllerImprimeEtiquetasLocalEstoque(publicId: LocalEstoqueControllerImprimeEtiquetasLocalEstoquePathParams["publicId"], headers: LocalEstoqueControllerImprimeEtiquetasLocalEstoqueHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<LocalEstoqueControllerImprimeEtiquetasLocalEstoqueQueryResponse, ResponseErrorConfig<LocalEstoqueControllerImprimeEtiquetasLocalEstoque404>, unknown>({ method : "GET", url : `/local-estoque/etiquetas/${publicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<LocalEstoqueControllerImprimeEtiquetasLocalEstoqueQueryResponse, ResponseErrorConfig<LocalEstoqueControllerImprimeEtiquetasLocalEstoque404>, unknown>({ method : "GET", url : `/local-estoque/etiquetas/${publicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function localEstoqueControllerImprimeEtiquetasLocalEstoqueQueryOptions(publicId: LocalEstoqueControllerImprimeEtiquetasLocalEstoquePathParams["publicId"], headers: LocalEstoqueControllerImprimeEtiquetasLocalEstoqueHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = localEstoqueControllerImprimeEtiquetasLocalEstoqueQueryKey(publicId)
-        return queryOptions<LocalEstoqueControllerImprimeEtiquetasLocalEstoqueQueryResponse, ResponseErrorConfig<LocalEstoqueControllerImprimeEtiquetasLocalEstoque404>, LocalEstoqueControllerImprimeEtiquetasLocalEstoqueQueryResponse, typeof queryKey>({
-         enabled: !!(publicId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return localEstoqueControllerImprimeEtiquetasLocalEstoque(publicId, headers, config)
-         },
-        })
-  
+  const queryKey = localEstoqueControllerImprimeEtiquetasLocalEstoqueQueryKey(publicId)
+  return queryOptions<LocalEstoqueControllerImprimeEtiquetasLocalEstoqueQueryResponse, ResponseErrorConfig<LocalEstoqueControllerImprimeEtiquetasLocalEstoque404>, LocalEstoqueControllerImprimeEtiquetasLocalEstoqueQueryResponse, typeof queryKey>({
+   enabled: !!(publicId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return localEstoqueControllerImprimeEtiquetasLocalEstoque(publicId, headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function localEstoqueControllerImprimeEtiquetasLocalEstoqueQueryOptions(p
  * {@link /local-estoque/etiquetas/:publicId}
  */
 export function useLocalEstoqueControllerImprimeEtiquetasLocalEstoque<TData = LocalEstoqueControllerImprimeEtiquetasLocalEstoqueQueryResponse, TQueryData = LocalEstoqueControllerImprimeEtiquetasLocalEstoqueQueryResponse, TQueryKey extends QueryKey = LocalEstoqueControllerImprimeEtiquetasLocalEstoqueQueryKey>(publicId: LocalEstoqueControllerImprimeEtiquetasLocalEstoquePathParams["publicId"], headers: LocalEstoqueControllerImprimeEtiquetasLocalEstoqueHeaderParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<LocalEstoqueControllerImprimeEtiquetasLocalEstoqueQueryResponse, ResponseErrorConfig<LocalEstoqueControllerImprimeEtiquetasLocalEstoque404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? localEstoqueControllerImprimeEtiquetasLocalEstoqueQueryKey(publicId)
-  
-         const query = useQuery({
-          ...localEstoqueControllerImprimeEtiquetasLocalEstoqueQueryOptions(publicId, headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<LocalEstoqueControllerImprimeEtiquetasLocalEstoque404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<LocalEstoqueControllerImprimeEtiquetasLocalEstoqueQueryResponse, ResponseErrorConfig<LocalEstoqueControllerImprimeEtiquetasLocalEstoque404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? localEstoqueControllerImprimeEtiquetasLocalEstoqueQueryKey(publicId)
+
+  const query = useQuery({
+   ...localEstoqueControllerImprimeEtiquetasLocalEstoqueQueryOptions(publicId, headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<LocalEstoqueControllerImprimeEtiquetasLocalEstoque404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

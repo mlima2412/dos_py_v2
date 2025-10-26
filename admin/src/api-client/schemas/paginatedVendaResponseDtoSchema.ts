@@ -4,13 +4,14 @@
 */
 
 import type { PaginatedVendaResponseDto } from "../types/PaginatedVendaResponseDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { vendaSchema } from "./vendaSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const paginatedVendaResponseDtoSchema = z.object({
-      "data": z.array(z.lazy(() => vendaSchema)).describe("Array de vendas"),
-  "total": z.coerce.number().describe("Total de registros"),
-  "page": z.coerce.number().describe("Página atual"),
-  "limit": z.coerce.number().describe("Quantidade de itens por página")
-      }) as unknown as ToZod<PaginatedVendaResponseDto>
+    get "data"(){
+                return z.array(vendaSchema).describe("Array de vendas")
+              },
+"total": z.coerce.number().describe("Total de registros"),
+"page": z.coerce.number().describe("Página atual"),
+"limit": z.coerce.number().describe("Quantidade de itens por página")
+    }) as unknown as z.ZodType<PaginatedVendaResponseDto>

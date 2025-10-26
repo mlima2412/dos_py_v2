@@ -4,11 +4,12 @@
 */
 
 import type { AjusteConferenciaLoteDto } from "../types/AjusteConferenciaLoteDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { ajusteConferenciaItemDtoSchema } from "./ajusteConferenciaItemDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const ajusteConferenciaLoteDtoSchema = z.object({
-      "itens": z.array(z.lazy(() => ajusteConferenciaItemDtoSchema)).describe("Lista de itens para ajuste"),
-  "observacao": z.coerce.string().describe("Observação para os ajustes").optional()
-      }) as unknown as ToZod<AjusteConferenciaLoteDto>
+    get "itens"(){
+                return z.array(ajusteConferenciaItemDtoSchema).describe("Lista de itens para ajuste")
+              },
+"observacao": z.optional(z.coerce.string().describe("Observação para os ajustes"))
+    }) as unknown as z.ZodType<AjusteConferenciaLoteDto>

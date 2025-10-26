@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const parcelamentoControllerFindAllSuspenseQueryKey = (params: ParcelamentoControllerFindAllQueryParams) =>   [{ url: '/parcelamento' }, ...(params ? [params] : [])] as const
+export const parcelamentoControllerFindAllSuspenseQueryKey = (params: ParcelamentoControllerFindAllQueryParams) => [{ url: '/parcelamento' }, ...(params ? [params] : [])] as const
 
 export type ParcelamentoControllerFindAllSuspenseQueryKey = ReturnType<typeof parcelamentoControllerFindAllSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type ParcelamentoControllerFindAllSuspenseQueryKey = ReturnType<typeof pa
  * {@link /parcelamento}
  */
 export async function parcelamentoControllerFindAllSuspense(params: ParcelamentoControllerFindAllQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ParcelamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/parcelamento`, params, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ParcelamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/parcelamento`, params, ... requestConfig })  
+  return res.data
 }
 
 export function parcelamentoControllerFindAllSuspenseQueryOptions(params: ParcelamentoControllerFindAllQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = parcelamentoControllerFindAllSuspenseQueryKey(params)
-        return queryOptions<ParcelamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, ParcelamentoControllerFindAllQueryResponse, typeof queryKey>({
-         enabled: !!(params),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return parcelamentoControllerFindAllSuspense(params, config)
-         },
-        })
-  
+  const queryKey = parcelamentoControllerFindAllSuspenseQueryKey(params)
+  return queryOptions<ParcelamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, ParcelamentoControllerFindAllQueryResponse, typeof queryKey>({
+   enabled: !!(params),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return parcelamentoControllerFindAllSuspense(params, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function parcelamentoControllerFindAllSuspenseQueryOptions(params: Parcel
  * {@link /parcelamento}
  */
 export function useParcelamentoControllerFindAllSuspense<TData = ParcelamentoControllerFindAllQueryResponse, TQueryKey extends QueryKey = ParcelamentoControllerFindAllSuspenseQueryKey>(params: ParcelamentoControllerFindAllQueryParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<ParcelamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? parcelamentoControllerFindAllSuspenseQueryKey(params)
-  
-         const query = useSuspenseQuery({
-          ...parcelamentoControllerFindAllSuspenseQueryOptions(params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<ParcelamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? parcelamentoControllerFindAllSuspenseQueryKey(params)
+
+  const query = useSuspenseQuery({
+   ...parcelamentoControllerFindAllSuspenseQueryOptions(params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

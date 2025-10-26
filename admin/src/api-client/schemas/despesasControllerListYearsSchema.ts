@@ -4,16 +4,15 @@
 */
 
 import type { DespesasControllerListYearsHeaderParams, DespesasControllerListYears200, DespesasControllerListYearsQueryResponse } from "../types/DespesasControllerListYears.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const despesasControllerListYearsHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<DespesasControllerListYearsHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<DespesasControllerListYearsHeaderParams>
 
 /**
  * @description Lista de anos com despesas
  */
-export const despesasControllerListYears200Schema = z.unknown() as unknown as ToZod<DespesasControllerListYears200>
+export const despesasControllerListYears200Schema = z.unknown() as unknown as z.ZodType<DespesasControllerListYears200>
 
-export const despesasControllerListYearsQueryResponseSchema = z.lazy(() => despesasControllerListYears200Schema) as unknown as ToZod<DespesasControllerListYearsQueryResponse>
+export const despesasControllerListYearsQueryResponseSchema = despesasControllerListYears200Schema as unknown as z.ZodType<DespesasControllerListYearsQueryResponse>

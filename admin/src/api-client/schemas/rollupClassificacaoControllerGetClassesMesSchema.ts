@@ -4,14 +4,13 @@
 */
 
 import type { RollupClassificacaoControllerGetClassesMesQueryParams, RollupClassificacaoControllerGetClassesMes200, RollupClassificacaoControllerGetClassesMesQueryResponse } from "../types/RollupClassificacaoControllerGetClassesMes.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const rollupClassificacaoControllerGetClassesMesQueryParamsSchema = z.object({
-      "parceiroId": z.string(),
-  "yyyymm": z.string()
-      }) as unknown as ToZod<RollupClassificacaoControllerGetClassesMesQueryParams>
+    "parceiroId": z.string(),
+"yyyymm": z.string()
+    }) as unknown as z.ZodType<RollupClassificacaoControllerGetClassesMesQueryParams>
 
-export const rollupClassificacaoControllerGetClassesMes200Schema = z.unknown() as unknown as ToZod<RollupClassificacaoControllerGetClassesMes200>
+export const rollupClassificacaoControllerGetClassesMes200Schema = z.unknown() as unknown as z.ZodType<RollupClassificacaoControllerGetClassesMes200>
 
-export const rollupClassificacaoControllerGetClassesMesQueryResponseSchema = z.lazy(() => rollupClassificacaoControllerGetClassesMes200Schema) as unknown as ToZod<RollupClassificacaoControllerGetClassesMesQueryResponse>
+export const rollupClassificacaoControllerGetClassesMesQueryResponseSchema = rollupClassificacaoControllerGetClassesMes200Schema as unknown as z.ZodType<RollupClassificacaoControllerGetClassesMesQueryResponse>

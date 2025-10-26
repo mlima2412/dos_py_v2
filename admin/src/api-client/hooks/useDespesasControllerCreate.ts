@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { DespesasControllerCreateMutationRequest, DespesasControllerCreateMutationResponse, DespesasControllerCreateHeaderParams, DespesasControllerCreate400 } from "../types/DespesasControllerCreate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const despesasControllerCreateMutationKey = () =>   [{"url":"/despesas"}] as const
+export const despesasControllerCreateMutationKey = () => [{ url: '/despesas' }] as const
 
 export type DespesasControllerCreateMutationKey = ReturnType<typeof despesasControllerCreateMutationKey>
 
@@ -18,11 +18,22 @@ export type DespesasControllerCreateMutationKey = ReturnType<typeof despesasCont
  * {@link /despesas}
  */
 export async function despesasControllerCreate(data: DespesasControllerCreateMutationRequest, headers: DespesasControllerCreateHeaderParams, config: Partial<RequestConfig<DespesasControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<DespesasControllerCreateMutationResponse, ResponseErrorConfig<DespesasControllerCreate400>, DespesasControllerCreateMutationRequest>({ method : "POST", url : `/despesas`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<DespesasControllerCreateMutationResponse, ResponseErrorConfig<DespesasControllerCreate400>, DespesasControllerCreateMutationRequest>({ method : "POST", url : `/despesas`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function despesasControllerCreateMutationOptions(config: Partial<RequestConfig<DespesasControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = despesasControllerCreateMutationKey()
+  return mutationOptions<DespesasControllerCreateMutationResponse, ResponseErrorConfig<DespesasControllerCreate400>, {data: DespesasControllerCreateMutationRequest, headers: DespesasControllerCreateHeaderParams}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data, headers }) => {
+      return despesasControllerCreate(data, headers, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /despesas}
  */
 export function useDespesasControllerCreate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<DespesasControllerCreateMutationResponse, ResponseErrorConfig<DespesasControllerCreate400>, {data: DespesasControllerCreateMutationRequest, headers: DespesasControllerCreateHeaderParams}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<DespesasControllerCreateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? despesasControllerCreateMutationKey()
-  
-          return useMutation<DespesasControllerCreateMutationResponse, ResponseErrorConfig<DespesasControllerCreate400>, {data: DespesasControllerCreateMutationRequest, headers: DespesasControllerCreateHeaderParams}, TContext>({
-            mutationFn: async({ data, headers }) => {
-              return despesasControllerCreate(data, headers, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<DespesasControllerCreateMutationResponse, ResponseErrorConfig<DespesasControllerCreate400>, {data: DespesasControllerCreateMutationRequest, headers: DespesasControllerCreateHeaderParams}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<DespesasControllerCreateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? despesasControllerCreateMutationKey()
+
+  const baseOptions = despesasControllerCreateMutationOptions(config) as UseMutationOptions<DespesasControllerCreateMutationResponse, ResponseErrorConfig<DespesasControllerCreate400>, {data: DespesasControllerCreateMutationRequest, headers: DespesasControllerCreateHeaderParams}, TContext>
+
+  return useMutation<DespesasControllerCreateMutationResponse, ResponseErrorConfig<DespesasControllerCreate400>, {data: DespesasControllerCreateMutationRequest, headers: DespesasControllerCreateHeaderParams}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<DespesasControllerCreateMutationResponse, ResponseErrorConfig<DespesasControllerCreate400>, {data: DespesasControllerCreateMutationRequest, headers: DespesasControllerCreateHeaderParams}, TContext>
 }

@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { UsuarioParceiroControllerRemoveByUsuarioAndParceiroMutationResponse, UsuarioParceiroControllerRemoveByUsuarioAndParceiroPathParams, UsuarioParceiroControllerRemoveByUsuarioAndParceiro404 } from "../types/UsuarioParceiroControllerRemoveByUsuarioAndParceiro.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const usuarioParceiroControllerRemoveByUsuarioAndParceiroMutationKey = () =>   [{"url":"/usuario-parceiro/usuario/{usuarioId}/parceiro/{parceiroId}"}] as const
+export const usuarioParceiroControllerRemoveByUsuarioAndParceiroMutationKey = () => [{ url: '/usuario-parceiro/usuario/:usuarioId/parceiro/:parceiroId' }] as const
 
 export type UsuarioParceiroControllerRemoveByUsuarioAndParceiroMutationKey = ReturnType<typeof usuarioParceiroControllerRemoveByUsuarioAndParceiroMutationKey>
 
@@ -18,11 +18,20 @@ export type UsuarioParceiroControllerRemoveByUsuarioAndParceiroMutationKey = Ret
  * {@link /usuario-parceiro/usuario/:usuarioId/parceiro/:parceiroId}
  */
 export async function usuarioParceiroControllerRemoveByUsuarioAndParceiro(usuarioId: UsuarioParceiroControllerRemoveByUsuarioAndParceiroPathParams["usuarioId"], parceiroId: UsuarioParceiroControllerRemoveByUsuarioAndParceiroPathParams["parceiroId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<UsuarioParceiroControllerRemoveByUsuarioAndParceiroMutationResponse, ResponseErrorConfig<UsuarioParceiroControllerRemoveByUsuarioAndParceiro404>, unknown>({ method : "DELETE", url : `/usuario-parceiro/usuario/${usuarioId}/parceiro/${parceiroId}`, ... requestConfig })  
+  return res.data
+}
 
-
-const res = await request<UsuarioParceiroControllerRemoveByUsuarioAndParceiroMutationResponse, ResponseErrorConfig<UsuarioParceiroControllerRemoveByUsuarioAndParceiro404>, unknown>({ method : "DELETE", url : `/usuario-parceiro/usuario/${usuarioId}/parceiro/${parceiroId}`, ... requestConfig })
-return res.data
+export function usuarioParceiroControllerRemoveByUsuarioAndParceiroMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = usuarioParceiroControllerRemoveByUsuarioAndParceiroMutationKey()
+  return mutationOptions<UsuarioParceiroControllerRemoveByUsuarioAndParceiroMutationResponse, ResponseErrorConfig<UsuarioParceiroControllerRemoveByUsuarioAndParceiro404>, {usuarioId: UsuarioParceiroControllerRemoveByUsuarioAndParceiroPathParams["usuarioId"], parceiroId: UsuarioParceiroControllerRemoveByUsuarioAndParceiroPathParams["parceiroId"]}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ usuarioId, parceiroId }) => {
+      return usuarioParceiroControllerRemoveByUsuarioAndParceiro(usuarioId, parceiroId, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /usuario-parceiro/usuario/:usuarioId/parceiro/:parceiroId}
  */
 export function useUsuarioParceiroControllerRemoveByUsuarioAndParceiro<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<UsuarioParceiroControllerRemoveByUsuarioAndParceiroMutationResponse, ResponseErrorConfig<UsuarioParceiroControllerRemoveByUsuarioAndParceiro404>, {usuarioId: UsuarioParceiroControllerRemoveByUsuarioAndParceiroPathParams["usuarioId"], parceiroId: UsuarioParceiroControllerRemoveByUsuarioAndParceiroPathParams["parceiroId"]}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? usuarioParceiroControllerRemoveByUsuarioAndParceiroMutationKey()
-  
-          return useMutation<UsuarioParceiroControllerRemoveByUsuarioAndParceiroMutationResponse, ResponseErrorConfig<UsuarioParceiroControllerRemoveByUsuarioAndParceiro404>, {usuarioId: UsuarioParceiroControllerRemoveByUsuarioAndParceiroPathParams["usuarioId"], parceiroId: UsuarioParceiroControllerRemoveByUsuarioAndParceiroPathParams["parceiroId"]}, TContext>({
-            mutationFn: async({ usuarioId, parceiroId }) => {
-              return usuarioParceiroControllerRemoveByUsuarioAndParceiro(usuarioId, parceiroId, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<UsuarioParceiroControllerRemoveByUsuarioAndParceiroMutationResponse, ResponseErrorConfig<UsuarioParceiroControllerRemoveByUsuarioAndParceiro404>, {usuarioId: UsuarioParceiroControllerRemoveByUsuarioAndParceiroPathParams["usuarioId"], parceiroId: UsuarioParceiroControllerRemoveByUsuarioAndParceiroPathParams["parceiroId"]}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? usuarioParceiroControllerRemoveByUsuarioAndParceiroMutationKey()
+
+  const baseOptions = usuarioParceiroControllerRemoveByUsuarioAndParceiroMutationOptions(config) as UseMutationOptions<UsuarioParceiroControllerRemoveByUsuarioAndParceiroMutationResponse, ResponseErrorConfig<UsuarioParceiroControllerRemoveByUsuarioAndParceiro404>, {usuarioId: UsuarioParceiroControllerRemoveByUsuarioAndParceiroPathParams["usuarioId"], parceiroId: UsuarioParceiroControllerRemoveByUsuarioAndParceiroPathParams["parceiroId"]}, TContext>
+
+  return useMutation<UsuarioParceiroControllerRemoveByUsuarioAndParceiroMutationResponse, ResponseErrorConfig<UsuarioParceiroControllerRemoveByUsuarioAndParceiro404>, {usuarioId: UsuarioParceiroControllerRemoveByUsuarioAndParceiroPathParams["usuarioId"], parceiroId: UsuarioParceiroControllerRemoveByUsuarioAndParceiroPathParams["parceiroId"]}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<UsuarioParceiroControllerRemoveByUsuarioAndParceiroMutationResponse, ResponseErrorConfig<UsuarioParceiroControllerRemoveByUsuarioAndParceiro404>, {usuarioId: UsuarioParceiroControllerRemoveByUsuarioAndParceiroPathParams["usuarioId"], parceiroId: UsuarioParceiroControllerRemoveByUsuarioAndParceiroPathParams["parceiroId"]}, TContext>
 }

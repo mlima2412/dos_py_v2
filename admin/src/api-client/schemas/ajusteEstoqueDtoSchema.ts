@@ -4,12 +4,11 @@
 */
 
 import type { AjusteEstoqueDto } from "../types/AjusteEstoqueDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const ajusteEstoqueDtoSchema = z.object({
-      "skuId": z.coerce.number().describe("ID do SKU a ser ajustado"),
-  "localId": z.coerce.number().describe("ID do local onde será feito o ajuste"),
-  "qtdAjuste": z.coerce.number().describe("Quantidade do ajuste. Positivo para aumentar estoque (ex: +5), negativo para diminuir (ex: -3)"),
-  "observacao": z.coerce.string().describe("Observação sobre o motivo do ajuste").optional()
-      }) as unknown as ToZod<AjusteEstoqueDto>
+    "skuId": z.coerce.number().describe("ID do SKU a ser ajustado"),
+"localId": z.coerce.number().describe("ID do local onde será feito o ajuste"),
+"qtdAjuste": z.coerce.number().describe("Quantidade do ajuste. Positivo para aumentar estoque (ex: +5), negativo para diminuir (ex: -3)"),
+"observacao": z.optional(z.coerce.string().describe("Observação sobre o motivo do ajuste"))
+    }) as unknown as z.ZodType<AjusteEstoqueDto>

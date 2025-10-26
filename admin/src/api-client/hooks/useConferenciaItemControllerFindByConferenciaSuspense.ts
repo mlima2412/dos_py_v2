@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const conferenciaItemControllerFindByConferenciaSuspenseQueryKey = (conferenciaId: ConferenciaItemControllerFindByConferenciaPathParams["conferenciaId"]) =>   [{ url: '/conferencia-item/conferencia/:conferenciaId', params: {conferenciaId:conferenciaId} }] as const
+export const conferenciaItemControllerFindByConferenciaSuspenseQueryKey = (conferenciaId: ConferenciaItemControllerFindByConferenciaPathParams["conferenciaId"]) => [{ url: '/conferencia-item/conferencia/:conferenciaId', params: {conferenciaId:conferenciaId} }] as const
 
 export type ConferenciaItemControllerFindByConferenciaSuspenseQueryKey = ReturnType<typeof conferenciaItemControllerFindByConferenciaSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type ConferenciaItemControllerFindByConferenciaSuspenseQueryKey = ReturnT
  * {@link /conferencia-item/conferencia/:conferenciaId}
  */
 export async function conferenciaItemControllerFindByConferenciaSuspense(conferenciaId: ConferenciaItemControllerFindByConferenciaPathParams["conferenciaId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ConferenciaItemControllerFindByConferenciaQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/conferencia-item/conferencia/${conferenciaId}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ConferenciaItemControllerFindByConferenciaQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/conferencia-item/conferencia/${conferenciaId}`, ... requestConfig })  
+  return res.data
 }
 
 export function conferenciaItemControllerFindByConferenciaSuspenseQueryOptions(conferenciaId: ConferenciaItemControllerFindByConferenciaPathParams["conferenciaId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = conferenciaItemControllerFindByConferenciaSuspenseQueryKey(conferenciaId)
-        return queryOptions<ConferenciaItemControllerFindByConferenciaQueryResponse, ResponseErrorConfig<Error>, ConferenciaItemControllerFindByConferenciaQueryResponse, typeof queryKey>({
-         enabled: !!(conferenciaId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return conferenciaItemControllerFindByConferenciaSuspense(conferenciaId, config)
-         },
-        })
-  
+  const queryKey = conferenciaItemControllerFindByConferenciaSuspenseQueryKey(conferenciaId)
+  return queryOptions<ConferenciaItemControllerFindByConferenciaQueryResponse, ResponseErrorConfig<Error>, ConferenciaItemControllerFindByConferenciaQueryResponse, typeof queryKey>({
+   enabled: !!(conferenciaId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return conferenciaItemControllerFindByConferenciaSuspense(conferenciaId, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function conferenciaItemControllerFindByConferenciaSuspenseQueryOptions(c
  * {@link /conferencia-item/conferencia/:conferenciaId}
  */
 export function useConferenciaItemControllerFindByConferenciaSuspense<TData = ConferenciaItemControllerFindByConferenciaQueryResponse, TQueryKey extends QueryKey = ConferenciaItemControllerFindByConferenciaSuspenseQueryKey>(conferenciaId: ConferenciaItemControllerFindByConferenciaPathParams["conferenciaId"], options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<ConferenciaItemControllerFindByConferenciaQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? conferenciaItemControllerFindByConferenciaSuspenseQueryKey(conferenciaId)
-  
-         const query = useSuspenseQuery({
-          ...conferenciaItemControllerFindByConferenciaSuspenseQueryOptions(conferenciaId, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<ConferenciaItemControllerFindByConferenciaQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? conferenciaItemControllerFindByConferenciaSuspenseQueryKey(conferenciaId)
+
+  const query = useSuspenseQuery({
+   ...conferenciaItemControllerFindByConferenciaSuspenseQueryOptions(conferenciaId, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { VendaControllerCreateMutationRequest, VendaControllerCreateMutationResponse, VendaControllerCreateHeaderParams, VendaControllerCreate400 } from "../types/VendaControllerCreate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const vendaControllerCreateMutationKey = () =>   [{"url":"/venda"}] as const
+export const vendaControllerCreateMutationKey = () => [{ url: '/venda' }] as const
 
 export type VendaControllerCreateMutationKey = ReturnType<typeof vendaControllerCreateMutationKey>
 
@@ -18,11 +18,22 @@ export type VendaControllerCreateMutationKey = ReturnType<typeof vendaController
  * {@link /venda}
  */
 export async function vendaControllerCreate(data: VendaControllerCreateMutationRequest, headers: VendaControllerCreateHeaderParams, config: Partial<RequestConfig<VendaControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<VendaControllerCreateMutationResponse, ResponseErrorConfig<VendaControllerCreate400>, VendaControllerCreateMutationRequest>({ method : "POST", url : `/venda`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<VendaControllerCreateMutationResponse, ResponseErrorConfig<VendaControllerCreate400>, VendaControllerCreateMutationRequest>({ method : "POST", url : `/venda`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function vendaControllerCreateMutationOptions(config: Partial<RequestConfig<VendaControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = vendaControllerCreateMutationKey()
+  return mutationOptions<VendaControllerCreateMutationResponse, ResponseErrorConfig<VendaControllerCreate400>, {data: VendaControllerCreateMutationRequest, headers: VendaControllerCreateHeaderParams}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data, headers }) => {
+      return vendaControllerCreate(data, headers, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /venda}
  */
 export function useVendaControllerCreate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<VendaControllerCreateMutationResponse, ResponseErrorConfig<VendaControllerCreate400>, {data: VendaControllerCreateMutationRequest, headers: VendaControllerCreateHeaderParams}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<VendaControllerCreateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? vendaControllerCreateMutationKey()
-  
-          return useMutation<VendaControllerCreateMutationResponse, ResponseErrorConfig<VendaControllerCreate400>, {data: VendaControllerCreateMutationRequest, headers: VendaControllerCreateHeaderParams}, TContext>({
-            mutationFn: async({ data, headers }) => {
-              return vendaControllerCreate(data, headers, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<VendaControllerCreateMutationResponse, ResponseErrorConfig<VendaControllerCreate400>, {data: VendaControllerCreateMutationRequest, headers: VendaControllerCreateHeaderParams}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<VendaControllerCreateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? vendaControllerCreateMutationKey()
+
+  const baseOptions = vendaControllerCreateMutationOptions(config) as UseMutationOptions<VendaControllerCreateMutationResponse, ResponseErrorConfig<VendaControllerCreate400>, {data: VendaControllerCreateMutationRequest, headers: VendaControllerCreateHeaderParams}, TContext>
+
+  return useMutation<VendaControllerCreateMutationResponse, ResponseErrorConfig<VendaControllerCreate400>, {data: VendaControllerCreateMutationRequest, headers: VendaControllerCreateHeaderParams}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<VendaControllerCreateMutationResponse, ResponseErrorConfig<VendaControllerCreate400>, {data: VendaControllerCreateMutationRequest, headers: VendaControllerCreateHeaderParams}, TContext>
 }

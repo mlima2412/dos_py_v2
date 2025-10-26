@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { EstoqueSkuControllerUpdateMutationRequest, EstoqueSkuControllerUpdateMutationResponse, EstoqueSkuControllerUpdatePathParams, EstoqueSkuControllerUpdate404 } from "../types/EstoqueSkuControllerUpdate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const estoqueSkuControllerUpdateMutationKey = () =>   [{"url":"/estoque-sku/{localId}/{skuId}"}] as const
+export const estoqueSkuControllerUpdateMutationKey = () => [{ url: '/estoque-sku/:localId/:skuId' }] as const
 
 export type EstoqueSkuControllerUpdateMutationKey = ReturnType<typeof estoqueSkuControllerUpdateMutationKey>
 
@@ -18,11 +18,22 @@ export type EstoqueSkuControllerUpdateMutationKey = ReturnType<typeof estoqueSku
  * {@link /estoque-sku/:localId/:skuId}
  */
 export async function estoqueSkuControllerUpdate(localId: EstoqueSkuControllerUpdatePathParams["localId"], skuId: EstoqueSkuControllerUpdatePathParams["skuId"], data?: EstoqueSkuControllerUpdateMutationRequest, config: Partial<RequestConfig<EstoqueSkuControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<EstoqueSkuControllerUpdateMutationResponse, ResponseErrorConfig<EstoqueSkuControllerUpdate404>, EstoqueSkuControllerUpdateMutationRequest>({ method : "PATCH", url : `/estoque-sku/${localId}/${skuId}`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<EstoqueSkuControllerUpdateMutationResponse, ResponseErrorConfig<EstoqueSkuControllerUpdate404>, EstoqueSkuControllerUpdateMutationRequest>({ method : "PATCH", url : `/estoque-sku/${localId}/${skuId}`, data : requestData, ... requestConfig })
-return res.data
+export function estoqueSkuControllerUpdateMutationOptions(config: Partial<RequestConfig<EstoqueSkuControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = estoqueSkuControllerUpdateMutationKey()
+  return mutationOptions<EstoqueSkuControllerUpdateMutationResponse, ResponseErrorConfig<EstoqueSkuControllerUpdate404>, {localId: EstoqueSkuControllerUpdatePathParams["localId"], skuId: EstoqueSkuControllerUpdatePathParams["skuId"], data?: EstoqueSkuControllerUpdateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ localId, skuId, data }) => {
+      return estoqueSkuControllerUpdate(localId, skuId, data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /estoque-sku/:localId/:skuId}
  */
 export function useEstoqueSkuControllerUpdate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<EstoqueSkuControllerUpdateMutationResponse, ResponseErrorConfig<EstoqueSkuControllerUpdate404>, {localId: EstoqueSkuControllerUpdatePathParams["localId"], skuId: EstoqueSkuControllerUpdatePathParams["skuId"], data?: EstoqueSkuControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<EstoqueSkuControllerUpdateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? estoqueSkuControllerUpdateMutationKey()
-  
-          return useMutation<EstoqueSkuControllerUpdateMutationResponse, ResponseErrorConfig<EstoqueSkuControllerUpdate404>, {localId: EstoqueSkuControllerUpdatePathParams["localId"], skuId: EstoqueSkuControllerUpdatePathParams["skuId"], data?: EstoqueSkuControllerUpdateMutationRequest}, TContext>({
-            mutationFn: async({ localId, skuId, data }) => {
-              return estoqueSkuControllerUpdate(localId, skuId, data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<EstoqueSkuControllerUpdateMutationResponse, ResponseErrorConfig<EstoqueSkuControllerUpdate404>, {localId: EstoqueSkuControllerUpdatePathParams["localId"], skuId: EstoqueSkuControllerUpdatePathParams["skuId"], data?: EstoqueSkuControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<EstoqueSkuControllerUpdateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? estoqueSkuControllerUpdateMutationKey()
+
+  const baseOptions = estoqueSkuControllerUpdateMutationOptions(config) as UseMutationOptions<EstoqueSkuControllerUpdateMutationResponse, ResponseErrorConfig<EstoqueSkuControllerUpdate404>, {localId: EstoqueSkuControllerUpdatePathParams["localId"], skuId: EstoqueSkuControllerUpdatePathParams["skuId"], data?: EstoqueSkuControllerUpdateMutationRequest}, TContext>
+
+  return useMutation<EstoqueSkuControllerUpdateMutationResponse, ResponseErrorConfig<EstoqueSkuControllerUpdate404>, {localId: EstoqueSkuControllerUpdatePathParams["localId"], skuId: EstoqueSkuControllerUpdatePathParams["skuId"], data?: EstoqueSkuControllerUpdateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<EstoqueSkuControllerUpdateMutationResponse, ResponseErrorConfig<EstoqueSkuControllerUpdate404>, {localId: EstoqueSkuControllerUpdatePathParams["localId"], skuId: EstoqueSkuControllerUpdatePathParams["skuId"], data?: EstoqueSkuControllerUpdateMutationRequest}, TContext>
 }

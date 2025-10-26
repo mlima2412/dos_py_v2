@@ -78,25 +78,6 @@ export class CreateClienteDto {
   @IsString()
   ruccnpj?: string;
 
-  //ruccnpjSecundario
-  @ApiProperty({
-    description: 'RUC/CNPJ secundario do cliente',
-    example: '12.345.678/0001-90',
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  ruccnpjSecundario?: string;
-
-  @ApiProperty({
-    description: 'Nome da fatura do cliente',
-    example: 'João Silva',
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  nomeFatura?: string;
-
   @ApiProperty({
     description: 'Endereço do cliente',
     example: 'Rua das Flores, 123',

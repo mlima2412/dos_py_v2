@@ -9,7 +9,7 @@ export const updateVendaItemDtoTipoEnum = {
     "BRINDE": "BRINDE"
 } as const;
 
-export type UpdateVendaItemDtoTipoEnum = (typeof updateVendaItemDtoTipoEnum)[keyof typeof updateVendaItemDtoTipoEnum];
+export type UpdateVendaItemDtoTipoEnumKey = (typeof updateVendaItemDtoTipoEnum)[keyof typeof updateVendaItemDtoTipoEnum];
 
 export type UpdateVendaItemDto = {
     /**
@@ -26,7 +26,7 @@ export type UpdateVendaItemDto = {
      * @description Tipo do item
      * @type string | undefined
     */
-    tipo?: UpdateVendaItemDtoTipoEnum;
+    tipo?: UpdateVendaItemDtoTipoEnumKey;
     /**
      * @description Quantidade reservada
      * @type number | undefined

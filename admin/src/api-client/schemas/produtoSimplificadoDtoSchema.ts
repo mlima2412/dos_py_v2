@@ -4,10 +4,9 @@
 */
 
 import type { ProdutoSimplificadoDto } from "../types/ProdutoSimplificadoDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const produtoSimplificadoDtoSchema = z.object({
-      "id": z.coerce.number().describe("ID do produto"),
-  "nome": z.coerce.string().describe("Nome do produto")
-      }) as unknown as ToZod<ProdutoSimplificadoDto>
+    "id": z.coerce.number().describe("ID do produto"),
+"nome": z.coerce.string().describe("Nome do produto")
+    }) as unknown as z.ZodType<ProdutoSimplificadoDto>

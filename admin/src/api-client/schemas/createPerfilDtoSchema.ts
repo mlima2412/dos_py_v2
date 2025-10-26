@@ -4,9 +4,8 @@
 */
 
 import type { CreatePerfilDto } from "../types/CreatePerfilDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const createPerfilDtoSchema = z.object({
-      
-      }) as unknown as ToZod<CreatePerfilDto>
+    
+    }) as unknown as z.ZodType<CreatePerfilDto>

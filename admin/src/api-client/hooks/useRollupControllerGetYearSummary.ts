@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const rollupControllerGetYearSummaryQueryKey = (params: RollupControllerGetYearSummaryQueryParams) =>   [{ url: '/dashboard/despesas/ano' }, ...(params ? [params] : [])] as const
+export const rollupControllerGetYearSummaryQueryKey = (params: RollupControllerGetYearSummaryQueryParams) => [{ url: '/dashboard/despesas/ano' }, ...(params ? [params] : [])] as const
 
 export type RollupControllerGetYearSummaryQueryKey = ReturnType<typeof rollupControllerGetYearSummaryQueryKey>
 
@@ -18,25 +18,22 @@ export type RollupControllerGetYearSummaryQueryKey = ReturnType<typeof rollupCon
  * {@link /dashboard/despesas/ano}
  */
 export async function rollupControllerGetYearSummary(params: RollupControllerGetYearSummaryQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<RollupControllerGetYearSummaryQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/dashboard/despesas/ano`, params, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<RollupControllerGetYearSummaryQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/dashboard/despesas/ano`, params, ... requestConfig })  
+  return res.data
 }
 
 export function rollupControllerGetYearSummaryQueryOptions(params: RollupControllerGetYearSummaryQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = rollupControllerGetYearSummaryQueryKey(params)
-        return queryOptions<RollupControllerGetYearSummaryQueryResponse, ResponseErrorConfig<Error>, RollupControllerGetYearSummaryQueryResponse, typeof queryKey>({
-         enabled: !!(params),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return rollupControllerGetYearSummary(params, config)
-         },
-        })
-  
+  const queryKey = rollupControllerGetYearSummaryQueryKey(params)
+  return queryOptions<RollupControllerGetYearSummaryQueryResponse, ResponseErrorConfig<Error>, RollupControllerGetYearSummaryQueryResponse, typeof queryKey>({
+   enabled: !!(params),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return rollupControllerGetYearSummary(params, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function rollupControllerGetYearSummaryQueryOptions(params: RollupControl
  * {@link /dashboard/despesas/ano}
  */
 export function useRollupControllerGetYearSummary<TData = RollupControllerGetYearSummaryQueryResponse, TQueryData = RollupControllerGetYearSummaryQueryResponse, TQueryKey extends QueryKey = RollupControllerGetYearSummaryQueryKey>(params: RollupControllerGetYearSummaryQueryParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<RollupControllerGetYearSummaryQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? rollupControllerGetYearSummaryQueryKey(params)
-  
-         const query = useQuery({
-          ...rollupControllerGetYearSummaryQueryOptions(params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<RollupControllerGetYearSummaryQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? rollupControllerGetYearSummaryQueryKey(params)
+
+  const query = useQuery({
+   ...rollupControllerGetYearSummaryQueryOptions(params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

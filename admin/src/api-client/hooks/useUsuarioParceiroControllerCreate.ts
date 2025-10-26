@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { UsuarioParceiroControllerCreateMutationRequest, UsuarioParceiroControllerCreateMutationResponse, UsuarioParceiroControllerCreate400, UsuarioParceiroControllerCreate404, UsuarioParceiroControllerCreate409 } from "../types/UsuarioParceiroControllerCreate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const usuarioParceiroControllerCreateMutationKey = () =>   [{"url":"/usuario-parceiro"}] as const
+export const usuarioParceiroControllerCreateMutationKey = () => [{ url: '/usuario-parceiro' }] as const
 
 export type UsuarioParceiroControllerCreateMutationKey = ReturnType<typeof usuarioParceiroControllerCreateMutationKey>
 
@@ -18,11 +18,22 @@ export type UsuarioParceiroControllerCreateMutationKey = ReturnType<typeof usuar
  * {@link /usuario-parceiro}
  */
 export async function usuarioParceiroControllerCreate(data: UsuarioParceiroControllerCreateMutationRequest, config: Partial<RequestConfig<UsuarioParceiroControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<UsuarioParceiroControllerCreateMutationResponse, ResponseErrorConfig<UsuarioParceiroControllerCreate400 | UsuarioParceiroControllerCreate404 | UsuarioParceiroControllerCreate409>, UsuarioParceiroControllerCreateMutationRequest>({ method : "POST", url : `/usuario-parceiro`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<UsuarioParceiroControllerCreateMutationResponse, ResponseErrorConfig<UsuarioParceiroControllerCreate400 | UsuarioParceiroControllerCreate404 | UsuarioParceiroControllerCreate409>, UsuarioParceiroControllerCreateMutationRequest>({ method : "POST", url : `/usuario-parceiro`, data : requestData, ... requestConfig })
-return res.data
+export function usuarioParceiroControllerCreateMutationOptions(config: Partial<RequestConfig<UsuarioParceiroControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = usuarioParceiroControllerCreateMutationKey()
+  return mutationOptions<UsuarioParceiroControllerCreateMutationResponse, ResponseErrorConfig<UsuarioParceiroControllerCreate400 | UsuarioParceiroControllerCreate404 | UsuarioParceiroControllerCreate409>, {data: UsuarioParceiroControllerCreateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data }) => {
+      return usuarioParceiroControllerCreate(data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /usuario-parceiro}
  */
 export function useUsuarioParceiroControllerCreate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<UsuarioParceiroControllerCreateMutationResponse, ResponseErrorConfig<UsuarioParceiroControllerCreate400 | UsuarioParceiroControllerCreate404 | UsuarioParceiroControllerCreate409>, {data: UsuarioParceiroControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<UsuarioParceiroControllerCreateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? usuarioParceiroControllerCreateMutationKey()
-  
-          return useMutation<UsuarioParceiroControllerCreateMutationResponse, ResponseErrorConfig<UsuarioParceiroControllerCreate400 | UsuarioParceiroControllerCreate404 | UsuarioParceiroControllerCreate409>, {data: UsuarioParceiroControllerCreateMutationRequest}, TContext>({
-            mutationFn: async({ data }) => {
-              return usuarioParceiroControllerCreate(data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<UsuarioParceiroControllerCreateMutationResponse, ResponseErrorConfig<UsuarioParceiroControllerCreate400 | UsuarioParceiroControllerCreate404 | UsuarioParceiroControllerCreate409>, {data: UsuarioParceiroControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<UsuarioParceiroControllerCreateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? usuarioParceiroControllerCreateMutationKey()
+
+  const baseOptions = usuarioParceiroControllerCreateMutationOptions(config) as UseMutationOptions<UsuarioParceiroControllerCreateMutationResponse, ResponseErrorConfig<UsuarioParceiroControllerCreate400 | UsuarioParceiroControllerCreate404 | UsuarioParceiroControllerCreate409>, {data: UsuarioParceiroControllerCreateMutationRequest}, TContext>
+
+  return useMutation<UsuarioParceiroControllerCreateMutationResponse, ResponseErrorConfig<UsuarioParceiroControllerCreate400 | UsuarioParceiroControllerCreate404 | UsuarioParceiroControllerCreate409>, {data: UsuarioParceiroControllerCreateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<UsuarioParceiroControllerCreateMutationResponse, ResponseErrorConfig<UsuarioParceiroControllerCreate400 | UsuarioParceiroControllerCreate404 | UsuarioParceiroControllerCreate409>, {data: UsuarioParceiroControllerCreateMutationRequest}, TContext>
 }

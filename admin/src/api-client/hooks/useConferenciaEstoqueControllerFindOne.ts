@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const conferenciaEstoqueControllerFindOneQueryKey = (publicId: ConferenciaEstoqueControllerFindOnePathParams["publicId"]) =>   [{ url: '/conferencia-estoque/:publicId', params: {publicId:publicId} }] as const
+export const conferenciaEstoqueControllerFindOneQueryKey = (publicId: ConferenciaEstoqueControllerFindOnePathParams["publicId"]) => [{ url: '/conferencia-estoque/:publicId', params: {publicId:publicId} }] as const
 
 export type ConferenciaEstoqueControllerFindOneQueryKey = ReturnType<typeof conferenciaEstoqueControllerFindOneQueryKey>
 
@@ -18,25 +18,22 @@ export type ConferenciaEstoqueControllerFindOneQueryKey = ReturnType<typeof conf
  * {@link /conferencia-estoque/:publicId}
  */
 export async function conferenciaEstoqueControllerFindOne(publicId: ConferenciaEstoqueControllerFindOnePathParams["publicId"], headers: ConferenciaEstoqueControllerFindOneHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ConferenciaEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaEstoqueControllerFindOne404>, unknown>({ method : "GET", url : `/conferencia-estoque/${publicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ConferenciaEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaEstoqueControllerFindOne404>, unknown>({ method : "GET", url : `/conferencia-estoque/${publicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function conferenciaEstoqueControllerFindOneQueryOptions(publicId: ConferenciaEstoqueControllerFindOnePathParams["publicId"], headers: ConferenciaEstoqueControllerFindOneHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = conferenciaEstoqueControllerFindOneQueryKey(publicId)
-        return queryOptions<ConferenciaEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaEstoqueControllerFindOne404>, ConferenciaEstoqueControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(publicId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return conferenciaEstoqueControllerFindOne(publicId, headers, config)
-         },
-        })
-  
+  const queryKey = conferenciaEstoqueControllerFindOneQueryKey(publicId)
+  return queryOptions<ConferenciaEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaEstoqueControllerFindOne404>, ConferenciaEstoqueControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(publicId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return conferenciaEstoqueControllerFindOne(publicId, headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function conferenciaEstoqueControllerFindOneQueryOptions(publicId: Confer
  * {@link /conferencia-estoque/:publicId}
  */
 export function useConferenciaEstoqueControllerFindOne<TData = ConferenciaEstoqueControllerFindOneQueryResponse, TQueryData = ConferenciaEstoqueControllerFindOneQueryResponse, TQueryKey extends QueryKey = ConferenciaEstoqueControllerFindOneQueryKey>(publicId: ConferenciaEstoqueControllerFindOnePathParams["publicId"], headers: ConferenciaEstoqueControllerFindOneHeaderParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<ConferenciaEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaEstoqueControllerFindOne404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? conferenciaEstoqueControllerFindOneQueryKey(publicId)
-  
-         const query = useQuery({
-          ...conferenciaEstoqueControllerFindOneQueryOptions(publicId, headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<ConferenciaEstoqueControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<ConferenciaEstoqueControllerFindOneQueryResponse, ResponseErrorConfig<ConferenciaEstoqueControllerFindOne404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? conferenciaEstoqueControllerFindOneQueryKey(publicId)
+
+  const query = useQuery({
+   ...conferenciaEstoqueControllerFindOneQueryOptions(publicId, headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<ConferenciaEstoqueControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

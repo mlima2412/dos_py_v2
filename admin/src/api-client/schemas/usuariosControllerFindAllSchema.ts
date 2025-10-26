@@ -4,13 +4,12 @@
 */
 
 import type { UsuariosControllerFindAll200, UsuariosControllerFindAllQueryResponse } from "../types/UsuariosControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { usuarioSchema } from "./usuarioSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Lista de usuários retornada com sucesso
  */
-export const usuariosControllerFindAll200Schema = z.array(z.lazy(() => usuarioSchema)) as unknown as ToZod<UsuariosControllerFindAll200>
+export const usuariosControllerFindAll200Schema = z.array(usuarioSchema) as unknown as z.ZodType<UsuariosControllerFindAll200>
 
-export const usuariosControllerFindAllQueryResponseSchema = z.lazy(() => usuariosControllerFindAll200Schema) as unknown as ToZod<UsuariosControllerFindAllQueryResponse>
+export const usuariosControllerFindAllQueryResponseSchema = usuariosControllerFindAll200Schema as unknown as z.ZodType<UsuariosControllerFindAllQueryResponse>

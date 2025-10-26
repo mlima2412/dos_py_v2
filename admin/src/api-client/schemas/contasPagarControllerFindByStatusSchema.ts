@@ -4,17 +4,16 @@
 */
 
 import type { ContasPagarControllerFindByStatusPathParams, ContasPagarControllerFindByStatus200, ContasPagarControllerFindByStatusQueryResponse } from "../types/ContasPagarControllerFindByStatus.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { contasPagarSchema } from "./contasPagarSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const contasPagarControllerFindByStatusPathParamsSchema = z.object({
-      "pago": z.boolean().describe("Status de pagamento (true/false)")
-      }) as unknown as ToZod<ContasPagarControllerFindByStatusPathParams>
+    "pago": z.boolean().describe("Status de pagamento (true/false)")
+    }) as unknown as z.ZodType<ContasPagarControllerFindByStatusPathParams>
 
 /**
  * @description Contas a pagar por status.
  */
-export const contasPagarControllerFindByStatus200Schema = z.array(z.lazy(() => contasPagarSchema)) as unknown as ToZod<ContasPagarControllerFindByStatus200>
+export const contasPagarControllerFindByStatus200Schema = z.array(contasPagarSchema) as unknown as z.ZodType<ContasPagarControllerFindByStatus200>
 
-export const contasPagarControllerFindByStatusQueryResponseSchema = z.lazy(() => contasPagarControllerFindByStatus200Schema) as unknown as ToZod<ContasPagarControllerFindByStatusQueryResponse>
+export const contasPagarControllerFindByStatusQueryResponseSchema = contasPagarControllerFindByStatus200Schema as unknown as z.ZodType<ContasPagarControllerFindByStatusQueryResponse>

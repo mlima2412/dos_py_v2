@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const parceirosControllerFindPaginatedSuspenseQueryKey = (params: ParceirosControllerFindPaginatedQueryParams) =>   [{ url: '/parceiros/paginated' }, ...(params ? [params] : [])] as const
+export const parceirosControllerFindPaginatedSuspenseQueryKey = (params: ParceirosControllerFindPaginatedQueryParams) => [{ url: '/parceiros/paginated' }, ...(params ? [params] : [])] as const
 
 export type ParceirosControllerFindPaginatedSuspenseQueryKey = ReturnType<typeof parceirosControllerFindPaginatedSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type ParceirosControllerFindPaginatedSuspenseQueryKey = ReturnType<typeof
  * {@link /parceiros/paginated}
  */
 export async function parceirosControllerFindPaginatedSuspense(params: ParceirosControllerFindPaginatedQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ParceirosControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/parceiros/paginated`, params, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ParceirosControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/parceiros/paginated`, params, ... requestConfig })  
+  return res.data
 }
 
 export function parceirosControllerFindPaginatedSuspenseQueryOptions(params: ParceirosControllerFindPaginatedQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = parceirosControllerFindPaginatedSuspenseQueryKey(params)
-        return queryOptions<ParceirosControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, ParceirosControllerFindPaginatedQueryResponse, typeof queryKey>({
-         enabled: !!(params),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return parceirosControllerFindPaginatedSuspense(params, config)
-         },
-        })
-  
+  const queryKey = parceirosControllerFindPaginatedSuspenseQueryKey(params)
+  return queryOptions<ParceirosControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, ParceirosControllerFindPaginatedQueryResponse, typeof queryKey>({
+   enabled: !!(params),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return parceirosControllerFindPaginatedSuspense(params, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function parceirosControllerFindPaginatedSuspenseQueryOptions(params: Par
  * {@link /parceiros/paginated}
  */
 export function useParceirosControllerFindPaginatedSuspense<TData = ParceirosControllerFindPaginatedQueryResponse, TQueryKey extends QueryKey = ParceirosControllerFindPaginatedSuspenseQueryKey>(params: ParceirosControllerFindPaginatedQueryParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<ParceirosControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? parceirosControllerFindPaginatedSuspenseQueryKey(params)
-  
-         const query = useSuspenseQuery({
-          ...parceirosControllerFindPaginatedSuspenseQueryOptions(params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<ParceirosControllerFindPaginatedQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? parceirosControllerFindPaginatedSuspenseQueryKey(params)
+
+  const query = useSuspenseQuery({
+   ...parceirosControllerFindPaginatedSuspenseQueryOptions(params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const parcelasControllerFindOneSuspenseQueryKey = (id: ParcelasControllerFindOnePathParams["id"]) =>   [{ url: '/parcelas/:id', params: {id:id} }] as const
+export const parcelasControllerFindOneSuspenseQueryKey = (id: ParcelasControllerFindOnePathParams["id"]) => [{ url: '/parcelas/:id', params: {id:id} }] as const
 
 export type ParcelasControllerFindOneSuspenseQueryKey = ReturnType<typeof parcelasControllerFindOneSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type ParcelasControllerFindOneSuspenseQueryKey = ReturnType<typeof parcel
  * {@link /parcelas/:id}
  */
 export async function parcelasControllerFindOneSuspense(id: ParcelasControllerFindOnePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ParcelasControllerFindOneQueryResponse, ResponseErrorConfig<ParcelasControllerFindOne404>, unknown>({ method : "GET", url : `/parcelas/${id}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ParcelasControllerFindOneQueryResponse, ResponseErrorConfig<ParcelasControllerFindOne404>, unknown>({ method : "GET", url : `/parcelas/${id}`, ... requestConfig })  
+  return res.data
 }
 
 export function parcelasControllerFindOneSuspenseQueryOptions(id: ParcelasControllerFindOnePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = parcelasControllerFindOneSuspenseQueryKey(id)
-        return queryOptions<ParcelasControllerFindOneQueryResponse, ResponseErrorConfig<ParcelasControllerFindOne404>, ParcelasControllerFindOneQueryResponse, typeof queryKey>({
-         enabled: !!(id),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return parcelasControllerFindOneSuspense(id, config)
-         },
-        })
-  
+  const queryKey = parcelasControllerFindOneSuspenseQueryKey(id)
+  return queryOptions<ParcelasControllerFindOneQueryResponse, ResponseErrorConfig<ParcelasControllerFindOne404>, ParcelasControllerFindOneQueryResponse, typeof queryKey>({
+   enabled: !!(id),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return parcelasControllerFindOneSuspense(id, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function parcelasControllerFindOneSuspenseQueryOptions(id: ParcelasContro
  * {@link /parcelas/:id}
  */
 export function useParcelasControllerFindOneSuspense<TData = ParcelasControllerFindOneQueryResponse, TQueryKey extends QueryKey = ParcelasControllerFindOneSuspenseQueryKey>(id: ParcelasControllerFindOnePathParams["id"], options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<ParcelasControllerFindOneQueryResponse, ResponseErrorConfig<ParcelasControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? parcelasControllerFindOneSuspenseQueryKey(id)
-  
-         const query = useSuspenseQuery({
-          ...parcelasControllerFindOneSuspenseQueryOptions(id, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<ParcelasControllerFindOne404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<ParcelasControllerFindOneQueryResponse, ResponseErrorConfig<ParcelasControllerFindOne404>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? parcelasControllerFindOneSuspenseQueryKey(id)
+
+  const query = useSuspenseQuery({
+   ...parcelasControllerFindOneSuspenseQueryOptions(id, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<ParcelasControllerFindOne404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

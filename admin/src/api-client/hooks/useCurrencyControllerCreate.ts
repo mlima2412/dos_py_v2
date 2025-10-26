@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { CurrencyControllerCreateMutationRequest, CurrencyControllerCreateMutationResponse, CurrencyControllerCreate400, CurrencyControllerCreate401, CurrencyControllerCreate409 } from "../types/CurrencyControllerCreate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const currencyControllerCreateMutationKey = () =>   [{"url":"/currency"}] as const
+export const currencyControllerCreateMutationKey = () => [{ url: '/currency' }] as const
 
 export type CurrencyControllerCreateMutationKey = ReturnType<typeof currencyControllerCreateMutationKey>
 
@@ -18,11 +18,22 @@ export type CurrencyControllerCreateMutationKey = ReturnType<typeof currencyCont
  * {@link /currency}
  */
 export async function currencyControllerCreate(data: CurrencyControllerCreateMutationRequest, config: Partial<RequestConfig<CurrencyControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<CurrencyControllerCreateMutationResponse, ResponseErrorConfig<CurrencyControllerCreate400 | CurrencyControllerCreate401 | CurrencyControllerCreate409>, CurrencyControllerCreateMutationRequest>({ method : "POST", url : `/currency`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<CurrencyControllerCreateMutationResponse, ResponseErrorConfig<CurrencyControllerCreate400 | CurrencyControllerCreate401 | CurrencyControllerCreate409>, CurrencyControllerCreateMutationRequest>({ method : "POST", url : `/currency`, data : requestData, ... requestConfig })
-return res.data
+export function currencyControllerCreateMutationOptions(config: Partial<RequestConfig<CurrencyControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = currencyControllerCreateMutationKey()
+  return mutationOptions<CurrencyControllerCreateMutationResponse, ResponseErrorConfig<CurrencyControllerCreate400 | CurrencyControllerCreate401 | CurrencyControllerCreate409>, {data: CurrencyControllerCreateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data }) => {
+      return currencyControllerCreate(data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /currency}
  */
 export function useCurrencyControllerCreate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<CurrencyControllerCreateMutationResponse, ResponseErrorConfig<CurrencyControllerCreate400 | CurrencyControllerCreate401 | CurrencyControllerCreate409>, {data: CurrencyControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<CurrencyControllerCreateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? currencyControllerCreateMutationKey()
-  
-          return useMutation<CurrencyControllerCreateMutationResponse, ResponseErrorConfig<CurrencyControllerCreate400 | CurrencyControllerCreate401 | CurrencyControllerCreate409>, {data: CurrencyControllerCreateMutationRequest}, TContext>({
-            mutationFn: async({ data }) => {
-              return currencyControllerCreate(data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<CurrencyControllerCreateMutationResponse, ResponseErrorConfig<CurrencyControllerCreate400 | CurrencyControllerCreate401 | CurrencyControllerCreate409>, {data: CurrencyControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<CurrencyControllerCreateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? currencyControllerCreateMutationKey()
+
+  const baseOptions = currencyControllerCreateMutationOptions(config) as UseMutationOptions<CurrencyControllerCreateMutationResponse, ResponseErrorConfig<CurrencyControllerCreate400 | CurrencyControllerCreate401 | CurrencyControllerCreate409>, {data: CurrencyControllerCreateMutationRequest}, TContext>
+
+  return useMutation<CurrencyControllerCreateMutationResponse, ResponseErrorConfig<CurrencyControllerCreate400 | CurrencyControllerCreate401 | CurrencyControllerCreate409>, {data: CurrencyControllerCreateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<CurrencyControllerCreateMutationResponse, ResponseErrorConfig<CurrencyControllerCreate400 | CurrencyControllerCreate401 | CurrencyControllerCreate409>, {data: CurrencyControllerCreateMutationRequest}, TContext>
 }

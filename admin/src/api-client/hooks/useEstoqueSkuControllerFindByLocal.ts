@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const estoqueSkuControllerFindByLocalQueryKey = (localId: EstoqueSkuControllerFindByLocalPathParams["localId"]) =>   [{ url: '/estoque-sku/local/:localId', params: {localId:localId} }] as const
+export const estoqueSkuControllerFindByLocalQueryKey = (localId: EstoqueSkuControllerFindByLocalPathParams["localId"]) => [{ url: '/estoque-sku/local/:localId', params: {localId:localId} }] as const
 
 export type EstoqueSkuControllerFindByLocalQueryKey = ReturnType<typeof estoqueSkuControllerFindByLocalQueryKey>
 
@@ -18,25 +18,22 @@ export type EstoqueSkuControllerFindByLocalQueryKey = ReturnType<typeof estoqueS
  * {@link /estoque-sku/local/:localId}
  */
 export async function estoqueSkuControllerFindByLocal(localId: EstoqueSkuControllerFindByLocalPathParams["localId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<EstoqueSkuControllerFindByLocalQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/estoque-sku/local/${localId}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<EstoqueSkuControllerFindByLocalQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/estoque-sku/local/${localId}`, ... requestConfig })  
+  return res.data
 }
 
 export function estoqueSkuControllerFindByLocalQueryOptions(localId: EstoqueSkuControllerFindByLocalPathParams["localId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = estoqueSkuControllerFindByLocalQueryKey(localId)
-        return queryOptions<EstoqueSkuControllerFindByLocalQueryResponse, ResponseErrorConfig<Error>, EstoqueSkuControllerFindByLocalQueryResponse, typeof queryKey>({
-         enabled: !!(localId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return estoqueSkuControllerFindByLocal(localId, config)
-         },
-        })
-  
+  const queryKey = estoqueSkuControllerFindByLocalQueryKey(localId)
+  return queryOptions<EstoqueSkuControllerFindByLocalQueryResponse, ResponseErrorConfig<Error>, EstoqueSkuControllerFindByLocalQueryResponse, typeof queryKey>({
+   enabled: !!(localId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return estoqueSkuControllerFindByLocal(localId, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function estoqueSkuControllerFindByLocalQueryOptions(localId: EstoqueSkuC
  * {@link /estoque-sku/local/:localId}
  */
 export function useEstoqueSkuControllerFindByLocal<TData = EstoqueSkuControllerFindByLocalQueryResponse, TQueryData = EstoqueSkuControllerFindByLocalQueryResponse, TQueryKey extends QueryKey = EstoqueSkuControllerFindByLocalQueryKey>(localId: EstoqueSkuControllerFindByLocalPathParams["localId"], options: 
-  {
-    query?: Partial<QueryObserverOptions<EstoqueSkuControllerFindByLocalQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? estoqueSkuControllerFindByLocalQueryKey(localId)
-  
-         const query = useQuery({
-          ...estoqueSkuControllerFindByLocalQueryOptions(localId, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<EstoqueSkuControllerFindByLocalQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? estoqueSkuControllerFindByLocalQueryKey(localId)
+
+  const query = useQuery({
+   ...estoqueSkuControllerFindByLocalQueryOptions(localId, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

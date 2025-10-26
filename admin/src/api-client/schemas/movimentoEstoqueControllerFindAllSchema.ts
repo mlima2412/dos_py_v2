@@ -4,13 +4,12 @@
 */
 
 import type { MovimentoEstoqueControllerFindAll200, MovimentoEstoqueControllerFindAllQueryResponse } from "../types/MovimentoEstoqueControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { movimentoEstoqueResponseDtoSchema } from "./movimentoEstoqueResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Lista de movimentos retornada com sucesso
  */
-export const movimentoEstoqueControllerFindAll200Schema = z.array(z.lazy(() => movimentoEstoqueResponseDtoSchema)) as unknown as ToZod<MovimentoEstoqueControllerFindAll200>
+export const movimentoEstoqueControllerFindAll200Schema = z.array(movimentoEstoqueResponseDtoSchema) as unknown as z.ZodType<MovimentoEstoqueControllerFindAll200>
 
-export const movimentoEstoqueControllerFindAllQueryResponseSchema = z.lazy(() => movimentoEstoqueControllerFindAll200Schema) as unknown as ToZod<MovimentoEstoqueControllerFindAllQueryResponse>
+export const movimentoEstoqueControllerFindAllQueryResponseSchema = movimentoEstoqueControllerFindAll200Schema as unknown as z.ZodType<MovimentoEstoqueControllerFindAllQueryResponse>

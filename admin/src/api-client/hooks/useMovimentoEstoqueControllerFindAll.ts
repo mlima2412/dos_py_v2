@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const movimentoEstoqueControllerFindAllQueryKey = () =>   [{ url: '/movimento-estoque' }] as const
+export const movimentoEstoqueControllerFindAllQueryKey = () => [{ url: '/movimento-estoque' }] as const
 
 export type MovimentoEstoqueControllerFindAllQueryKey = ReturnType<typeof movimentoEstoqueControllerFindAllQueryKey>
 
@@ -19,25 +19,22 @@ export type MovimentoEstoqueControllerFindAllQueryKey = ReturnType<typeof movime
  * {@link /movimento-estoque}
  */
 export async function movimentoEstoqueControllerFindAll(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<MovimentoEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/movimento-estoque`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<MovimentoEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/movimento-estoque`, ... requestConfig })  
+  return res.data
 }
 
 export function movimentoEstoqueControllerFindAllQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = movimentoEstoqueControllerFindAllQueryKey()
-        return queryOptions<MovimentoEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, MovimentoEstoqueControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return movimentoEstoqueControllerFindAll(config)
-         },
-        })
-  
+  const queryKey = movimentoEstoqueControllerFindAllQueryKey()
+  return queryOptions<MovimentoEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, MovimentoEstoqueControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return movimentoEstoqueControllerFindAll(config)
+   },
+  })
 }
 
 /**
@@ -46,23 +43,22 @@ export function movimentoEstoqueControllerFindAllQueryOptions(config: Partial<Re
  * {@link /movimento-estoque}
  */
 export function useMovimentoEstoqueControllerFindAll<TData = MovimentoEstoqueControllerFindAllQueryResponse, TQueryData = MovimentoEstoqueControllerFindAllQueryResponse, TQueryKey extends QueryKey = MovimentoEstoqueControllerFindAllQueryKey>(options: 
-  {
-    query?: Partial<QueryObserverOptions<MovimentoEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? movimentoEstoqueControllerFindAllQueryKey()
-  
-         const query = useQuery({
-          ...movimentoEstoqueControllerFindAllQueryOptions(config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<MovimentoEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? movimentoEstoqueControllerFindAllQueryKey()
+
+  const query = useQuery({
+   ...movimentoEstoqueControllerFindAllQueryOptions(config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

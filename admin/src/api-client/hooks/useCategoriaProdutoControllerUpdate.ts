@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { CategoriaProdutoControllerUpdateMutationRequest, CategoriaProdutoControllerUpdateMutationResponse, CategoriaProdutoControllerUpdatePathParams, CategoriaProdutoControllerUpdate400, CategoriaProdutoControllerUpdate404, CategoriaProdutoControllerUpdate409 } from "../types/CategoriaProdutoControllerUpdate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const categoriaProdutoControllerUpdateMutationKey = () =>   [{"url":"/categoria-produto/{id}"}] as const
+export const categoriaProdutoControllerUpdateMutationKey = () => [{ url: '/categoria-produto/:id' }] as const
 
 export type CategoriaProdutoControllerUpdateMutationKey = ReturnType<typeof categoriaProdutoControllerUpdateMutationKey>
 
@@ -18,11 +18,22 @@ export type CategoriaProdutoControllerUpdateMutationKey = ReturnType<typeof cate
  * {@link /categoria-produto/:id}
  */
 export async function categoriaProdutoControllerUpdate(id: CategoriaProdutoControllerUpdatePathParams["id"], data?: CategoriaProdutoControllerUpdateMutationRequest, config: Partial<RequestConfig<CategoriaProdutoControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<CategoriaProdutoControllerUpdateMutationResponse, ResponseErrorConfig<CategoriaProdutoControllerUpdate400 | CategoriaProdutoControllerUpdate404 | CategoriaProdutoControllerUpdate409>, CategoriaProdutoControllerUpdateMutationRequest>({ method : "PATCH", url : `/categoria-produto/${id}`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<CategoriaProdutoControllerUpdateMutationResponse, ResponseErrorConfig<CategoriaProdutoControllerUpdate400 | CategoriaProdutoControllerUpdate404 | CategoriaProdutoControllerUpdate409>, CategoriaProdutoControllerUpdateMutationRequest>({ method : "PATCH", url : `/categoria-produto/${id}`, data : requestData, ... requestConfig })
-return res.data
+export function categoriaProdutoControllerUpdateMutationOptions(config: Partial<RequestConfig<CategoriaProdutoControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = categoriaProdutoControllerUpdateMutationKey()
+  return mutationOptions<CategoriaProdutoControllerUpdateMutationResponse, ResponseErrorConfig<CategoriaProdutoControllerUpdate400 | CategoriaProdutoControllerUpdate404 | CategoriaProdutoControllerUpdate409>, {id: CategoriaProdutoControllerUpdatePathParams["id"], data?: CategoriaProdutoControllerUpdateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ id, data }) => {
+      return categoriaProdutoControllerUpdate(id, data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /categoria-produto/:id}
  */
 export function useCategoriaProdutoControllerUpdate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<CategoriaProdutoControllerUpdateMutationResponse, ResponseErrorConfig<CategoriaProdutoControllerUpdate400 | CategoriaProdutoControllerUpdate404 | CategoriaProdutoControllerUpdate409>, {id: CategoriaProdutoControllerUpdatePathParams["id"], data?: CategoriaProdutoControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<CategoriaProdutoControllerUpdateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? categoriaProdutoControllerUpdateMutationKey()
-  
-          return useMutation<CategoriaProdutoControllerUpdateMutationResponse, ResponseErrorConfig<CategoriaProdutoControllerUpdate400 | CategoriaProdutoControllerUpdate404 | CategoriaProdutoControllerUpdate409>, {id: CategoriaProdutoControllerUpdatePathParams["id"], data?: CategoriaProdutoControllerUpdateMutationRequest}, TContext>({
-            mutationFn: async({ id, data }) => {
-              return categoriaProdutoControllerUpdate(id, data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<CategoriaProdutoControllerUpdateMutationResponse, ResponseErrorConfig<CategoriaProdutoControllerUpdate400 | CategoriaProdutoControllerUpdate404 | CategoriaProdutoControllerUpdate409>, {id: CategoriaProdutoControllerUpdatePathParams["id"], data?: CategoriaProdutoControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<CategoriaProdutoControllerUpdateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? categoriaProdutoControllerUpdateMutationKey()
+
+  const baseOptions = categoriaProdutoControllerUpdateMutationOptions(config) as UseMutationOptions<CategoriaProdutoControllerUpdateMutationResponse, ResponseErrorConfig<CategoriaProdutoControllerUpdate400 | CategoriaProdutoControllerUpdate404 | CategoriaProdutoControllerUpdate409>, {id: CategoriaProdutoControllerUpdatePathParams["id"], data?: CategoriaProdutoControllerUpdateMutationRequest}, TContext>
+
+  return useMutation<CategoriaProdutoControllerUpdateMutationResponse, ResponseErrorConfig<CategoriaProdutoControllerUpdate400 | CategoriaProdutoControllerUpdate404 | CategoriaProdutoControllerUpdate409>, {id: CategoriaProdutoControllerUpdatePathParams["id"], data?: CategoriaProdutoControllerUpdateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<CategoriaProdutoControllerUpdateMutationResponse, ResponseErrorConfig<CategoriaProdutoControllerUpdate400 | CategoriaProdutoControllerUpdate404 | CategoriaProdutoControllerUpdate409>, {id: CategoriaProdutoControllerUpdatePathParams["id"], data?: CategoriaProdutoControllerUpdateMutationRequest}, TContext>
 }

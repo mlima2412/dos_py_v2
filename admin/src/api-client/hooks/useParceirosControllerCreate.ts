@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ParceirosControllerCreateMutationRequest, ParceirosControllerCreateMutationResponse, ParceirosControllerCreate400, ParceirosControllerCreate409 } from "../types/ParceirosControllerCreate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const parceirosControllerCreateMutationKey = () =>   [{"url":"/parceiros"}] as const
+export const parceirosControllerCreateMutationKey = () => [{ url: '/parceiros' }] as const
 
 export type ParceirosControllerCreateMutationKey = ReturnType<typeof parceirosControllerCreateMutationKey>
 
@@ -18,11 +18,22 @@ export type ParceirosControllerCreateMutationKey = ReturnType<typeof parceirosCo
  * {@link /parceiros}
  */
 export async function parceirosControllerCreate(data: ParceirosControllerCreateMutationRequest, config: Partial<RequestConfig<ParceirosControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<ParceirosControllerCreateMutationResponse, ResponseErrorConfig<ParceirosControllerCreate400 | ParceirosControllerCreate409>, ParceirosControllerCreateMutationRequest>({ method : "POST", url : `/parceiros`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<ParceirosControllerCreateMutationResponse, ResponseErrorConfig<ParceirosControllerCreate400 | ParceirosControllerCreate409>, ParceirosControllerCreateMutationRequest>({ method : "POST", url : `/parceiros`, data : requestData, ... requestConfig })
-return res.data
+export function parceirosControllerCreateMutationOptions(config: Partial<RequestConfig<ParceirosControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = parceirosControllerCreateMutationKey()
+  return mutationOptions<ParceirosControllerCreateMutationResponse, ResponseErrorConfig<ParceirosControllerCreate400 | ParceirosControllerCreate409>, {data: ParceirosControllerCreateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data }) => {
+      return parceirosControllerCreate(data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /parceiros}
  */
 export function useParceirosControllerCreate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ParceirosControllerCreateMutationResponse, ResponseErrorConfig<ParceirosControllerCreate400 | ParceirosControllerCreate409>, {data: ParceirosControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<ParceirosControllerCreateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? parceirosControllerCreateMutationKey()
-  
-          return useMutation<ParceirosControllerCreateMutationResponse, ResponseErrorConfig<ParceirosControllerCreate400 | ParceirosControllerCreate409>, {data: ParceirosControllerCreateMutationRequest}, TContext>({
-            mutationFn: async({ data }) => {
-              return parceirosControllerCreate(data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ParceirosControllerCreateMutationResponse, ResponseErrorConfig<ParceirosControllerCreate400 | ParceirosControllerCreate409>, {data: ParceirosControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<ParceirosControllerCreateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? parceirosControllerCreateMutationKey()
+
+  const baseOptions = parceirosControllerCreateMutationOptions(config) as UseMutationOptions<ParceirosControllerCreateMutationResponse, ResponseErrorConfig<ParceirosControllerCreate400 | ParceirosControllerCreate409>, {data: ParceirosControllerCreateMutationRequest}, TContext>
+
+  return useMutation<ParceirosControllerCreateMutationResponse, ResponseErrorConfig<ParceirosControllerCreate400 | ParceirosControllerCreate409>, {data: ParceirosControllerCreateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ParceirosControllerCreateMutationResponse, ResponseErrorConfig<ParceirosControllerCreate400 | ParceirosControllerCreate409>, {data: ParceirosControllerCreateMutationRequest}, TContext>
 }

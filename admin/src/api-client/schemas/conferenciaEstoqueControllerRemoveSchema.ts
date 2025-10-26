@@ -4,30 +4,29 @@
 */
 
 import type { ConferenciaEstoqueControllerRemovePathParams, ConferenciaEstoqueControllerRemoveHeaderParams, ConferenciaEstoqueControllerRemove204, ConferenciaEstoqueControllerRemove400, ConferenciaEstoqueControllerRemove404, ConferenciaEstoqueControllerRemoveMutationResponse } from "../types/ConferenciaEstoqueControllerRemove.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const conferenciaEstoqueControllerRemovePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público da conferência de estoque")
-      }) as unknown as ToZod<ConferenciaEstoqueControllerRemovePathParams>
+    "publicId": z.string().describe("ID público da conferência de estoque")
+    }) as unknown as z.ZodType<ConferenciaEstoqueControllerRemovePathParams>
 
 export const conferenciaEstoqueControllerRemoveHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<ConferenciaEstoqueControllerRemoveHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<ConferenciaEstoqueControllerRemoveHeaderParams>
 
 /**
  * @description Conferência de estoque removida com sucesso
  */
-export const conferenciaEstoqueControllerRemove204Schema = z.unknown() as unknown as ToZod<ConferenciaEstoqueControllerRemove204>
+export const conferenciaEstoqueControllerRemove204Schema = z.unknown() as unknown as z.ZodType<ConferenciaEstoqueControllerRemove204>
 
 /**
  * @description Não é possível remover conferência em andamento
  */
-export const conferenciaEstoqueControllerRemove400Schema = z.unknown() as unknown as ToZod<ConferenciaEstoqueControllerRemove400>
+export const conferenciaEstoqueControllerRemove400Schema = z.unknown() as unknown as z.ZodType<ConferenciaEstoqueControllerRemove400>
 
 /**
  * @description Conferência de estoque não encontrada
  */
-export const conferenciaEstoqueControllerRemove404Schema = z.unknown() as unknown as ToZod<ConferenciaEstoqueControllerRemove404>
+export const conferenciaEstoqueControllerRemove404Schema = z.unknown() as unknown as z.ZodType<ConferenciaEstoqueControllerRemove404>
 
-export const conferenciaEstoqueControllerRemoveMutationResponseSchema = z.lazy(() => conferenciaEstoqueControllerRemove204Schema) as unknown as ToZod<ConferenciaEstoqueControllerRemoveMutationResponse>
+export const conferenciaEstoqueControllerRemoveMutationResponseSchema = conferenciaEstoqueControllerRemove204Schema as unknown as z.ZodType<ConferenciaEstoqueControllerRemoveMutationResponse>

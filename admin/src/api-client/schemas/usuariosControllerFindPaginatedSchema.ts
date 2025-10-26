@@ -4,27 +4,28 @@
 */
 
 import type { UsuariosControllerFindPaginatedQueryParams, UsuariosControllerFindPaginated200, UsuariosControllerFindPaginatedQueryResponse } from "../types/UsuariosControllerFindPaginated.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { usuarioSchema } from "./usuarioSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const usuariosControllerFindPaginatedQueryParamsSchema = z.object({
-      "page": z.string(),
-  "limit": z.string(),
-  "search": z.string(),
-  "organizacao": z.string(),
-  "ativo": z.string()
-      }) as unknown as ToZod<UsuariosControllerFindPaginatedQueryParams>
+    "page": z.string(),
+"limit": z.string(),
+"search": z.string(),
+"organizacao": z.string(),
+"ativo": z.string()
+    }) as unknown as z.ZodType<UsuariosControllerFindPaginatedQueryParams>
 
 /**
  * @description Lista paginada de usuários retornada com sucesso
  */
 export const usuariosControllerFindPaginated200Schema = z.object({
-      "data": z.array(z.lazy(() => usuarioSchema)).optional(),
-  "total": z.coerce.number().describe("Total de registros").optional(),
-  "page": z.coerce.number().describe("Página atual").optional(),
-  "limit": z.coerce.number().describe("Itens por página").optional(),
-  "totalPages": z.coerce.number().describe("Total de páginas").optional()
-      }) as unknown as ToZod<UsuariosControllerFindPaginated200>
+    get "data"(){
+                return z.optional(z.array(usuarioSchema))
+              },
+"total": z.optional(z.coerce.number().describe("Total de registros")),
+"page": z.optional(z.coerce.number().describe("Página atual")),
+"limit": z.optional(z.coerce.number().describe("Itens por página")),
+"totalPages": z.optional(z.coerce.number().describe("Total de páginas"))
+    }) as unknown as z.ZodType<UsuariosControllerFindPaginated200>
 
-export const usuariosControllerFindPaginatedQueryResponseSchema = z.lazy(() => usuariosControllerFindPaginated200Schema) as unknown as ToZod<UsuariosControllerFindPaginatedQueryResponse>
+export const usuariosControllerFindPaginatedQueryResponseSchema = usuariosControllerFindPaginated200Schema as unknown as z.ZodType<UsuariosControllerFindPaginatedQueryResponse>

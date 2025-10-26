@@ -4,31 +4,30 @@
 */
 
 import type { CategoriaDespesasControllerFindOnePathParams, CategoriaDespesasControllerFindOne200, CategoriaDespesasControllerFindOne401, CategoriaDespesasControllerFindOne404, CategoriaDespesasControllerFindOneQueryResponse } from "../types/CategoriaDespesasControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const categoriaDespesasControllerFindOnePathParamsSchema = z.object({
-      "id": z.coerce.number().describe("ID da categoria de despesas")
-      }) as unknown as ToZod<CategoriaDespesasControllerFindOnePathParams>
+    "id": z.coerce.number().describe("ID da categoria de despesas")
+    }) as unknown as z.ZodType<CategoriaDespesasControllerFindOnePathParams>
 
 /**
  * @description Categoria de despesas encontrada
  */
 export const categoriaDespesasControllerFindOne200Schema = z.object({
-      "idCategoria": z.coerce.number().optional(),
-  "descricao": z.coerce.string().optional(),
-  "ativo": z.boolean().optional(),
-  "createdAt": z.coerce.string().optional()
-      }) as unknown as ToZod<CategoriaDespesasControllerFindOne200>
+    "idCategoria": z.optional(z.coerce.number()),
+"descricao": z.optional(z.coerce.string()),
+"ativo": z.optional(z.boolean()),
+"createdAt": z.optional(z.coerce.string())
+    }) as unknown as z.ZodType<CategoriaDespesasControllerFindOne200>
 
 /**
  * @description Não autorizado
  */
-export const categoriaDespesasControllerFindOne401Schema = z.unknown() as unknown as ToZod<CategoriaDespesasControllerFindOne401>
+export const categoriaDespesasControllerFindOne401Schema = z.unknown() as unknown as z.ZodType<CategoriaDespesasControllerFindOne401>
 
 /**
  * @description Categoria de despesas não encontrada
  */
-export const categoriaDespesasControllerFindOne404Schema = z.unknown() as unknown as ToZod<CategoriaDespesasControllerFindOne404>
+export const categoriaDespesasControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<CategoriaDespesasControllerFindOne404>
 
-export const categoriaDespesasControllerFindOneQueryResponseSchema = z.lazy(() => categoriaDespesasControllerFindOne200Schema) as unknown as ToZod<CategoriaDespesasControllerFindOneQueryResponse>
+export const categoriaDespesasControllerFindOneQueryResponseSchema = categoriaDespesasControllerFindOne200Schema as unknown as z.ZodType<CategoriaDespesasControllerFindOneQueryResponse>

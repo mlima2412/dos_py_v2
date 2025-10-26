@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { VendaControllerRemoveMutationResponse, VendaControllerRemovePathParams, VendaControllerRemoveHeaderParams, VendaControllerRemove400, VendaControllerRemove401, VendaControllerRemove403, VendaControllerRemove404 } from "../types/VendaControllerRemove.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const vendaControllerRemoveMutationKey = () =>   [{"url":"/venda/{publicId}"}] as const
+export const vendaControllerRemoveMutationKey = () => [{ url: '/venda/:publicId' }] as const
 
 export type VendaControllerRemoveMutationKey = ReturnType<typeof vendaControllerRemoveMutationKey>
 
@@ -18,11 +18,20 @@ export type VendaControllerRemoveMutationKey = ReturnType<typeof vendaController
  * {@link /venda/:publicId}
  */
 export async function vendaControllerRemove(publicId: VendaControllerRemovePathParams["publicId"], headers: VendaControllerRemoveHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<VendaControllerRemoveMutationResponse, ResponseErrorConfig<VendaControllerRemove400 | VendaControllerRemove401 | VendaControllerRemove403 | VendaControllerRemove404>, unknown>({ method : "DELETE", url : `/venda/${publicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-
-const res = await request<VendaControllerRemoveMutationResponse, ResponseErrorConfig<VendaControllerRemove400 | VendaControllerRemove401 | VendaControllerRemove403 | VendaControllerRemove404>, unknown>({ method : "DELETE", url : `/venda/${publicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function vendaControllerRemoveMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = vendaControllerRemoveMutationKey()
+  return mutationOptions<VendaControllerRemoveMutationResponse, ResponseErrorConfig<VendaControllerRemove400 | VendaControllerRemove401 | VendaControllerRemove403 | VendaControllerRemove404>, {publicId: VendaControllerRemovePathParams["publicId"], headers: VendaControllerRemoveHeaderParams}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId, headers }) => {
+      return vendaControllerRemove(publicId, headers, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /venda/:publicId}
  */
 export function useVendaControllerRemove<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<VendaControllerRemoveMutationResponse, ResponseErrorConfig<VendaControllerRemove400 | VendaControllerRemove401 | VendaControllerRemove403 | VendaControllerRemove404>, {publicId: VendaControllerRemovePathParams["publicId"], headers: VendaControllerRemoveHeaderParams}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? vendaControllerRemoveMutationKey()
-  
-          return useMutation<VendaControllerRemoveMutationResponse, ResponseErrorConfig<VendaControllerRemove400 | VendaControllerRemove401 | VendaControllerRemove403 | VendaControllerRemove404>, {publicId: VendaControllerRemovePathParams["publicId"], headers: VendaControllerRemoveHeaderParams}, TContext>({
-            mutationFn: async({ publicId, headers }) => {
-              return vendaControllerRemove(publicId, headers, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<VendaControllerRemoveMutationResponse, ResponseErrorConfig<VendaControllerRemove400 | VendaControllerRemove401 | VendaControllerRemove403 | VendaControllerRemove404>, {publicId: VendaControllerRemovePathParams["publicId"], headers: VendaControllerRemoveHeaderParams}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? vendaControllerRemoveMutationKey()
+
+  const baseOptions = vendaControllerRemoveMutationOptions(config) as UseMutationOptions<VendaControllerRemoveMutationResponse, ResponseErrorConfig<VendaControllerRemove400 | VendaControllerRemove401 | VendaControllerRemove403 | VendaControllerRemove404>, {publicId: VendaControllerRemovePathParams["publicId"], headers: VendaControllerRemoveHeaderParams}, TContext>
+
+  return useMutation<VendaControllerRemoveMutationResponse, ResponseErrorConfig<VendaControllerRemove400 | VendaControllerRemove401 | VendaControllerRemove403 | VendaControllerRemove404>, {publicId: VendaControllerRemovePathParams["publicId"], headers: VendaControllerRemoveHeaderParams}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<VendaControllerRemoveMutationResponse, ResponseErrorConfig<VendaControllerRemove400 | VendaControllerRemove401 | VendaControllerRemove403 | VendaControllerRemove404>, {publicId: VendaControllerRemovePathParams["publicId"], headers: VendaControllerRemoveHeaderParams}, TContext>
 }

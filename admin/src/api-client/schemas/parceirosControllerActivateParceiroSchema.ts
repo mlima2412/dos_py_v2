@@ -4,22 +4,21 @@
 */
 
 import type { ParceirosControllerActivateParceiroPathParams, ParceirosControllerActivateParceiro200, ParceirosControllerActivateParceiro404, ParceirosControllerActivateParceiroMutationResponse } from "../types/ParceirosControllerActivateParceiro.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { parceiroSchema } from "./parceiroSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const parceirosControllerActivateParceiroPathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do parceiro")
-      }) as unknown as ToZod<ParceirosControllerActivateParceiroPathParams>
+    "publicId": z.string().describe("ID público do parceiro")
+    }) as unknown as z.ZodType<ParceirosControllerActivateParceiroPathParams>
 
 /**
  * @description Parceiro ativado com sucesso
  */
-export const parceirosControllerActivateParceiro200Schema = z.lazy(() => parceiroSchema) as unknown as ToZod<ParceirosControllerActivateParceiro200>
+export const parceirosControllerActivateParceiro200Schema = parceiroSchema as unknown as z.ZodType<ParceirosControllerActivateParceiro200>
 
 /**
  * @description Parceiro não encontrado
  */
-export const parceirosControllerActivateParceiro404Schema = z.unknown() as unknown as ToZod<ParceirosControllerActivateParceiro404>
+export const parceirosControllerActivateParceiro404Schema = z.unknown() as unknown as z.ZodType<ParceirosControllerActivateParceiro404>
 
-export const parceirosControllerActivateParceiroMutationResponseSchema = z.lazy(() => parceirosControllerActivateParceiro200Schema) as unknown as ToZod<ParceirosControllerActivateParceiroMutationResponse>
+export const parceirosControllerActivateParceiroMutationResponseSchema = parceirosControllerActivateParceiro200Schema as unknown as z.ZodType<ParceirosControllerActivateParceiroMutationResponse>

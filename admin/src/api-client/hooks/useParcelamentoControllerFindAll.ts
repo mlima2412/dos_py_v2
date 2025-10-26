@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const parcelamentoControllerFindAllQueryKey = (params: ParcelamentoControllerFindAllQueryParams) =>   [{ url: '/parcelamento' }, ...(params ? [params] : [])] as const
+export const parcelamentoControllerFindAllQueryKey = (params: ParcelamentoControllerFindAllQueryParams) => [{ url: '/parcelamento' }, ...(params ? [params] : [])] as const
 
 export type ParcelamentoControllerFindAllQueryKey = ReturnType<typeof parcelamentoControllerFindAllQueryKey>
 
@@ -18,25 +18,22 @@ export type ParcelamentoControllerFindAllQueryKey = ReturnType<typeof parcelamen
  * {@link /parcelamento}
  */
 export async function parcelamentoControllerFindAll(params: ParcelamentoControllerFindAllQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ParcelamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/parcelamento`, params, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ParcelamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/parcelamento`, params, ... requestConfig })  
+  return res.data
 }
 
 export function parcelamentoControllerFindAllQueryOptions(params: ParcelamentoControllerFindAllQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = parcelamentoControllerFindAllQueryKey(params)
-        return queryOptions<ParcelamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, ParcelamentoControllerFindAllQueryResponse, typeof queryKey>({
-         enabled: !!(params),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return parcelamentoControllerFindAll(params, config)
-         },
-        })
-  
+  const queryKey = parcelamentoControllerFindAllQueryKey(params)
+  return queryOptions<ParcelamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, ParcelamentoControllerFindAllQueryResponse, typeof queryKey>({
+   enabled: !!(params),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return parcelamentoControllerFindAll(params, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function parcelamentoControllerFindAllQueryOptions(params: ParcelamentoCo
  * {@link /parcelamento}
  */
 export function useParcelamentoControllerFindAll<TData = ParcelamentoControllerFindAllQueryResponse, TQueryData = ParcelamentoControllerFindAllQueryResponse, TQueryKey extends QueryKey = ParcelamentoControllerFindAllQueryKey>(params: ParcelamentoControllerFindAllQueryParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<ParcelamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? parcelamentoControllerFindAllQueryKey(params)
-  
-         const query = useQuery({
-          ...parcelamentoControllerFindAllQueryOptions(params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<ParcelamentoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? parcelamentoControllerFindAllQueryKey(params)
+
+  const query = useQuery({
+   ...parcelamentoControllerFindAllQueryOptions(params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

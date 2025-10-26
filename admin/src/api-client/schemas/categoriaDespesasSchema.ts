@@ -4,12 +4,11 @@
 */
 
 import type { CategoriaDespesas } from "../types/CategoriaDespesas.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const categoriaDespesasSchema = z.object({
-      "idCategoria": z.coerce.number().describe("ID interno da categoria de despesas"),
-  "descricao": z.coerce.string().describe("Descrição da categoria de despesas"),
-  "ativo": z.boolean().default(true).describe("Status ativo da categoria"),
-  "createdAt": z.string().datetime().describe("Data de criação da categoria")
-      }) as unknown as ToZod<CategoriaDespesas>
+    "idCategoria": z.coerce.number().describe("ID interno da categoria de despesas"),
+"descricao": z.coerce.string().describe("Descrição da categoria de despesas"),
+"ativo": z.boolean().default(true).describe("Status ativo da categoria"),
+"createdAt": z.string().datetime().describe("Data de criação da categoria")
+    }) as unknown as z.ZodType<CategoriaDespesas>

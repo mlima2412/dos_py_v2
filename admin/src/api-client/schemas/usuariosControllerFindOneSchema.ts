@@ -4,22 +4,21 @@
 */
 
 import type { UsuariosControllerFindOnePathParams, UsuariosControllerFindOne200, UsuariosControllerFindOne404, UsuariosControllerFindOneQueryResponse } from "../types/UsuariosControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { usuarioSchema } from "./usuarioSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const usuariosControllerFindOnePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do usuário (UUID v7)")
-      }) as unknown as ToZod<UsuariosControllerFindOnePathParams>
+    "publicId": z.string().describe("ID público do usuário (UUID v7)")
+    }) as unknown as z.ZodType<UsuariosControllerFindOnePathParams>
 
 /**
  * @description Usuário encontrado com sucesso
  */
-export const usuariosControllerFindOne200Schema = z.lazy(() => usuarioSchema) as unknown as ToZod<UsuariosControllerFindOne200>
+export const usuariosControllerFindOne200Schema = usuarioSchema as unknown as z.ZodType<UsuariosControllerFindOne200>
 
 /**
  * @description Usuário não encontrado
  */
-export const usuariosControllerFindOne404Schema = z.unknown() as unknown as ToZod<UsuariosControllerFindOne404>
+export const usuariosControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<UsuariosControllerFindOne404>
 
-export const usuariosControllerFindOneQueryResponseSchema = z.lazy(() => usuariosControllerFindOne200Schema) as unknown as ToZod<UsuariosControllerFindOneQueryResponse>
+export const usuariosControllerFindOneQueryResponseSchema = usuariosControllerFindOne200Schema as unknown as z.ZodType<UsuariosControllerFindOneQueryResponse>

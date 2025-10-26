@@ -4,26 +4,25 @@
 */
 
 import type { ParceirosControllerCreate201, ParceirosControllerCreate400, ParceirosControllerCreate409, ParceirosControllerCreateMutationRequest, ParceirosControllerCreateMutationResponse } from "../types/ParceirosControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createParceiroDtoSchema } from "./createParceiroDtoSchema.ts";
 import { parceiroSchema } from "./parceiroSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Parceiro criado com sucesso
  */
-export const parceirosControllerCreate201Schema = z.lazy(() => parceiroSchema) as unknown as ToZod<ParceirosControllerCreate201>
+export const parceirosControllerCreate201Schema = parceiroSchema as unknown as z.ZodType<ParceirosControllerCreate201>
 
 /**
  * @description Dados inválidos
  */
-export const parceirosControllerCreate400Schema = z.unknown() as unknown as ToZod<ParceirosControllerCreate400>
+export const parceirosControllerCreate400Schema = z.unknown() as unknown as z.ZodType<ParceirosControllerCreate400>
 
 /**
  * @description Email ou RUC/CNPJ já existe
  */
-export const parceirosControllerCreate409Schema = z.unknown() as unknown as ToZod<ParceirosControllerCreate409>
+export const parceirosControllerCreate409Schema = z.unknown() as unknown as z.ZodType<ParceirosControllerCreate409>
 
-export const parceirosControllerCreateMutationRequestSchema = z.lazy(() => createParceiroDtoSchema) as unknown as ToZod<ParceirosControllerCreateMutationRequest>
+export const parceirosControllerCreateMutationRequestSchema = createParceiroDtoSchema as unknown as z.ZodType<ParceirosControllerCreateMutationRequest>
 
-export const parceirosControllerCreateMutationResponseSchema = z.lazy(() => parceirosControllerCreate201Schema) as unknown as ToZod<ParceirosControllerCreateMutationResponse>
+export const parceirosControllerCreateMutationResponseSchema = parceirosControllerCreate201Schema as unknown as z.ZodType<ParceirosControllerCreateMutationResponse>

@@ -11,20 +11,24 @@ export const useVendaTotals = (
 	const { selectedPartnerLocale, selectedPartnerIsoCode } = usePartnerContext();
 
 	const totals = useMemo<VendaTotals>(() => {
+		// 1. Subtotal dos itens SEM descontos
 		const itensSubtotal = itensSelecionados.reduce((acc, item) => {
 			const subtotal = item.qtdReservada * item.precoUnit;
-			const itemDesconto = item.desconto ?? 0;
-			return acc + (subtotal - itemDesconto);
+			return acc + subtotal;
 		}, 0);
 
+		// 2. Total de descontos aplicados nos itens
 		const descontoItens = itensSelecionados.reduce((acc, item) => {
 			return acc + (item.desconto ?? 0);
 		}, 0);
 
+		// 3. Outros valores
 		const descontoGeral = descontoTotal ?? 0;
 		const frete = valorFrete ?? 0;
 		const comissaoValue = comissao ?? 0;
-		const total = itensSubtotal - descontoGeral + frete;
+
+		// 4. Total = subtotal - descontos dos itens - desconto geral + frete
+		const total = itensSubtotal - descontoItens - descontoGeral + frete;
 
 		return {
 			itensSubtotal,

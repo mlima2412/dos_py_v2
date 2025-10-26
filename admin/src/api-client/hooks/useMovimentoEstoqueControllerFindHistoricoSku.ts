@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const movimentoEstoqueControllerFindHistoricoSkuQueryKey = (skuId: MovimentoEstoqueControllerFindHistoricoSkuPathParams["skuId"], params?: MovimentoEstoqueControllerFindHistoricoSkuQueryParams) =>   [{ url: '/movimento-estoque/historico-sku/:skuId', params: {skuId:skuId} }, ...(params ? [params] : [])] as const
+export const movimentoEstoqueControllerFindHistoricoSkuQueryKey = (skuId: MovimentoEstoqueControllerFindHistoricoSkuPathParams["skuId"], params?: MovimentoEstoqueControllerFindHistoricoSkuQueryParams) => [{ url: '/movimento-estoque/historico-sku/:skuId', params: {skuId:skuId} }, ...(params ? [params] : [])] as const
 
 export type MovimentoEstoqueControllerFindHistoricoSkuQueryKey = ReturnType<typeof movimentoEstoqueControllerFindHistoricoSkuQueryKey>
 
@@ -19,25 +19,22 @@ export type MovimentoEstoqueControllerFindHistoricoSkuQueryKey = ReturnType<type
  * {@link /movimento-estoque/historico-sku/:skuId}
  */
 export async function movimentoEstoqueControllerFindHistoricoSku(skuId: MovimentoEstoqueControllerFindHistoricoSkuPathParams["skuId"], params?: MovimentoEstoqueControllerFindHistoricoSkuQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<MovimentoEstoqueControllerFindHistoricoSkuQueryResponse, ResponseErrorConfig<MovimentoEstoqueControllerFindHistoricoSku404>, unknown>({ method : "GET", url : `/movimento-estoque/historico-sku/${skuId}`, params, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<MovimentoEstoqueControllerFindHistoricoSkuQueryResponse, ResponseErrorConfig<MovimentoEstoqueControllerFindHistoricoSku404>, unknown>({ method : "GET", url : `/movimento-estoque/historico-sku/${skuId}`, params, ... requestConfig })  
+  return res.data
 }
 
 export function movimentoEstoqueControllerFindHistoricoSkuQueryOptions(skuId: MovimentoEstoqueControllerFindHistoricoSkuPathParams["skuId"], params?: MovimentoEstoqueControllerFindHistoricoSkuQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = movimentoEstoqueControllerFindHistoricoSkuQueryKey(skuId, params)
-        return queryOptions<MovimentoEstoqueControllerFindHistoricoSkuQueryResponse, ResponseErrorConfig<MovimentoEstoqueControllerFindHistoricoSku404>, MovimentoEstoqueControllerFindHistoricoSkuQueryResponse, typeof queryKey>({
-         enabled: !!(skuId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return movimentoEstoqueControllerFindHistoricoSku(skuId, params, config)
-         },
-        })
-  
+  const queryKey = movimentoEstoqueControllerFindHistoricoSkuQueryKey(skuId, params)
+  return queryOptions<MovimentoEstoqueControllerFindHistoricoSkuQueryResponse, ResponseErrorConfig<MovimentoEstoqueControllerFindHistoricoSku404>, MovimentoEstoqueControllerFindHistoricoSkuQueryResponse, typeof queryKey>({
+   enabled: !!(skuId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return movimentoEstoqueControllerFindHistoricoSku(skuId, params, config)
+   },
+  })
 }
 
 /**
@@ -46,23 +43,22 @@ export function movimentoEstoqueControllerFindHistoricoSkuQueryOptions(skuId: Mo
  * {@link /movimento-estoque/historico-sku/:skuId}
  */
 export function useMovimentoEstoqueControllerFindHistoricoSku<TData = MovimentoEstoqueControllerFindHistoricoSkuQueryResponse, TQueryData = MovimentoEstoqueControllerFindHistoricoSkuQueryResponse, TQueryKey extends QueryKey = MovimentoEstoqueControllerFindHistoricoSkuQueryKey>(skuId: MovimentoEstoqueControllerFindHistoricoSkuPathParams["skuId"], params?: MovimentoEstoqueControllerFindHistoricoSkuQueryParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<MovimentoEstoqueControllerFindHistoricoSkuQueryResponse, ResponseErrorConfig<MovimentoEstoqueControllerFindHistoricoSku404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? movimentoEstoqueControllerFindHistoricoSkuQueryKey(skuId, params)
-  
-         const query = useQuery({
-          ...movimentoEstoqueControllerFindHistoricoSkuQueryOptions(skuId, params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<MovimentoEstoqueControllerFindHistoricoSku404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<MovimentoEstoqueControllerFindHistoricoSkuQueryResponse, ResponseErrorConfig<MovimentoEstoqueControllerFindHistoricoSku404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? movimentoEstoqueControllerFindHistoricoSkuQueryKey(skuId, params)
+
+  const query = useQuery({
+   ...movimentoEstoqueControllerFindHistoricoSkuQueryOptions(skuId, params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<MovimentoEstoqueControllerFindHistoricoSku404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

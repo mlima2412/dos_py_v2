@@ -4,19 +4,18 @@
 */
 
 import type { Usuario } from "../types/Usuario.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const usuarioSchema = z.object({
-      "id": z.coerce.number().describe("ID interno do usuário"),
-  "publicId": z.coerce.string().describe("ID público do usuário (UUID v7)"),
-  "nome": z.coerce.string().describe("Nome completo do usuário"),
-  "email": z.coerce.string().describe("Email do usuário"),
-  "telefone": z.coerce.string().describe("Telefone do usuário para SMS ou WhatsApp").optional(),
-  "provider": z.coerce.string().default("LOCAL").describe("Provedor de autenticação"),
-  "googleId": z.coerce.string().describe("ID do Google para autenticação OAuth").optional(),
-  "senha": z.coerce.string().describe("Senha do usuário (hash)").optional(),
-  "ativo": z.boolean().default(true).describe("Status ativo do usuário"),
-  "avatar": z.coerce.string().describe("URL do avatar do usuário").optional(),
-  "createdAt": z.string().datetime().describe("Data de criação do usuário")
-      }) as unknown as ToZod<Usuario>
+    "id": z.coerce.number().describe("ID interno do usuário"),
+"publicId": z.coerce.string().describe("ID público do usuário (UUID v7)"),
+"nome": z.coerce.string().describe("Nome completo do usuário"),
+"email": z.coerce.string().describe("Email do usuário"),
+"telefone": z.optional(z.coerce.string().describe("Telefone do usuário para SMS ou WhatsApp")),
+"provider": z.coerce.string().default("LOCAL").describe("Provedor de autenticação"),
+"googleId": z.optional(z.coerce.string().describe("ID do Google para autenticação OAuth")),
+"senha": z.optional(z.coerce.string().describe("Senha do usuário (hash)")),
+"ativo": z.boolean().default(true).describe("Status ativo do usuário"),
+"avatar": z.optional(z.coerce.string().describe("URL do avatar do usuário")),
+"createdAt": z.string().datetime().describe("Data de criação do usuário")
+    }) as unknown as z.ZodType<Usuario>

@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const produtoControllerFindByFornecedorSuspenseQueryKey = (fornecedorPublicId: ProdutoControllerFindByFornecedorPathParams["fornecedorPublicId"]) =>   [{ url: '/produto/fornecedor/:fornecedorPublicId', params: {fornecedorPublicId:fornecedorPublicId} }] as const
+export const produtoControllerFindByFornecedorSuspenseQueryKey = (fornecedorPublicId: ProdutoControllerFindByFornecedorPathParams["fornecedorPublicId"]) => [{ url: '/produto/fornecedor/:fornecedorPublicId', params: {fornecedorPublicId:fornecedorPublicId} }] as const
 
 export type ProdutoControllerFindByFornecedorSuspenseQueryKey = ReturnType<typeof produtoControllerFindByFornecedorSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type ProdutoControllerFindByFornecedorSuspenseQueryKey = ReturnType<typeo
  * {@link /produto/fornecedor/:fornecedorPublicId}
  */
 export async function produtoControllerFindByFornecedorSuspense(fornecedorPublicId: ProdutoControllerFindByFornecedorPathParams["fornecedorPublicId"], headers: ProdutoControllerFindByFornecedorHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ProdutoControllerFindByFornecedorQueryResponse, ResponseErrorConfig<ProdutoControllerFindByFornecedor404>, unknown>({ method : "GET", url : `/produto/fornecedor/${fornecedorPublicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ProdutoControllerFindByFornecedorQueryResponse, ResponseErrorConfig<ProdutoControllerFindByFornecedor404>, unknown>({ method : "GET", url : `/produto/fornecedor/${fornecedorPublicId}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function produtoControllerFindByFornecedorSuspenseQueryOptions(fornecedorPublicId: ProdutoControllerFindByFornecedorPathParams["fornecedorPublicId"], headers: ProdutoControllerFindByFornecedorHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = produtoControllerFindByFornecedorSuspenseQueryKey(fornecedorPublicId)
-        return queryOptions<ProdutoControllerFindByFornecedorQueryResponse, ResponseErrorConfig<ProdutoControllerFindByFornecedor404>, ProdutoControllerFindByFornecedorQueryResponse, typeof queryKey>({
-         enabled: !!(fornecedorPublicId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return produtoControllerFindByFornecedorSuspense(fornecedorPublicId, headers, config)
-         },
-        })
-  
+  const queryKey = produtoControllerFindByFornecedorSuspenseQueryKey(fornecedorPublicId)
+  return queryOptions<ProdutoControllerFindByFornecedorQueryResponse, ResponseErrorConfig<ProdutoControllerFindByFornecedor404>, ProdutoControllerFindByFornecedorQueryResponse, typeof queryKey>({
+   enabled: !!(fornecedorPublicId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return produtoControllerFindByFornecedorSuspense(fornecedorPublicId, headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function produtoControllerFindByFornecedorSuspenseQueryOptions(fornecedor
  * {@link /produto/fornecedor/:fornecedorPublicId}
  */
 export function useProdutoControllerFindByFornecedorSuspense<TData = ProdutoControllerFindByFornecedorQueryResponse, TQueryKey extends QueryKey = ProdutoControllerFindByFornecedorSuspenseQueryKey>(fornecedorPublicId: ProdutoControllerFindByFornecedorPathParams["fornecedorPublicId"], headers: ProdutoControllerFindByFornecedorHeaderParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<ProdutoControllerFindByFornecedorQueryResponse, ResponseErrorConfig<ProdutoControllerFindByFornecedor404>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? produtoControllerFindByFornecedorSuspenseQueryKey(fornecedorPublicId)
-  
-         const query = useSuspenseQuery({
-          ...produtoControllerFindByFornecedorSuspenseQueryOptions(fornecedorPublicId, headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<ProdutoControllerFindByFornecedor404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<ProdutoControllerFindByFornecedorQueryResponse, ResponseErrorConfig<ProdutoControllerFindByFornecedor404>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? produtoControllerFindByFornecedorSuspenseQueryKey(fornecedorPublicId)
+
+  const query = useSuspenseQuery({
+   ...produtoControllerFindByFornecedorSuspenseQueryOptions(fornecedorPublicId, headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<ProdutoControllerFindByFornecedor404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

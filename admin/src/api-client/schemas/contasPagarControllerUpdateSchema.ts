@@ -4,25 +4,24 @@
 */
 
 import type { ContasPagarControllerUpdatePathParams, ContasPagarControllerUpdate200, ContasPagarControllerUpdate404, ContasPagarControllerUpdateMutationRequest, ContasPagarControllerUpdateMutationResponse } from "../types/ContasPagarControllerUpdate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { contasPagarSchema } from "./contasPagarSchema.ts";
 import { updateContasPagarDtoSchema } from "./updateContasPagarDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const contasPagarControllerUpdatePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público da conta a pagar")
-      }) as unknown as ToZod<ContasPagarControllerUpdatePathParams>
+    "publicId": z.string().describe("ID público da conta a pagar")
+    }) as unknown as z.ZodType<ContasPagarControllerUpdatePathParams>
 
 /**
  * @description Conta a pagar atualizada com sucesso.
  */
-export const contasPagarControllerUpdate200Schema = z.lazy(() => contasPagarSchema) as unknown as ToZod<ContasPagarControllerUpdate200>
+export const contasPagarControllerUpdate200Schema = contasPagarSchema as unknown as z.ZodType<ContasPagarControllerUpdate200>
 
 /**
  * @description Conta a pagar não encontrada.
  */
-export const contasPagarControllerUpdate404Schema = z.unknown() as unknown as ToZod<ContasPagarControllerUpdate404>
+export const contasPagarControllerUpdate404Schema = z.unknown() as unknown as z.ZodType<ContasPagarControllerUpdate404>
 
-export const contasPagarControllerUpdateMutationRequestSchema = z.lazy(() => updateContasPagarDtoSchema) as unknown as ToZod<ContasPagarControllerUpdateMutationRequest>
+export const contasPagarControllerUpdateMutationRequestSchema = updateContasPagarDtoSchema as unknown as z.ZodType<ContasPagarControllerUpdateMutationRequest>
 
-export const contasPagarControllerUpdateMutationResponseSchema = z.lazy(() => contasPagarControllerUpdate200Schema) as unknown as ToZod<ContasPagarControllerUpdateMutationResponse>
+export const contasPagarControllerUpdateMutationResponseSchema = contasPagarControllerUpdate200Schema as unknown as z.ZodType<ContasPagarControllerUpdateMutationResponse>

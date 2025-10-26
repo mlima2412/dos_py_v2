@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const fornecedoresControllerFindAllSuspenseQueryKey = () =>   [{ url: '/fornecedores' }] as const
+export const fornecedoresControllerFindAllSuspenseQueryKey = () => [{ url: '/fornecedores' }] as const
 
 export type FornecedoresControllerFindAllSuspenseQueryKey = ReturnType<typeof fornecedoresControllerFindAllSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type FornecedoresControllerFindAllSuspenseQueryKey = ReturnType<typeof fo
  * {@link /fornecedores}
  */
 export async function fornecedoresControllerFindAllSuspense(headers: FornecedoresControllerFindAllHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<FornecedoresControllerFindAllQueryResponse, ResponseErrorConfig<FornecedoresControllerFindAll400>, unknown>({ method : "GET", url : `/fornecedores`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<FornecedoresControllerFindAllQueryResponse, ResponseErrorConfig<FornecedoresControllerFindAll400>, unknown>({ method : "GET", url : `/fornecedores`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function fornecedoresControllerFindAllSuspenseQueryOptions(headers: FornecedoresControllerFindAllHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = fornecedoresControllerFindAllSuspenseQueryKey()
-        return queryOptions<FornecedoresControllerFindAllQueryResponse, ResponseErrorConfig<FornecedoresControllerFindAll400>, FornecedoresControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return fornecedoresControllerFindAllSuspense(headers, config)
-         },
-        })
-  
+  const queryKey = fornecedoresControllerFindAllSuspenseQueryKey()
+  return queryOptions<FornecedoresControllerFindAllQueryResponse, ResponseErrorConfig<FornecedoresControllerFindAll400>, FornecedoresControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return fornecedoresControllerFindAllSuspense(headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function fornecedoresControllerFindAllSuspenseQueryOptions(headers: Forne
  * {@link /fornecedores}
  */
 export function useFornecedoresControllerFindAllSuspense<TData = FornecedoresControllerFindAllQueryResponse, TQueryKey extends QueryKey = FornecedoresControllerFindAllSuspenseQueryKey>(headers: FornecedoresControllerFindAllHeaderParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<FornecedoresControllerFindAllQueryResponse, ResponseErrorConfig<FornecedoresControllerFindAll400>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? fornecedoresControllerFindAllSuspenseQueryKey()
-  
-         const query = useSuspenseQuery({
-          ...fornecedoresControllerFindAllSuspenseQueryOptions(headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<FornecedoresControllerFindAll400>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<FornecedoresControllerFindAllQueryResponse, ResponseErrorConfig<FornecedoresControllerFindAll400>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? fornecedoresControllerFindAllSuspenseQueryKey()
+
+  const query = useSuspenseQuery({
+   ...fornecedoresControllerFindAllSuspenseQueryOptions(headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<FornecedoresControllerFindAll400>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

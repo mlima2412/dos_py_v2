@@ -4,13 +4,12 @@
 */
 
 import type { CreateContasPagarDto } from "../types/CreateContasPagarDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const createContasPagarDtoSchema = z.object({
-      "despesaId": z.coerce.number().describe("ID da despesa relacionada").optional(),
-  "valorTotal": z.coerce.number().describe("Valor total da conta a pagar"),
-  "saldo": z.coerce.number().describe("Saldo atual da conta (soma dos valores pagos)").optional(),
-  "pago": z.boolean().describe("Indica se a conta foi totalmente paga").optional(),
-  "dataPagamento": z.coerce.string().describe("Data do pagamento da conta").optional()
-      }) as unknown as ToZod<CreateContasPagarDto>
+    "despesaId": z.optional(z.coerce.number().describe("ID da despesa relacionada")),
+"valorTotal": z.coerce.number().describe("Valor total da conta a pagar"),
+"saldo": z.optional(z.coerce.number().describe("Saldo atual da conta (soma dos valores pagos)")),
+"pago": z.optional(z.boolean().describe("Indica se a conta foi totalmente paga")),
+"dataPagamento": z.optional(z.coerce.string().describe("Data do pagamento da conta"))
+    }) as unknown as z.ZodType<CreateContasPagarDto>

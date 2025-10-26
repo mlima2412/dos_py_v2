@@ -4,12 +4,11 @@
 */
 
 import type { LocalEstoqueResponseDto } from "../types/LocalEstoqueResponseDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const localEstoqueResponseDtoSchema = z.object({
-      "id": z.coerce.number().describe("ID do local"),
-  "publicId": z.coerce.string().describe("Public ID do local"),
-  "nome": z.coerce.string().describe("Nome do local"),
-  "descricao": z.coerce.string().describe("Descrição do local")
-      }) as unknown as ToZod<LocalEstoqueResponseDto>
+    "id": z.coerce.number().describe("ID do local"),
+"publicId": z.coerce.string().describe("Public ID do local"),
+"nome": z.coerce.string().describe("Nome do local"),
+"descricao": z.coerce.string().describe("Descrição do local")
+    }) as unknown as z.ZodType<LocalEstoqueResponseDto>

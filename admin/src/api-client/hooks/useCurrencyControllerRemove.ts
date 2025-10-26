@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { CurrencyControllerRemoveMutationResponse, CurrencyControllerRemovePathParams, CurrencyControllerRemove401, CurrencyControllerRemove404, CurrencyControllerRemove409 } from "../types/CurrencyControllerRemove.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const currencyControllerRemoveMutationKey = () =>   [{"url":"/currency/{publicId}"}] as const
+export const currencyControllerRemoveMutationKey = () => [{ url: '/currency/:publicId' }] as const
 
 export type CurrencyControllerRemoveMutationKey = ReturnType<typeof currencyControllerRemoveMutationKey>
 
@@ -18,11 +18,20 @@ export type CurrencyControllerRemoveMutationKey = ReturnType<typeof currencyCont
  * {@link /currency/:publicId}
  */
 export async function currencyControllerRemove(publicId: CurrencyControllerRemovePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<CurrencyControllerRemoveMutationResponse, ResponseErrorConfig<CurrencyControllerRemove401 | CurrencyControllerRemove404 | CurrencyControllerRemove409>, unknown>({ method : "DELETE", url : `/currency/${publicId}`, ... requestConfig })  
+  return res.data
+}
 
-
-const res = await request<CurrencyControllerRemoveMutationResponse, ResponseErrorConfig<CurrencyControllerRemove401 | CurrencyControllerRemove404 | CurrencyControllerRemove409>, unknown>({ method : "DELETE", url : `/currency/${publicId}`, ... requestConfig })
-return res.data
+export function currencyControllerRemoveMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = currencyControllerRemoveMutationKey()
+  return mutationOptions<CurrencyControllerRemoveMutationResponse, ResponseErrorConfig<CurrencyControllerRemove401 | CurrencyControllerRemove404 | CurrencyControllerRemove409>, {publicId: CurrencyControllerRemovePathParams["publicId"]}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId }) => {
+      return currencyControllerRemove(publicId, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /currency/:publicId}
  */
 export function useCurrencyControllerRemove<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<CurrencyControllerRemoveMutationResponse, ResponseErrorConfig<CurrencyControllerRemove401 | CurrencyControllerRemove404 | CurrencyControllerRemove409>, {publicId: CurrencyControllerRemovePathParams["publicId"]}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? currencyControllerRemoveMutationKey()
-  
-          return useMutation<CurrencyControllerRemoveMutationResponse, ResponseErrorConfig<CurrencyControllerRemove401 | CurrencyControllerRemove404 | CurrencyControllerRemove409>, {publicId: CurrencyControllerRemovePathParams["publicId"]}, TContext>({
-            mutationFn: async({ publicId }) => {
-              return currencyControllerRemove(publicId, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<CurrencyControllerRemoveMutationResponse, ResponseErrorConfig<CurrencyControllerRemove401 | CurrencyControllerRemove404 | CurrencyControllerRemove409>, {publicId: CurrencyControllerRemovePathParams["publicId"]}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? currencyControllerRemoveMutationKey()
+
+  const baseOptions = currencyControllerRemoveMutationOptions(config) as UseMutationOptions<CurrencyControllerRemoveMutationResponse, ResponseErrorConfig<CurrencyControllerRemove401 | CurrencyControllerRemove404 | CurrencyControllerRemove409>, {publicId: CurrencyControllerRemovePathParams["publicId"]}, TContext>
+
+  return useMutation<CurrencyControllerRemoveMutationResponse, ResponseErrorConfig<CurrencyControllerRemove401 | CurrencyControllerRemove404 | CurrencyControllerRemove409>, {publicId: CurrencyControllerRemovePathParams["publicId"]}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<CurrencyControllerRemoveMutationResponse, ResponseErrorConfig<CurrencyControllerRemove401 | CurrencyControllerRemove404 | CurrencyControllerRemove409>, {publicId: CurrencyControllerRemovePathParams["publicId"]}, TContext>
 }

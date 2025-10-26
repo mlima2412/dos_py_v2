@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { LocalEstoqueControllerCreateMutationRequest, LocalEstoqueControllerCreateMutationResponse, LocalEstoqueControllerCreate400, LocalEstoqueControllerCreate409 } from "../types/LocalEstoqueControllerCreate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const localEstoqueControllerCreateMutationKey = () =>   [{"url":"/local-estoque"}] as const
+export const localEstoqueControllerCreateMutationKey = () => [{ url: '/local-estoque' }] as const
 
 export type LocalEstoqueControllerCreateMutationKey = ReturnType<typeof localEstoqueControllerCreateMutationKey>
 
@@ -18,11 +18,22 @@ export type LocalEstoqueControllerCreateMutationKey = ReturnType<typeof localEst
  * {@link /local-estoque}
  */
 export async function localEstoqueControllerCreate(data: LocalEstoqueControllerCreateMutationRequest, config: Partial<RequestConfig<LocalEstoqueControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<LocalEstoqueControllerCreateMutationResponse, ResponseErrorConfig<LocalEstoqueControllerCreate400 | LocalEstoqueControllerCreate409>, LocalEstoqueControllerCreateMutationRequest>({ method : "POST", url : `/local-estoque`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<LocalEstoqueControllerCreateMutationResponse, ResponseErrorConfig<LocalEstoqueControllerCreate400 | LocalEstoqueControllerCreate409>, LocalEstoqueControllerCreateMutationRequest>({ method : "POST", url : `/local-estoque`, data : requestData, ... requestConfig })
-return res.data
+export function localEstoqueControllerCreateMutationOptions(config: Partial<RequestConfig<LocalEstoqueControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = localEstoqueControllerCreateMutationKey()
+  return mutationOptions<LocalEstoqueControllerCreateMutationResponse, ResponseErrorConfig<LocalEstoqueControllerCreate400 | LocalEstoqueControllerCreate409>, {data: LocalEstoqueControllerCreateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data }) => {
+      return localEstoqueControllerCreate(data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /local-estoque}
  */
 export function useLocalEstoqueControllerCreate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<LocalEstoqueControllerCreateMutationResponse, ResponseErrorConfig<LocalEstoqueControllerCreate400 | LocalEstoqueControllerCreate409>, {data: LocalEstoqueControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<LocalEstoqueControllerCreateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? localEstoqueControllerCreateMutationKey()
-  
-          return useMutation<LocalEstoqueControllerCreateMutationResponse, ResponseErrorConfig<LocalEstoqueControllerCreate400 | LocalEstoqueControllerCreate409>, {data: LocalEstoqueControllerCreateMutationRequest}, TContext>({
-            mutationFn: async({ data }) => {
-              return localEstoqueControllerCreate(data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<LocalEstoqueControllerCreateMutationResponse, ResponseErrorConfig<LocalEstoqueControllerCreate400 | LocalEstoqueControllerCreate409>, {data: LocalEstoqueControllerCreateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<LocalEstoqueControllerCreateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? localEstoqueControllerCreateMutationKey()
+
+  const baseOptions = localEstoqueControllerCreateMutationOptions(config) as UseMutationOptions<LocalEstoqueControllerCreateMutationResponse, ResponseErrorConfig<LocalEstoqueControllerCreate400 | LocalEstoqueControllerCreate409>, {data: LocalEstoqueControllerCreateMutationRequest}, TContext>
+
+  return useMutation<LocalEstoqueControllerCreateMutationResponse, ResponseErrorConfig<LocalEstoqueControllerCreate400 | LocalEstoqueControllerCreate409>, {data: LocalEstoqueControllerCreateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<LocalEstoqueControllerCreateMutationResponse, ResponseErrorConfig<LocalEstoqueControllerCreate400 | LocalEstoqueControllerCreate409>, {data: LocalEstoqueControllerCreateMutationRequest}, TContext>
 }

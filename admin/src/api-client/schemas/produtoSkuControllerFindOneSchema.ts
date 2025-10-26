@@ -4,26 +4,25 @@
 */
 
 import type { ProdutoSkuControllerFindOnePathParams, ProdutoSkuControllerFindOneHeaderParams, ProdutoSkuControllerFindOne200, ProdutoSkuControllerFindOne404, ProdutoSkuControllerFindOneQueryResponse } from "../types/ProdutoSkuControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { produtoSKUSchema } from "./produtoSKUSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const produtoSkuControllerFindOnePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do SKU")
-      }) as unknown as ToZod<ProdutoSkuControllerFindOnePathParams>
+    "publicId": z.string().describe("ID público do SKU")
+    }) as unknown as z.ZodType<ProdutoSkuControllerFindOnePathParams>
 
 export const produtoSkuControllerFindOneHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<ProdutoSkuControllerFindOneHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<ProdutoSkuControllerFindOneHeaderParams>
 
 /**
  * @description SKU do produto encontrado
  */
-export const produtoSkuControllerFindOne200Schema = z.lazy(() => produtoSKUSchema) as unknown as ToZod<ProdutoSkuControllerFindOne200>
+export const produtoSkuControllerFindOne200Schema = produtoSKUSchema as unknown as z.ZodType<ProdutoSkuControllerFindOne200>
 
 /**
  * @description SKU do produto não encontrado
  */
-export const produtoSkuControllerFindOne404Schema = z.unknown() as unknown as ToZod<ProdutoSkuControllerFindOne404>
+export const produtoSkuControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<ProdutoSkuControllerFindOne404>
 
-export const produtoSkuControllerFindOneQueryResponseSchema = z.lazy(() => produtoSkuControllerFindOne200Schema) as unknown as ToZod<ProdutoSkuControllerFindOneQueryResponse>
+export const produtoSkuControllerFindOneQueryResponseSchema = produtoSkuControllerFindOne200Schema as unknown as z.ZodType<ProdutoSkuControllerFindOneQueryResponse>

@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { CurrencyControllerActivateMutationResponse, CurrencyControllerActivatePathParams, CurrencyControllerActivate401, CurrencyControllerActivate404 } from "../types/CurrencyControllerActivate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const currencyControllerActivateMutationKey = () =>   [{"url":"/currency/{publicId}/activate"}] as const
+export const currencyControllerActivateMutationKey = () => [{ url: '/currency/:publicId/activate' }] as const
 
 export type CurrencyControllerActivateMutationKey = ReturnType<typeof currencyControllerActivateMutationKey>
 
@@ -18,11 +18,20 @@ export type CurrencyControllerActivateMutationKey = ReturnType<typeof currencyCo
  * {@link /currency/:publicId/activate}
  */
 export async function currencyControllerActivate(publicId: CurrencyControllerActivatePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<CurrencyControllerActivateMutationResponse, ResponseErrorConfig<CurrencyControllerActivate401 | CurrencyControllerActivate404>, unknown>({ method : "PATCH", url : `/currency/${publicId}/activate`, ... requestConfig })  
+  return res.data
+}
 
-
-const res = await request<CurrencyControllerActivateMutationResponse, ResponseErrorConfig<CurrencyControllerActivate401 | CurrencyControllerActivate404>, unknown>({ method : "PATCH", url : `/currency/${publicId}/activate`, ... requestConfig })
-return res.data
+export function currencyControllerActivateMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = currencyControllerActivateMutationKey()
+  return mutationOptions<CurrencyControllerActivateMutationResponse, ResponseErrorConfig<CurrencyControllerActivate401 | CurrencyControllerActivate404>, {publicId: CurrencyControllerActivatePathParams["publicId"]}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId }) => {
+      return currencyControllerActivate(publicId, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /currency/:publicId/activate}
  */
 export function useCurrencyControllerActivate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<CurrencyControllerActivateMutationResponse, ResponseErrorConfig<CurrencyControllerActivate401 | CurrencyControllerActivate404>, {publicId: CurrencyControllerActivatePathParams["publicId"]}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? currencyControllerActivateMutationKey()
-  
-          return useMutation<CurrencyControllerActivateMutationResponse, ResponseErrorConfig<CurrencyControllerActivate401 | CurrencyControllerActivate404>, {publicId: CurrencyControllerActivatePathParams["publicId"]}, TContext>({
-            mutationFn: async({ publicId }) => {
-              return currencyControllerActivate(publicId, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<CurrencyControllerActivateMutationResponse, ResponseErrorConfig<CurrencyControllerActivate401 | CurrencyControllerActivate404>, {publicId: CurrencyControllerActivatePathParams["publicId"]}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? currencyControllerActivateMutationKey()
+
+  const baseOptions = currencyControllerActivateMutationOptions(config) as UseMutationOptions<CurrencyControllerActivateMutationResponse, ResponseErrorConfig<CurrencyControllerActivate401 | CurrencyControllerActivate404>, {publicId: CurrencyControllerActivatePathParams["publicId"]}, TContext>
+
+  return useMutation<CurrencyControllerActivateMutationResponse, ResponseErrorConfig<CurrencyControllerActivate401 | CurrencyControllerActivate404>, {publicId: CurrencyControllerActivatePathParams["publicId"]}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<CurrencyControllerActivateMutationResponse, ResponseErrorConfig<CurrencyControllerActivate401 | CurrencyControllerActivate404>, {publicId: CurrencyControllerActivatePathParams["publicId"]}, TContext>
 }

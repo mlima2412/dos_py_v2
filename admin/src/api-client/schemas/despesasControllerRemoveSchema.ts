@@ -4,25 +4,24 @@
 */
 
 import type { DespesasControllerRemovePathParams, DespesasControllerRemoveHeaderParams, DespesasControllerRemove204, DespesasControllerRemove404, DespesasControllerRemoveMutationResponse } from "../types/DespesasControllerRemove.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const despesasControllerRemovePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público da despesa")
-      }) as unknown as ToZod<DespesasControllerRemovePathParams>
+    "publicId": z.string().describe("ID público da despesa")
+    }) as unknown as z.ZodType<DespesasControllerRemovePathParams>
 
 export const despesasControllerRemoveHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<DespesasControllerRemoveHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<DespesasControllerRemoveHeaderParams>
 
 /**
  * @description Despesa removida com sucesso
  */
-export const despesasControllerRemove204Schema = z.unknown() as unknown as ToZod<DespesasControllerRemove204>
+export const despesasControllerRemove204Schema = z.unknown() as unknown as z.ZodType<DespesasControllerRemove204>
 
 /**
  * @description Despesa não encontrada
  */
-export const despesasControllerRemove404Schema = z.unknown() as unknown as ToZod<DespesasControllerRemove404>
+export const despesasControllerRemove404Schema = z.unknown() as unknown as z.ZodType<DespesasControllerRemove404>
 
-export const despesasControllerRemoveMutationResponseSchema = z.lazy(() => despesasControllerRemove204Schema) as unknown as ToZod<DespesasControllerRemoveMutationResponse>
+export const despesasControllerRemoveMutationResponseSchema = despesasControllerRemove204Schema as unknown as z.ZodType<DespesasControllerRemoveMutationResponse>

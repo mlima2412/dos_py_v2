@@ -4,32 +4,31 @@
 */
 
 import type { ProdutoHistoricoPrecoControllerFindByProdutoIdPathParams, ProdutoHistoricoPrecoControllerFindByProdutoIdQueryParams, ProdutoHistoricoPrecoControllerFindByProdutoIdHeaderParams, ProdutoHistoricoPrecoControllerFindByProdutoId200, ProdutoHistoricoPrecoControllerFindByProdutoId404, ProdutoHistoricoPrecoControllerFindByProdutoIdQueryResponse } from "../types/ProdutoHistoricoPrecoControllerFindByProdutoId.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { produtoHistoricoPrecoResponseDtoSchema } from "./produtoHistoricoPrecoResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const produtoHistoricoPrecoControllerFindByProdutoIdPathParamsSchema = z.object({
-      "produtoId": z.coerce.number().int().describe("ID numérico do produto")
-      }) as unknown as ToZod<ProdutoHistoricoPrecoControllerFindByProdutoIdPathParams>
+    "produtoId": z.coerce.number().int().describe("ID numérico do produto")
+    }) as unknown as z.ZodType<ProdutoHistoricoPrecoControllerFindByProdutoIdPathParams>
 
 export const produtoHistoricoPrecoControllerFindByProdutoIdQueryParamsSchema = z.object({
-      "dataInicial": z.string().describe("Data inicial para filtro (formato ISO)").optional(),
-  "dataFinal": z.string().describe("Data final para filtro (formato ISO)").optional(),
-  "limit": z.coerce.number().int().min(1).max(100).describe("Limite de registros (máximo 100)").optional()
-      }).optional() as unknown as ToZod<ProdutoHistoricoPrecoControllerFindByProdutoIdQueryParams>
+    "dataInicial": z.optional(z.string().describe("Data inicial para filtro (formato ISO)")),
+"dataFinal": z.optional(z.string().describe("Data final para filtro (formato ISO)")),
+"limit": z.optional(z.coerce.number().int().min(1).max(100).describe("Limite de registros (máximo 100)"))
+    }).optional() as unknown as z.ZodType<ProdutoHistoricoPrecoControllerFindByProdutoIdQueryParams>
 
 export const produtoHistoricoPrecoControllerFindByProdutoIdHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<ProdutoHistoricoPrecoControllerFindByProdutoIdHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<ProdutoHistoricoPrecoControllerFindByProdutoIdHeaderParams>
 
 /**
  * @description Lista de históricos de preço do produto
  */
-export const produtoHistoricoPrecoControllerFindByProdutoId200Schema = z.array(z.lazy(() => produtoHistoricoPrecoResponseDtoSchema)) as unknown as ToZod<ProdutoHistoricoPrecoControllerFindByProdutoId200>
+export const produtoHistoricoPrecoControllerFindByProdutoId200Schema = z.array(produtoHistoricoPrecoResponseDtoSchema) as unknown as z.ZodType<ProdutoHistoricoPrecoControllerFindByProdutoId200>
 
 /**
  * @description Produto não encontrado
  */
-export const produtoHistoricoPrecoControllerFindByProdutoId404Schema = z.unknown() as unknown as ToZod<ProdutoHistoricoPrecoControllerFindByProdutoId404>
+export const produtoHistoricoPrecoControllerFindByProdutoId404Schema = z.unknown() as unknown as z.ZodType<ProdutoHistoricoPrecoControllerFindByProdutoId404>
 
-export const produtoHistoricoPrecoControllerFindByProdutoIdQueryResponseSchema = z.lazy(() => produtoHistoricoPrecoControllerFindByProdutoId200Schema) as unknown as ToZod<ProdutoHistoricoPrecoControllerFindByProdutoIdQueryResponse>
+export const produtoHistoricoPrecoControllerFindByProdutoIdQueryResponseSchema = produtoHistoricoPrecoControllerFindByProdutoId200Schema as unknown as z.ZodType<ProdutoHistoricoPrecoControllerFindByProdutoIdQueryResponse>

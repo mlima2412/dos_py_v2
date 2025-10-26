@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { CanalOrigemControllerDeactivateMutationResponse, CanalOrigemControllerDeactivatePathParams, CanalOrigemControllerDeactivate404 } from "../types/CanalOrigemControllerDeactivate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const canalOrigemControllerDeactivateMutationKey = () =>   [{"url":"/canal-origem/{publicId}/desativar"}] as const
+export const canalOrigemControllerDeactivateMutationKey = () => [{ url: '/canal-origem/:publicId/desativar' }] as const
 
 export type CanalOrigemControllerDeactivateMutationKey = ReturnType<typeof canalOrigemControllerDeactivateMutationKey>
 
@@ -18,11 +18,20 @@ export type CanalOrigemControllerDeactivateMutationKey = ReturnType<typeof canal
  * {@link /canal-origem/:publicId/desativar}
  */
 export async function canalOrigemControllerDeactivate(publicId: CanalOrigemControllerDeactivatePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<CanalOrigemControllerDeactivateMutationResponse, ResponseErrorConfig<CanalOrigemControllerDeactivate404>, unknown>({ method : "PATCH", url : `/canal-origem/${publicId}/desativar`, ... requestConfig })  
+  return res.data
+}
 
-
-const res = await request<CanalOrigemControllerDeactivateMutationResponse, ResponseErrorConfig<CanalOrigemControllerDeactivate404>, unknown>({ method : "PATCH", url : `/canal-origem/${publicId}/desativar`, ... requestConfig })
-return res.data
+export function canalOrigemControllerDeactivateMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = canalOrigemControllerDeactivateMutationKey()
+  return mutationOptions<CanalOrigemControllerDeactivateMutationResponse, ResponseErrorConfig<CanalOrigemControllerDeactivate404>, {publicId: CanalOrigemControllerDeactivatePathParams["publicId"]}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId }) => {
+      return canalOrigemControllerDeactivate(publicId, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /canal-origem/:publicId/desativar}
  */
 export function useCanalOrigemControllerDeactivate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<CanalOrigemControllerDeactivateMutationResponse, ResponseErrorConfig<CanalOrigemControllerDeactivate404>, {publicId: CanalOrigemControllerDeactivatePathParams["publicId"]}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? canalOrigemControllerDeactivateMutationKey()
-  
-          return useMutation<CanalOrigemControllerDeactivateMutationResponse, ResponseErrorConfig<CanalOrigemControllerDeactivate404>, {publicId: CanalOrigemControllerDeactivatePathParams["publicId"]}, TContext>({
-            mutationFn: async({ publicId }) => {
-              return canalOrigemControllerDeactivate(publicId, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<CanalOrigemControllerDeactivateMutationResponse, ResponseErrorConfig<CanalOrigemControllerDeactivate404>, {publicId: CanalOrigemControllerDeactivatePathParams["publicId"]}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? canalOrigemControllerDeactivateMutationKey()
+
+  const baseOptions = canalOrigemControllerDeactivateMutationOptions(config) as UseMutationOptions<CanalOrigemControllerDeactivateMutationResponse, ResponseErrorConfig<CanalOrigemControllerDeactivate404>, {publicId: CanalOrigemControllerDeactivatePathParams["publicId"]}, TContext>
+
+  return useMutation<CanalOrigemControllerDeactivateMutationResponse, ResponseErrorConfig<CanalOrigemControllerDeactivate404>, {publicId: CanalOrigemControllerDeactivatePathParams["publicId"]}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<CanalOrigemControllerDeactivateMutationResponse, ResponseErrorConfig<CanalOrigemControllerDeactivate404>, {publicId: CanalOrigemControllerDeactivatePathParams["publicId"]}, TContext>
 }

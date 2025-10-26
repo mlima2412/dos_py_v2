@@ -227,22 +227,6 @@ export function FormularioCliente() {
 									onCheckedChange={checked => setValue("ativo", checked)}
 									disabled={isViewing}
 								/>
-								<FormField
-									id="ruccnpjSecundario"
-									label={t("clients.labels.secondaryRuccnpj")}
-									placeholder={t("clients.placeholders.secondaryRuccnpj")}
-									disabled={isViewing}
-									optional
-									{...register("ruccnpjSecundario")}
-								/>
-								<FormField
-									id="nomeFatura"
-									label={t("clients.labels.invoiceName")}
-									placeholder={t("clients.placeholders.invoiceName")}
-									disabled={isViewing}
-									optional
-									{...register("nomeFatura")}
-								/>
 							</div>
 
 							{/* Sexta linha: Observações */}

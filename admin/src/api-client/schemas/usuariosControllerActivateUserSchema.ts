@@ -4,22 +4,21 @@
 */
 
 import type { UsuariosControllerActivateUserPathParams, UsuariosControllerActivateUser200, UsuariosControllerActivateUser404, UsuariosControllerActivateUserMutationResponse } from "../types/UsuariosControllerActivateUser.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { usuarioSchema } from "./usuarioSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const usuariosControllerActivateUserPathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do usuário (UUID v7)")
-      }) as unknown as ToZod<UsuariosControllerActivateUserPathParams>
+    "publicId": z.string().describe("ID público do usuário (UUID v7)")
+    }) as unknown as z.ZodType<UsuariosControllerActivateUserPathParams>
 
 /**
  * @description Usuário ativado com sucesso
  */
-export const usuariosControllerActivateUser200Schema = z.lazy(() => usuarioSchema) as unknown as ToZod<UsuariosControllerActivateUser200>
+export const usuariosControllerActivateUser200Schema = usuarioSchema as unknown as z.ZodType<UsuariosControllerActivateUser200>
 
 /**
  * @description Usuário não encontrado
  */
-export const usuariosControllerActivateUser404Schema = z.unknown() as unknown as ToZod<UsuariosControllerActivateUser404>
+export const usuariosControllerActivateUser404Schema = z.unknown() as unknown as z.ZodType<UsuariosControllerActivateUser404>
 
-export const usuariosControllerActivateUserMutationResponseSchema = z.lazy(() => usuariosControllerActivateUser200Schema) as unknown as ToZod<UsuariosControllerActivateUserMutationResponse>
+export const usuariosControllerActivateUserMutationResponseSchema = usuariosControllerActivateUser200Schema as unknown as z.ZodType<UsuariosControllerActivateUserMutationResponse>

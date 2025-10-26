@@ -4,13 +4,14 @@
 */
 
 import type { CreateTransferenciaEstoqueDto } from "../types/CreateTransferenciaEstoqueDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createMovimentoEstoqueDtoSchema } from "./createMovimentoEstoqueDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const createTransferenciaEstoqueDtoSchema = z.object({
-      "localOrigemId": z.coerce.number().describe("ID do local de origem da transferência"),
-  "localDestinoId": z.coerce.number().describe("ID do local de destino da transferência"),
-  "skus": z.array(z.lazy(() => createMovimentoEstoqueDtoSchema)).describe("Lista de SKUs a serem transferidos"),
-  "observacao": z.coerce.string().describe("Observação geral da transferência").optional()
-      }) as unknown as ToZod<CreateTransferenciaEstoqueDto>
+    "localOrigemId": z.coerce.number().describe("ID do local de origem da transferência"),
+"localDestinoId": z.coerce.number().describe("ID do local de destino da transferência"),
+get "skus"(){
+                return z.array(createMovimentoEstoqueDtoSchema).describe("Lista de SKUs a serem transferidos")
+              },
+"observacao": z.optional(z.coerce.string().describe("Observação geral da transferência"))
+    }) as unknown as z.ZodType<CreateTransferenciaEstoqueDto>

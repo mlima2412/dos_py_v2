@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ParcelamentoControllerRemoveMutationResponse, ParcelamentoControllerRemovePathParams } from "../types/ParcelamentoControllerRemove.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const parcelamentoControllerRemoveMutationKey = () =>   [{"url":"/parcelamento/{id}"}] as const
+export const parcelamentoControllerRemoveMutationKey = () => [{ url: '/parcelamento/:id' }] as const
 
 export type ParcelamentoControllerRemoveMutationKey = ReturnType<typeof parcelamentoControllerRemoveMutationKey>
 
@@ -18,11 +18,20 @@ export type ParcelamentoControllerRemoveMutationKey = ReturnType<typeof parcelam
  * {@link /parcelamento/:id}
  */
 export async function parcelamentoControllerRemove(id: ParcelamentoControllerRemovePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ParcelamentoControllerRemoveMutationResponse, ResponseErrorConfig<Error>, unknown>({ method : "DELETE", url : `/parcelamento/${id}`, ... requestConfig })  
+  return res.data
+}
 
-
-const res = await request<ParcelamentoControllerRemoveMutationResponse, ResponseErrorConfig<Error>, unknown>({ method : "DELETE", url : `/parcelamento/${id}`, ... requestConfig })
-return res.data
+export function parcelamentoControllerRemoveMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = parcelamentoControllerRemoveMutationKey()
+  return mutationOptions<ParcelamentoControllerRemoveMutationResponse, ResponseErrorConfig<Error>, {id: ParcelamentoControllerRemovePathParams["id"]}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ id }) => {
+      return parcelamentoControllerRemove(id, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /parcelamento/:id}
  */
 export function useParcelamentoControllerRemove<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ParcelamentoControllerRemoveMutationResponse, ResponseErrorConfig<Error>, {id: ParcelamentoControllerRemovePathParams["id"]}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? parcelamentoControllerRemoveMutationKey()
-  
-          return useMutation<ParcelamentoControllerRemoveMutationResponse, ResponseErrorConfig<Error>, {id: ParcelamentoControllerRemovePathParams["id"]}, TContext>({
-            mutationFn: async({ id }) => {
-              return parcelamentoControllerRemove(id, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ParcelamentoControllerRemoveMutationResponse, ResponseErrorConfig<Error>, {id: ParcelamentoControllerRemovePathParams["id"]}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? parcelamentoControllerRemoveMutationKey()
+
+  const baseOptions = parcelamentoControllerRemoveMutationOptions(config) as UseMutationOptions<ParcelamentoControllerRemoveMutationResponse, ResponseErrorConfig<Error>, {id: ParcelamentoControllerRemovePathParams["id"]}, TContext>
+
+  return useMutation<ParcelamentoControllerRemoveMutationResponse, ResponseErrorConfig<Error>, {id: ParcelamentoControllerRemovePathParams["id"]}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ParcelamentoControllerRemoveMutationResponse, ResponseErrorConfig<Error>, {id: ParcelamentoControllerRemovePathParams["id"]}, TContext>
 }

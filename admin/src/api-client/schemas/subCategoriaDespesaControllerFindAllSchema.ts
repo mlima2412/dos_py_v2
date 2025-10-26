@@ -4,28 +4,27 @@
 */
 
 import type { SubCategoriaDespesaControllerFindAll200, SubCategoriaDespesaControllerFindAll401, SubCategoriaDespesaControllerFindAllQueryResponse } from "../types/SubCategoriaDespesaControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Lista de subcategorias de despesas retornada com sucesso
  */
 export const subCategoriaDespesaControllerFindAll200Schema = z.array(z.object({
-      "idSubCategoria": z.coerce.number().optional(),
-  "categoriaId": z.coerce.number().optional(),
-  "descricao": z.coerce.string().optional(),
-  "ativo": z.boolean().optional(),
-  "createdAt": z.coerce.string().optional(),
-  "categoria": z.object({
-      "idCategoria": z.coerce.number().optional(),
-  "descricao": z.coerce.string().optional(),
-  "ativo": z.boolean().optional()
-      }).optional()
-      })) as unknown as ToZod<SubCategoriaDespesaControllerFindAll200>
+    "idSubCategoria": z.optional(z.coerce.number()),
+"categoriaId": z.optional(z.coerce.number()),
+"descricao": z.optional(z.coerce.string()),
+"ativo": z.optional(z.boolean()),
+"createdAt": z.optional(z.coerce.string()),
+"categoria": z.optional(z.object({
+    "idCategoria": z.optional(z.coerce.number()),
+"descricao": z.optional(z.coerce.string()),
+"ativo": z.optional(z.boolean())
+    }))
+    })) as unknown as z.ZodType<SubCategoriaDespesaControllerFindAll200>
 
 /**
  * @description Não autorizado
  */
-export const subCategoriaDespesaControllerFindAll401Schema = z.unknown() as unknown as ToZod<SubCategoriaDespesaControllerFindAll401>
+export const subCategoriaDespesaControllerFindAll401Schema = z.unknown() as unknown as z.ZodType<SubCategoriaDespesaControllerFindAll401>
 
-export const subCategoriaDespesaControllerFindAllQueryResponseSchema = z.lazy(() => subCategoriaDespesaControllerFindAll200Schema) as unknown as ToZod<SubCategoriaDespesaControllerFindAllQueryResponse>
+export const subCategoriaDespesaControllerFindAllQueryResponseSchema = subCategoriaDespesaControllerFindAll200Schema as unknown as z.ZodType<SubCategoriaDespesaControllerFindAllQueryResponse>

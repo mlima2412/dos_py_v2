@@ -4,41 +4,40 @@
 */
 
 import type { PerfisControllerUpdatePathParams, PerfisControllerUpdate200, PerfisControllerUpdate400, PerfisControllerUpdate404, PerfisControllerUpdate409, PerfisControllerUpdateMutationRequest, PerfisControllerUpdateMutationResponse } from "../types/PerfisControllerUpdate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { updatePerfilDtoSchema } from "./updatePerfilDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const perfisControllerUpdatePathParamsSchema = z.object({
-      "id": z.coerce.number().describe("ID do perfil")
-      }) as unknown as ToZod<PerfisControllerUpdatePathParams>
+    "id": z.coerce.number().describe("ID do perfil")
+    }) as unknown as z.ZodType<PerfisControllerUpdatePathParams>
 
 /**
  * @description Perfil atualizado com sucesso
  */
 export const perfisControllerUpdate200Schema = z.object({
-      "id": z.coerce.number().optional(),
-  "nome": z.coerce.string().optional(),
-  "descricao": z.coerce.string().optional(),
-  "ativo": z.boolean().optional(),
-  "createdAt": z.string().datetime().optional(),
-  "updatedAt": z.string().datetime().optional()
-      }) as unknown as ToZod<PerfisControllerUpdate200>
+    "id": z.optional(z.coerce.number()),
+"nome": z.optional(z.coerce.string()),
+"descricao": z.optional(z.coerce.string()),
+"ativo": z.optional(z.boolean()),
+"createdAt": z.optional(z.string().datetime()),
+"updatedAt": z.optional(z.string().datetime())
+    }) as unknown as z.ZodType<PerfisControllerUpdate200>
 
 /**
  * @description Dados de entrada inválidos
  */
-export const perfisControllerUpdate400Schema = z.unknown() as unknown as ToZod<PerfisControllerUpdate400>
+export const perfisControllerUpdate400Schema = z.unknown() as unknown as z.ZodType<PerfisControllerUpdate400>
 
 /**
  * @description Perfil não encontrado
  */
-export const perfisControllerUpdate404Schema = z.unknown() as unknown as ToZod<PerfisControllerUpdate404>
+export const perfisControllerUpdate404Schema = z.unknown() as unknown as z.ZodType<PerfisControllerUpdate404>
 
 /**
  * @description Perfil com este nome já existe
  */
-export const perfisControllerUpdate409Schema = z.unknown() as unknown as ToZod<PerfisControllerUpdate409>
+export const perfisControllerUpdate409Schema = z.unknown() as unknown as z.ZodType<PerfisControllerUpdate409>
 
-export const perfisControllerUpdateMutationRequestSchema = z.lazy(() => updatePerfilDtoSchema) as unknown as ToZod<PerfisControllerUpdateMutationRequest>
+export const perfisControllerUpdateMutationRequestSchema = updatePerfilDtoSchema as unknown as z.ZodType<PerfisControllerUpdateMutationRequest>
 
-export const perfisControllerUpdateMutationResponseSchema = z.lazy(() => perfisControllerUpdate200Schema) as unknown as ToZod<PerfisControllerUpdateMutationResponse>
+export const perfisControllerUpdateMutationResponseSchema = perfisControllerUpdate200Schema as unknown as z.ZodType<PerfisControllerUpdateMutationResponse>

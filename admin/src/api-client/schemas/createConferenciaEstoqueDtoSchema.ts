@@ -4,13 +4,12 @@
 */
 
 import type { CreateConferenciaEstoqueDto } from "../types/CreateConferenciaEstoqueDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const createConferenciaEstoqueDtoSchema = z.object({
-      "localEstoqueId": z.coerce.number().describe("ID do local de estoque"),
-  "usuarioResponsavel": z.coerce.number().describe("ID do usuário responsável pela conferência"),
-  "dataInicio": z.coerce.string().describe("Data de início da conferência").optional(),
-  "dataFim": z.coerce.string().describe("Data de fim da conferência").optional(),
-  "status": z.enum(["PENDENTE", "EM_ANDAMENTO", "CONCLUIDA", "FINALIZADA", "CANCELADA"]).default("PENDENTE").describe("Status da conferência")
-      }) as unknown as ToZod<CreateConferenciaEstoqueDto>
+    "localEstoqueId": z.coerce.number().describe("ID do local de estoque"),
+"usuarioResponsavel": z.coerce.number().describe("ID do usuário responsável pela conferência"),
+"dataInicio": z.optional(z.coerce.string().describe("Data de início da conferência")),
+"dataFim": z.optional(z.coerce.string().describe("Data de fim da conferência")),
+"status": z.optional(z.enum(["PENDENTE", "EM_ANDAMENTO", "CONCLUIDA", "FINALIZADA", "CANCELADA"]).default("PENDENTE").describe("Status da conferência"))
+    }) as unknown as z.ZodType<CreateConferenciaEstoqueDto>

@@ -4,17 +4,16 @@
 */
 
 import type { ParcelasControllerFindAllQueryParams, ParcelasControllerFindAll200, ParcelasControllerFindAllQueryResponse } from "../types/ParcelasControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { parcelaSchema } from "./parcelaSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const parcelasControllerFindAllQueryParamsSchema = z.object({
-      "parcelamentoId": z.coerce.number()
-      }) as unknown as ToZod<ParcelasControllerFindAllQueryParams>
+    "parcelamentoId": z.coerce.number()
+    }) as unknown as z.ZodType<ParcelasControllerFindAllQueryParams>
 
 /**
  * @description Lista de parcelas
  */
-export const parcelasControllerFindAll200Schema = z.array(z.lazy(() => parcelaSchema)) as unknown as ToZod<ParcelasControllerFindAll200>
+export const parcelasControllerFindAll200Schema = z.array(parcelaSchema) as unknown as z.ZodType<ParcelasControllerFindAll200>
 
-export const parcelasControllerFindAllQueryResponseSchema = z.lazy(() => parcelasControllerFindAll200Schema) as unknown as ToZod<ParcelasControllerFindAllQueryResponse>
+export const parcelasControllerFindAllQueryResponseSchema = parcelasControllerFindAll200Schema as unknown as z.ZodType<ParcelasControllerFindAllQueryResponse>

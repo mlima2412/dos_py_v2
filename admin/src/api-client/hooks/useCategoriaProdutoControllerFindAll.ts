@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const categoriaProdutoControllerFindAllQueryKey = () =>   [{ url: '/categoria-produto' }] as const
+export const categoriaProdutoControllerFindAllQueryKey = () => [{ url: '/categoria-produto' }] as const
 
 export type CategoriaProdutoControllerFindAllQueryKey = ReturnType<typeof categoriaProdutoControllerFindAllQueryKey>
 
@@ -18,25 +18,22 @@ export type CategoriaProdutoControllerFindAllQueryKey = ReturnType<typeof catego
  * {@link /categoria-produto}
  */
 export async function categoriaProdutoControllerFindAll(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<CategoriaProdutoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/categoria-produto`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<CategoriaProdutoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/categoria-produto`, ... requestConfig })  
+  return res.data
 }
 
 export function categoriaProdutoControllerFindAllQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = categoriaProdutoControllerFindAllQueryKey()
-        return queryOptions<CategoriaProdutoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, CategoriaProdutoControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return categoriaProdutoControllerFindAll(config)
-         },
-        })
-  
+  const queryKey = categoriaProdutoControllerFindAllQueryKey()
+  return queryOptions<CategoriaProdutoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, CategoriaProdutoControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return categoriaProdutoControllerFindAll(config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function categoriaProdutoControllerFindAllQueryOptions(config: Partial<Re
  * {@link /categoria-produto}
  */
 export function useCategoriaProdutoControllerFindAll<TData = CategoriaProdutoControllerFindAllQueryResponse, TQueryData = CategoriaProdutoControllerFindAllQueryResponse, TQueryKey extends QueryKey = CategoriaProdutoControllerFindAllQueryKey>(options: 
-  {
-    query?: Partial<QueryObserverOptions<CategoriaProdutoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? categoriaProdutoControllerFindAllQueryKey()
-  
-         const query = useQuery({
-          ...categoriaProdutoControllerFindAllQueryOptions(config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<CategoriaProdutoControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? categoriaProdutoControllerFindAllQueryKey()
+
+  const query = useQuery({
+   ...categoriaProdutoControllerFindAllQueryOptions(config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

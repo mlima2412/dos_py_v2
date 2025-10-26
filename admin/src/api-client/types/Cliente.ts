@@ -11,7 +11,7 @@ export const clienteLinguagemEnum = {
     "Portugues": "Portugues"
 } as const;
 
-export type ClienteLinguagemEnum = (typeof clienteLinguagemEnum)[keyof typeof clienteLinguagemEnum];
+export type ClienteLinguagemEnumKey = (typeof clienteLinguagemEnum)[keyof typeof clienteLinguagemEnum];
 
 export type Cliente = {
     /**
@@ -55,16 +55,6 @@ export type Cliente = {
     */
     ruccnpj?: string;
     /**
-     * @description RUC/CNPJ secundario do cliente
-     * @type string | undefined
-    */
-    ruccnpjSecundario?: string;
-    /**
-     * @description Nome da fatura do cliente (caso não seja o mesmo nome do cliente)
-     * @type string | undefined
-    */
-    nomeFatura?: string;
-    /**
      * @description Endereço do cliente
      * @type string | undefined
     */
@@ -88,7 +78,7 @@ export type Cliente = {
      * @description Linguagem preferida do cliente
      * @type string
     */
-    linguagem: ClienteLinguagemEnum;
+    linguagem: ClienteLinguagemEnumKey;
     /**
      * @description Status ativo do cliente
      * @type boolean

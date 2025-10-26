@@ -4,9 +4,8 @@
 */
 
 import type { UpdatePerfilDto } from "../types/UpdatePerfilDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const updatePerfilDtoSchema = z.object({
-      
-      }) as unknown as ToZod<UpdatePerfilDto>
+    
+    }) as unknown as z.ZodType<UpdatePerfilDto>

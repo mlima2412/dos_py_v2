@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ProdutoHistoricoPrecoControllerCreateMutationRequest, ProdutoHistoricoPrecoControllerCreateMutationResponse, ProdutoHistoricoPrecoControllerCreateHeaderParams, ProdutoHistoricoPrecoControllerCreate400, ProdutoHistoricoPrecoControllerCreate404 } from "../types/ProdutoHistoricoPrecoControllerCreate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const produtoHistoricoPrecoControllerCreateMutationKey = () =>   [{"url":"/produto-historico-preco"}] as const
+export const produtoHistoricoPrecoControllerCreateMutationKey = () => [{ url: '/produto-historico-preco' }] as const
 
 export type ProdutoHistoricoPrecoControllerCreateMutationKey = ReturnType<typeof produtoHistoricoPrecoControllerCreateMutationKey>
 
@@ -19,11 +19,22 @@ export type ProdutoHistoricoPrecoControllerCreateMutationKey = ReturnType<typeof
  * {@link /produto-historico-preco}
  */
 export async function produtoHistoricoPrecoControllerCreate(data: ProdutoHistoricoPrecoControllerCreateMutationRequest, headers: ProdutoHistoricoPrecoControllerCreateHeaderParams, config: Partial<RequestConfig<ProdutoHistoricoPrecoControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<ProdutoHistoricoPrecoControllerCreateMutationResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerCreate400 | ProdutoHistoricoPrecoControllerCreate404>, ProdutoHistoricoPrecoControllerCreateMutationRequest>({ method : "POST", url : `/produto-historico-preco`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<ProdutoHistoricoPrecoControllerCreateMutationResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerCreate400 | ProdutoHistoricoPrecoControllerCreate404>, ProdutoHistoricoPrecoControllerCreateMutationRequest>({ method : "POST", url : `/produto-historico-preco`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function produtoHistoricoPrecoControllerCreateMutationOptions(config: Partial<RequestConfig<ProdutoHistoricoPrecoControllerCreateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = produtoHistoricoPrecoControllerCreateMutationKey()
+  return mutationOptions<ProdutoHistoricoPrecoControllerCreateMutationResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerCreate400 | ProdutoHistoricoPrecoControllerCreate404>, {data: ProdutoHistoricoPrecoControllerCreateMutationRequest, headers: ProdutoHistoricoPrecoControllerCreateHeaderParams}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data, headers }) => {
+      return produtoHistoricoPrecoControllerCreate(data, headers, config)
+    },
+  })
 }
 
 /**
@@ -32,22 +43,20 @@ return res.data
  * {@link /produto-historico-preco}
  */
 export function useProdutoHistoricoPrecoControllerCreate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ProdutoHistoricoPrecoControllerCreateMutationResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerCreate400 | ProdutoHistoricoPrecoControllerCreate404>, {data: ProdutoHistoricoPrecoControllerCreateMutationRequest, headers: ProdutoHistoricoPrecoControllerCreateHeaderParams}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<ProdutoHistoricoPrecoControllerCreateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? produtoHistoricoPrecoControllerCreateMutationKey()
-  
-          return useMutation<ProdutoHistoricoPrecoControllerCreateMutationResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerCreate400 | ProdutoHistoricoPrecoControllerCreate404>, {data: ProdutoHistoricoPrecoControllerCreateMutationRequest, headers: ProdutoHistoricoPrecoControllerCreateHeaderParams}, TContext>({
-            mutationFn: async({ data, headers }) => {
-              return produtoHistoricoPrecoControllerCreate(data, headers, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ProdutoHistoricoPrecoControllerCreateMutationResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerCreate400 | ProdutoHistoricoPrecoControllerCreate404>, {data: ProdutoHistoricoPrecoControllerCreateMutationRequest, headers: ProdutoHistoricoPrecoControllerCreateHeaderParams}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<ProdutoHistoricoPrecoControllerCreateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? produtoHistoricoPrecoControllerCreateMutationKey()
+
+  const baseOptions = produtoHistoricoPrecoControllerCreateMutationOptions(config) as UseMutationOptions<ProdutoHistoricoPrecoControllerCreateMutationResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerCreate400 | ProdutoHistoricoPrecoControllerCreate404>, {data: ProdutoHistoricoPrecoControllerCreateMutationRequest, headers: ProdutoHistoricoPrecoControllerCreateHeaderParams}, TContext>
+
+  return useMutation<ProdutoHistoricoPrecoControllerCreateMutationResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerCreate400 | ProdutoHistoricoPrecoControllerCreate404>, {data: ProdutoHistoricoPrecoControllerCreateMutationRequest, headers: ProdutoHistoricoPrecoControllerCreateHeaderParams}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ProdutoHistoricoPrecoControllerCreateMutationResponse, ResponseErrorConfig<ProdutoHistoricoPrecoControllerCreate400 | ProdutoHistoricoPrecoControllerCreate404>, {data: ProdutoHistoricoPrecoControllerCreateMutationRequest, headers: ProdutoHistoricoPrecoControllerCreateHeaderParams}, TContext>
 }

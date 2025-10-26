@@ -10,7 +10,7 @@ export const updateParcelaDtoStatusEnum = {
     "PAGO_ATRASADO": "PAGO_ATRASADO"
 } as const;
 
-export type UpdateParcelaDtoStatusEnum = (typeof updateParcelaDtoStatusEnum)[keyof typeof updateParcelaDtoStatusEnum];
+export type UpdateParcelaDtoStatusEnumKey = (typeof updateParcelaDtoStatusEnum)[keyof typeof updateParcelaDtoStatusEnum];
 
 export type UpdateParcelaDto = {
     /**
@@ -42,5 +42,5 @@ export type UpdateParcelaDto = {
      * @description Status da parcela
      * @type string | undefined
     */
-    status?: UpdateParcelaDtoStatusEnum;
+    status?: UpdateParcelaDtoStatusEnumKey;
 };

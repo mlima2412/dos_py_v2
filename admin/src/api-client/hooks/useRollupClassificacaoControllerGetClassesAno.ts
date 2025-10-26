@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const rollupClassificacaoControllerGetClassesAnoQueryKey = (params: RollupClassificacaoControllerGetClassesAnoQueryParams) =>   [{ url: '/dashboard/despesas/classificacao/classes-ano' }, ...(params ? [params] : [])] as const
+export const rollupClassificacaoControllerGetClassesAnoQueryKey = (params: RollupClassificacaoControllerGetClassesAnoQueryParams) => [{ url: '/dashboard/despesas/classificacao/classes-ano' }, ...(params ? [params] : [])] as const
 
 export type RollupClassificacaoControllerGetClassesAnoQueryKey = ReturnType<typeof rollupClassificacaoControllerGetClassesAnoQueryKey>
 
@@ -18,25 +18,22 @@ export type RollupClassificacaoControllerGetClassesAnoQueryKey = ReturnType<type
  * {@link /dashboard/despesas/classificacao/classes-ano}
  */
 export async function rollupClassificacaoControllerGetClassesAno(params: RollupClassificacaoControllerGetClassesAnoQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<RollupClassificacaoControllerGetClassesAnoQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/dashboard/despesas/classificacao/classes-ano`, params, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<RollupClassificacaoControllerGetClassesAnoQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/dashboard/despesas/classificacao/classes-ano`, params, ... requestConfig })  
+  return res.data
 }
 
 export function rollupClassificacaoControllerGetClassesAnoQueryOptions(params: RollupClassificacaoControllerGetClassesAnoQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = rollupClassificacaoControllerGetClassesAnoQueryKey(params)
-        return queryOptions<RollupClassificacaoControllerGetClassesAnoQueryResponse, ResponseErrorConfig<Error>, RollupClassificacaoControllerGetClassesAnoQueryResponse, typeof queryKey>({
-         enabled: !!(params),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return rollupClassificacaoControllerGetClassesAno(params, config)
-         },
-        })
-  
+  const queryKey = rollupClassificacaoControllerGetClassesAnoQueryKey(params)
+  return queryOptions<RollupClassificacaoControllerGetClassesAnoQueryResponse, ResponseErrorConfig<Error>, RollupClassificacaoControllerGetClassesAnoQueryResponse, typeof queryKey>({
+   enabled: !!(params),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return rollupClassificacaoControllerGetClassesAno(params, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function rollupClassificacaoControllerGetClassesAnoQueryOptions(params: R
  * {@link /dashboard/despesas/classificacao/classes-ano}
  */
 export function useRollupClassificacaoControllerGetClassesAno<TData = RollupClassificacaoControllerGetClassesAnoQueryResponse, TQueryData = RollupClassificacaoControllerGetClassesAnoQueryResponse, TQueryKey extends QueryKey = RollupClassificacaoControllerGetClassesAnoQueryKey>(params: RollupClassificacaoControllerGetClassesAnoQueryParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<RollupClassificacaoControllerGetClassesAnoQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? rollupClassificacaoControllerGetClassesAnoQueryKey(params)
-  
-         const query = useQuery({
-          ...rollupClassificacaoControllerGetClassesAnoQueryOptions(params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<RollupClassificacaoControllerGetClassesAnoQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? rollupClassificacaoControllerGetClassesAnoQueryKey(params)
+
+  const query = useQuery({
+   ...rollupClassificacaoControllerGetClassesAnoQueryOptions(params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

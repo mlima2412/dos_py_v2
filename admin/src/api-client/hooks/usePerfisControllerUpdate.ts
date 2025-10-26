@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { PerfisControllerUpdateMutationRequest, PerfisControllerUpdateMutationResponse, PerfisControllerUpdatePathParams, PerfisControllerUpdate400, PerfisControllerUpdate404, PerfisControllerUpdate409 } from "../types/PerfisControllerUpdate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const perfisControllerUpdateMutationKey = () =>   [{"url":"/perfis/{id}"}] as const
+export const perfisControllerUpdateMutationKey = () => [{ url: '/perfis/:id' }] as const
 
 export type PerfisControllerUpdateMutationKey = ReturnType<typeof perfisControllerUpdateMutationKey>
 
@@ -18,11 +18,22 @@ export type PerfisControllerUpdateMutationKey = ReturnType<typeof perfisControll
  * {@link /perfis/:id}
  */
 export async function perfisControllerUpdate(id: PerfisControllerUpdatePathParams["id"], data?: PerfisControllerUpdateMutationRequest, config: Partial<RequestConfig<PerfisControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<PerfisControllerUpdateMutationResponse, ResponseErrorConfig<PerfisControllerUpdate400 | PerfisControllerUpdate404 | PerfisControllerUpdate409>, PerfisControllerUpdateMutationRequest>({ method : "PATCH", url : `/perfis/${id}`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<PerfisControllerUpdateMutationResponse, ResponseErrorConfig<PerfisControllerUpdate400 | PerfisControllerUpdate404 | PerfisControllerUpdate409>, PerfisControllerUpdateMutationRequest>({ method : "PATCH", url : `/perfis/${id}`, data : requestData, ... requestConfig })
-return res.data
+export function perfisControllerUpdateMutationOptions(config: Partial<RequestConfig<PerfisControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = perfisControllerUpdateMutationKey()
+  return mutationOptions<PerfisControllerUpdateMutationResponse, ResponseErrorConfig<PerfisControllerUpdate400 | PerfisControllerUpdate404 | PerfisControllerUpdate409>, {id: PerfisControllerUpdatePathParams["id"], data?: PerfisControllerUpdateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ id, data }) => {
+      return perfisControllerUpdate(id, data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /perfis/:id}
  */
 export function usePerfisControllerUpdate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<PerfisControllerUpdateMutationResponse, ResponseErrorConfig<PerfisControllerUpdate400 | PerfisControllerUpdate404 | PerfisControllerUpdate409>, {id: PerfisControllerUpdatePathParams["id"], data?: PerfisControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<PerfisControllerUpdateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? perfisControllerUpdateMutationKey()
-  
-          return useMutation<PerfisControllerUpdateMutationResponse, ResponseErrorConfig<PerfisControllerUpdate400 | PerfisControllerUpdate404 | PerfisControllerUpdate409>, {id: PerfisControllerUpdatePathParams["id"], data?: PerfisControllerUpdateMutationRequest}, TContext>({
-            mutationFn: async({ id, data }) => {
-              return perfisControllerUpdate(id, data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<PerfisControllerUpdateMutationResponse, ResponseErrorConfig<PerfisControllerUpdate400 | PerfisControllerUpdate404 | PerfisControllerUpdate409>, {id: PerfisControllerUpdatePathParams["id"], data?: PerfisControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<PerfisControllerUpdateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? perfisControllerUpdateMutationKey()
+
+  const baseOptions = perfisControllerUpdateMutationOptions(config) as UseMutationOptions<PerfisControllerUpdateMutationResponse, ResponseErrorConfig<PerfisControllerUpdate400 | PerfisControllerUpdate404 | PerfisControllerUpdate409>, {id: PerfisControllerUpdatePathParams["id"], data?: PerfisControllerUpdateMutationRequest}, TContext>
+
+  return useMutation<PerfisControllerUpdateMutationResponse, ResponseErrorConfig<PerfisControllerUpdate400 | PerfisControllerUpdate404 | PerfisControllerUpdate409>, {id: PerfisControllerUpdatePathParams["id"], data?: PerfisControllerUpdateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<PerfisControllerUpdateMutationResponse, ResponseErrorConfig<PerfisControllerUpdate400 | PerfisControllerUpdate404 | PerfisControllerUpdate409>, {id: PerfisControllerUpdatePathParams["id"], data?: PerfisControllerUpdateMutationRequest}, TContext>
 }

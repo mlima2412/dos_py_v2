@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const contasPagarControllerFindAllQueryKey = () =>   [{ url: '/contas-pagar' }] as const
+export const contasPagarControllerFindAllQueryKey = () => [{ url: '/contas-pagar' }] as const
 
 export type ContasPagarControllerFindAllQueryKey = ReturnType<typeof contasPagarControllerFindAllQueryKey>
 
@@ -18,25 +18,22 @@ export type ContasPagarControllerFindAllQueryKey = ReturnType<typeof contasPagar
  * {@link /contas-pagar}
  */
 export async function contasPagarControllerFindAll(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ContasPagarControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/contas-pagar`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ContasPagarControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/contas-pagar`, ... requestConfig })  
+  return res.data
 }
 
 export function contasPagarControllerFindAllQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = contasPagarControllerFindAllQueryKey()
-        return queryOptions<ContasPagarControllerFindAllQueryResponse, ResponseErrorConfig<Error>, ContasPagarControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return contasPagarControllerFindAll(config)
-         },
-        })
-  
+  const queryKey = contasPagarControllerFindAllQueryKey()
+  return queryOptions<ContasPagarControllerFindAllQueryResponse, ResponseErrorConfig<Error>, ContasPagarControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return contasPagarControllerFindAll(config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function contasPagarControllerFindAllQueryOptions(config: Partial<Request
  * {@link /contas-pagar}
  */
 export function useContasPagarControllerFindAll<TData = ContasPagarControllerFindAllQueryResponse, TQueryData = ContasPagarControllerFindAllQueryResponse, TQueryKey extends QueryKey = ContasPagarControllerFindAllQueryKey>(options: 
-  {
-    query?: Partial<QueryObserverOptions<ContasPagarControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? contasPagarControllerFindAllQueryKey()
-  
-         const query = useQuery({
-          ...contasPagarControllerFindAllQueryOptions(config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<ContasPagarControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? contasPagarControllerFindAllQueryKey()
+
+  const query = useQuery({
+   ...contasPagarControllerFindAllQueryOptions(config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

@@ -4,9 +4,8 @@
 */
 
 import type { UpdateEstoqueSkuDto } from "../types/UpdateEstoqueSkuDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const updateEstoqueSkuDtoSchema = z.object({
-      "qtd": z.coerce.number().min(0).describe("Quantidade em estoque").optional()
-      }) as unknown as ToZod<UpdateEstoqueSkuDto>
+    "qtd": z.optional(z.coerce.number().min(0).describe("Quantidade em estoque"))
+    }) as unknown as z.ZodType<UpdateEstoqueSkuDto>

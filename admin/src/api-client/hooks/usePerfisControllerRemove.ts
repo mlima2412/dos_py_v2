@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { PerfisControllerRemoveMutationResponse, PerfisControllerRemovePathParams, PerfisControllerRemove400, PerfisControllerRemove404 } from "../types/PerfisControllerRemove.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const perfisControllerRemoveMutationKey = () =>   [{"url":"/perfis/{id}"}] as const
+export const perfisControllerRemoveMutationKey = () => [{ url: '/perfis/:id' }] as const
 
 export type PerfisControllerRemoveMutationKey = ReturnType<typeof perfisControllerRemoveMutationKey>
 
@@ -18,11 +18,20 @@ export type PerfisControllerRemoveMutationKey = ReturnType<typeof perfisControll
  * {@link /perfis/:id}
  */
 export async function perfisControllerRemove(id: PerfisControllerRemovePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<PerfisControllerRemoveMutationResponse, ResponseErrorConfig<PerfisControllerRemove400 | PerfisControllerRemove404>, unknown>({ method : "DELETE", url : `/perfis/${id}`, ... requestConfig })  
+  return res.data
+}
 
-
-const res = await request<PerfisControllerRemoveMutationResponse, ResponseErrorConfig<PerfisControllerRemove400 | PerfisControllerRemove404>, unknown>({ method : "DELETE", url : `/perfis/${id}`, ... requestConfig })
-return res.data
+export function perfisControllerRemoveMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = perfisControllerRemoveMutationKey()
+  return mutationOptions<PerfisControllerRemoveMutationResponse, ResponseErrorConfig<PerfisControllerRemove400 | PerfisControllerRemove404>, {id: PerfisControllerRemovePathParams["id"]}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ id }) => {
+      return perfisControllerRemove(id, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /perfis/:id}
  */
 export function usePerfisControllerRemove<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<PerfisControllerRemoveMutationResponse, ResponseErrorConfig<PerfisControllerRemove400 | PerfisControllerRemove404>, {id: PerfisControllerRemovePathParams["id"]}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? perfisControllerRemoveMutationKey()
-  
-          return useMutation<PerfisControllerRemoveMutationResponse, ResponseErrorConfig<PerfisControllerRemove400 | PerfisControllerRemove404>, {id: PerfisControllerRemovePathParams["id"]}, TContext>({
-            mutationFn: async({ id }) => {
-              return perfisControllerRemove(id, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<PerfisControllerRemoveMutationResponse, ResponseErrorConfig<PerfisControllerRemove400 | PerfisControllerRemove404>, {id: PerfisControllerRemovePathParams["id"]}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? perfisControllerRemoveMutationKey()
+
+  const baseOptions = perfisControllerRemoveMutationOptions(config) as UseMutationOptions<PerfisControllerRemoveMutationResponse, ResponseErrorConfig<PerfisControllerRemove400 | PerfisControllerRemove404>, {id: PerfisControllerRemovePathParams["id"]}, TContext>
+
+  return useMutation<PerfisControllerRemoveMutationResponse, ResponseErrorConfig<PerfisControllerRemove400 | PerfisControllerRemove404>, {id: PerfisControllerRemovePathParams["id"]}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<PerfisControllerRemoveMutationResponse, ResponseErrorConfig<PerfisControllerRemove400 | PerfisControllerRemove404>, {id: PerfisControllerRemovePathParams["id"]}, TContext>
 }

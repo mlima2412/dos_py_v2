@@ -4,29 +4,28 @@
 */
 
 import type { LocalEstoqueControllerCreate201, LocalEstoqueControllerCreate400, LocalEstoqueControllerCreate409, LocalEstoqueControllerCreateMutationRequest, LocalEstoqueControllerCreateMutationResponse } from "../types/LocalEstoqueControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createLocalEstoqueDtoSchema } from "./createLocalEstoqueDtoSchema.ts";
 import { localEstoqueSchema } from "./localEstoqueSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Local de estoque criado com sucesso
  */
-export const localEstoqueControllerCreate201Schema = z.lazy(() => localEstoqueSchema) as unknown as ToZod<LocalEstoqueControllerCreate201>
+export const localEstoqueControllerCreate201Schema = localEstoqueSchema as unknown as z.ZodType<LocalEstoqueControllerCreate201>
 
 /**
  * @description Dados inválidos
  */
-export const localEstoqueControllerCreate400Schema = z.unknown() as unknown as ToZod<LocalEstoqueControllerCreate400>
+export const localEstoqueControllerCreate400Schema = z.unknown() as unknown as z.ZodType<LocalEstoqueControllerCreate400>
 
 /**
  * @description Já existe um local com este nome para este parceiro
  */
-export const localEstoqueControllerCreate409Schema = z.unknown() as unknown as ToZod<LocalEstoqueControllerCreate409>
+export const localEstoqueControllerCreate409Schema = z.unknown() as unknown as z.ZodType<LocalEstoqueControllerCreate409>
 
 /**
  * @description Dados para criação do local de estoque
  */
-export const localEstoqueControllerCreateMutationRequestSchema = z.lazy(() => createLocalEstoqueDtoSchema) as unknown as ToZod<LocalEstoqueControllerCreateMutationRequest>
+export const localEstoqueControllerCreateMutationRequestSchema = createLocalEstoqueDtoSchema as unknown as z.ZodType<LocalEstoqueControllerCreateMutationRequest>
 
-export const localEstoqueControllerCreateMutationResponseSchema = z.lazy(() => localEstoqueControllerCreate201Schema) as unknown as ToZod<LocalEstoqueControllerCreateMutationResponse>
+export const localEstoqueControllerCreateMutationResponseSchema = localEstoqueControllerCreate201Schema as unknown as z.ZodType<LocalEstoqueControllerCreateMutationResponse>

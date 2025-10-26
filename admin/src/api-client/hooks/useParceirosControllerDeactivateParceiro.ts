@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ParceirosControllerDeactivateParceiroMutationResponse, ParceirosControllerDeactivateParceiroPathParams, ParceirosControllerDeactivateParceiro404 } from "../types/ParceirosControllerDeactivateParceiro.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const parceirosControllerDeactivateParceiroMutationKey = () =>   [{"url":"/parceiros/{publicId}/desativar"}] as const
+export const parceirosControllerDeactivateParceiroMutationKey = () => [{ url: '/parceiros/:publicId/desativar' }] as const
 
 export type ParceirosControllerDeactivateParceiroMutationKey = ReturnType<typeof parceirosControllerDeactivateParceiroMutationKey>
 
@@ -18,11 +18,20 @@ export type ParceirosControllerDeactivateParceiroMutationKey = ReturnType<typeof
  * {@link /parceiros/:publicId/desativar}
  */
 export async function parceirosControllerDeactivateParceiro(publicId: ParceirosControllerDeactivateParceiroPathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ParceirosControllerDeactivateParceiroMutationResponse, ResponseErrorConfig<ParceirosControllerDeactivateParceiro404>, unknown>({ method : "PATCH", url : `/parceiros/${publicId}/desativar`, ... requestConfig })  
+  return res.data
+}
 
-
-const res = await request<ParceirosControllerDeactivateParceiroMutationResponse, ResponseErrorConfig<ParceirosControllerDeactivateParceiro404>, unknown>({ method : "PATCH", url : `/parceiros/${publicId}/desativar`, ... requestConfig })
-return res.data
+export function parceirosControllerDeactivateParceiroMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = parceirosControllerDeactivateParceiroMutationKey()
+  return mutationOptions<ParceirosControllerDeactivateParceiroMutationResponse, ResponseErrorConfig<ParceirosControllerDeactivateParceiro404>, {publicId: ParceirosControllerDeactivateParceiroPathParams["publicId"]}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId }) => {
+      return parceirosControllerDeactivateParceiro(publicId, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /parceiros/:publicId/desativar}
  */
 export function useParceirosControllerDeactivateParceiro<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ParceirosControllerDeactivateParceiroMutationResponse, ResponseErrorConfig<ParceirosControllerDeactivateParceiro404>, {publicId: ParceirosControllerDeactivateParceiroPathParams["publicId"]}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? parceirosControllerDeactivateParceiroMutationKey()
-  
-          return useMutation<ParceirosControllerDeactivateParceiroMutationResponse, ResponseErrorConfig<ParceirosControllerDeactivateParceiro404>, {publicId: ParceirosControllerDeactivateParceiroPathParams["publicId"]}, TContext>({
-            mutationFn: async({ publicId }) => {
-              return parceirosControllerDeactivateParceiro(publicId, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ParceirosControllerDeactivateParceiroMutationResponse, ResponseErrorConfig<ParceirosControllerDeactivateParceiro404>, {publicId: ParceirosControllerDeactivateParceiroPathParams["publicId"]}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? parceirosControllerDeactivateParceiroMutationKey()
+
+  const baseOptions = parceirosControllerDeactivateParceiroMutationOptions(config) as UseMutationOptions<ParceirosControllerDeactivateParceiroMutationResponse, ResponseErrorConfig<ParceirosControllerDeactivateParceiro404>, {publicId: ParceirosControllerDeactivateParceiroPathParams["publicId"]}, TContext>
+
+  return useMutation<ParceirosControllerDeactivateParceiroMutationResponse, ResponseErrorConfig<ParceirosControllerDeactivateParceiro404>, {publicId: ParceirosControllerDeactivateParceiroPathParams["publicId"]}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ParceirosControllerDeactivateParceiroMutationResponse, ResponseErrorConfig<ParceirosControllerDeactivateParceiro404>, {publicId: ParceirosControllerDeactivateParceiroPathParams["publicId"]}, TContext>
 }

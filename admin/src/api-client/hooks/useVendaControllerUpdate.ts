@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { VendaControllerUpdateMutationRequest, VendaControllerUpdateMutationResponse, VendaControllerUpdatePathParams, VendaControllerUpdateHeaderParams } from "../types/VendaControllerUpdate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const vendaControllerUpdateMutationKey = () =>   [{"url":"/venda/{publicId}"}] as const
+export const vendaControllerUpdateMutationKey = () => [{ url: '/venda/:publicId' }] as const
 
 export type VendaControllerUpdateMutationKey = ReturnType<typeof vendaControllerUpdateMutationKey>
 
@@ -18,11 +18,22 @@ export type VendaControllerUpdateMutationKey = ReturnType<typeof vendaController
  * {@link /venda/:publicId}
  */
 export async function vendaControllerUpdate(publicId: VendaControllerUpdatePathParams["publicId"], headers: VendaControllerUpdateHeaderParams, data?: VendaControllerUpdateMutationRequest, config: Partial<RequestConfig<VendaControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<VendaControllerUpdateMutationResponse, ResponseErrorConfig<Error>, VendaControllerUpdateMutationRequest>({ method : "PATCH", url : `/venda/${publicId}`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<VendaControllerUpdateMutationResponse, ResponseErrorConfig<Error>, VendaControllerUpdateMutationRequest>({ method : "PATCH", url : `/venda/${publicId}`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function vendaControllerUpdateMutationOptions(config: Partial<RequestConfig<VendaControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = vendaControllerUpdateMutationKey()
+  return mutationOptions<VendaControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {publicId: VendaControllerUpdatePathParams["publicId"], headers: VendaControllerUpdateHeaderParams, data?: VendaControllerUpdateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId, headers, data }) => {
+      return vendaControllerUpdate(publicId, headers, data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /venda/:publicId}
  */
 export function useVendaControllerUpdate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<VendaControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {publicId: VendaControllerUpdatePathParams["publicId"], headers: VendaControllerUpdateHeaderParams, data?: VendaControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<VendaControllerUpdateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? vendaControllerUpdateMutationKey()
-  
-          return useMutation<VendaControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {publicId: VendaControllerUpdatePathParams["publicId"], headers: VendaControllerUpdateHeaderParams, data?: VendaControllerUpdateMutationRequest}, TContext>({
-            mutationFn: async({ publicId, headers, data }) => {
-              return vendaControllerUpdate(publicId, headers, data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<VendaControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {publicId: VendaControllerUpdatePathParams["publicId"], headers: VendaControllerUpdateHeaderParams, data?: VendaControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<VendaControllerUpdateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? vendaControllerUpdateMutationKey()
+
+  const baseOptions = vendaControllerUpdateMutationOptions(config) as UseMutationOptions<VendaControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {publicId: VendaControllerUpdatePathParams["publicId"], headers: VendaControllerUpdateHeaderParams, data?: VendaControllerUpdateMutationRequest}, TContext>
+
+  return useMutation<VendaControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {publicId: VendaControllerUpdatePathParams["publicId"], headers: VendaControllerUpdateHeaderParams, data?: VendaControllerUpdateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<VendaControllerUpdateMutationResponse, ResponseErrorConfig<Error>, {publicId: VendaControllerUpdatePathParams["publicId"], headers: VendaControllerUpdateHeaderParams, data?: VendaControllerUpdateMutationRequest}, TContext>
 }

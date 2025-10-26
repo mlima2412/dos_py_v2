@@ -4,30 +4,29 @@
 */
 
 import type { TransferenciaEstoqueControllerCreateHeaderParams, TransferenciaEstoqueControllerCreate201, TransferenciaEstoqueControllerCreate400, TransferenciaEstoqueControllerCreate404, TransferenciaEstoqueControllerCreateMutationRequest, TransferenciaEstoqueControllerCreateMutationResponse } from "../types/TransferenciaEstoqueControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createTransferenciaEstoqueDtoSchema } from "./createTransferenciaEstoqueDtoSchema.ts";
 import { createTransferenciaResponseDtoSchema } from "./createTransferenciaResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const transferenciaEstoqueControllerCreateHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
-      }) as unknown as ToZod<TransferenciaEstoqueControllerCreateHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+    }) as unknown as z.ZodType<TransferenciaEstoqueControllerCreateHeaderParams>
 
 /**
  * @description Transferência criada com sucesso
  */
-export const transferenciaEstoqueControllerCreate201Schema = z.lazy(() => createTransferenciaResponseDtoSchema) as unknown as ToZod<TransferenciaEstoqueControllerCreate201>
+export const transferenciaEstoqueControllerCreate201Schema = createTransferenciaResponseDtoSchema as unknown as z.ZodType<TransferenciaEstoqueControllerCreate201>
 
 /**
  * @description Dados inválidos ou estoque insuficiente
  */
-export const transferenciaEstoqueControllerCreate400Schema = z.unknown() as unknown as ToZod<TransferenciaEstoqueControllerCreate400>
+export const transferenciaEstoqueControllerCreate400Schema = z.unknown() as unknown as z.ZodType<TransferenciaEstoqueControllerCreate400>
 
 /**
  * @description Local de origem ou destino não encontrado
  */
-export const transferenciaEstoqueControllerCreate404Schema = z.unknown() as unknown as ToZod<TransferenciaEstoqueControllerCreate404>
+export const transferenciaEstoqueControllerCreate404Schema = z.unknown() as unknown as z.ZodType<TransferenciaEstoqueControllerCreate404>
 
-export const transferenciaEstoqueControllerCreateMutationRequestSchema = z.lazy(() => createTransferenciaEstoqueDtoSchema) as unknown as ToZod<TransferenciaEstoqueControllerCreateMutationRequest>
+export const transferenciaEstoqueControllerCreateMutationRequestSchema = createTransferenciaEstoqueDtoSchema as unknown as z.ZodType<TransferenciaEstoqueControllerCreateMutationRequest>
 
-export const transferenciaEstoqueControllerCreateMutationResponseSchema = z.lazy(() => transferenciaEstoqueControllerCreate201Schema) as unknown as ToZod<TransferenciaEstoqueControllerCreateMutationResponse>
+export const transferenciaEstoqueControllerCreateMutationResponseSchema = transferenciaEstoqueControllerCreate201Schema as unknown as z.ZodType<TransferenciaEstoqueControllerCreateMutationResponse>

@@ -13,7 +13,7 @@ export const conferenciaEstoqueResponseDtoStatusEnum = {
     "CONCLUIDA": "CONCLUIDA"
 } as const;
 
-export type ConferenciaEstoqueResponseDtoStatusEnum = (typeof conferenciaEstoqueResponseDtoStatusEnum)[keyof typeof conferenciaEstoqueResponseDtoStatusEnum];
+export type ConferenciaEstoqueResponseDtoStatusEnumKey = (typeof conferenciaEstoqueResponseDtoStatusEnum)[keyof typeof conferenciaEstoqueResponseDtoStatusEnum];
 
 export type ConferenciaEstoqueResponseDto = {
     /**
@@ -60,7 +60,7 @@ export type ConferenciaEstoqueResponseDto = {
      * @description Status da conferência
      * @type string
     */
-    status: ConferenciaEstoqueResponseDtoStatusEnum;
+    status: ConferenciaEstoqueResponseDtoStatusEnumKey;
     /**
      * @description Itens da conferência com dados simplificados
      * @type array | undefined

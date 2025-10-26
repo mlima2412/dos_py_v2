@@ -4,27 +4,26 @@
 */
 
 import type { CurrencyControllerDeactivatePathParams, CurrencyControllerDeactivate200, CurrencyControllerDeactivate401, CurrencyControllerDeactivate404, CurrencyControllerDeactivateMutationResponse } from "../types/CurrencyControllerDeactivate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { currencySchema } from "./currencySchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const currencyControllerDeactivatePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público da moeda")
-      }) as unknown as ToZod<CurrencyControllerDeactivatePathParams>
+    "publicId": z.string().describe("ID público da moeda")
+    }) as unknown as z.ZodType<CurrencyControllerDeactivatePathParams>
 
 /**
  * @description Moeda desativada com sucesso
  */
-export const currencyControllerDeactivate200Schema = z.lazy(() => currencySchema) as unknown as ToZod<CurrencyControllerDeactivate200>
+export const currencyControllerDeactivate200Schema = currencySchema as unknown as z.ZodType<CurrencyControllerDeactivate200>
 
 /**
  * @description Não autorizado
  */
-export const currencyControllerDeactivate401Schema = z.unknown() as unknown as ToZod<CurrencyControllerDeactivate401>
+export const currencyControllerDeactivate401Schema = z.unknown() as unknown as z.ZodType<CurrencyControllerDeactivate401>
 
 /**
  * @description Moeda não encontrada
  */
-export const currencyControllerDeactivate404Schema = z.unknown() as unknown as ToZod<CurrencyControllerDeactivate404>
+export const currencyControllerDeactivate404Schema = z.unknown() as unknown as z.ZodType<CurrencyControllerDeactivate404>
 
-export const currencyControllerDeactivateMutationResponseSchema = z.lazy(() => currencyControllerDeactivate200Schema) as unknown as ToZod<CurrencyControllerDeactivateMutationResponse>
+export const currencyControllerDeactivateMutationResponseSchema = currencyControllerDeactivate200Schema as unknown as z.ZodType<CurrencyControllerDeactivateMutationResponse>

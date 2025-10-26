@@ -4,37 +4,36 @@
 */
 
 import type { PedidoCompraControllerUpdatePathParams, PedidoCompraControllerUpdateHeaderParams, PedidoCompraControllerUpdate200, PedidoCompraControllerUpdate404, PedidoCompraControllerUpdate409, PedidoCompraControllerUpdateMutationRequest, PedidoCompraControllerUpdateMutationResponse } from "../types/PedidoCompraControllerUpdate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { pedidoCompraSchema } from "./pedidoCompraSchema.ts";
 import { updatePedidoCompraDtoSchema } from "./updatePedidoCompraDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const pedidoCompraControllerUpdatePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do pedido de compra (UUID v7)")
-      }) as unknown as ToZod<PedidoCompraControllerUpdatePathParams>
+    "publicId": z.string().describe("ID público do pedido de compra (UUID v7)")
+    }) as unknown as z.ZodType<PedidoCompraControllerUpdatePathParams>
 
 export const pedidoCompraControllerUpdateHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
-      }) as unknown as ToZod<PedidoCompraControllerUpdateHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+    }) as unknown as z.ZodType<PedidoCompraControllerUpdateHeaderParams>
 
 /**
  * @description Pedido de compra atualizado com sucesso
  */
-export const pedidoCompraControllerUpdate200Schema = z.lazy(() => pedidoCompraSchema) as unknown as ToZod<PedidoCompraControllerUpdate200>
+export const pedidoCompraControllerUpdate200Schema = pedidoCompraSchema as unknown as z.ZodType<PedidoCompraControllerUpdate200>
 
 /**
  * @description Pedido de compra não encontrado
  */
-export const pedidoCompraControllerUpdate404Schema = z.unknown() as unknown as ToZod<PedidoCompraControllerUpdate404>
+export const pedidoCompraControllerUpdate404Schema = z.unknown() as unknown as z.ZodType<PedidoCompraControllerUpdate404>
 
 /**
  * @description Não é possível editar um pedido finalizado
  */
-export const pedidoCompraControllerUpdate409Schema = z.unknown() as unknown as ToZod<PedidoCompraControllerUpdate409>
+export const pedidoCompraControllerUpdate409Schema = z.unknown() as unknown as z.ZodType<PedidoCompraControllerUpdate409>
 
 /**
  * @description Dados para atualização do pedido de compra
  */
-export const pedidoCompraControllerUpdateMutationRequestSchema = z.lazy(() => updatePedidoCompraDtoSchema) as unknown as ToZod<PedidoCompraControllerUpdateMutationRequest>
+export const pedidoCompraControllerUpdateMutationRequestSchema = updatePedidoCompraDtoSchema as unknown as z.ZodType<PedidoCompraControllerUpdateMutationRequest>
 
-export const pedidoCompraControllerUpdateMutationResponseSchema = z.lazy(() => pedidoCompraControllerUpdate200Schema) as unknown as ToZod<PedidoCompraControllerUpdateMutationResponse>
+export const pedidoCompraControllerUpdateMutationResponseSchema = pedidoCompraControllerUpdate200Schema as unknown as z.ZodType<PedidoCompraControllerUpdateMutationResponse>

@@ -11,7 +11,7 @@ import type {
 
 export type VendaFormMode = "create" | "edit" | "view";
 
-export type VendaFormStep = "basic" | "items" | "review";
+export type VendaFormStep = "basic" | "items" | "billing" | "review";
 
 export interface VendaItemFormData {
 	remoteId?: number;
@@ -30,11 +30,12 @@ export interface VendaItemFormData {
 }
 
 export interface PagamentoFormData {
+	tipo: PagamentoTipoEnum; // Cada pagamento tem seu próprio tipo
 	formaPagamentoId: number;
 	valor: number;
 	entrada: boolean;
 	valorDelivery?: number;
-	// Campos condicionais baseados no tipoVenda global da venda
+	// Campos condicionais baseados no tipo do pagamento
 	vencimento?: Date; // A_PRAZO_SEM_PARCELAS
 	numeroParcelas?: number; // PARCELADO
 	primeiraParcelaData?: Date; // PARCELADO
@@ -51,7 +52,12 @@ export interface VendaFormValues {
 	valorFrete?: number | null;
 	descontoTotal?: number | null;
 	comissao?: number | null;
-	tipoVenda?: PagamentoTipoEnum;
+	// Dados de faturamento
+	desejaFatura: boolean;
+	faturaEmNomeCliente: boolean;
+	nomeFatura?: string | null;
+	ruccnpjFatura?: string | null;
+	numeroFatura?: string | null;
 	pagamentos: PagamentoFormData[];
 }
 

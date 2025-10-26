@@ -4,10 +4,9 @@
 */
 
 import type { RequestPasswordResetDto } from "../types/RequestPasswordResetDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const requestPasswordResetDtoSchema = z.object({
-      "email": z.coerce.string().describe("Email do usuário para envio do link de recuperação"),
-  "language": z.coerce.string().default("pt-BR").describe("Idioma preferido para o email de recuperação")
-      }) as unknown as ToZod<RequestPasswordResetDto>
+    "email": z.coerce.string().describe("Email do usuário para envio do link de recuperação"),
+"language": z.optional(z.coerce.string().default("pt-BR").describe("Idioma preferido para o email de recuperação"))
+    }) as unknown as z.ZodType<RequestPasswordResetDto>

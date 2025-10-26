@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const parceirosControllerFindAllQueryKey = () =>   [{ url: '/parceiros' }] as const
+export const parceirosControllerFindAllQueryKey = () => [{ url: '/parceiros' }] as const
 
 export type ParceirosControllerFindAllQueryKey = ReturnType<typeof parceirosControllerFindAllQueryKey>
 
@@ -18,25 +18,22 @@ export type ParceirosControllerFindAllQueryKey = ReturnType<typeof parceirosCont
  * {@link /parceiros}
  */
 export async function parceirosControllerFindAll(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ParceirosControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/parceiros`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ParceirosControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/parceiros`, ... requestConfig })  
+  return res.data
 }
 
 export function parceirosControllerFindAllQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = parceirosControllerFindAllQueryKey()
-        return queryOptions<ParceirosControllerFindAllQueryResponse, ResponseErrorConfig<Error>, ParceirosControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return parceirosControllerFindAll(config)
-         },
-        })
-  
+  const queryKey = parceirosControllerFindAllQueryKey()
+  return queryOptions<ParceirosControllerFindAllQueryResponse, ResponseErrorConfig<Error>, ParceirosControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return parceirosControllerFindAll(config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function parceirosControllerFindAllQueryOptions(config: Partial<RequestCo
  * {@link /parceiros}
  */
 export function useParceirosControllerFindAll<TData = ParceirosControllerFindAllQueryResponse, TQueryData = ParceirosControllerFindAllQueryResponse, TQueryKey extends QueryKey = ParceirosControllerFindAllQueryKey>(options: 
-  {
-    query?: Partial<QueryObserverOptions<ParceirosControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? parceirosControllerFindAllQueryKey()
-  
-         const query = useQuery({
-          ...parceirosControllerFindAllQueryOptions(config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<ParceirosControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? parceirosControllerFindAllQueryKey()
+
+  const query = useQuery({
+   ...parceirosControllerFindAllQueryOptions(config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

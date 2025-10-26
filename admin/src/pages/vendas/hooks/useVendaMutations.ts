@@ -108,6 +108,12 @@ export const useVendaMutations = ({
 			tipo: VendaTipoEnum;
 			dataEntrega?: Date | null;
 			observacao?: string | null;
+			valorFrete?: number | null;
+			descontoTotal?: number | null;
+			comissao?: number | null;
+			numeroFatura?: string | null;
+			nomeFatura?: string | null;
+			ruccnpjFatura?: string | null;
 		}) => {
 			if (!parceiroIdNumber) {
 				showError(t("salesOrders.form.messages.partnerRequired"));
@@ -122,6 +128,12 @@ export const useVendaMutations = ({
 					? payload.dataEntrega.toISOString()
 					: undefined,
 				observacao: payload.observacao || undefined,
+				valorFrete: payload.valorFrete ?? undefined,
+				desconto: payload.descontoTotal ?? undefined,
+				valorComissao: payload.comissao ?? undefined,
+				numeroFatura: payload.numeroFatura || undefined,
+				nomeFatura: payload.nomeFatura || undefined,
+				ruccnpj: payload.ruccnpjFatura || undefined,
 			};
 
 			if (mode === "create" || !vendaResumo?.publicId) {

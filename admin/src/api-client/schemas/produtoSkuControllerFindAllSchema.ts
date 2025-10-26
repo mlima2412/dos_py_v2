@@ -4,17 +4,16 @@
 */
 
 import type { ProdutoSkuControllerFindAllHeaderParams, ProdutoSkuControllerFindAll200, ProdutoSkuControllerFindAllQueryResponse } from "../types/ProdutoSkuControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { produtoSKUSchema } from "./produtoSKUSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const produtoSkuControllerFindAllHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<ProdutoSkuControllerFindAllHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<ProdutoSkuControllerFindAllHeaderParams>
 
 /**
  * @description Lista de SKUs de produtos
  */
-export const produtoSkuControllerFindAll200Schema = z.array(z.lazy(() => produtoSKUSchema)) as unknown as ToZod<ProdutoSkuControllerFindAll200>
+export const produtoSkuControllerFindAll200Schema = z.array(produtoSKUSchema) as unknown as z.ZodType<ProdutoSkuControllerFindAll200>
 
-export const produtoSkuControllerFindAllQueryResponseSchema = z.lazy(() => produtoSkuControllerFindAll200Schema) as unknown as ToZod<ProdutoSkuControllerFindAllQueryResponse>
+export const produtoSkuControllerFindAllQueryResponseSchema = produtoSkuControllerFindAll200Schema as unknown as z.ZodType<ProdutoSkuControllerFindAllQueryResponse>

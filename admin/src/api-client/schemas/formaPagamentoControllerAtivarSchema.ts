@@ -4,26 +4,25 @@
 */
 
 import type { FormaPagamentoControllerAtivarPathParams, FormaPagamentoControllerAtivarHeaderParams, FormaPagamentoControllerAtivar200, FormaPagamentoControllerAtivar404, FormaPagamentoControllerAtivarMutationResponse } from "../types/FormaPagamentoControllerAtivar.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { formaPagamentoResponseDtoSchema } from "./formaPagamentoResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const formaPagamentoControllerAtivarPathParamsSchema = z.object({
-      "id": z.coerce.number().describe("ID da forma de pagamento")
-      }) as unknown as ToZod<FormaPagamentoControllerAtivarPathParams>
+    "id": z.coerce.number().describe("ID da forma de pagamento")
+    }) as unknown as z.ZodType<FormaPagamentoControllerAtivarPathParams>
 
 export const formaPagamentoControllerAtivarHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<FormaPagamentoControllerAtivarHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<FormaPagamentoControllerAtivarHeaderParams>
 
 /**
  * @description Forma de pagamento ativada com sucesso
  */
-export const formaPagamentoControllerAtivar200Schema = z.lazy(() => formaPagamentoResponseDtoSchema) as unknown as ToZod<FormaPagamentoControllerAtivar200>
+export const formaPagamentoControllerAtivar200Schema = formaPagamentoResponseDtoSchema as unknown as z.ZodType<FormaPagamentoControllerAtivar200>
 
 /**
  * @description Forma de pagamento não encontrada
  */
-export const formaPagamentoControllerAtivar404Schema = z.unknown() as unknown as ToZod<FormaPagamentoControllerAtivar404>
+export const formaPagamentoControllerAtivar404Schema = z.unknown() as unknown as z.ZodType<FormaPagamentoControllerAtivar404>
 
-export const formaPagamentoControllerAtivarMutationResponseSchema = z.lazy(() => formaPagamentoControllerAtivar200Schema) as unknown as ToZod<FormaPagamentoControllerAtivarMutationResponse>
+export const formaPagamentoControllerAtivarMutationResponseSchema = formaPagamentoControllerAtivar200Schema as unknown as z.ZodType<FormaPagamentoControllerAtivarMutationResponse>

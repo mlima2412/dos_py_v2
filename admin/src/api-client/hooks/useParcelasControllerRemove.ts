@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { ParcelasControllerRemoveMutationResponse, ParcelasControllerRemovePathParams } from "../types/ParcelasControllerRemove.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const parcelasControllerRemoveMutationKey = () =>   [{"url":"/parcelas/{id}"}] as const
+export const parcelasControllerRemoveMutationKey = () => [{ url: '/parcelas/:id' }] as const
 
 export type ParcelasControllerRemoveMutationKey = ReturnType<typeof parcelasControllerRemoveMutationKey>
 
@@ -18,11 +18,20 @@ export type ParcelasControllerRemoveMutationKey = ReturnType<typeof parcelasCont
  * {@link /parcelas/:id}
  */
 export async function parcelasControllerRemove(id: ParcelasControllerRemovePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ParcelasControllerRemoveMutationResponse, ResponseErrorConfig<Error>, unknown>({ method : "DELETE", url : `/parcelas/${id}`, ... requestConfig })  
+  return res.data
+}
 
-
-const res = await request<ParcelasControllerRemoveMutationResponse, ResponseErrorConfig<Error>, unknown>({ method : "DELETE", url : `/parcelas/${id}`, ... requestConfig })
-return res.data
+export function parcelasControllerRemoveMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = parcelasControllerRemoveMutationKey()
+  return mutationOptions<ParcelasControllerRemoveMutationResponse, ResponseErrorConfig<Error>, {id: ParcelasControllerRemovePathParams["id"]}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ id }) => {
+      return parcelasControllerRemove(id, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /parcelas/:id}
  */
 export function useParcelasControllerRemove<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<ParcelasControllerRemoveMutationResponse, ResponseErrorConfig<Error>, {id: ParcelasControllerRemovePathParams["id"]}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? parcelasControllerRemoveMutationKey()
-  
-          return useMutation<ParcelasControllerRemoveMutationResponse, ResponseErrorConfig<Error>, {id: ParcelasControllerRemovePathParams["id"]}, TContext>({
-            mutationFn: async({ id }) => {
-              return parcelasControllerRemove(id, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<ParcelasControllerRemoveMutationResponse, ResponseErrorConfig<Error>, {id: ParcelasControllerRemovePathParams["id"]}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? parcelasControllerRemoveMutationKey()
+
+  const baseOptions = parcelasControllerRemoveMutationOptions(config) as UseMutationOptions<ParcelasControllerRemoveMutationResponse, ResponseErrorConfig<Error>, {id: ParcelasControllerRemovePathParams["id"]}, TContext>
+
+  return useMutation<ParcelasControllerRemoveMutationResponse, ResponseErrorConfig<Error>, {id: ParcelasControllerRemovePathParams["id"]}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<ParcelasControllerRemoveMutationResponse, ResponseErrorConfig<Error>, {id: ParcelasControllerRemovePathParams["id"]}, TContext>
 }

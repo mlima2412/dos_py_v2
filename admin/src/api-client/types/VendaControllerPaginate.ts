@@ -14,7 +14,7 @@ export const vendaControllerPaginateQueryParamsStatusEnum = {
     "CANCELADA": "CANCELADA"
 } as const;
 
-export type VendaControllerPaginateQueryParamsStatusEnum = (typeof vendaControllerPaginateQueryParamsStatusEnum)[keyof typeof vendaControllerPaginateQueryParamsStatusEnum];
+export type VendaControllerPaginateQueryParamsStatusEnumKey = (typeof vendaControllerPaginateQueryParamsStatusEnum)[keyof typeof vendaControllerPaginateQueryParamsStatusEnum];
 
 export type VendaControllerPaginateQueryParams = {
     /**
@@ -33,7 +33,7 @@ export type VendaControllerPaginateQueryParams = {
      * @description Status opcional para filtro
      * @type string | undefined
     */
-    status?: VendaControllerPaginateQueryParamsStatusEnum;
+    status?: VendaControllerPaginateQueryParamsStatusEnumKey;
 };
 
 export type VendaControllerPaginateHeaderParams = {

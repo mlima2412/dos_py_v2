@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { PedidoCompraItemControllerUpdateMutationRequest, PedidoCompraItemControllerUpdateMutationResponse, PedidoCompraItemControllerUpdatePathParams, PedidoCompraItemControllerUpdateHeaderParams, PedidoCompraItemControllerUpdate404, PedidoCompraItemControllerUpdate409 } from "../types/PedidoCompraItemControllerUpdate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const pedidoCompraItemControllerUpdateMutationKey = () =>   [{"url":"/pedido-compra-item/{id}"}] as const
+export const pedidoCompraItemControllerUpdateMutationKey = () => [{ url: '/pedido-compra-item/:id' }] as const
 
 export type PedidoCompraItemControllerUpdateMutationKey = ReturnType<typeof pedidoCompraItemControllerUpdateMutationKey>
 
@@ -18,11 +18,22 @@ export type PedidoCompraItemControllerUpdateMutationKey = ReturnType<typeof pedi
  * {@link /pedido-compra-item/:id}
  */
 export async function pedidoCompraItemControllerUpdate(id: PedidoCompraItemControllerUpdatePathParams["id"], headers: PedidoCompraItemControllerUpdateHeaderParams, data?: PedidoCompraItemControllerUpdateMutationRequest, config: Partial<RequestConfig<PedidoCompraItemControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<PedidoCompraItemControllerUpdateMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerUpdate404 | PedidoCompraItemControllerUpdate409>, PedidoCompraItemControllerUpdateMutationRequest>({ method : "PATCH", url : `/pedido-compra-item/${id}`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<PedidoCompraItemControllerUpdateMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerUpdate404 | PedidoCompraItemControllerUpdate409>, PedidoCompraItemControllerUpdateMutationRequest>({ method : "PATCH", url : `/pedido-compra-item/${id}`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function pedidoCompraItemControllerUpdateMutationOptions(config: Partial<RequestConfig<PedidoCompraItemControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = pedidoCompraItemControllerUpdateMutationKey()
+  return mutationOptions<PedidoCompraItemControllerUpdateMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerUpdate404 | PedidoCompraItemControllerUpdate409>, {id: PedidoCompraItemControllerUpdatePathParams["id"], headers: PedidoCompraItemControllerUpdateHeaderParams, data?: PedidoCompraItemControllerUpdateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ id, headers, data }) => {
+      return pedidoCompraItemControllerUpdate(id, headers, data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /pedido-compra-item/:id}
  */
 export function usePedidoCompraItemControllerUpdate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<PedidoCompraItemControllerUpdateMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerUpdate404 | PedidoCompraItemControllerUpdate409>, {id: PedidoCompraItemControllerUpdatePathParams["id"], headers: PedidoCompraItemControllerUpdateHeaderParams, data?: PedidoCompraItemControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<PedidoCompraItemControllerUpdateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? pedidoCompraItemControllerUpdateMutationKey()
-  
-          return useMutation<PedidoCompraItemControllerUpdateMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerUpdate404 | PedidoCompraItemControllerUpdate409>, {id: PedidoCompraItemControllerUpdatePathParams["id"], headers: PedidoCompraItemControllerUpdateHeaderParams, data?: PedidoCompraItemControllerUpdateMutationRequest}, TContext>({
-            mutationFn: async({ id, headers, data }) => {
-              return pedidoCompraItemControllerUpdate(id, headers, data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<PedidoCompraItemControllerUpdateMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerUpdate404 | PedidoCompraItemControllerUpdate409>, {id: PedidoCompraItemControllerUpdatePathParams["id"], headers: PedidoCompraItemControllerUpdateHeaderParams, data?: PedidoCompraItemControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<PedidoCompraItemControllerUpdateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? pedidoCompraItemControllerUpdateMutationKey()
+
+  const baseOptions = pedidoCompraItemControllerUpdateMutationOptions(config) as UseMutationOptions<PedidoCompraItemControllerUpdateMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerUpdate404 | PedidoCompraItemControllerUpdate409>, {id: PedidoCompraItemControllerUpdatePathParams["id"], headers: PedidoCompraItemControllerUpdateHeaderParams, data?: PedidoCompraItemControllerUpdateMutationRequest}, TContext>
+
+  return useMutation<PedidoCompraItemControllerUpdateMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerUpdate404 | PedidoCompraItemControllerUpdate409>, {id: PedidoCompraItemControllerUpdatePathParams["id"], headers: PedidoCompraItemControllerUpdateHeaderParams, data?: PedidoCompraItemControllerUpdateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<PedidoCompraItemControllerUpdateMutationResponse, ResponseErrorConfig<PedidoCompraItemControllerUpdate404 | PedidoCompraItemControllerUpdate409>, {id: PedidoCompraItemControllerUpdatePathParams["id"], headers: PedidoCompraItemControllerUpdateHeaderParams, data?: PedidoCompraItemControllerUpdateMutationRequest}, TContext>
 }

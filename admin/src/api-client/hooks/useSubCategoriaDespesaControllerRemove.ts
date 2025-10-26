@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { SubCategoriaDespesaControllerRemoveMutationResponse, SubCategoriaDespesaControllerRemovePathParams, SubCategoriaDespesaControllerRemove401, SubCategoriaDespesaControllerRemove404 } from "../types/SubCategoriaDespesaControllerRemove.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const subCategoriaDespesaControllerRemoveMutationKey = () =>   [{"url":"/subcategoria-despesa/{id}"}] as const
+export const subCategoriaDespesaControllerRemoveMutationKey = () => [{ url: '/subcategoria-despesa/:id' }] as const
 
 export type SubCategoriaDespesaControllerRemoveMutationKey = ReturnType<typeof subCategoriaDespesaControllerRemoveMutationKey>
 
@@ -18,11 +18,20 @@ export type SubCategoriaDespesaControllerRemoveMutationKey = ReturnType<typeof s
  * {@link /subcategoria-despesa/:id}
  */
 export async function subCategoriaDespesaControllerRemove(id: SubCategoriaDespesaControllerRemovePathParams["id"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<SubCategoriaDespesaControllerRemoveMutationResponse, ResponseErrorConfig<SubCategoriaDespesaControllerRemove401 | SubCategoriaDespesaControllerRemove404>, unknown>({ method : "DELETE", url : `/subcategoria-despesa/${id}`, ... requestConfig })  
+  return res.data
+}
 
-
-const res = await request<SubCategoriaDespesaControllerRemoveMutationResponse, ResponseErrorConfig<SubCategoriaDespesaControllerRemove401 | SubCategoriaDespesaControllerRemove404>, unknown>({ method : "DELETE", url : `/subcategoria-despesa/${id}`, ... requestConfig })
-return res.data
+export function subCategoriaDespesaControllerRemoveMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = subCategoriaDespesaControllerRemoveMutationKey()
+  return mutationOptions<SubCategoriaDespesaControllerRemoveMutationResponse, ResponseErrorConfig<SubCategoriaDespesaControllerRemove401 | SubCategoriaDespesaControllerRemove404>, {id: SubCategoriaDespesaControllerRemovePathParams["id"]}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ id }) => {
+      return subCategoriaDespesaControllerRemove(id, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /subcategoria-despesa/:id}
  */
 export function useSubCategoriaDespesaControllerRemove<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<SubCategoriaDespesaControllerRemoveMutationResponse, ResponseErrorConfig<SubCategoriaDespesaControllerRemove401 | SubCategoriaDespesaControllerRemove404>, {id: SubCategoriaDespesaControllerRemovePathParams["id"]}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? subCategoriaDespesaControllerRemoveMutationKey()
-  
-          return useMutation<SubCategoriaDespesaControllerRemoveMutationResponse, ResponseErrorConfig<SubCategoriaDespesaControllerRemove401 | SubCategoriaDespesaControllerRemove404>, {id: SubCategoriaDespesaControllerRemovePathParams["id"]}, TContext>({
-            mutationFn: async({ id }) => {
-              return subCategoriaDespesaControllerRemove(id, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<SubCategoriaDespesaControllerRemoveMutationResponse, ResponseErrorConfig<SubCategoriaDespesaControllerRemove401 | SubCategoriaDespesaControllerRemove404>, {id: SubCategoriaDespesaControllerRemovePathParams["id"]}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? subCategoriaDespesaControllerRemoveMutationKey()
+
+  const baseOptions = subCategoriaDespesaControllerRemoveMutationOptions(config) as UseMutationOptions<SubCategoriaDespesaControllerRemoveMutationResponse, ResponseErrorConfig<SubCategoriaDespesaControllerRemove401 | SubCategoriaDespesaControllerRemove404>, {id: SubCategoriaDespesaControllerRemovePathParams["id"]}, TContext>
+
+  return useMutation<SubCategoriaDespesaControllerRemoveMutationResponse, ResponseErrorConfig<SubCategoriaDespesaControllerRemove401 | SubCategoriaDespesaControllerRemove404>, {id: SubCategoriaDespesaControllerRemovePathParams["id"]}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<SubCategoriaDespesaControllerRemoveMutationResponse, ResponseErrorConfig<SubCategoriaDespesaControllerRemove401 | SubCategoriaDespesaControllerRemove404>, {id: SubCategoriaDespesaControllerRemovePathParams["id"]}, TContext>
 }

@@ -4,31 +4,30 @@
 */
 
 import type { CurrencyControllerCreate201, CurrencyControllerCreate400, CurrencyControllerCreate401, CurrencyControllerCreate409, CurrencyControllerCreateMutationRequest, CurrencyControllerCreateMutationResponse } from "../types/CurrencyControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createCurrencyDtoSchema } from "./createCurrencyDtoSchema.ts";
 import { currencySchema } from "./currencySchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Moeda criada com sucesso
  */
-export const currencyControllerCreate201Schema = z.lazy(() => currencySchema) as unknown as ToZod<CurrencyControllerCreate201>
+export const currencyControllerCreate201Schema = currencySchema as unknown as z.ZodType<CurrencyControllerCreate201>
 
 /**
  * @description Dados inválidos
  */
-export const currencyControllerCreate400Schema = z.unknown() as unknown as ToZod<CurrencyControllerCreate400>
+export const currencyControllerCreate400Schema = z.unknown() as unknown as z.ZodType<CurrencyControllerCreate400>
 
 /**
  * @description Não autorizado
  */
-export const currencyControllerCreate401Schema = z.unknown() as unknown as ToZod<CurrencyControllerCreate401>
+export const currencyControllerCreate401Schema = z.unknown() as unknown as z.ZodType<CurrencyControllerCreate401>
 
 /**
  * @description Código ISO já existe
  */
-export const currencyControllerCreate409Schema = z.unknown() as unknown as ToZod<CurrencyControllerCreate409>
+export const currencyControllerCreate409Schema = z.unknown() as unknown as z.ZodType<CurrencyControllerCreate409>
 
-export const currencyControllerCreateMutationRequestSchema = z.lazy(() => createCurrencyDtoSchema) as unknown as ToZod<CurrencyControllerCreateMutationRequest>
+export const currencyControllerCreateMutationRequestSchema = createCurrencyDtoSchema as unknown as z.ZodType<CurrencyControllerCreateMutationRequest>
 
-export const currencyControllerCreateMutationResponseSchema = z.lazy(() => currencyControllerCreate201Schema) as unknown as ToZod<CurrencyControllerCreateMutationResponse>
+export const currencyControllerCreateMutationResponseSchema = currencyControllerCreate201Schema as unknown as z.ZodType<CurrencyControllerCreateMutationResponse>

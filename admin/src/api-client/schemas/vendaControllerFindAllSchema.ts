@@ -4,17 +4,16 @@
 */
 
 import type { VendaControllerFindAllHeaderParams, VendaControllerFindAll200, VendaControllerFindAllQueryResponse } from "../types/VendaControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { vendaSchema } from "./vendaSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const vendaControllerFindAllHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<VendaControllerFindAllHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<VendaControllerFindAllHeaderParams>
 
 /**
  * @description Lista de vendas
  */
-export const vendaControllerFindAll200Schema = z.array(z.lazy(() => vendaSchema)) as unknown as ToZod<VendaControllerFindAll200>
+export const vendaControllerFindAll200Schema = z.array(vendaSchema) as unknown as z.ZodType<VendaControllerFindAll200>
 
-export const vendaControllerFindAllQueryResponseSchema = z.lazy(() => vendaControllerFindAll200Schema) as unknown as ToZod<VendaControllerFindAllQueryResponse>
+export const vendaControllerFindAllQueryResponseSchema = vendaControllerFindAll200Schema as unknown as z.ZodType<VendaControllerFindAllQueryResponse>

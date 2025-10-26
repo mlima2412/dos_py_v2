@@ -4,23 +4,22 @@
 */
 
 import type { VendaControllerPaginateQueryParams, VendaControllerPaginateHeaderParams, VendaControllerPaginate200, VendaControllerPaginateQueryResponse } from "../types/VendaControllerPaginate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { paginatedVendaResponseDtoSchema } from "./paginatedVendaResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const vendaControllerPaginateQueryParamsSchema = z.object({
-      "page": z.coerce.number().default(1).describe("Página atual"),
-  "limit": z.coerce.number().default(10).describe("Quantidade de itens por página"),
-  "status": z.enum(["PEDIDO", "ABERTA", "CONFIRMADA", "CONFIRMADA_PARCIAL", "CONFIRMADA_TOTAL", "CANCELADA"]).describe("Status opcional para filtro").optional()
-      }) as unknown as ToZod<VendaControllerPaginateQueryParams>
+    "page": z.optional(z.coerce.number().default(1).describe("Página atual")),
+"limit": z.optional(z.coerce.number().default(10).describe("Quantidade de itens por página")),
+"status": z.optional(z.enum(["PEDIDO", "ABERTA", "CONFIRMADA", "CONFIRMADA_PARCIAL", "CONFIRMADA_TOTAL", "CANCELADA"]).describe("Status opcional para filtro"))
+    }) as unknown as z.ZodType<VendaControllerPaginateQueryParams>
 
 export const vendaControllerPaginateHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<VendaControllerPaginateHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<VendaControllerPaginateHeaderParams>
 
 /**
  * @description Vendas paginadas
  */
-export const vendaControllerPaginate200Schema = z.lazy(() => paginatedVendaResponseDtoSchema) as unknown as ToZod<VendaControllerPaginate200>
+export const vendaControllerPaginate200Schema = paginatedVendaResponseDtoSchema as unknown as z.ZodType<VendaControllerPaginate200>
 
-export const vendaControllerPaginateQueryResponseSchema = z.lazy(() => vendaControllerPaginate200Schema) as unknown as ToZod<VendaControllerPaginateQueryResponse>
+export const vendaControllerPaginateQueryResponseSchema = vendaControllerPaginate200Schema as unknown as z.ZodType<VendaControllerPaginateQueryResponse>

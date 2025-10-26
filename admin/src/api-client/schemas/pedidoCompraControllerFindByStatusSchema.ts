@@ -4,21 +4,20 @@
 */
 
 import type { PedidoCompraControllerFindByStatusPathParams, PedidoCompraControllerFindByStatusHeaderParams, PedidoCompraControllerFindByStatus200, PedidoCompraControllerFindByStatusQueryResponse } from "../types/PedidoCompraControllerFindByStatus.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { pedidoCompraSchema } from "./pedidoCompraSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const pedidoCompraControllerFindByStatusPathParamsSchema = z.object({
-      "status": z.union([z.literal(1), z.literal(2), z.literal(3)]).describe("Status do pedido de compra")
-      }) as unknown as ToZod<PedidoCompraControllerFindByStatusPathParams>
+    "status": z.union([z.literal(1), z.literal(2), z.literal(3)]).describe("Status do pedido de compra")
+    }) as unknown as z.ZodType<PedidoCompraControllerFindByStatusPathParams>
 
 export const pedidoCompraControllerFindByStatusHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
-      }) as unknown as ToZod<PedidoCompraControllerFindByStatusHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+    }) as unknown as z.ZodType<PedidoCompraControllerFindByStatusHeaderParams>
 
 /**
  * @description Lista de pedidos de compra por status retornada com sucesso
  */
-export const pedidoCompraControllerFindByStatus200Schema = z.array(z.lazy(() => pedidoCompraSchema)) as unknown as ToZod<PedidoCompraControllerFindByStatus200>
+export const pedidoCompraControllerFindByStatus200Schema = z.array(pedidoCompraSchema) as unknown as z.ZodType<PedidoCompraControllerFindByStatus200>
 
-export const pedidoCompraControllerFindByStatusQueryResponseSchema = z.lazy(() => pedidoCompraControllerFindByStatus200Schema) as unknown as ToZod<PedidoCompraControllerFindByStatusQueryResponse>
+export const pedidoCompraControllerFindByStatusQueryResponseSchema = pedidoCompraControllerFindByStatus200Schema as unknown as z.ZodType<PedidoCompraControllerFindByStatusQueryResponse>

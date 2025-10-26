@@ -4,16 +4,15 @@
 */
 
 import type { ParcelamentoControllerCreate201, ParcelamentoControllerCreateMutationRequest, ParcelamentoControllerCreateMutationResponse } from "../types/ParcelamentoControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createParcelamentoDtoSchema } from "./createParcelamentoDtoSchema.ts";
 import { parcelamentoSchema } from "./parcelamentoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Parcelamento criado
  */
-export const parcelamentoControllerCreate201Schema = z.lazy(() => parcelamentoSchema) as unknown as ToZod<ParcelamentoControllerCreate201>
+export const parcelamentoControllerCreate201Schema = parcelamentoSchema as unknown as z.ZodType<ParcelamentoControllerCreate201>
 
-export const parcelamentoControllerCreateMutationRequestSchema = z.lazy(() => createParcelamentoDtoSchema) as unknown as ToZod<ParcelamentoControllerCreateMutationRequest>
+export const parcelamentoControllerCreateMutationRequestSchema = createParcelamentoDtoSchema as unknown as z.ZodType<ParcelamentoControllerCreateMutationRequest>
 
-export const parcelamentoControllerCreateMutationResponseSchema = z.lazy(() => parcelamentoControllerCreate201Schema) as unknown as ToZod<ParcelamentoControllerCreateMutationResponse>
+export const parcelamentoControllerCreateMutationResponseSchema = parcelamentoControllerCreate201Schema as unknown as z.ZodType<ParcelamentoControllerCreateMutationResponse>

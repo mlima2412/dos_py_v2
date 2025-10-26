@@ -4,22 +4,21 @@
 */
 
 import type { EstoqueSkuControllerRemovePathParams, EstoqueSkuControllerRemove204, EstoqueSkuControllerRemove404, EstoqueSkuControllerRemoveMutationResponse } from "../types/EstoqueSkuControllerRemove.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const estoqueSkuControllerRemovePathParamsSchema = z.object({
-      "localId": z.coerce.number().describe("ID do local de estoque"),
-  "skuId": z.coerce.number().describe("ID do SKU")
-      }) as unknown as ToZod<EstoqueSkuControllerRemovePathParams>
+    "localId": z.coerce.number().describe("ID do local de estoque"),
+"skuId": z.coerce.number().describe("ID do SKU")
+    }) as unknown as z.ZodType<EstoqueSkuControllerRemovePathParams>
 
 /**
  * @description Registro de estoque excluído com sucesso
  */
-export const estoqueSkuControllerRemove204Schema = z.unknown() as unknown as ToZod<EstoqueSkuControllerRemove204>
+export const estoqueSkuControllerRemove204Schema = z.unknown() as unknown as z.ZodType<EstoqueSkuControllerRemove204>
 
 /**
  * @description Registro de estoque não encontrado
  */
-export const estoqueSkuControllerRemove404Schema = z.unknown() as unknown as ToZod<EstoqueSkuControllerRemove404>
+export const estoqueSkuControllerRemove404Schema = z.unknown() as unknown as z.ZodType<EstoqueSkuControllerRemove404>
 
-export const estoqueSkuControllerRemoveMutationResponseSchema = z.lazy(() => estoqueSkuControllerRemove204Schema) as unknown as ToZod<EstoqueSkuControllerRemoveMutationResponse>
+export const estoqueSkuControllerRemoveMutationResponseSchema = estoqueSkuControllerRemove204Schema as unknown as z.ZodType<EstoqueSkuControllerRemoveMutationResponse>

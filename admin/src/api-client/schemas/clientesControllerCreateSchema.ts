@@ -4,26 +4,25 @@
 */
 
 import type { ClientesControllerCreate201, ClientesControllerCreate400, ClientesControllerCreate409, ClientesControllerCreateMutationRequest, ClientesControllerCreateMutationResponse } from "../types/ClientesControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { clienteSchema } from "./clienteSchema.ts";
 import { createClienteDtoSchema } from "./createClienteDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Cliente criado com sucesso
  */
-export const clientesControllerCreate201Schema = z.lazy(() => clienteSchema) as unknown as ToZod<ClientesControllerCreate201>
+export const clientesControllerCreate201Schema = clienteSchema as unknown as z.ZodType<ClientesControllerCreate201>
 
 /**
  * @description Dados inválidos
  */
-export const clientesControllerCreate400Schema = z.unknown() as unknown as ToZod<ClientesControllerCreate400>
+export const clientesControllerCreate400Schema = z.unknown() as unknown as z.ZodType<ClientesControllerCreate400>
 
 /**
  * @description Email já está em uso
  */
-export const clientesControllerCreate409Schema = z.unknown() as unknown as ToZod<ClientesControllerCreate409>
+export const clientesControllerCreate409Schema = z.unknown() as unknown as z.ZodType<ClientesControllerCreate409>
 
-export const clientesControllerCreateMutationRequestSchema = z.lazy(() => createClienteDtoSchema) as unknown as ToZod<ClientesControllerCreateMutationRequest>
+export const clientesControllerCreateMutationRequestSchema = createClienteDtoSchema as unknown as z.ZodType<ClientesControllerCreateMutationRequest>
 
-export const clientesControllerCreateMutationResponseSchema = z.lazy(() => clientesControllerCreate201Schema) as unknown as ToZod<ClientesControllerCreateMutationResponse>
+export const clientesControllerCreateMutationResponseSchema = clientesControllerCreate201Schema as unknown as z.ZodType<ClientesControllerCreateMutationResponse>

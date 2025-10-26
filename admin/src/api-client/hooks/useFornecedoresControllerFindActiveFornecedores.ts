@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const fornecedoresControllerFindActiveFornecedoresQueryKey = () =>   [{ url: '/fornecedores/ativos' }] as const
+export const fornecedoresControllerFindActiveFornecedoresQueryKey = () => [{ url: '/fornecedores/ativos' }] as const
 
 export type FornecedoresControllerFindActiveFornecedoresQueryKey = ReturnType<typeof fornecedoresControllerFindActiveFornecedoresQueryKey>
 
@@ -18,25 +18,22 @@ export type FornecedoresControllerFindActiveFornecedoresQueryKey = ReturnType<ty
  * {@link /fornecedores/ativos}
  */
 export async function fornecedoresControllerFindActiveFornecedores(headers: FornecedoresControllerFindActiveFornecedoresHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<FornecedoresControllerFindActiveFornecedoresQueryResponse, ResponseErrorConfig<FornecedoresControllerFindActiveFornecedores400>, unknown>({ method : "GET", url : `/fornecedores/ativos`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<FornecedoresControllerFindActiveFornecedoresQueryResponse, ResponseErrorConfig<FornecedoresControllerFindActiveFornecedores400>, unknown>({ method : "GET", url : `/fornecedores/ativos`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function fornecedoresControllerFindActiveFornecedoresQueryOptions(headers: FornecedoresControllerFindActiveFornecedoresHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = fornecedoresControllerFindActiveFornecedoresQueryKey()
-        return queryOptions<FornecedoresControllerFindActiveFornecedoresQueryResponse, ResponseErrorConfig<FornecedoresControllerFindActiveFornecedores400>, FornecedoresControllerFindActiveFornecedoresQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return fornecedoresControllerFindActiveFornecedores(headers, config)
-         },
-        })
-  
+  const queryKey = fornecedoresControllerFindActiveFornecedoresQueryKey()
+  return queryOptions<FornecedoresControllerFindActiveFornecedoresQueryResponse, ResponseErrorConfig<FornecedoresControllerFindActiveFornecedores400>, FornecedoresControllerFindActiveFornecedoresQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return fornecedoresControllerFindActiveFornecedores(headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function fornecedoresControllerFindActiveFornecedoresQueryOptions(headers
  * {@link /fornecedores/ativos}
  */
 export function useFornecedoresControllerFindActiveFornecedores<TData = FornecedoresControllerFindActiveFornecedoresQueryResponse, TQueryData = FornecedoresControllerFindActiveFornecedoresQueryResponse, TQueryKey extends QueryKey = FornecedoresControllerFindActiveFornecedoresQueryKey>(headers: FornecedoresControllerFindActiveFornecedoresHeaderParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<FornecedoresControllerFindActiveFornecedoresQueryResponse, ResponseErrorConfig<FornecedoresControllerFindActiveFornecedores400>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? fornecedoresControllerFindActiveFornecedoresQueryKey()
-  
-         const query = useQuery({
-          ...fornecedoresControllerFindActiveFornecedoresQueryOptions(headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<FornecedoresControllerFindActiveFornecedores400>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<FornecedoresControllerFindActiveFornecedoresQueryResponse, ResponseErrorConfig<FornecedoresControllerFindActiveFornecedores400>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? fornecedoresControllerFindActiveFornecedoresQueryKey()
+
+  const query = useQuery({
+   ...fornecedoresControllerFindActiveFornecedoresQueryOptions(headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<FornecedoresControllerFindActiveFornecedores400>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { LocalEstoqueControllerRemoveMutationResponse, LocalEstoqueControllerRemovePathParams, LocalEstoqueControllerRemove404, LocalEstoqueControllerRemove409 } from "../types/LocalEstoqueControllerRemove.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const localEstoqueControllerRemoveMutationKey = () =>   [{"url":"/local-estoque/{publicId}"}] as const
+export const localEstoqueControllerRemoveMutationKey = () => [{ url: '/local-estoque/:publicId' }] as const
 
 export type LocalEstoqueControllerRemoveMutationKey = ReturnType<typeof localEstoqueControllerRemoveMutationKey>
 
@@ -18,11 +18,20 @@ export type LocalEstoqueControllerRemoveMutationKey = ReturnType<typeof localEst
  * {@link /local-estoque/:publicId}
  */
 export async function localEstoqueControllerRemove(publicId: LocalEstoqueControllerRemovePathParams["publicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<LocalEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<LocalEstoqueControllerRemove404 | LocalEstoqueControllerRemove409>, unknown>({ method : "DELETE", url : `/local-estoque/${publicId}`, ... requestConfig })  
+  return res.data
+}
 
-
-const res = await request<LocalEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<LocalEstoqueControllerRemove404 | LocalEstoqueControllerRemove409>, unknown>({ method : "DELETE", url : `/local-estoque/${publicId}`, ... requestConfig })
-return res.data
+export function localEstoqueControllerRemoveMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = localEstoqueControllerRemoveMutationKey()
+  return mutationOptions<LocalEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<LocalEstoqueControllerRemove404 | LocalEstoqueControllerRemove409>, {publicId: LocalEstoqueControllerRemovePathParams["publicId"]}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId }) => {
+      return localEstoqueControllerRemove(publicId, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /local-estoque/:publicId}
  */
 export function useLocalEstoqueControllerRemove<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<LocalEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<LocalEstoqueControllerRemove404 | LocalEstoqueControllerRemove409>, {publicId: LocalEstoqueControllerRemovePathParams["publicId"]}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? localEstoqueControllerRemoveMutationKey()
-  
-          return useMutation<LocalEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<LocalEstoqueControllerRemove404 | LocalEstoqueControllerRemove409>, {publicId: LocalEstoqueControllerRemovePathParams["publicId"]}, TContext>({
-            mutationFn: async({ publicId }) => {
-              return localEstoqueControllerRemove(publicId, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<LocalEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<LocalEstoqueControllerRemove404 | LocalEstoqueControllerRemove409>, {publicId: LocalEstoqueControllerRemovePathParams["publicId"]}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? localEstoqueControllerRemoveMutationKey()
+
+  const baseOptions = localEstoqueControllerRemoveMutationOptions(config) as UseMutationOptions<LocalEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<LocalEstoqueControllerRemove404 | LocalEstoqueControllerRemove409>, {publicId: LocalEstoqueControllerRemovePathParams["publicId"]}, TContext>
+
+  return useMutation<LocalEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<LocalEstoqueControllerRemove404 | LocalEstoqueControllerRemove409>, {publicId: LocalEstoqueControllerRemovePathParams["publicId"]}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<LocalEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<LocalEstoqueControllerRemove404 | LocalEstoqueControllerRemove409>, {publicId: LocalEstoqueControllerRemovePathParams["publicId"]}, TContext>
 }

@@ -4,32 +4,41 @@
 */
 
 import type { Produto } from "../types/Produto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { categoriaProdutoSchema } from "./categoriaProdutoSchema.ts";
 import { currencySchema } from "./currencySchema.ts";
 import { fornecedorSchema } from "./fornecedorSchema.ts";
 import { parceiroSchema } from "./parceiroSchema.ts";
 import { produtoSKUSchema } from "./produtoSKUSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const produtoSchema = z.object({
-      "id": z.coerce.number().describe("ID único do produto"),
-  "publicId": z.coerce.string().describe("ID público do produto"),
-  "nome": z.coerce.string().describe("Nome do produto"),
-  "dataCadastro": z.string().datetime().describe("Data de cadastro do produto"),
-  "ativo": z.boolean().describe("Status ativo do produto"),
-  "consignado": z.boolean().describe("Se o produto é consignado"),
-  "categoriaId": z.coerce.number().describe("ID da categoria do produto").optional(),
-  "descricao": z.coerce.string().describe("Descrição do produto").optional(),
-  "imgURL": z.coerce.string().describe("URL da imagem do produto").optional(),
-  "precoCompra": z.coerce.number().describe("Preço de compra do produto"),
-  "precoVenda": z.coerce.number().describe("Preço de venda do produto"),
-  "parceiroId": z.coerce.number().describe("ID do parceiro proprietário"),
-  "fornecedorId": z.coerce.number().describe("ID do fornecedor do produto").optional(),
-  "currencyId": z.coerce.number().describe("ID da moeda do produto").optional(),
-  "categoria": z.lazy(() => categoriaProdutoSchema).describe("Categoria do produto").optional(),
-  "Parceiro": z.lazy(() => parceiroSchema).describe("Parceiro proprietário do produto"),
-  "fornecedor": z.lazy(() => fornecedorSchema).describe("Fornecedor do produto").optional(),
-  "currency": z.lazy(() => currencySchema).describe("Moeda do produto").optional(),
-  "ProdutoSKU": z.array(z.lazy(() => produtoSKUSchema)).describe("SKUs do produto").optional()
-      }) as unknown as ToZod<Produto>
+    "id": z.coerce.number().describe("ID único do produto"),
+"publicId": z.coerce.string().describe("ID público do produto"),
+"nome": z.coerce.string().describe("Nome do produto"),
+"dataCadastro": z.string().datetime().describe("Data de cadastro do produto"),
+"ativo": z.boolean().describe("Status ativo do produto"),
+"consignado": z.boolean().describe("Se o produto é consignado"),
+"categoriaId": z.optional(z.coerce.number().describe("ID da categoria do produto")),
+"descricao": z.optional(z.coerce.string().describe("Descrição do produto")),
+"imgURL": z.optional(z.coerce.string().describe("URL da imagem do produto")),
+"precoCompra": z.coerce.number().describe("Preço de compra do produto"),
+"precoVenda": z.coerce.number().describe("Preço de venda do produto"),
+"parceiroId": z.coerce.number().describe("ID do parceiro proprietário"),
+"fornecedorId": z.optional(z.coerce.number().describe("ID do fornecedor do produto")),
+"currencyId": z.optional(z.coerce.number().describe("ID da moeda do produto")),
+get "categoria"(){
+                return z.optional(categoriaProdutoSchema.describe("Categoria do produto"))
+              },
+get "Parceiro"(){
+                return parceiroSchema.describe("Parceiro proprietário do produto")
+              },
+get "fornecedor"(){
+                return z.optional(fornecedorSchema.describe("Fornecedor do produto"))
+              },
+get "currency"(){
+                return z.optional(currencySchema.describe("Moeda do produto"))
+              },
+get "ProdutoSKU"(){
+                return z.optional(z.array(produtoSKUSchema).describe("SKUs do produto"))
+              }
+    }) as unknown as z.ZodType<Produto>

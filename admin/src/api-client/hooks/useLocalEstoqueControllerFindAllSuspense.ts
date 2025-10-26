@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const localEstoqueControllerFindAllSuspenseQueryKey = () =>   [{ url: '/local-estoque' }] as const
+export const localEstoqueControllerFindAllSuspenseQueryKey = () => [{ url: '/local-estoque' }] as const
 
 export type LocalEstoqueControllerFindAllSuspenseQueryKey = ReturnType<typeof localEstoqueControllerFindAllSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type LocalEstoqueControllerFindAllSuspenseQueryKey = ReturnType<typeof lo
  * {@link /local-estoque}
  */
 export async function localEstoqueControllerFindAllSuspense(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<LocalEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/local-estoque`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<LocalEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/local-estoque`, ... requestConfig })  
+  return res.data
 }
 
 export function localEstoqueControllerFindAllSuspenseQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = localEstoqueControllerFindAllSuspenseQueryKey()
-        return queryOptions<LocalEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, LocalEstoqueControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return localEstoqueControllerFindAllSuspense(config)
-         },
-        })
-  
+  const queryKey = localEstoqueControllerFindAllSuspenseQueryKey()
+  return queryOptions<LocalEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, LocalEstoqueControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return localEstoqueControllerFindAllSuspense(config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function localEstoqueControllerFindAllSuspenseQueryOptions(config: Partia
  * {@link /local-estoque}
  */
 export function useLocalEstoqueControllerFindAllSuspense<TData = LocalEstoqueControllerFindAllQueryResponse, TQueryKey extends QueryKey = LocalEstoqueControllerFindAllSuspenseQueryKey>(options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<LocalEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? localEstoqueControllerFindAllSuspenseQueryKey()
-  
-         const query = useSuspenseQuery({
-          ...localEstoqueControllerFindAllSuspenseQueryOptions(config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<LocalEstoqueControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? localEstoqueControllerFindAllSuspenseQueryKey()
+
+  const query = useSuspenseQuery({
+   ...localEstoqueControllerFindAllSuspenseQueryOptions(config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

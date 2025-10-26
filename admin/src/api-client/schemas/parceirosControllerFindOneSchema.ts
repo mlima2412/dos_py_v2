@@ -4,22 +4,21 @@
 */
 
 import type { ParceirosControllerFindOnePathParams, ParceirosControllerFindOne200, ParceirosControllerFindOne404, ParceirosControllerFindOneQueryResponse } from "../types/ParceirosControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { parceiroSchema } from "./parceiroSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const parceirosControllerFindOnePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do parceiro")
-      }) as unknown as ToZod<ParceirosControllerFindOnePathParams>
+    "publicId": z.string().describe("ID público do parceiro")
+    }) as unknown as z.ZodType<ParceirosControllerFindOnePathParams>
 
 /**
  * @description Dados do parceiro
  */
-export const parceirosControllerFindOne200Schema = z.lazy(() => parceiroSchema) as unknown as ToZod<ParceirosControllerFindOne200>
+export const parceirosControllerFindOne200Schema = parceiroSchema as unknown as z.ZodType<ParceirosControllerFindOne200>
 
 /**
  * @description Parceiro não encontrado
  */
-export const parceirosControllerFindOne404Schema = z.unknown() as unknown as ToZod<ParceirosControllerFindOne404>
+export const parceirosControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<ParceirosControllerFindOne404>
 
-export const parceirosControllerFindOneQueryResponseSchema = z.lazy(() => parceirosControllerFindOne200Schema) as unknown as ToZod<ParceirosControllerFindOneQueryResponse>
+export const parceirosControllerFindOneQueryResponseSchema = parceirosControllerFindOne200Schema as unknown as z.ZodType<ParceirosControllerFindOneQueryResponse>

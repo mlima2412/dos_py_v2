@@ -4,26 +4,25 @@
 */
 
 import type { SubCategoriaDespesaControllerRemovePathParams, SubCategoriaDespesaControllerRemove200, SubCategoriaDespesaControllerRemove401, SubCategoriaDespesaControllerRemove404, SubCategoriaDespesaControllerRemoveMutationResponse } from "../types/SubCategoriaDespesaControllerRemove.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const subCategoriaDespesaControllerRemovePathParamsSchema = z.object({
-      "id": z.coerce.number().describe("ID da subcategoria de despesas")
-      }) as unknown as ToZod<SubCategoriaDespesaControllerRemovePathParams>
+    "id": z.coerce.number().describe("ID da subcategoria de despesas")
+    }) as unknown as z.ZodType<SubCategoriaDespesaControllerRemovePathParams>
 
 /**
  * @description Subcategoria de despesas removida com sucesso
  */
-export const subCategoriaDespesaControllerRemove200Schema = z.unknown() as unknown as ToZod<SubCategoriaDespesaControllerRemove200>
+export const subCategoriaDespesaControllerRemove200Schema = z.unknown() as unknown as z.ZodType<SubCategoriaDespesaControllerRemove200>
 
 /**
  * @description Não autorizado
  */
-export const subCategoriaDespesaControllerRemove401Schema = z.unknown() as unknown as ToZod<SubCategoriaDespesaControllerRemove401>
+export const subCategoriaDespesaControllerRemove401Schema = z.unknown() as unknown as z.ZodType<SubCategoriaDespesaControllerRemove401>
 
 /**
  * @description Subcategoria de despesas não encontrada
  */
-export const subCategoriaDespesaControllerRemove404Schema = z.unknown() as unknown as ToZod<SubCategoriaDespesaControllerRemove404>
+export const subCategoriaDespesaControllerRemove404Schema = z.unknown() as unknown as z.ZodType<SubCategoriaDespesaControllerRemove404>
 
-export const subCategoriaDespesaControllerRemoveMutationResponseSchema = z.lazy(() => subCategoriaDespesaControllerRemove200Schema) as unknown as ToZod<SubCategoriaDespesaControllerRemoveMutationResponse>
+export const subCategoriaDespesaControllerRemoveMutationResponseSchema = subCategoriaDespesaControllerRemove200Schema as unknown as z.ZodType<SubCategoriaDespesaControllerRemoveMutationResponse>

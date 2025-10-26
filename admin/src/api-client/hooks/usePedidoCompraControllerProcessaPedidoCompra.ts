@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { PedidoCompraControllerProcessaPedidoCompraMutationRequest, PedidoCompraControllerProcessaPedidoCompraMutationResponse, PedidoCompraControllerProcessaPedidoCompraHeaderParams, PedidoCompraControllerProcessaPedidoCompra400, PedidoCompraControllerProcessaPedidoCompra404, PedidoCompraControllerProcessaPedidoCompra409 } from "../types/PedidoCompraControllerProcessaPedidoCompra.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const pedidoCompraControllerProcessaPedidoCompraMutationKey = () =>   [{"url":"/pedido-compra/processa-pedido-compra"}] as const
+export const pedidoCompraControllerProcessaPedidoCompraMutationKey = () => [{ url: '/pedido-compra/processa-pedido-compra' }] as const
 
 export type PedidoCompraControllerProcessaPedidoCompraMutationKey = ReturnType<typeof pedidoCompraControllerProcessaPedidoCompraMutationKey>
 
@@ -18,11 +18,22 @@ export type PedidoCompraControllerProcessaPedidoCompraMutationKey = ReturnType<t
  * {@link /pedido-compra/processa-pedido-compra}
  */
 export async function pedidoCompraControllerProcessaPedidoCompra(data: PedidoCompraControllerProcessaPedidoCompraMutationRequest, headers: PedidoCompraControllerProcessaPedidoCompraHeaderParams, config: Partial<RequestConfig<PedidoCompraControllerProcessaPedidoCompraMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<PedidoCompraControllerProcessaPedidoCompraMutationResponse, ResponseErrorConfig<PedidoCompraControllerProcessaPedidoCompra400 | PedidoCompraControllerProcessaPedidoCompra404 | PedidoCompraControllerProcessaPedidoCompra409>, PedidoCompraControllerProcessaPedidoCompraMutationRequest>({ method : "POST", url : `/pedido-compra/processa-pedido-compra`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<PedidoCompraControllerProcessaPedidoCompraMutationResponse, ResponseErrorConfig<PedidoCompraControllerProcessaPedidoCompra400 | PedidoCompraControllerProcessaPedidoCompra404 | PedidoCompraControllerProcessaPedidoCompra409>, PedidoCompraControllerProcessaPedidoCompraMutationRequest>({ method : "POST", url : `/pedido-compra/processa-pedido-compra`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function pedidoCompraControllerProcessaPedidoCompraMutationOptions(config: Partial<RequestConfig<PedidoCompraControllerProcessaPedidoCompraMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = pedidoCompraControllerProcessaPedidoCompraMutationKey()
+  return mutationOptions<PedidoCompraControllerProcessaPedidoCompraMutationResponse, ResponseErrorConfig<PedidoCompraControllerProcessaPedidoCompra400 | PedidoCompraControllerProcessaPedidoCompra404 | PedidoCompraControllerProcessaPedidoCompra409>, {data: PedidoCompraControllerProcessaPedidoCompraMutationRequest, headers: PedidoCompraControllerProcessaPedidoCompraHeaderParams}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data, headers }) => {
+      return pedidoCompraControllerProcessaPedidoCompra(data, headers, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /pedido-compra/processa-pedido-compra}
  */
 export function usePedidoCompraControllerProcessaPedidoCompra<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<PedidoCompraControllerProcessaPedidoCompraMutationResponse, ResponseErrorConfig<PedidoCompraControllerProcessaPedidoCompra400 | PedidoCompraControllerProcessaPedidoCompra404 | PedidoCompraControllerProcessaPedidoCompra409>, {data: PedidoCompraControllerProcessaPedidoCompraMutationRequest, headers: PedidoCompraControllerProcessaPedidoCompraHeaderParams}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<PedidoCompraControllerProcessaPedidoCompraMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? pedidoCompraControllerProcessaPedidoCompraMutationKey()
-  
-          return useMutation<PedidoCompraControllerProcessaPedidoCompraMutationResponse, ResponseErrorConfig<PedidoCompraControllerProcessaPedidoCompra400 | PedidoCompraControllerProcessaPedidoCompra404 | PedidoCompraControllerProcessaPedidoCompra409>, {data: PedidoCompraControllerProcessaPedidoCompraMutationRequest, headers: PedidoCompraControllerProcessaPedidoCompraHeaderParams}, TContext>({
-            mutationFn: async({ data, headers }) => {
-              return pedidoCompraControllerProcessaPedidoCompra(data, headers, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<PedidoCompraControllerProcessaPedidoCompraMutationResponse, ResponseErrorConfig<PedidoCompraControllerProcessaPedidoCompra400 | PedidoCompraControllerProcessaPedidoCompra404 | PedidoCompraControllerProcessaPedidoCompra409>, {data: PedidoCompraControllerProcessaPedidoCompraMutationRequest, headers: PedidoCompraControllerProcessaPedidoCompraHeaderParams}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<PedidoCompraControllerProcessaPedidoCompraMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? pedidoCompraControllerProcessaPedidoCompraMutationKey()
+
+  const baseOptions = pedidoCompraControllerProcessaPedidoCompraMutationOptions(config) as UseMutationOptions<PedidoCompraControllerProcessaPedidoCompraMutationResponse, ResponseErrorConfig<PedidoCompraControllerProcessaPedidoCompra400 | PedidoCompraControllerProcessaPedidoCompra404 | PedidoCompraControllerProcessaPedidoCompra409>, {data: PedidoCompraControllerProcessaPedidoCompraMutationRequest, headers: PedidoCompraControllerProcessaPedidoCompraHeaderParams}, TContext>
+
+  return useMutation<PedidoCompraControllerProcessaPedidoCompraMutationResponse, ResponseErrorConfig<PedidoCompraControllerProcessaPedidoCompra400 | PedidoCompraControllerProcessaPedidoCompra404 | PedidoCompraControllerProcessaPedidoCompra409>, {data: PedidoCompraControllerProcessaPedidoCompraMutationRequest, headers: PedidoCompraControllerProcessaPedidoCompraHeaderParams}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<PedidoCompraControllerProcessaPedidoCompraMutationResponse, ResponseErrorConfig<PedidoCompraControllerProcessaPedidoCompra400 | PedidoCompraControllerProcessaPedidoCompra404 | PedidoCompraControllerProcessaPedidoCompra409>, {data: PedidoCompraControllerProcessaPedidoCompraMutationRequest, headers: PedidoCompraControllerProcessaPedidoCompraHeaderParams}, TContext>
 }

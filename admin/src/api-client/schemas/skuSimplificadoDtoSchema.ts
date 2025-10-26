@@ -4,12 +4,11 @@
 */
 
 import type { SkuSimplificadoDto } from "../types/SkuSimplificadoDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const skuSimplificadoDtoSchema = z.object({
-      "id": z.coerce.number().describe("ID do SKU"),
-  "cor": z.coerce.string().describe("Cor do SKU").optional(),
-  "tamanho": z.coerce.string().describe("Tamanho do SKU").optional(),
-  "produtoNome": z.coerce.string().describe("Nome do produto").optional()
-      }) as unknown as ToZod<SkuSimplificadoDto>
+    "id": z.coerce.number().describe("ID do SKU"),
+"cor": z.optional(z.coerce.string().describe("Cor do SKU")),
+"tamanho": z.optional(z.coerce.string().describe("Tamanho do SKU")),
+"produtoNome": z.optional(z.coerce.string().describe("Nome do produto"))
+    }) as unknown as z.ZodType<SkuSimplificadoDto>

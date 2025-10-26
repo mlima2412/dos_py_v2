@@ -4,21 +4,20 @@
 */
 
 import type { CanalOrigemControllerCreate201, CanalOrigemControllerCreate400, CanalOrigemControllerCreateMutationRequest, CanalOrigemControllerCreateMutationResponse } from "../types/CanalOrigemControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { canalOrigemSchema } from "./canalOrigemSchema.ts";
 import { createCanalOrigemDtoSchema } from "./createCanalOrigemDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Canal de origem criado com sucesso
  */
-export const canalOrigemControllerCreate201Schema = z.lazy(() => canalOrigemSchema) as unknown as ToZod<CanalOrigemControllerCreate201>
+export const canalOrigemControllerCreate201Schema = canalOrigemSchema as unknown as z.ZodType<CanalOrigemControllerCreate201>
 
 /**
  * @description Dados inválidos ou regras de negócio violadas
  */
-export const canalOrigemControllerCreate400Schema = z.unknown() as unknown as ToZod<CanalOrigemControllerCreate400>
+export const canalOrigemControllerCreate400Schema = z.unknown() as unknown as z.ZodType<CanalOrigemControllerCreate400>
 
-export const canalOrigemControllerCreateMutationRequestSchema = z.lazy(() => createCanalOrigemDtoSchema) as unknown as ToZod<CanalOrigemControllerCreateMutationRequest>
+export const canalOrigemControllerCreateMutationRequestSchema = createCanalOrigemDtoSchema as unknown as z.ZodType<CanalOrigemControllerCreateMutationRequest>
 
-export const canalOrigemControllerCreateMutationResponseSchema = z.lazy(() => canalOrigemControllerCreate201Schema) as unknown as ToZod<CanalOrigemControllerCreateMutationResponse>
+export const canalOrigemControllerCreateMutationResponseSchema = canalOrigemControllerCreate201Schema as unknown as z.ZodType<CanalOrigemControllerCreateMutationResponse>

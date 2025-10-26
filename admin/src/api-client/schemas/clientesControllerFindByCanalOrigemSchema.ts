@@ -4,17 +4,16 @@
 */
 
 import type { ClientesControllerFindByCanalOrigemPathParams, ClientesControllerFindByCanalOrigem200, ClientesControllerFindByCanalOrigemQueryResponse } from "../types/ClientesControllerFindByCanalOrigem.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { clienteSchema } from "./clienteSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const clientesControllerFindByCanalOrigemPathParamsSchema = z.object({
-      "canalOrigemId": z.string().describe("ID do canal de origem")
-      }) as unknown as ToZod<ClientesControllerFindByCanalOrigemPathParams>
+    "canalOrigemId": z.string().describe("ID do canal de origem")
+    }) as unknown as z.ZodType<ClientesControllerFindByCanalOrigemPathParams>
 
 /**
  * @description Lista de clientes do canal de origem
  */
-export const clientesControllerFindByCanalOrigem200Schema = z.array(z.lazy(() => clienteSchema)) as unknown as ToZod<ClientesControllerFindByCanalOrigem200>
+export const clientesControllerFindByCanalOrigem200Schema = z.array(clienteSchema) as unknown as z.ZodType<ClientesControllerFindByCanalOrigem200>
 
-export const clientesControllerFindByCanalOrigemQueryResponseSchema = z.lazy(() => clientesControllerFindByCanalOrigem200Schema) as unknown as ToZod<ClientesControllerFindByCanalOrigemQueryResponse>
+export const clientesControllerFindByCanalOrigemQueryResponseSchema = clientesControllerFindByCanalOrigem200Schema as unknown as z.ZodType<ClientesControllerFindByCanalOrigemQueryResponse>

@@ -4,26 +4,25 @@
 */
 
 import type { LocalEstoqueControllerRemovePathParams, LocalEstoqueControllerRemove204, LocalEstoqueControllerRemove404, LocalEstoqueControllerRemove409, LocalEstoqueControllerRemoveMutationResponse } from "../types/LocalEstoqueControllerRemove.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const localEstoqueControllerRemovePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do local de estoque (UUID v7)")
-      }) as unknown as ToZod<LocalEstoqueControllerRemovePathParams>
+    "publicId": z.string().describe("ID público do local de estoque (UUID v7)")
+    }) as unknown as z.ZodType<LocalEstoqueControllerRemovePathParams>
 
 /**
  * @description Local de estoque excluído com sucesso
  */
-export const localEstoqueControllerRemove204Schema = z.unknown() as unknown as ToZod<LocalEstoqueControllerRemove204>
+export const localEstoqueControllerRemove204Schema = z.unknown() as unknown as z.ZodType<LocalEstoqueControllerRemove204>
 
 /**
  * @description Local de estoque não encontrado
  */
-export const localEstoqueControllerRemove404Schema = z.unknown() as unknown as ToZod<LocalEstoqueControllerRemove404>
+export const localEstoqueControllerRemove404Schema = z.unknown() as unknown as z.ZodType<LocalEstoqueControllerRemove404>
 
 /**
  * @description Não é possível excluir local que possui produtos em estoque
  */
-export const localEstoqueControllerRemove409Schema = z.unknown() as unknown as ToZod<LocalEstoqueControllerRemove409>
+export const localEstoqueControllerRemove409Schema = z.unknown() as unknown as z.ZodType<LocalEstoqueControllerRemove409>
 
-export const localEstoqueControllerRemoveMutationResponseSchema = z.lazy(() => localEstoqueControllerRemove204Schema) as unknown as ToZod<LocalEstoqueControllerRemoveMutationResponse>
+export const localEstoqueControllerRemoveMutationResponseSchema = localEstoqueControllerRemove204Schema as unknown as z.ZodType<LocalEstoqueControllerRemoveMutationResponse>

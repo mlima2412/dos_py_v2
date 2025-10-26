@@ -1487,6 +1487,7 @@
 			"steps": {
 				"basic": "Datos básicos",
 				"items": "Ítems",
+				"billing": "Facturación",
 				"review": "Pago"
 			},
 			"sections": {
@@ -1494,6 +1495,7 @@
 				"availableProducts": "Productos disponibles",
 				"selectedItems": "Ítems seleccionados",
 				"itemsTable": "Detalle de los ítems",
+				"billing": "Datos de facturación",
 				"review": "Revisión y confirmación",
 				"itemsSummary": "Resumen de los ítems"
 			},
@@ -1545,7 +1547,21 @@
 				"valueSituation": "Situación de los Valores",
 				"adjustments": "Ajustes",
 				"actions": "Acciones",
-				"paymentDialogDescription": "Completa los datos de la forma de pago"
+				"normalPayment": "Pago normal",
+				"paymentDialogDescription": "Completa los datos de la forma de pago",
+				"wantsInvoice": "¿Desea emitir factura?",
+				"invoiceInNameOf": "La factura será a nombre de:",
+				"customerName": "Cliente",
+				"invoiceInCustomerName": "Factura a nombre del cliente",
+				"invoiceInThirdPartyName": "Factura a nombre de tercero",
+				"customerAlreadyHasRucCnpj": "El cliente ya tiene RUC/CNPJ registrado",
+				"customerRucCnpj": "RUC/CNPJ del cliente",
+				"thirdPartyName": "Tercero",
+				"thirdPartyRucCnpj": "RUC/CNPJ (tercero)",
+				"rucCnpj": "RUC/CNPJ",
+				"invoiceName": "Nombre para factura",
+				"previousInvoiceNames": "Nombres usados anteriormente",
+				"newInvoiceName": "Nuevo nombre"
 			},
 			"paymentTypes": {
 				"A_VISTA_IMEDIATA": "Al contado",
@@ -1563,7 +1579,12 @@
 				"invoiceNumber": "Ingresa el número de factura",
 				"observation": "Agrega observaciones generales",
 				"product": "Busca un producto",
-				"barcode": "Código de barras o SKU"
+				"barcode": "Código de barras o SKU",
+				"thirdPartyName": "Ingresa el nombre completo",
+				"thirdPartyRucCnpj": "Ingresa el RUC/CNPJ",
+				"customerRucCnpj": "Ingresa el RUC/CNPJ del cliente",
+				"fullName": "Escribe el nombre completo",
+				"selectPreviousName": "Selecciona un nombre anterior o crea nuevo"
 			},
 			"actions": {
 				"saveAndContinue": "Guardar y continuar",
@@ -1593,7 +1614,8 @@
 				"itemsSaveError": "No fue posible guardar los ítems de la venta.",
 				"finalizeSuccess": "¡Venta finalizada con éxito!",
 				"finalizeError": "No fue posible finalizar la venta.",
-				"noPaymentsAdded": "No hay formas de pago agregadas"
+				"noPaymentsAdded": "No hay formas de pago agregadas",
+				"customerNeedsRucCnpj": "El cliente no tiene RUC/CNPJ registrado. Por favor, ingresa el RUC/CNPJ para emitir la factura."
 			},
 			"discount": {
 				"title": "Descuento",

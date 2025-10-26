@@ -92,8 +92,14 @@ export class Venda {
   @ApiProperty({ description: 'Desconto total da venda', example: 0, required: false, type: 'number' })
   desconto?: number | null;
 
+  @ApiProperty({ description: 'Valor total da venda', example: 120.5, required: false, type: 'number' })
+  valorTotal?: number | null;
+
   @ApiProperty({ description: 'RUC/CNPJ da fatura da venda', required: false })
   ruccnpj?: string | null;
+
+  @ApiProperty({ description: 'Nome para a fatura da venda', required: false })
+  nomeFatura?: string | null;
 
   @ApiProperty({ description: 'Número da fatura', required: false })
   numeroFatura?: string | null;

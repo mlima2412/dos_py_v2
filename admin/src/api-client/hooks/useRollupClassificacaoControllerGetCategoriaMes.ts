@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const rollupClassificacaoControllerGetCategoriaMesQueryKey = (params: RollupClassificacaoControllerGetCategoriaMesQueryParams) =>   [{ url: '/dashboard/despesas/classificacao/categoria-mes' }, ...(params ? [params] : [])] as const
+export const rollupClassificacaoControllerGetCategoriaMesQueryKey = (params: RollupClassificacaoControllerGetCategoriaMesQueryParams) => [{ url: '/dashboard/despesas/classificacao/categoria-mes' }, ...(params ? [params] : [])] as const
 
 export type RollupClassificacaoControllerGetCategoriaMesQueryKey = ReturnType<typeof rollupClassificacaoControllerGetCategoriaMesQueryKey>
 
@@ -18,25 +18,22 @@ export type RollupClassificacaoControllerGetCategoriaMesQueryKey = ReturnType<ty
  * {@link /dashboard/despesas/classificacao/categoria-mes}
  */
 export async function rollupClassificacaoControllerGetCategoriaMes(params: RollupClassificacaoControllerGetCategoriaMesQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<RollupClassificacaoControllerGetCategoriaMesQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/dashboard/despesas/classificacao/categoria-mes`, params, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<RollupClassificacaoControllerGetCategoriaMesQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/dashboard/despesas/classificacao/categoria-mes`, params, ... requestConfig })  
+  return res.data
 }
 
 export function rollupClassificacaoControllerGetCategoriaMesQueryOptions(params: RollupClassificacaoControllerGetCategoriaMesQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = rollupClassificacaoControllerGetCategoriaMesQueryKey(params)
-        return queryOptions<RollupClassificacaoControllerGetCategoriaMesQueryResponse, ResponseErrorConfig<Error>, RollupClassificacaoControllerGetCategoriaMesQueryResponse, typeof queryKey>({
-         enabled: !!(params),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return rollupClassificacaoControllerGetCategoriaMes(params, config)
-         },
-        })
-  
+  const queryKey = rollupClassificacaoControllerGetCategoriaMesQueryKey(params)
+  return queryOptions<RollupClassificacaoControllerGetCategoriaMesQueryResponse, ResponseErrorConfig<Error>, RollupClassificacaoControllerGetCategoriaMesQueryResponse, typeof queryKey>({
+   enabled: !!(params),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return rollupClassificacaoControllerGetCategoriaMes(params, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function rollupClassificacaoControllerGetCategoriaMesQueryOptions(params:
  * {@link /dashboard/despesas/classificacao/categoria-mes}
  */
 export function useRollupClassificacaoControllerGetCategoriaMes<TData = RollupClassificacaoControllerGetCategoriaMesQueryResponse, TQueryData = RollupClassificacaoControllerGetCategoriaMesQueryResponse, TQueryKey extends QueryKey = RollupClassificacaoControllerGetCategoriaMesQueryKey>(params: RollupClassificacaoControllerGetCategoriaMesQueryParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<RollupClassificacaoControllerGetCategoriaMesQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? rollupClassificacaoControllerGetCategoriaMesQueryKey(params)
-  
-         const query = useQuery({
-          ...rollupClassificacaoControllerGetCategoriaMesQueryOptions(params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<RollupClassificacaoControllerGetCategoriaMesQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? rollupClassificacaoControllerGetCategoriaMesQueryKey(params)
+
+  const query = useQuery({
+   ...rollupClassificacaoControllerGetCategoriaMesQueryOptions(params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

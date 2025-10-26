@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { CurrencyControllerUpdateMutationRequest, CurrencyControllerUpdateMutationResponse, CurrencyControllerUpdatePathParams, CurrencyControllerUpdate400, CurrencyControllerUpdate401, CurrencyControllerUpdate404, CurrencyControllerUpdate409 } from "../types/CurrencyControllerUpdate.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const currencyControllerUpdateMutationKey = () =>   [{"url":"/currency/{publicId}"}] as const
+export const currencyControllerUpdateMutationKey = () => [{ url: '/currency/:publicId' }] as const
 
 export type CurrencyControllerUpdateMutationKey = ReturnType<typeof currencyControllerUpdateMutationKey>
 
@@ -18,11 +18,22 @@ export type CurrencyControllerUpdateMutationKey = ReturnType<typeof currencyCont
  * {@link /currency/:publicId}
  */
 export async function currencyControllerUpdate(publicId: CurrencyControllerUpdatePathParams["publicId"], data?: CurrencyControllerUpdateMutationRequest, config: Partial<RequestConfig<CurrencyControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<CurrencyControllerUpdateMutationResponse, ResponseErrorConfig<CurrencyControllerUpdate400 | CurrencyControllerUpdate401 | CurrencyControllerUpdate404 | CurrencyControllerUpdate409>, CurrencyControllerUpdateMutationRequest>({ method : "PATCH", url : `/currency/${publicId}`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<CurrencyControllerUpdateMutationResponse, ResponseErrorConfig<CurrencyControllerUpdate400 | CurrencyControllerUpdate401 | CurrencyControllerUpdate404 | CurrencyControllerUpdate409>, CurrencyControllerUpdateMutationRequest>({ method : "PATCH", url : `/currency/${publicId}`, data : requestData, ... requestConfig })
-return res.data
+export function currencyControllerUpdateMutationOptions(config: Partial<RequestConfig<CurrencyControllerUpdateMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = currencyControllerUpdateMutationKey()
+  return mutationOptions<CurrencyControllerUpdateMutationResponse, ResponseErrorConfig<CurrencyControllerUpdate400 | CurrencyControllerUpdate401 | CurrencyControllerUpdate404 | CurrencyControllerUpdate409>, {publicId: CurrencyControllerUpdatePathParams["publicId"], data?: CurrencyControllerUpdateMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ publicId, data }) => {
+      return currencyControllerUpdate(publicId, data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /currency/:publicId}
  */
 export function useCurrencyControllerUpdate<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<CurrencyControllerUpdateMutationResponse, ResponseErrorConfig<CurrencyControllerUpdate400 | CurrencyControllerUpdate401 | CurrencyControllerUpdate404 | CurrencyControllerUpdate409>, {publicId: CurrencyControllerUpdatePathParams["publicId"], data?: CurrencyControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<CurrencyControllerUpdateMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? currencyControllerUpdateMutationKey()
-  
-          return useMutation<CurrencyControllerUpdateMutationResponse, ResponseErrorConfig<CurrencyControllerUpdate400 | CurrencyControllerUpdate401 | CurrencyControllerUpdate404 | CurrencyControllerUpdate409>, {publicId: CurrencyControllerUpdatePathParams["publicId"], data?: CurrencyControllerUpdateMutationRequest}, TContext>({
-            mutationFn: async({ publicId, data }) => {
-              return currencyControllerUpdate(publicId, data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<CurrencyControllerUpdateMutationResponse, ResponseErrorConfig<CurrencyControllerUpdate400 | CurrencyControllerUpdate401 | CurrencyControllerUpdate404 | CurrencyControllerUpdate409>, {publicId: CurrencyControllerUpdatePathParams["publicId"], data?: CurrencyControllerUpdateMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<CurrencyControllerUpdateMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? currencyControllerUpdateMutationKey()
+
+  const baseOptions = currencyControllerUpdateMutationOptions(config) as UseMutationOptions<CurrencyControllerUpdateMutationResponse, ResponseErrorConfig<CurrencyControllerUpdate400 | CurrencyControllerUpdate401 | CurrencyControllerUpdate404 | CurrencyControllerUpdate409>, {publicId: CurrencyControllerUpdatePathParams["publicId"], data?: CurrencyControllerUpdateMutationRequest}, TContext>
+
+  return useMutation<CurrencyControllerUpdateMutationResponse, ResponseErrorConfig<CurrencyControllerUpdate400 | CurrencyControllerUpdate401 | CurrencyControllerUpdate404 | CurrencyControllerUpdate409>, {publicId: CurrencyControllerUpdatePathParams["publicId"], data?: CurrencyControllerUpdateMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<CurrencyControllerUpdateMutationResponse, ResponseErrorConfig<CurrencyControllerUpdate400 | CurrencyControllerUpdate401 | CurrencyControllerUpdate404 | CurrencyControllerUpdate409>, {publicId: CurrencyControllerUpdatePathParams["publicId"], data?: CurrencyControllerUpdateMutationRequest}, TContext>
 }

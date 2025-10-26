@@ -4,24 +4,27 @@
 */
 
 import type { Parceiro } from "../types/Parceiro.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { clienteSchema } from "./clienteSchema.ts";
 import { currencySchema } from "./currencySchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const parceiroSchema = z.object({
-      "id": z.coerce.number().describe("ID único do parceiro"),
-  "publicId": z.coerce.string().describe("ID público do parceiro"),
-  "nome": z.coerce.string().describe("Nome do parceiro"),
-  "ruccnpj": z.coerce.string().describe("RUC/CNPJ do parceiro").optional(),
-  "email": z.coerce.string().describe("Email do parceiro"),
-  "redesocial": z.coerce.string().describe("Rede social do parceiro").optional(),
-  "telefone": z.coerce.string().describe("Telefone do parceiro").optional(),
-  "currencyId": z.coerce.number().describe("ID da moeda do parceiro").optional(),
-  "ativo": z.boolean().describe("Status ativo do parceiro"),
-  "logourl": z.coerce.string().describe("URL do logo do parceiro").optional(),
-  "thumburl": z.coerce.string().describe("URL da imagem reduzida do parceiro").optional(),
-  "createdAt": z.string().datetime().describe("Data de criação do parceiro"),
-  "clientes": z.array(z.lazy(() => clienteSchema)).describe("Clientes associados ao parceiro").optional(),
-  "currency": z.lazy(() => currencySchema).describe("Moeda do parceiro").optional()
-      }) as unknown as ToZod<Parceiro>
+    "id": z.coerce.number().describe("ID único do parceiro"),
+"publicId": z.coerce.string().describe("ID público do parceiro"),
+"nome": z.coerce.string().describe("Nome do parceiro"),
+"ruccnpj": z.optional(z.coerce.string().describe("RUC/CNPJ do parceiro")),
+"email": z.coerce.string().describe("Email do parceiro"),
+"redesocial": z.optional(z.coerce.string().describe("Rede social do parceiro")),
+"telefone": z.optional(z.coerce.string().describe("Telefone do parceiro")),
+"currencyId": z.optional(z.coerce.number().describe("ID da moeda do parceiro")),
+"ativo": z.boolean().describe("Status ativo do parceiro"),
+"logourl": z.optional(z.coerce.string().describe("URL do logo do parceiro")),
+"thumburl": z.optional(z.coerce.string().describe("URL da imagem reduzida do parceiro")),
+"createdAt": z.string().datetime().describe("Data de criação do parceiro"),
+get "clientes"(){
+                return z.optional(z.array(clienteSchema).describe("Clientes associados ao parceiro"))
+              },
+get "currency"(){
+                return z.optional(currencySchema.describe("Moeda do parceiro"))
+              }
+    }) as unknown as z.ZodType<Parceiro>

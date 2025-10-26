@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const transferenciaEstoqueSkuControllerFindByTransferenciaQueryKey = (transferenciaPublicId: TransferenciaEstoqueSkuControllerFindByTransferenciaPathParams["transferenciaPublicId"]) =>   [{ url: '/transferencia-estoque-sku/:transferenciaPublicId', params: {transferenciaPublicId:transferenciaPublicId} }] as const
+export const transferenciaEstoqueSkuControllerFindByTransferenciaQueryKey = (transferenciaPublicId: TransferenciaEstoqueSkuControllerFindByTransferenciaPathParams["transferenciaPublicId"]) => [{ url: '/transferencia-estoque-sku/:transferenciaPublicId', params: {transferenciaPublicId:transferenciaPublicId} }] as const
 
 export type TransferenciaEstoqueSkuControllerFindByTransferenciaQueryKey = ReturnType<typeof transferenciaEstoqueSkuControllerFindByTransferenciaQueryKey>
 
@@ -19,25 +19,22 @@ export type TransferenciaEstoqueSkuControllerFindByTransferenciaQueryKey = Retur
  * {@link /transferencia-estoque-sku/:transferenciaPublicId}
  */
 export async function transferenciaEstoqueSkuControllerFindByTransferencia(transferenciaPublicId: TransferenciaEstoqueSkuControllerFindByTransferenciaPathParams["transferenciaPublicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<TransferenciaEstoqueSkuControllerFindByTransferenciaQueryResponse, ResponseErrorConfig<TransferenciaEstoqueSkuControllerFindByTransferencia404>, unknown>({ method : "GET", url : `/transferencia-estoque-sku/${transferenciaPublicId}`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<TransferenciaEstoqueSkuControllerFindByTransferenciaQueryResponse, ResponseErrorConfig<TransferenciaEstoqueSkuControllerFindByTransferencia404>, unknown>({ method : "GET", url : `/transferencia-estoque-sku/${transferenciaPublicId}`, ... requestConfig })  
+  return res.data
 }
 
 export function transferenciaEstoqueSkuControllerFindByTransferenciaQueryOptions(transferenciaPublicId: TransferenciaEstoqueSkuControllerFindByTransferenciaPathParams["transferenciaPublicId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = transferenciaEstoqueSkuControllerFindByTransferenciaQueryKey(transferenciaPublicId)
-        return queryOptions<TransferenciaEstoqueSkuControllerFindByTransferenciaQueryResponse, ResponseErrorConfig<TransferenciaEstoqueSkuControllerFindByTransferencia404>, TransferenciaEstoqueSkuControllerFindByTransferenciaQueryResponse, typeof queryKey>({
-         enabled: !!(transferenciaPublicId),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return transferenciaEstoqueSkuControllerFindByTransferencia(transferenciaPublicId, config)
-         },
-        })
-  
+  const queryKey = transferenciaEstoqueSkuControllerFindByTransferenciaQueryKey(transferenciaPublicId)
+  return queryOptions<TransferenciaEstoqueSkuControllerFindByTransferenciaQueryResponse, ResponseErrorConfig<TransferenciaEstoqueSkuControllerFindByTransferencia404>, TransferenciaEstoqueSkuControllerFindByTransferenciaQueryResponse, typeof queryKey>({
+   enabled: !!(transferenciaPublicId),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return transferenciaEstoqueSkuControllerFindByTransferencia(transferenciaPublicId, config)
+   },
+  })
 }
 
 /**
@@ -46,23 +43,22 @@ export function transferenciaEstoqueSkuControllerFindByTransferenciaQueryOptions
  * {@link /transferencia-estoque-sku/:transferenciaPublicId}
  */
 export function useTransferenciaEstoqueSkuControllerFindByTransferencia<TData = TransferenciaEstoqueSkuControllerFindByTransferenciaQueryResponse, TQueryData = TransferenciaEstoqueSkuControllerFindByTransferenciaQueryResponse, TQueryKey extends QueryKey = TransferenciaEstoqueSkuControllerFindByTransferenciaQueryKey>(transferenciaPublicId: TransferenciaEstoqueSkuControllerFindByTransferenciaPathParams["transferenciaPublicId"], options: 
-  {
-    query?: Partial<QueryObserverOptions<TransferenciaEstoqueSkuControllerFindByTransferenciaQueryResponse, ResponseErrorConfig<TransferenciaEstoqueSkuControllerFindByTransferencia404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? transferenciaEstoqueSkuControllerFindByTransferenciaQueryKey(transferenciaPublicId)
-  
-         const query = useQuery({
-          ...transferenciaEstoqueSkuControllerFindByTransferenciaQueryOptions(transferenciaPublicId, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<TransferenciaEstoqueSkuControllerFindByTransferencia404>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<TransferenciaEstoqueSkuControllerFindByTransferenciaQueryResponse, ResponseErrorConfig<TransferenciaEstoqueSkuControllerFindByTransferencia404>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? transferenciaEstoqueSkuControllerFindByTransferenciaQueryKey(transferenciaPublicId)
+
+  const query = useQuery({
+   ...transferenciaEstoqueSkuControllerFindByTransferenciaQueryOptions(transferenciaPublicId, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<TransferenciaEstoqueSkuControllerFindByTransferencia404>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

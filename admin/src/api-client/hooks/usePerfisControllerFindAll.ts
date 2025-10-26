@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const perfisControllerFindAllQueryKey = () =>   [{ url: '/perfis' }] as const
+export const perfisControllerFindAllQueryKey = () => [{ url: '/perfis' }] as const
 
 export type PerfisControllerFindAllQueryKey = ReturnType<typeof perfisControllerFindAllQueryKey>
 
@@ -18,25 +18,22 @@ export type PerfisControllerFindAllQueryKey = ReturnType<typeof perfisController
  * {@link /perfis}
  */
 export async function perfisControllerFindAll(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<PerfisControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/perfis`, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<PerfisControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/perfis`, ... requestConfig })  
+  return res.data
 }
 
 export function perfisControllerFindAllQueryOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = perfisControllerFindAllQueryKey()
-        return queryOptions<PerfisControllerFindAllQueryResponse, ResponseErrorConfig<Error>, PerfisControllerFindAllQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return perfisControllerFindAll(config)
-         },
-        })
-  
+  const queryKey = perfisControllerFindAllQueryKey()
+  return queryOptions<PerfisControllerFindAllQueryResponse, ResponseErrorConfig<Error>, PerfisControllerFindAllQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return perfisControllerFindAll(config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function perfisControllerFindAllQueryOptions(config: Partial<RequestConfi
  * {@link /perfis}
  */
 export function usePerfisControllerFindAll<TData = PerfisControllerFindAllQueryResponse, TQueryData = PerfisControllerFindAllQueryResponse, TQueryKey extends QueryKey = PerfisControllerFindAllQueryKey>(options: 
-  {
-    query?: Partial<QueryObserverOptions<PerfisControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? perfisControllerFindAllQueryKey()
-  
-         const query = useQuery({
-          ...perfisControllerFindAllQueryOptions(config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<PerfisControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? perfisControllerFindAllQueryKey()
+
+  const query = useQuery({
+   ...perfisControllerFindAllQueryOptions(config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { AuthControllerLoginMutationRequest, AuthControllerLoginMutationResponse, AuthControllerLogin401 } from "../types/AuthControllerLogin.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const authControllerLoginMutationKey = () =>   [{"url":"/auth/login"}] as const
+export const authControllerLoginMutationKey = () => [{ url: '/auth/login' }] as const
 
 export type AuthControllerLoginMutationKey = ReturnType<typeof authControllerLoginMutationKey>
 
@@ -18,11 +18,22 @@ export type AuthControllerLoginMutationKey = ReturnType<typeof authControllerLog
  * {@link /auth/login}
  */
 export async function authControllerLogin(data: AuthControllerLoginMutationRequest, config: Partial<RequestConfig<AuthControllerLoginMutationRequest>> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const requestData = data  
+  
+  const res = await request<AuthControllerLoginMutationResponse, ResponseErrorConfig<AuthControllerLogin401>, AuthControllerLoginMutationRequest>({ method : "POST", url : `/auth/login`, data : requestData, ... requestConfig })  
+  return res.data
+}
 
-const requestData = data
-const res = await request<AuthControllerLoginMutationResponse, ResponseErrorConfig<AuthControllerLogin401>, AuthControllerLoginMutationRequest>({ method : "POST", url : `/auth/login`, data : requestData, ... requestConfig })
-return res.data
+export function authControllerLoginMutationOptions(config: Partial<RequestConfig<AuthControllerLoginMutationRequest>> & { client?: typeof fetch } = {}) {
+  const mutationKey = authControllerLoginMutationKey()
+  return mutationOptions<AuthControllerLoginMutationResponse, ResponseErrorConfig<AuthControllerLogin401>, {data: AuthControllerLoginMutationRequest}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ data }) => {
+      return authControllerLogin(data, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +41,20 @@ return res.data
  * {@link /auth/login}
  */
 export function useAuthControllerLogin<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<AuthControllerLoginMutationResponse, ResponseErrorConfig<AuthControllerLogin401>, {data: AuthControllerLoginMutationRequest}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig<AuthControllerLoginMutationRequest>> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? authControllerLoginMutationKey()
-  
-          return useMutation<AuthControllerLoginMutationResponse, ResponseErrorConfig<AuthControllerLogin401>, {data: AuthControllerLoginMutationRequest}, TContext>({
-            mutationFn: async({ data }) => {
-              return authControllerLogin(data, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<AuthControllerLoginMutationResponse, ResponseErrorConfig<AuthControllerLogin401>, {data: AuthControllerLoginMutationRequest}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig<AuthControllerLoginMutationRequest>> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? authControllerLoginMutationKey()
+
+  const baseOptions = authControllerLoginMutationOptions(config) as UseMutationOptions<AuthControllerLoginMutationResponse, ResponseErrorConfig<AuthControllerLogin401>, {data: AuthControllerLoginMutationRequest}, TContext>
+
+  return useMutation<AuthControllerLoginMutationResponse, ResponseErrorConfig<AuthControllerLogin401>, {data: AuthControllerLoginMutationRequest}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<AuthControllerLoginMutationResponse, ResponseErrorConfig<AuthControllerLogin401>, {data: AuthControllerLoginMutationRequest}, TContext>
 }

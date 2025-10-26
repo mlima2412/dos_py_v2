@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { TransferenciaEstoqueControllerRemoveMutationResponse, TransferenciaEstoqueControllerRemovePathParams, TransferenciaEstoqueControllerRemoveHeaderParams, TransferenciaEstoqueControllerRemove404, TransferenciaEstoqueControllerRemove409 } from "../types/TransferenciaEstoqueControllerRemove.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const transferenciaEstoqueControllerRemoveMutationKey = () =>   [{"url":"/transferencia-estoque/{id}"}] as const
+export const transferenciaEstoqueControllerRemoveMutationKey = () => [{ url: '/transferencia-estoque/:id' }] as const
 
 export type TransferenciaEstoqueControllerRemoveMutationKey = ReturnType<typeof transferenciaEstoqueControllerRemoveMutationKey>
 
@@ -19,11 +19,20 @@ export type TransferenciaEstoqueControllerRemoveMutationKey = ReturnType<typeof 
  * {@link /transferencia-estoque/:id}
  */
 export async function transferenciaEstoqueControllerRemove(id: TransferenciaEstoqueControllerRemovePathParams["id"], headers: TransferenciaEstoqueControllerRemoveHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<TransferenciaEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerRemove404 | TransferenciaEstoqueControllerRemove409>, unknown>({ method : "DELETE", url : `/transferencia-estoque/${id}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
+}
 
-
-const res = await request<TransferenciaEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerRemove404 | TransferenciaEstoqueControllerRemove409>, unknown>({ method : "DELETE", url : `/transferencia-estoque/${id}`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+export function transferenciaEstoqueControllerRemoveMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = transferenciaEstoqueControllerRemoveMutationKey()
+  return mutationOptions<TransferenciaEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerRemove404 | TransferenciaEstoqueControllerRemove409>, {id: TransferenciaEstoqueControllerRemovePathParams["id"], headers: TransferenciaEstoqueControllerRemoveHeaderParams}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ id, headers }) => {
+      return transferenciaEstoqueControllerRemove(id, headers, config)
+    },
+  })
 }
 
 /**
@@ -32,22 +41,20 @@ return res.data
  * {@link /transferencia-estoque/:id}
  */
 export function useTransferenciaEstoqueControllerRemove<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<TransferenciaEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerRemove404 | TransferenciaEstoqueControllerRemove409>, {id: TransferenciaEstoqueControllerRemovePathParams["id"], headers: TransferenciaEstoqueControllerRemoveHeaderParams}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? transferenciaEstoqueControllerRemoveMutationKey()
-  
-          return useMutation<TransferenciaEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerRemove404 | TransferenciaEstoqueControllerRemove409>, {id: TransferenciaEstoqueControllerRemovePathParams["id"], headers: TransferenciaEstoqueControllerRemoveHeaderParams}, TContext>({
-            mutationFn: async({ id, headers }) => {
-              return transferenciaEstoqueControllerRemove(id, headers, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<TransferenciaEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerRemove404 | TransferenciaEstoqueControllerRemove409>, {id: TransferenciaEstoqueControllerRemovePathParams["id"], headers: TransferenciaEstoqueControllerRemoveHeaderParams}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? transferenciaEstoqueControllerRemoveMutationKey()
+
+  const baseOptions = transferenciaEstoqueControllerRemoveMutationOptions(config) as UseMutationOptions<TransferenciaEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerRemove404 | TransferenciaEstoqueControllerRemove409>, {id: TransferenciaEstoqueControllerRemovePathParams["id"], headers: TransferenciaEstoqueControllerRemoveHeaderParams}, TContext>
+
+  return useMutation<TransferenciaEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerRemove404 | TransferenciaEstoqueControllerRemove409>, {id: TransferenciaEstoqueControllerRemovePathParams["id"], headers: TransferenciaEstoqueControllerRemoveHeaderParams}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<TransferenciaEstoqueControllerRemoveMutationResponse, ResponseErrorConfig<TransferenciaEstoqueControllerRemove404 | TransferenciaEstoqueControllerRemove409>, {id: TransferenciaEstoqueControllerRemovePathParams["id"], headers: TransferenciaEstoqueControllerRemoveHeaderParams}, TContext>
 }

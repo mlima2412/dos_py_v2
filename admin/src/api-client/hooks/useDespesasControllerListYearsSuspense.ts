@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
-export const despesasControllerListYearsSuspenseQueryKey = () =>   [{ url: '/despesas/DespesasAno' }] as const
+export const despesasControllerListYearsSuspenseQueryKey = () => [{ url: '/despesas/DespesasAno' }] as const
 
 export type DespesasControllerListYearsSuspenseQueryKey = ReturnType<typeof despesasControllerListYearsSuspenseQueryKey>
 
@@ -18,25 +18,22 @@ export type DespesasControllerListYearsSuspenseQueryKey = ReturnType<typeof desp
  * {@link /despesas/DespesasAno}
  */
 export async function despesasControllerListYearsSuspense(headers: DespesasControllerListYearsHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<DespesasControllerListYearsQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/despesas/DespesasAno`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<DespesasControllerListYearsQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/despesas/DespesasAno`, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  return res.data
 }
 
 export function despesasControllerListYearsSuspenseQueryOptions(headers: DespesasControllerListYearsHeaderParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = despesasControllerListYearsSuspenseQueryKey()
-        return queryOptions<DespesasControllerListYearsQueryResponse, ResponseErrorConfig<Error>, DespesasControllerListYearsQueryResponse, typeof queryKey>({
-         
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return despesasControllerListYearsSuspense(headers, config)
-         },
-        })
-  
+  const queryKey = despesasControllerListYearsSuspenseQueryKey()
+  return queryOptions<DespesasControllerListYearsQueryResponse, ResponseErrorConfig<Error>, DespesasControllerListYearsQueryResponse, typeof queryKey>({
+ 
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return despesasControllerListYearsSuspense(headers, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function despesasControllerListYearsSuspenseQueryOptions(headers: Despesa
  * {@link /despesas/DespesasAno}
  */
 export function useDespesasControllerListYearsSuspense<TData = DespesasControllerListYearsQueryResponse, TQueryKey extends QueryKey = DespesasControllerListYearsSuspenseQueryKey>(headers: DespesasControllerListYearsHeaderParams, options: 
-  {
-    query?: Partial<UseSuspenseQueryOptions<DespesasControllerListYearsQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? despesasControllerListYearsSuspenseQueryKey()
-  
-         const query = useSuspenseQuery({
-          ...despesasControllerListYearsSuspenseQueryOptions(headers, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<UseSuspenseQueryOptions<DespesasControllerListYearsQueryResponse, ResponseErrorConfig<Error>, TData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? despesasControllerListYearsSuspenseQueryKey()
+
+  const query = useSuspenseQuery({
+   ...despesasControllerListYearsSuspenseQueryOptions(headers, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as UseSuspenseQueryOptions, queryClient) as UseSuspenseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }

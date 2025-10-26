@@ -4,22 +4,21 @@
 */
 
 import type { CanalOrigemControllerDeactivatePathParams, CanalOrigemControllerDeactivate200, CanalOrigemControllerDeactivate404, CanalOrigemControllerDeactivateMutationResponse } from "../types/CanalOrigemControllerDeactivate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { canalOrigemSchema } from "./canalOrigemSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const canalOrigemControllerDeactivatePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público do canal de origem")
-      }) as unknown as ToZod<CanalOrigemControllerDeactivatePathParams>
+    "publicId": z.string().describe("ID público do canal de origem")
+    }) as unknown as z.ZodType<CanalOrigemControllerDeactivatePathParams>
 
 /**
  * @description Canal de origem desativado com sucesso
  */
-export const canalOrigemControllerDeactivate200Schema = z.lazy(() => canalOrigemSchema) as unknown as ToZod<CanalOrigemControllerDeactivate200>
+export const canalOrigemControllerDeactivate200Schema = canalOrigemSchema as unknown as z.ZodType<CanalOrigemControllerDeactivate200>
 
 /**
  * @description Canal de origem não encontrado
  */
-export const canalOrigemControllerDeactivate404Schema = z.unknown() as unknown as ToZod<CanalOrigemControllerDeactivate404>
+export const canalOrigemControllerDeactivate404Schema = z.unknown() as unknown as z.ZodType<CanalOrigemControllerDeactivate404>
 
-export const canalOrigemControllerDeactivateMutationResponseSchema = z.lazy(() => canalOrigemControllerDeactivate200Schema) as unknown as ToZod<CanalOrigemControllerDeactivateMutationResponse>
+export const canalOrigemControllerDeactivateMutationResponseSchema = canalOrigemControllerDeactivate200Schema as unknown as z.ZodType<CanalOrigemControllerDeactivateMutationResponse>

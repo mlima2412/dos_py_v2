@@ -6,10 +6,10 @@
 import fetch from "@/lib/fetch-client";
 import type { EstoqueSkuControllerRemoveMutationResponse, EstoqueSkuControllerRemovePathParams, EstoqueSkuControllerRemove404 } from "../types/EstoqueSkuControllerRemove.ts";
 import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
-import type { UseMutationOptions, QueryClient } from "@tanstack/react-query";
-import { useMutation } from "@tanstack/react-query";
+import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
+import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const estoqueSkuControllerRemoveMutationKey = () =>   [{"url":"/estoque-sku/{localId}/{skuId}"}] as const
+export const estoqueSkuControllerRemoveMutationKey = () => [{ url: '/estoque-sku/:localId/:skuId' }] as const
 
 export type EstoqueSkuControllerRemoveMutationKey = ReturnType<typeof estoqueSkuControllerRemoveMutationKey>
 
@@ -18,11 +18,20 @@ export type EstoqueSkuControllerRemoveMutationKey = ReturnType<typeof estoqueSku
  * {@link /estoque-sku/:localId/:skuId}
  */
 export async function estoqueSkuControllerRemove(localId: EstoqueSkuControllerRemovePathParams["localId"], skuId: EstoqueSkuControllerRemovePathParams["skuId"], config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<EstoqueSkuControllerRemoveMutationResponse, ResponseErrorConfig<EstoqueSkuControllerRemove404>, unknown>({ method : "DELETE", url : `/estoque-sku/${localId}/${skuId}`, ... requestConfig })  
+  return res.data
+}
 
-
-const res = await request<EstoqueSkuControllerRemoveMutationResponse, ResponseErrorConfig<EstoqueSkuControllerRemove404>, unknown>({ method : "DELETE", url : `/estoque-sku/${localId}/${skuId}`, ... requestConfig })
-return res.data
+export function estoqueSkuControllerRemoveMutationOptions(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
+  const mutationKey = estoqueSkuControllerRemoveMutationKey()
+  return mutationOptions<EstoqueSkuControllerRemoveMutationResponse, ResponseErrorConfig<EstoqueSkuControllerRemove404>, {localId: EstoqueSkuControllerRemovePathParams["localId"], skuId: EstoqueSkuControllerRemovePathParams["skuId"]}, typeof mutationKey>({
+    mutationKey,
+    mutationFn: async({ localId, skuId }) => {
+      return estoqueSkuControllerRemove(localId, skuId, config)
+    },
+  })
 }
 
 /**
@@ -30,22 +39,20 @@ return res.data
  * {@link /estoque-sku/:localId/:skuId}
  */
 export function useEstoqueSkuControllerRemove<TContext>(options: 
-  {
-    mutation?: UseMutationOptions<EstoqueSkuControllerRemoveMutationResponse, ResponseErrorConfig<EstoqueSkuControllerRemove404>, {localId: EstoqueSkuControllerRemovePathParams["localId"], skuId: EstoqueSkuControllerRemovePathParams["skuId"]}, TContext> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch },
-  }
-   = {}) {
-  
-          const { mutation = {}, client: config = {} } = options ?? {}
-          const { client: queryClient, ...mutationOptions } = mutation;
-          const mutationKey = mutationOptions.mutationKey ?? estoqueSkuControllerRemoveMutationKey()
-  
-          return useMutation<EstoqueSkuControllerRemoveMutationResponse, ResponseErrorConfig<EstoqueSkuControllerRemove404>, {localId: EstoqueSkuControllerRemovePathParams["localId"], skuId: EstoqueSkuControllerRemovePathParams["skuId"]}, TContext>({
-            mutationFn: async({ localId, skuId }) => {
-              return estoqueSkuControllerRemove(localId, skuId, config)
-            },
-            mutationKey,
-            ...mutationOptions
-          }, queryClient)
-      
+{
+  mutation?: UseMutationOptions<EstoqueSkuControllerRemoveMutationResponse, ResponseErrorConfig<EstoqueSkuControllerRemove404>, {localId: EstoqueSkuControllerRemovePathParams["localId"], skuId: EstoqueSkuControllerRemovePathParams["skuId"]}, TContext> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch },
+}
+ = {}) {
+  const { mutation = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...mutationOptions } = mutation;
+  const mutationKey = mutationOptions.mutationKey ?? estoqueSkuControllerRemoveMutationKey()
+
+  const baseOptions = estoqueSkuControllerRemoveMutationOptions(config) as UseMutationOptions<EstoqueSkuControllerRemoveMutationResponse, ResponseErrorConfig<EstoqueSkuControllerRemove404>, {localId: EstoqueSkuControllerRemovePathParams["localId"], skuId: EstoqueSkuControllerRemovePathParams["skuId"]}, TContext>
+
+  return useMutation<EstoqueSkuControllerRemoveMutationResponse, ResponseErrorConfig<EstoqueSkuControllerRemove404>, {localId: EstoqueSkuControllerRemovePathParams["localId"], skuId: EstoqueSkuControllerRemovePathParams["skuId"]}, TContext>({
+    ...baseOptions,
+    mutationKey,
+    ...mutationOptions,
+  }, queryClient) as UseMutationResult<EstoqueSkuControllerRemoveMutationResponse, ResponseErrorConfig<EstoqueSkuControllerRemove404>, {localId: EstoqueSkuControllerRemovePathParams["localId"], skuId: EstoqueSkuControllerRemovePathParams["skuId"]}, TContext>
 }

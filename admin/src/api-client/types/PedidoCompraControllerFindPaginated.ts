@@ -11,7 +11,7 @@ export const pedidoCompraControllerFindPaginatedQueryParamsStatusEnum = {
     "FINALIZADO": "FINALIZADO"
 } as const;
 
-export type PedidoCompraControllerFindPaginatedQueryParamsStatusEnum = (typeof pedidoCompraControllerFindPaginatedQueryParamsStatusEnum)[keyof typeof pedidoCompraControllerFindPaginatedQueryParamsStatusEnum];
+export type PedidoCompraControllerFindPaginatedQueryParamsStatusEnumKey = (typeof pedidoCompraControllerFindPaginatedQueryParamsStatusEnum)[keyof typeof pedidoCompraControllerFindPaginatedQueryParamsStatusEnum];
 
 export type PedidoCompraControllerFindPaginatedQueryParams = {
     /**
@@ -40,7 +40,7 @@ export type PedidoCompraControllerFindPaginatedQueryParams = {
      * @description Status do pedido para filtrar
      * @type string | undefined
     */
-    status?: PedidoCompraControllerFindPaginatedQueryParamsStatusEnum;
+    status?: PedidoCompraControllerFindPaginatedQueryParamsStatusEnumKey;
     /**
      * @description ID do local de entrada para filtrar
      * @type string | undefined

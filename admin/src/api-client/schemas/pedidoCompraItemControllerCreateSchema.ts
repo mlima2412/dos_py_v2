@@ -4,38 +4,37 @@
 */
 
 import type { PedidoCompraItemControllerCreateHeaderParams, PedidoCompraItemControllerCreate201, PedidoCompraItemControllerCreate400, PedidoCompraItemControllerCreate404, PedidoCompraItemControllerCreate409, PedidoCompraItemControllerCreateMutationRequest, PedidoCompraItemControllerCreateMutationResponse } from "../types/PedidoCompraItemControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { createPedidoCompraItemDtoSchema } from "./createPedidoCompraItemDtoSchema.ts";
 import { pedidoCompraItemSchema } from "./pedidoCompraItemSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const pedidoCompraItemControllerCreateHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
-      }) as unknown as ToZod<PedidoCompraItemControllerCreateHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro")
+    }) as unknown as z.ZodType<PedidoCompraItemControllerCreateHeaderParams>
 
 /**
  * @description Item de pedido de compra criado com sucesso
  */
-export const pedidoCompraItemControllerCreate201Schema = z.lazy(() => pedidoCompraItemSchema) as unknown as ToZod<PedidoCompraItemControllerCreate201>
+export const pedidoCompraItemControllerCreate201Schema = pedidoCompraItemSchema as unknown as z.ZodType<PedidoCompraItemControllerCreate201>
 
 /**
  * @description Dados inválidos
  */
-export const pedidoCompraItemControllerCreate400Schema = z.unknown() as unknown as ToZod<PedidoCompraItemControllerCreate400>
+export const pedidoCompraItemControllerCreate400Schema = z.unknown() as unknown as z.ZodType<PedidoCompraItemControllerCreate400>
 
 /**
  * @description Pedido de compra ou SKU não encontrado
  */
-export const pedidoCompraItemControllerCreate404Schema = z.unknown() as unknown as ToZod<PedidoCompraItemControllerCreate404>
+export const pedidoCompraItemControllerCreate404Schema = z.unknown() as unknown as z.ZodType<PedidoCompraItemControllerCreate404>
 
 /**
  * @description SKU já adicionado ao pedido ou pedido finalizado
  */
-export const pedidoCompraItemControllerCreate409Schema = z.unknown() as unknown as ToZod<PedidoCompraItemControllerCreate409>
+export const pedidoCompraItemControllerCreate409Schema = z.unknown() as unknown as z.ZodType<PedidoCompraItemControllerCreate409>
 
 /**
  * @description Dados para criação do item de pedido de compra
  */
-export const pedidoCompraItemControllerCreateMutationRequestSchema = z.lazy(() => createPedidoCompraItemDtoSchema) as unknown as ToZod<PedidoCompraItemControllerCreateMutationRequest>
+export const pedidoCompraItemControllerCreateMutationRequestSchema = createPedidoCompraItemDtoSchema as unknown as z.ZodType<PedidoCompraItemControllerCreateMutationRequest>
 
-export const pedidoCompraItemControllerCreateMutationResponseSchema = z.lazy(() => pedidoCompraItemControllerCreate201Schema) as unknown as ToZod<PedidoCompraItemControllerCreateMutationResponse>
+export const pedidoCompraItemControllerCreateMutationResponseSchema = pedidoCompraItemControllerCreate201Schema as unknown as z.ZodType<PedidoCompraItemControllerCreateMutationResponse>

@@ -4,30 +4,29 @@
 */
 
 import type { VendaItemControllerFindOnePathParams, VendaItemControllerFindOneQueryParams, VendaItemControllerFindOneHeaderParams, VendaItemControllerFindOne200, VendaItemControllerFindOne404, VendaItemControllerFindOneQueryResponse } from "../types/VendaItemControllerFindOne.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { vendaItemEntitySchema } from "./vendaItemEntitySchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const vendaItemControllerFindOnePathParamsSchema = z.object({
-      "id": z.string().describe("ID do item")
-      }) as unknown as ToZod<VendaItemControllerFindOnePathParams>
+    "id": z.string().describe("ID do item")
+    }) as unknown as z.ZodType<VendaItemControllerFindOnePathParams>
 
 export const vendaItemControllerFindOneQueryParamsSchema = z.object({
-      "vendaId": z.string()
-      }) as unknown as ToZod<VendaItemControllerFindOneQueryParams>
+    "vendaId": z.string()
+    }) as unknown as z.ZodType<VendaItemControllerFindOneQueryParams>
 
 export const vendaItemControllerFindOneHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<VendaItemControllerFindOneHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<VendaItemControllerFindOneHeaderParams>
 
 /**
  * @description Item encontrado
  */
-export const vendaItemControllerFindOne200Schema = z.lazy(() => vendaItemEntitySchema) as unknown as ToZod<VendaItemControllerFindOne200>
+export const vendaItemControllerFindOne200Schema = vendaItemEntitySchema as unknown as z.ZodType<VendaItemControllerFindOne200>
 
 /**
  * @description Item não encontrado
  */
-export const vendaItemControllerFindOne404Schema = z.unknown() as unknown as ToZod<VendaItemControllerFindOne404>
+export const vendaItemControllerFindOne404Schema = z.unknown() as unknown as z.ZodType<VendaItemControllerFindOne404>
 
-export const vendaItemControllerFindOneQueryResponseSchema = z.lazy(() => vendaItemControllerFindOne200Schema) as unknown as ToZod<VendaItemControllerFindOneQueryResponse>
+export const vendaItemControllerFindOneQueryResponseSchema = vendaItemControllerFindOne200Schema as unknown as z.ZodType<VendaItemControllerFindOneQueryResponse>

@@ -4,17 +4,16 @@
 */
 
 import type { UpdateParceiroDto } from "../types/UpdateParceiroDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const updateParceiroDtoSchema = z.object({
-      "nome": z.coerce.string().describe("Nome do parceiro").optional(),
-  "ruccnpj": z.coerce.string().describe("RUC/CNPJ do parceiro").optional(),
-  "email": z.coerce.string().describe("Email do parceiro").optional(),
-  "redesocial": z.coerce.string().describe("Rede social do parceiro").optional(),
-  "telefone": z.coerce.string().describe("Telefone do parceiro").optional(),
-  "currencyId": z.coerce.number().describe("ID da moeda do parceiro").optional(),
-  "ativo": z.boolean().default(true).describe("Status ativo do parceiro"),
-  "logourl": z.coerce.string().describe("URL do logo do parceiro").optional(),
-  "thumburl": z.coerce.string().describe("URL da imagem reduzida do parceiro").optional()
-      }) as unknown as ToZod<UpdateParceiroDto>
+    "nome": z.optional(z.coerce.string().describe("Nome do parceiro")),
+"ruccnpj": z.optional(z.coerce.string().describe("RUC/CNPJ do parceiro")),
+"email": z.optional(z.coerce.string().describe("Email do parceiro")),
+"redesocial": z.optional(z.coerce.string().describe("Rede social do parceiro")),
+"telefone": z.optional(z.coerce.string().describe("Telefone do parceiro")),
+"currencyId": z.optional(z.coerce.number().describe("ID da moeda do parceiro")),
+"ativo": z.optional(z.boolean().default(true).describe("Status ativo do parceiro")),
+"logourl": z.optional(z.coerce.string().describe("URL do logo do parceiro")),
+"thumburl": z.optional(z.coerce.string().describe("URL da imagem reduzida do parceiro"))
+    }) as unknown as z.ZodType<UpdateParceiroDto>

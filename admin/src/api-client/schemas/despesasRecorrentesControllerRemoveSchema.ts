@@ -4,26 +4,25 @@
 */
 
 import type { DespesasRecorrentesControllerRemovePathParams, DespesasRecorrentesControllerRemove200, DespesasRecorrentesControllerRemove401, DespesasRecorrentesControllerRemove404, DespesasRecorrentesControllerRemoveMutationResponse } from "../types/DespesasRecorrentesControllerRemove.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const despesasRecorrentesControllerRemovePathParamsSchema = z.object({
-      "publicId": z.string().describe("ID público da despesa recorrente")
-      }) as unknown as ToZod<DespesasRecorrentesControllerRemovePathParams>
+    "publicId": z.string().describe("ID público da despesa recorrente")
+    }) as unknown as z.ZodType<DespesasRecorrentesControllerRemovePathParams>
 
 /**
  * @description Despesa recorrente removida com sucesso
  */
-export const despesasRecorrentesControllerRemove200Schema = z.unknown() as unknown as ToZod<DespesasRecorrentesControllerRemove200>
+export const despesasRecorrentesControllerRemove200Schema = z.unknown() as unknown as z.ZodType<DespesasRecorrentesControllerRemove200>
 
 /**
  * @description Não autorizado
  */
-export const despesasRecorrentesControllerRemove401Schema = z.unknown() as unknown as ToZod<DespesasRecorrentesControllerRemove401>
+export const despesasRecorrentesControllerRemove401Schema = z.unknown() as unknown as z.ZodType<DespesasRecorrentesControllerRemove401>
 
 /**
  * @description Despesa recorrente não encontrada
  */
-export const despesasRecorrentesControllerRemove404Schema = z.unknown() as unknown as ToZod<DespesasRecorrentesControllerRemove404>
+export const despesasRecorrentesControllerRemove404Schema = z.unknown() as unknown as z.ZodType<DespesasRecorrentesControllerRemove404>
 
-export const despesasRecorrentesControllerRemoveMutationResponseSchema = z.lazy(() => despesasRecorrentesControllerRemove200Schema) as unknown as ToZod<DespesasRecorrentesControllerRemoveMutationResponse>
+export const despesasRecorrentesControllerRemoveMutationResponseSchema = despesasRecorrentesControllerRemove200Schema as unknown as z.ZodType<DespesasRecorrentesControllerRemoveMutationResponse>

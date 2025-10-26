@@ -4,12 +4,11 @@
 */
 
 import type { UpdateLocalEstoqueDto } from "../types/UpdateLocalEstoqueDto.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const updateLocalEstoqueDtoSchema = z.object({
-      "parceiroId": z.coerce.number().describe("ID do parceiro proprietário").optional(),
-  "nome": z.coerce.string().describe("Nome do local de estoque").optional(),
-  "descricao": z.coerce.string().describe("Descrição do local de estoque").optional(),
-  "endereco": z.coerce.string().describe("Endereço do local de estoque").optional()
-      }) as unknown as ToZod<UpdateLocalEstoqueDto>
+    "parceiroId": z.optional(z.coerce.number().describe("ID do parceiro proprietário")),
+"nome": z.optional(z.coerce.string().describe("Nome do local de estoque")),
+"descricao": z.optional(z.coerce.string().describe("Descrição do local de estoque")),
+"endereco": z.optional(z.coerce.string().describe("Endereço do local de estoque"))
+    }) as unknown as z.ZodType<UpdateLocalEstoqueDto>

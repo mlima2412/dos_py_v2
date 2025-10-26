@@ -4,15 +4,14 @@
 */
 
 import type { CategoriaProdutoControllerFindAll200, CategoriaProdutoControllerFindAllQueryResponse } from "../types/CategoriaProdutoControllerFindAll.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /**
  * @description Lista de categorias de produto retornada com sucesso
  */
 export const categoriaProdutoControllerFindAll200Schema = z.array(z.object({
-      "id": z.coerce.number().optional(),
-  "descricao": z.coerce.string().optional()
-      })) as unknown as ToZod<CategoriaProdutoControllerFindAll200>
+    "id": z.optional(z.coerce.number()),
+"descricao": z.optional(z.coerce.string())
+    })) as unknown as z.ZodType<CategoriaProdutoControllerFindAll200>
 
-export const categoriaProdutoControllerFindAllQueryResponseSchema = z.lazy(() => categoriaProdutoControllerFindAll200Schema) as unknown as ToZod<CategoriaProdutoControllerFindAllQueryResponse>
+export const categoriaProdutoControllerFindAllQueryResponseSchema = categoriaProdutoControllerFindAll200Schema as unknown as z.ZodType<CategoriaProdutoControllerFindAllQueryResponse>

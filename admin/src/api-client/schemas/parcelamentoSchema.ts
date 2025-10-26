@@ -4,17 +4,16 @@
 */
 
 import type { Parcelamento } from "../types/Parcelamento.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const parcelamentoSchema = z.object({
-      "id": z.coerce.number().describe("ID do parcelamento"),
-  "idPagamento": z.coerce.number().describe("ID do pagamento associado"),
-  "clienteId": z.coerce.number().describe("ID do cliente associado"),
-  "valorTotal": z.coerce.number().describe("Valor total parcelado"),
-  "valorPago": z.coerce.number().default(0).describe("Valor já pago neste parcelamento"),
-  "idFormaPag": z.coerce.number().describe("ID da forma de pagamento"),
-  "situacao": z.coerce.number().default(1).describe("Situação do parcelamento (1 - Aberto, 2 - Concluído)"),
-  "formaPagamentoNome": z.coerce.string().describe("Nome da forma de pagamento").optional(),
-  "clienteNome": z.coerce.string().describe("Nome do cliente").optional()
-      }) as unknown as ToZod<Parcelamento>
+    "id": z.coerce.number().describe("ID do parcelamento"),
+"idPagamento": z.coerce.number().describe("ID do pagamento associado"),
+"clienteId": z.coerce.number().describe("ID do cliente associado"),
+"valorTotal": z.coerce.number().describe("Valor total parcelado"),
+"valorPago": z.coerce.number().default(0).describe("Valor já pago neste parcelamento"),
+"idFormaPag": z.coerce.number().describe("ID da forma de pagamento"),
+"situacao": z.coerce.number().default(1).describe("Situação do parcelamento (1 - Aberto, 2 - Concluído)"),
+"formaPagamentoNome": z.optional(z.coerce.string().describe("Nome da forma de pagamento")),
+"clienteNome": z.optional(z.coerce.string().describe("Nome do cliente"))
+    }) as unknown as z.ZodType<Parcelamento>

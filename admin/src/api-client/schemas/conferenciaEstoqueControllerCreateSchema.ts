@@ -4,35 +4,34 @@
 */
 
 import type { ConferenciaEstoqueControllerCreateHeaderParams, ConferenciaEstoqueControllerCreate201, ConferenciaEstoqueControllerCreate400, ConferenciaEstoqueControllerCreate404, ConferenciaEstoqueControllerCreate409, ConferenciaEstoqueControllerCreateMutationRequest, ConferenciaEstoqueControllerCreateMutationResponse } from "../types/ConferenciaEstoqueControllerCreate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { conferenciaEstoqueResponseDtoSchema } from "./conferenciaEstoqueResponseDtoSchema.ts";
 import { createConferenciaEstoqueDtoSchema } from "./createConferenciaEstoqueDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const conferenciaEstoqueControllerCreateHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<ConferenciaEstoqueControllerCreateHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<ConferenciaEstoqueControllerCreateHeaderParams>
 
 /**
  * @description Conferência de estoque criada com sucesso
  */
-export const conferenciaEstoqueControllerCreate201Schema = z.lazy(() => conferenciaEstoqueResponseDtoSchema) as unknown as ToZod<ConferenciaEstoqueControllerCreate201>
+export const conferenciaEstoqueControllerCreate201Schema = conferenciaEstoqueResponseDtoSchema as unknown as z.ZodType<ConferenciaEstoqueControllerCreate201>
 
 /**
  * @description Dados inválidos
  */
-export const conferenciaEstoqueControllerCreate400Schema = z.unknown() as unknown as ToZod<ConferenciaEstoqueControllerCreate400>
+export const conferenciaEstoqueControllerCreate400Schema = z.unknown() as unknown as z.ZodType<ConferenciaEstoqueControllerCreate400>
 
 /**
  * @description Local de estoque ou usuário não encontrado
  */
-export const conferenciaEstoqueControllerCreate404Schema = z.unknown() as unknown as ToZod<ConferenciaEstoqueControllerCreate404>
+export const conferenciaEstoqueControllerCreate404Schema = z.unknown() as unknown as z.ZodType<ConferenciaEstoqueControllerCreate404>
 
 /**
  * @description Já existe uma conferência em andamento para este local
  */
-export const conferenciaEstoqueControllerCreate409Schema = z.unknown() as unknown as ToZod<ConferenciaEstoqueControllerCreate409>
+export const conferenciaEstoqueControllerCreate409Schema = z.unknown() as unknown as z.ZodType<ConferenciaEstoqueControllerCreate409>
 
-export const conferenciaEstoqueControllerCreateMutationRequestSchema = z.lazy(() => createConferenciaEstoqueDtoSchema) as unknown as ToZod<ConferenciaEstoqueControllerCreateMutationRequest>
+export const conferenciaEstoqueControllerCreateMutationRequestSchema = createConferenciaEstoqueDtoSchema as unknown as z.ZodType<ConferenciaEstoqueControllerCreateMutationRequest>
 
-export const conferenciaEstoqueControllerCreateMutationResponseSchema = z.lazy(() => conferenciaEstoqueControllerCreate201Schema) as unknown as ToZod<ConferenciaEstoqueControllerCreateMutationResponse>
+export const conferenciaEstoqueControllerCreateMutationResponseSchema = conferenciaEstoqueControllerCreate201Schema as unknown as z.ZodType<ConferenciaEstoqueControllerCreateMutationResponse>

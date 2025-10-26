@@ -4,31 +4,30 @@
 */
 
 import type { ProdutoControllerFindByLocalPathParams, ProdutoControllerFindByLocalQueryParams, ProdutoControllerFindByLocalHeaderParams, ProdutoControllerFindByLocal200, ProdutoControllerFindByLocal404, ProdutoControllerFindByLocalQueryResponse } from "../types/ProdutoControllerFindByLocal.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { produtosPorLocalResponseDtoSchema } from "./produtosPorLocalResponseDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const produtoControllerFindByLocalPathParamsSchema = z.object({
-      "localId": z.string().describe("ID público do local de estoque")
-      }) as unknown as ToZod<ProdutoControllerFindByLocalPathParams>
+    "localId": z.string().describe("ID público do local de estoque")
+    }) as unknown as z.ZodType<ProdutoControllerFindByLocalPathParams>
 
 export const produtoControllerFindByLocalQueryParamsSchema = z.object({
-      "apenasComEstoque": z.boolean().default(true).describe("Se deve incluir apenas produtos com estoque (qtd > 0)"),
-  "fornecedorId": z.string().describe("ID público do fornecedor para filtrar produtos").optional()
-      }) as unknown as ToZod<ProdutoControllerFindByLocalQueryParams>
+    "apenasComEstoque": z.optional(z.boolean().default(true).describe("Se deve incluir apenas produtos com estoque (qtd > 0)")),
+"fornecedorId": z.optional(z.string().describe("ID público do fornecedor para filtrar produtos"))
+    }) as unknown as z.ZodType<ProdutoControllerFindByLocalQueryParams>
 
 export const produtoControllerFindByLocalHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<ProdutoControllerFindByLocalHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<ProdutoControllerFindByLocalHeaderParams>
 
 /**
  * @description Lista de produtos com estoque no local especificado
  */
-export const produtoControllerFindByLocal200Schema = z.array(z.lazy(() => produtosPorLocalResponseDtoSchema)) as unknown as ToZod<ProdutoControllerFindByLocal200>
+export const produtoControllerFindByLocal200Schema = z.array(produtosPorLocalResponseDtoSchema) as unknown as z.ZodType<ProdutoControllerFindByLocal200>
 
 /**
  * @description Local de estoque não encontrado
  */
-export const produtoControllerFindByLocal404Schema = z.unknown() as unknown as ToZod<ProdutoControllerFindByLocal404>
+export const produtoControllerFindByLocal404Schema = z.unknown() as unknown as z.ZodType<ProdutoControllerFindByLocal404>
 
-export const produtoControllerFindByLocalQueryResponseSchema = z.lazy(() => produtoControllerFindByLocal200Schema) as unknown as ToZod<ProdutoControllerFindByLocalQueryResponse>
+export const produtoControllerFindByLocalQueryResponseSchema = produtoControllerFindByLocal200Schema as unknown as z.ZodType<ProdutoControllerFindByLocalQueryResponse>

@@ -4,25 +4,24 @@
 */
 
 import type { PagamentoControllerRemovePathParams, PagamentoControllerRemoveHeaderParams, PagamentoControllerRemove204, PagamentoControllerRemove404, PagamentoControllerRemoveMutationResponse } from "../types/PagamentoControllerRemove.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const pagamentoControllerRemovePathParamsSchema = z.object({
-      "id": z.coerce.number().describe("ID do pagamento")
-      }) as unknown as ToZod<PagamentoControllerRemovePathParams>
+    "id": z.coerce.number().describe("ID do pagamento")
+    }) as unknown as z.ZodType<PagamentoControllerRemovePathParams>
 
 export const pagamentoControllerRemoveHeaderParamsSchema = z.object({
-      "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
-      }) as unknown as ToZod<PagamentoControllerRemoveHeaderParams>
+    "x-parceiro-id": z.coerce.number().int().describe("ID do parceiro logado")
+    }) as unknown as z.ZodType<PagamentoControllerRemoveHeaderParams>
 
 /**
  * @description Pagamento removido com sucesso
  */
-export const pagamentoControllerRemove204Schema = z.unknown() as unknown as ToZod<PagamentoControllerRemove204>
+export const pagamentoControllerRemove204Schema = z.unknown() as unknown as z.ZodType<PagamentoControllerRemove204>
 
 /**
  * @description Pagamento não encontrado
  */
-export const pagamentoControllerRemove404Schema = z.unknown() as unknown as ToZod<PagamentoControllerRemove404>
+export const pagamentoControllerRemove404Schema = z.unknown() as unknown as z.ZodType<PagamentoControllerRemove404>
 
-export const pagamentoControllerRemoveMutationResponseSchema = z.lazy(() => pagamentoControllerRemove204Schema) as unknown as ToZod<PagamentoControllerRemoveMutationResponse>
+export const pagamentoControllerRemoveMutationResponseSchema = pagamentoControllerRemove204Schema as unknown as z.ZodType<PagamentoControllerRemoveMutationResponse>

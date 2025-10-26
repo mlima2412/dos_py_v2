@@ -4,45 +4,44 @@
 */
 
 import type { SubCategoriaDespesaControllerUpdatePathParams, SubCategoriaDespesaControllerUpdate200, SubCategoriaDespesaControllerUpdate401, SubCategoriaDespesaControllerUpdate404, SubCategoriaDespesaControllerUpdate409, SubCategoriaDespesaControllerUpdateMutationRequest, SubCategoriaDespesaControllerUpdateMutationResponse } from "../types/SubCategoriaDespesaControllerUpdate.ts";
-import type { ToZod } from "@kubb/plugin-zod/utils";
 import { updateSubCategoriaDespesaDtoSchema } from "./updateSubCategoriaDespesaDtoSchema.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const subCategoriaDespesaControllerUpdatePathParamsSchema = z.object({
-      "id": z.coerce.number().describe("ID da subcategoria de despesas")
-      }) as unknown as ToZod<SubCategoriaDespesaControllerUpdatePathParams>
+    "id": z.coerce.number().describe("ID da subcategoria de despesas")
+    }) as unknown as z.ZodType<SubCategoriaDespesaControllerUpdatePathParams>
 
 /**
  * @description Subcategoria de despesas atualizada com sucesso
  */
 export const subCategoriaDespesaControllerUpdate200Schema = z.object({
-      "idSubCategoria": z.coerce.number().optional(),
-  "categoriaId": z.coerce.number().optional(),
-  "descricao": z.coerce.string().optional(),
-  "ativo": z.boolean().optional(),
-  "createdAt": z.coerce.string().optional(),
-  "categoria": z.object({
-      "idCategoria": z.coerce.number().optional(),
-  "descricao": z.coerce.string().optional(),
-  "ativo": z.boolean().optional()
-      }).optional()
-      }) as unknown as ToZod<SubCategoriaDespesaControllerUpdate200>
+    "idSubCategoria": z.optional(z.coerce.number()),
+"categoriaId": z.optional(z.coerce.number()),
+"descricao": z.optional(z.coerce.string()),
+"ativo": z.optional(z.boolean()),
+"createdAt": z.optional(z.coerce.string()),
+"categoria": z.optional(z.object({
+    "idCategoria": z.optional(z.coerce.number()),
+"descricao": z.optional(z.coerce.string()),
+"ativo": z.optional(z.boolean())
+    }))
+    }) as unknown as z.ZodType<SubCategoriaDespesaControllerUpdate200>
 
 /**
  * @description Não autorizado
  */
-export const subCategoriaDespesaControllerUpdate401Schema = z.unknown() as unknown as ToZod<SubCategoriaDespesaControllerUpdate401>
+export const subCategoriaDespesaControllerUpdate401Schema = z.unknown() as unknown as z.ZodType<SubCategoriaDespesaControllerUpdate401>
 
 /**
  * @description Subcategoria de despesas não encontrada
  */
-export const subCategoriaDespesaControllerUpdate404Schema = z.unknown() as unknown as ToZod<SubCategoriaDespesaControllerUpdate404>
+export const subCategoriaDespesaControllerUpdate404Schema = z.unknown() as unknown as z.ZodType<SubCategoriaDespesaControllerUpdate404>
 
 /**
  * @description Descrição da subcategoria já existe nesta categoria
  */
-export const subCategoriaDespesaControllerUpdate409Schema = z.unknown() as unknown as ToZod<SubCategoriaDespesaControllerUpdate409>
+export const subCategoriaDespesaControllerUpdate409Schema = z.unknown() as unknown as z.ZodType<SubCategoriaDespesaControllerUpdate409>
 
-export const subCategoriaDespesaControllerUpdateMutationRequestSchema = z.lazy(() => updateSubCategoriaDespesaDtoSchema) as unknown as ToZod<SubCategoriaDespesaControllerUpdateMutationRequest>
+export const subCategoriaDespesaControllerUpdateMutationRequestSchema = updateSubCategoriaDespesaDtoSchema as unknown as z.ZodType<SubCategoriaDespesaControllerUpdateMutationRequest>
 
-export const subCategoriaDespesaControllerUpdateMutationResponseSchema = z.lazy(() => subCategoriaDespesaControllerUpdate200Schema) as unknown as ToZod<SubCategoriaDespesaControllerUpdateMutationResponse>
+export const subCategoriaDespesaControllerUpdateMutationResponseSchema = subCategoriaDespesaControllerUpdate200Schema as unknown as z.ZodType<SubCategoriaDespesaControllerUpdateMutationResponse>

@@ -9,7 +9,7 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const parcelasControllerFindAllQueryKey = (params: ParcelasControllerFindAllQueryParams) =>   [{ url: '/parcelas' }, ...(params ? [params] : [])] as const
+export const parcelasControllerFindAllQueryKey = (params: ParcelasControllerFindAllQueryParams) => [{ url: '/parcelas' }, ...(params ? [params] : [])] as const
 
 export type ParcelasControllerFindAllQueryKey = ReturnType<typeof parcelasControllerFindAllQueryKey>
 
@@ -18,25 +18,22 @@ export type ParcelasControllerFindAllQueryKey = ReturnType<typeof parcelasContro
  * {@link /parcelas}
  */
 export async function parcelasControllerFindAll(params: ParcelasControllerFindAllQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  const { client:request = fetch, ...requestConfig } = config
-
-
-const res = await request<ParcelasControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/parcelas`, params, ... requestConfig })
-return res.data
+  const { client: request = fetch, ...requestConfig } = config  
+  
+  const res = await request<ParcelasControllerFindAllQueryResponse, ResponseErrorConfig<Error>, unknown>({ method : "GET", url : `/parcelas`, params, ... requestConfig })  
+  return res.data
 }
 
 export function parcelasControllerFindAllQueryOptions(params: ParcelasControllerFindAllQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
-  
-        const queryKey = parcelasControllerFindAllQueryKey(params)
-        return queryOptions<ParcelasControllerFindAllQueryResponse, ResponseErrorConfig<Error>, ParcelasControllerFindAllQueryResponse, typeof queryKey>({
-         enabled: !!(params),
-         queryKey,
-         queryFn: async ({ signal }) => {
-            config.signal = signal
-            return parcelasControllerFindAll(params, config)
-         },
-        })
-  
+  const queryKey = parcelasControllerFindAllQueryKey(params)
+  return queryOptions<ParcelasControllerFindAllQueryResponse, ResponseErrorConfig<Error>, ParcelasControllerFindAllQueryResponse, typeof queryKey>({
+   enabled: !!(params),
+   queryKey,
+   queryFn: async ({ signal }) => {
+      config.signal = signal
+      return parcelasControllerFindAll(params, config)
+   },
+  })
 }
 
 /**
@@ -44,23 +41,22 @@ export function parcelasControllerFindAllQueryOptions(params: ParcelasController
  * {@link /parcelas}
  */
 export function useParcelasControllerFindAll<TData = ParcelasControllerFindAllQueryResponse, TQueryData = ParcelasControllerFindAllQueryResponse, TQueryKey extends QueryKey = ParcelasControllerFindAllQueryKey>(params: ParcelasControllerFindAllQueryParams, options: 
-  {
-    query?: Partial<QueryObserverOptions<ParcelasControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
-    client?: Partial<RequestConfig> & { client?: typeof fetch }
-  }
-   = {}) {
-  
-         const { query: { client: queryClient, ...queryOptions } = {}, client: config = {} } = options ?? {}
-         const queryKey = queryOptions?.queryKey ?? parcelasControllerFindAllQueryKey(params)
-  
-         const query = useQuery({
-          ...parcelasControllerFindAllQueryOptions(params, config),
-          queryKey,
-          ...queryOptions
-         } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
-  
-         query.queryKey = queryKey as TQueryKey
-  
-         return query
-         
+{
+  query?: Partial<QueryObserverOptions<ParcelasControllerFindAllQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & { client?: QueryClient },
+  client?: Partial<RequestConfig> & { client?: typeof fetch }
+}
+ = {}) {
+  const { query: queryConfig = {}, client: config = {} } = options ?? {}
+  const { client: queryClient, ...queryOptions } = queryConfig
+  const queryKey = queryOptions?.queryKey ?? parcelasControllerFindAllQueryKey(params)
+
+  const query = useQuery({
+   ...parcelasControllerFindAllQueryOptions(params, config),
+   queryKey,
+   ...queryOptions
+  } as unknown as QueryObserverOptions, queryClient) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey }
+
+  query.queryKey = queryKey as TQueryKey
+
+  return query
 }
