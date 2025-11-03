@@ -66,22 +66,15 @@ const finalizePurchaseSchema = z
 		paymentType: z.enum(
 			["A_VISTA_IMEDIATA", "A_PRAZO_SEM_PARCELAS", "PARCELADO"],
 			{
-				errorMap: () => ({
-					message: "purchaseOrders.finalize.validation.paymentTypeRequired",
-				}),
+				message: "purchaseOrders.finalize.validation.paymentTypeRequired",
 			}
 		),
 		dueDate: z.date().optional(),
 		entryValue: z
-			.number({
-				invalid_type_error: "purchaseOrders.finalize.validation.entryValueMin",
-			})
+			.number()
 			.min(0, { message: "purchaseOrders.finalize.validation.entryValueMin" }),
 		installments: z
-			.number({
-				invalid_type_error:
-					"purchaseOrders.finalize.validation.installmentsMin",
-			})
+			.number()
 			.min(1, {
 				message: "purchaseOrders.finalize.validation.installmentsMin",
 			}),
@@ -161,16 +154,7 @@ export const FinalizarPedidoCompra: React.FC = () => {
 	const storageKey = getStorageKey(selectedPartnerId, publicId);
 
 	const form = useForm<FinalizePurchaseFormData>({
-		resolver: zodResolver(finalizePurchaseSchema, {
-			errorMap: issue => {
-				if (issue.message && issue.message.startsWith("purchaseOrders")) {
-					return {
-						message: t(issue.message as never),
-					};
-				}
-				return { message: t("purchaseOrders.finalize.validation.generic") };
-			},
-		}),
+		resolver: zodResolver(finalizePurchaseSchema),
 		defaultValues: {
 			paymentType: "A_VISTA_IMEDIATA",
 			dueDate: undefined,
@@ -226,7 +210,10 @@ export const FinalizarPedidoCompra: React.FC = () => {
 		[pedido, currencies]
 	);
 
-	const supplierName = pedido?.fornecedor?.nome || "-";
+	type PedidoFornecedorInfo = { nome?: string | null };
+	const supplierName =
+		((pedido?.fornecedor as PedidoFornecedorInfo | undefined)?.nome ??
+			undefined) || "-";
 	const valorOriginalNumber = useMemo(
 		() => parseToNumber(pedido?.valorTotal ?? 0) || 0,
 		[pedido?.valorTotal]
@@ -305,7 +292,7 @@ export const FinalizarPedidoCompra: React.FC = () => {
 
 		const subscription = form.watch(values => {
 			const dataToPersist: StoredFinalizeFormData = {
-				paymentType: values.paymentType,
+				paymentType: values.paymentType || "A_VISTA_IMEDIATA",
 				dueDate: values.dueDate ? values.dueDate.toISOString() : null,
 				entryValue: values.entryValue ?? 0,
 				installments: values.installments ?? 1,
@@ -329,7 +316,7 @@ export const FinalizarPedidoCompra: React.FC = () => {
 		navigate("/pedidoCompra");
 	};
 
-	const onSubmit = (values: FinalizePurchaseFormData) => {
+	const onSubmit = (_values: FinalizePurchaseFormData) => {
 		if (!publicId) return;
 		setShowConfirmDialog(true);
 	};

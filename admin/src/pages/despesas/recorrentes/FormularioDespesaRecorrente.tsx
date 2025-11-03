@@ -96,6 +96,10 @@ export function FormularioDespesaRecorrente() {
 	const [cotacaoInput, setCotacaoInput] = useState<string>("");
 	const [selectedCategoria, setSelectedCategoria] = useState<string>("");
 
+	const fornecedoresHeaders = {
+		"x-parceiro-id": selectedPartnerId?.toString() ?? "",
+	};
+
 	// Criar schema com traduções
 	const formSchema = createFormSchema(t);
 	type FormData = z.infer<typeof formSchema>;
@@ -131,7 +135,14 @@ export function FormularioDespesaRecorrente() {
 		});
 
 	const { data: fornecedores = [] } =
-		useFornecedoresControllerFindActiveFornecedores();
+		useFornecedoresControllerFindActiveFornecedores(
+			fornecedoresHeaders,
+			{
+				query: {
+					enabled: Boolean(selectedPartnerId),
+				},
+			}
+		);
 
 	const { data: currencies = [] } = useCurrencyControllerFindAllActive();
 

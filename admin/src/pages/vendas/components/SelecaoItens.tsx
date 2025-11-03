@@ -74,9 +74,10 @@ export const SelecaoItens: React.FC<SelecaoItensProps> = ({
 		sku: ProdutoSKUEstoqueResponseDto;
 		product: ProdutosPorLocalResponseDto;
 	} | null>(null);
+	const isViewMode = (mode as string) === "view";
 
 	const handleEditDiscount = (skuId: number) => {
-		if (mode === "view") return;
+		if (isViewMode) return;
 		const item = itensSelecionados.find(i => i.skuId === skuId);
 		if (item) {
 			setEditingSkuId(skuId);
@@ -89,7 +90,7 @@ export const SelecaoItens: React.FC<SelecaoItensProps> = ({
 		sku: ProdutoSKUEstoqueResponseDto,
 		product: ProdutosPorLocalResponseDto
 	) => {
-		if (mode === "view") return;
+		if (isViewMode) return;
 
 		// Set pending addition and open dialog
 		setPendingAddition({ sku, product });
@@ -133,7 +134,7 @@ export const SelecaoItens: React.FC<SelecaoItensProps> = ({
 				</Card>
 			)}
 			<div className="grid gap-4 lg:grid-cols-2">
-				{mode !== "view" && (
+				{!isViewMode && (
 					<Card className="h-full">
 						<CardHeader>
 							<CardTitle>
@@ -147,7 +148,7 @@ export const SelecaoItens: React.FC<SelecaoItensProps> = ({
 								onProductSelect={value => setSelectedProductId(value)}
 								isLoading={isLoadingProdutos}
 								error={produtosError}
-								disabled={mode === "view" || !selectedLocal}
+									disabled={isViewMode || !selectedLocal}
 								placeholder={t("salesOrders.form.placeholders.product")}
 							/>
 							<ScrollArea className="h-[620px] rounded-md border">
@@ -195,7 +196,7 @@ export const SelecaoItens: React.FC<SelecaoItensProps> = ({
 								value={skuSearchCode}
 								onChange={event => setSkuSearchCode(event.target.value)}
 								placeholder={t("salesOrders.form.placeholders.barcode")}
-								disabled={mode === "view"}
+								disabled={isViewMode}
 								onKeyDown={event => {
 									if (event.key === "Enter") {
 										event.preventDefault();
@@ -223,7 +224,7 @@ export const SelecaoItens: React.FC<SelecaoItensProps> = ({
 							}))}
 							onRemoveSku={handlers.onRemoveItem}
 							onUpdateQuantity={handlers.onUpdateQuantity}
-							enabledStockAdjustment={mode !== "view"}
+											enabledStockAdjustment={!isViewMode}
 							emptyMessage={t("salesOrders.form.messages.noItemsSelected")}
 							showDiscount={true}
 							onEditDiscount={handleEditDiscount}
@@ -247,7 +248,7 @@ export const SelecaoItens: React.FC<SelecaoItensProps> = ({
 				</Card>
 			</div>
 
-			{mode !== "view" && (
+			{!isViewMode && (
 				<div className="flex justify-between pt-2">
 					<Button variant="outline" onClick={onBack}>
 						{t("salesOrders.form.actions.back")}

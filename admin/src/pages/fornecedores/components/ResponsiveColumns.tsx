@@ -21,8 +21,13 @@ import {
 	useFornecedoresControllerDeactivateFornecedor,
 } from "@/api-client";
 import { useToast } from "@/hooks/useToast";
+import { usePartnerContext } from "@/hooks/usePartnerContext";
 
 type FornecedorWithRelations = Fornecedor;
+
+type FornecedorMutationHeaders = {
+	"x-parceiro-id": string;
+};
 
 export const createColumns = (
 	t: (key: string) => string,
@@ -32,7 +37,9 @@ export const createColumns = (
 	deactivateFornecedor: ReturnType<
 		typeof useFornecedoresControllerDeactivateFornecedor
 	>,
-	toast: ReturnType<typeof useToast>
+	toast: ReturnType<typeof useToast>,
+	partnerHeaders: FornecedorMutationHeaders,
+	partnerId?: string | null
 ): ColumnDef<FornecedorWithRelations>[] => [
 	{
 		accessorKey: "nome",
@@ -111,15 +118,22 @@ export const createColumns = (
 			const isActive = fornecedor.ativo;
 
 			const handleToggle = async () => {
+				if (!partnerId) {
+					toast.error(t("suppliers.messages.partnerRequired"));
+					return;
+				}
+
 				try {
 					if (isActive) {
 						await deactivateFornecedor.mutateAsync({
 							publicId: fornecedor.publicId,
+							headers: partnerHeaders,
 						});
 						toast.success(t("suppliers.messages.deactivateSuccess"));
 					} else {
 						await activateFornecedor.mutateAsync({
 							publicId: fornecedor.publicId,
+							headers: partnerHeaders,
 						});
 						toast.success(t("suppliers.messages.activateSuccess"));
 					}
@@ -165,13 +179,23 @@ export const useResponsiveColumns = (
 	const activateFornecedor = useFornecedoresControllerActivateFornecedor();
 	const deactivateFornecedor = useFornecedoresControllerDeactivateFornecedor();
 	const toast = useToast();
+	const { selectedPartnerId } = usePartnerContext();
+	const partnerId = selectedPartnerId?.toString();
+	const partnerHeaders = useMemo<FornecedorMutationHeaders>(
+		() => ({
+			"x-parceiro-id": partnerId ?? "",
+		}),
+		[partnerId]
+	);
 
 	return useMemo(() => {
 		const allColumns = createColumns(
 			t,
 			activateFornecedor,
 			deactivateFornecedor,
-			toast
+			toast,
+			partnerHeaders,
+			partnerId
 		);
 
 		if (isMobile) {
@@ -184,7 +208,15 @@ export const useResponsiveColumns = (
 		}
 
 		return allColumns;
-	}, [t, isMobile, activateFornecedor, deactivateFornecedor, toast]);
+	}, [
+		t,
+		isMobile,
+		activateFornecedor,
+		deactivateFornecedor,
+		toast,
+		partnerHeaders,
+		partnerId,
+	]);
 };
 
 export const useIsMobile = () => {

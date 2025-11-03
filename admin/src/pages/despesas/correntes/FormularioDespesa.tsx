@@ -153,8 +153,12 @@ export function FormularioDespesa() {
 			query: { enabled: Boolean(selectedCategoria) },
 		});
 
+	const fornecedoresHeaders = {
+		"x-parceiro-id": selectedPartnerId?.toString() ?? "",
+	};
+
 	const { data: fornecedores = [], isLoading: isLoadingFornecedores } =
-		useFornecedoresControllerFindAll(Number(selectedPartnerId!), {
+		useFornecedoresControllerFindAll(fornecedoresHeaders, {
 			query: { enabled: Boolean(selectedPartnerId) },
 		});
 

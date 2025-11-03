@@ -176,6 +176,17 @@ export const FormularioPedidoCompra: React.FC = () => {
 				: 0;
 		};
 
+		const normalizeCodCor = (value: unknown): number => {
+			if (typeof value === "number" && Number.isFinite(value)) {
+				return value;
+			}
+			if (typeof value === "string") {
+				const parsed = Number(value);
+				return Number.isNaN(parsed) ? 0 : parsed;
+			}
+			return 0;
+		};
+
 		return produtosResponse.map(produto => ({
 			id: produto.id,
 			publicId: produto.publicId,
@@ -213,7 +224,7 @@ export const FormularioPedidoCompra: React.FC = () => {
 				publicId: sku.publicId,
 				cor: sku.cor ?? "",
 				tamanho: sku.tamanho ?? "",
-				codCor: sku.codCor ?? "",
+				codCor: normalizeCodCor(sku.codCor),
 				qtdMinima: sku.qtdMinima ?? 0,
 				estoque: normalizeEstoque(sku),
 			})),

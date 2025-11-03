@@ -23,14 +23,14 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import type { PagamentoFormData } from "../types";
 import type {
-	PagamentoTipoEnum,
+	PagamentoTipoEnumKey,
 	FormaPagamentoResponseDto,
 } from "@/api-client/types";
 
 interface PagamentoFormItemProps {
 	index: number;
 	pagamento: PagamentoFormData;
-	tipoVenda: PagamentoTipoEnum | undefined;
+	tipoVenda: PagamentoTipoEnumKey | undefined;
 	formasPagamento: FormaPagamentoResponseDto[];
 	onUpdate: (index: number, pagamento: Partial<PagamentoFormData>) => void;
 	onRemove: (index: number) => void;

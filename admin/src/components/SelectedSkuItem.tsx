@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, Minus, Trash2 } from "lucide-react";
 import { useCurrencyFormatter } from "@/hooks/useCurrencyFormatter";

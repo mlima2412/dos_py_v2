@@ -17,8 +17,6 @@ export const transformClienteToForm = (cliente: Cliente): ClienteFormData => ({
 	cep: cliente.cep || "",
 	observacoes: cliente.observacoes || "",
 	ativo: cliente.ativo ?? true,
-	ruccnpjSecundario: cliente.ruccnpjSecundario || "",
-	nomeFatura: (cliente as { nomeFatura?: string }).nomeFatura || "",
 });
 
 // Helper function to convert empty strings to undefined for unique fields
@@ -27,14 +25,6 @@ const cleanUniqueFields = (data: ClienteFormData) => ({
 	ruccnpj:
 		data.ruccnpj && data.ruccnpj.trim() !== "" ? data.ruccnpj : undefined,
 	email: data.email && data.email.trim() !== "" ? data.email : undefined,
-	ruccnpjSecundario:
-		data.ruccnpjSecundario && data.ruccnpjSecundario.trim() !== ""
-			? data.ruccnpjSecundario
-			: undefined,
-	nomeFatura:
-		data.nomeFatura && data.nomeFatura.trim() !== ""
-			? data.nomeFatura
-			: undefined,
 });
 
 export const transformFormToCreateCliente = (

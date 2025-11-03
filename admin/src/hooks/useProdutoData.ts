@@ -20,8 +20,12 @@ export const useProdutoData = (id?: string, isEditing: boolean = false) => {
 	const { data: categorias = [], isLoading: isLoadingCategorias } =
 		useCategoriaProdutoControllerFindAll();
 
+	const fornecedoresHeaders = {
+		"x-parceiro-id": selectedPartnerId?.toString() ?? "",
+	};
+
 	const { data: fornecedores = [], isLoading: isLoadingFornecedores } =
-		useFornecedoresControllerFindAll(Number(selectedPartnerId!), {
+		useFornecedoresControllerFindAll(fornecedoresHeaders, {
 			query: {
 				enabled: Boolean(selectedPartnerId),
 			},

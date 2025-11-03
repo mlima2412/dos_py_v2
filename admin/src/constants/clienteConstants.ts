@@ -13,8 +13,6 @@ export const CLIENTE_FORM_DEFAULTS = {
 	cep: "",
 	observacoes: "",
 	ativo: true,
-	ruccnpjSecundario: "",
-	nomeFatura: "",
 } as const;
 
 export const CLIENTE_FORM_GRID_CLASSES = {

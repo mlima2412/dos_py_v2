@@ -15,17 +15,17 @@ import { cn } from "@/lib/utils";
 import { PagamentoFormItem } from "./PagamentoFormItem";
 import type { PagamentoFormData } from "../types";
 import type {
-	PagamentoTipoEnum,
+	PagamentoTipoEnumKey,
 	FormaPagamentoResponseDto,
 } from "@/api-client/types";
 
 interface GestorPagamentosProps {
-	tipoVenda: PagamentoTipoEnum | undefined;
+	tipoVenda: PagamentoTipoEnumKey | undefined;
 	pagamentos: PagamentoFormData[];
 	formasPagamento: FormaPagamentoResponseDto[];
 	totalVenda: number;
 	formatCurrency: (value: number) => string;
-	onTipoVendaChange: (tipo: PagamentoTipoEnum) => void;
+	onTipoVendaChange: (tipo: PagamentoTipoEnumKey) => void;
 	onAddPagamento: () => void;
 	onUpdatePagamento: (
 		index: number,
@@ -65,7 +65,7 @@ export const GestorPagamentos: React.FC<GestorPagamentosProps> = ({
 					<Select
 						value={tipoVenda || ""}
 						onValueChange={value =>
-							onTipoVendaChange(value as PagamentoTipoEnum)
+							onTipoVendaChange(value as PagamentoTipoEnumKey)
 						}
 					>
 						<SelectTrigger>

@@ -1,13 +1,21 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 import { conferenciaEstoqueControllerFindAll } from "@/api-client";
-import type { ConferenciaEstoque } from "@/api-client/types";
+import type { ConferenciaEstoqueResponseDto } from "@/api-client";
 
 interface UseConferenciasParams {
 	search?: string;
 	parceiroId?: number;
 	limit?: number;
 }
+
+type ConferenciaEstoque = ConferenciaEstoqueResponseDto & {
+	parceiroId?: number;
+	LocalEstoque?: {
+		nome?: string;
+		descricao?: string;
+	};
+};
 
 export function useConferencias(params: UseConferenciasParams = {}) {
 	const { search, parceiroId, limit = 20 } = params;
@@ -35,15 +43,21 @@ export function useConferencias(params: UseConferenciasParams = {}) {
 					filteredConferencias = filteredConferencias.filter(
 						(conferencia: ConferenciaEstoque) => {
 							const searchTerm = search.toLowerCase();
-							return (
+							const localMatches =
+								conferencia.localNome?.toLowerCase().includes(searchTerm) ||
 								conferencia.LocalEstoque?.nome
 									?.toLowerCase()
 									.includes(searchTerm) ||
 								conferencia.LocalEstoque?.descricao
 									?.toLowerCase()
-									.includes(searchTerm) ||
-								conferencia.Usuario?.nome?.toLowerCase().includes(searchTerm)
-							);
+									.includes(searchTerm);
+							const usuarioMatches =
+								(typeof conferencia.Usuario === "string"
+									? conferencia.Usuario.toLowerCase()
+									: ""
+								).includes(searchTerm);
+
+							return localMatches || usuarioMatches;
 						}
 					);
 				}

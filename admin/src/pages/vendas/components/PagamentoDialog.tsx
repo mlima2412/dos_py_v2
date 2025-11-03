@@ -31,7 +31,7 @@ import {
 import { cn } from "@/lib/utils";
 import type { PagamentoFormData } from "../types";
 import type {
-	PagamentoTipoEnum,
+	PagamentoTipoEnumKey,
 	FormaPagamentoResponseDto,
 } from "@/api-client/types";
 
@@ -63,7 +63,7 @@ export const PagamentoDialog: React.FC<PagamentoDialogProps> = ({
 	const { t } = useTranslation("common");
 
 	const [tipoPagamento, setTipoPagamento] =
-		useState<PagamentoTipoEnum>("A_VISTA_IMEDIATA");
+		useState<PagamentoTipoEnumKey>("A_VISTA_IMEDIATA");
 	const [formaPagamentoId, setFormaPagamentoId] = useState<number>(
 		formasPagamento[0]?.idFormaPag || 0
 	);
@@ -157,7 +157,7 @@ export const PagamentoDialog: React.FC<PagamentoDialogProps> = ({
 						<Select
 							value={tipoPagamento}
 							onValueChange={value =>
-								setTipoPagamento(value as PagamentoTipoEnum)
+								setTipoPagamento(value as PagamentoTipoEnumKey)
 							}
 						>
 							<SelectTrigger>

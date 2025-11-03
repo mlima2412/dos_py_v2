@@ -1,4 +1,5 @@
 import { useFieldArray, useForm } from "react-hook-form";
+import type { Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import type { VendaFormMode, VendaFormValues, VendaSummary } from "../types";
@@ -98,15 +99,15 @@ interface UseVendaFormProps {
 }
 
 export const useVendaForm = ({
-	mode,
-	publicId,
-	setVendaResumo,
-	setCanAccessItems,
-	setCanAccessReview,
+	mode: _mode,
+	publicId: _publicId,
+	setVendaResumo: _setVendaResumo,
+	setCanAccessItems: _setCanAccessItems,
+	setCanAccessReview: _setCanAccessReview,
 }: UseVendaFormProps) => {
 	const formMethods = useForm<VendaFormValues>({
 		defaultValues,
-		resolver: zodResolver(vendaFormSchema),
+		resolver: zodResolver(vendaFormSchema) as Resolver<VendaFormValues>,
 		mode: "onBlur",
 	});
 

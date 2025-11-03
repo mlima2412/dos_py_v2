@@ -13,6 +13,12 @@ import type {
 	ProductGroup,
 } from "./types";
 
+type PedidoSkuDetails = {
+	produto?: { nome?: string | null } | null;
+	cor?: string | null;
+	tamanho?: string | null;
+};
+
 export const PedidoCompraPrintPage: React.FC = () => {
 	const { t, i18n } = useTranslation("common");
 	const { publicId } = useParams<{ publicId: string }>();
@@ -64,10 +70,10 @@ export const PedidoCompraPrintPage: React.FC = () => {
 			const groupedItems = new Map<string, PedidoCompraItemPrint[]>();
 
 			pedidoItens.forEach(item => {
-				const productName =
-					(item.ProdutoSKU?.produto?.nome as string | undefined) || "Produto";
-				const cor = item.ProdutoSKU?.cor || "-";
-				const tamanho = item.ProdutoSKU?.tamanho || "-";
+				const skuInfo = (item.ProdutoSKU as PedidoSkuDetails | undefined) || {};
+				const productName = skuInfo.produto?.nome || "Produto";
+				const cor = skuInfo.cor || "-";
+				const tamanho = skuInfo.tamanho || "-";
 				const quantidade = item.qtd;
 				const valorUnitario =
 					typeof item.precoCompra === "number"

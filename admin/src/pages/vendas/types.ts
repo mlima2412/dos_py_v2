@@ -1,8 +1,8 @@
 import type {
 	VendaItemEntity,
-	VendaStatusEnum,
-	VendaTipoEnum,
-	PagamentoTipoEnum,
+	VendaStatusEnumKey,
+	VendaTipoEnumKey,
+	PagamentoTipoEnumKey,
 } from "@/api-client/types";
 import type {
 	ProdutoSKUEstoqueResponseDto,
@@ -30,7 +30,7 @@ export interface VendaItemFormData {
 }
 
 export interface PagamentoFormData {
-	tipo: PagamentoTipoEnum; // Cada pagamento tem seu próprio tipo
+	tipo: PagamentoTipoEnumKey; // Cada pagamento tem seu próprio tipo
 	formaPagamentoId: number;
 	valor: number;
 	entrada: boolean;
@@ -44,7 +44,7 @@ export interface PagamentoFormData {
 export interface VendaFormValues {
 	clienteId?: number | null;
 	localSaidaId?: number | null;
-	tipo: VendaTipoEnum;
+	tipo: VendaTipoEnumKey;
 	dataVenda: Date;
 	dataEntrega?: Date | null;
 	observacao?: string;
@@ -64,7 +64,7 @@ export interface VendaFormValues {
 export interface VendaSummary {
 	id?: number;
 	publicId?: string;
-	status?: VendaStatusEnum;
+	status?: VendaStatusEnumKey;
 	clienteId?: number;
 	clienteNome?: string;
 	clienteSobrenome?: string;
