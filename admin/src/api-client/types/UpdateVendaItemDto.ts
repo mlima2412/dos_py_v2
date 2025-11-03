@@ -16,40 +16,40 @@ export type UpdateVendaItemDto = {
      * @description ID da venda
      * @type number | undefined
     */
-    vendaId?: number;
+    vendaId?: number | undefined;
     /**
      * @description ID do SKU
      * @type number | undefined
     */
-    skuId?: number;
+    skuId?: number | undefined;
     /**
      * @description Tipo do item
      * @type string | undefined
     */
-    tipo?: UpdateVendaItemDtoTipoEnumKey;
+    tipo?: UpdateVendaItemDtoTipoEnumKey | undefined;
     /**
      * @description Quantidade reservada
      * @type number | undefined
     */
-    qtdReservada?: number;
+    qtdReservada?: number | undefined;
     /**
      * @description Quantidade aceita (cliente ficou)
      * @type number | undefined
     */
-    qtdAceita?: number;
+    qtdAceita?: number | undefined;
     /**
      * @description Quantidade devolvida
      * @type number | undefined
     */
-    qtdDevolvida?: number;
+    qtdDevolvida?: number | undefined;
     /**
      * @description Desconto por item
      * @type number | undefined
     */
-    desconto?: number;
+    desconto?: number | undefined;
     /**
      * @description Preço unitário
      * @type number | undefined
     */
-    precoUnit?: number;
+    precoUnit?: number | undefined;
 };

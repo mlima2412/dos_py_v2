@@ -21,28 +21,28 @@ export type ConferenciaEstoqueControllerFindPaginatedQueryParams = {
      * @default 1
      * @type number | undefined
     */
-    page?: number;
+    page?: number | undefined;
     /**
      * @description Número de itens por página
      * @default 20
      * @type number | undefined
     */
-    limit?: number;
+    limit?: number | undefined;
     /**
      * @description Termo de busca
      * @type string | undefined
     */
-    search?: string;
+    search?: string | undefined;
     /**
      * @description Filtrar por status
      * @type string | undefined
     */
-    status?: ConferenciaEstoqueControllerFindPaginatedQueryParamsStatusEnumKey;
+    status?: ConferenciaEstoqueControllerFindPaginatedQueryParamsStatusEnumKey | undefined;
     /**
      * @description ID do local de estoque
      * @type number | undefined
     */
-    localEstoqueId?: number;
+    localEstoqueId?: number | undefined;
 };
 
 export type ConferenciaEstoqueControllerFindPaginatedHeaderParams = {
@@ -60,23 +60,23 @@ export type ConferenciaEstoqueControllerFindPaginated200 = {
     /**
      * @type array | undefined
     */
-    data?: ConferenciaEstoqueResponseDto[];
+    data?: ConferenciaEstoqueResponseDto[] | undefined;
     /**
      * @type number | undefined
     */
-    total?: number;
+    total?: number | undefined;
     /**
      * @type number | undefined
     */
-    page?: number;
+    page?: number | undefined;
     /**
      * @type number | undefined
     */
-    limit?: number;
+    limit?: number | undefined;
     /**
      * @type number | undefined
     */
-    totalPages?: number;
+    totalPages?: number | undefined;
 };
 
 export type ConferenciaEstoqueControllerFindPaginatedQueryResponse = ConferenciaEstoqueControllerFindPaginated200;

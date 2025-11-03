@@ -9,7 +9,7 @@ export type CreateCategoriaDespesasDto = {
      * @description ID da categoria
      * @type number | undefined
     */
-    idCategoria?: number;
+    idCategoria?: number | undefined;
     /**
      * @description Descrição da categoria de despesa
      * @type string
@@ -19,5 +19,5 @@ export type CreateCategoriaDespesasDto = {
      * @description Status ativo da categoria
      * @type boolean | undefined
     */
-    ativo?: boolean;
+    ativo?: boolean | undefined;
 };

@@ -46,10 +46,10 @@ export type Parcelamento = {
      * @description Nome da forma de pagamento
      * @type string | undefined
     */
-    formaPagamentoNome?: string;
+    formaPagamentoNome?: string | undefined;
     /**
      * @description Nome do cliente
      * @type string | undefined
     */
-    clienteNome?: string;
+    clienteNome?: string | undefined;
 };

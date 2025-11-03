@@ -20,17 +20,17 @@ export type CreateConferenciaItemDto = {
      * @default 0
      * @type number | undefined
     */
-    qtdSistema?: number;
+    qtdSistema?: number | undefined;
     /**
      * @description Quantidade conferida
      * @default 0
      * @type number | undefined
     */
-    qtdConferencia?: number;
+    qtdConferencia?: number | undefined;
     /**
      * @description Se o item foi ajustado
      * @default false
      * @type boolean | undefined
     */
-    ajustado?: boolean;
+    ajustado?: boolean | undefined;
 };

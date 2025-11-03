@@ -12,23 +12,23 @@ export type SubCategoriaDespesaControllerCreate201 = {
     /**
      * @type number | undefined
     */
-    idSubCategoria?: number;
+    idSubCategoria?: number | undefined;
     /**
      * @type number | undefined
     */
-    categoriaId?: number;
+    categoriaId?: number | undefined;
     /**
      * @type string | undefined
     */
-    descricao?: string;
+    descricao?: string | undefined;
     /**
      * @type boolean | undefined
     */
-    ativo?: boolean;
+    ativo?: boolean | undefined;
     /**
      * @type string | undefined
     */
-    createdAt?: string;
+    createdAt?: string | undefined;
     /**
      * @type object | undefined
     */
@@ -36,16 +36,16 @@ export type SubCategoriaDespesaControllerCreate201 = {
         /**
          * @type number | undefined
         */
-        idCategoria?: number;
+        idCategoria?: number | undefined;
         /**
          * @type string | undefined
         */
-        descricao?: string;
+        descricao?: string | undefined;
         /**
          * @type boolean | undefined
         */
-        ativo?: boolean;
-    };
+        ativo?: boolean | undefined;
+    } | undefined;
 };
 
 /**

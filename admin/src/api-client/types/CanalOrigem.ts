@@ -25,7 +25,7 @@ export type CanalOrigem = {
      * @description Descrição do canal de origem
      * @type string | undefined
     */
-    descricao?: string;
+    descricao?: string | undefined;
     /**
      * @description Status ativo do canal de origem
      * @type boolean
@@ -40,5 +40,5 @@ export type CanalOrigem = {
      * @description Clientes associados ao canal de origem
      * @type array | undefined
     */
-    clientes?: Cliente[];
+    clientes?: Cliente[] | undefined;
 };

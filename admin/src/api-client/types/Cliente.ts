@@ -33,47 +33,47 @@ export type Cliente = {
      * @description Sobrenome do cliente
      * @type string | undefined
     */
-    sobrenome?: string;
+    sobrenome?: string | undefined;
     /**
      * @description Email do cliente
      * @type string | undefined
     */
-    email?: string;
+    email?: string | undefined;
     /**
      * @description Rede social do cliente
      * @type string | undefined
     */
-    redeSocial?: string;
+    redeSocial?: string | undefined;
     /**
      * @description Celular do cliente
      * @type string | undefined
     */
-    celular?: string;
+    celular?: string | undefined;
     /**
      * @description RUC/CNPJ do cliente
      * @type string | undefined
     */
-    ruccnpj?: string;
+    ruccnpj?: string | undefined;
     /**
      * @description Endereço do cliente
      * @type string | undefined
     */
-    endereco?: string;
+    endereco?: string | undefined;
     /**
      * @description Cidade do cliente
      * @type string | undefined
     */
-    cidade?: string;
+    cidade?: string | undefined;
     /**
      * @description CEP do cliente
      * @type string | undefined
     */
-    cep?: string;
+    cep?: string | undefined;
     /**
      * @description Observações sobre o cliente
      * @type string | undefined
     */
-    observacoes?: string;
+    observacoes?: string | undefined;
     /**
      * @description Linguagem preferida do cliente
      * @type string
@@ -93,7 +93,7 @@ export type Cliente = {
      * @description ID do canal de origem
      * @type number | undefined
     */
-    canalOrigemId?: number;
+    canalOrigemId?: number | undefined;
     /**
      * @description Data de criação do cliente
      * @type string, date-time
@@ -117,9 +117,9 @@ export type Cliente = {
     /**
      * @description Parceiro associado ao cliente
     */
-    parceiro?: Parceiro;
+    parceiro?: Parceiro | undefined;
     /**
      * @description Canal de origem do cliente
     */
-    canalOrigem?: CanalOrigem;
+    canalOrigem?: CanalOrigem | undefined;
 };

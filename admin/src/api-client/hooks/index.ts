@@ -336,6 +336,7 @@ export type { UsuariosControllerFindPaginatedSuspenseQueryKey } from "./useUsuar
 export type { UsuariosControllerInitializeSystemMutationKey } from "./useUsuariosControllerInitializeSystem.ts";
 export type { UsuariosControllerUpdateMutationKey } from "./useUsuariosControllerUpdate.ts";
 export type { VendaControllerCreateMutationKey } from "./useVendaControllerCreate.ts";
+export type { VendaControllerFinalizarBrindePermutaMutationKey } from "./useVendaControllerFinalizarBrindePermuta.ts";
 export type { VendaControllerFinalizeDiretaMutationKey } from "./useVendaControllerFinalizeDireta.ts";
 export type { VendaControllerFindAllQueryKey } from "./useVendaControllerFindAll.ts";
 export type { VendaControllerFindAllSuspenseQueryKey } from "./useVendaControllerFindAllSuspense.ts";
@@ -692,6 +693,7 @@ export { usuariosControllerFindPaginatedSuspenseQueryKey, usuariosControllerFind
 export { usuariosControllerInitializeSystemMutationKey, usuariosControllerInitializeSystem, usuariosControllerInitializeSystemMutationOptions, useUsuariosControllerInitializeSystem } from "./useUsuariosControllerInitializeSystem.ts";
 export { usuariosControllerUpdateMutationKey, usuariosControllerUpdate, usuariosControllerUpdateMutationOptions, useUsuariosControllerUpdate } from "./useUsuariosControllerUpdate.ts";
 export { vendaControllerCreateMutationKey, vendaControllerCreate, vendaControllerCreateMutationOptions, useVendaControllerCreate } from "./useVendaControllerCreate.ts";
+export { vendaControllerFinalizarBrindePermutaMutationKey, vendaControllerFinalizarBrindePermuta, vendaControllerFinalizarBrindePermutaMutationOptions, useVendaControllerFinalizarBrindePermuta } from "./useVendaControllerFinalizarBrindePermuta.ts";
 export { vendaControllerFinalizeDiretaMutationKey, vendaControllerFinalizeDireta, vendaControllerFinalizeDiretaMutationOptions, useVendaControllerFinalizeDireta } from "./useVendaControllerFinalizeDireta.ts";
 export { vendaControllerFindAllQueryKey, vendaControllerFindAll, vendaControllerFindAllQueryOptions, useVendaControllerFindAll } from "./useVendaControllerFindAll.ts";
 export { vendaControllerFindAllSuspenseQueryKey, vendaControllerFindAllSuspense, vendaControllerFindAllSuspenseQueryOptions, useVendaControllerFindAllSuspense } from "./useVendaControllerFindAllSuspense.ts";

@@ -41,17 +41,17 @@ export type VendaItemEntity = {
      * @description Quantidade aceita (ficou com cliente)
      * @type number | undefined
     */
-    qtdAceita?: number;
+    qtdAceita?: number | undefined;
     /**
      * @description Quantidade devolvida
      * @type number | undefined
     */
-    qtdDevolvida?: number;
+    qtdDevolvida?: number | undefined;
     /**
      * @description Desconto do item
      * @type number | undefined
     */
-    desconto?: number;
+    desconto?: number | undefined;
     /**
      * @description Preço unitário
      * @type number
@@ -61,20 +61,20 @@ export type VendaItemEntity = {
      * @description Public ID do SKU
      * @type string | undefined
     */
-    skuPublicId?: string;
+    skuPublicId?: string | undefined;
     /**
      * @description Cor do SKU
      * @type string | undefined
     */
-    skuCor?: string;
+    skuCor?: string | undefined;
     /**
      * @description Código da cor do SKU (hex)
      * @type string | undefined
     */
-    skuCodCor?: string;
+    skuCodCor?: string | undefined;
     /**
      * @description Tamanho do SKU
      * @type string | undefined
     */
-    skuTamanho?: string;
+    skuTamanho?: string | undefined;
 };

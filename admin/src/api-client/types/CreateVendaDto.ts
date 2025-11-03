@@ -29,45 +29,45 @@ export type CreateVendaDto = {
      * @default "DIRETA"
      * @type string | undefined
     */
-    tipo?: CreateVendaDtoTipoEnumKey;
+    tipo?: CreateVendaDtoTipoEnumKey | undefined;
     /**
      * @description Data de entrega
      * @type string | undefined
     */
-    dataEntrega?: string;
+    dataEntrega?: string | undefined;
     /**
      * @description Valor do frete
      * @type number | undefined
     */
-    valorFrete?: number;
+    valorFrete?: number | undefined;
     /**
      * @description Desconto total da venda
      * @type number | undefined
     */
-    desconto?: number;
+    desconto?: number | undefined;
     /**
      * @description RUC/CNPJ da fatura da venda
      * @type string | undefined
     */
-    ruccnpj?: string;
+    ruccnpj?: string | undefined;
     /**
      * @description Nome para a fatura da venda
      * @type string | undefined
     */
-    nomeFatura?: string;
+    nomeFatura?: string | undefined;
     /**
      * @description Número da fatura
      * @type string | undefined
     */
-    numeroFatura?: string;
+    numeroFatura?: string | undefined;
     /**
      * @description Observação da venda
      * @type string | undefined
     */
-    observacao?: string;
+    observacao?: string | undefined;
     /**
      * @description Valor da comissão
      * @type number | undefined
     */
-    valorComissao?: number;
+    valorComissao?: number | undefined;
 };

@@ -31,27 +31,27 @@ export type ParceirosControllerFindPaginated200 = {
     /**
      * @type array | undefined
     */
-    data?: Parceiro[];
+    data?: Parceiro[] | undefined;
     /**
      * @description Total de registros
      * @type number | undefined
     */
-    total?: number;
+    total?: number | undefined;
     /**
      * @description Página atual
      * @type number | undefined
     */
-    page?: number;
+    page?: number | undefined;
     /**
      * @description Itens por página
      * @type number | undefined
     */
-    limit?: number;
+    limit?: number | undefined;
     /**
      * @description Total de páginas
      * @type number | undefined
     */
-    totalPages?: number;
+    totalPages?: number | undefined;
 };
 
 export type ParceirosControllerFindPaginatedQueryResponse = ParceirosControllerFindPaginated200;

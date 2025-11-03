@@ -25,17 +25,17 @@ export type ProdutoSKU = {
      * @description Cor do produto
      * @type string | undefined
     */
-    cor?: string;
+    cor?: string | undefined;
     /**
      * @description Código hexadecimal da cor
      * @type string | undefined
     */
-    codCor?: string;
+    codCor?: string | undefined;
     /**
      * @description Tamanho do produto
      * @type string | undefined
     */
-    tamanho?: string;
+    tamanho?: string | undefined;
     /**
      * @description Quantidade mínima em estoque
      * @type number
@@ -45,7 +45,7 @@ export type ProdutoSKU = {
      * @description Data da última compra
      * @type string | undefined, date-time
     */
-    dataUltimaCompra?: string;
+    dataUltimaCompra?: string | undefined;
     /**
      * @description Produto pai
     */

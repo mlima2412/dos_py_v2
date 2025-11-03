@@ -11,11 +11,11 @@ export type CategoriaProdutoControllerFindAll200 = {
     /**
      * @type number | undefined
     */
-    id?: number;
+    id?: number | undefined;
     /**
      * @type string | undefined
     */
-    descricao?: string;
+    descricao?: string | undefined;
 }[];
 
 export type CategoriaProdutoControllerFindAllQueryResponse = CategoriaProdutoControllerFindAll200;

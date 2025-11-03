@@ -44,5 +44,5 @@ export type ConferenciaItemSimplificadoDto = {
     /**
      * @description Dados simplificados do SKU
     */
-    sku?: SkuSimplificadoDto;
+    sku?: SkuSimplificadoDto | undefined;
 };

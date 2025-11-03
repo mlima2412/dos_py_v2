@@ -45,11 +45,11 @@ export type ContasPagarParcelas = {
     /**
      * @description Conta a pagar relacionada
     */
-    contasPagar?: ContasPagar;
+    contasPagar?: ContasPagar | undefined;
     /**
      * @description Moeda da parcela
     */
-    currency?: Currency;
+    currency?: Currency | undefined;
     /**
      * @description ID da moeda
      * @type number

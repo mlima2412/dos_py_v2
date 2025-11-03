@@ -19,14 +19,14 @@ export type MovimentoEstoqueControllerFindHistoricoSkuQueryParams = {
      * @minLength 1
      * @type number | undefined
     */
-    page?: number;
+    page?: number | undefined;
     /**
      * @description Limite de itens por página
      * @minLength 1
      * @maxLength 100
      * @type number | undefined
     */
-    limit?: number;
+    limit?: number | undefined;
 };
 
 /**
@@ -36,23 +36,23 @@ export type MovimentoEstoqueControllerFindHistoricoSku200 = {
     /**
      * @type array | undefined
     */
-    data?: MovimentoEstoqueResponseDto[];
+    data?: MovimentoEstoqueResponseDto[] | undefined;
     /**
      * @type number | undefined
     */
-    total?: number;
+    total?: number | undefined;
     /**
      * @type number | undefined
     */
-    page?: number;
+    page?: number | undefined;
     /**
      * @type number | undefined
     */
-    limit?: number;
+    limit?: number | undefined;
     /**
      * @type number | undefined
     */
-    totalPages?: number;
+    totalPages?: number | undefined;
 };
 
 /**

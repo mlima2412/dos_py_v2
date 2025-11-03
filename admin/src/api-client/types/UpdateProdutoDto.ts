@@ -9,73 +9,73 @@ export type UpdateProdutoDto = {
      * @description ID do produto
      * @type number | undefined
     */
-    id?: number;
+    id?: number | undefined;
     /**
      * @description Public ID do produto
      * @type string | undefined
     */
-    publicId?: string;
+    publicId?: string | undefined;
     /**
      * @description ID do parceiro
      * @type number | undefined
     */
-    parceiroId?: number;
+    parceiroId?: number | undefined;
     /**
      * @description Nome do produto
      * @maxLength 255
      * @type string | undefined
     */
-    nome?: string;
+    nome?: string | undefined;
     /**
      * @description Descrição do produto
      * @type string | undefined
     */
-    descricao?: string;
+    descricao?: string | undefined;
     /**
      * @description URL da imagem do produto
      * @type string | undefined
     */
-    imgURL?: string;
+    imgURL?: string | undefined;
     /**
      * @description Preço de compra do produto
      * @type number | undefined
     */
-    precoCompra?: number;
+    precoCompra?: number | undefined;
     /**
      * @description Preço de venda do produto
      * @type number | undefined
     */
-    precoVenda?: number;
+    precoVenda?: number | undefined;
     /**
      * @description Se o produto é consignado
      * @default false
      * @type boolean | undefined
     */
-    consignado?: boolean;
+    consignado?: boolean | undefined;
     /**
      * @description ID da categoria do produto
      * @type number | undefined
     */
-    categoriaId?: number;
+    categoriaId?: number | undefined;
     /**
      * @description ID do fornecedor do produto
      * @type number | undefined
     */
-    fornecedorId?: number;
+    fornecedorId?: number | undefined;
     /**
      * @description ID da moeda do produto
      * @type number | undefined
     */
-    currencyId?: number;
+    currencyId?: number | undefined;
     /**
      * @description Status ativo do produto
      * @default true
      * @type boolean | undefined
     */
-    ativo?: boolean;
+    ativo?: boolean | undefined;
     /**
      * @description Data de cadastro do produto
      * @type string | undefined, date-time
     */
-    dataCadastro?: string;
+    dataCadastro?: string | undefined;
 };

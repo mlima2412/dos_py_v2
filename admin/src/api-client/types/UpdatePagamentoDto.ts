@@ -18,31 +18,31 @@ export type UpdatePagamentoDto = {
      * @description ID da venda
      * @type number | undefined
     */
-    vendaId?: number;
+    vendaId?: number | undefined;
     /**
      * @description ID da forma de pagamento
      * @type number | undefined
     */
-    formaPagamentoId?: number;
+    formaPagamentoId?: number | undefined;
     /**
      * @description Tipo da venda
      * @type string | undefined
     */
-    tipo?: UpdatePagamentoDtoTipoEnumKey;
+    tipo?: UpdatePagamentoDtoTipoEnumKey | undefined;
     /**
      * @description Valor pago
      * @type number | undefined
     */
-    valor?: number;
+    valor?: number | undefined;
     /**
      * @description Valor do delivery, se houver
      * @type number | undefined
     */
-    valorDelivery?: number;
+    valorDelivery?: number | undefined;
     /**
      * @description É pagamento de entrada?
      * @default false
      * @type boolean | undefined
     */
-    entrada?: boolean;
+    entrada?: boolean | undefined;
 };

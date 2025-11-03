@@ -32,15 +32,15 @@ export type CreateParcelaDto = {
      * @description Data de vencimento (ISO 8601)
      * @type string | undefined
     */
-    vencimento?: string;
+    vencimento?: string | undefined;
     /**
      * @description Data de recebimento (ISO 8601)
      * @type string | undefined
     */
-    recebidoEm?: string;
+    recebidoEm?: string | undefined;
     /**
      * @description Status da parcela
      * @type string | undefined
     */
-    status?: CreateParcelaDtoStatusEnumKey;
+    status?: CreateParcelaDtoStatusEnumKey | undefined;
 };

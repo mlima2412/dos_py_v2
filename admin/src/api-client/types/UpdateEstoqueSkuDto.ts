@@ -10,5 +10,5 @@ export type UpdateEstoqueSkuDto = {
      * @minLength 0
      * @type number | undefined
     */
-    qtd?: number;
+    qtd?: number | undefined;
 };

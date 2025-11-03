@@ -10,5 +10,5 @@ export type UpdateCategoriaProdutoDto = {
      * @maxLength 255
      * @type string | undefined
     */
-    descricao?: string;
+    descricao?: string | undefined;
 };

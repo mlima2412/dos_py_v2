@@ -29,12 +29,12 @@ export type Parcela = {
      * @description Data de vencimento
      * @type string | undefined, date-time
     */
-    vencimento?: string;
+    vencimento?: string | undefined;
     /**
      * @description Data de recebimento
      * @type string | undefined, date-time
     */
-    recebidoEm?: string;
+    recebidoEm?: string | undefined;
     /**
      * @description Status da parcela
      * @type string

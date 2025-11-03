@@ -44,17 +44,17 @@ export type Produto = {
      * @description ID da categoria do produto
      * @type number | undefined
     */
-    categoriaId?: number;
+    categoriaId?: number | undefined;
     /**
      * @description Descrição do produto
      * @type string | undefined
     */
-    descricao?: string;
+    descricao?: string | undefined;
     /**
      * @description URL da imagem do produto
      * @type string | undefined
     */
-    imgURL?: string;
+    imgURL?: string | undefined;
     /**
      * @description Preço de compra do produto
      * @type number
@@ -74,16 +74,16 @@ export type Produto = {
      * @description ID do fornecedor do produto
      * @type number | undefined
     */
-    fornecedorId?: number;
+    fornecedorId?: number | undefined;
     /**
      * @description ID da moeda do produto
      * @type number | undefined
     */
-    currencyId?: number;
+    currencyId?: number | undefined;
     /**
      * @description Categoria do produto
     */
-    categoria?: CategoriaProduto;
+    categoria?: CategoriaProduto | undefined;
     /**
      * @description Parceiro proprietário do produto
     */
@@ -91,14 +91,14 @@ export type Produto = {
     /**
      * @description Fornecedor do produto
     */
-    fornecedor?: Fornecedor;
+    fornecedor?: Fornecedor | undefined;
     /**
      * @description Moeda do produto
     */
-    currency?: Currency;
+    currency?: Currency | undefined;
     /**
      * @description SKUs do produto
      * @type array | undefined
     */
-    ProdutoSKU?: ProdutoSKU[];
+    ProdutoSKU?: ProdutoSKU[] | undefined;
 };

@@ -25,9 +25,9 @@ export class SubCategoriaDespesaService {
     }
 
     // Verificar se a descrição já existe na mesma categoria
+    console.log(createSubCategoriaDespesaDto);
     const existingItem = await this.prisma.subCategoriaDespesa.findFirst({
       where: {
-        idSubCategoria: createSubCategoriaDespesaDto.idSubCategoria,
         descricao: createSubCategoriaDespesaDto.descricao,
         categoriaId: createSubCategoriaDespesaDto.categoriaId,
       },
@@ -39,20 +39,15 @@ export class SubCategoriaDespesaService {
       );
     }
 
-    // Criar instância da entidade SubCategoriaDespesa
-    const itemEntity = SubCategoriaDespesa.create({
-      idSubCategoria: createSubCategoriaDespesaDto.idSubCategoria,
-      categoriaId: createSubCategoriaDespesaDto.categoriaId,
-      descricao: createSubCategoriaDespesaDto.descricao,
-      ativo: createSubCategoriaDespesaDto.ativo,
-    });
-
+    // Criar a subcategoria (idSubCategoria será auto-gerado se não fornecido)
     const item = await this.prisma.subCategoriaDespesa.create({
       data: {
-        idSubCategoria: itemEntity.idSubCategoria,
-        categoriaId: itemEntity.categoriaId,
-        descricao: itemEntity.descricao,
-        ativo: itemEntity.ativo,
+        ...(createSubCategoriaDespesaDto.idSubCategoria && {
+          idSubCategoria: createSubCategoriaDespesaDto.idSubCategoria,
+        }),
+        categoriaId: createSubCategoriaDespesaDto.categoriaId,
+        descricao: createSubCategoriaDespesaDto.descricao,
+        ativo: createSubCategoriaDespesaDto.ativo ?? true,
       },
       include: {
         categoria: true,
@@ -83,6 +78,17 @@ export class SubCategoriaDespesaService {
       },
       orderBy: { descricao: 'asc' },
     });
+  }
+
+  async resetIncrement() {
+    await this.prisma.$executeRaw`
+        SELECT setval(
+          pg_get_serial_sequence('public.subcategoria_despesa', 'subcategoria_id'),
+          COALESCE(MAX(subcategoria_id), 1)
+        )
+        FROM public."subcategoria_despesa";
+      `;
+    console.log('Sequência de subcategoria_despesa reiniciada.');
   }
 
   async findOne(idSubCategoria: number): Promise<SubCategoriaDespesa> {

@@ -9,33 +9,33 @@ export type UpdateProdutoSkuDto = {
      * @description ID do produto SKU
      * @type number | undefined
     */
-    id?: number;
+    id?: number | undefined;
     /**
      * @description Cor do produto
      * @maxLength 50
      * @type string | undefined
     */
-    cor?: string;
+    cor?: string | undefined;
     /**
      * @description Código hexadecimal da cor
      * @type string | undefined
     */
-    codCor?: string;
+    codCor?: string | undefined;
     /**
      * @description Tamanho do produto
      * @maxLength 10
      * @type string | undefined
     */
-    tamanho?: string;
+    tamanho?: string | undefined;
     /**
      * @description Quantidade mínima em estoque
      * @default 0
      * @type number | undefined
     */
-    qtdMinima?: number;
+    qtdMinima?: number | undefined;
     /**
      * @description Data da última compra
      * @type string | undefined, date-time
     */
-    dataUltimaCompra?: string;
+    dataUltimaCompra?: string | undefined;
 };

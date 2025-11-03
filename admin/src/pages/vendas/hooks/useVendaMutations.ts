@@ -17,7 +17,7 @@ import {
 import type {
 	ProdutoSKUEstoqueResponseDto,
 	ProdutosPorLocalResponseDto,
-	VendaTipoEnum,
+	VendaTipoEnumKey,
 } from "@/api-client/types";
 import type {
 	VendaFormMode,
@@ -93,19 +93,64 @@ export const useVendaMutations = ({
 					clienteNome: data.clienteNome,
 				});
 			},
+			onError: error => {
+				console.error("Erro ao criar venda:", error);
+				const mensagem =
+					error?.data?.message ?? t("salesOrders.form.messages.basicDataError");
+				showError(mensagem);
+			},
 		},
 	});
 
-	const vendaUpdateMutation = useVendaControllerUpdate();
-	const vendaItemCreateMutation = useVendaItemControllerCreate();
-	const vendaItemUpdateMutation = useVendaItemControllerUpdate();
-	const vendaItemRemoveMutation = useVendaItemControllerRemove();
+	const vendaUpdateMutation = useVendaControllerUpdate({
+		mutation: {
+			onError: error => {
+				console.error("Erro ao atualizar venda:", error);
+				const mensagem =
+					error?.data?.message ?? t("salesOrders.form.messages.basicDataError");
+				showError(mensagem);
+			},
+		},
+	});
+
+	const vendaItemCreateMutation = useVendaItemControllerCreate({
+		mutation: {
+			onError: error => {
+				console.error("Erro ao criar item da venda:", error);
+				const mensagem =
+					error?.data?.message ?? t("salesOrders.form.messages.itemsSaveError");
+				showError(mensagem);
+			},
+		},
+	});
+
+	const vendaItemUpdateMutation = useVendaItemControllerUpdate({
+		mutation: {
+			onError: error => {
+				console.error("Erro ao atualizar item da venda:", error);
+				const mensagem =
+					error?.data?.message ?? t("salesOrders.form.messages.itemsSaveError");
+				showError(mensagem);
+			},
+		},
+	});
+
+	const vendaItemRemoveMutation = useVendaItemControllerRemove({
+		mutation: {
+			onError: error => {
+				console.error("Erro ao remover item da venda:", error);
+				const mensagem =
+					error?.data?.message ?? t("salesOrders.form.messages.removeItemError");
+				showError(mensagem);
+			},
+		},
+	});
 
 	const handleCreateOrUpdateVenda = useCallback(
 		async (payload: {
-			clienteId: number;
+			clienteId: number | null | undefined;
 			localSaidaId: number;
-			tipo: VendaTipoEnum;
+			tipo: VendaTipoEnumKey;
 			dataEntrega?: Date | null;
 			observacao?: string | null;
 			valorFrete?: number | null;
@@ -117,6 +162,12 @@ export const useVendaMutations = ({
 		}) => {
 			if (!parceiroIdNumber) {
 				showError(t("salesOrders.form.messages.partnerRequired"));
+				return null;
+			}
+
+			// Validar que clienteId está presente (backend sempre exige)
+			if (!payload.clienteId || payload.clienteId <= 0) {
+				showError(t("salesOrders.form.messages.clientRequired"));
 				return null;
 			}
 
@@ -136,35 +187,41 @@ export const useVendaMutations = ({
 				ruccnpj: payload.ruccnpjFatura || undefined,
 			};
 
-			if (mode === "create" || !vendaResumo?.publicId) {
-				const result = await vendaCreateMutation.mutateAsync({
-					data: dto,
-					headers: { "x-parceiro-id": parceiroIdNumber },
-				});
-				setVendaResumo({
-					id: result.id,
-					publicId: result.publicId,
-					status: result.status,
-					clienteId: result.clienteId,
-					clienteNome: result.clienteNome,
-					clienteSobrenome: result.clienteSobrenome,
-				});
-				return result;
-			}
+			try {
+				if (mode === "create" || !vendaResumo?.publicId) {
+					const result = await vendaCreateMutation.mutateAsync({
+						data: dto,
+						headers: { "x-parceiro-id": parceiroIdNumber },
+					});
+					setVendaResumo({
+						id: result.id,
+						publicId: result.publicId,
+						status: result.status,
+						clienteId: result.clienteId,
+						clienteNome: result.clienteNome,
+						clienteSobrenome: result.clienteSobrenome,
+					});
+					return result;
+				}
 
-			const updated = await vendaUpdateMutation.mutateAsync({
-				publicId: vendaResumo.publicId,
-				headers: { "x-parceiro-id": parceiroIdNumber },
-				data: dto,
-			});
-			setVendaResumo(prev => ({
-				...prev,
-				status: updated.status,
-				clienteId: updated.clienteId ?? prev?.clienteId,
-				clienteNome: updated.clienteNome ?? prev?.clienteNome,
-				clienteSobrenome: updated.clienteSobrenome ?? prev?.clienteSobrenome,
-			}));
-			return updated;
+				const updated = await vendaUpdateMutation.mutateAsync({
+					publicId: vendaResumo.publicId,
+					headers: { "x-parceiro-id": parceiroIdNumber },
+					data: dto,
+				});
+				setVendaResumo(prev => ({
+					...prev,
+					status: updated.status,
+					clienteId: updated.clienteId ?? prev?.clienteId,
+					clienteNome: updated.clienteNome ?? prev?.clienteNome,
+					clienteSobrenome: updated.clienteSobrenome ?? prev?.clienteSobrenome,
+				}));
+				return updated;
+			} catch (error) {
+				// Error already handled by mutation onError handler
+				console.error("Erro em handleCreateOrUpdateVenda:", error);
+				throw error;
+			}
 		},
 		[
 			mode,

@@ -16,97 +16,97 @@ export type UpdateClienteDto = {
      * @description ID do cliente
      * @type number | undefined
     */
-    id?: number;
+    id?: number | undefined;
     /**
      * @description Public ID do cliente
      * @type string | undefined
     */
-    publicId?: string;
+    publicId?: string | undefined;
     /**
      * @description Nome do cliente
      * @type string | undefined
     */
-    nome?: string;
+    nome?: string | undefined;
     /**
      * @description Sobrenome do cliente
      * @type string | undefined
     */
-    sobrenome?: string;
+    sobrenome?: string | undefined;
     /**
      * @description Email do cliente
      * @type string | undefined
     */
-    email?: string;
+    email?: string | undefined;
     /**
      * @description Rede social do cliente
      * @type string | undefined
     */
-    redeSocial?: string;
+    redeSocial?: string | undefined;
     /**
      * @description Celular do cliente
      * @type string | undefined
     */
-    celular?: string;
+    celular?: string | undefined;
     /**
      * @description RUC/CNPJ do cliente
      * @type string | undefined
     */
-    ruccnpj?: string;
+    ruccnpj?: string | undefined;
     /**
      * @description Endereço do cliente
      * @type string | undefined
     */
-    endereco?: string;
+    endereco?: string | undefined;
     /**
      * @description Cidade do cliente
      * @type string | undefined
     */
-    cidade?: string;
+    cidade?: string | undefined;
     /**
      * @description CEP do cliente
      * @type string | undefined
     */
-    cep?: string;
+    cep?: string | undefined;
     /**
      * @description Observações sobre o cliente
      * @type string | undefined
     */
-    observacoes?: string;
+    observacoes?: string | undefined;
     /**
      * @description Linguagem preferida do cliente
      * @default "Espanol"
      * @type string | undefined
     */
-    linguagem?: UpdateClienteDtoLinguagemEnumKey;
+    linguagem?: UpdateClienteDtoLinguagemEnumKey | undefined;
     /**
      * @description Status ativo do cliente
      * @default true
      * @type boolean | undefined
     */
-    ativo?: boolean;
+    ativo?: boolean | undefined;
     /**
      * @description ID do parceiro associado
      * @type number | undefined
     */
-    parceiroId?: number;
+    parceiroId?: number | undefined;
     /**
      * @description ID do canal de origem
      * @type number | undefined
     */
-    canalOrigemId?: number;
+    canalOrigemId?: number | undefined;
     /**
      * @description Data de criação do cliente
      * @type string | undefined, date-time
     */
-    createdAt?: string;
+    createdAt?: string | undefined;
     /**
      * @description Data de atualização do cliente
      * @type string | undefined, date-time
     */
-    updatedAt?: string;
+    updatedAt?: string | undefined;
     /**
      * @description Data da última compra do cliente
      * @type string | undefined, date-time
     */
-    ultimaCompra?: string;
+    ultimaCompra?: string | undefined;
 };

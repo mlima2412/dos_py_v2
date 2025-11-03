@@ -25,5 +25,5 @@ export type CreateTransferenciaEstoqueDto = {
      * @description Observação geral da transferência
      * @type string | undefined
     */
-    observacao?: string;
+    observacao?: string | undefined;
 };

@@ -43,7 +43,7 @@ export type MovimentoEstoqueResponseDto = {
      * @description Observação do movimento
      * @type string | undefined
     */
-    observacao?: string;
+    observacao?: string | undefined;
     /**
      * @description Informações do SKU
     */
@@ -55,9 +55,9 @@ export type MovimentoEstoqueResponseDto = {
     /**
      * @description Local de origem
     */
-    localOrigem?: LocalEstoqueResponseDto;
+    localOrigem?: LocalEstoqueResponseDto | undefined;
     /**
      * @description Local de destino
     */
-    localDestino?: LocalEstoqueResponseDto;
+    localDestino?: LocalEstoqueResponseDto | undefined;
 };

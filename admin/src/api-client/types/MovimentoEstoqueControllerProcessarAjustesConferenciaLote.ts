@@ -12,11 +12,11 @@ export type MovimentoEstoqueControllerProcessarAjustesConferenciaLote201 = {
     /**
      * @type number | undefined
     */
-    totalProcessados?: number;
+    totalProcessados?: number | undefined;
     /**
      * @type number | undefined
     */
-    totalIgnorados?: number;
+    totalIgnorados?: number | undefined;
 };
 
 /**

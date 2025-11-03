@@ -29,22 +29,22 @@ export type Fornecedor = {
      * @description RUC/CNPJ do fornecedor
      * @type string | undefined
     */
-    ruccnpj?: string;
+    ruccnpj?: string | undefined;
     /**
      * @description Email do fornecedor
      * @type string | undefined
     */
-    email?: string;
+    email?: string | undefined;
     /**
      * @description Telefone do fornecedor
      * @type string | undefined
     */
-    telefone?: string;
+    telefone?: string | undefined;
     /**
      * @description Rede social do fornecedor
      * @type string | undefined
     */
-    redesocial?: string;
+    redesocial?: string | undefined;
     /**
      * @description Status ativo do fornecedor
      * @type boolean
@@ -54,7 +54,7 @@ export type Fornecedor = {
      * @description Data da última compra
      * @type string | undefined, date-time
     */
-    ultimaCompra?: string;
+    ultimaCompra?: string | undefined;
     /**
      * @description Data de criação do fornecedor
      * @type string, date-time

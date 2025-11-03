@@ -10,12 +10,12 @@ export type ClientesControllerFindAllQueryParams = {
      * @description Filtrar por ID do parceiro
      * @type string | undefined
     */
-    parceiroId?: string;
+    parceiroId?: string | undefined;
     /**
      * @description Filtrar por ID do canal de origem
      * @type string | undefined
     */
-    canalOrigemId?: string;
+    canalOrigemId?: string | undefined;
 };
 
 /**

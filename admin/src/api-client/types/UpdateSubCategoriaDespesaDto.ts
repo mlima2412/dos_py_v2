@@ -7,22 +7,22 @@
 export type UpdateSubCategoriaDespesaDto = {
     /**
      * @description ID da subcategoria de despesa
-     * @type number | undefined
+     * @type number
     */
-    idSubCategoria?: number;
+    idSubCategoria?: (number | null) | undefined;
     /**
      * @description ID da categoria de despesa
      * @type number | undefined
     */
-    categoriaId?: number;
+    categoriaId?: number | undefined;
     /**
      * @description Descrição da subcategoria de despesa
      * @type string | undefined
     */
-    descricao?: string;
+    descricao?: string | undefined;
     /**
      * @description Status ativo da subcategoria
-     * @type boolean | undefined
+     * @type boolean
     */
-    ativo?: boolean;
+    ativo?: (boolean | null) | undefined;
 };

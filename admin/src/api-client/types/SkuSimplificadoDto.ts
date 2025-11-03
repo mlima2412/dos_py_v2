@@ -14,15 +14,15 @@ export type SkuSimplificadoDto = {
      * @description Cor do SKU
      * @type string | undefined
     */
-    cor?: string;
+    cor?: string | undefined;
     /**
      * @description Tamanho do SKU
      * @type string | undefined
     */
-    tamanho?: string;
+    tamanho?: string | undefined;
     /**
      * @description Nome do produto
      * @type string | undefined
     */
-    produtoNome?: string;
+    produtoNome?: string | undefined;
 };

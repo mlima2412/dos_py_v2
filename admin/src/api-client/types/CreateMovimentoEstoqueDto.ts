@@ -35,15 +35,15 @@ export type CreateMovimentoEstoqueDto = {
      * @description ID do local de origem (obrigatório para SAIDA, TRANSFERENCIA, CONDICIONAL)
      * @type number | undefined
     */
-    localOrigemId?: number;
+    localOrigemId?: number | undefined;
     /**
      * @description ID do local de destino (obrigatório para ENTRADA, TRANSFERENCIA, AJUSTE)
      * @type number | undefined
     */
-    localDestinoId?: number;
+    localDestinoId?: number | undefined;
     /**
      * @description Observação sobre o movimento
      * @type string | undefined
     */
-    observacao?: string;
+    observacao?: string | undefined;
 };

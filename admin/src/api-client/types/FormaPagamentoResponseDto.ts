@@ -24,7 +24,7 @@ export type FormaPagamentoResponseDto = {
      * @description Taxa da forma de pagamento (em decimal)
      * @type number | undefined
     */
-    taxa?: number;
+    taxa?: number | undefined;
     /**
      * @description Tempo de liberação em dias
      * @type number

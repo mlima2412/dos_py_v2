@@ -9,25 +9,25 @@ export type UpdatePedidoCompraItemDto = {
      * @description ID do pedido de compra
      * @type number | undefined
     */
-    pedidoCompraId?: number;
+    pedidoCompraId?: number | undefined;
     /**
      * @description ID do SKU do produto
      * @type number | undefined
     */
-    skuId?: number;
+    skuId?: number | undefined;
     /**
      * @description Quantidade do item
      * @type number | undefined
     */
-    qtd?: number;
+    qtd?: number | undefined;
     /**
      * @description Preço de compra unitário
      * @type number | undefined
     */
-    precoCompra?: number;
+    precoCompra?: number | undefined;
     /**
      * @description Observações do item
      * @type string | undefined
     */
-    observacao?: string;
+    observacao?: string | undefined;
 };

@@ -30,6 +30,7 @@ import { ParceiroId } from '../auth/decorators/parceiro-id.decorator';
 import { UserId } from '../auth/decorators/user-id.decorator';
 import { Venda } from './entities/venda.entity';
 import { FinalizeVendaDiretaDto } from './dto/finalize-venda-direta.dto';
+import { FinalizeVendaSemPagamentoDto } from './dto/finalize-venda-sem-pagamento.dto';
 import { VendaStatus } from '@prisma/client';
 
 @ApiTags('Venda')
@@ -174,7 +175,7 @@ export class VendaController {
     return this.vendaService.update(publicId, updateVendaDto, parceiroId);
   }
 
-  @Patch(':publicId/finalizar')
+  @Patch(':publicId/finalizarBrindePermuta')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
   @ApiHeader({
@@ -183,7 +184,37 @@ export class VendaController {
     required: true,
     schema: { type: 'integer', example: 1 },
   })
-  @ApiOperation({ summary: 'Finalizar venda direta com pagamentos e baixa de estoque' })
+  @ApiOperation({
+    summary: 'Finalizar brinde ou permuta sem pagamentos e com baixa de estoque',
+  })
+  @ApiParam({ name: 'publicId', description: 'ID público da venda' })
+  @ApiResponse({ status: 200, description: 'Venda finalizada', type: Venda })
+  finalizarBrindePermuta(
+    @Param('publicId') publicId: string,
+    @Body() finalizeDto: FinalizeVendaSemPagamentoDto,
+    @ParceiroId() parceiroId: number,
+    @UserId() usuarioId: number,
+  ): Promise<Venda> {
+    return this.vendaService.finalizarBrindePermuta(
+      publicId,
+      finalizeDto,
+      parceiroId,
+      usuarioId,
+    );
+  }
+
+  @Patch(':publicId/finalizarDireta')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro logado',
+    required: true,
+    schema: { type: 'integer', example: 1 },
+  })
+  @ApiOperation({
+    summary: 'Finalizar brinde sem pagamentos e baixa de estoque',
+  })
   @ApiParam({ name: 'publicId', description: 'ID público da venda' })
   @ApiResponse({ status: 200, description: 'Venda finalizada', type: Venda })
   finalizeDireta(
@@ -192,7 +223,12 @@ export class VendaController {
     @ParceiroId() parceiroId: number,
     @UserId() usuarioId: number,
   ): Promise<Venda> {
-    return this.vendaService.finalizarDireta(publicId, finalizeDto, parceiroId, usuarioId);
+    return this.vendaService.finalizarDireta(
+      publicId,
+      finalizeDto,
+      parceiroId,
+      usuarioId,
+    );
   }
 
   @Delete(':publicId')

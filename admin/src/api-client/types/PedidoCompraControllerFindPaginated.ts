@@ -19,38 +19,38 @@ export type PedidoCompraControllerFindPaginatedQueryParams = {
      * @default "1"
      * @type string | undefined
     */
-    page?: string;
+    page?: string | undefined;
     /**
      * @description Número de itens por página
      * @default "20"
      * @type string | undefined
     */
-    limit?: string;
+    limit?: string | undefined;
     /**
      * @description Termo de busca para filtrar por observação
      * @type string | undefined
     */
-    search?: string;
+    search?: string | undefined;
     /**
      * @description ID do fornecedor para filtrar
      * @type string | undefined
     */
-    fornecedorId?: string;
+    fornecedorId?: string | undefined;
     /**
      * @description Status do pedido para filtrar
      * @type string | undefined
     */
-    status?: PedidoCompraControllerFindPaginatedQueryParamsStatusEnumKey;
+    status?: PedidoCompraControllerFindPaginatedQueryParamsStatusEnumKey | undefined;
     /**
      * @description ID do local de entrada para filtrar
      * @type string | undefined
     */
-    localEntradaId?: string;
+    localEntradaId?: string | undefined;
     /**
      * @description Filtrar apenas pedidos consignados
      * @type string | undefined
     */
-    consignado?: string;
+    consignado?: string | undefined;
 };
 
 export type PedidoCompraControllerFindPaginatedHeaderParams = {
@@ -68,27 +68,27 @@ export type PedidoCompraControllerFindPaginated200 = {
     /**
      * @type array | undefined
     */
-    data?: PedidoCompra[];
+    data?: PedidoCompra[] | undefined;
     /**
      * @description Total de registros
      * @type number | undefined
     */
-    total?: number;
+    total?: number | undefined;
     /**
      * @description Página atual
      * @type number | undefined
     */
-    page?: number;
+    page?: number | undefined;
     /**
      * @description Itens por página
      * @type number | undefined
     */
-    limit?: number;
+    limit?: number | undefined;
     /**
      * @description Total de páginas
      * @type number | undefined
     */
-    totalPages?: number;
+    totalPages?: number | undefined;
 };
 
 export type PedidoCompraControllerFindPaginatedQueryResponse = PedidoCompraControllerFindPaginated200;

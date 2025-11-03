@@ -11,28 +11,28 @@ export type ProdutoControllerFindPaginatedQueryParams = {
      * @default "1"
      * @type string | undefined
     */
-    page?: string;
+    page?: string | undefined;
     /**
      * @description Número de itens por página
      * @default "20"
      * @type string | undefined
     */
-    limit?: string;
+    limit?: string | undefined;
     /**
      * @description Termo de busca para filtrar por nome do produto
      * @type string | undefined
     */
-    search?: string;
+    search?: string | undefined;
     /**
      * @description ID da categoria para filtrar
      * @type string | undefined
     */
-    categoriaId?: string;
+    categoriaId?: string | undefined;
     /**
      * @description Filtrar apenas produtos ativos
      * @type string | undefined
     */
-    ativo?: string;
+    ativo?: string | undefined;
 };
 
 export type ProdutoControllerFindPaginatedHeaderParams = {
@@ -50,23 +50,23 @@ export type ProdutoControllerFindPaginated200 = {
     /**
      * @type array | undefined
     */
-    data?: Produto[];
+    data?: Produto[] | undefined;
     /**
      * @type number | undefined
     */
-    total?: number;
+    total?: number | undefined;
     /**
      * @type number | undefined
     */
-    page?: number;
+    page?: number | undefined;
     /**
      * @type number | undefined
     */
-    limit?: number;
+    limit?: number | undefined;
     /**
      * @type number | undefined
     */
-    totalPages?: number;
+    totalPages?: number | undefined;
 };
 
 export type ProdutoControllerFindPaginatedQueryResponse = ProdutoControllerFindPaginated200;

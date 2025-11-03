@@ -27,13 +27,13 @@ export type ProcessaPedidoCompraDto = {
      * @description Data de vencimento (obrigatório para A_PRAZO_SEM_PARCELAS)
      * @type string | undefined
     */
-    dueDate?: string;
+    dueDate?: string | undefined;
     /**
      * @description Valor de entrada (obrigatório para PARCELADO)
      * @default 0
      * @type number | undefined
     */
-    entryValue?: number;
+    entryValue?: number | undefined;
     /**
      * @description Número de parcelas
      * @default 1
@@ -44,5 +44,5 @@ export type ProcessaPedidoCompraDto = {
      * @description Data da primeira parcela (obrigatório para PARCELADO)
      * @type string | undefined
     */
-    firstInstallmentDate?: string;
+    firstInstallmentDate?: string | undefined;
 };

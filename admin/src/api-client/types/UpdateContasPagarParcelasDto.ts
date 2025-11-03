@@ -9,30 +9,30 @@ export type UpdateContasPagarParcelasDto = {
      * @description Data do pagamento da parcela
      * @type string | undefined
     */
-    dataPagamento?: string;
+    dataPagamento?: string | undefined;
     /**
      * @description Data de vencimento da parcela
      * @type string | undefined
     */
-    dataVencimento?: string;
+    dataVencimento?: string | undefined;
     /**
      * @description Valor da parcela
      * @type number | undefined
     */
-    valor?: number;
+    valor?: number | undefined;
     /**
      * @description Se a parcela foi paga
      * @type boolean | undefined
     */
-    pago?: boolean;
+    pago?: boolean | undefined;
     /**
      * @description ID da conta a pagar relacionada
      * @type number | undefined
     */
-    contasPagarId?: number;
+    contasPagarId?: number | undefined;
     /**
      * @description ID da moeda
      * @type number | undefined
     */
-    currencyId?: number;
+    currencyId?: number | undefined;
 };

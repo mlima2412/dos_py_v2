@@ -20,55 +20,55 @@ export type UpdateDespesaRecorrenteDto = {
      * @description Descrição da despesa recorrente
      * @type string | undefined
     */
-    descricao?: string;
+    descricao?: string | undefined;
     /**
      * @description Valor da despesa recorrente
      * @type number | undefined
     */
-    valor?: number;
+    valor?: number | undefined;
     /**
      * @description Frequência da despesa recorrente
      * @type string | undefined
     */
-    frequencia?: UpdateDespesaRecorrenteDtoFrequenciaEnumKey;
+    frequencia?: UpdateDespesaRecorrenteDtoFrequenciaEnumKey | undefined;
     /**
      * @description Dia do vencimento da despesa recorrente (1-31)
      * @type number | undefined
     */
-    diaVencimento?: number;
+    diaVencimento?: number | undefined;
     /**
      * @description Data de início da despesa recorrente
      * @type string | undefined
     */
-    dataInicio?: string;
+    dataInicio?: string | undefined;
     /**
      * @description Data de fim da despesa recorrente
      * @type string | undefined
     */
-    dataFim?: string;
+    dataFim?: string | undefined;
     /**
      * @description ID da subcategoria da despesa
      * @type number | undefined
     */
-    subCategoriaId?: number;
+    subCategoriaId?: number | undefined;
     /**
      * @description ID do parceiro responsável pela despesa
      * @type number | undefined
     */
-    parceiroId?: number;
+    parceiroId?: number | undefined;
     /**
      * @description ID do fornecedor da despesa
      * @type number | undefined
     */
-    fornecedorId?: number;
+    fornecedorId?: number | undefined;
     /**
      * @description ID da moeda da despesa
      * @type number | undefined
     */
-    currencyId?: number;
+    currencyId?: number | undefined;
     /**
      * @description Cotação da moeda no momento da despesa
      * @type number | undefined
     */
-    cotacao?: number;
+    cotacao?: number | undefined;
 };

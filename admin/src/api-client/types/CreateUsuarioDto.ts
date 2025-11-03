@@ -21,33 +21,33 @@ export type CreateUsuarioDto = {
      * @description Telefone do usuário para SMS ou WhatsApp
      * @type string | undefined
     */
-    telefone?: string;
+    telefone?: string | undefined;
     /**
      * @description Provedor de autenticação
      * @default "LOCAL"
      * @type string | undefined
     */
-    provider?: string;
+    provider?: string | undefined;
     /**
      * @description ID do Google para autenticação OAuth
      * @type string | undefined
     */
-    googleId?: string;
+    googleId?: string | undefined;
     /**
      * @description Senha do usuário
      * @minLength 6
      * @type string | undefined
     */
-    senha?: string;
+    senha?: string | undefined;
     /**
      * @description Status ativo do usuário
      * @default true
      * @type boolean | undefined
     */
-    ativo?: boolean;
+    ativo?: boolean | undefined;
     /**
      * @description URL do avatar do usuário
      * @type string | undefined
     */
-    avatar?: string;
+    avatar?: string | undefined;
 };

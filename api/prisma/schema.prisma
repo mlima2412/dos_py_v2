@@ -615,7 +615,9 @@ enum VendaStatus {
 
 enum VendaItemTipo {
   NORMAL
+  CONDICIONAL
   BRINDE
+  PERMUTA
 }
 
 enum TipoVenda {

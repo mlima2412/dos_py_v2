@@ -21,7 +21,7 @@ export type ContasPagar = {
      * @description ID da despesa relacionada
      * @type number | undefined
     */
-    despesaId?: number;
+    despesaId?: number | undefined;
     /**
      * @description Data de criação da conta
      * @type string, date-time
@@ -31,7 +31,7 @@ export type ContasPagar = {
      * @description Data do pagamento da conta
      * @type string | undefined, date-time
     */
-    dataPagamento?: string;
+    dataPagamento?: string | undefined;
     /**
      * @description Valor total da conta a pagar
      * @type number
@@ -51,9 +51,9 @@ export type ContasPagar = {
      * @description Parcelas da conta a pagar
      * @type array | undefined
     */
-    contasPagarParcelas?: ContasPagarParcelas[];
+    contasPagarParcelas?: ContasPagarParcelas[] | undefined;
     /**
      * @description Despesa relacionada
     */
-    despesa?: Despesa;
+    despesa?: Despesa | undefined;
 };

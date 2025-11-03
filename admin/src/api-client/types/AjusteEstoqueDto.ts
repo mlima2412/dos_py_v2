@@ -24,5 +24,5 @@ export type AjusteEstoqueDto = {
      * @description Observação sobre o motivo do ajuste
      * @type string | undefined
     */
-    observacao?: string;
+    observacao?: string | undefined;
 };

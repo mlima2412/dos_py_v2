@@ -15,5 +15,5 @@ export type RequestPasswordResetDto = {
      * @default "pt-BR"
      * @type string | undefined
     */
-    language?: string;
+    language?: string | undefined;
 };

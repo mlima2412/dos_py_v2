@@ -28,12 +28,12 @@ export type ProdutosPorLocalResponseDto = {
      * @description Descrição do produto
      * @type string | undefined
     */
-    descricao?: string;
+    descricao?: string | undefined;
     /**
      * @description URL da imagem do produto
      * @type string | undefined
     */
-    imgURL?: string;
+    imgURL?: string | undefined;
     /**
      * @description Preço de venda
      * @type number
@@ -57,15 +57,15 @@ export type ProdutosPorLocalResponseDto = {
     /**
      * @description Categoria do produto
     */
-    categoria?: CategoriaResponseDto;
+    categoria?: CategoriaResponseDto | undefined;
     /**
      * @description Fornecedor do produto
     */
-    fornecedor?: FornecedorResponseDto;
+    fornecedor?: FornecedorResponseDto | undefined;
     /**
      * @description Moeda do produto
     */
-    currency?: CurrencyResponseDto;
+    currency?: CurrencyResponseDto | undefined;
     /**
      * @description SKUs do produto com informações de estoque
      * @type array

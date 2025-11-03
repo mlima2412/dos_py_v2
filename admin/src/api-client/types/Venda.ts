@@ -75,65 +75,65 @@ export type Venda = {
      * @description Data de entrega
      * @type string | undefined, date-time
     */
-    dataEntrega?: string;
+    dataEntrega?: string | undefined;
     /**
      * @description Valor do frete
      * @type number | undefined
     */
-    valorFrete?: number;
+    valorFrete?: number | undefined;
     /**
      * @description Desconto total da venda
      * @type number | undefined
     */
-    desconto?: number;
+    desconto?: number | undefined;
     /**
      * @description Valor total da venda
      * @type number | undefined
     */
-    valorTotal?: number;
+    valorTotal?: number | undefined;
     /**
      * @description RUC/CNPJ da fatura da venda
      * @type string | undefined
     */
-    ruccnpj?: string;
+    ruccnpj?: string | undefined;
     /**
      * @description Nome para a fatura da venda
      * @type string | undefined
     */
-    nomeFatura?: string;
+    nomeFatura?: string | undefined;
     /**
      * @description Número da fatura
      * @type string | undefined
     */
-    numeroFatura?: string;
+    numeroFatura?: string | undefined;
     /**
      * @description Observação da venda
      * @type string | undefined
     */
-    observacao?: string;
+    observacao?: string | undefined;
     /**
      * @description Valor da comissão
      * @type number | undefined
     */
-    valorComissao?: number;
+    valorComissao?: number | undefined;
     /**
      * @description Nome do cliente
      * @type string | undefined
     */
-    clienteNome?: string;
+    clienteNome?: string | undefined;
     /**
      * @description Sobrenome do cliente
      * @type string | undefined
     */
-    clienteSobrenome?: string;
+    clienteSobrenome?: string | undefined;
     /**
      * @description Nome do usuário que criou a venda
      * @type string | undefined
     */
-    usuarioNome?: string;
+    usuarioNome?: string | undefined;
     /**
      * @description Itens vendidos
      * @type array | undefined
     */
-    VendaItem?: VendaItemEntity[];
+    VendaItem?: VendaItemEntity[] | undefined;
 };

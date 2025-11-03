@@ -27,7 +27,7 @@ export type TransferenciaEstoqueControllerMarcarComoRecebida200 = {
     /**
      * @type string | undefined
     */
-    publicId?: string;
+    publicId?: string | undefined;
 };
 
 /**

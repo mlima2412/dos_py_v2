@@ -11,11 +11,11 @@ export type AuthControllerGetUserParceiros200 = {
     /**
      * @type number | undefined
     */
-    id?: number;
+    id?: number | undefined;
     /**
      * @type number | undefined
     */
-    parceiroId?: number;
+    parceiroId?: number | undefined;
     /**
      * @type object | undefined
     */
@@ -23,23 +23,23 @@ export type AuthControllerGetUserParceiros200 = {
         /**
          * @type number | undefined
         */
-        id?: number;
+        id?: number | undefined;
         /**
          * @type string | undefined
         */
-        publicId?: string;
+        publicId?: string | undefined;
         /**
          * @type string | undefined
         */
-        nome?: string;
+        nome?: string | undefined;
         /**
          * @type string | undefined
         */
-        logourl?: string;
+        logourl?: string | undefined;
         /**
          * @type number | undefined
         */
-        currencyId?: number;
+        currencyId?: number | undefined;
         /**
          * @type object | undefined
         */
@@ -47,17 +47,17 @@ export type AuthControllerGetUserParceiros200 = {
             /**
              * @type number | undefined
             */
-            id?: number;
+            id?: number | undefined;
             /**
              * @type string | undefined
             */
-            locale?: string;
+            locale?: string | undefined;
             /**
              * @type string | undefined
             */
-            isoCode?: string;
-        };
-    };
+            isoCode?: string | undefined;
+        } | undefined;
+    } | undefined;
     /**
      * @type object | undefined
     */
@@ -65,12 +65,12 @@ export type AuthControllerGetUserParceiros200 = {
         /**
          * @type number | undefined
         */
-        id?: number;
+        id?: number | undefined;
         /**
          * @type string | undefined
         */
-        nome?: string;
-    };
+        nome?: string | undefined;
+    } | undefined;
 }[];
 
 export type AuthControllerGetUserParceirosQueryResponse = AuthControllerGetUserParceiros200;

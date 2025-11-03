@@ -24,12 +24,12 @@ export type EtiquetaPedidoCompraDto = {
      * @description Cor do produto
      * @type string | undefined
     */
-    cor?: string;
+    cor?: string | undefined;
     /**
      * @description Tamanho do produto
      * @type string | undefined
     */
-    tamanho?: string;
+    tamanho?: string | undefined;
     /**
      * @description Preço do produto
      * @type number

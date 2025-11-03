@@ -17,30 +17,30 @@ export type UpdateParcelaDto = {
      * @description ID do parcelamento associado
      * @type number | undefined
     */
-    parcelamentoId?: number;
+    parcelamentoId?: number | undefined;
     /**
      * @description Número da parcela
      * @type number | undefined
     */
-    numero?: number;
+    numero?: number | undefined;
     /**
      * @description Valor da parcela
      * @type number | undefined
     */
-    valor?: number;
+    valor?: number | undefined;
     /**
      * @description Data de vencimento (ISO 8601)
      * @type string | undefined
     */
-    vencimento?: string;
+    vencimento?: string | undefined;
     /**
      * @description Data de recebimento (ISO 8601)
      * @type string | undefined
     */
-    recebidoEm?: string;
+    recebidoEm?: string | undefined;
     /**
      * @description Status da parcela
      * @type string | undefined
     */
-    status?: UpdateParcelaDtoStatusEnumKey;
+    status?: UpdateParcelaDtoStatusEnumKey | undefined;
 };

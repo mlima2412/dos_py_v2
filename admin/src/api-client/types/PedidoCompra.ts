@@ -48,34 +48,34 @@ export type PedidoCompra = {
      * @description Data de entrega prevista
      * @type string | undefined, date-time
     */
-    dataEntrega?: string;
+    dataEntrega?: string | undefined;
     /**
      * @description Valor do frete
     */
-    valorFrete?: I;
+    valorFrete?: I | undefined;
     /**
      * @description Valor total do pedido
     */
-    valorTotal?: I;
+    valorTotal?: I | undefined;
     /**
      * @description Observações do pedido
      * @type string | undefined
     */
-    observacao?: string;
+    observacao?: string | undefined;
     /**
      * @description Valor da comissão
     */
-    valorComissao?: I;
+    valorComissao?: I | undefined;
     /**
      * @description Cotação da moeda
      * @type number | undefined
     */
-    cotacao?: number;
+    cotacao?: number | undefined;
     /**
      * @description ID da moeda
      * @type number | undefined
     */
-    currencyId?: number;
+    currencyId?: number | undefined;
     /**
      * @description Indica se o pedido é consignado
      * @type boolean
@@ -90,20 +90,20 @@ export type PedidoCompra = {
      * @description Dados do fornecedor
      * @type object | undefined
     */
-    fornecedor?: object;
+    fornecedor?: object | undefined;
     /**
      * @description Dados da moeda
      * @type object | undefined
     */
-    currency?: object;
+    currency?: object | undefined;
     /**
      * @description Dados do parceiro
      * @type object | undefined
     */
-    Parceiro?: object;
+    Parceiro?: object | undefined;
     /**
      * @description Dados do local de entrada
      * @type object | undefined
     */
-    LocalEntrada?: object;
+    LocalEntrada?: object | undefined;
 };

@@ -23,7 +23,7 @@ import {
 import { ClientSelector } from "@/components";
 import { cn } from "@/lib/utils";
 import type { VendaFormMode, VendaFormValues, LocalOption } from "../types";
-import type { VendaTipoEnum } from "@/api-client/types";
+import type { VendaTipoEnumKey } from "@/api-client/types";
 
 interface DadosBasicosProps {
 	mode: VendaFormMode;
@@ -107,7 +107,7 @@ export const DadosBasicos: React.FC<DadosBasicosProps> = ({
 									disabled={mode === "view"}
 									value={field.value}
 									onValueChange={value =>
-										field.onChange(value as VendaTipoEnum)
+										field.onChange(value as VendaTipoEnumKey)
 									}
 								>
 									<SelectTrigger>
@@ -116,11 +116,13 @@ export const DadosBasicos: React.FC<DadosBasicosProps> = ({
 										/>
 									</SelectTrigger>
 									<SelectContent>
-										{["DIRETA", "CONDICIONAL", "BRINDE"].map(option => (
-											<SelectItem key={option} value={option}>
-												{t(`salesOrders.types.${option}`)}
-											</SelectItem>
-										))}
+										{["DIRETA", "CONDICIONAL", "BRINDE", "PERMUTA"].map(
+											option => (
+												<SelectItem key={option} value={option}>
+													{t(`salesOrders.types.${option}`)}
+												</SelectItem>
+											)
+										)}
 									</SelectContent>
 								</Select>
 							)}

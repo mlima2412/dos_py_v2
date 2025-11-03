@@ -9,7 +9,7 @@ export type CreateSubCategoriaDespesaDto = {
      * @description ID da subcategoria de despesa
      * @type number
     */
-    idSubCategoria: number;
+    idSubCategoria?: (number | null) | undefined;
     /**
      * @description ID da categoria de despesa
      * @type number
@@ -22,7 +22,7 @@ export type CreateSubCategoriaDespesaDto = {
     descricao: string;
     /**
      * @description Status ativo da subcategoria
-     * @type boolean | undefined
+     * @type boolean
     */
-    ativo?: boolean;
+    ativo?: (boolean | null) | undefined;
 };

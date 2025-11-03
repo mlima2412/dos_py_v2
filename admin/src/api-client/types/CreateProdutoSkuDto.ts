@@ -20,18 +20,18 @@ export type CreateProdutoSkuDto = {
      * @maxLength 50
      * @type string | undefined
     */
-    cor?: string;
+    cor?: string | undefined;
     /**
      * @description Código hexadecimal da cor
      * @type string | undefined
     */
-    codCor?: string;
+    codCor?: string | undefined;
     /**
      * @description Tamanho do produto
      * @maxLength 10
      * @type string | undefined
     */
-    tamanho?: string;
+    tamanho?: string | undefined;
     /**
      * @description Quantidade mínima em estoque
      * @default 0
@@ -42,5 +42,5 @@ export type CreateProdutoSkuDto = {
      * @description Data da última compra
      * @type string | undefined, date-time
     */
-    dataUltimaCompra?: string;
+    dataUltimaCompra?: string | undefined;
 };

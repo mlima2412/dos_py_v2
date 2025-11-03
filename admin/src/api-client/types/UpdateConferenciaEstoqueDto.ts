@@ -19,26 +19,26 @@ export type UpdateConferenciaEstoqueDto = {
      * @description ID do local de estoque
      * @type number | undefined
     */
-    localEstoqueId?: number;
+    localEstoqueId?: number | undefined;
     /**
      * @description ID do usuário responsável pela conferência
      * @type number | undefined
     */
-    usuarioResponsavel?: number;
+    usuarioResponsavel?: number | undefined;
     /**
      * @description Data de início da conferência
      * @type string | undefined
     */
-    dataInicio?: string;
+    dataInicio?: string | undefined;
     /**
      * @description Data de fim da conferência
      * @type string | undefined
     */
-    dataFim?: string;
+    dataFim?: string | undefined;
     /**
      * @description Status da conferência
      * @default "PENDENTE"
      * @type string | undefined
     */
-    status?: UpdateConferenciaEstoqueDtoStatusEnumKey;
+    status?: UpdateConferenciaEstoqueDtoStatusEnumKey | undefined;
 };

@@ -38,7 +38,7 @@ export type CreatePagamentoDto = {
      * @description Valor do delivery, se houver
      * @type number | undefined
     */
-    valorDelivery?: number;
+    valorDelivery?: number | undefined;
     /**
      * @description É pagamento de entrada?
      * @default false

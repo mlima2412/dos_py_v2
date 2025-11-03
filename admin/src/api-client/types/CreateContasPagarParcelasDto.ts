@@ -24,7 +24,7 @@ export type CreateContasPagarParcelasDto = {
      * @description Se a parcela foi paga
      * @type boolean | undefined
     */
-    pago?: boolean;
+    pago?: boolean | undefined;
     /**
      * @description ID da conta a pagar relacionada
      * @type number

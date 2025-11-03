@@ -49,6 +49,17 @@ export class CategoriaDespesasService {
     });
   }
 
+  async resetIncrement() {
+    await this.prisma.$executeRaw`
+        SELECT setval(
+          pg_get_serial_sequence('public.categoria_despesas', 'categoria_id'),
+          COALESCE(MAX(categoria_id), 1)
+        )
+        FROM public."categoria_despesas";
+      `;
+    console.log('Sequência de categoria_despesas reiniciada.');
+  }
+
   async findOne(idCategoria: number): Promise<CategoriaDespesas> {
     const categoria = await this.prisma.categoriaDespesas.findUnique({
       where: { idCategoria },

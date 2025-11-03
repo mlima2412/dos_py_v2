@@ -9,20 +9,20 @@ import type { RequestConfig, ResponseErrorConfig } from "@/lib/fetch-client";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const vendaControllerFinalizeDiretaMutationKey = () => [{ url: '/venda/:publicId/finalizar' }] as const
+export const vendaControllerFinalizeDiretaMutationKey = () => [{ url: '/venda/:publicId/finalizarDireta' }] as const
 
 export type VendaControllerFinalizeDiretaMutationKey = ReturnType<typeof vendaControllerFinalizeDiretaMutationKey>
 
 /**
- * @summary Finalizar venda direta com pagamentos e baixa de estoque
- * {@link /venda/:publicId/finalizar}
+ * @summary Finalizar brinde sem pagamentos e baixa de estoque
+ * {@link /venda/:publicId/finalizarDireta}
  */
 export async function vendaControllerFinalizeDireta(publicId: VendaControllerFinalizeDiretaPathParams["publicId"], headers: VendaControllerFinalizeDiretaHeaderParams, data?: VendaControllerFinalizeDiretaMutationRequest, config: Partial<RequestConfig<VendaControllerFinalizeDiretaMutationRequest>> & { client?: typeof fetch } = {}) {
   const { client: request = fetch, ...requestConfig } = config  
   
   const requestData = data  
   
-  const res = await request<VendaControllerFinalizeDiretaMutationResponse, ResponseErrorConfig<Error>, VendaControllerFinalizeDiretaMutationRequest>({ method : "PATCH", url : `/venda/${publicId}/finalizar`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
+  const res = await request<VendaControllerFinalizeDiretaMutationResponse, ResponseErrorConfig<Error>, VendaControllerFinalizeDiretaMutationRequest>({ method : "PATCH", url : `/venda/${publicId}/finalizarDireta`, data : requestData, ... requestConfig, headers : { ...headers, ...requestConfig.headers } })  
   return res.data
 }
 
@@ -37,8 +37,8 @@ export function vendaControllerFinalizeDiretaMutationOptions(config: Partial<Req
 }
 
 /**
- * @summary Finalizar venda direta com pagamentos e baixa de estoque
- * {@link /venda/:publicId/finalizar}
+ * @summary Finalizar brinde sem pagamentos e baixa de estoque
+ * {@link /venda/:publicId/finalizarDireta}
  */
 export function useVendaControllerFinalizeDireta<TContext>(options: 
 {

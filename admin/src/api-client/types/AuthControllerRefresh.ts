@@ -12,7 +12,7 @@ export type AuthControllerRefresh200 = {
     /**
      * @type string | undefined
     */
-    accessToken?: string;
+    accessToken?: string | undefined;
 };
 
 /**

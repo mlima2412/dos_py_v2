@@ -19,12 +19,12 @@ export type ProdutoSKUResponseDto = {
      * @description Cor do produto
      * @type string | undefined
     */
-    cor?: string;
+    cor?: string | undefined;
     /**
      * @description Tamanho do produto
      * @type string | undefined
     */
-    tamanho?: string;
+    tamanho?: string | undefined;
     /**
      * @description Informações do produto
      * @type object

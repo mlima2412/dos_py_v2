@@ -28,7 +28,7 @@ export type ConferenciaEstoqueControllerCheckLocalEmConferencia200 = {
      * @description True se existe conferência pendente, false caso contrário
      * @type boolean | undefined
     */
-    emConferencia?: boolean;
+    emConferencia?: boolean | undefined;
 };
 
 /**

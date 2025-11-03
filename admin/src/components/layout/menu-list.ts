@@ -171,7 +171,8 @@ export function getMenuList(
 				{
 					href: "/vendas",
 					label: t("menu.sales"),
-					active: pathname.includes("/vendas") || pathname.includes("/pedidoVendas"),
+					active:
+						pathname.includes("/vendas") || pathname.includes("/pedidoVendas"),
 					icon: ShoppingCartIcon,
 					submenus: [
 						{
@@ -188,6 +189,11 @@ export function getMenuList(
 							href: "/pedidoVendas/condicionais",
 							label: t("menu.conditionals"),
 							active: pathname.includes("/pedidoVendas/condicionais"),
+						},
+						{
+							href: "/pedidoVendas/brinde",
+							label: t("menu.gifts"),
+							active: pathname.includes("/pedidoVendas/brinde"),
 						},
 						{
 							href: "/pedidoVendas/parcelamentos",

@@ -80,7 +80,7 @@ export interface VendaFormHandlers {
 	onRemoveItem: (skuId: number) => Promise<void>;
 	onUpdateQuantity: (skuId: number, qty: number) => Promise<void>;
 	onUpdateDiscount: (skuId: number, discount: number) => Promise<void>;
-	onSearchSkuByCode: () => Promise<void>;
+	onSearchSkuByCode: (discount?: number) => Promise<null | { sku: ProdutoSKUEstoqueResponseDto; product: ProdutosPorLocalResponseDto; }>;
 }
 
 export interface VendaTotals {

@@ -182,6 +182,7 @@
 		"completedSales": "Vendas Realizadas",
 		"conditionals": "Condicionais",
 		"installments": "Parcelamentos",
+		"gifts": "Brindes & Permutas",
 		"administration": "Administração",
 		"users": "Usuários",
 		"partners": "Parceiros",
@@ -1601,7 +1602,8 @@
 			"all": "Todos",
 			"DIRETA": "Direta",
 			"CONDICIONAL": "Condicional",
-			"BRINDE": "Brinde"
+			"BRINDE": "Brinde",
+			"PERMUTA": "Permuta"
 		},
 		"status": {
 			"PEDIDO": "Pedido",
@@ -1745,10 +1747,14 @@
 				"save": "Salvar",
 				"cancel": "Cancelar",
 				"confirmSale": "Confirmar venda",
+				"confirmGift": "Confirmar brinde",
+				"confirmExchange": "Confirmar permuta",
+				"confirmConditional": "Confirmar condicional",
 				"backToList": "Voltar para listagem"
 			},
 			"messages": {
 				"partnerRequired": "Selecione um parceiro para continuar.",
+				"clientRequired": "Selecione um cliente para continuar.",
 				"checkRequiredFields": "Revise os campos obrigatórios antes de avançar.",
 				"basicDataSaved": "Dados básicos salvos com sucesso!",
 				"basicDataError": "Não foi possível salvar os dados básicos.",

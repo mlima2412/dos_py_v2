@@ -29,16 +29,16 @@ export type CreateConferenciaEstoqueDto = {
      * @description Data de início da conferência
      * @type string | undefined
     */
-    dataInicio?: string;
+    dataInicio?: string | undefined;
     /**
      * @description Data de fim da conferência
      * @type string | undefined
     */
-    dataFim?: string;
+    dataFim?: string | undefined;
     /**
      * @description Status da conferência
      * @default "PENDENTE"
      * @type string | undefined
     */
-    status?: CreateConferenciaEstoqueDtoStatusEnumKey;
+    status?: CreateConferenciaEstoqueDtoStatusEnumKey | undefined;
 };

@@ -15,5 +15,5 @@ export type AjusteConferenciaLoteDto = {
      * @description Observação para os ajustes
      * @type string | undefined
     */
-    observacao?: string;
+    observacao?: string | undefined;
 };

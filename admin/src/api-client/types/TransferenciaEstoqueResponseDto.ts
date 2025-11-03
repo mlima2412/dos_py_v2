@@ -38,7 +38,7 @@ export type TransferenciaEstoqueResponseDto = {
      * @description Data do recebimento
      * @type string | undefined, date-time
     */
-    dataRecebimento?: string;
+    dataRecebimento?: string | undefined;
     /**
      * @description Parceiro responsável pela transferência
     */
@@ -58,7 +58,7 @@ export type TransferenciaEstoqueResponseDto = {
     /**
      * @description Usuário que recebeu
     */
-    recebidoPorUsuario?: UsuarioResponseDto;
+    recebidoPorUsuario?: UsuarioResponseDto | undefined;
     /**
      * @description Itens da transferência
      * @type array

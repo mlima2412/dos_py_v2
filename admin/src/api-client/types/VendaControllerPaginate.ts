@@ -22,18 +22,18 @@ export type VendaControllerPaginateQueryParams = {
      * @default 1
      * @type number | undefined
     */
-    page?: number;
+    page?: number | undefined;
     /**
      * @description Quantidade de itens por página
      * @default 10
      * @type number | undefined
     */
-    limit?: number;
+    limit?: number | undefined;
     /**
      * @description Status opcional para filtro
      * @type string | undefined
     */
-    status?: VendaControllerPaginateQueryParamsStatusEnumKey;
+    status?: VendaControllerPaginateQueryParamsStatusEnumKey | undefined;
 };
 
 export type VendaControllerPaginateHeaderParams = {

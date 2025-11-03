@@ -36,13 +36,13 @@ export type UsuarioParceiro = {
     /**
      * @description Dados do usuário relacionado
     */
-    Usuario?: Usuario;
+    Usuario?: Usuario | undefined;
     /**
      * @description Dados do parceiro relacionado
     */
-    Parceiro?: Parceiro;
+    Parceiro?: Parceiro | undefined;
     /**
      * @description Dados do perfil relacionado
     */
-    perfil?: Perfil;
+    perfil?: Perfil | undefined;
 };

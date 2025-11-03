@@ -50,7 +50,8 @@ const styles = StyleSheet.create({
 	},
 	textRowValue: {
 		flexDirection: "row",
-		fontSize: 5,
+		fontSize: 6,
+		fontWeight: "bold",
 	},
 });
 

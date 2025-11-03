@@ -10,7 +10,7 @@ export type CurrencyControllerFindAllQueryParams = {
      * @description Filtrar por status ativo
      * @type boolean | undefined
     */
-    ativo?: boolean;
+    ativo?: boolean | undefined;
 };
 
 /**

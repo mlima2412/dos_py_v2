@@ -9,46 +9,46 @@ export type UpdateParceiroDto = {
      * @description Nome do parceiro
      * @type string | undefined
     */
-    nome?: string;
+    nome?: string | undefined;
     /**
      * @description RUC/CNPJ do parceiro
      * @type string | undefined
     */
-    ruccnpj?: string;
+    ruccnpj?: string | undefined;
     /**
      * @description Email do parceiro
      * @type string | undefined
     */
-    email?: string;
+    email?: string | undefined;
     /**
      * @description Rede social do parceiro
      * @type string | undefined
     */
-    redesocial?: string;
+    redesocial?: string | undefined;
     /**
      * @description Telefone do parceiro
      * @type string | undefined
     */
-    telefone?: string;
+    telefone?: string | undefined;
     /**
      * @description ID da moeda do parceiro
      * @type number | undefined
     */
-    currencyId?: number;
+    currencyId?: number | undefined;
     /**
      * @description Status ativo do parceiro
      * @default true
      * @type boolean | undefined
     */
-    ativo?: boolean;
+    ativo?: boolean | undefined;
     /**
      * @description URL do logo do parceiro
      * @type string | undefined
     */
-    logourl?: string;
+    logourl?: string | undefined;
     /**
      * @description URL da imagem reduzida do parceiro
      * @type string | undefined
     */
-    thumburl?: string;
+    thumburl?: string | undefined;
 };

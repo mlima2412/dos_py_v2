@@ -10,28 +10,28 @@ export type UpdateFormaPagamentoDto = {
      * @maxLength 255
      * @type string | undefined
     */
-    nome?: string;
+    nome?: string | undefined;
     /**
      * @description Taxa da forma de pagamento (em decimal)
      * @type number | undefined
     */
-    taxa?: number;
+    taxa?: number | undefined;
     /**
      * @description Tempo de liberação em dias
      * @default 0
      * @type number | undefined
     */
-    tempoLiberacao?: number;
+    tempoLiberacao?: number | undefined;
     /**
      * @description Se o imposto é calculado após o desconto da taxa
      * @default false
      * @type boolean | undefined
     */
-    impostoPosCalculo?: boolean;
+    impostoPosCalculo?: boolean | undefined;
     /**
      * @description Status ativo/inativo da forma de pagamento
      * @default true
      * @type boolean | undefined
     */
-    ativo?: boolean;
+    ativo?: boolean | undefined;
 };

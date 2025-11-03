@@ -10,28 +10,28 @@ export type DespesasControllerFindPaginatedQueryParams = {
      * @default "1"
      * @type string | undefined
     */
-    page?: string;
+    page?: string | undefined;
     /**
      * @description Número de itens por página
      * @default "20"
      * @type string | undefined
     */
-    limit?: string;
+    limit?: string | undefined;
     /**
      * @description Termo de busca para filtrar por descrição
      * @type string | undefined
     */
-    search?: string;
+    search?: string | undefined;
     /**
      * @description ID do fornecedor para filtrar
      * @type string | undefined
     */
-    fornecedorId?: string;
+    fornecedorId?: string | undefined;
     /**
      * @description ID da subcategoria para filtrar
      * @type string | undefined
     */
-    subCategoriaId?: string;
+    subCategoriaId?: string | undefined;
 };
 
 /**

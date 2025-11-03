@@ -22,6 +22,8 @@ export default defineConfig({
 			output: {
 				path: "./types",
 			},
+			optionalType: "questionTokenAndUndefined",
+			oasType: "infer",
 		}),
 		pluginZod({
 			output: {

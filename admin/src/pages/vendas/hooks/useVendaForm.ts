@@ -39,19 +39,17 @@ const pagamentoFormSchema = z.object({
 const vendaFormSchema = z.object({
 	clienteId: z
 		.number({
-			required_error: "Cliente obrigatório",
-			invalid_type_error: "Cliente obrigatório",
+			message: "Cliente obrigatório",
 		})
 		.int()
-		.positive(),
+		.positive("Cliente obrigatório"),
 	localSaidaId: z
 		.number({
-			required_error: "Local de saída obrigatório",
-			invalid_type_error: "Local de saída obrigatório",
+			message: "Local de saída obrigatório",
 		})
 		.int()
-		.positive(),
-	tipo: z.enum(["DIRETA", "CONDICIONAL", "BRINDE"] as const),
+		.positive("Local de saída obrigatório"),
+	tipo: z.enum(["DIRETA", "CONDICIONAL", "BRINDE", "PERMUTA"] as const),
 	dataVenda: z.date(),
 	dataEntrega: z.date().nullable().optional(),
 	observacao: z.string().max(500).nullable().optional().or(z.literal("")),

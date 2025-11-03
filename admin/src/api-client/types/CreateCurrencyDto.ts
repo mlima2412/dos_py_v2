@@ -25,23 +25,23 @@ export type CreateCurrencyDto = {
      * @default 2
      * @type number | undefined
     */
-    precision?: number;
+    precision?: number | undefined;
     /**
      * @description Locale para formatação
      * @default "pt-BR"
      * @type string | undefined
     */
-    locale?: string;
+    locale?: string | undefined;
     /**
      * @description Taxa de câmbio padrão
      * @default 0
      * @type number | undefined
     */
-    defaultRate?: number;
+    defaultRate?: number | undefined;
     /**
      * @description Status ativo da moeda
      * @default true
      * @type boolean | undefined
     */
-    ativo?: boolean;
+    ativo?: boolean | undefined;
 };

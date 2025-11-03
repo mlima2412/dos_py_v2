@@ -127,11 +127,10 @@ const FormularioSubCategoriaDespesas: React.FC = () => {
 			createMutation.mutate(
 				{
 					data: {
-						idSubCategoria: Date.now(), // Gerar ID único temporário
 						descricao: data.descricao,
 						categoriaId: data.categoriaId,
 						ativo: true,
-					},
+					} as any, // TypeScript workaround: Kubb não está gerando tipos opcionais corretamente
 				},
 				{
 					onSuccess: () => {

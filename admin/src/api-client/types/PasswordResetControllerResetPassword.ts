@@ -12,7 +12,7 @@ export type PasswordResetControllerResetPassword200 = {
     /**
      * @type string | undefined
     */
-    message?: string;
+    message?: string | undefined;
 };
 
 /**

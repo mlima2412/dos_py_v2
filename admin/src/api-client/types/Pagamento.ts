@@ -43,7 +43,7 @@ export type Pagamento = {
      * @description Valor do delivery, se houver
      * @type number | undefined
     */
-    valorDelivery?: number;
+    valorDelivery?: number | undefined;
     /**
      * @description Indica se é pagamento de entrada
      * @type boolean
@@ -53,5 +53,5 @@ export type Pagamento = {
      * @description Nome da forma de pagamento
      * @type string | undefined
     */
-    formaPagamentoNome?: string;
+    formaPagamentoNome?: string | undefined;
 };

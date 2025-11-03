@@ -34,7 +34,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { useVendaControllerPaginate } from "@/api-client";
 import type { Venda } from "@/api-client/types";
 interface ListagemVendasProps {
-	tipo: "all" | "pedido" | "venda" | "condicional" | "parcelamento";
+	tipo: "all" | "pedido" | "venda" | "condicional" | "parcelamento" | "brinde";
 }
 export const ListagemVendas: React.FC<ListagemVendasProps> = ({ tipo }) => {
 	const { t } = useTranslation("common");
@@ -93,6 +93,13 @@ export const ListagemVendas: React.FC<ListagemVendasProps> = ({ tipo }) => {
 					// Condicionais: tipo CONDICIONAL
 					vendas = vendas.filter(
 						venda => venda.tipo === "CONDICIONAL" && venda.status !== "PEDIDO"
+					);
+					break;
+				case "brinde":
+					// Brindes: tipo BRINDE
+					vendas = vendas.filter(
+						venda =>
+							venda.tipo === "BRINDE" && venda.status !== "CONFIRMADA_TOTAL"
 					);
 					break;
 				case "parcelamento":

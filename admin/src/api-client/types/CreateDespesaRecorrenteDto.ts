@@ -30,7 +30,7 @@ export type CreateDespesaRecorrenteDto = {
      * @description Frequência da despesa recorrente
      * @type string | undefined
     */
-    frequencia?: CreateDespesaRecorrenteDtoFrequenciaEnumKey;
+    frequencia?: CreateDespesaRecorrenteDtoFrequenciaEnumKey | undefined;
     /**
      * @description Dia do vencimento da despesa recorrente (1-31)
      * @type number
@@ -40,12 +40,12 @@ export type CreateDespesaRecorrenteDto = {
      * @description Data de início da despesa recorrente
      * @type string | undefined
     */
-    dataInicio?: string;
+    dataInicio?: string | undefined;
     /**
      * @description Data de fim da despesa recorrente
      * @type string | undefined
     */
-    dataFim?: string;
+    dataFim?: string | undefined;
     /**
      * @description ID da subcategoria da despesa
      * @type number
@@ -60,15 +60,15 @@ export type CreateDespesaRecorrenteDto = {
      * @description ID do fornecedor da despesa
      * @type number | undefined
     */
-    fornecedorId?: number;
+    fornecedorId?: number | undefined;
     /**
      * @description ID da moeda da despesa
      * @type number | undefined
     */
-    currencyId?: number;
+    currencyId?: number | undefined;
     /**
      * @description Cotação da moeda no momento da despesa
      * @type number | undefined
     */
-    cotacao?: number;
+    cotacao?: number | undefined;
 };

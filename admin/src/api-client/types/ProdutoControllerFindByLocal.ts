@@ -19,12 +19,12 @@ export type ProdutoControllerFindByLocalQueryParams = {
      * @default true
      * @type boolean | undefined
     */
-    apenasComEstoque?: boolean;
+    apenasComEstoque?: boolean | undefined;
     /**
      * @description ID público do fornecedor para filtrar produtos
      * @type string | undefined
     */
-    fornecedorId?: string;
+    fornecedorId?: string | undefined;
 };
 
 export type ProdutoControllerFindByLocalHeaderParams = {

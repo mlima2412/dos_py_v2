@@ -29,5 +29,5 @@ export type ProdutoHistoricoPrecoResponseDto = {
      * @description Nome do produto
      * @type string | undefined
     */
-    nomeProduto?: string;
+    nomeProduto?: string | undefined;
 };

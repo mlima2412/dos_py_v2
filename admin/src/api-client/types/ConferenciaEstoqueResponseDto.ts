@@ -45,7 +45,7 @@ export type ConferenciaEstoqueResponseDto = {
      * @description Data de fim da conferência
      * @type string | undefined, date-time
     */
-    dataFim?: string;
+    dataFim?: string | undefined;
     /**
      * @description ID do usuário responsável pela conferência
      * @type number
@@ -65,5 +65,5 @@ export type ConferenciaEstoqueResponseDto = {
      * @description Itens da conferência com dados simplificados
      * @type array | undefined
     */
-    itens?: ConferenciaItemSimplificadoDto[];
+    itens?: ConferenciaItemSimplificadoDto[] | undefined;
 };

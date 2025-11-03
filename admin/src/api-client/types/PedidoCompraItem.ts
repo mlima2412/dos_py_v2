@@ -34,15 +34,15 @@ export type PedidoCompraItem = {
      * @description Observações do item
      * @type string | undefined
     */
-    observacao?: string;
+    observacao?: string | undefined;
     /**
      * @description Dados do pedido de compra
      * @type object | undefined
     */
-    pedidoCompra?: object;
+    pedidoCompra?: object | undefined;
     /**
      * @description Dados do produto SKU
      * @type object | undefined
     */
-    ProdutoSKU?: object;
+    ProdutoSKU?: object | undefined;
 };

@@ -12,7 +12,7 @@ export type AuthControllerLogin200 = {
     /**
      * @type string | undefined
     */
-    accessToken?: string;
+    accessToken?: string | undefined;
     /**
      * @type object | undefined
     */
@@ -20,27 +20,27 @@ export type AuthControllerLogin200 = {
         /**
          * @type number | undefined
         */
-        id?: number;
+        id?: number | undefined;
         /**
          * @type string | undefined
         */
-        publicId?: string;
+        publicId?: string | undefined;
         /**
          * @type string | undefined
         */
-        nome?: string;
+        nome?: string | undefined;
         /**
          * @type string | undefined
         */
-        email?: string;
+        email?: string | undefined;
         /**
          * @type string | undefined
         */
-        telefone?: string;
+        telefone?: string | undefined;
         /**
          * @type boolean | undefined
         */
-        ativo?: boolean;
+        ativo?: boolean | undefined;
         /**
          * @type object | undefined
         */
@@ -48,13 +48,13 @@ export type AuthControllerLogin200 = {
             /**
              * @type number | undefined
             */
-            id?: number;
+            id?: number | undefined;
             /**
              * @type string | undefined
             */
-            nome?: string;
-        };
-    };
+            nome?: string | undefined;
+        } | undefined;
+    } | undefined;
 };
 
 /**

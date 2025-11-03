@@ -144,6 +144,7 @@ export type { EstoqueSkuControllerRemovePathParams, EstoqueSkuControllerRemove20
 export type { EstoqueSkuControllerUpdatePathParams, EstoqueSkuControllerUpdate200, EstoqueSkuControllerUpdate404, EstoqueSkuControllerUpdateMutationRequest, EstoqueSkuControllerUpdateMutationResponse, EstoqueSkuControllerUpdateMutation } from "./EstoqueSkuControllerUpdate.ts";
 export type { EtiquetaPedidoCompraDto } from "./EtiquetaPedidoCompraDto.ts";
 export type { FinalizeVendaDiretaDto } from "./FinalizeVendaDiretaDto.ts";
+export type { FinalizeVendaSemPagamentoDto } from "./FinalizeVendaSemPagamentoDto.ts";
 export type { FormaPagamentoControllerAtivarPathParams, FormaPagamentoControllerAtivarHeaderParams, FormaPagamentoControllerAtivar200, FormaPagamentoControllerAtivar404, FormaPagamentoControllerAtivarMutationResponse, FormaPagamentoControllerAtivarMutation } from "./FormaPagamentoControllerAtivar.ts";
 export type { FormaPagamentoControllerCreateHeaderParams, FormaPagamentoControllerCreate201, FormaPagamentoControllerCreate400, FormaPagamentoControllerCreateMutationRequest, FormaPagamentoControllerCreateMutationResponse, FormaPagamentoControllerCreateMutation } from "./FormaPagamentoControllerCreate.ts";
 export type { FormaPagamentoControllerFindAllHeaderParams, FormaPagamentoControllerFindAll200, FormaPagamentoControllerFindAllQueryResponse, FormaPagamentoControllerFindAllQuery } from "./FormaPagamentoControllerFindAll.ts";
@@ -179,6 +180,7 @@ export type { MovimentoEstoqueControllerFindHistoricoSkuPathParams, MovimentoEst
 export type { MovimentoEstoqueControllerFindOnePathParams, MovimentoEstoqueControllerFindOne200, MovimentoEstoqueControllerFindOne404, MovimentoEstoqueControllerFindOneQueryResponse, MovimentoEstoqueControllerFindOneQuery } from "./MovimentoEstoqueControllerFindOne.ts";
 export type { MovimentoEstoqueControllerProcessarAjustesConferenciaLote201, MovimentoEstoqueControllerProcessarAjustesConferenciaLote400, MovimentoEstoqueControllerProcessarAjustesConferenciaLote404, MovimentoEstoqueControllerProcessarAjustesConferenciaLote409, MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationRequest, MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationResponse, MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutation } from "./MovimentoEstoqueControllerProcessarAjustesConferenciaLote.ts";
 export type { MovimentoEstoqueResponseDtoTipoEnumKey, MovimentoEstoqueResponseDto } from "./MovimentoEstoqueResponseDto.ts";
+export type { Oas } from "./oas.ts";
 export type { PagamentoTipoEnumKey, Pagamento } from "./Pagamento.ts";
 export type { PagamentoControllerCreateHeaderParams, PagamentoControllerCreate201, PagamentoControllerCreate404, PagamentoControllerCreateMutationRequest, PagamentoControllerCreateMutationResponse, PagamentoControllerCreateMutation } from "./PagamentoControllerCreate.ts";
 export type { PagamentoControllerFindAllQueryParams, PagamentoControllerFindAllHeaderParams, PagamentoControllerFindAll200, PagamentoControllerFindAllQueryResponse, PagamentoControllerFindAllQuery } from "./PagamentoControllerFindAll.ts";
@@ -343,6 +345,7 @@ export type { UsuariosControllerInitializeSystem201, UsuariosControllerInitializ
 export type { UsuariosControllerUpdatePathParams, UsuariosControllerUpdate200, UsuariosControllerUpdate400, UsuariosControllerUpdate404, UsuariosControllerUpdate409, UsuariosControllerUpdateMutationRequest, UsuariosControllerUpdateMutationResponse, UsuariosControllerUpdateMutation } from "./UsuariosControllerUpdate.ts";
 export type { VendaTipoEnumKey, VendaStatusEnumKey, Venda } from "./Venda.ts";
 export type { VendaControllerCreateHeaderParams, VendaControllerCreate201, VendaControllerCreate400, VendaControllerCreateMutationRequest, VendaControllerCreateMutationResponse, VendaControllerCreateMutation } from "./VendaControllerCreate.ts";
+export type { VendaControllerFinalizarBrindePermutaPathParams, VendaControllerFinalizarBrindePermutaHeaderParams, VendaControllerFinalizarBrindePermuta200, VendaControllerFinalizarBrindePermutaMutationRequest, VendaControllerFinalizarBrindePermutaMutationResponse, VendaControllerFinalizarBrindePermutaMutation } from "./VendaControllerFinalizarBrindePermuta.ts";
 export type { VendaControllerFinalizeDiretaPathParams, VendaControllerFinalizeDiretaHeaderParams, VendaControllerFinalizeDireta200, VendaControllerFinalizeDiretaMutationRequest, VendaControllerFinalizeDiretaMutationResponse, VendaControllerFinalizeDiretaMutation } from "./VendaControllerFinalizeDireta.ts";
 export type { VendaControllerFindAllHeaderParams, VendaControllerFindAll200, VendaControllerFindAllQueryResponse, VendaControllerFindAllQuery } from "./VendaControllerFindAll.ts";
 export type { VendaControllerFindInvoiceNamesPathParams, VendaControllerFindInvoiceNamesHeaderParams, VendaControllerFindInvoiceNames200, VendaControllerFindInvoiceNamesQueryResponse, VendaControllerFindInvoiceNamesQuery } from "./VendaControllerFindInvoiceNames.ts";
@@ -370,6 +373,7 @@ export { createVendaDtoTipoEnum } from "./CreateVendaDto.ts";
 export { createVendaItemDtoTipoEnum } from "./CreateVendaItemDto.ts";
 export { despesaRecorrenteFrequenciaEnum } from "./DespesaRecorrente.ts";
 export { movimentoEstoqueResponseDtoTipoEnum } from "./MovimentoEstoqueResponseDto.ts";
+export { oas } from "./oas.ts";
 export { pagamentoTipoEnum } from "./Pagamento.ts";
 export { pedidoCompraStatusEnum } from "./PedidoCompra.ts";
 export { pedidoCompraControllerFindByStatusPathParamsStatusEnum } from "./PedidoCompraControllerFindByStatus.ts";

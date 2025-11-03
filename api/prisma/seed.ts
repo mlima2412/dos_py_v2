@@ -67,12 +67,14 @@ async function fetchCategoriaFromLegacy(app, legacyDb) {
     };
     await categoriaService.create(dto);
   }
+  // Ajustar o sequence para continuar a partir do maior ID inserido
+  await categoriaService.resetIncrement();
 }
 
 async function fetchSubCategoriaFromLegacy(app, legacyDb) {
   console.log('🌱 Migrando Sub-Categorias de Despesas');
   const subcategorias = await legacyDb.query(
-    'SELECT * FROM public."ItensDespesas"',
+    'SELECT * FROM public."ItensDespesas" as id order by id."idItem" asc',
   );
 
   const subcategoriaService = app.get(SubCategoriaDespesaService);
@@ -87,6 +89,9 @@ async function fetchSubCategoriaFromLegacy(app, legacyDb) {
     };
     await subcategoriaService.create(dto);
   }
+
+  // Ajustar o sequence para continuar a partir do maior ID inserido
+  await subcategoriaService.resetIncrement();
 }
 
 async function fetchClientesFromLegacy(app, legacyDb) {
@@ -97,7 +102,6 @@ async function fetchClientesFromLegacy(app, legacyDb) {
 
   const clienteService = app.get(ClientesService);
   for (const raw of clientes.rows) {
-    // mapeie do legado -> DTO do seu service
     console.log(`Criando o cliente:${raw.nome}`);
     const dto: CreateClienteDto = {
       id: raw.id,
@@ -313,31 +317,3 @@ async function run() {
 }
 
 run();
-
-// // Criar perfil admin primeiro
-// const perfil = await prisma.perfil.upsert({
-//   where: { id: 1 },
-//   update: {},
-//   create: {
-//     id: 1,
-//     nome: 'ADMIN',
-//     ativo: true,
-//   },
-// });
-
-// // Hash da senha padrão
-// const senhaHash = await bcrypt.hash('123456', 10);
-
-// // Criar usuário admin de teste
-// const usuarios = Array.from({ length: 1000 }).map(() => {
-//   return {
-//     publicId: uuidv7(),
-//     nome: faker.person.fullName(),
-//     email: faker.internet.email(),
-//     telefone: faker.phone.number(),
-//     provider: 'LOCAL',
-//     senha: senhaHash,
-//     ativo: true,
-//     avatar: '',
-//   };
-//})

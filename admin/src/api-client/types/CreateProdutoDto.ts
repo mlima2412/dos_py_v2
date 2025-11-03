@@ -9,17 +9,17 @@ export type CreateProdutoDto = {
      * @description ID do produto
      * @type number | undefined
     */
-    id?: number;
+    id?: number | undefined;
     /**
      * @description Public ID do produto
      * @type string | undefined
     */
-    publicId?: string;
+    publicId?: string | undefined;
     /**
      * @description ID do parceiro
      * @type number | undefined
     */
-    parceiroId?: number;
+    parceiroId?: number | undefined;
     /**
      * @description Nome do produto
      * @maxLength 255
@@ -30,17 +30,17 @@ export type CreateProdutoDto = {
      * @description Descrição do produto
      * @type string | undefined
     */
-    descricao?: string;
+    descricao?: string | undefined;
     /**
      * @description URL da imagem do produto
      * @type string | undefined
     */
-    imgURL?: string;
+    imgURL?: string | undefined;
     /**
      * @description Preço de compra do produto
      * @type number | undefined
     */
-    precoCompra?: number;
+    precoCompra?: number | undefined;
     /**
      * @description Preço de venda do produto
      * @type number
@@ -56,17 +56,17 @@ export type CreateProdutoDto = {
      * @description ID da categoria do produto
      * @type number | undefined
     */
-    categoriaId?: number;
+    categoriaId?: number | undefined;
     /**
      * @description ID do fornecedor do produto
      * @type number | undefined
     */
-    fornecedorId?: number;
+    fornecedorId?: number | undefined;
     /**
      * @description ID da moeda do produto
      * @type number | undefined
     */
-    currencyId?: number;
+    currencyId?: number | undefined;
     /**
      * @description Status ativo do produto
      * @default true
@@ -77,5 +77,5 @@ export type CreateProdutoDto = {
      * @description Data de cadastro do produto
      * @type string | undefined, date-time
     */
-    dataCadastro?: string;
+    dataCadastro?: string | undefined;
 };

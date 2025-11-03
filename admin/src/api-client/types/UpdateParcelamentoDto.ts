@@ -9,32 +9,32 @@ export type UpdateParcelamentoDto = {
      * @description ID do pagamento associado
      * @type number | undefined
     */
-    idPagamento?: number;
+    idPagamento?: number | undefined;
     /**
      * @description ID do cliente associado
      * @type number | undefined
     */
-    clienteId?: number;
+    clienteId?: number | undefined;
     /**
      * @description Valor total parcelado
      * @type number | undefined
     */
-    valorTotal?: number;
+    valorTotal?: number | undefined;
     /**
      * @description Valor já pago
      * @default 0
      * @type number | undefined
     */
-    valorPago?: number;
+    valorPago?: number | undefined;
     /**
      * @description ID da forma de pagamento
      * @type number | undefined
     */
-    idFormaPag?: number;
+    idFormaPag?: number | undefined;
     /**
      * @description Situação (1 - Aberto, 2 - Concluído)
      * @default 1
      * @type number | undefined
     */
-    situacao?: number;
+    situacao?: number | undefined;
 };

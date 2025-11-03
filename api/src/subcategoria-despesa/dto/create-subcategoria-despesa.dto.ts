@@ -1,14 +1,15 @@
 import { IsBoolean, IsInt, IsOptional, IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateSubCategoriaDespesaDto {
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'ID da subcategoria de despesa',
     example: 1,
+    nullable: true,
   })
   @IsOptional()
   @IsInt()
-  idSubCategoria: number;
+  idSubCategoria?: number;
 
   @ApiProperty({
     description: 'ID da categoria de despesa',
@@ -24,10 +25,10 @@ export class CreateSubCategoriaDespesaDto {
   @IsString()
   descricao: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Status ativo da subcategoria',
     example: true,
-    required: false,
+    nullable: true,
   })
   @IsOptional()
   @IsBoolean()

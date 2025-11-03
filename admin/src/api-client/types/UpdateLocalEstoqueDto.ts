@@ -9,20 +9,20 @@ export type UpdateLocalEstoqueDto = {
      * @description ID do parceiro proprietário
      * @type number | undefined
     */
-    parceiroId?: number;
+    parceiroId?: number | undefined;
     /**
      * @description Nome do local de estoque
      * @type string | undefined
     */
-    nome?: string;
+    nome?: string | undefined;
     /**
      * @description Descrição do local de estoque
      * @type string | undefined
     */
-    descricao?: string;
+    descricao?: string | undefined;
     /**
      * @description Endereço do local de estoque
      * @type string | undefined
     */
-    endereco?: string;
+    endereco?: string | undefined;
 };

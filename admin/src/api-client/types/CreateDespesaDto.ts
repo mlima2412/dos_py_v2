@@ -17,7 +17,7 @@ export type CreateDespesaDto = {
      * @description Data do registro
      * @type string | undefined
     */
-    dataRegistro?: string;
+    dataRegistro?: string | undefined;
     /**
      * @description Valor da despesa
      * @type number
@@ -42,7 +42,7 @@ export type CreateDespesaDto = {
      * @description ID do fornecedor da despesa
      * @type number | undefined
     */
-    fornecedorId?: number;
+    fornecedorId?: number | undefined;
     /**
      * @description Tipo de pagamento da despesa
      * @type string
@@ -52,30 +52,30 @@ export type CreateDespesaDto = {
      * @description Valor da entrada (apenas para pagamento parcelado)
      * @type number | undefined
     */
-    valorEntrada?: number;
+    valorEntrada?: number | undefined;
     /**
      * @description Data da primeira parcela (apenas para pagamento parcelado)
      * @type string | undefined
     */
-    dataPrimeiraParcela?: string;
+    dataPrimeiraParcela?: string | undefined;
     /**
      * @description Número de parcelas (apenas para pagamento parcelado)
      * @type number | undefined
     */
-    numeroParcelas?: number;
+    numeroParcelas?: number | undefined;
     /**
      * @description Data de vencimento (apenas para pagamento à prazo sem parcelas)
      * @type string | undefined
     */
-    dataVencimento?: string;
+    dataVencimento?: string | undefined;
     /**
      * @description ID da moeda da despesa
      * @type number | undefined
     */
-    currencyId?: number;
+    currencyId?: number | undefined;
     /**
      * @description Cotação da moeda no momento da despesa
      * @type number | undefined
     */
-    cotacao?: number;
+    cotacao?: number | undefined;
 };

@@ -20,27 +20,27 @@ export type PerfisControllerUpdate200 = {
     /**
      * @type number | undefined
     */
-    id?: number;
+    id?: number | undefined;
     /**
      * @type string | undefined
     */
-    nome?: string;
+    nome?: string | undefined;
     /**
      * @type string | undefined
     */
-    descricao?: string;
+    descricao?: string | undefined;
     /**
      * @type boolean | undefined
     */
-    ativo?: boolean;
+    ativo?: boolean | undefined;
     /**
      * @type string | undefined, date-time
     */
-    createdAt?: string;
+    createdAt?: string | undefined;
     /**
      * @type string | undefined, date-time
     */
-    updatedAt?: string;
+    updatedAt?: string | undefined;
 };
 
 /**

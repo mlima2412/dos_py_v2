@@ -29,5 +29,5 @@ export type CreatePedidoCompraItemDto = {
      * @description Observações do item
      * @type string | undefined
     */
-    observacao?: string;
+    observacao?: string | undefined;
 };

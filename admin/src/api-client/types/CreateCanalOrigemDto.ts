@@ -14,11 +14,11 @@ export type CreateCanalOrigemDto = {
      * @description Descrição do canal de origem
      * @type string | undefined
     */
-    descricao?: string;
+    descricao?: string | undefined;
     /**
      * @description Status ativo do canal de origem
      * @default true
      * @type boolean | undefined
     */
-    ativo?: boolean;
+    ativo?: boolean | undefined;
 };

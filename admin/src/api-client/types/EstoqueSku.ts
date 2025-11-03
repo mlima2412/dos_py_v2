@@ -24,10 +24,10 @@ export type EstoqueSku = {
      * @description Informações do SKU
      * @type object | undefined
     */
-    sku?: object;
+    sku?: object | undefined;
     /**
      * @description Informações do local de estoque
      * @type object | undefined
     */
-    local?: object;
+    local?: object | undefined;
 };

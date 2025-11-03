@@ -20,19 +20,19 @@ export type CategoriaDespesasControllerUpdate200 = {
     /**
      * @type number | undefined
     */
-    idCategoria?: number;
+    idCategoria?: number | undefined;
     /**
      * @type string | undefined
     */
-    descricao?: string;
+    descricao?: string | undefined;
     /**
      * @type boolean | undefined
     */
-    ativo?: boolean;
+    ativo?: boolean | undefined;
     /**
      * @type string | undefined
     */
-    createdAt?: string;
+    createdAt?: string | undefined;
 };
 
 /**

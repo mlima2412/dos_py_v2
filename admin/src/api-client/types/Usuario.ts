@@ -29,7 +29,7 @@ export type Usuario = {
      * @description Telefone do usuário para SMS ou WhatsApp
      * @type string | undefined
     */
-    telefone?: string;
+    telefone?: string | undefined;
     /**
      * @description Provedor de autenticação
      * @default "LOCAL"
@@ -40,12 +40,12 @@ export type Usuario = {
      * @description ID do Google para autenticação OAuth
      * @type string | undefined
     */
-    googleId?: string;
+    googleId?: string | undefined;
     /**
      * @description Senha do usuário (hash)
      * @type string | undefined
     */
-    senha?: string;
+    senha?: string | undefined;
     /**
      * @description Status ativo do usuário
      * @default true
@@ -56,7 +56,7 @@ export type Usuario = {
      * @description URL do avatar do usuário
      * @type string | undefined
     */
-    avatar?: string;
+    avatar?: string | undefined;
     /**
      * @description Data de criação do usuário
      * @type string, date-time

@@ -9,16 +9,16 @@ export type UpdateCanalOrigemDto = {
      * @description Nome do canal de origem
      * @type string | undefined
     */
-    nome?: string;
+    nome?: string | undefined;
     /**
      * @description Descrição do canal de origem
      * @type string | undefined
     */
-    descricao?: string;
+    descricao?: string | undefined;
     /**
      * @description Status ativo do canal de origem
      * @default true
      * @type boolean | undefined
     */
-    ativo?: boolean;
+    ativo?: boolean | undefined;
 };

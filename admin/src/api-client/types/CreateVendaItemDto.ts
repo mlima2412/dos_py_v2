@@ -26,7 +26,7 @@ export type CreateVendaItemDto = {
      * @description Tipo do item
      * @type string | undefined
     */
-    tipo?: CreateVendaItemDtoTipoEnumKey;
+    tipo?: CreateVendaItemDtoTipoEnumKey | undefined;
     /**
      * @description Quantidade reservada
      * @type number
@@ -36,17 +36,17 @@ export type CreateVendaItemDto = {
      * @description Quantidade aceita (cliente ficou)
      * @type number | undefined
     */
-    qtdAceita?: number;
+    qtdAceita?: number | undefined;
     /**
      * @description Quantidade devolvida
      * @type number | undefined
     */
-    qtdDevolvida?: number;
+    qtdDevolvida?: number | undefined;
     /**
      * @description Desconto por item
      * @type number | undefined
     */
-    desconto?: number;
+    desconto?: number | undefined;
     /**
      * @description Preço unitário
      * @type number

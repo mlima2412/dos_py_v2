@@ -25,7 +25,7 @@ export type CreateParcelamentoDto = {
      * @default 0
      * @type number | undefined
     */
-    valorPago?: number;
+    valorPago?: number | undefined;
     /**
      * @description ID da forma de pagamento
      * @type number
@@ -36,5 +36,5 @@ export type CreateParcelamentoDto = {
      * @default 1
      * @type number | undefined
     */
-    situacao?: number;
+    situacao?: number | undefined;
 };

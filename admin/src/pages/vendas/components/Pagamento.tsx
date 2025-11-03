@@ -26,6 +26,7 @@ import type {
 	VendaTotals,
 	PagamentoFormData,
 } from "../types";
+import type { VendaTipoEnumKey } from "@/api-client/types";
 
 interface PagamentoProps {
 	mode: VendaFormMode;
@@ -44,6 +45,8 @@ interface PagamentoProps {
 	isFinalizing: boolean;
 	isSubmitting: boolean;
 	onBack: () => void;
+	tipoVenda: VendaTipoEnumKey;
+	shouldShowBillingAndPayment: boolean;
 }
 
 export const Pagamento: React.FC<PagamentoProps> = ({
@@ -61,6 +64,9 @@ export const Pagamento: React.FC<PagamentoProps> = ({
 	isFinalizing,
 	isSubmitting,
 	onBack,
+	tipoVenda,
+	shouldShowBillingAndPayment,
+	vendaResumo,
 }) => {
 	const { t } = useTranslation("common");
 	const navigate = useNavigate();
@@ -306,7 +312,8 @@ export const Pagamento: React.FC<PagamentoProps> = ({
 
 				<Separator />
 
-				{/* Card de Formas de Pagamento */}
+				{/* Card de Formas de Pagamento - Só aparece para vendas com pagamento */}
+				{shouldShowBillingAndPayment && (
 				<Card>
 					<CardHeader>
 						<div className="flex items-center justify-between">
@@ -346,6 +353,7 @@ export const Pagamento: React.FC<PagamentoProps> = ({
 						/>
 					</CardContent>
 				</Card>
+				)}
 
 				<Separator />
 
@@ -353,8 +361,9 @@ export const Pagamento: React.FC<PagamentoProps> = ({
 					<Button variant="outline" onClick={onBack}>
 						{t("salesOrders.form.actions.back")}
 					</Button>
-					{mode !== "view" ? (
-						<div className="flex gap-2">
+				{mode !== "view" ? (
+					<div className="flex gap-2">
+						{shouldShowBillingAndPayment && (
 							<Button
 								variant="outline"
 								onClick={onSave}
@@ -363,26 +372,33 @@ export const Pagamento: React.FC<PagamentoProps> = ({
 								{isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
 								{t("salesOrders.form.actions.save")}
 							</Button>
-							<Button
-								onClick={onFinalize}
-								disabled={
-									isSaving ||
-									isFinalizing ||
-									isSubmitting ||
-									!totalmenteAlocado
-								}
-								title={
-									!totalmenteAlocado
-										? t("salesOrders.form.messages.completePaymentFirst")
-										: ""
-								}
-							>
-								{isFinalizing && (
-									<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-								)}
-								{t("salesOrders.form.actions.confirmSale")}
-							</Button>
-						</div>
+						)}
+						<Button
+							onClick={onFinalize}
+							disabled={
+								isSaving ||
+								isFinalizing ||
+								isSubmitting ||
+								(shouldShowBillingAndPayment && !totalmenteAlocado)
+							}
+							title={
+								shouldShowBillingAndPayment && !totalmenteAlocado
+									? t("salesOrders.form.messages.completePaymentFirst")
+									: ""
+							}
+						>
+							{isFinalizing && (
+								<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+							)}
+							{tipoVenda === "BRINDE"
+								? t("salesOrders.form.actions.confirmGift")
+								: tipoVenda === "PERMUTA"
+								? t("salesOrders.form.actions.confirmExchange")
+								: tipoVenda === "CONDICIONAL" && vendaResumo?.status === "PEDIDO"
+								? t("salesOrders.form.actions.confirmConditional")
+								: t("salesOrders.form.actions.confirmSale")}
+						</Button>
+					</div>
 					) : (
 						<Button
 							variant="secondary"

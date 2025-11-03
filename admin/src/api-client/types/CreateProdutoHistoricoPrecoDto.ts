@@ -19,5 +19,5 @@ export type CreateProdutoHistoricoPrecoDto = {
      * @description Data do registro do preço
      * @type string | undefined, date-time
     */
-    data?: string;
+    data?: string | undefined;
 };

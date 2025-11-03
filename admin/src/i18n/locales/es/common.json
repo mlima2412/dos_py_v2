@@ -167,6 +167,16 @@
 			"payable": "Agenda de pagos",
 			"recurring": "Gastos Recurrentes"
 		},
+		"sales": "Ventas",
+		"openOrders": "Pedidos en Abierto",
+		"completedSales": "Ventas Realizadas",
+		"conditionals": "Condicionales",
+		"installments": "Cuotas",
+		"gifts": "Brindes & Canjes",
+		"administration": "Administración",
+		"users": "Usuarios",
+		"partners": "Socios",
+		"deleteUser": "Eliminar Usuario",
 		"paymentMethods": "Forma de Pago",
 		"originChannels": "Canales"
 	},
@@ -268,6 +278,7 @@
 		"openOrders": "Pedidos Abiertos",
 		"completedSales": "Ventas Realizadas",
 		"conditionals": "Condicionales",
+		"gifts": "Brindes & Canjes",
 		"installments": "Cuotas"
 	},
 	"administration": {
@@ -1450,7 +1461,8 @@
 			"all": "Todos",
 			"DIRETA": "Directa",
 			"CONDICIONAL": "Condicional",
-			"BRINDE": "Regalo"
+			"BRINDE": "Regalo",
+			"PERMUTA": "Canje"
 		},
 		"status": {
 			"PEDIDO": "Pedido",
@@ -1594,10 +1606,14 @@
 				"save": "Guardar",
 				"cancel": "Cancelar",
 				"confirmSale": "Confirmar venta",
+				"confirmGift": "Confirmar obsequio",
+				"confirmExchange": "Confirmar permuta",
+				"confirmConditional": "Confirmar condicional",
 				"backToList": "Volver al listado"
 			},
 			"messages": {
 				"partnerRequired": "Selecciona un socio para continuar.",
+				"clientRequired": "Selecciona un cliente para continuar.",
 				"checkRequiredFields": "Revisa los campos obligatorios antes de avanzar.",
 				"basicDataSaved": "¡Datos básicos guardados con éxito!",
 				"basicDataError": "No fue posible guardar los datos básicos.",

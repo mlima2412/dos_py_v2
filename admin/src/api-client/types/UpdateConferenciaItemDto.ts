@@ -9,28 +9,28 @@ export type UpdateConferenciaItemDto = {
      * @description ID da conferência de estoque
      * @type number | undefined
     */
-    conferenciaId?: number;
+    conferenciaId?: number | undefined;
     /**
      * @description ID do SKU do produto
      * @type number | undefined
     */
-    skuId?: number;
+    skuId?: number | undefined;
     /**
      * @description Quantidade no sistema
      * @default 0
      * @type number | undefined
     */
-    qtdSistema?: number;
+    qtdSistema?: number | undefined;
     /**
      * @description Quantidade conferida
      * @default 0
      * @type number | undefined
     */
-    qtdConferencia?: number;
+    qtdConferencia?: number | undefined;
     /**
      * @description Se o item foi ajustado
      * @default false
      * @type boolean | undefined
     */
-    ajustado?: boolean;
+    ajustado?: boolean | undefined;
 };

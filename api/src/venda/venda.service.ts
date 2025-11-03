@@ -19,10 +19,16 @@ import {
 } from '@prisma/client';
 import { Venda } from './entities/venda.entity';
 import { FinalizeVendaDiretaDto } from './dto/finalize-venda-direta.dto';
+import { FinalizeVendaSemPagamentoDto } from './dto/finalize-venda-sem-pagamento.dto';
+import { DespesasService } from '../despesas/despesas.service';
+import { TipoPagamento } from '../despesas/dto/create-despesa.dto';
 
 @Injectable()
 export class VendaService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly despesasService: DespesasService,
+  ) {}
 
   private mapToVendaEntity(data: any): Venda {
     const venda = new Venda({
@@ -493,6 +499,280 @@ export class VendaService {
           // atualiza o ruccnpj do cliente se estiver vazio
           ruccnpj:
             nomeFatura.length === 0 && ruccnpj.length > 0 ? ruccnpj : null,
+        },
+      });
+
+      const vendaAtualizada = await tx.venda.findUnique({
+        where: { id: venda.id },
+        include: {
+          Cliente: { select: { id: true, nome: true, sobrenome: true } },
+          Usuario: { select: { id: true, nome: true } },
+          VendaItem: {
+            include: {
+              ProdutoSKU: {
+                include: {
+                  produto: {
+                    select: {
+                      id: true,
+                      publicId: true,
+                      nome: true,
+                      precoVenda: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!vendaAtualizada) {
+        throw new NotFoundException('Erro ao finalizar venda');
+      }
+
+      return this.mapToVendaEntity(vendaAtualizada);
+    });
+  }
+  async finalizarBrindePermuta(
+    publicId: string,
+    finalizeDto: FinalizeVendaSemPagamentoDto,
+    parceiroId: number,
+    usuarioId: number,
+  ): Promise<Venda> {
+    return this.prisma.$transaction(async tx => {
+      const venda = await tx.venda.findFirst({
+        where: { publicId, parceiroId },
+        include: {
+          Cliente: { select: { id: true, nome: true, sobrenome: true } },
+          Usuario: { select: { id: true, nome: true } },
+          VendaItem: {
+            include: {
+              ProdutoSKU: {
+                include: {
+                  produto: {
+                    select: {
+                      id: true,
+                      parceiroId: true,
+                      nome: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!venda) {
+        throw new NotFoundException('Pedido não encontrado');
+      }
+
+      if (venda.tipo !== VendaTipo.BRINDE && venda.tipo !== VendaTipo.PERMUTA) {
+        throw new BadRequestException(
+          'Somente vendas de brinde ou permuta podem ser finalizadas por este endpoint',
+        );
+      }
+
+      if (venda.status !== VendaStatus.PEDIDO) {
+        throw new BadRequestException(
+          'O pedido já foi finalizado ou está em um status que não permite finalização',
+        );
+      }
+
+      if (!venda.localSaidaId) {
+        throw new BadRequestException(
+          'Venda não possui local de saída definido',
+        );
+      }
+
+      if (!venda.VendaItem.length) {
+        throw new BadRequestException(
+          'Venda sem itens não pode ser finalizada',
+        );
+      }
+
+      const localSaidaId = venda.localSaidaId;
+
+      // Validar estoque disponível
+      for (const item of venda.VendaItem) {
+        const estoque = await tx.estoqueSKU.findUnique({
+          where: {
+            localId_skuId: {
+              localId: localSaidaId,
+              skuId: item.skuId,
+            },
+          },
+          select: { qtd: true },
+        });
+
+        if (!estoque || estoque.qtd < item.qtdReservada) {
+          throw new BadRequestException(
+            `Estoque insuficiente para o SKU ${item.skuId} no local selecionado`,
+          );
+        }
+      }
+
+      const itensSubtotal = venda.VendaItem.reduce(
+        (acc, item) =>
+          acc.add(
+            this.toDecimal(item.precoUnit).mul(new Decimal(item.qtdReservada)),
+          ),
+        new Decimal(0),
+      );
+
+      const descontoItens = venda.VendaItem.reduce(
+        (acc, item) => acc.add(this.toDecimal(item.desconto)),
+        new Decimal(0),
+      );
+
+      const descontoTotal = this.toDecimal(
+        finalizeDto.descontoTotal ?? venda.desconto,
+      ).toDecimalPlaces(2);
+      const valorFrete = this.toDecimal(
+        finalizeDto.valorFrete ?? venda.valorFrete,
+      ).toDecimalPlaces(2);
+      const valorComissao = this.toDecimal(
+        finalizeDto.valorComissao ?? venda.valorComissao,
+      ).toDecimalPlaces(2);
+
+      let totalVenda = itensSubtotal.sub(descontoItens).sub(descontoTotal);
+      totalVenda = totalVenda.add(valorFrete).toDecimalPlaces(2);
+
+      if (totalVenda.lessThan(0)) {
+        throw new BadRequestException('Total da venda não pode ser negativo');
+      }
+
+      const nomeFatura = finalizeDto.nomeFatura ?? venda.nomeFatura ?? null;
+      const ruccnpj = finalizeDto.ruccnpj ?? venda.ruccnpj ?? null;
+      const numeroFatura =
+        finalizeDto.numeroFatura ?? venda.numeroFatura ?? null;
+
+      // Movimentar estoque e atualizar itens
+      for (const item of venda.VendaItem) {
+        await tx.movimentoEstoque.create({
+          data: {
+            skuId: item.skuId,
+            tipo: TipoMovimento.SAIDA,
+            qtd: item.qtdReservada,
+            idUsuario: usuarioId,
+            localOrigemId: localSaidaId,
+            observacao: `Saída por ${venda.tipo === VendaTipo.BRINDE ? 'brinde' : 'permuta'} ${venda.id}`,
+          },
+        });
+
+        await tx.estoqueSKU.update({
+          where: {
+            localId_skuId: {
+              localId: localSaidaId,
+              skuId: item.skuId,
+            },
+          },
+          data: {
+            qtd: {
+              decrement: item.qtdReservada,
+            },
+          },
+        });
+
+        await tx.vendaItem.update({
+          where: { id: item.id },
+          data: {
+            qtdAceita: item.qtdReservada,
+            qtdDevolvida: 0,
+          },
+        });
+      }
+
+      // Se for PERMUTA, criar despesa
+      if (venda.tipo === VendaTipo.PERMUTA) {
+        // Buscar ou criar categoria "Operacional"
+        let categoria = await tx.categoriaDespesas.findFirst({
+          where: {
+            descricao: 'Operacional',
+          },
+        });
+
+        if (!categoria) {
+          categoria = await tx.categoriaDespesas.create({
+            data: {
+              descricao: 'Operacional',
+            },
+          });
+        }
+
+        // Buscar ou criar subcategoria "Permuta"
+        let subCategoria = await tx.subCategoriaDespesa.findFirst({
+          where: {
+            descricao: 'Permuta',
+            categoriaId: categoria.idCategoria,
+          },
+        });
+
+        if (!subCategoria) {
+          subCategoria = await tx.subCategoriaDespesa.create({
+            data: {
+              descricao: 'Permuta',
+              categoriaId: categoria.idCategoria,
+            },
+          });
+        }
+
+        // Buscar parceiro para obter currency padrão
+        const parceiro = await tx.parceiro.findUnique({
+          where: { id: parceiroId },
+          select: { currencyId: true },
+        });
+
+        if (!parceiro) {
+          throw new BadRequestException('Parceiro não encontrado');
+        }
+
+        // Criar despesa usando o service
+        await this.despesasService.createWithinTransaction(
+          {
+            descricao: `Permuta com a venda ${venda.id}`,
+            valorTotal: totalVenda.toNumber(),
+            dataRegistro: new Date().toISOString(),
+            tipoPagamento: TipoPagamento.A_VISTA_IMEDIATA,
+            subCategoriaId: subCategoria.idSubCategoria,
+            parceiroId: parceiroId,
+            fornecedorId: undefined,
+            currencyId: parceiro.currencyId,
+            cotacao: undefined,
+          },
+          parceiroId,
+          tx,
+        );
+      }
+
+      // Atualizar venda com totais e status
+      await tx.venda.update({
+        where: { id: venda.id },
+        data: {
+          status: VendaStatus.CONFIRMADA_TOTAL,
+          valorFrete,
+          desconto: descontoTotal,
+          valorComissao,
+          valorTotal: totalVenda,
+          nomeFatura,
+          ruccnpj,
+          numeroFatura,
+        },
+      });
+
+      await tx.cliente.update({
+        where: { id: venda.clienteId },
+        data: {
+          ultimaCompra: new Date(),
+          qtdCompras: { increment: 1 },
+          // atualiza o ruccnpj do cliente se estiver vazio
+          ruccnpj:
+            nomeFatura &&
+            nomeFatura.length === 0 &&
+            ruccnpj &&
+            ruccnpj.length > 0
+              ? ruccnpj
+              : undefined,
         },
       });
 

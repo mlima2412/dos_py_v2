@@ -54,5 +54,5 @@ export type ConferenciaItemResponseDto = {
      * @description Dados básicos da conferência de estoque
      * @type object | undefined
     */
-    ConferenciaEstoque?: object;
+    ConferenciaEstoque?: object | undefined;
 };

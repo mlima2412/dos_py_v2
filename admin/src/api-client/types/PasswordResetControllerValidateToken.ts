@@ -19,11 +19,11 @@ export type PasswordResetControllerValidateToken200 = {
     /**
      * @type boolean | undefined
     */
-    valid?: boolean;
+    valid?: boolean | undefined;
     /**
      * @type string | undefined
     */
-    message?: string;
+    message?: string | undefined;
 };
 
 export type PasswordResetControllerValidateTokenQueryResponse = PasswordResetControllerValidateToken200;

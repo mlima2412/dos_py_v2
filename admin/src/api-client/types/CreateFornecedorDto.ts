@@ -9,7 +9,7 @@ export type CreateFornecedorDto = {
      * @description Código do fornecedor
      * @type number | undefined
     */
-    id?: number;
+    id?: number | undefined;
     /**
      * @description Nome do fornecedor
      * @type string
@@ -24,30 +24,30 @@ export type CreateFornecedorDto = {
      * @description RUC/CNPJ do fornecedor
      * @type string | undefined
     */
-    ruccnpj?: string;
+    ruccnpj?: string | undefined;
     /**
      * @description Email do fornecedor
      * @type string | undefined
     */
-    email?: string;
+    email?: string | undefined;
     /**
      * @description Telefone do fornecedor
      * @type string | undefined
     */
-    telefone?: string;
+    telefone?: string | undefined;
     /**
      * @description Rede social do fornecedor
      * @type string | undefined
     */
-    redesocial?: string;
+    redesocial?: string | undefined;
     /**
      * @description Data da última compra do fornecedor
      * @type string | undefined, date-time
     */
-    ultimaCompra?: string;
+    ultimaCompra?: string | undefined;
     /**
      * @description Status ativo do fornecedor
      * @type boolean | undefined
     */
-    ativo?: boolean;
+    ativo?: boolean | undefined;
 };

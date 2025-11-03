@@ -26,6 +26,7 @@ import {
 	vendaControllerFindOneQueryKey,
 	vendaControllerPaginateQueryKey,
 	useVendaControllerFinalizeDireta,
+	useVendaControllerFinalizarBrindePermuta,
 } from "@/api-client";
 import type { SkuListingRef } from "@/components/SkuListing";
 import type { SelectedSkusListRef } from "@/components/SelectedSkusList";
@@ -189,6 +190,7 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 	const descontoTotal = watch("descontoTotal");
 	const valorFrete = watch("valorFrete");
 	const comissao = watch("comissao");
+	const tipoVenda = watch("tipo");
 
 	// Get selected local from locais options
 	const selectedLocal = useMemo(() => {
@@ -205,6 +207,19 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 		valorFrete,
 		comissao
 	);
+
+	// Determina se as abas de faturamento e pagamento devem ser mostradas
+	// BRINDE e PERMUTA não precisam de faturamento/pagamento
+	// CONDICIONAL com status PEDIDO também não precisa
+	const shouldShowBillingAndPayment = useMemo(() => {
+		if (tipoVenda === "BRINDE" || tipoVenda === "PERMUTA") {
+			return false;
+		}
+		if (tipoVenda === "CONDICIONAL" && vendaResumo?.status === "PEDIDO") {
+			return false;
+		}
+		return true;
+	}, [tipoVenda, vendaResumo?.status]);
 
 	// Mutations
 	const {
@@ -233,7 +248,7 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 		selectedSkusRef,
 	});
 
-	// Finalization hook
+	// Finalization hooks
 	const finalizacaoMutation = useVendaControllerFinalizeDireta({
 		mutation: {
 			onSuccess: () => {
@@ -248,9 +263,33 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 				});
 				navigate("/pedidoVendas");
 			},
-			onError: (error) => {
+			onError: error => {
 				console.error("Erro ao finalizar venda:", error);
-				const mensagem = error?.data?.message ?? t("salesOrders.form.messages.finalizeError");
+				const mensagem =
+					error?.data?.message ?? t("salesOrders.form.messages.finalizeError");
+				showError(mensagem);
+			},
+		},
+	});
+
+	const finalizacaoBrindePermutaMutation = useVendaControllerFinalizarBrindePermuta({
+		mutation: {
+			onSuccess: () => {
+				showSuccess(t("salesOrders.form.messages.finalizeSuccess"));
+				if (vendaResumo?.publicId) {
+					queryClient.invalidateQueries({
+						queryKey: vendaControllerFindOneQueryKey(vendaResumo.publicId),
+					});
+				}
+				queryClient.invalidateQueries({
+					queryKey: vendaControllerPaginateQueryKey(),
+				});
+				navigate("/pedidoVendas");
+			},
+			onError: error => {
+				console.error("Erro ao finalizar brinde/permuta:", error);
+				const mensagem =
+					error?.data?.message ?? t("salesOrders.form.messages.finalizeError");
 				showError(mensagem);
 			},
 		},
@@ -262,17 +301,18 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 		setSkuSearchCode("");
 	}, [selectedLocal?.publicId]);
 
-	// Update billing and review access based on items
+	// Update billing and review access based on items and sale type
 	useEffect(() => {
 		if (mode === "view") {
-			setCanAccessBilling(true);
+			setCanAccessBilling(shouldShowBillingAndPayment);
 			setCanAccessReview(true);
 			return;
 		}
 		const hasItems = itensSelecionados.length > 0;
-		setCanAccessBilling(hasItems);
+		// Só permite acesso ao faturamento se tiver itens E se o tipo de venda exigir
+		setCanAccessBilling(hasItems && shouldShowBillingAndPayment);
 		setCanAccessReview(hasItems);
-	}, [itensSelecionados.length, mode]);
+	}, [itensSelecionados.length, mode, shouldShowBillingAndPayment]);
 
 	const handleStepChange = useCallback(
 		(nextStep: VendaFormStep) => {
@@ -301,7 +341,7 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 
 			const values = getValues();
 			const payload = {
-				clienteId: values.clienteId!,
+				clienteId: values.clienteId,
 				localSaidaId: values.localSaidaId!,
 				tipo: values.tipo,
 				dataEntrega: values.dataEntrega,
@@ -315,8 +355,8 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 				setActiveStep("items");
 			}
 		} catch (error) {
-			console.error(error);
-			showError(t("salesOrders.form.messages.basicDataError"));
+			// Error already handled by mutation onError handler with specific message
+			console.error("Erro ao salvar dados básicos:", error);
 		} finally {
 			setIsSavingBasic(false);
 		}
@@ -335,7 +375,7 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 		setIsSavingPayment(true);
 		try {
 			await handleCreateOrUpdateVenda({
-				clienteId: getValues("clienteId")!,
+				clienteId: getValues("clienteId"),
 				localSaidaId: getValues("localSaidaId")!,
 				tipo: getValues("tipo"),
 				dataEntrega: getValues("dataEntrega"),
@@ -344,8 +384,8 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 
 			showSuccess(t("salesOrders.form.messages.basicDataSaved"));
 		} catch (error) {
-			console.error(error);
-			showError(t("salesOrders.form.messages.basicDataError"));
+			// Error already handled by mutation onError handler with specific message
+			console.error("Erro ao salvar pagamento:", error);
 		} finally {
 			setIsSavingPayment(false);
 		}
@@ -355,23 +395,19 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 		handleCreateOrUpdateVenda,
 		getValues,
 		showSuccess,
-		showError,
 		t,
 	]);
 
 	const handleFinalize = useCallback(async () => {
-		if (!parceiroIdNumber || !vendaResumo?.publicId) {
-			showError("Salve os dados básicos da venda antes de finalizar.");
-			return;
-		}
-
+		const tipoVendaAtual = getValues("tipo");
+		if (!parceiroIdNumber || !vendaResumo?.publicId) return;
 		setIsFinalizing(true);
 		try {
-			// 1. Salvar dados básicos da venda (desconto, frete, comissão, fatura)
+			// 1. Salvar dados básicos da venda
 			await handleCreateOrUpdateVenda({
-				clienteId: getValues("clienteId")!,
+				clienteId: getValues("clienteId"),
 				localSaidaId: getValues("localSaidaId")!,
-				tipo: getValues("tipo"),
+				tipo: tipoVendaAtual,
 				dataEntrega: getValues("dataEntrega"),
 				observacao: getValues("observacao") || null,
 				valorFrete: getValues("valorFrete"),
@@ -382,7 +418,46 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 				ruccnpjFatura: getValues("ruccnpjFatura"),
 			});
 
-			// 2. Validar e processar pagamentos
+			// 2. Tratamento específico por tipo de venda
+			if (tipoVendaAtual === "BRINDE" || tipoVendaAtual === "PERMUTA") {
+				// Finalizar BRINDE ou PERMUTA sem pagamentos
+				await finalizacaoBrindePermutaMutation.mutateAsync({
+					publicId: vendaResumo.publicId,
+					headers: {
+						"x-parceiro-id": parceiroIdNumber,
+					},
+					data: {
+						valorFrete: getValues("valorFrete") ?? undefined,
+						descontoTotal: getValues("descontoTotal") ?? undefined,
+						valorComissao: getValues("comissao") ?? undefined,
+						numeroFatura: getValues("numeroFatura") ?? undefined,
+						nomeFatura: getValues("nomeFatura") ?? undefined,
+						ruccnpj: getValues("ruccnpjFatura") ?? undefined,
+					},
+				});
+				return;
+			}
+
+			if (
+				tipoVendaAtual === "CONDICIONAL" &&
+				vendaResumo?.status === "PEDIDO"
+			) {
+				// TODO: Implementar endpoint específico para confirmar CONDICIONAL
+				// await confirmarCondicional(vendaResumo.publicId, parceiroIdNumber);
+				showSuccess(
+					"Venda CONDICIONAL confirmada com sucesso (endpoint pendente)"
+				);
+				queryClient.invalidateQueries({
+					queryKey: vendaControllerFindOneQueryKey(vendaResumo.publicId),
+				});
+				queryClient.invalidateQueries({
+					queryKey: vendaControllerPaginateQueryKey(),
+				});
+				navigate("/pedidoVendas");
+				return;
+			}
+
+			// 3. Validar e processar pagamentos para vendas normais (DIRETA ou CONDICIONAL não-PEDIDO)
 			const pagamentos = getValues("pagamentos") || [];
 
 			if (pagamentos.length === 0) {
@@ -390,7 +465,7 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 				return;
 			}
 
-			// 3. Preparar payload de finalização
+			// 4. Preparar payload de finalização
 			const pagamentosPayload = pagamentos.map(pagamento => ({
 				formaPagamentoId: pagamento.formaPagamentoId,
 				tipo: pagamento.tipo,
@@ -406,7 +481,7 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 					: undefined,
 			}));
 
-			// 4. Chamar endpoint de finalização
+			// 5. Chamar endpoint de finalização para vendas DIRETA
 			await finalizacaoMutation.mutateAsync({
 				publicId: vendaResumo.publicId,
 				headers: {
@@ -434,7 +509,11 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 		handleCreateOrUpdateVenda,
 		getValues,
 		finalizacaoMutation,
+		finalizacaoBrindePermutaMutation,
 		showError,
+		showSuccess,
+		queryClient,
+		navigate,
 	]);
 
 	const handlers: VendaFormHandlers = {
@@ -527,7 +606,11 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 								selectedSkusRef={selectedSkusRef}
 								findSkuByCode={findSkuByCode}
 								onBack={() => setActiveStep("basic")}
-								onNext={() => setActiveStep("billing")}
+								onNext={() =>
+									setActiveStep(
+										shouldShowBillingAndPayment ? "billing" : "review"
+									)
+								}
 							/>
 						)}
 
@@ -556,9 +639,19 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 								onSave={handleSavePayment}
 								onFinalize={handleFinalize}
 								isSaving={isSavingPayment}
-								isFinalizing={isFinalizing || finalizacaoMutation.isPending}
+								isFinalizing={
+									isFinalizing ||
+									finalizacaoMutation.isPending ||
+									finalizacaoBrindePermutaMutation.isPending
+								}
 								isSubmitting={isSubmitting}
-								onBack={() => setActiveStep("billing")}
+								onBack={() =>
+									setActiveStep(
+										shouldShowBillingAndPayment ? "billing" : "items"
+									)
+								}
+								tipoVenda={tipoVenda}
+								shouldShowBillingAndPayment={shouldShowBillingAndPayment}
 							/>
 						)}
 					</div>

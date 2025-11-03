@@ -9,7 +9,7 @@ export type CreateContasPagarDto = {
      * @description ID da despesa relacionada
      * @type number | undefined
     */
-    despesaId?: number;
+    despesaId?: number | undefined;
     /**
      * @description Valor total da conta a pagar
      * @type number
@@ -19,15 +19,15 @@ export type CreateContasPagarDto = {
      * @description Saldo atual da conta (soma dos valores pagos)
      * @type number | undefined
     */
-    saldo?: number;
+    saldo?: number | undefined;
     /**
      * @description Indica se a conta foi totalmente paga
      * @type boolean | undefined
     */
-    pago?: boolean;
+    pago?: boolean | undefined;
     /**
      * @description Data do pagamento da conta
      * @type string | undefined
     */
-    dataPagamento?: string;
+    dataPagamento?: string | undefined;
 };

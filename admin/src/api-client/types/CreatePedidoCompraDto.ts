@@ -19,50 +19,50 @@ export type CreatePedidoCompraDto = {
      * @description Data do pedido
      * @type string | undefined
     */
-    dataPedido?: string;
+    dataPedido?: string | undefined;
     /**
      * @description Data de entrega prevista
      * @type string | undefined
     */
-    dataEntrega?: string;
+    dataEntrega?: string | undefined;
     /**
      * @description Valor do frete
      * @type number | undefined
     */
-    valorFrete?: number;
+    valorFrete?: number | undefined;
     /**
      * @description Valor total do pedido
      * @type number | undefined
     */
-    valorTotal?: number;
+    valorTotal?: number | undefined;
     /**
      * @description Observações do pedido
      * @type string | undefined
     */
-    observacao?: string;
+    observacao?: string | undefined;
     /**
      * @description Valor da comissão
      * @type number | undefined
     */
-    valorComissao?: number;
+    valorComissao?: number | undefined;
     /**
      * @description Cotação da moeda
      * @type number | undefined
     */
-    cotacao?: number;
+    cotacao?: number | undefined;
     /**
      * @description ID da moeda
      * @type number | undefined
     */
-    currencyId?: number;
+    currencyId?: number | undefined;
     /**
      * @description Indica se o pedido é consignado
      * @type boolean | undefined
     */
-    consignado?: boolean;
+    consignado?: boolean | undefined;
     /**
      * @description Status do pedido (1 a 3)
      * @type number | undefined
     */
-    status?: number;
+    status?: number | undefined;
 };

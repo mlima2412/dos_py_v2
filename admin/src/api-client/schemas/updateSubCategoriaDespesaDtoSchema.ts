@@ -7,8 +7,8 @@ import type { UpdateSubCategoriaDespesaDto } from "../types/UpdateSubCategoriaDe
 import { z } from "zod/v4";
 
 export const updateSubCategoriaDespesaDtoSchema = z.object({
-    "idSubCategoria": z.optional(z.coerce.number().describe("ID da subcategoria de despesa")),
+    "idSubCategoria": z.coerce.number().describe("ID da subcategoria de despesa").nullish(),
 "categoriaId": z.optional(z.coerce.number().describe("ID da categoria de despesa")),
 "descricao": z.optional(z.coerce.string().describe("Descrição da subcategoria de despesa")),
-"ativo": z.optional(z.boolean().describe("Status ativo da subcategoria"))
+"ativo": z.boolean().describe("Status ativo da subcategoria").nullish()
     }) as unknown as z.ZodType<UpdateSubCategoriaDespesaDto>

@@ -6,7 +6,7 @@ export class SubCategoriaDespesa {
     description: 'ID interno da subcategoria de despesas',
     example: 1,
   })
-  idSubCategoria: number;
+  idSubCategoria?: number;
 
   @ApiProperty({
     description: 'ID da categoria de despesas',

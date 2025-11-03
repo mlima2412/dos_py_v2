@@ -29,5 +29,5 @@ export type ProdutoHistoricoPreco = {
     /**
      * @description Produto relacionado
     */
-    Produto?: Produto;
+    Produto?: Produto | undefined;
 };

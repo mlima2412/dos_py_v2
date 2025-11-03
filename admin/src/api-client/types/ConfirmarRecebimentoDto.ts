@@ -9,5 +9,5 @@ export type ConfirmarRecebimentoDto = {
      * @description Observação sobre o recebimento
      * @type string | undefined
     */
-    observacao?: string;
+    observacao?: string | undefined;
 };

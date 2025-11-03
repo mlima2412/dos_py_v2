@@ -10,19 +10,19 @@ export type ProdutoHistoricoPrecoControllerFindAllQueryParams = {
      * @description Data inicial para filtro (formato ISO)
      * @type string | undefined
     */
-    dataInicial?: string;
+    dataInicial?: string | undefined;
     /**
      * @description Data final para filtro (formato ISO)
      * @type string | undefined
     */
-    dataFinal?: string;
+    dataFinal?: string | undefined;
     /**
      * @description Limite de registros (máximo 100)
      * @minLength 1
      * @maxLength 100
      * @type integer | undefined
     */
-    limit?: number;
+    limit?: number | undefined;
 };
 
 export type ProdutoHistoricoPrecoControllerFindAllHeaderParams = {

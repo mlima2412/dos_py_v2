@@ -9,39 +9,39 @@ export type UpdateCurrencyDto = {
      * @description Nome da moeda
      * @type string | undefined
     */
-    nome?: string;
+    nome?: string | undefined;
     /**
      * @description Prefixo da moeda
      * @type string | undefined
     */
-    prefixo?: string;
+    prefixo?: string | undefined;
     /**
      * @description Código ISO da moeda
      * @type string | undefined
     */
-    isoCode?: string;
+    isoCode?: string | undefined;
     /**
      * @description Precisão decimal da moeda
      * @default 2
      * @type number | undefined
     */
-    precision?: number;
+    precision?: number | undefined;
     /**
      * @description Locale para formatação
      * @default "pt-BR"
      * @type string | undefined
     */
-    locale?: string;
+    locale?: string | undefined;
     /**
      * @description Taxa de câmbio padrão
      * @default 0
      * @type number | undefined
     */
-    defaultRate?: number;
+    defaultRate?: number | undefined;
     /**
      * @description Status ativo da moeda
      * @default true
      * @type boolean | undefined
     */
-    ativo?: boolean;
+    ativo?: boolean | undefined;
 };
