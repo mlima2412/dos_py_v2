@@ -14,6 +14,7 @@ export const appControllerGetHelloQueryKey = () => [{ url: '/' }] as const
 export type AppControllerGetHelloQueryKey = ReturnType<typeof appControllerGetHelloQueryKey>
 
 /**
+ * @summary Health check
  * {@link /}
  */
 export async function appControllerGetHello(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
@@ -36,6 +37,7 @@ export function appControllerGetHelloQueryOptions(config: Partial<RequestConfig>
 }
 
 /**
+ * @summary Health check
  * {@link /}
  */
 export function useAppControllerGetHello<TData = AppControllerGetHelloQueryResponse, TQueryData = AppControllerGetHelloQueryResponse, TQueryKey extends QueryKey = AppControllerGetHelloQueryKey>(options: 

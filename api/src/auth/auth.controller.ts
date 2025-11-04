@@ -14,6 +14,11 @@ import type { Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { LoginResponseDto } from './dto/login-response.dto';
+import { RefreshResponseDto } from './dto/refresh-response.dto';
+import { LogoutResponseDto } from './dto/logout-response.dto';
+import { UserProfileDto } from './dto/user-profile.dto';
+import { UserParceiroItemDto } from './dto/user-parceiro-response.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Public } from './decorators/public.decorator';
 import {
@@ -58,43 +63,14 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: 'Login realizado com sucesso',
-    schema: {
-      type: 'object',
-      properties: {
-        accessToken: {
-          type: 'string',
-          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-        },
-        user: {
-          type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            publicId: {
-              type: 'string',
-              example: '01234567-89ab-cdef-0123-456789abcdef',
-            },
-            nome: { type: 'string', example: 'João Silva' },
-            email: { type: 'string', example: 'joao@exemplo.com' },
-            telefone: { type: 'string', example: '(11) 99999-9999' },
-            ativo: { type: 'boolean', example: true },
-            perfil: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                nome: { type: 'string', example: 'Admin' },
-              },
-            },
-          },
-        },
-      },
-    },
+    type: LoginResponseDto,
   })
   @ApiResponse({ status: 401, description: 'Credenciais inválidas' })
   async login(
     @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) response: Response,
     @Req() req: Request & { language: string; t: TFunction },
-  ) {
+  ): Promise<LoginResponseDto> {
     const result = await this.authService.login(loginDto);
     console.log(req.t('main.greeting'));
     // Configurar cookie para aplicação web (7 dias)
@@ -135,18 +111,10 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: 'Token renovado com sucesso',
-    schema: {
-      type: 'object',
-      properties: {
-        accessToken: {
-          type: 'string',
-          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-        },
-      },
-    },
+    type: RefreshResponseDto,
   })
   @ApiResponse({ status: 401, description: 'Refresh token inválido' })
-  async refresh(@Body() refreshTokenDto: RefreshTokenDto, @Request() req) {
+  async refresh(@Body() refreshTokenDto: RefreshTokenDto, @Request() req): Promise<RefreshResponseDto> {
     // Priorizar refresh token do body (mobile) ou cookie (web)
     const refreshToken =
       refreshTokenDto.refreshToken || req.cookies?.refreshToken;
@@ -163,8 +131,12 @@ export class AuthController {
   @ApiBearerAuth('JWT-auth')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Realizar logout' })
-  @ApiResponse({ status: 200, description: 'Logout realizado com sucesso' })
-  async logout(@Res({ passthrough: true }) response: Response) {
+  @ApiResponse({
+    status: 200,
+    description: 'Logout realizado com sucesso',
+    type: LogoutResponseDto,
+  })
+  async logout(@Res({ passthrough: true }) response: Response): Promise<LogoutResponseDto> {
     // Limpar cookie do refresh token
     response.clearCookie('refreshToken');
 
@@ -175,8 +147,12 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Obter dados do usuário logado' })
-  @ApiResponse({ status: 200, description: 'Dados do usuário' })
-  async getProfile(@Request() req) {
+  @ApiResponse({
+    status: 200,
+    description: 'Dados do usuário',
+    type: UserProfileDto,
+  })
+  async getProfile(@Request() req): Promise<UserProfileDto> {
     return req.user;
   }
 
@@ -187,49 +163,9 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: 'Lista de parceiros do usuário',
-    schema: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          id: { type: 'number', example: 1 },
-          parceiroId: { type: 'number', example: 1 },
-          Parceiro: {
-            type: 'object',
-            properties: {
-              id: { type: 'number', example: 1 },
-              publicId: {
-                type: 'string',
-                example: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-              },
-              nome: { type: 'string', example: 'Parceiro Exemplo' },
-              logourl: {
-                type: 'string',
-                example: 'https://exemplo.com/logo.png',
-              },
-              currencyId: { type: 'number', example: 1 },
-              currency: {
-                type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  locale: { type: 'string', example: 'pt-BR' },
-                  isoCode: { type: 'string', example: 'BRL' },
-                },
-              },
-            },
-          },
-          perfil: {
-            type: 'object',
-            properties: {
-              id: { type: 'number', example: 1 },
-              nome: { type: 'string', example: 'Admin' },
-            },
-          },
-        },
-      },
-    },
+    type: [UserParceiroItemDto],
   })
-  async getUserParceiros(@Request() req) {
+  async getUserParceiros(@Request() req): Promise<UserParceiroItemDto[]> {
     return this.authService.getUserParceiros(req.user.id);
   }
 }

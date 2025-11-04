@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { ValidateTokenResponseDto } from "./ValidateTokenResponseDto.ts";
 
 export type PasswordResetControllerValidateTokenQueryParams = {
     /**
@@ -15,16 +16,7 @@ export type PasswordResetControllerValidateTokenQueryParams = {
 /**
  * @description Status de validação do token
 */
-export type PasswordResetControllerValidateToken200 = {
-    /**
-     * @type boolean | undefined
-    */
-    valid?: boolean | undefined;
-    /**
-     * @type string | undefined
-    */
-    message?: string | undefined;
-};
+export type PasswordResetControllerValidateToken200 = ValidateTokenResponseDto;
 
 export type PasswordResetControllerValidateTokenQueryResponse = PasswordResetControllerValidateToken200;
 

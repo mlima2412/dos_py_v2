@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { MovimentoEstoqueResponseDto } from "./MovimentoEstoqueResponseDto.ts";
+import type { PaginatedMovimentoEstoqueResponseDto } from "./PaginatedMovimentoEstoqueResponseDto.ts";
 
 export type MovimentoEstoqueControllerFindHistoricoSkuPathParams = {
     /**
@@ -32,28 +32,7 @@ export type MovimentoEstoqueControllerFindHistoricoSkuQueryParams = {
 /**
  * @description Histórico do SKU retornado com sucesso
 */
-export type MovimentoEstoqueControllerFindHistoricoSku200 = {
-    /**
-     * @type array | undefined
-    */
-    data?: MovimentoEstoqueResponseDto[] | undefined;
-    /**
-     * @type number | undefined
-    */
-    total?: number | undefined;
-    /**
-     * @type number | undefined
-    */
-    page?: number | undefined;
-    /**
-     * @type number | undefined
-    */
-    limit?: number | undefined;
-    /**
-     * @type number | undefined
-    */
-    totalPages?: number | undefined;
-};
+export type MovimentoEstoqueControllerFindHistoricoSku200 = PaginatedMovimentoEstoqueResponseDto;
 
 /**
  * @description SKU não encontrado

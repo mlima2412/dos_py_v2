@@ -62,7 +62,7 @@ export const ListarProdutosTable: React.FC = () => {
 	const [sortField, setSortField] = useState<"nome" | null>(null);
 	const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 	const [isSkuDialogOpen, setIsSkuDialogOpen] = useState(false);
-	const [selectedProduto, setSelectedProduto] = useState<any>(null);
+	const [selectedProduto, setSelectedProduto] = useState<Record<string, unknown> | null>(null);
 
 	// Debounce para busca
 	const debouncedSearch = useDebounce(search, 500);
@@ -129,7 +129,7 @@ export const ListarProdutosTable: React.FC = () => {
 	const ativarProduto = useAtivarProduto();
 	const desativarProduto = useDesativarProduto();
 
-	const handleAtivarDesativar = async (produto: any) => {
+	const handleAtivarDesativar = async (produto: { ativo: boolean; publicId: string }) => {
 		const headers = {
 			"x-parceiro-id": Number(selectedPartnerId) || 0,
 		};
@@ -147,7 +147,7 @@ export const ListarProdutosTable: React.FC = () => {
 		}
 	};
 
-	const handleCreateSku = async (skuData: any) => {
+	const handleCreateSku = async (skuData: { cor?: string; tamanho?: string; qtdMinima?: number }) => {
 		if (!selectedPartnerId || !selectedProduto) return;
 
 		try {
@@ -175,7 +175,7 @@ export const ListarProdutosTable: React.FC = () => {
 		}
 	};
 
-	const handleOpenSkuDialog = (produto: any) => {
+	const handleOpenSkuDialog = (produto: Record<string, unknown>) => {
 		setSelectedProduto(produto);
 		setIsSkuDialogOpen(true);
 	};

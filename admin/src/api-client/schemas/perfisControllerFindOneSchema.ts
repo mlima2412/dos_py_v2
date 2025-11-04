@@ -4,6 +4,7 @@
 */
 
 import type { PerfisControllerFindOnePathParams, PerfisControllerFindOne200, PerfisControllerFindOne404, PerfisControllerFindOneQueryResponse } from "../types/PerfisControllerFindOne.ts";
+import { perfilSchema } from "./perfilSchema.ts";
 import { z } from "zod/v4";
 
 export const perfisControllerFindOnePathParamsSchema = z.object({
@@ -13,14 +14,7 @@ export const perfisControllerFindOnePathParamsSchema = z.object({
 /**
  * @description Perfil encontrado com sucesso
  */
-export const perfisControllerFindOne200Schema = z.object({
-    "id": z.optional(z.coerce.number()),
-"nome": z.optional(z.coerce.string()),
-"descricao": z.optional(z.coerce.string()),
-"ativo": z.optional(z.boolean()),
-"createdAt": z.optional(z.string().datetime()),
-"updatedAt": z.optional(z.string().datetime())
-    }) as unknown as z.ZodType<PerfisControllerFindOne200>
+export const perfisControllerFindOne200Schema = perfilSchema as unknown as z.ZodType<PerfisControllerFindOne200>
 
 /**
  * @description Perfil não encontrado

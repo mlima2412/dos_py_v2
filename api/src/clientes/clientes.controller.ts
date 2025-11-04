@@ -22,6 +22,7 @@ import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
 import { Cliente } from './entities/cliente.entity';
 import { PaginatedQueryDto } from './dto/paginated-query.dto';
+import { PaginatedClienteResponseDto } from './dto/paginated-response.dto';
 import { ParceiroId } from '../auth/decorators/parceiro-id.decorator';
 
 @ApiTags('Clientes')
@@ -94,19 +95,7 @@ export class ClientesController {
   @ApiResponse({
     status: 200,
     description: 'Lista paginada de clientes',
-    schema: {
-      type: 'object',
-      properties: {
-        data: {
-          type: 'array',
-          items: { $ref: '#/components/schemas/Cliente' },
-        },
-        total: { type: 'number', example: 100 },
-        page: { type: 'number', example: 1 },
-        limit: { type: 'number', example: 20 },
-        totalPages: { type: 'number', example: 5 },
-      },
-    },
+    type: PaginatedClienteResponseDto,
   })
   async findPaginated(
     @Query() query: PaginatedQueryDto,

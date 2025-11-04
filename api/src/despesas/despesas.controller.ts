@@ -21,6 +21,8 @@ import {
 import { DespesasService } from './despesas.service';
 import { CreateDespesaDto } from './dto/create-despesa.dto';
 import { PaginatedQueryDto } from './dto/paginated-query.dto';
+import { PaginatedDespesaResponseDto } from './dto/paginated-despesa-response.dto';
+import { YearItemDto } from './dto/year-item-response.dto';
 
 import { Despesa } from './entities/despesa.entity';
 import { ParceiroId } from '../auth/decorators/parceiro-id.decorator';
@@ -56,7 +58,11 @@ export class DespesasController {
   @Get('paginated')
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Listar despesas paginadas' })
-  @ApiResponse({ status: 200, description: 'Lista paginada de despesas' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista paginada de despesas',
+    type: PaginatedDespesaResponseDto,
+  })
   async findPaginated(
     @Query() query: PaginatedQueryDto,
     @ParceiroId() parceiroId: number,
@@ -114,8 +120,9 @@ export class DespesasController {
   @ApiResponse({
     status: 200,
     description: 'Lista de anos com despesas',
+    type: [YearItemDto],
   })
-  async listYears(@ParceiroId() parceiroId: number) {
+  async listYears(@ParceiroId() parceiroId: number): Promise<YearItemDto[]> {
     return this.despesasService.listYears(parceiroId);
   }
 

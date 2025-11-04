@@ -4,15 +4,14 @@
 */
 
 import type { PasswordResetControllerRequestPasswordReset200, PasswordResetControllerRequestPasswordReset404, PasswordResetControllerRequestPasswordResetMutationRequest, PasswordResetControllerRequestPasswordResetMutationResponse } from "../types/PasswordResetControllerRequestPasswordReset.ts";
+import { passwordResetMessageResponseDtoSchema } from "./passwordResetMessageResponseDtoSchema.ts";
 import { requestPasswordResetDtoSchema } from "./requestPasswordResetDtoSchema.ts";
 import { z } from "zod/v4";
 
 /**
  * @description Email de recuperação enviado com sucesso
  */
-export const passwordResetControllerRequestPasswordReset200Schema = z.object({
-    "message": z.optional(z.coerce.string())
-    }) as unknown as z.ZodType<PasswordResetControllerRequestPasswordReset200>
+export const passwordResetControllerRequestPasswordReset200Schema = passwordResetMessageResponseDtoSchema as unknown as z.ZodType<PasswordResetControllerRequestPasswordReset200>
 
 /**
  * @description Usuário não encontrado ou inativo

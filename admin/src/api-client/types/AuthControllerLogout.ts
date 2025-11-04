@@ -3,11 +3,12 @@
 * Do not edit manually.
 */
 
+import type { LogoutResponseDto } from "./LogoutResponseDto.ts";
 
 /**
  * @description Logout realizado com sucesso
 */
-export type AuthControllerLogout200 = any;
+export type AuthControllerLogout200 = LogoutResponseDto;
 
 export type AuthControllerLogoutMutationResponse = AuthControllerLogout200;
 

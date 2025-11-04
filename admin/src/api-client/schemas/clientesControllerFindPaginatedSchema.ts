@@ -4,7 +4,7 @@
 */
 
 import type { ClientesControllerFindPaginatedQueryParams, ClientesControllerFindPaginatedHeaderParams, ClientesControllerFindPaginated200, ClientesControllerFindPaginatedQueryResponse } from "../types/ClientesControllerFindPaginated.ts";
-import { clienteSchema } from "./clienteSchema.ts";
+import { paginatedClienteResponseDtoSchema } from "./paginatedClienteResponseDtoSchema.ts";
 import { z } from "zod/v4";
 
 export const clientesControllerFindPaginatedQueryParamsSchema = z.object({
@@ -22,14 +22,6 @@ export const clientesControllerFindPaginatedHeaderParamsSchema = z.object({
 /**
  * @description Lista paginada de clientes
  */
-export const clientesControllerFindPaginated200Schema = z.object({
-    get "data"(){
-                return z.optional(z.array(clienteSchema))
-              },
-"total": z.optional(z.coerce.number()),
-"page": z.optional(z.coerce.number()),
-"limit": z.optional(z.coerce.number()),
-"totalPages": z.optional(z.coerce.number())
-    }) as unknown as z.ZodType<ClientesControllerFindPaginated200>
+export const clientesControllerFindPaginated200Schema = paginatedClienteResponseDtoSchema as unknown as z.ZodType<ClientesControllerFindPaginated200>
 
 export const clientesControllerFindPaginatedQueryResponseSchema = clientesControllerFindPaginated200Schema as unknown as z.ZodType<ClientesControllerFindPaginatedQueryResponse>

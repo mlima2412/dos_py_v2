@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { CategoriaProduto } from "./CategoriaProduto.ts";
 import type { UpdateCategoriaProdutoDto } from "./UpdateCategoriaProdutoDto.ts";
 
 export type CategoriaProdutoControllerUpdatePathParams = {
@@ -16,16 +17,7 @@ export type CategoriaProdutoControllerUpdatePathParams = {
 /**
  * @description Categoria de produto atualizada com sucesso
 */
-export type CategoriaProdutoControllerUpdate200 = {
-    /**
-     * @type number | undefined
-    */
-    id?: number | undefined;
-    /**
-     * @type string | undefined
-    */
-    descricao?: string | undefined;
-};
+export type CategoriaProdutoControllerUpdate200 = CategoriaProduto;
 
 /**
  * @description Dados de entrada inválidos

@@ -4,7 +4,7 @@
 */
 
 import type { PedidoCompraControllerFindPaginatedQueryParams, PedidoCompraControllerFindPaginatedHeaderParams, PedidoCompraControllerFindPaginated200, PedidoCompraControllerFindPaginatedQueryResponse } from "../types/PedidoCompraControllerFindPaginated.ts";
-import { pedidoCompraSchema } from "./pedidoCompraSchema.ts";
+import { paginatedPedidoCompraResponseDtoSchema } from "./paginatedPedidoCompraResponseDtoSchema.ts";
 import { z } from "zod/v4";
 
 export const pedidoCompraControllerFindPaginatedQueryParamsSchema = z.object({
@@ -24,14 +24,6 @@ export const pedidoCompraControllerFindPaginatedHeaderParamsSchema = z.object({
 /**
  * @description Lista paginada de pedidos de compra retornada com sucesso
  */
-export const pedidoCompraControllerFindPaginated200Schema = z.object({
-    get "data"(){
-                return z.optional(z.array(pedidoCompraSchema))
-              },
-"total": z.optional(z.coerce.number().describe("Total de registros")),
-"page": z.optional(z.coerce.number().describe("Página atual")),
-"limit": z.optional(z.coerce.number().describe("Itens por página")),
-"totalPages": z.optional(z.coerce.number().describe("Total de páginas"))
-    }) as unknown as z.ZodType<PedidoCompraControllerFindPaginated200>
+export const pedidoCompraControllerFindPaginated200Schema = paginatedPedidoCompraResponseDtoSchema as unknown as z.ZodType<PedidoCompraControllerFindPaginated200>
 
 export const pedidoCompraControllerFindPaginatedQueryResponseSchema = pedidoCompraControllerFindPaginated200Schema as unknown as z.ZodType<PedidoCompraControllerFindPaginatedQueryResponse>

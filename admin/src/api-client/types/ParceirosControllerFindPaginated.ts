@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { Parceiro } from "./Parceiro.ts";
+import type { PaginatedParceiroResponseDto } from "./PaginatedParceiroResponseDto.ts";
 
 export type ParceirosControllerFindPaginatedQueryParams = {
     /**
@@ -27,32 +27,7 @@ export type ParceirosControllerFindPaginatedQueryParams = {
 /**
  * @description Lista paginada de parceiros retornada com sucesso
 */
-export type ParceirosControllerFindPaginated200 = {
-    /**
-     * @type array | undefined
-    */
-    data?: Parceiro[] | undefined;
-    /**
-     * @description Total de registros
-     * @type number | undefined
-    */
-    total?: number | undefined;
-    /**
-     * @description Página atual
-     * @type number | undefined
-    */
-    page?: number | undefined;
-    /**
-     * @description Itens por página
-     * @type number | undefined
-    */
-    limit?: number | undefined;
-    /**
-     * @description Total de páginas
-     * @type number | undefined
-    */
-    totalPages?: number | undefined;
-};
+export type ParceirosControllerFindPaginated200 = PaginatedParceiroResponseDto;
 
 export type ParceirosControllerFindPaginatedQueryResponse = ParceirosControllerFindPaginated200;
 

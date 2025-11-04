@@ -4,11 +4,12 @@
 */
 
 import type { AuthControllerLogout200, AuthControllerLogoutMutationResponse } from "../types/AuthControllerLogout.ts";
+import { logoutResponseDtoSchema } from "./logoutResponseDtoSchema.ts";
 import { z } from "zod/v4";
 
 /**
  * @description Logout realizado com sucesso
  */
-export const authControllerLogout200Schema = z.unknown() as unknown as z.ZodType<AuthControllerLogout200>
+export const authControllerLogout200Schema = logoutResponseDtoSchema as unknown as z.ZodType<AuthControllerLogout200>
 
 export const authControllerLogoutMutationResponseSchema = authControllerLogout200Schema as unknown as z.ZodType<AuthControllerLogoutMutationResponse>

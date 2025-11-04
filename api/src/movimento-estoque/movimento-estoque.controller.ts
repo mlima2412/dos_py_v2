@@ -25,6 +25,8 @@ import { MovimentoEstoqueResponseDto } from './dto/movimento-estoque-response.dt
 import { HistoricoSkuQueryDto } from './dto/historico-sku-query.dto';
 import { AjusteEstoqueDto } from './dto/ajuste-estoque.dto';
 import { AjusteConferenciaLoteDto } from './dto/ajuste-conferencia-lote.dto';
+import { AjusteConferenciaLoteResponseDto } from './dto/ajuste-conferencia-lote-response.dto';
+import { PaginatedMovimentoEstoqueResponseDto } from './dto/paginated-movimento-estoque-response.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('Movimento de Estoque')
@@ -112,13 +114,7 @@ export class MovimentoEstoqueController {
   @ApiResponse({
     status: 201,
     description: 'Ajustes processados com sucesso',
-    schema: {
-      type: 'object',
-      properties: {
-        totalProcessados: { type: 'number', example: 5 },
-        totalIgnorados: { type: 'number', example: 2 },
-      },
-    },
+    type: AjusteConferenciaLoteResponseDto,
   })
   @ApiResponse({
     status: 400,
@@ -184,19 +180,7 @@ export class MovimentoEstoqueController {
   @ApiResponse({
     status: 200,
     description: 'Histórico do SKU retornado com sucesso',
-    schema: {
-      type: 'object',
-      properties: {
-        data: {
-          type: 'array',
-          items: { $ref: '#/components/schemas/MovimentoEstoqueResponseDto' },
-        },
-        total: { type: 'number', example: 50 },
-        page: { type: 'number', example: 1 },
-        limit: { type: 'number', example: 20 },
-        totalPages: { type: 'number', example: 3 },
-      },
-    },
+    type: PaginatedMovimentoEstoqueResponseDto,
   })
   @ApiResponse({
     status: 404,

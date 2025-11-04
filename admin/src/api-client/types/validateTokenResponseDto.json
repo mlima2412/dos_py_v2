@@ -1,0 +1,1 @@
+{"type":"object","properties":{"valid":{"type":"boolean","description":"Indica se o token é válido","example":true},"message":{"type":"string","description":"Mensagem descritiva","example":"Token válido"}},"required":["valid","message"],"x-readme-ref-name":"ValidateTokenResponseDto"}

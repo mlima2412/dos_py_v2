@@ -41,7 +41,7 @@ export class CurrencyController {
   @ApiResponse({ status: 400, description: 'Dados inválidos' })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
   @ApiResponse({ status: 409, description: 'Código ISO já existe' })
-  create(@Body() createCurrencyDto: CreateCurrencyDto) {
+  create(@Body() createCurrencyDto: CreateCurrencyDto): Promise<Currency> {
     return this.currencyService.create(createCurrencyDto);
   }
 
@@ -59,7 +59,7 @@ export class CurrencyController {
     type: [Currency],
   })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
-  findAll(@Query('ativo') ativo?: boolean) {
+  findAll(@Query('ativo') ativo?: boolean): Promise<Currency[]> {
     return this.currencyService.findAll(ativo);
   }
 
@@ -71,7 +71,7 @@ export class CurrencyController {
     type: [Currency],
   })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
-  findAllActive() {
+  findAllActive(): Promise<Currency[]> {
     return this.currencyService.findAllActive();
   }
 
@@ -89,7 +89,7 @@ export class CurrencyController {
   })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
   @ApiResponse({ status: 404, description: 'Moeda não encontrada' })
-  findOne(@Param('publicId') publicId: string) {
+  findOne(@Param('publicId') publicId: string): Promise<Currency> {
     return this.currencyService.findOne(publicId);
   }
 
@@ -113,7 +113,7 @@ export class CurrencyController {
   update(
     @Param('publicId') publicId: string,
     @Body() updateCurrencyDto: UpdateCurrencyDto,
-  ) {
+  ): Promise<Currency> {
     return this.currencyService.update(publicId, updateCurrencyDto);
   }
 
@@ -132,7 +132,7 @@ export class CurrencyController {
   @ApiResponse({ status: 401, description: 'Não autorizado' })
   @ApiResponse({ status: 404, description: 'Moeda não encontrada' })
   @HttpCode(HttpStatus.OK)
-  activate(@Param('publicId') publicId: string) {
+  activate(@Param('publicId') publicId: string): Promise<Currency> {
     return this.currencyService.activate(publicId);
   }
 
@@ -151,7 +151,7 @@ export class CurrencyController {
   @ApiResponse({ status: 401, description: 'Não autorizado' })
   @ApiResponse({ status: 404, description: 'Moeda não encontrada' })
   @HttpCode(HttpStatus.OK)
-  deactivate(@Param('publicId') publicId: string) {
+  deactivate(@Param('publicId') publicId: string): Promise<Currency> {
     return this.currencyService.deactivate(publicId);
   }
 
@@ -173,7 +173,7 @@ export class CurrencyController {
     description: 'Moeda está sendo utilizada e não pode ser removida',
   })
   @HttpCode(HttpStatus.OK)
-  remove(@Param('publicId') publicId: string) {
+  remove(@Param('publicId') publicId: string): Promise<void> {
     return this.currencyService.remove(publicId);
   }
 }

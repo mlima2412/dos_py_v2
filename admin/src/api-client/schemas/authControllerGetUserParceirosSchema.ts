@@ -4,30 +4,12 @@
 */
 
 import type { AuthControllerGetUserParceiros200, AuthControllerGetUserParceirosQueryResponse } from "../types/AuthControllerGetUserParceiros.ts";
+import { userParceiroItemDtoSchema } from "./userParceiroItemDtoSchema.ts";
 import { z } from "zod/v4";
 
 /**
  * @description Lista de parceiros do usuário
  */
-export const authControllerGetUserParceiros200Schema = z.array(z.object({
-    "id": z.optional(z.coerce.number()),
-"parceiroId": z.optional(z.coerce.number()),
-"Parceiro": z.optional(z.object({
-    "id": z.optional(z.coerce.number()),
-"publicId": z.optional(z.coerce.string()),
-"nome": z.optional(z.coerce.string()),
-"logourl": z.optional(z.coerce.string()),
-"currencyId": z.optional(z.coerce.number()),
-"currency": z.optional(z.object({
-    "id": z.optional(z.coerce.number()),
-"locale": z.optional(z.coerce.string()),
-"isoCode": z.optional(z.coerce.string())
-    }))
-    })),
-"perfil": z.optional(z.object({
-    "id": z.optional(z.coerce.number()),
-"nome": z.optional(z.coerce.string())
-    }))
-    })) as unknown as z.ZodType<AuthControllerGetUserParceiros200>
+export const authControllerGetUserParceiros200Schema = z.array(userParceiroItemDtoSchema) as unknown as z.ZodType<AuthControllerGetUserParceiros200>
 
 export const authControllerGetUserParceirosQueryResponseSchema = authControllerGetUserParceiros200Schema as unknown as z.ZodType<AuthControllerGetUserParceirosQueryResponse>

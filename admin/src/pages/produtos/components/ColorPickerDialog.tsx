@@ -13,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 interface ColorPickerDialogProps {
-	sku: any;
+	sku: Record<string, unknown> & { publicId: string; codCor?: string; cor?: string; tamanho?: string };
 	onColorChange: (skuId: string, codCor: string) => void;
 }
 
@@ -27,7 +27,7 @@ export function ColorPickerDialog({
 	);
 	const [isOpen, setIsOpen] = useState(false);
 
-	const handleColorChange = (color: any) => {
+	const handleColorChange = (color: { hex: string }) => {
 		setSelectedColor(color.hex);
 	};
 

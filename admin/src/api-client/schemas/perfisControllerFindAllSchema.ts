@@ -4,18 +4,12 @@
 */
 
 import type { PerfisControllerFindAll200, PerfisControllerFindAllQueryResponse } from "../types/PerfisControllerFindAll.ts";
+import { perfilSchema } from "./perfilSchema.ts";
 import { z } from "zod/v4";
 
 /**
  * @description Lista de perfis retornada com sucesso
  */
-export const perfisControllerFindAll200Schema = z.array(z.object({
-    "id": z.optional(z.coerce.number()),
-"nome": z.optional(z.coerce.string()),
-"descricao": z.optional(z.coerce.string()),
-"ativo": z.optional(z.boolean()),
-"createdAt": z.optional(z.string().datetime()),
-"updatedAt": z.optional(z.string().datetime())
-    })) as unknown as z.ZodType<PerfisControllerFindAll200>
+export const perfisControllerFindAll200Schema = z.array(perfilSchema) as unknown as z.ZodType<PerfisControllerFindAll200>
 
 export const perfisControllerFindAllQueryResponseSchema = perfisControllerFindAll200Schema as unknown as z.ZodType<PerfisControllerFindAllQueryResponse>

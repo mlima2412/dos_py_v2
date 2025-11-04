@@ -26,6 +26,7 @@ import { UpdatePedidoCompraDto } from './dto/update-pedido-compra.dto';
 import { UpdateStatusPedidoCompraDto } from './dto/update-status-pedido-compra.dto';
 import { ProcessaPedidoCompraDto } from './dto/processa-pedido-compra.dto';
 import { PaginatedQueryDto } from './dto/paginated-query.dto';
+import { PaginatedPedidoCompraResponseDto } from './dto/paginated-pedido-compra-response.dto';
 import { PedidoCompra } from './entities/pedido-compra.entity';
 import { StatusPedidoCompra } from './enums/status-pedido-compra.enum';
 import { ParceiroId } from '../auth/decorators/parceiro-id.decorator';
@@ -105,19 +106,7 @@ export class PedidoCompraController {
   @ApiResponse({
     status: 200,
     description: 'Lista paginada de pedidos de compra retornada com sucesso',
-    schema: {
-      type: 'object',
-      properties: {
-        data: {
-          type: 'array',
-          items: { $ref: '#/components/schemas/PedidoCompra' },
-        },
-        total: { type: 'number', description: 'Total de registros' },
-        page: { type: 'number', description: 'Página atual' },
-        limit: { type: 'number', description: 'Itens por página' },
-        totalPages: { type: 'number', description: 'Total de páginas' },
-      },
-    },
+    type: PaginatedPedidoCompraResponseDto,
   })
   async findPaginated(
     @Query() query: PaginatedQueryDto,

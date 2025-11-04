@@ -6,7 +6,9 @@
 
 export const createVendaItemDtoTipoEnum = {
     "NORMAL": "NORMAL",
-    "BRINDE": "BRINDE"
+    "CONDICIONAL": "CONDICIONAL",
+    "BRINDE": "BRINDE",
+    "PERMUTA": "PERMUTA"
 } as const;
 
 export type CreateVendaItemDtoTipoEnumKey = (typeof createVendaItemDtoTipoEnum)[keyof typeof createVendaItemDtoTipoEnum];

@@ -21,7 +21,7 @@ import {
 	useProdutoControllerCreate,
 	useProdutoControllerUpdate,
 } from "@/api-client";
-import { Produto } from "@/api-client";
+import { Produto, CategoriaProduto, Fornecedor, Currency } from "@/api-client";
 
 // Função para criar schema com traduções
 const createFormSchema = (t: (key: string) => string) =>
@@ -53,9 +53,9 @@ const createFormSchema = (t: (key: string) => string) =>
 interface UseProdutoFormProps {
 	produto?: Produto;
 	isEditing: boolean;
-	categorias: any[];
-	fornecedores: any[];
-	currencies: any[];
+	categorias: CategoriaProduto[];
+	fornecedores: Fornecedor[];
+	currencies: Currency[];
 }
 
 export const useProdutoForm = ({
@@ -75,7 +75,7 @@ export const useProdutoForm = ({
 	const [precoCompraInput, setPrecoCompraInput] = useState<string>("");
 	const [precoVendaInput, setPrecoVendaInput] = useState<string>("");
 
-	const [formSchema, setFormSchema] = useState<any>(null);
+	const [formSchema, setFormSchema] = useState<ReturnType<typeof z.object> | null>(null);
 
 	// Criar schema com traduções
 	useEffect(() => {

@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { Produto } from "./Produto.ts";
+import type { PaginatedProdutoResponseDto } from "./PaginatedProdutoResponseDto.ts";
 
 export type ProdutoControllerFindPaginatedQueryParams = {
     /**
@@ -46,28 +46,7 @@ export type ProdutoControllerFindPaginatedHeaderParams = {
 /**
  * @description Lista paginada de produtos
 */
-export type ProdutoControllerFindPaginated200 = {
-    /**
-     * @type array | undefined
-    */
-    data?: Produto[] | undefined;
-    /**
-     * @type number | undefined
-    */
-    total?: number | undefined;
-    /**
-     * @type number | undefined
-    */
-    page?: number | undefined;
-    /**
-     * @type number | undefined
-    */
-    limit?: number | undefined;
-    /**
-     * @type number | undefined
-    */
-    totalPages?: number | undefined;
-};
+export type ProdutoControllerFindPaginated200 = PaginatedProdutoResponseDto;
 
 export type ProdutoControllerFindPaginatedQueryResponse = ProdutoControllerFindPaginated200;
 

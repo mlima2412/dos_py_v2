@@ -4,7 +4,7 @@
 */
 
 import type { ConferenciaEstoqueControllerFindPaginatedQueryParams, ConferenciaEstoqueControllerFindPaginatedHeaderParams, ConferenciaEstoqueControllerFindPaginated200, ConferenciaEstoqueControllerFindPaginatedQueryResponse } from "../types/ConferenciaEstoqueControllerFindPaginated.ts";
-import { conferenciaEstoqueResponseDtoSchema } from "./conferenciaEstoqueResponseDtoSchema.ts";
+import { paginatedConferenciaEstoqueResponseDtoSchema } from "./paginatedConferenciaEstoqueResponseDtoSchema.ts";
 import { z } from "zod/v4";
 
 export const conferenciaEstoqueControllerFindPaginatedQueryParamsSchema = z.object({
@@ -22,14 +22,6 @@ export const conferenciaEstoqueControllerFindPaginatedHeaderParamsSchema = z.obj
 /**
  * @description Lista paginada de conferências de estoque
  */
-export const conferenciaEstoqueControllerFindPaginated200Schema = z.object({
-    get "data"(){
-                return z.optional(z.array(conferenciaEstoqueResponseDtoSchema))
-              },
-"total": z.optional(z.coerce.number()),
-"page": z.optional(z.coerce.number()),
-"limit": z.optional(z.coerce.number()),
-"totalPages": z.optional(z.coerce.number())
-    }) as unknown as z.ZodType<ConferenciaEstoqueControllerFindPaginated200>
+export const conferenciaEstoqueControllerFindPaginated200Schema = paginatedConferenciaEstoqueResponseDtoSchema as unknown as z.ZodType<ConferenciaEstoqueControllerFindPaginated200>
 
 export const conferenciaEstoqueControllerFindPaginatedQueryResponseSchema = conferenciaEstoqueControllerFindPaginated200Schema as unknown as z.ZodType<ConferenciaEstoqueControllerFindPaginatedQueryResponse>

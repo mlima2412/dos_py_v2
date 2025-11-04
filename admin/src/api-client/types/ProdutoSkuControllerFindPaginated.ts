@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { ProdutoSKU } from "./ProdutoSKU.ts";
+import type { PaginatedProdutoSkuResponseDto } from "./PaginatedProdutoSkuResponseDto.ts";
 
 export type ProdutoSkuControllerFindPaginatedQueryParams = {
     /**
@@ -46,28 +46,7 @@ export type ProdutoSkuControllerFindPaginatedHeaderParams = {
 /**
  * @description Lista paginada de SKUs de produtos
 */
-export type ProdutoSkuControllerFindPaginated200 = {
-    /**
-     * @type array | undefined
-    */
-    data?: ProdutoSKU[] | undefined;
-    /**
-     * @type number | undefined
-    */
-    total?: number | undefined;
-    /**
-     * @type number | undefined
-    */
-    page?: number | undefined;
-    /**
-     * @type number | undefined
-    */
-    limit?: number | undefined;
-    /**
-     * @type number | undefined
-    */
-    totalPages?: number | undefined;
-};
+export type ProdutoSkuControllerFindPaginated200 = PaginatedProdutoSkuResponseDto;
 
 export type ProdutoSkuControllerFindPaginatedQueryResponse = ProdutoSkuControllerFindPaginated200;
 

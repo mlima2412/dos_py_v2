@@ -4,7 +4,11 @@
 */
 
 
-export type AppControllerGetHello200 = any;
+/**
+ * @description Retorna mensagem de boas-vindas
+ * @example Hello World!
+*/
+export type AppControllerGetHello200 = string;
 
 export type AppControllerGetHelloQueryResponse = AppControllerGetHello200;
 

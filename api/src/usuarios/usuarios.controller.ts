@@ -21,6 +21,7 @@ import { UsuariosService } from './usuarios.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Usuario } from './entities/usuario.entity';
+import { PaginatedUsuarioResponseDto } from './dto/paginated-usuario-response.dto';
 import { Public } from '../auth/decorators/public.decorator';
 
 @ApiTags('Usuarios')
@@ -89,23 +90,91 @@ export class UsuariosController {
 
   @Get('paginated')
   @ApiBearerAuth('JWT-auth')
-  @ApiOperation({ summary: 'Listar usuários com paginação, busca e filtros' })
   @ApiResponse({
     status: 200,
     description: 'Lista paginada de usuários retornada com sucesso',
-    schema: {
-      type: 'object',
-      properties: {
-        data: {
-          type: 'array',
-          items: { $ref: '#/components/schemas/Usuario' },
-        },
-        total: { type: 'number', description: 'Total de registros' },
-        page: { type: 'number', description: 'Página atual' },
-        limit: { type: 'number', description: 'Itens por página' },
-        totalPages: { type: 'number', description: 'Total de páginas' },
-      },
-    },
+    type: PaginatedUsuarioResponseDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista paginada de usuários retornada com sucesso',
+    type: PaginatedUsuarioResponseDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista paginada de usuários retornada com sucesso',
+    type: PaginatedUsuarioResponseDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista paginada de usuários retornada com sucesso',
+    type: PaginatedUsuarioResponseDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista paginada de usuários retornada com sucesso',
+    type: PaginatedUsuarioResponseDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista paginada de usuários retornada com sucesso',
+    type: PaginatedUsuarioResponseDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista paginada de usuários retornada com sucesso',
+    type: PaginatedUsuarioResponseDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista paginada de usuários retornada com sucesso',
+    type: PaginatedUsuarioResponseDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista paginada de usuários retornada com sucesso',
+    type: PaginatedUsuarioResponseDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista paginada de usuários retornada com sucesso',
+    type: PaginatedUsuarioResponseDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista paginada de usuários retornada com sucesso',
+    type: PaginatedUsuarioResponseDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista paginada de usuários retornada com sucesso',
+    type: PaginatedUsuarioResponseDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista paginada de usuários retornada com sucesso',
+    type: PaginatedUsuarioResponseDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista paginada de usuários retornada com sucesso',
+    type: PaginatedUsuarioResponseDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista paginada de usuários retornada com sucesso',
+    type: PaginatedUsuarioResponseDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista paginada de usuários retornada com sucesso',
+    type: PaginatedUsuarioResponseDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista paginada de usuários retornada com sucesso',
+    type: PaginatedUsuarioResponseDto,
+  })
   })
   findPaginated(
     @Query('page') page: string = '1',

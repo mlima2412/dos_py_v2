@@ -22,12 +22,12 @@ import {
 	useClientesControllerCreate,
 	useClientesControllerUpdate,
 } from "@/api-client";
-import { Cliente } from "@/api-client";
+import { Cliente, Parceiro } from "@/api-client";
 
 interface UseClienteFormProps {
 	cliente?: Cliente;
 	isEditing: boolean;
-	parceiros: any[];
+	parceiros: Parceiro[];
 }
 
 export const useClienteForm = ({

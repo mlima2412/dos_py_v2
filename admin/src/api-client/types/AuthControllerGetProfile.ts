@@ -3,11 +3,12 @@
 * Do not edit manually.
 */
 
+import type { UserProfileDto } from "./UserProfileDto.ts";
 
 /**
  * @description Dados do usuário
 */
-export type AuthControllerGetProfile200 = any;
+export type AuthControllerGetProfile200 = UserProfileDto;
 
 export type AuthControllerGetProfileQueryResponse = AuthControllerGetProfile200;
 

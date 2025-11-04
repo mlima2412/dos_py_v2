@@ -6,7 +6,9 @@
 
 export const vendaItemEntityTipoEnum = {
     "NORMAL": "NORMAL",
-    "BRINDE": "BRINDE"
+    "CONDICIONAL": "CONDICIONAL",
+    "BRINDE": "BRINDE",
+    "PERMUTA": "PERMUTA"
 } as const;
 
 export type VendaItemEntityTipoEnumKey = (typeof vendaItemEntityTipoEnum)[keyof typeof vendaItemEntityTipoEnum];

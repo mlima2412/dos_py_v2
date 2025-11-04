@@ -5,15 +5,13 @@
 
 import type { MovimentoEstoqueControllerProcessarAjustesConferenciaLote201, MovimentoEstoqueControllerProcessarAjustesConferenciaLote400, MovimentoEstoqueControllerProcessarAjustesConferenciaLote404, MovimentoEstoqueControllerProcessarAjustesConferenciaLote409, MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationRequest, MovimentoEstoqueControllerProcessarAjustesConferenciaLoteMutationResponse } from "../types/MovimentoEstoqueControllerProcessarAjustesConferenciaLote.ts";
 import { ajusteConferenciaLoteDtoSchema } from "./ajusteConferenciaLoteDtoSchema.ts";
+import { ajusteConferenciaLoteResponseDtoSchema } from "./ajusteConferenciaLoteResponseDtoSchema.ts";
 import { z } from "zod/v4";
 
 /**
  * @description Ajustes processados com sucesso
  */
-export const movimentoEstoqueControllerProcessarAjustesConferenciaLote201Schema = z.object({
-    "totalProcessados": z.optional(z.coerce.number()),
-"totalIgnorados": z.optional(z.coerce.number())
-    }) as unknown as z.ZodType<MovimentoEstoqueControllerProcessarAjustesConferenciaLote201>
+export const movimentoEstoqueControllerProcessarAjustesConferenciaLote201Schema = ajusteConferenciaLoteResponseDtoSchema as unknown as z.ZodType<MovimentoEstoqueControllerProcessarAjustesConferenciaLote201>
 
 /**
  * @description Dados inválidos ou lista vazia

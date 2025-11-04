@@ -3,36 +3,12 @@
 * Do not edit manually.
 */
 
+import type { Perfil } from "./Perfil.ts";
 
 /**
  * @description Lista de perfis retornada com sucesso
 */
-export type PerfisControllerFindAll200 = {
-    /**
-     * @type number | undefined
-    */
-    id?: number | undefined;
-    /**
-     * @type string | undefined
-    */
-    nome?: string | undefined;
-    /**
-     * @type string | undefined
-    */
-    descricao?: string | undefined;
-    /**
-     * @type boolean | undefined
-    */
-    ativo?: boolean | undefined;
-    /**
-     * @type string | undefined, date-time
-    */
-    createdAt?: string | undefined;
-    /**
-     * @type string | undefined, date-time
-    */
-    updatedAt?: string | undefined;
-}[];
+export type PerfisControllerFindAll200 = Perfil[];
 
 export type PerfisControllerFindAllQueryResponse = PerfisControllerFindAll200;
 

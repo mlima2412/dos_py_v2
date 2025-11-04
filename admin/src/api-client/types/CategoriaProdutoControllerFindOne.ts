@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { CategoriaProduto } from "./CategoriaProduto.ts";
 
 export type CategoriaProdutoControllerFindOnePathParams = {
     /**
@@ -15,16 +16,7 @@ export type CategoriaProdutoControllerFindOnePathParams = {
 /**
  * @description Categoria de produto encontrada com sucesso
 */
-export type CategoriaProdutoControllerFindOne200 = {
-    /**
-     * @type number | undefined
-    */
-    id?: number | undefined;
-    /**
-     * @type string | undefined
-    */
-    descricao?: string | undefined;
-};
+export type CategoriaProdutoControllerFindOne200 = CategoriaProduto;
 
 /**
  * @description Categoria de produto não encontrada

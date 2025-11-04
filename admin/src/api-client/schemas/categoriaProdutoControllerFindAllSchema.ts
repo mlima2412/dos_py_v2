@@ -4,14 +4,12 @@
 */
 
 import type { CategoriaProdutoControllerFindAll200, CategoriaProdutoControllerFindAllQueryResponse } from "../types/CategoriaProdutoControllerFindAll.ts";
+import { categoriaProdutoSchema } from "./categoriaProdutoSchema.ts";
 import { z } from "zod/v4";
 
 /**
  * @description Lista de categorias de produto retornada com sucesso
  */
-export const categoriaProdutoControllerFindAll200Schema = z.array(z.object({
-    "id": z.optional(z.coerce.number()),
-"descricao": z.optional(z.coerce.string())
-    })) as unknown as z.ZodType<CategoriaProdutoControllerFindAll200>
+export const categoriaProdutoControllerFindAll200Schema = z.array(categoriaProdutoSchema) as unknown as z.ZodType<CategoriaProdutoControllerFindAll200>
 
 export const categoriaProdutoControllerFindAllQueryResponseSchema = categoriaProdutoControllerFindAll200Schema as unknown as z.ZodType<CategoriaProdutoControllerFindAllQueryResponse>

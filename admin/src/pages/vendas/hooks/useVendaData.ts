@@ -147,7 +147,7 @@ export const useVendaData = ({
 		);
 
 	const mapVendaItemToFormData = useCallback(
-		(item: any): VendaItemFormData => ({
+		(item: T & { id: number; skuId: number; produtoId: number; qtdReservada: number; precoUnit: number; desconto?: number; tipo: string }): VendaItemFormData => ({
 			remoteId: item.id,
 			skuId: item.skuId,
 			productId: item.produtoId,

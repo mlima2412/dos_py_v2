@@ -130,7 +130,7 @@ const FormularioSubCategoriaDespesas: React.FC = () => {
 						descricao: data.descricao,
 						categoriaId: data.categoriaId,
 						ativo: true,
-					} as any, // TypeScript workaround: Kubb não está gerando tipos opcionais corretamente
+					}, // TypeScript workaround: Kubb não está gerando tipos opcionais corretamente
 				},
 				{
 					onSuccess: () => {

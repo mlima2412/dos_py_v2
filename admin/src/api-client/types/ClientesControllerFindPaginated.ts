@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { Cliente } from "./Cliente.ts";
+import type { PaginatedClienteResponseDto } from "./PaginatedClienteResponseDto.ts";
 
 export type ClientesControllerFindPaginatedQueryParams = {
     /**
@@ -46,28 +46,7 @@ export type ClientesControllerFindPaginatedHeaderParams = {
 /**
  * @description Lista paginada de clientes
 */
-export type ClientesControllerFindPaginated200 = {
-    /**
-     * @type array | undefined
-    */
-    data?: Cliente[] | undefined;
-    /**
-     * @type number | undefined
-    */
-    total?: number | undefined;
-    /**
-     * @type number | undefined
-    */
-    page?: number | undefined;
-    /**
-     * @type number | undefined
-    */
-    limit?: number | undefined;
-    /**
-     * @type number | undefined
-    */
-    totalPages?: number | undefined;
-};
+export type ClientesControllerFindPaginated200 = PaginatedClienteResponseDto;
 
 export type ClientesControllerFindPaginatedQueryResponse = ClientesControllerFindPaginated200;
 

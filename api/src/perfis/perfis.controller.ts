@@ -19,6 +19,7 @@ import {
 import { PerfisService } from './perfis.service';
 import { CreatePerfilDto } from './dto/create-perfil.dto';
 import { UpdatePerfilDto } from './dto/update-perfil.dto';
+import { Perfil } from './entities/perfil.entity';
 
 @ApiTags('Perfis')
 @Controller('perfis')
@@ -52,28 +53,7 @@ export class PerfisController {
   @ApiResponse({
     status: 201,
     description: 'Perfil criado com sucesso',
-    schema: {
-      type: 'object',
-      properties: {
-        id: { type: 'number', example: 1 },
-        nome: { type: 'string', example: 'Administrador' },
-        descricao: {
-          type: 'string',
-          example: 'Perfil com acesso total ao sistema',
-        },
-        ativo: { type: 'boolean', example: true },
-        createdAt: {
-          type: 'string',
-          format: 'date-time',
-          example: '2024-01-01T00:00:00.000Z',
-        },
-        updatedAt: {
-          type: 'string',
-          format: 'date-time',
-          example: '2024-01-01T00:00:00.000Z',
-        },
-      },
-    },
+    type: Perfil,
   })
   @ApiResponse({ status: 400, description: 'Dados de entrada inválidos' })
   @ApiResponse({ status: 409, description: 'Perfil com este nome já existe' })
@@ -87,23 +67,7 @@ export class PerfisController {
   @ApiResponse({
     status: 200,
     description: 'Lista de perfis retornada com sucesso',
-    schema: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          id: { type: 'number', example: 1 },
-          nome: { type: 'string', example: 'Administrador' },
-          descricao: {
-            type: 'string',
-            example: 'Perfil com acesso total ao sistema',
-          },
-          ativo: { type: 'boolean', example: true },
-          createdAt: { type: 'string', format: 'date-time' },
-          updatedAt: { type: 'string', format: 'date-time' },
-        },
-      },
-    },
+    type: [Perfil],
   })
   findAll() {
     return this.perfisService.findAll();
@@ -116,20 +80,7 @@ export class PerfisController {
   @ApiResponse({
     status: 200,
     description: 'Perfil encontrado com sucesso',
-    schema: {
-      type: 'object',
-      properties: {
-        id: { type: 'number', example: 1 },
-        nome: { type: 'string', example: 'Administrador' },
-        descricao: {
-          type: 'string',
-          example: 'Perfil com acesso total ao sistema',
-        },
-        ativo: { type: 'boolean', example: true },
-        createdAt: { type: 'string', format: 'date-time' },
-        updatedAt: { type: 'string', format: 'date-time' },
-      },
-    },
+    type: Perfil,
   })
   @ApiResponse({ status: 404, description: 'Perfil não encontrado' })
   findOne(@Param('id', ParseIntPipe) id: number) {
@@ -156,20 +107,7 @@ export class PerfisController {
   @ApiResponse({
     status: 200,
     description: 'Perfil atualizado com sucesso',
-    schema: {
-      type: 'object',
-      properties: {
-        id: { type: 'number', example: 1 },
-        nome: { type: 'string', example: 'Administrador Geral' },
-        descricao: {
-          type: 'string',
-          example: 'Perfil com acesso total e gerenciamento do sistema',
-        },
-        ativo: { type: 'boolean', example: true },
-        createdAt: { type: 'string', format: 'date-time' },
-        updatedAt: { type: 'string', format: 'date-time' },
-      },
-    },
+    type: Perfil,
   })
   @ApiResponse({ status: 404, description: 'Perfil não encontrado' })
   @ApiResponse({ status: 400, description: 'Dados de entrada inválidos' })

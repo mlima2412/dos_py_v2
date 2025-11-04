@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { PedidoCompra } from "./PedidoCompra.ts";
+import type { PaginatedPedidoCompraResponseDto } from "./PaginatedPedidoCompraResponseDto.ts";
 
 export const pedidoCompraControllerFindPaginatedQueryParamsStatusEnum = {
     "EDICAO": "EDICAO",
@@ -64,32 +64,7 @@ export type PedidoCompraControllerFindPaginatedHeaderParams = {
 /**
  * @description Lista paginada de pedidos de compra retornada com sucesso
 */
-export type PedidoCompraControllerFindPaginated200 = {
-    /**
-     * @type array | undefined
-    */
-    data?: PedidoCompra[] | undefined;
-    /**
-     * @description Total de registros
-     * @type number | undefined
-    */
-    total?: number | undefined;
-    /**
-     * @description Página atual
-     * @type number | undefined
-    */
-    page?: number | undefined;
-    /**
-     * @description Itens por página
-     * @type number | undefined
-    */
-    limit?: number | undefined;
-    /**
-     * @description Total de páginas
-     * @type number | undefined
-    */
-    totalPages?: number | undefined;
-};
+export type PedidoCompraControllerFindPaginated200 = PaginatedPedidoCompraResponseDto;
 
 export type PedidoCompraControllerFindPaginatedQueryResponse = PedidoCompraControllerFindPaginated200;
 

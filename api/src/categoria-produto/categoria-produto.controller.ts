@@ -19,6 +19,7 @@ import {
 import { CategoriaProdutoService } from './categoria-produto.service';
 import { CreateCategoriaProdutoDto } from './dto/create-categoria-produto.dto';
 import { UpdateCategoriaProdutoDto } from './dto/update-categoria-produto.dto';
+import { CategoriaProduto } from './entities/categoria-produto.entity';
 
 @ApiTags('Categoria Produto')
 @Controller('categoria-produto')
@@ -52,20 +53,14 @@ export class CategoriaProdutoController {
   @ApiResponse({
     status: 201,
     description: 'Categoria de produto criada com sucesso',
-    schema: {
-      type: 'object',
-      properties: {
-        id: { type: 'number', example: 1 },
-        descricao: { type: 'string', example: 'Eletrônicos' },
-      },
-    },
+    type: CategoriaProduto,
   })
   @ApiResponse({ status: 400, description: 'Dados de entrada inválidos' })
   @ApiResponse({
     status: 409,
     description: 'Categoria com esta descrição já existe',
   })
-  create(@Body() createCategoriaProdutoDto: CreateCategoriaProdutoDto) {
+  create(@Body() createCategoriaProdutoDto: CreateCategoriaProdutoDto): Promise<CategoriaProduto> {
     console.log(createCategoriaProdutoDto);
     return this.categoriaProdutoService.create(createCategoriaProdutoDto);
   }
@@ -76,18 +71,9 @@ export class CategoriaProdutoController {
   @ApiResponse({
     status: 200,
     description: 'Lista de categorias de produto retornada com sucesso',
-    schema: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          id: { type: 'number', example: 1 },
-          descricao: { type: 'string', example: 'Eletrônicos' },
-        },
-      },
-    },
+    type: [CategoriaProduto],
   })
-  findAll() {
+  findAll(): Promise<CategoriaProduto[]> {
     return this.categoriaProdutoService.findAll();
   }
 
@@ -102,19 +88,13 @@ export class CategoriaProdutoController {
   @ApiResponse({
     status: 200,
     description: 'Categoria de produto encontrada com sucesso',
-    schema: {
-      type: 'object',
-      properties: {
-        id: { type: 'number', example: 1 },
-        descricao: { type: 'string', example: 'Eletrônicos' },
-      },
-    },
+    type: CategoriaProduto,
   })
   @ApiResponse({
     status: 404,
     description: 'Categoria de produto não encontrada',
   })
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<CategoriaProduto> {
     return this.categoriaProdutoService.findOne(id);
   }
 
@@ -141,13 +121,7 @@ export class CategoriaProdutoController {
   @ApiResponse({
     status: 200,
     description: 'Categoria de produto atualizada com sucesso',
-    schema: {
-      type: 'object',
-      properties: {
-        id: { type: 'number', example: 1 },
-        descricao: { type: 'string', example: 'Eletrônicos e Tecnologia' },
-      },
-    },
+    type: CategoriaProduto,
   })
   @ApiResponse({
     status: 404,
@@ -161,7 +135,7 @@ export class CategoriaProdutoController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateCategoriaProdutoDto: UpdateCategoriaProdutoDto,
-  ) {
+  ): Promise<CategoriaProduto> {
     return this.categoriaProdutoService.update(id, updateCategoriaProdutoDto);
   }
 
@@ -185,7 +159,7 @@ export class CategoriaProdutoController {
     status: 400,
     description: 'Não é possível remover categoria em uso por produtos',
   })
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.categoriaProdutoService.remove(id);
   }
 }

@@ -3,20 +3,12 @@
 * Do not edit manually.
 */
 
+import type { CategoriaProduto } from "./CategoriaProduto.ts";
 
 /**
  * @description Lista de categorias de produto retornada com sucesso
 */
-export type CategoriaProdutoControllerFindAll200 = {
-    /**
-     * @type number | undefined
-    */
-    id?: number | undefined;
-    /**
-     * @type string | undefined
-    */
-    descricao?: string | undefined;
-}[];
+export type CategoriaProdutoControllerFindAll200 = CategoriaProduto[];
 
 export type CategoriaProdutoControllerFindAllQueryResponse = CategoriaProdutoControllerFindAll200;
 

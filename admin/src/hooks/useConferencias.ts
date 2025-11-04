@@ -102,6 +102,7 @@ export function useCompleteConferencia() {
 	const queryClient = useQueryClient();
 
 	return {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		completeConferencia: async (_conferenciaId: string) => {
 			// TODO: Implementar chamada para API de atualização
 			// Por enquanto, apenas invalidar a query para recarregar os dados

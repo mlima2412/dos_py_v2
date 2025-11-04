@@ -25,7 +25,7 @@ interface SelecaoItensProps {
 	vendaId?: number;
 	produtosDisponiveis: ProdutosPorLocalResponseDto[];
 	isLoadingProdutos: boolean;
-	produtosError: any;
+	produtosError: Error | null;
 	selectedLocal: LocalOption | null;
 	selectedProductId: number | null;
 	setSelectedProductId: (id: number | null) => void;

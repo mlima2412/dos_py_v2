@@ -5,26 +5,13 @@
 
 import type { AuthControllerLogin200, AuthControllerLogin401, AuthControllerLoginMutationRequest, AuthControllerLoginMutationResponse } from "../types/AuthControllerLogin.ts";
 import { loginDtoSchema } from "./loginDtoSchema.ts";
+import { loginResponseDtoSchema } from "./loginResponseDtoSchema.ts";
 import { z } from "zod/v4";
 
 /**
  * @description Login realizado com sucesso
  */
-export const authControllerLogin200Schema = z.object({
-    "accessToken": z.optional(z.coerce.string()),
-"user": z.optional(z.object({
-    "id": z.optional(z.coerce.number()),
-"publicId": z.optional(z.coerce.string()),
-"nome": z.optional(z.coerce.string()),
-"email": z.optional(z.coerce.string()),
-"telefone": z.optional(z.coerce.string()),
-"ativo": z.optional(z.boolean()),
-"perfil": z.optional(z.object({
-    "id": z.optional(z.coerce.number()),
-"nome": z.optional(z.coerce.string())
-    }))
-    }))
-    }) as unknown as z.ZodType<AuthControllerLogin200>
+export const authControllerLogin200Schema = loginResponseDtoSchema as unknown as z.ZodType<AuthControllerLogin200>
 
 /**
  * @description Credenciais inválidas

@@ -4,7 +4,7 @@
 */
 
 import type { ParceirosControllerFindPaginatedQueryParams, ParceirosControllerFindPaginated200, ParceirosControllerFindPaginatedQueryResponse } from "../types/ParceirosControllerFindPaginated.ts";
-import { parceiroSchema } from "./parceiroSchema.ts";
+import { paginatedParceiroResponseDtoSchema } from "./paginatedParceiroResponseDtoSchema.ts";
 import { z } from "zod/v4";
 
 export const parceirosControllerFindPaginatedQueryParamsSchema = z.object({
@@ -17,14 +17,6 @@ export const parceirosControllerFindPaginatedQueryParamsSchema = z.object({
 /**
  * @description Lista paginada de parceiros retornada com sucesso
  */
-export const parceirosControllerFindPaginated200Schema = z.object({
-    get "data"(){
-                return z.optional(z.array(parceiroSchema))
-              },
-"total": z.optional(z.coerce.number().describe("Total de registros")),
-"page": z.optional(z.coerce.number().describe("Página atual")),
-"limit": z.optional(z.coerce.number().describe("Itens por página")),
-"totalPages": z.optional(z.coerce.number().describe("Total de páginas"))
-    }) as unknown as z.ZodType<ParceirosControllerFindPaginated200>
+export const parceirosControllerFindPaginated200Schema = paginatedParceiroResponseDtoSchema as unknown as z.ZodType<ParceirosControllerFindPaginated200>
 
 export const parceirosControllerFindPaginatedQueryResponseSchema = parceirosControllerFindPaginated200Schema as unknown as z.ZodType<ParceirosControllerFindPaginatedQueryResponse>

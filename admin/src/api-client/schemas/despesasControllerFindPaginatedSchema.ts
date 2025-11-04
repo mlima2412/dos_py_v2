@@ -4,6 +4,7 @@
 */
 
 import type { DespesasControllerFindPaginatedQueryParams, DespesasControllerFindPaginated200, DespesasControllerFindPaginatedQueryResponse } from "../types/DespesasControllerFindPaginated.ts";
+import { paginatedDespesaResponseDtoSchema } from "./paginatedDespesaResponseDtoSchema.ts";
 import { z } from "zod/v4";
 
 export const despesasControllerFindPaginatedQueryParamsSchema = z.object({
@@ -17,6 +18,6 @@ export const despesasControllerFindPaginatedQueryParamsSchema = z.object({
 /**
  * @description Lista paginada de despesas
  */
-export const despesasControllerFindPaginated200Schema = z.unknown() as unknown as z.ZodType<DespesasControllerFindPaginated200>
+export const despesasControllerFindPaginated200Schema = paginatedDespesaResponseDtoSchema as unknown as z.ZodType<DespesasControllerFindPaginated200>
 
 export const despesasControllerFindPaginatedQueryResponseSchema = despesasControllerFindPaginated200Schema as unknown as z.ZodType<DespesasControllerFindPaginatedQueryResponse>

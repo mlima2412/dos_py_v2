@@ -4,15 +4,14 @@
 */
 
 import type { PasswordResetControllerResetPassword200, PasswordResetControllerResetPassword400, PasswordResetControllerResetPasswordMutationRequest, PasswordResetControllerResetPasswordMutationResponse } from "../types/PasswordResetControllerResetPassword.ts";
+import { passwordResetMessageResponseDtoSchema } from "./passwordResetMessageResponseDtoSchema.ts";
 import { resetPasswordDtoSchema } from "./resetPasswordDtoSchema.ts";
 import { z } from "zod/v4";
 
 /**
  * @description Senha alterada com sucesso
  */
-export const passwordResetControllerResetPassword200Schema = z.object({
-    "message": z.optional(z.coerce.string())
-    }) as unknown as z.ZodType<PasswordResetControllerResetPassword200>
+export const passwordResetControllerResetPassword200Schema = passwordResetMessageResponseDtoSchema as unknown as z.ZodType<PasswordResetControllerResetPassword200>
 
 /**
  * @description Token inválido ou expirado

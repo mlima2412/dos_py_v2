@@ -4,6 +4,7 @@
 */
 
 import type { CategoriaProdutoControllerUpdatePathParams, CategoriaProdutoControllerUpdate200, CategoriaProdutoControllerUpdate400, CategoriaProdutoControllerUpdate404, CategoriaProdutoControllerUpdate409, CategoriaProdutoControllerUpdateMutationRequest, CategoriaProdutoControllerUpdateMutationResponse } from "../types/CategoriaProdutoControllerUpdate.ts";
+import { categoriaProdutoSchema } from "./categoriaProdutoSchema.ts";
 import { updateCategoriaProdutoDtoSchema } from "./updateCategoriaProdutoDtoSchema.ts";
 import { z } from "zod/v4";
 
@@ -14,10 +15,7 @@ export const categoriaProdutoControllerUpdatePathParamsSchema = z.object({
 /**
  * @description Categoria de produto atualizada com sucesso
  */
-export const categoriaProdutoControllerUpdate200Schema = z.object({
-    "id": z.optional(z.coerce.number()),
-"descricao": z.optional(z.coerce.string())
-    }) as unknown as z.ZodType<CategoriaProdutoControllerUpdate200>
+export const categoriaProdutoControllerUpdate200Schema = categoriaProdutoSchema as unknown as z.ZodType<CategoriaProdutoControllerUpdate200>
 
 /**
  * @description Dados de entrada inválidos

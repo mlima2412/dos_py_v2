@@ -6,7 +6,9 @@
 
 export const updateVendaItemDtoTipoEnum = {
     "NORMAL": "NORMAL",
-    "BRINDE": "BRINDE"
+    "CONDICIONAL": "CONDICIONAL",
+    "BRINDE": "BRINDE",
+    "PERMUTA": "PERMUTA"
 } as const;
 
 export type UpdateVendaItemDtoTipoEnumKey = (typeof updateVendaItemDtoTipoEnum)[keyof typeof updateVendaItemDtoTipoEnum];

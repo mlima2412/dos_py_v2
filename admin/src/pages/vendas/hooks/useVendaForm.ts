@@ -98,13 +98,8 @@ interface UseVendaFormProps {
 	setCanAccessReview: (value: boolean) => void;
 }
 
-export const useVendaForm = ({
-	mode: _mode,
-	publicId: _publicId,
-	setVendaResumo: _setVendaResumo,
-	setCanAccessItems: _setCanAccessItems,
-	setCanAccessReview: _setCanAccessReview,
-}: UseVendaFormProps) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const useVendaForm = (props: UseVendaFormProps) => {
 	const formMethods = useForm<VendaFormValues>({
 		defaultValues,
 		resolver: zodResolver(vendaFormSchema) as Resolver<VendaFormValues>,

@@ -3,29 +3,13 @@
 * Do not edit manually.
 */
 
+import type { CategoriaDespesas } from "./CategoriaDespesas.ts";
 import type { CreateCategoriaDespesasDto } from "./CreateCategoriaDespesasDto.ts";
 
 /**
  * @description Categoria de despesas criada com sucesso
 */
-export type CategoriaDespesasControllerCreate201 = {
-    /**
-     * @type number | undefined
-    */
-    idCategoria?: number | undefined;
-    /**
-     * @type string | undefined
-    */
-    descricao?: string | undefined;
-    /**
-     * @type boolean | undefined
-    */
-    ativo?: boolean | undefined;
-    /**
-     * @type string | undefined
-    */
-    createdAt?: string | undefined;
-};
+export type CategoriaDespesasControllerCreate201 = CategoriaDespesas;
 
 /**
  * @description Não autorizado

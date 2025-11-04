@@ -4,6 +4,7 @@
 */
 
 import type { CategoriaDespesasControllerUpdatePathParams, CategoriaDespesasControllerUpdate200, CategoriaDespesasControllerUpdate401, CategoriaDespesasControllerUpdate404, CategoriaDespesasControllerUpdate409, CategoriaDespesasControllerUpdateMutationRequest, CategoriaDespesasControllerUpdateMutationResponse } from "../types/CategoriaDespesasControllerUpdate.ts";
+import { categoriaDespesasSchema } from "./categoriaDespesasSchema.ts";
 import { updateCategoriaDespesasDtoSchema } from "./updateCategoriaDespesasDtoSchema.ts";
 import { z } from "zod/v4";
 
@@ -14,12 +15,7 @@ export const categoriaDespesasControllerUpdatePathParamsSchema = z.object({
 /**
  * @description Categoria de despesas atualizada com sucesso
  */
-export const categoriaDespesasControllerUpdate200Schema = z.object({
-    "idCategoria": z.optional(z.coerce.number()),
-"descricao": z.optional(z.coerce.string()),
-"ativo": z.optional(z.boolean()),
-"createdAt": z.optional(z.coerce.string())
-    }) as unknown as z.ZodType<CategoriaDespesasControllerUpdate200>
+export const categoriaDespesasControllerUpdate200Schema = categoriaDespesasSchema as unknown as z.ZodType<CategoriaDespesasControllerUpdate200>
 
 /**
  * @description Não autorizado

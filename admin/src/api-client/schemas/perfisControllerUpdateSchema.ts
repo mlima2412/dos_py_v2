@@ -4,6 +4,7 @@
 */
 
 import type { PerfisControllerUpdatePathParams, PerfisControllerUpdate200, PerfisControllerUpdate400, PerfisControllerUpdate404, PerfisControllerUpdate409, PerfisControllerUpdateMutationRequest, PerfisControllerUpdateMutationResponse } from "../types/PerfisControllerUpdate.ts";
+import { perfilSchema } from "./perfilSchema.ts";
 import { updatePerfilDtoSchema } from "./updatePerfilDtoSchema.ts";
 import { z } from "zod/v4";
 
@@ -14,14 +15,7 @@ export const perfisControllerUpdatePathParamsSchema = z.object({
 /**
  * @description Perfil atualizado com sucesso
  */
-export const perfisControllerUpdate200Schema = z.object({
-    "id": z.optional(z.coerce.number()),
-"nome": z.optional(z.coerce.string()),
-"descricao": z.optional(z.coerce.string()),
-"ativo": z.optional(z.boolean()),
-"createdAt": z.optional(z.string().datetime()),
-"updatedAt": z.optional(z.string().datetime())
-    }) as unknown as z.ZodType<PerfisControllerUpdate200>
+export const perfisControllerUpdate200Schema = perfilSchema as unknown as z.ZodType<PerfisControllerUpdate200>
 
 /**
  * @description Dados de entrada inválidos

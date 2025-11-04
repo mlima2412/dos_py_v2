@@ -5,7 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Package, ShoppingCart } from "lucide-react";
 import { SelectedSkuItem } from "./SelectedSkuItem";
 
-export interface SelectedSkusListProps<T = any> {
+export interface SelectedSkusListProps<T = Record<string, unknown>> {
 	selectedSkus: Array<{
 		sku: T & {
 			id: number;
@@ -26,7 +26,7 @@ export interface SelectedSkusListProps<T = any> {
 	title?: string;
 	emptyMessage?: string;
 	showStockLimit?: boolean;
-	maxQuantity?: (sku: T) => number;
+	maxQuantity?: (sku: T & { id: number }) => number;
 	scrollAreaHeight?: string;
 	enabledStockAdjustment?: boolean;
 	showDiscount?: boolean;
@@ -107,7 +107,7 @@ const SelectedSkusListComponent = forwardRef<
 		const handleIncrement = (
 			skuId: number,
 			currentQuantity: number,
-			sku: any
+			sku: Record<string, unknown> & { id: number }
 		) => {
 			if (showStockLimit && maxQuantity) {
 				const maxQty = maxQuantity(sku);

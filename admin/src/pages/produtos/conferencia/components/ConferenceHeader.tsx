@@ -26,7 +26,7 @@ interface ConferenceHeaderProps {
 		status: string;
 		localEstoqueId?: number;
 		localNome?: string;
-		Usuario?: any;
+		Usuario?: Record<string, unknown>;
 		dataInicio?: string;
 		dataFim?: string;
 	};
@@ -189,7 +189,7 @@ export const ConferenceHeader: React.FC<ConferenceHeaderProps> = ({
 							<p className="text-sm text-muted-foreground">
 								{typeof conferencia.Usuario === "string"
 									? conferencia.Usuario
-									: (conferencia.Usuario as any)?.nome || "N/A"}
+									: (conferencia.Usuario as { nome?: string })?.nome || "N/A"}
 							</p>
 						</div>
 					</div>

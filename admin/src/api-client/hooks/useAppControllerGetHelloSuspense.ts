@@ -14,6 +14,7 @@ export const appControllerGetHelloSuspenseQueryKey = () => [{ url: '/' }] as con
 export type AppControllerGetHelloSuspenseQueryKey = ReturnType<typeof appControllerGetHelloSuspenseQueryKey>
 
 /**
+ * @summary Health check
  * {@link /}
  */
 export async function appControllerGetHelloSuspense(config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
@@ -36,6 +37,7 @@ export function appControllerGetHelloSuspenseQueryOptions(config: Partial<Reques
 }
 
 /**
+ * @summary Health check
  * {@link /}
  */
 export function useAppControllerGetHelloSuspense<TData = AppControllerGetHelloQueryResponse, TQueryKey extends QueryKey = AppControllerGetHelloSuspenseQueryKey>(options: 

@@ -1,0 +1,1 @@
+{"type":"object","properties":{"id":{"type":"number","example":1},"locale":{"type":"string","example":"pt-BR"},"isoCode":{"type":"string","example":"BRL"}},"required":["id","locale","isoCode"],"x-readme-ref-name":"CurrencyDto"}

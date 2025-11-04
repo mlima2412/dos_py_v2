@@ -59,8 +59,8 @@ interface UseVendaMutationsProps {
 	setSelectedProductId: (id: number | null) => void;
 	skuSearchCode: string;
 	setSkuSearchCode: (code: string) => void;
-	skuListingRef: React.RefObject<any | null>;
-	selectedSkusRef: React.RefObject<any | null>;
+	skuListingRef: React.RefObject<{ scrollToItem: (skuId: number) => void } | null>;
+	selectedSkusRef: React.RefObject<{ scrollToItem: (skuId: number) => void } | null>;
 }
 
 export const useVendaMutations = ({

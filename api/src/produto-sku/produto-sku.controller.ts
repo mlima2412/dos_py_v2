@@ -25,6 +25,7 @@ import { UpdateProdutoSkuDto } from './dto/update-produto-sku.dto';
 import { ProdutoSKU } from './entities/produto-sku.entity';
 import { ParceiroId } from '../auth/decorators/parceiro-id.decorator';
 import { PaginatedQueryDto } from './dto/paginated-query.dto';
+import { PaginatedProdutoSkuResponseDto } from './dto/paginated-produto-sku-response.dto';
 
 @ApiTags('Produto SKU')
 @Controller('produto-sku')
@@ -108,19 +109,7 @@ export class ProdutoSkuController {
   @ApiResponse({
     status: 200,
     description: 'Lista paginada de SKUs de produtos',
-    schema: {
-      type: 'object',
-      properties: {
-        data: {
-          type: 'array',
-          items: { $ref: '#/components/schemas/ProdutoSKU' },
-        },
-        total: { type: 'number', example: 100 },
-        page: { type: 'number', example: 1 },
-        limit: { type: 'number', example: 20 },
-        totalPages: { type: 'number', example: 5 },
-      },
-    },
+    type: PaginatedProdutoSkuResponseDto,
   })
   async findPaginated(
     @Query() query: PaginatedQueryDto,

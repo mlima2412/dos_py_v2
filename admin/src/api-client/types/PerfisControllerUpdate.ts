@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { Perfil } from "./Perfil.ts";
 import type { UpdatePerfilDto } from "./UpdatePerfilDto.ts";
 
 export type PerfisControllerUpdatePathParams = {
@@ -16,32 +17,7 @@ export type PerfisControllerUpdatePathParams = {
 /**
  * @description Perfil atualizado com sucesso
 */
-export type PerfisControllerUpdate200 = {
-    /**
-     * @type number | undefined
-    */
-    id?: number | undefined;
-    /**
-     * @type string | undefined
-    */
-    nome?: string | undefined;
-    /**
-     * @type string | undefined
-    */
-    descricao?: string | undefined;
-    /**
-     * @type boolean | undefined
-    */
-    ativo?: boolean | undefined;
-    /**
-     * @type string | undefined, date-time
-    */
-    createdAt?: string | undefined;
-    /**
-     * @type string | undefined, date-time
-    */
-    updatedAt?: string | undefined;
-};
+export type PerfisControllerUpdate200 = Perfil;
 
 /**
  * @description Dados de entrada inválidos

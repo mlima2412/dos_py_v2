@@ -4,16 +4,14 @@
 */
 
 import type { CategoriaProdutoControllerCreate201, CategoriaProdutoControllerCreate400, CategoriaProdutoControllerCreate409, CategoriaProdutoControllerCreateMutationRequest, CategoriaProdutoControllerCreateMutationResponse } from "../types/CategoriaProdutoControllerCreate.ts";
+import { categoriaProdutoSchema } from "./categoriaProdutoSchema.ts";
 import { createCategoriaProdutoDtoSchema } from "./createCategoriaProdutoDtoSchema.ts";
 import { z } from "zod/v4";
 
 /**
  * @description Categoria de produto criada com sucesso
  */
-export const categoriaProdutoControllerCreate201Schema = z.object({
-    "id": z.optional(z.coerce.number()),
-"descricao": z.optional(z.coerce.string())
-    }) as unknown as z.ZodType<CategoriaProdutoControllerCreate201>
+export const categoriaProdutoControllerCreate201Schema = categoriaProdutoSchema as unknown as z.ZodType<CategoriaProdutoControllerCreate201>
 
 /**
  * @description Dados de entrada inválidos

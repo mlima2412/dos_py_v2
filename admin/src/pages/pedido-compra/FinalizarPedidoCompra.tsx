@@ -316,6 +316,7 @@ export const FinalizarPedidoCompra: React.FC = () => {
 		navigate("/pedidoCompra");
 	};
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const onSubmit = (_values: FinalizePurchaseFormData) => {
 		if (!publicId) return;
 		setShowConfirmDialog(true);

@@ -4,6 +4,7 @@
 */
 
 import type { DespesasControllerListYearsHeaderParams, DespesasControllerListYears200, DespesasControllerListYearsQueryResponse } from "../types/DespesasControllerListYears.ts";
+import { yearItemDtoSchema } from "./yearItemDtoSchema.ts";
 import { z } from "zod/v4";
 
 export const despesasControllerListYearsHeaderParamsSchema = z.object({
@@ -13,6 +14,6 @@ export const despesasControllerListYearsHeaderParamsSchema = z.object({
 /**
  * @description Lista de anos com despesas
  */
-export const despesasControllerListYears200Schema = z.unknown() as unknown as z.ZodType<DespesasControllerListYears200>
+export const despesasControllerListYears200Schema = z.array(yearItemDtoSchema) as unknown as z.ZodType<DespesasControllerListYears200>
 
 export const despesasControllerListYearsQueryResponseSchema = despesasControllerListYears200Schema as unknown as z.ZodType<DespesasControllerListYearsQueryResponse>

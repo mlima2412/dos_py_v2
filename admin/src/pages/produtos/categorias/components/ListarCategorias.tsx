@@ -24,7 +24,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { LoadingMessage } from "@/components/ui/TableSkeleton";
 import { useResponsiveColumns, useIsMobile } from "./ResponsiveColumns";
 
-interface ListarCategoriasProps {}
+type ListarCategoriasProps = Record<string, never>
 
 export const ListarCategorias: React.FC<ListarCategoriasProps> = () => {
 	const { t } = useTranslation("common");

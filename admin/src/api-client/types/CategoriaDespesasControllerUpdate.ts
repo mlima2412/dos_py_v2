@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { CategoriaDespesas } from "./CategoriaDespesas.ts";
 import type { UpdateCategoriaDespesasDto } from "./UpdateCategoriaDespesasDto.ts";
 
 export type CategoriaDespesasControllerUpdatePathParams = {
@@ -16,24 +17,7 @@ export type CategoriaDespesasControllerUpdatePathParams = {
 /**
  * @description Categoria de despesas atualizada com sucesso
 */
-export type CategoriaDespesasControllerUpdate200 = {
-    /**
-     * @type number | undefined
-    */
-    idCategoria?: number | undefined;
-    /**
-     * @type string | undefined
-    */
-    descricao?: string | undefined;
-    /**
-     * @type boolean | undefined
-    */
-    ativo?: boolean | undefined;
-    /**
-     * @type string | undefined
-    */
-    createdAt?: string | undefined;
-};
+export type CategoriaDespesasControllerUpdate200 = CategoriaDespesas;
 
 /**
  * @description Não autorizado

@@ -1,0 +1,1 @@
+{"type":"object","properties":{"message":{"type":"string","description":"Mensagem de confirmação","example":"Logout realizado com sucesso"}},"required":["message"],"x-readme-ref-name":"LogoutResponseDto"}

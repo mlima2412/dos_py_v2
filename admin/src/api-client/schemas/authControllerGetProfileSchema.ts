@@ -4,11 +4,12 @@
 */
 
 import type { AuthControllerGetProfile200, AuthControllerGetProfileQueryResponse } from "../types/AuthControllerGetProfile.ts";
+import { userProfileDtoSchema } from "./userProfileDtoSchema.ts";
 import { z } from "zod/v4";
 
 /**
  * @description Dados do usuário
  */
-export const authControllerGetProfile200Schema = z.unknown() as unknown as z.ZodType<AuthControllerGetProfile200>
+export const authControllerGetProfile200Schema = userProfileDtoSchema as unknown as z.ZodType<AuthControllerGetProfile200>
 
 export const authControllerGetProfileQueryResponseSchema = authControllerGetProfile200Schema as unknown as z.ZodType<AuthControllerGetProfileQueryResponse>

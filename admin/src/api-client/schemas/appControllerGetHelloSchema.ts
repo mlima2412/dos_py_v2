@@ -6,6 +6,9 @@
 import type { AppControllerGetHello200, AppControllerGetHelloQueryResponse } from "../types/AppControllerGetHello.ts";
 import { z } from "zod/v4";
 
-export const appControllerGetHello200Schema = z.unknown() as unknown as z.ZodType<AppControllerGetHello200>
+/**
+ * @description Retorna mensagem de boas-vindas
+ */
+export const appControllerGetHello200Schema = z.coerce.string() as unknown as z.ZodType<AppControllerGetHello200>
 
 export const appControllerGetHelloQueryResponseSchema = appControllerGetHello200Schema as unknown as z.ZodType<AppControllerGetHelloQueryResponse>

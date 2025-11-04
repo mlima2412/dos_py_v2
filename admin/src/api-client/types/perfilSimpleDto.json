@@ -1,0 +1,1 @@
+{"type":"object","properties":{"id":{"type":"number","example":1},"nome":{"type":"string","example":"Admin"}},"required":["id","nome"],"x-readme-ref-name":"PerfilSimpleDto"}

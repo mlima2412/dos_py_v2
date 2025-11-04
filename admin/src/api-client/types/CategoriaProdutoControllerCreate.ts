@@ -3,21 +3,13 @@
 * Do not edit manually.
 */
 
+import type { CategoriaProduto } from "./CategoriaProduto.ts";
 import type { CreateCategoriaProdutoDto } from "./CreateCategoriaProdutoDto.ts";
 
 /**
  * @description Categoria de produto criada com sucesso
 */
-export type CategoriaProdutoControllerCreate201 = {
-    /**
-     * @type number | undefined
-    */
-    id?: number | undefined;
-    /**
-     * @type string | undefined
-    */
-    descricao?: string | undefined;
-};
+export type CategoriaProdutoControllerCreate201 = CategoriaProduto;
 
 /**
  * @description Dados de entrada inválidos

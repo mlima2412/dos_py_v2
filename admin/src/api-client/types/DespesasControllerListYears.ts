@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { YearItemDto } from "./YearItemDto.ts";
 
 export type DespesasControllerListYearsHeaderParams = {
     /**
@@ -15,7 +16,7 @@ export type DespesasControllerListYearsHeaderParams = {
 /**
  * @description Lista de anos com despesas
 */
-export type DespesasControllerListYears200 = any;
+export type DespesasControllerListYears200 = YearItemDto[];
 
 export type DespesasControllerListYearsQueryResponse = DespesasControllerListYears200;
 

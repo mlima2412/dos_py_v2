@@ -67,7 +67,7 @@ export const ListarFormasPagamento: React.FC = () => {
 			{
 				accessorKey: "nome",
 				header: t("paymentMethods.columns.name"),
-				cell: ({ getValue }: any) => (
+				cell: ({ getValue }: { getValue: () => unknown }) => (
 					<div className="font-medium">{getValue()}</div>
 				),
 			},
@@ -76,7 +76,7 @@ export const ListarFormasPagamento: React.FC = () => {
 				header: () => (
 					<div className="text-center">{t("paymentMethods.columns.tax")}</div>
 				),
-				cell: ({ getValue }: any) => {
+				cell: ({ getValue }: { getValue: () => unknown }) => {
 					const taxa = getValue();
 					return (
 						<div className="text-center">
@@ -94,7 +94,7 @@ export const ListarFormasPagamento: React.FC = () => {
 						{t("paymentMethods.columns.discountApplied")}
 					</div>
 				),
-				cell: ({ getValue }: any) => {
+				cell: ({ getValue }: { getValue: () => unknown }) => {
 					const impostoPosCalculo = getValue();
 					return (
 						<div className="text-center">
@@ -114,7 +114,7 @@ export const ListarFormasPagamento: React.FC = () => {
 						{t("paymentMethods.columns.daysToRelease")}
 					</div>
 				),
-				cell: ({ getValue }: any) => {
+				cell: ({ getValue }: { getValue: () => unknown }) => {
 					const dias = getValue();
 					const diasNumber = Number(dias);
 					return (
@@ -131,7 +131,7 @@ export const ListarFormasPagamento: React.FC = () => {
 			{
 				id: "actions",
 				header: t("paymentMethods.columns.actions"),
-				cell: ({ row }: any) => {
+				cell: ({ row }: { row: { original: Record<string, unknown> } }) => {
 					const formaPagamento = row.original;
 
 					return (

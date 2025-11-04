@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { LocalEmConferenciaResponseDto } from "./LocalEmConferenciaResponseDto.ts";
 
 export type ConferenciaEstoqueControllerCheckLocalEmConferenciaPathParams = {
     /**
@@ -23,13 +24,7 @@ export type ConferenciaEstoqueControllerCheckLocalEmConferenciaHeaderParams = {
 /**
  * @description Status da conferência do local de estoque
 */
-export type ConferenciaEstoqueControllerCheckLocalEmConferencia200 = {
-    /**
-     * @description True se existe conferência pendente, false caso contrário
-     * @type boolean | undefined
-    */
-    emConferencia?: boolean | undefined;
-};
+export type ConferenciaEstoqueControllerCheckLocalEmConferencia200 = LocalEmConferenciaResponseDto;
 
 /**
  * @description Local de estoque não encontrado

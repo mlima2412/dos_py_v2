@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { ConferenciaEstoqueResponseDto } from "./ConferenciaEstoqueResponseDto.ts";
+import type { PaginatedConferenciaEstoqueResponseDto } from "./PaginatedConferenciaEstoqueResponseDto.ts";
 
 export const conferenciaEstoqueControllerFindPaginatedQueryParamsStatusEnum = {
     "PENDENTE": "PENDENTE",
@@ -56,28 +56,7 @@ export type ConferenciaEstoqueControllerFindPaginatedHeaderParams = {
 /**
  * @description Lista paginada de conferências de estoque
 */
-export type ConferenciaEstoqueControllerFindPaginated200 = {
-    /**
-     * @type array | undefined
-    */
-    data?: ConferenciaEstoqueResponseDto[] | undefined;
-    /**
-     * @type number | undefined
-    */
-    total?: number | undefined;
-    /**
-     * @type number | undefined
-    */
-    page?: number | undefined;
-    /**
-     * @type number | undefined
-    */
-    limit?: number | undefined;
-    /**
-     * @type number | undefined
-    */
-    totalPages?: number | undefined;
-};
+export type ConferenciaEstoqueControllerFindPaginated200 = PaginatedConferenciaEstoqueResponseDto;
 
 export type ConferenciaEstoqueControllerFindPaginatedQueryResponse = ConferenciaEstoqueControllerFindPaginated200;
 

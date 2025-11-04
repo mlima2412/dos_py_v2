@@ -4,20 +4,12 @@
 */
 
 import type { AjusteConferenciaLoteDto } from "./AjusteConferenciaLoteDto.ts";
+import type { AjusteConferenciaLoteResponseDto } from "./AjusteConferenciaLoteResponseDto.ts";
 
 /**
  * @description Ajustes processados com sucesso
 */
-export type MovimentoEstoqueControllerProcessarAjustesConferenciaLote201 = {
-    /**
-     * @type number | undefined
-    */
-    totalProcessados?: number | undefined;
-    /**
-     * @type number | undefined
-    */
-    totalIgnorados?: number | undefined;
-};
+export type MovimentoEstoqueControllerProcessarAjustesConferenciaLote201 = AjusteConferenciaLoteResponseDto;
 
 /**
  * @description Dados inválidos ou lista vazia

@@ -4,6 +4,7 @@
 */
 
 import type { ConferenciaEstoqueControllerCheckLocalEmConferenciaPathParams, ConferenciaEstoqueControllerCheckLocalEmConferenciaHeaderParams, ConferenciaEstoqueControllerCheckLocalEmConferencia200, ConferenciaEstoqueControllerCheckLocalEmConferencia404, ConferenciaEstoqueControllerCheckLocalEmConferenciaQueryResponse } from "../types/ConferenciaEstoqueControllerCheckLocalEmConferencia.ts";
+import { localEmConferenciaResponseDtoSchema } from "./localEmConferenciaResponseDtoSchema.ts";
 import { z } from "zod/v4";
 
 export const conferenciaEstoqueControllerCheckLocalEmConferenciaPathParamsSchema = z.object({
@@ -17,9 +18,7 @@ export const conferenciaEstoqueControllerCheckLocalEmConferenciaHeaderParamsSche
 /**
  * @description Status da conferência do local de estoque
  */
-export const conferenciaEstoqueControllerCheckLocalEmConferencia200Schema = z.object({
-    "emConferencia": z.optional(z.boolean().describe("True se existe conferência pendente, false caso contrário"))
-    }) as unknown as z.ZodType<ConferenciaEstoqueControllerCheckLocalEmConferencia200>
+export const conferenciaEstoqueControllerCheckLocalEmConferencia200Schema = localEmConferenciaResponseDtoSchema as unknown as z.ZodType<ConferenciaEstoqueControllerCheckLocalEmConferencia200>
 
 /**
  * @description Local de estoque não encontrado

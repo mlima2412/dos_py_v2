@@ -4,6 +4,7 @@
 */
 
 import type { CategoriaDespesasControllerFindOnePathParams, CategoriaDespesasControllerFindOne200, CategoriaDespesasControllerFindOne401, CategoriaDespesasControllerFindOne404, CategoriaDespesasControllerFindOneQueryResponse } from "../types/CategoriaDespesasControllerFindOne.ts";
+import { categoriaDespesasSchema } from "./categoriaDespesasSchema.ts";
 import { z } from "zod/v4";
 
 export const categoriaDespesasControllerFindOnePathParamsSchema = z.object({
@@ -13,12 +14,7 @@ export const categoriaDespesasControllerFindOnePathParamsSchema = z.object({
 /**
  * @description Categoria de despesas encontrada
  */
-export const categoriaDespesasControllerFindOne200Schema = z.object({
-    "idCategoria": z.optional(z.coerce.number()),
-"descricao": z.optional(z.coerce.string()),
-"ativo": z.optional(z.boolean()),
-"createdAt": z.optional(z.coerce.string())
-    }) as unknown as z.ZodType<CategoriaDespesasControllerFindOne200>
+export const categoriaDespesasControllerFindOne200Schema = categoriaDespesasSchema as unknown as z.ZodType<CategoriaDespesasControllerFindOne200>
 
 /**
  * @description Não autorizado

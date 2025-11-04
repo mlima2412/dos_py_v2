@@ -24,6 +24,7 @@ import { UpdateProdutoDto } from './dto/update-produto.dto';
 import { Produto } from './entities/produto.entity';
 import { ParceiroId } from '../auth/decorators/parceiro-id.decorator';
 import { PaginatedQueryDto } from './dto/paginated-query.dto';
+import { PaginatedProdutoResponseDto } from './dto/paginated-produto-response.dto';
 import { ProdutosPorLocalQueryDto } from './dto/produtos-por-local-query.dto';
 import { ProdutosPorLocalResponseDto } from './dto/produtos-por-local-response.dto';
 
@@ -141,19 +142,7 @@ export class ProdutoController {
   @ApiResponse({
     status: 200,
     description: 'Lista paginada de produtos',
-    schema: {
-      type: 'object',
-      properties: {
-        data: {
-          type: 'array',
-          items: { $ref: '#/components/schemas/Produto' },
-        },
-        total: { type: 'number', example: 100 },
-        page: { type: 'number', example: 1 },
-        limit: { type: 'number', example: 20 },
-        totalPages: { type: 'number', example: 5 },
-      },
-    },
+    type: PaginatedProdutoResponseDto,
   })
   findPaginated(
     @Query() query: PaginatedQueryDto,

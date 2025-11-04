@@ -4,36 +4,12 @@
 */
 
 import type { CreatePerfilDto } from "./CreatePerfilDto.ts";
+import type { Perfil } from "./Perfil.ts";
 
 /**
  * @description Perfil criado com sucesso
 */
-export type PerfisControllerCreate201 = {
-    /**
-     * @type number | undefined
-    */
-    id?: number | undefined;
-    /**
-     * @type string | undefined
-    */
-    nome?: string | undefined;
-    /**
-     * @type string | undefined
-    */
-    descricao?: string | undefined;
-    /**
-     * @type boolean | undefined
-    */
-    ativo?: boolean | undefined;
-    /**
-     * @type string | undefined, date-time
-    */
-    createdAt?: string | undefined;
-    /**
-     * @type string | undefined, date-time
-    */
-    updatedAt?: string | undefined;
-};
+export type PerfisControllerCreate201 = Perfil;
 
 /**
  * @description Dados de entrada inválidos

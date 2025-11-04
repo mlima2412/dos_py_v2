@@ -14,9 +14,18 @@ export const oas = {
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Retorna mensagem de boas-vindas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "Hello World!"
+                }
+              }
+            }
           }
         },
+        "summary": "Health check",
         "tags": [
           "App"
         ]
@@ -60,55 +69,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "accessToken": {
-                      "type": "string",
-                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                    },
-                    "user": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "number",
-                          "example": 1
-                        },
-                        "publicId": {
-                          "type": "string",
-                          "example": "01234567-89ab-cdef-0123-456789abcdef"
-                        },
-                        "nome": {
-                          "type": "string",
-                          "example": "João Silva"
-                        },
-                        "email": {
-                          "type": "string",
-                          "example": "joao@exemplo.com"
-                        },
-                        "telefone": {
-                          "type": "string",
-                          "example": "(11) 99999-9999"
-                        },
-                        "ativo": {
-                          "type": "boolean",
-                          "example": true
-                        },
-                        "perfil": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "number",
-                              "example": 1
-                            },
-                            "nome": {
-                              "type": "string",
-                              "example": "Admin"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/LoginResponseDto"
                 }
               }
             }
@@ -152,13 +113,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "accessToken": {
-                      "type": "string",
-                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                    }
-                  }
+                  "$ref": "#/components/schemas/RefreshResponseDto"
                 }
               }
             }
@@ -179,7 +134,14 @@ export const oas = {
         "parameters": [],
         "responses": {
           "200": {
-            "description": "Logout realizado com sucesso"
+            "description": "Logout realizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogoutResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -199,7 +161,14 @@ export const oas = {
         "parameters": [],
         "responses": {
           "200": {
-            "description": "Dados do usuário"
+            "description": "Dados do usuário",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -225,72 +194,7 @@ export const oas = {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "number",
-                        "example": 1
-                      },
-                      "parceiroId": {
-                        "type": "number",
-                        "example": 1
-                      },
-                      "Parceiro": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "number",
-                            "example": 1
-                          },
-                          "publicId": {
-                            "type": "string",
-                            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
-                          },
-                          "nome": {
-                            "type": "string",
-                            "example": "Parceiro Exemplo"
-                          },
-                          "logourl": {
-                            "type": "string",
-                            "example": "https://exemplo.com/logo.png"
-                          },
-                          "currencyId": {
-                            "type": "number",
-                            "example": 1
-                          },
-                          "currency": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "number",
-                                "example": 1
-                              },
-                              "locale": {
-                                "type": "string",
-                                "example": "pt-BR"
-                              },
-                              "isoCode": {
-                                "type": "string",
-                                "example": "BRL"
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "perfil": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "number",
-                            "example": 1
-                          },
-                          "nome": {
-                            "type": "string",
-                            "example": "Admin"
-                          }
-                        }
-                      }
-                    }
+                    "$ref": "#/components/schemas/UserParceiroItemDto"
                   }
                 }
               }
@@ -768,35 +672,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "number",
-                      "example": 1
-                    },
-                    "nome": {
-                      "type": "string",
-                      "example": "Administrador"
-                    },
-                    "descricao": {
-                      "type": "string",
-                      "example": "Perfil com acesso total ao sistema"
-                    },
-                    "ativo": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "example": "2024-01-01T00:00:00.000Z"
-                    },
-                    "updatedAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "example": "2024-01-01T00:00:00.000Z"
-                    }
-                  }
+                  "$ref": "#/components/schemas/Perfil"
                 }
               }
             }
@@ -829,33 +705,7 @@ export const oas = {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "number",
-                        "example": 1
-                      },
-                      "nome": {
-                        "type": "string",
-                        "example": "Administrador"
-                      },
-                      "descricao": {
-                        "type": "string",
-                        "example": "Perfil com acesso total ao sistema"
-                      },
-                      "ativo": {
-                        "type": "boolean",
-                        "example": true
-                      },
-                      "createdAt": {
-                        "type": "string",
-                        "format": "date-time"
-                      },
-                      "updatedAt": {
-                        "type": "string",
-                        "format": "date-time"
-                      }
-                    }
+                    "$ref": "#/components/schemas/Perfil"
                   }
                 }
               }
@@ -894,33 +744,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "number",
-                      "example": 1
-                    },
-                    "nome": {
-                      "type": "string",
-                      "example": "Administrador"
-                    },
-                    "descricao": {
-                      "type": "string",
-                      "example": "Perfil com acesso total ao sistema"
-                    },
-                    "ativo": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "updatedAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    }
-                  }
+                  "$ref": "#/components/schemas/Perfil"
                 }
               }
             }
@@ -979,33 +803,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "number",
-                      "example": 1
-                    },
-                    "nome": {
-                      "type": "string",
-                      "example": "Administrador Geral"
-                    },
-                    "descricao": {
-                      "type": "string",
-                      "example": "Perfil com acesso total e gerenciamento do sistema"
-                    },
-                    "ativo": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "updatedAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    }
-                  }
+                  "$ref": "#/components/schemas/Perfil"
                 }
               }
             }
@@ -1582,31 +1380,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Parceiro"
-                      }
-                    },
-                    "total": {
-                      "type": "number",
-                      "description": "Total de registros"
-                    },
-                    "page": {
-                      "type": "number",
-                      "description": "Página atual"
-                    },
-                    "limit": {
-                      "type": "number",
-                      "description": "Itens por página"
-                    },
-                    "totalPages": {
-                      "type": "number",
-                      "description": "Total de páginas"
-                    }
-                  }
+                  "$ref": "#/components/schemas/PaginatedParceiroResponseDto"
                 }
               }
             }
@@ -2537,31 +2311,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Cliente"
-                      }
-                    },
-                    "total": {
-                      "type": "number",
-                      "example": 100
-                    },
-                    "page": {
-                      "type": "number",
-                      "example": 1
-                    },
-                    "limit": {
-                      "type": "number",
-                      "example": 20
-                    },
-                    "totalPages": {
-                      "type": "number",
-                      "example": 5
-                    }
-                  }
+                  "$ref": "#/components/schemas/PaginatedClienteResponseDto"
                 }
               }
             }
@@ -2868,25 +2618,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "idCategoria": {
-                      "type": "number",
-                      "example": 1
-                    },
-                    "descricao": {
-                      "type": "string",
-                      "example": "Alimentação"
-                    },
-                    "ativo": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "example": "2024-01-01T00:00:00.000Z"
-                    }
-                  }
+                  "$ref": "#/components/schemas/CategoriaDespesas"
                 }
               }
             }
@@ -2919,25 +2651,7 @@ export const oas = {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "properties": {
-                      "idCategoria": {
-                        "type": "number",
-                        "example": 1
-                      },
-                      "descricao": {
-                        "type": "string",
-                        "example": "Alimentação"
-                      },
-                      "ativo": {
-                        "type": "boolean",
-                        "example": true
-                      },
-                      "createdAt": {
-                        "type": "string",
-                        "example": "2024-01-01T00:00:00.000Z"
-                      }
-                    }
+                    "$ref": "#/components/schemas/CategoriaDespesas"
                   }
                 }
               }
@@ -2978,25 +2692,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "idCategoria": {
-                      "type": "number",
-                      "example": 1
-                    },
-                    "descricao": {
-                      "type": "string",
-                      "example": "Alimentação"
-                    },
-                    "ativo": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "example": "2024-01-01T00:00:00.000Z"
-                    }
-                  }
+                  "$ref": "#/components/schemas/CategoriaDespesas"
                 }
               }
             }
@@ -3061,25 +2757,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "idCategoria": {
-                      "type": "number",
-                      "example": 1
-                    },
-                    "descricao": {
-                      "type": "string",
-                      "example": "Alimentação e Bebidas"
-                    },
-                    "ativo": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "example": "2024-01-01T00:00:00.000Z"
-                    }
-                  }
+                  "$ref": "#/components/schemas/CategoriaDespesas"
                 }
               }
             }
@@ -3772,7 +3450,14 @@ export const oas = {
         ],
         "responses": {
           "200": {
-            "description": "Lista paginada de despesas"
+            "description": "Lista paginada de despesas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedDespesaResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -3803,7 +3488,17 @@ export const oas = {
         ],
         "responses": {
           "200": {
-            "description": "Lista de anos com despesas"
+            "description": "Lista de anos com despesas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/YearItemDto"
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -5420,13 +5115,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Email de recuperação enviado com sucesso"
-                    }
-                  }
+                  "$ref": "#/components/schemas/PasswordResetMessageResponseDto"
                 }
               }
             }
@@ -5461,13 +5150,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Senha alterada com sucesso"
-                    }
-                  }
+                  "$ref": "#/components/schemas/PasswordResetMessageResponseDto"
                 }
               }
             }
@@ -5503,17 +5186,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "valid": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Token inválido ou expirado"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ValidateTokenResponseDto"
                 }
               }
             }
@@ -5561,17 +5234,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "number",
-                      "example": 1
-                    },
-                    "descricao": {
-                      "type": "string",
-                      "example": "Eletrônicos"
-                    }
-                  }
+                  "$ref": "#/components/schemas/CategoriaProduto"
                 }
               }
             }
@@ -5604,17 +5267,7 @@ export const oas = {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "number",
-                        "example": 1
-                      },
-                      "descricao": {
-                        "type": "string",
-                        "example": "Eletrônicos"
-                      }
-                    }
+                    "$ref": "#/components/schemas/CategoriaProduto"
                   }
                 }
               }
@@ -5653,17 +5306,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "number",
-                      "example": 1
-                    },
-                    "descricao": {
-                      "type": "string",
-                      "example": "Eletrônicos"
-                    }
-                  }
+                  "$ref": "#/components/schemas/CategoriaProduto"
                 }
               }
             }
@@ -5721,17 +5364,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "number",
-                      "example": 1
-                    },
-                    "descricao": {
-                      "type": "string",
-                      "example": "Eletrônicos e Tecnologia"
-                    }
-                  }
+                  "$ref": "#/components/schemas/CategoriaProduto"
                 }
               }
             }
@@ -6062,31 +5695,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Produto"
-                      }
-                    },
-                    "total": {
-                      "type": "number",
-                      "example": 100
-                    },
-                    "page": {
-                      "type": "number",
-                      "example": 1
-                    },
-                    "limit": {
-                      "type": "number",
-                      "example": 20
-                    },
-                    "totalPages": {
-                      "type": "number",
-                      "example": 5
-                    }
-                  }
+                  "$ref": "#/components/schemas/PaginatedProdutoResponseDto"
                 }
               }
             }
@@ -6612,31 +6221,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/ProdutoSKU"
-                      }
-                    },
-                    "total": {
-                      "type": "number",
-                      "example": 100
-                    },
-                    "page": {
-                      "type": "number",
-                      "example": 1
-                    },
-                    "limit": {
-                      "type": "number",
-                      "example": 20
-                    },
-                    "totalPages": {
-                      "type": "number",
-                      "example": 5
-                    }
-                  }
+                  "$ref": "#/components/schemas/PaginatedProdutoSkuResponseDto"
                 }
               }
             }
@@ -7571,17 +7156,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "totalProcessados": {
-                      "type": "number",
-                      "example": 5
-                    },
-                    "totalIgnorados": {
-                      "type": "number",
-                      "example": 2
-                    }
-                  }
+                  "$ref": "#/components/schemas/AjusteConferenciaLoteResponseDto"
                 }
               }
             }
@@ -7652,31 +7227,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/MovimentoEstoqueResponseDto"
-                      }
-                    },
-                    "total": {
-                      "type": "number",
-                      "example": 50
-                    },
-                    "page": {
-                      "type": "number",
-                      "example": 1
-                    },
-                    "limit": {
-                      "type": "number",
-                      "example": 20
-                    },
-                    "totalPages": {
-                      "type": "number",
-                      "example": 3
-                    }
-                  }
+                  "$ref": "#/components/schemas/PaginatedMovimentoEstoqueResponseDto"
                 }
               }
             }
@@ -8279,31 +7830,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/ConferenciaEstoqueResponseDto"
-                      }
-                    },
-                    "total": {
-                      "type": "number",
-                      "example": 100
-                    },
-                    "page": {
-                      "type": "number",
-                      "example": 1
-                    },
-                    "limit": {
-                      "type": "number",
-                      "example": 20
-                    },
-                    "totalPages": {
-                      "type": "number",
-                      "example": 5
-                    }
-                  }
+                  "$ref": "#/components/schemas/PaginatedConferenciaEstoqueResponseDto"
                 }
               }
             }
@@ -8506,14 +8033,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "emConferencia": {
-                      "type": "boolean",
-                      "description": "True se existe conferência pendente, false caso contrário",
-                      "example": true
-                    }
-                  }
+                  "$ref": "#/components/schemas/LocalEmConferenciaResponseDto"
                 }
               }
             }
@@ -9357,31 +8877,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/PedidoCompra"
-                      }
-                    },
-                    "total": {
-                      "type": "number",
-                      "description": "Total de registros"
-                    },
-                    "page": {
-                      "type": "number",
-                      "description": "Página atual"
-                    },
-                    "limit": {
-                      "type": "number",
-                      "description": "Itens por página"
-                    },
-                    "totalPages": {
-                      "type": "number",
-                      "description": "Total de páginas"
-                    }
-                  }
+                  "$ref": "#/components/schemas/PaginatedPedidoCompraResponseDto"
                 }
               }
             }
@@ -11895,9 +11391,256 @@ export const oas = {
           "senha"
         ]
       },
+      "PerfilDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "nome": {
+            "type": "string",
+            "example": "Admin"
+          }
+        },
+        "required": [
+          "id",
+          "nome"
+        ]
+      },
+      "UserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "publicId": {
+            "type": "string",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          },
+          "nome": {
+            "type": "string",
+            "example": "João Silva"
+          },
+          "email": {
+            "type": "string",
+            "example": "joao@exemplo.com"
+          },
+          "telefone": {
+            "type": "string",
+            "example": "(11) 99999-9999"
+          },
+          "ativo": {
+            "type": "boolean",
+            "example": true
+          },
+          "perfil": {
+            "$ref": "#/components/schemas/PerfilDto"
+          }
+        },
+        "required": [
+          "id",
+          "publicId",
+          "nome",
+          "email",
+          "ativo",
+          "perfil"
+        ]
+      },
+      "LoginResponseDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserDto"
+          }
+        },
+        "required": [
+          "accessToken",
+          "user"
+        ]
+      },
       "RefreshTokenDto": {
         "type": "object",
         "properties": {}
+      },
+      "RefreshResponseDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "Novo access token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          }
+        },
+        "required": [
+          "accessToken"
+        ]
+      },
+      "LogoutResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Mensagem de confirmação",
+            "example": "Logout realizado com sucesso"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "UserProfileDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "ID único do usuário",
+            "example": 1
+          },
+          "publicId": {
+            "type": "string",
+            "description": "ID público do usuário",
+            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+          },
+          "nome": {
+            "type": "string",
+            "description": "Nome do usuário",
+            "example": "João Silva"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email do usuário",
+            "example": "joao.silva@exemplo.com"
+          },
+          "telefone": {
+            "type": "string",
+            "description": "Telefone do usuário",
+            "example": "+5511999999999"
+          },
+          "avatar": {
+            "type": "string",
+            "description": "URL do avatar do usuário",
+            "example": "https://exemplo.com/avatar.jpg"
+          },
+          "perfil": {
+            "description": "Perfil do usuário",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PerfilDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "publicId",
+          "nome",
+          "email"
+        ]
+      },
+      "CurrencyDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "locale": {
+            "type": "string",
+            "example": "pt-BR"
+          },
+          "isoCode": {
+            "type": "string",
+            "example": "BRL"
+          }
+        },
+        "required": [
+          "id",
+          "locale",
+          "isoCode"
+        ]
+      },
+      "ParceiroDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "publicId": {
+            "type": "string",
+            "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+          },
+          "nome": {
+            "type": "string",
+            "example": "Parceiro Exemplo"
+          },
+          "logourl": {
+            "type": "string",
+            "example": "https://exemplo.com/logo.png"
+          },
+          "currencyId": {
+            "type": "number",
+            "example": 1
+          },
+          "currency": {
+            "$ref": "#/components/schemas/CurrencyDto"
+          }
+        },
+        "required": [
+          "id",
+          "publicId",
+          "nome",
+          "currencyId",
+          "currency"
+        ]
+      },
+      "PerfilSimpleDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "nome": {
+            "type": "string",
+            "example": "Admin"
+          }
+        },
+        "required": [
+          "id",
+          "nome"
+        ]
+      },
+      "UserParceiroItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "parceiroId": {
+            "type": "number",
+            "example": 1
+          },
+          "Parceiro": {
+            "$ref": "#/components/schemas/ParceiroDto"
+          },
+          "perfil": {
+            "$ref": "#/components/schemas/PerfilSimpleDto"
+          }
+        },
+        "required": [
+          "id",
+          "parceiroId",
+          "Parceiro",
+          "perfil"
+        ]
       },
       "CreateUsuarioDto": {
         "type": "object",
@@ -12086,6 +11829,32 @@ export const oas = {
       "CreatePerfilDto": {
         "type": "object",
         "properties": {}
+      },
+      "Perfil": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "ID interno do perfil",
+            "example": 1
+          },
+          "nome": {
+            "type": "string",
+            "description": "Nome do perfil",
+            "example": "Administrador"
+          },
+          "ativo": {
+            "type": "boolean",
+            "description": "Status ativo do perfil",
+            "example": true,
+            "default": true
+          }
+        },
+        "required": [
+          "id",
+          "nome",
+          "ativo"
+        ]
       },
       "UpdatePerfilDto": {
         "type": "object",
@@ -12669,6 +12438,45 @@ export const oas = {
           "qtdCompras"
         ]
       },
+      "PaginatedParceiroResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Lista de parceiros",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Parceiro"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Total de registros",
+            "example": 100
+          },
+          "page": {
+            "type": "number",
+            "description": "Página atual",
+            "example": 1
+          },
+          "limit": {
+            "type": "number",
+            "description": "Limite de registros por página",
+            "example": 20
+          },
+          "totalPages": {
+            "type": "number",
+            "description": "Total de páginas",
+            "example": 5
+          }
+        },
+        "required": [
+          "data",
+          "total",
+          "page",
+          "limit",
+          "totalPages"
+        ]
+      },
       "UpdateParceiroDto": {
         "type": "object",
         "properties": {
@@ -12743,32 +12551,6 @@ export const oas = {
           "perfilId",
           "usuarioId",
           "parceiroId"
-        ]
-      },
-      "Perfil": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "number",
-            "description": "ID interno do perfil",
-            "example": 1
-          },
-          "nome": {
-            "type": "string",
-            "description": "Nome do perfil",
-            "example": "Administrador"
-          },
-          "ativo": {
-            "type": "boolean",
-            "description": "Status ativo do perfil",
-            "example": true,
-            "default": true
-          }
-        },
-        "required": [
-          "id",
-          "nome",
-          "ativo"
         ]
       },
       "UsuarioParceiro": {
@@ -12993,6 +12775,45 @@ export const oas = {
           "parceiroId"
         ]
       },
+      "PaginatedClienteResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Lista de clientes",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Cliente"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Total de registros",
+            "example": 100
+          },
+          "page": {
+            "type": "number",
+            "description": "Página atual",
+            "example": 1
+          },
+          "limit": {
+            "type": "number",
+            "description": "Limite de registros por página",
+            "example": 20
+          },
+          "totalPages": {
+            "type": "number",
+            "description": "Total de páginas",
+            "example": 5
+          }
+        },
+        "required": [
+          "data",
+          "total",
+          "page",
+          "limit",
+          "totalPages"
+        ]
+      },
       "UpdateClienteDto": {
         "type": "object",
         "properties": {
@@ -13123,6 +12944,39 @@ export const oas = {
         },
         "required": [
           "descricao"
+        ]
+      },
+      "CategoriaDespesas": {
+        "type": "object",
+        "properties": {
+          "idCategoria": {
+            "type": "number",
+            "description": "ID interno da categoria de despesas",
+            "example": 1
+          },
+          "descricao": {
+            "type": "string",
+            "description": "Descrição da categoria de despesas",
+            "example": "Alimentação"
+          },
+          "ativo": {
+            "type": "boolean",
+            "description": "Status ativo da categoria",
+            "example": true,
+            "default": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Data de criação da categoria",
+            "example": "2024-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "idCategoria",
+          "descricao",
+          "ativo",
+          "createdAt"
         ]
       },
       "UpdateCategoriaDespesasDto": {
@@ -13288,39 +13142,6 @@ export const oas = {
           "tipoPagamento"
         ]
       },
-      "CategoriaDespesas": {
-        "type": "object",
-        "properties": {
-          "idCategoria": {
-            "type": "number",
-            "description": "ID interno da categoria de despesas",
-            "example": 1
-          },
-          "descricao": {
-            "type": "string",
-            "description": "Descrição da categoria de despesas",
-            "example": "Alimentação"
-          },
-          "ativo": {
-            "type": "boolean",
-            "description": "Status ativo da categoria",
-            "example": true,
-            "default": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "Data de criação da categoria",
-            "example": "2024-01-01T00:00:00.000Z"
-          }
-        },
-        "required": [
-          "idCategoria",
-          "descricao",
-          "ativo",
-          "createdAt"
-        ]
-      },
       "SubCategoriaDespesa": {
         "type": "object",
         "properties": {
@@ -13457,6 +13278,64 @@ export const oas = {
           "subCategoriaId",
           "parceiroId",
           "subCategoria"
+        ]
+      },
+      "PaginatedDespesaResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Lista de despesas",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Despesa"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Total de registros",
+            "example": 100
+          },
+          "page": {
+            "type": "number",
+            "description": "Página atual",
+            "example": 1
+          },
+          "limit": {
+            "type": "number",
+            "description": "Limite de registros por página",
+            "example": 20
+          },
+          "totalPages": {
+            "type": "number",
+            "description": "Total de páginas",
+            "example": 5
+          }
+        },
+        "required": [
+          "data",
+          "total",
+          "page",
+          "limit",
+          "totalPages"
+        ]
+      },
+      "YearItemDto": {
+        "type": "object",
+        "properties": {
+          "ano": {
+            "type": "string",
+            "description": "Ano",
+            "example": "2024"
+          },
+          "total": {
+            "type": "number",
+            "description": "Total de despesas no ano",
+            "example": 150000.5
+          }
+        },
+        "required": [
+          "ano",
+          "total"
         ]
       },
       "CreateDespesaRecorrenteDto": {
@@ -13771,7 +13650,7 @@ export const oas = {
           "publicId": {
             "type": "string",
             "description": "ID público da conta a pagar",
-            "example": "019a452f-c19c-76f7-b605-fca2cf37348b"
+            "example": "019a4c52-6998-7b6c-9e40-8b4edbb263dc"
           },
           "despesaId": {
             "type": "number",
@@ -13841,7 +13720,7 @@ export const oas = {
           "publicId": {
             "type": "string",
             "description": "ID público da parcela",
-            "example": "019a452f-c19c-76f7-b605-fca1f2597283"
+            "example": "019a4c52-6997-7251-ad83-a5374f29c177"
           },
           "dataPagamento": {
             "format": "date-time",
@@ -14122,6 +14001,19 @@ export const oas = {
           "email"
         ]
       },
+      "PasswordResetMessageResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Mensagem de sucesso",
+            "example": "Email de recuperação enviado com sucesso"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
       "ResetPasswordDto": {
         "type": "object",
         "properties": {
@@ -14142,6 +14034,25 @@ export const oas = {
           "newPassword"
         ]
       },
+      "ValidateTokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "valid": {
+            "type": "boolean",
+            "description": "Indica se o token é válido",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "description": "Mensagem descritiva",
+            "example": "Token válido"
+          }
+        },
+        "required": [
+          "valid",
+          "message"
+        ]
+      },
       "CreateCategoriaProdutoDto": {
         "type": "object",
         "properties": {
@@ -14153,6 +14064,25 @@ export const oas = {
           }
         },
         "required": [
+          "descricao"
+        ]
+      },
+      "CategoriaProduto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "ID interno da categoria do produto",
+            "example": 1
+          },
+          "descricao": {
+            "type": "string",
+            "description": "Descrição da categoria do produto",
+            "example": "Eletrônicos"
+          }
+        },
+        "required": [
+          "id",
           "descricao"
         ]
       },
@@ -14250,25 +14180,6 @@ export const oas = {
           "precoVenda",
           "consignado",
           "ativo"
-        ]
-      },
-      "CategoriaProduto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "number",
-            "description": "ID interno da categoria do produto",
-            "example": 1
-          },
-          "descricao": {
-            "type": "string",
-            "description": "Descrição da categoria do produto",
-            "example": "Eletrônicos"
-          }
-        },
-        "required": [
-          "id",
-          "descricao"
         ]
       },
       "Produto": {
@@ -14457,6 +14368,45 @@ export const oas = {
           "produtoId",
           "qtdMinima",
           "produto"
+        ]
+      },
+      "PaginatedProdutoResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Lista de produtos",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Produto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Total de registros",
+            "example": 100
+          },
+          "page": {
+            "type": "number",
+            "description": "Página atual",
+            "example": 1
+          },
+          "limit": {
+            "type": "number",
+            "description": "Limite de registros por página",
+            "example": 20
+          },
+          "totalPages": {
+            "type": "number",
+            "description": "Total de páginas",
+            "example": 5
+          }
+        },
+        "required": [
+          "data",
+          "total",
+          "page",
+          "limit",
+          "totalPages"
         ]
       },
       "UpdateProdutoDto": {
@@ -14806,6 +14756,45 @@ export const oas = {
           "id",
           "produtoId",
           "qtdMinima"
+        ]
+      },
+      "PaginatedProdutoSkuResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Lista de SKUs",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProdutoSKU"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Total de registros",
+            "example": 100
+          },
+          "page": {
+            "type": "number",
+            "description": "Página atual",
+            "example": 1
+          },
+          "limit": {
+            "type": "number",
+            "description": "Limite de registros por página",
+            "example": 20
+          },
+          "totalPages": {
+            "type": "number",
+            "description": "Total de páginas",
+            "example": 5
+          }
+        },
+        "required": [
+          "data",
+          "total",
+          "page",
+          "limit",
+          "totalPages"
         ]
       },
       "UpdateProdutoSkuDto": {
@@ -15341,6 +15330,64 @@ export const oas = {
           "itens"
         ]
       },
+      "AjusteConferenciaLoteResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Mensagem de sucesso",
+            "example": "Ajustes processados com sucesso"
+          },
+          "processados": {
+            "type": "number",
+            "description": "Número de ajustes processados",
+            "example": 5
+          }
+        },
+        "required": [
+          "message",
+          "processados"
+        ]
+      },
+      "PaginatedMovimentoEstoqueResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Lista de movimentos de estoque",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MovimentoEstoqueResponseDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Total de registros",
+            "example": 100
+          },
+          "page": {
+            "type": "number",
+            "description": "Página atual",
+            "example": 1
+          },
+          "limit": {
+            "type": "number",
+            "description": "Limite de registros por página",
+            "example": 20
+          },
+          "totalPages": {
+            "type": "number",
+            "description": "Total de páginas",
+            "example": 5
+          }
+        },
+        "required": [
+          "data",
+          "total",
+          "page",
+          "limit",
+          "totalPages"
+        ]
+      },
       "CreateTransferenciaEstoqueDto": {
         "type": "object",
         "properties": {
@@ -15803,6 +15850,45 @@ export const oas = {
           "status"
         ]
       },
+      "PaginatedConferenciaEstoqueResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Lista de conferências de estoque",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConferenciaEstoqueResponseDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Total de registros",
+            "example": 100
+          },
+          "page": {
+            "type": "number",
+            "description": "Página atual",
+            "example": 1
+          },
+          "limit": {
+            "type": "number",
+            "description": "Limite de registros por página",
+            "example": 20
+          },
+          "totalPages": {
+            "type": "number",
+            "description": "Total de páginas",
+            "example": 5
+          }
+        },
+        "required": [
+          "data",
+          "total",
+          "page",
+          "limit",
+          "totalPages"
+        ]
+      },
       "UpdateConferenciaEstoqueDto": {
         "type": "object",
         "properties": {
@@ -15840,6 +15926,19 @@ export const oas = {
             "default": "PENDENTE"
           }
         }
+      },
+      "LocalEmConferenciaResponseDto": {
+        "type": "object",
+        "properties": {
+          "emConferencia": {
+            "type": "boolean",
+            "description": "True se existe conferência pendente, false caso contrário",
+            "example": true
+          }
+        },
+        "required": [
+          "emConferencia"
+        ]
       },
       "CreateConferenciaItemDto": {
         "type": "object",
@@ -16334,6 +16433,45 @@ export const oas = {
           "status"
         ]
       },
+      "PaginatedPedidoCompraResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Lista de pedidos de compra",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PedidoCompra"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Total de registros",
+            "example": 100
+          },
+          "page": {
+            "type": "number",
+            "description": "Página atual",
+            "example": 1
+          },
+          "limit": {
+            "type": "number",
+            "description": "Limite de registros por página",
+            "example": 20
+          },
+          "totalPages": {
+            "type": "number",
+            "description": "Total de páginas",
+            "example": 5
+          }
+        },
+        "required": [
+          "data",
+          "total",
+          "page",
+          "limit",
+          "totalPages"
+        ]
+      },
       "UpdatePedidoCompraDto": {
         "type": "object",
         "properties": {
@@ -16775,7 +16913,9 @@ export const oas = {
             "description": "Tipo do item",
             "enum": [
               "NORMAL",
-              "BRINDE"
+              "CONDICIONAL",
+              "BRINDE",
+              "PERMUTA"
             ],
             "example": "NORMAL"
           },
@@ -17091,7 +17231,9 @@ export const oas = {
             "description": "Tipo do item",
             "enum": [
               "NORMAL",
-              "BRINDE"
+              "CONDICIONAL",
+              "BRINDE",
+              "PERMUTA"
             ]
           },
           "qtdReservada": {
@@ -17145,7 +17287,9 @@ export const oas = {
             "description": "Tipo do item",
             "enum": [
               "NORMAL",
-              "BRINDE"
+              "CONDICIONAL",
+              "BRINDE",
+              "PERMUTA"
             ]
           },
           "qtdReservada": {

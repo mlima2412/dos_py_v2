@@ -4,7 +4,7 @@
 */
 
 import type { ProdutoSkuControllerFindPaginatedQueryParams, ProdutoSkuControllerFindPaginatedHeaderParams, ProdutoSkuControllerFindPaginated200, ProdutoSkuControllerFindPaginatedQueryResponse } from "../types/ProdutoSkuControllerFindPaginated.ts";
-import { produtoSKUSchema } from "./produtoSKUSchema.ts";
+import { paginatedProdutoSkuResponseDtoSchema } from "./paginatedProdutoSkuResponseDtoSchema.ts";
 import { z } from "zod/v4";
 
 export const produtoSkuControllerFindPaginatedQueryParamsSchema = z.object({
@@ -22,14 +22,6 @@ export const produtoSkuControllerFindPaginatedHeaderParamsSchema = z.object({
 /**
  * @description Lista paginada de SKUs de produtos
  */
-export const produtoSkuControllerFindPaginated200Schema = z.object({
-    get "data"(){
-                return z.optional(z.array(produtoSKUSchema))
-              },
-"total": z.optional(z.coerce.number()),
-"page": z.optional(z.coerce.number()),
-"limit": z.optional(z.coerce.number()),
-"totalPages": z.optional(z.coerce.number())
-    }) as unknown as z.ZodType<ProdutoSkuControllerFindPaginated200>
+export const produtoSkuControllerFindPaginated200Schema = paginatedProdutoSkuResponseDtoSchema as unknown as z.ZodType<ProdutoSkuControllerFindPaginated200>
 
 export const produtoSkuControllerFindPaginatedQueryResponseSchema = produtoSkuControllerFindPaginated200Schema as unknown as z.ZodType<ProdutoSkuControllerFindPaginatedQueryResponse>

@@ -3,28 +3,12 @@
 * Do not edit manually.
 */
 
+import type { CategoriaDespesas } from "./CategoriaDespesas.ts";
 
 /**
  * @description Lista de categorias de despesas retornada com sucesso
 */
-export type CategoriaDespesasControllerFindAll200 = {
-    /**
-     * @type number | undefined
-    */
-    idCategoria?: number | undefined;
-    /**
-     * @type string | undefined
-    */
-    descricao?: string | undefined;
-    /**
-     * @type boolean | undefined
-    */
-    ativo?: boolean | undefined;
-    /**
-     * @type string | undefined
-    */
-    createdAt?: string | undefined;
-}[];
+export type CategoriaDespesasControllerFindAll200 = CategoriaDespesas[];
 
 /**
  * @description Não autorizado

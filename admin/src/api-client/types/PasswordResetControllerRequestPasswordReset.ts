@@ -3,17 +3,13 @@
 * Do not edit manually.
 */
 
+import type { PasswordResetMessageResponseDto } from "./PasswordResetMessageResponseDto.ts";
 import type { RequestPasswordResetDto } from "./RequestPasswordResetDto.ts";
 
 /**
  * @description Email de recuperação enviado com sucesso
 */
-export type PasswordResetControllerRequestPasswordReset200 = {
-    /**
-     * @type string | undefined
-    */
-    message?: string | undefined;
-};
+export type PasswordResetControllerRequestPasswordReset200 = PasswordResetMessageResponseDto;
 
 /**
  * @description Usuário não encontrado ou inativo

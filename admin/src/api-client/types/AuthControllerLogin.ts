@@ -4,58 +4,12 @@
 */
 
 import type { LoginDto } from "./LoginDto.ts";
+import type { LoginResponseDto } from "./LoginResponseDto.ts";
 
 /**
  * @description Login realizado com sucesso
 */
-export type AuthControllerLogin200 = {
-    /**
-     * @type string | undefined
-    */
-    accessToken?: string | undefined;
-    /**
-     * @type object | undefined
-    */
-    user?: {
-        /**
-         * @type number | undefined
-        */
-        id?: number | undefined;
-        /**
-         * @type string | undefined
-        */
-        publicId?: string | undefined;
-        /**
-         * @type string | undefined
-        */
-        nome?: string | undefined;
-        /**
-         * @type string | undefined
-        */
-        email?: string | undefined;
-        /**
-         * @type string | undefined
-        */
-        telefone?: string | undefined;
-        /**
-         * @type boolean | undefined
-        */
-        ativo?: boolean | undefined;
-        /**
-         * @type object | undefined
-        */
-        perfil?: {
-            /**
-             * @type number | undefined
-            */
-            id?: number | undefined;
-            /**
-             * @type string | undefined
-            */
-            nome?: string | undefined;
-        } | undefined;
-    } | undefined;
-};
+export type AuthControllerLogin200 = LoginResponseDto;
 
 /**
  * @description Credenciais inválidas

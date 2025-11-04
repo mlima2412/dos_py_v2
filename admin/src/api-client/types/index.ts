@@ -1,6 +1,7 @@
 export type { AjustarItemDto } from "./AjustarItemDto.ts";
 export type { AjusteConferenciaItemDto } from "./AjusteConferenciaItemDto.ts";
 export type { AjusteConferenciaLoteDto } from "./AjusteConferenciaLoteDto.ts";
+export type { AjusteConferenciaLoteResponseDto } from "./AjusteConferenciaLoteResponseDto.ts";
 export type { AjusteEstoqueDto } from "./AjusteEstoqueDto.ts";
 export type { AppControllerGetHello200, AppControllerGetHelloQueryResponse, AppControllerGetHelloQuery } from "./AppControllerGetHello.ts";
 export type { AuthControllerGetProfile200, AuthControllerGetProfileQueryResponse, AuthControllerGetProfileQuery } from "./AuthControllerGetProfile.ts";
@@ -115,6 +116,7 @@ export type { CurrencyControllerFindAllActive200, CurrencyControllerFindAllActiv
 export type { CurrencyControllerFindOnePathParams, CurrencyControllerFindOne200, CurrencyControllerFindOne401, CurrencyControllerFindOne404, CurrencyControllerFindOneQueryResponse, CurrencyControllerFindOneQuery } from "./CurrencyControllerFindOne.ts";
 export type { CurrencyControllerRemovePathParams, CurrencyControllerRemove200, CurrencyControllerRemove401, CurrencyControllerRemove404, CurrencyControllerRemove409, CurrencyControllerRemoveMutationResponse, CurrencyControllerRemoveMutation } from "./CurrencyControllerRemove.ts";
 export type { CurrencyControllerUpdatePathParams, CurrencyControllerUpdate200, CurrencyControllerUpdate400, CurrencyControllerUpdate401, CurrencyControllerUpdate404, CurrencyControllerUpdate409, CurrencyControllerUpdateMutationRequest, CurrencyControllerUpdateMutationResponse, CurrencyControllerUpdateMutation } from "./CurrencyControllerUpdate.ts";
+export type { CurrencyDto } from "./CurrencyDto.ts";
 export type { CurrencyResponseDto } from "./CurrencyResponseDto.ts";
 export type { Despesa } from "./Despesa.ts";
 export type { DespesaRecorrenteFrequenciaEnumKey, DespesaRecorrente } from "./DespesaRecorrente.ts";
@@ -164,6 +166,7 @@ export type { FornecedoresControllerUpdatePathParams, FornecedoresControllerUpda
 export type { FornecedoresControllerUpdateUltimaCompraPathParams, FornecedoresControllerUpdateUltimaCompraHeaderParams, FornecedoresControllerUpdateUltimaCompra200, FornecedoresControllerUpdateUltimaCompra400, FornecedoresControllerUpdateUltimaCompra404, FornecedoresControllerUpdateUltimaCompraMutationResponse, FornecedoresControllerUpdateUltimaCompraMutation } from "./FornecedoresControllerUpdateUltimaCompra.ts";
 export type { FornecedorResponseDto } from "./FornecedorResponseDto.ts";
 export type { I } from "./I.ts";
+export type { LocalEmConferenciaResponseDto } from "./LocalEmConferenciaResponseDto.ts";
 export type { LocalEstoque } from "./LocalEstoque.ts";
 export type { LocalEstoqueControllerCreate201, LocalEstoqueControllerCreate400, LocalEstoqueControllerCreate409, LocalEstoqueControllerCreateMutationRequest, LocalEstoqueControllerCreateMutationResponse, LocalEstoqueControllerCreateMutation } from "./LocalEstoqueControllerCreate.ts";
 export type { LocalEstoqueControllerFindAll200, LocalEstoqueControllerFindAllQueryResponse, LocalEstoqueControllerFindAllQuery } from "./LocalEstoqueControllerFindAll.ts";
@@ -173,6 +176,8 @@ export type { LocalEstoqueControllerRemovePathParams, LocalEstoqueControllerRemo
 export type { LocalEstoqueControllerUpdatePathParams, LocalEstoqueControllerUpdate200, LocalEstoqueControllerUpdate404, LocalEstoqueControllerUpdate409, LocalEstoqueControllerUpdateMutationRequest, LocalEstoqueControllerUpdateMutationResponse, LocalEstoqueControllerUpdateMutation } from "./LocalEstoqueControllerUpdate.ts";
 export type { LocalEstoqueResponseDto } from "./LocalEstoqueResponseDto.ts";
 export type { LoginDto } from "./LoginDto.ts";
+export type { LoginResponseDto } from "./LoginResponseDto.ts";
+export type { LogoutResponseDto } from "./LogoutResponseDto.ts";
 export type { MovimentoEstoqueControllerAjusteEstoque201, MovimentoEstoqueControllerAjusteEstoque400, MovimentoEstoqueControllerAjusteEstoque404, MovimentoEstoqueControllerAjusteEstoqueMutationRequest, MovimentoEstoqueControllerAjusteEstoqueMutationResponse, MovimentoEstoqueControllerAjusteEstoqueMutation } from "./MovimentoEstoqueControllerAjusteEstoque.ts";
 export type { MovimentoEstoqueControllerCreate201, MovimentoEstoqueControllerCreate400, MovimentoEstoqueControllerCreate404, MovimentoEstoqueControllerCreateMutationRequest, MovimentoEstoqueControllerCreateMutationResponse, MovimentoEstoqueControllerCreateMutation } from "./MovimentoEstoqueControllerCreate.ts";
 export type { MovimentoEstoqueControllerFindAll200, MovimentoEstoqueControllerFindAllQueryResponse, MovimentoEstoqueControllerFindAllQuery } from "./MovimentoEstoqueControllerFindAll.ts";
@@ -187,8 +192,17 @@ export type { PagamentoControllerFindAllQueryParams, PagamentoControllerFindAllH
 export type { PagamentoControllerFindOnePathParams, PagamentoControllerFindOneHeaderParams, PagamentoControllerFindOne200, PagamentoControllerFindOne404, PagamentoControllerFindOneQueryResponse, PagamentoControllerFindOneQuery } from "./PagamentoControllerFindOne.ts";
 export type { PagamentoControllerRemovePathParams, PagamentoControllerRemoveHeaderParams, PagamentoControllerRemove204, PagamentoControllerRemove404, PagamentoControllerRemoveMutationResponse, PagamentoControllerRemoveMutation } from "./PagamentoControllerRemove.ts";
 export type { PagamentoControllerUpdatePathParams, PagamentoControllerUpdateHeaderParams, PagamentoControllerUpdate200, PagamentoControllerUpdate404, PagamentoControllerUpdateMutationRequest, PagamentoControllerUpdateMutationResponse, PagamentoControllerUpdateMutation } from "./PagamentoControllerUpdate.ts";
+export type { PaginatedClienteResponseDto } from "./PaginatedClienteResponseDto.ts";
+export type { PaginatedConferenciaEstoqueResponseDto } from "./PaginatedConferenciaEstoqueResponseDto.ts";
+export type { PaginatedDespesaResponseDto } from "./PaginatedDespesaResponseDto.ts";
+export type { PaginatedMovimentoEstoqueResponseDto } from "./PaginatedMovimentoEstoqueResponseDto.ts";
+export type { PaginatedParceiroResponseDto } from "./PaginatedParceiroResponseDto.ts";
+export type { PaginatedPedidoCompraResponseDto } from "./PaginatedPedidoCompraResponseDto.ts";
+export type { PaginatedProdutoResponseDto } from "./PaginatedProdutoResponseDto.ts";
+export type { PaginatedProdutoSkuResponseDto } from "./PaginatedProdutoSkuResponseDto.ts";
 export type { PaginatedVendaResponseDto } from "./PaginatedVendaResponseDto.ts";
 export type { Parceiro } from "./Parceiro.ts";
+export type { ParceiroDto } from "./ParceiroDto.ts";
 export type { ParceiroResponseDto } from "./ParceiroResponseDto.ts";
 export type { ParceirosControllerActivateParceiroPathParams, ParceirosControllerActivateParceiro200, ParceirosControllerActivateParceiro404, ParceirosControllerActivateParceiroMutationResponse, ParceirosControllerActivateParceiroMutation } from "./ParceirosControllerActivateParceiro.ts";
 export type { ParceirosControllerCreate201, ParceirosControllerCreate400, ParceirosControllerCreate409, ParceirosControllerCreateMutationRequest, ParceirosControllerCreateMutationResponse, ParceirosControllerCreateMutation } from "./ParceirosControllerCreate.ts";
@@ -213,6 +227,7 @@ export type { ParcelasControllerUpdatePathParams, ParcelasControllerUpdate200, P
 export type { PasswordResetControllerRequestPasswordReset200, PasswordResetControllerRequestPasswordReset404, PasswordResetControllerRequestPasswordResetMutationRequest, PasswordResetControllerRequestPasswordResetMutationResponse, PasswordResetControllerRequestPasswordResetMutation } from "./PasswordResetControllerRequestPasswordReset.ts";
 export type { PasswordResetControllerResetPassword200, PasswordResetControllerResetPassword400, PasswordResetControllerResetPasswordMutationRequest, PasswordResetControllerResetPasswordMutationResponse, PasswordResetControllerResetPasswordMutation } from "./PasswordResetControllerResetPassword.ts";
 export type { PasswordResetControllerValidateTokenQueryParams, PasswordResetControllerValidateToken200, PasswordResetControllerValidateTokenQueryResponse, PasswordResetControllerValidateTokenQuery } from "./PasswordResetControllerValidateToken.ts";
+export type { PasswordResetMessageResponseDto } from "./PasswordResetMessageResponseDto.ts";
 export type { PedidoCompraStatusEnumKey, PedidoCompra } from "./PedidoCompra.ts";
 export type { PedidoCompraControllerCreateHeaderParams, PedidoCompraControllerCreate201, PedidoCompraControllerCreate400, PedidoCompraControllerCreate404, PedidoCompraControllerCreateMutationRequest, PedidoCompraControllerCreateMutationResponse, PedidoCompraControllerCreateMutation } from "./PedidoCompraControllerCreate.ts";
 export type { PedidoCompraControllerFindAllHeaderParams, PedidoCompraControllerFindAll200, PedidoCompraControllerFindAllQueryResponse, PedidoCompraControllerFindAllQuery } from "./PedidoCompraControllerFindAll.ts";
@@ -232,6 +247,8 @@ export type { PedidoCompraItemControllerFindOnePathParams, PedidoCompraItemContr
 export type { PedidoCompraItemControllerRemovePathParams, PedidoCompraItemControllerRemoveHeaderParams, PedidoCompraItemControllerRemove200, PedidoCompraItemControllerRemove404, PedidoCompraItemControllerRemove409, PedidoCompraItemControllerRemoveMutationResponse, PedidoCompraItemControllerRemoveMutation } from "./PedidoCompraItemControllerRemove.ts";
 export type { PedidoCompraItemControllerUpdatePathParams, PedidoCompraItemControllerUpdateHeaderParams, PedidoCompraItemControllerUpdate200, PedidoCompraItemControllerUpdate404, PedidoCompraItemControllerUpdate409, PedidoCompraItemControllerUpdateMutationRequest, PedidoCompraItemControllerUpdateMutationResponse, PedidoCompraItemControllerUpdateMutation } from "./PedidoCompraItemControllerUpdate.ts";
 export type { Perfil } from "./Perfil.ts";
+export type { PerfilDto } from "./PerfilDto.ts";
+export type { PerfilSimpleDto } from "./PerfilSimpleDto.ts";
 export type { PerfisControllerCreate201, PerfisControllerCreate400, PerfisControllerCreate409, PerfisControllerCreateMutationRequest, PerfisControllerCreateMutationResponse, PerfisControllerCreateMutation } from "./PerfisControllerCreate.ts";
 export type { PerfisControllerFindAll200, PerfisControllerFindAllQueryResponse, PerfisControllerFindAllQuery } from "./PerfisControllerFindAll.ts";
 export type { PerfisControllerFindOnePathParams, PerfisControllerFindOne200, PerfisControllerFindOne404, PerfisControllerFindOneQueryResponse, PerfisControllerFindOneQuery } from "./PerfisControllerFindOne.ts";
@@ -269,6 +286,7 @@ export type { ProdutoSkuControllerUpdatePathParams, ProdutoSkuControllerUpdateHe
 export type { ProdutoSKUEstoqueResponseDto } from "./ProdutoSKUEstoqueResponseDto.ts";
 export type { ProdutoSKUResponseDto } from "./ProdutoSKUResponseDto.ts";
 export type { ProdutosPorLocalResponseDto } from "./ProdutosPorLocalResponseDto.ts";
+export type { RefreshResponseDto } from "./RefreshResponseDto.ts";
 export type { RefreshTokenDto } from "./RefreshTokenDto.ts";
 export type { RequestPasswordResetDto } from "./RequestPasswordResetDto.ts";
 export type { ResetPasswordDto } from "./ResetPasswordDto.ts";
@@ -324,6 +342,9 @@ export type { UpdateSubCategoriaDespesaDto } from "./UpdateSubCategoriaDespesaDt
 export type { UpdateUsuarioDto } from "./UpdateUsuarioDto.ts";
 export type { UpdateVendaDtoTipoEnumKey, UpdateVendaDto } from "./UpdateVendaDto.ts";
 export type { UpdateVendaItemDtoTipoEnumKey, UpdateVendaItemDto } from "./UpdateVendaItemDto.ts";
+export type { UserDto } from "./UserDto.ts";
+export type { UserParceiroItemDto } from "./UserParceiroItemDto.ts";
+export type { UserProfileDto } from "./UserProfileDto.ts";
 export type { Usuario } from "./Usuario.ts";
 export type { UsuarioParceiro } from "./UsuarioParceiro.ts";
 export type { UsuarioParceiroControllerCreate201, UsuarioParceiroControllerCreate400, UsuarioParceiroControllerCreate404, UsuarioParceiroControllerCreate409, UsuarioParceiroControllerCreateMutationRequest, UsuarioParceiroControllerCreateMutationResponse, UsuarioParceiroControllerCreateMutation } from "./UsuarioParceiroControllerCreate.ts";
@@ -343,6 +364,7 @@ export type { UsuariosControllerFindOnePathParams, UsuariosControllerFindOne200,
 export type { UsuariosControllerFindPaginatedQueryParams, UsuariosControllerFindPaginated200, UsuariosControllerFindPaginatedQueryResponse, UsuariosControllerFindPaginatedQuery } from "./UsuariosControllerFindPaginated.ts";
 export type { UsuariosControllerInitializeSystem201, UsuariosControllerInitializeSystemMutationResponse, UsuariosControllerInitializeSystemMutation } from "./UsuariosControllerInitializeSystem.ts";
 export type { UsuariosControllerUpdatePathParams, UsuariosControllerUpdate200, UsuariosControllerUpdate400, UsuariosControllerUpdate404, UsuariosControllerUpdate409, UsuariosControllerUpdateMutationRequest, UsuariosControllerUpdateMutationResponse, UsuariosControllerUpdateMutation } from "./UsuariosControllerUpdate.ts";
+export type { ValidateTokenResponseDto } from "./ValidateTokenResponseDto.ts";
 export type { VendaTipoEnumKey, VendaStatusEnumKey, Venda } from "./Venda.ts";
 export type { VendaControllerCreateHeaderParams, VendaControllerCreate201, VendaControllerCreate400, VendaControllerCreateMutationRequest, VendaControllerCreateMutationResponse, VendaControllerCreateMutation } from "./VendaControllerCreate.ts";
 export type { VendaControllerFinalizarBrindePermutaPathParams, VendaControllerFinalizarBrindePermutaHeaderParams, VendaControllerFinalizarBrindePermuta200, VendaControllerFinalizarBrindePermutaMutationRequest, VendaControllerFinalizarBrindePermutaMutationResponse, VendaControllerFinalizarBrindePermutaMutation } from "./VendaControllerFinalizarBrindePermuta.ts";
@@ -359,6 +381,7 @@ export type { VendaItemControllerFindOnePathParams, VendaItemControllerFindOneQu
 export type { VendaItemControllerRemovePathParams, VendaItemControllerRemoveQueryParams, VendaItemControllerRemoveHeaderParams, VendaItemControllerRemove204, VendaItemControllerRemove400, VendaItemControllerRemove404, VendaItemControllerRemoveMutationResponse, VendaItemControllerRemoveMutation } from "./VendaItemControllerRemove.ts";
 export type { VendaItemControllerUpdatePathParams, VendaItemControllerUpdateQueryParams, VendaItemControllerUpdateHeaderParams, VendaItemControllerUpdate200, VendaItemControllerUpdateMutationRequest, VendaItemControllerUpdateMutationResponse, VendaItemControllerUpdateMutation } from "./VendaItemControllerUpdate.ts";
 export type { VendaItemEntityTipoEnumKey, VendaItemEntity } from "./VendaItemEntity.ts";
+export type { YearItemDto } from "./YearItemDto.ts";
 export { clienteLinguagemEnum } from "./Cliente.ts";
 export { conferenciaEstoqueControllerFindPaginatedQueryParamsStatusEnum } from "./ConferenciaEstoqueControllerFindPaginated.ts";
 export { conferenciaEstoqueResponseDtoStatusEnum } from "./ConferenciaEstoqueResponseDto.ts";

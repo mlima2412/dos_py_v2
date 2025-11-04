@@ -3,17 +3,13 @@
 * Do not edit manually.
 */
 
+import type { PasswordResetMessageResponseDto } from "./PasswordResetMessageResponseDto.ts";
 import type { ResetPasswordDto } from "./ResetPasswordDto.ts";
 
 /**
  * @description Senha alterada com sucesso
 */
-export type PasswordResetControllerResetPassword200 = {
-    /**
-     * @type string | undefined
-    */
-    message?: string | undefined;
-};
+export type PasswordResetControllerResetPassword200 = PasswordResetMessageResponseDto;
 
 /**
  * @description Token inválido ou expirado

@@ -4,6 +4,7 @@
 */
 
 import type { PasswordResetControllerValidateTokenQueryParams, PasswordResetControllerValidateToken200, PasswordResetControllerValidateTokenQueryResponse } from "../types/PasswordResetControllerValidateToken.ts";
+import { validateTokenResponseDtoSchema } from "./validateTokenResponseDtoSchema.ts";
 import { z } from "zod/v4";
 
 export const passwordResetControllerValidateTokenQueryParamsSchema = z.object({
@@ -13,9 +14,6 @@ export const passwordResetControllerValidateTokenQueryParamsSchema = z.object({
 /**
  * @description Status de validação do token
  */
-export const passwordResetControllerValidateToken200Schema = z.object({
-    "valid": z.optional(z.boolean()),
-"message": z.optional(z.coerce.string())
-    }) as unknown as z.ZodType<PasswordResetControllerValidateToken200>
+export const passwordResetControllerValidateToken200Schema = validateTokenResponseDtoSchema as unknown as z.ZodType<PasswordResetControllerValidateToken200>
 
 export const passwordResetControllerValidateTokenQueryResponseSchema = passwordResetControllerValidateToken200Schema as unknown as z.ZodType<PasswordResetControllerValidateTokenQueryResponse>

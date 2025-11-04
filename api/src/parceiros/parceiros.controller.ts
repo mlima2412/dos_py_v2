@@ -23,6 +23,7 @@ import { ParceirosService } from './parceiros.service';
 import { CreateParceiroDto } from './dto/create-parceiro.dto';
 import { UpdateParceiroDto } from './dto/update-parceiro.dto';
 import { Parceiro } from './entities/parceiro.entity';
+import { PaginatedParceiroResponseDto } from './dto/paginated-parceiro-response.dto';
 
 @ApiTags('Parceiros')
 @Controller('parceiros')
@@ -66,19 +67,7 @@ export class ParceirosController {
   @ApiResponse({
     status: 200,
     description: 'Lista paginada de parceiros retornada com sucesso',
-    schema: {
-      type: 'object',
-      properties: {
-        data: {
-          type: 'array',
-          items: { $ref: '#/components/schemas/Parceiro' },
-        },
-        total: { type: 'number', description: 'Total de registros' },
-        page: { type: 'number', description: 'Página atual' },
-        limit: { type: 'number', description: 'Itens por página' },
-        totalPages: { type: 'number', description: 'Total de páginas' },
-      },
-    },
+    type: PaginatedParceiroResponseDto,
   })
   findPaginated(
     @Query('page') page: string = '1',

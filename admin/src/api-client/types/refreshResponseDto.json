@@ -1,0 +1,1 @@
+{"type":"object","properties":{"accessToken":{"type":"string","description":"Novo access token","example":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."}},"required":["accessToken"],"x-readme-ref-name":"RefreshResponseDto"}

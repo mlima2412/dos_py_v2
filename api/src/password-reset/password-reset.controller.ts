@@ -18,6 +18,10 @@ import {
 import { PasswordResetService } from './password-reset.service';
 import { RequestPasswordResetDto } from './dto/request-password-reset.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import {
+  PasswordResetMessageResponseDto,
+  ValidateTokenResponseDto,
+} from './dto/password-reset-message-response.dto';
 import { Public } from '../auth/decorators/public.decorator';
 
 import { TFunction } from 'i18next';
@@ -35,15 +39,7 @@ export class PasswordResetController {
   @ApiResponse({
     status: 200,
     description: 'Email de recuperação enviado com sucesso',
-    schema: {
-      type: 'object',
-      properties: {
-        message: {
-          type: 'string',
-          example: 'Email de recuperação enviado com sucesso',
-        },
-      },
-    },
+    type: PasswordResetMessageResponseDto,
   })
   @ApiResponse({
     status: 404,
@@ -65,15 +61,7 @@ export class PasswordResetController {
   @ApiResponse({
     status: 200,
     description: 'Senha alterada com sucesso',
-    schema: {
-      type: 'object',
-      properties: {
-        message: {
-          type: 'string',
-          example: 'Senha alterada com sucesso',
-        },
-      },
-    },
+    type: PasswordResetMessageResponseDto,
   })
   @ApiResponse({
     status: 400,
@@ -94,19 +82,7 @@ export class PasswordResetController {
   @ApiResponse({
     status: 200,
     description: 'Status de validação do token',
-    schema: {
-      type: 'object',
-      properties: {
-        valid: {
-          type: 'boolean',
-          example: true,
-        },
-        message: {
-          type: 'string',
-          example: 'Token inválido ou expirado',
-        },
-      },
-    },
+    type: ValidateTokenResponseDto,
   })
   async validateToken(@Query('token') token: string) {
     return this.passwordResetService.validateToken(token);

@@ -4,6 +4,7 @@
 */
 
 import type { CategoriaProdutoControllerFindOnePathParams, CategoriaProdutoControllerFindOne200, CategoriaProdutoControllerFindOne404, CategoriaProdutoControllerFindOneQueryResponse } from "../types/CategoriaProdutoControllerFindOne.ts";
+import { categoriaProdutoSchema } from "./categoriaProdutoSchema.ts";
 import { z } from "zod/v4";
 
 export const categoriaProdutoControllerFindOnePathParamsSchema = z.object({
@@ -13,10 +14,7 @@ export const categoriaProdutoControllerFindOnePathParamsSchema = z.object({
 /**
  * @description Categoria de produto encontrada com sucesso
  */
-export const categoriaProdutoControllerFindOne200Schema = z.object({
-    "id": z.optional(z.coerce.number()),
-"descricao": z.optional(z.coerce.string())
-    }) as unknown as z.ZodType<CategoriaProdutoControllerFindOne200>
+export const categoriaProdutoControllerFindOne200Schema = categoriaProdutoSchema as unknown as z.ZodType<CategoriaProdutoControllerFindOne200>
 
 /**
  * @description Categoria de produto não encontrada

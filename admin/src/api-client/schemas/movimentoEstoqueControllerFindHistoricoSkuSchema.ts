@@ -4,7 +4,7 @@
 */
 
 import type { MovimentoEstoqueControllerFindHistoricoSkuPathParams, MovimentoEstoqueControllerFindHistoricoSkuQueryParams, MovimentoEstoqueControllerFindHistoricoSku200, MovimentoEstoqueControllerFindHistoricoSku404, MovimentoEstoqueControllerFindHistoricoSkuQueryResponse } from "../types/MovimentoEstoqueControllerFindHistoricoSku.ts";
-import { movimentoEstoqueResponseDtoSchema } from "./movimentoEstoqueResponseDtoSchema.ts";
+import { paginatedMovimentoEstoqueResponseDtoSchema } from "./paginatedMovimentoEstoqueResponseDtoSchema.ts";
 import { z } from "zod/v4";
 
 export const movimentoEstoqueControllerFindHistoricoSkuPathParamsSchema = z.object({
@@ -19,15 +19,7 @@ export const movimentoEstoqueControllerFindHistoricoSkuQueryParamsSchema = z.obj
 /**
  * @description Histórico do SKU retornado com sucesso
  */
-export const movimentoEstoqueControllerFindHistoricoSku200Schema = z.object({
-    get "data"(){
-                return z.optional(z.array(movimentoEstoqueResponseDtoSchema))
-              },
-"total": z.optional(z.coerce.number()),
-"page": z.optional(z.coerce.number()),
-"limit": z.optional(z.coerce.number()),
-"totalPages": z.optional(z.coerce.number())
-    }) as unknown as z.ZodType<MovimentoEstoqueControllerFindHistoricoSku200>
+export const movimentoEstoqueControllerFindHistoricoSku200Schema = paginatedMovimentoEstoqueResponseDtoSchema as unknown as z.ZodType<MovimentoEstoqueControllerFindHistoricoSku200>
 
 /**
  * @description SKU não encontrado

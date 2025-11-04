@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { PaginatedDespesaResponseDto } from "./PaginatedDespesaResponseDto.ts";
 
 export type DespesasControllerFindPaginatedQueryParams = {
     /**
@@ -37,7 +38,7 @@ export type DespesasControllerFindPaginatedQueryParams = {
 /**
  * @description Lista paginada de despesas
 */
-export type DespesasControllerFindPaginated200 = any;
+export type DespesasControllerFindPaginated200 = PaginatedDespesaResponseDto;
 
 export type DespesasControllerFindPaginatedQueryResponse = DespesasControllerFindPaginated200;
 

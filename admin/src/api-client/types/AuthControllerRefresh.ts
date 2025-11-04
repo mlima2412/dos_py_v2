@@ -3,17 +3,13 @@
 * Do not edit manually.
 */
 
+import type { RefreshResponseDto } from "./RefreshResponseDto.ts";
 import type { RefreshTokenDto } from "./RefreshTokenDto.ts";
 
 /**
  * @description Token renovado com sucesso
 */
-export type AuthControllerRefresh200 = {
-    /**
-     * @type string | undefined
-    */
-    accessToken?: string | undefined;
-};
+export type AuthControllerRefresh200 = RefreshResponseDto;
 
 /**
  * @description Refresh token inválido

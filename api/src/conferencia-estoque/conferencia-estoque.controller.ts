@@ -26,6 +26,8 @@ import { ConferenciaEstoqueResponseDto } from './dto/conferencia-estoque-respons
 import { ConferenciaEstoque } from './entities/conferencia-estoque.entity';
 import { ParceiroId } from '../auth/decorators/parceiro-id.decorator';
 import { PaginatedQueryDto } from './dto/paginated-query.dto';
+import { PaginatedConferenciaEstoqueResponseDto } from './dto/paginated-conferencia-response.dto';
+import { LocalEmConferenciaResponseDto } from './dto/local-em-conferencia-response.dto';
 
 @ApiTags('Conferência de Estoque')
 @Controller('conferencia-estoque')
@@ -98,19 +100,7 @@ export class ConferenciaEstoqueController {
   @ApiResponse({
     status: 200,
     description: 'Lista paginada de conferências de estoque',
-    schema: {
-      type: 'object',
-      properties: {
-        data: {
-          type: 'array',
-          items: { $ref: '#/components/schemas/ConferenciaEstoqueResponseDto' },
-        },
-        total: { type: 'number', example: 100 },
-        page: { type: 'number', example: 1 },
-        limit: { type: 'number', example: 20 },
-        totalPages: { type: 'number', example: 5 },
-      },
-    },
+    type: PaginatedConferenciaEstoqueResponseDto,
   })
   async findPaginated(
     @Query() query: PaginatedQueryDto,
@@ -211,16 +201,7 @@ export class ConferenciaEstoqueController {
   @ApiResponse({
     status: 200,
     description: 'Status da conferência do local de estoque',
-    schema: {
-      type: 'object',
-      properties: {
-        emConferencia: {
-          type: 'boolean',
-          description: 'True se existe conferência pendente, false caso contrário',
-          example: true
-        }
-      }
-    }
+    type: LocalEmConferenciaResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Local de estoque não encontrado' })
   async checkLocalEmConferencia(
@@ -251,14 +232,6 @@ export class ConferenciaEstoqueController {
   @ApiResponse({
     status: 204,
     description: 'Conferência de estoque removida com sucesso',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Conferência de estoque não encontrada',
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Não é possível remover conferência em andamento',
   })
   remove(
     @Param('publicId') publicId: string,

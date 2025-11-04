@@ -4,17 +4,13 @@
 */
 
 import type { CategoriaDespesasControllerFindAll200, CategoriaDespesasControllerFindAll401, CategoriaDespesasControllerFindAllQueryResponse } from "../types/CategoriaDespesasControllerFindAll.ts";
+import { categoriaDespesasSchema } from "./categoriaDespesasSchema.ts";
 import { z } from "zod/v4";
 
 /**
  * @description Lista de categorias de despesas retornada com sucesso
  */
-export const categoriaDespesasControllerFindAll200Schema = z.array(z.object({
-    "idCategoria": z.optional(z.coerce.number()),
-"descricao": z.optional(z.coerce.string()),
-"ativo": z.optional(z.boolean()),
-"createdAt": z.optional(z.coerce.string())
-    })) as unknown as z.ZodType<CategoriaDespesasControllerFindAll200>
+export const categoriaDespesasControllerFindAll200Schema = z.array(categoriaDespesasSchema) as unknown as z.ZodType<CategoriaDespesasControllerFindAll200>
 
 /**
  * @description Não autorizado

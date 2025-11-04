@@ -4,6 +4,7 @@ import { useFormaPagamentoControllerCreate } from "@/api-client/hooks/useFormaPa
 import { useFormaPagamentoControllerUpdate } from "@/api-client/hooks/useFormaPagamentoControllerUpdate";
 import { useFormaPagamentoControllerAtivar } from "@/api-client/hooks/useFormaPagamentoControllerAtivar";
 import { useFormaPagamentoControllerInativar } from "@/api-client/hooks/useFormaPagamentoControllerInativar";
+import { CreateFormaPagamentoDto, UpdateFormaPagamentoDto } from "@/api-client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "./useToast";
 import { useTranslation } from "react-i18next";
@@ -127,9 +128,9 @@ export const useFormaPagamentoMutations = () => {
 	});
 
 	return {
-		createFormaPagamento: (data: any) =>
+		createFormaPagamento: (data: CreateFormaPagamentoDto) =>
 			createFormaPagamento.mutate({ data, headers }),
-		updateFormaPagamento: (id: number, data: any) =>
+		updateFormaPagamento: (id: number, data: UpdateFormaPagamentoDto) =>
 			updateFormaPagamento.mutate({ id, headers, data }),
 		ativarFormaPagamento: (id: number) =>
 			ativarFormaPagamento.mutate({ id, headers }),

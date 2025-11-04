@@ -10,7 +10,7 @@ export const vendaItemEntitySchema = z.object({
     "id": z.coerce.number().describe("ID do item da venda"),
 "vendaId": z.coerce.number().describe("ID da venda"),
 "skuId": z.coerce.number().describe("ID do SKU vendido"),
-"tipo": z.enum(["NORMAL", "BRINDE"]).describe("Tipo do item"),
+"tipo": z.enum(["NORMAL", "CONDICIONAL", "BRINDE", "PERMUTA"]).describe("Tipo do item"),
 "qtdReservada": z.coerce.number().describe("Quantidade reservada"),
 "qtdAceita": z.optional(z.coerce.number().describe("Quantidade aceita (ficou com cliente)")),
 "qtdDevolvida": z.optional(z.coerce.number().describe("Quantidade devolvida")),

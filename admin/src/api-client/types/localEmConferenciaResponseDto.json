@@ -1,0 +1,1 @@
+{"type":"object","properties":{"emConferencia":{"type":"boolean","description":"True se existe conferência pendente, false caso contrário","example":true}},"required":["emConferencia"],"x-readme-ref-name":"LocalEmConferenciaResponseDto"}

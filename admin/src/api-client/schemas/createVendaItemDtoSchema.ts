@@ -9,7 +9,7 @@ import { z } from "zod/v4";
 export const createVendaItemDtoSchema = z.object({
     "vendaId": z.coerce.number().describe("ID da venda"),
 "skuId": z.coerce.number().describe("ID do SKU"),
-"tipo": z.optional(z.enum(["NORMAL", "BRINDE"]).describe("Tipo do item")),
+"tipo": z.optional(z.enum(["NORMAL", "CONDICIONAL", "BRINDE", "PERMUTA"]).describe("Tipo do item")),
 "qtdReservada": z.coerce.number().describe("Quantidade reservada"),
 "qtdAceita": z.optional(z.coerce.number().describe("Quantidade aceita (cliente ficou)")),
 "qtdDevolvida": z.optional(z.coerce.number().describe("Quantidade devolvida")),

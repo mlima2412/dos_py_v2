@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, Minus, Trash2 } from "lucide-react";
 import { useCurrencyFormatter } from "@/hooks/useCurrencyFormatter";
 
-export interface SelectedSkuItemProps<T = any> {
+export interface SelectedSkuItemProps<T = Record<string, unknown>> {
 	sku: T & {
 		id: number;
 		cor?: string;
@@ -15,7 +15,7 @@ export interface SelectedSkuItemProps<T = any> {
 	};
 	quantity: number;
 	onRemove: (skuId: number) => void;
-	onIncrement: (skuId: number, currentQuantity: number, sku: any) => void;
+	onIncrement: (skuId: number, currentQuantity: number, sku: T & { id: number; cor?: string; codCor?: string; tamanho?: string }) => void;
 	onDecrement: (skuId: number, currentQuantity: number) => void;
 	isAtMaxLimit?: boolean;
 	enabledStockAdjustment?: boolean;

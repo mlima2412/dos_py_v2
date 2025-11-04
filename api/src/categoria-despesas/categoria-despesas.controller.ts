@@ -53,15 +53,7 @@ export class CategoriaDespesasController {
   @ApiResponse({
     status: 201,
     description: 'Categoria de despesas criada com sucesso',
-    schema: {
-      type: 'object',
-      properties: {
-        idCategoria: { type: 'number', example: 1 },
-        descricao: { type: 'string', example: 'Alimentação' },
-        ativo: { type: 'boolean', example: true },
-        createdAt: { type: 'string', example: '2024-01-01T00:00:00.000Z' },
-      },
-    },
+    type: CategoriaDespesas,
   })
   @ApiResponse({
     status: 409,
@@ -79,18 +71,7 @@ export class CategoriaDespesasController {
   @ApiResponse({
     status: 200,
     description: 'Lista de categorias de despesas retornada com sucesso',
-    schema: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          idCategoria: { type: 'number', example: 1 },
-          descricao: { type: 'string', example: 'Alimentação' },
-          ativo: { type: 'boolean', example: true },
-          createdAt: { type: 'string', example: '2024-01-01T00:00:00.000Z' },
-        },
-      },
-    },
+    type: [CategoriaDespesas],
   })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
   findAll(): Promise<CategoriaDespesas[]> {
@@ -107,15 +88,7 @@ export class CategoriaDespesasController {
   @ApiResponse({
     status: 200,
     description: 'Categoria de despesas encontrada',
-    schema: {
-      type: 'object',
-      properties: {
-        idCategoria: { type: 'number', example: 1 },
-        descricao: { type: 'string', example: 'Alimentação' },
-        ativo: { type: 'boolean', example: true },
-        createdAt: { type: 'string', example: '2024-01-01T00:00:00.000Z' },
-      },
-    },
+    type: CategoriaDespesas,
   })
   @ApiResponse({
     status: 404,
@@ -153,15 +126,7 @@ export class CategoriaDespesasController {
   @ApiResponse({
     status: 200,
     description: 'Categoria de despesas atualizada com sucesso',
-    schema: {
-      type: 'object',
-      properties: {
-        idCategoria: { type: 'number', example: 1 },
-        descricao: { type: 'string', example: 'Alimentação e Bebidas' },
-        ativo: { type: 'boolean', example: true },
-        createdAt: { type: 'string', example: '2024-01-01T00:00:00.000Z' },
-      },
-    },
+    type: CategoriaDespesas,
   })
   @ApiResponse({
     status: 404,

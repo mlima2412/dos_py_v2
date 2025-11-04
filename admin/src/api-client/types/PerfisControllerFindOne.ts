@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { Perfil } from "./Perfil.ts";
 
 export type PerfisControllerFindOnePathParams = {
     /**
@@ -15,32 +16,7 @@ export type PerfisControllerFindOnePathParams = {
 /**
  * @description Perfil encontrado com sucesso
 */
-export type PerfisControllerFindOne200 = {
-    /**
-     * @type number | undefined
-    */
-    id?: number | undefined;
-    /**
-     * @type string | undefined
-    */
-    nome?: string | undefined;
-    /**
-     * @type string | undefined
-    */
-    descricao?: string | undefined;
-    /**
-     * @type boolean | undefined
-    */
-    ativo?: boolean | undefined;
-    /**
-     * @type string | undefined, date-time
-    */
-    createdAt?: string | undefined;
-    /**
-     * @type string | undefined, date-time
-    */
-    updatedAt?: string | undefined;
-};
+export type PerfisControllerFindOne200 = Perfil;
 
 /**
  * @description Perfil não encontrado

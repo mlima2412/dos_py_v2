@@ -24,6 +24,7 @@ import { TransferenciaEstoqueResponseDto } from './dto/transferencia-estoque-res
 import { CreateTransferenciaResponseDto } from './dto/create-transferencia-response.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ParceiroId } from '../auth/decorators/parceiro-id.decorator';
+import { PublicIdResponseDto } from './dto/message-response.dto';
 
 @ApiTags('Transferência de Estoque')
 @ApiBearerAuth()
@@ -172,15 +173,7 @@ export class TransferenciaEstoqueController {
   @ApiResponse({
     status: 200,
     description: 'Transferência marcada como recebida com sucesso',
-    schema: {
-      type: 'object',
-      properties: {
-        publicId: {
-          type: 'string',
-          example: '01234567-89ab-cdef-0123-456789abcdef',
-        },
-      },
-    },
+    type: PublicIdResponseDto,
   })
   @ApiResponse({
     status: 404,

@@ -4,15 +4,14 @@
 */
 
 import type { AuthControllerRefresh200, AuthControllerRefresh401, AuthControllerRefreshMutationRequest, AuthControllerRefreshMutationResponse } from "../types/AuthControllerRefresh.ts";
+import { refreshResponseDtoSchema } from "./refreshResponseDtoSchema.ts";
 import { refreshTokenDtoSchema } from "./refreshTokenDtoSchema.ts";
 import { z } from "zod/v4";
 
 /**
  * @description Token renovado com sucesso
  */
-export const authControllerRefresh200Schema = z.object({
-    "accessToken": z.optional(z.coerce.string())
-    }) as unknown as z.ZodType<AuthControllerRefresh200>
+export const authControllerRefresh200Schema = refreshResponseDtoSchema as unknown as z.ZodType<AuthControllerRefresh200>
 
 /**
  * @description Refresh token inválido

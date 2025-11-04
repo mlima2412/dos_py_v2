@@ -3,75 +3,12 @@
 * Do not edit manually.
 */
 
+import type { UserParceiroItemDto } from "./UserParceiroItemDto.ts";
 
 /**
  * @description Lista de parceiros do usuário
 */
-export type AuthControllerGetUserParceiros200 = {
-    /**
-     * @type number | undefined
-    */
-    id?: number | undefined;
-    /**
-     * @type number | undefined
-    */
-    parceiroId?: number | undefined;
-    /**
-     * @type object | undefined
-    */
-    Parceiro?: {
-        /**
-         * @type number | undefined
-        */
-        id?: number | undefined;
-        /**
-         * @type string | undefined
-        */
-        publicId?: string | undefined;
-        /**
-         * @type string | undefined
-        */
-        nome?: string | undefined;
-        /**
-         * @type string | undefined
-        */
-        logourl?: string | undefined;
-        /**
-         * @type number | undefined
-        */
-        currencyId?: number | undefined;
-        /**
-         * @type object | undefined
-        */
-        currency?: {
-            /**
-             * @type number | undefined
-            */
-            id?: number | undefined;
-            /**
-             * @type string | undefined
-            */
-            locale?: string | undefined;
-            /**
-             * @type string | undefined
-            */
-            isoCode?: string | undefined;
-        } | undefined;
-    } | undefined;
-    /**
-     * @type object | undefined
-    */
-    perfil?: {
-        /**
-         * @type number | undefined
-        */
-        id?: number | undefined;
-        /**
-         * @type string | undefined
-        */
-        nome?: string | undefined;
-    } | undefined;
-}[];
+export type AuthControllerGetUserParceiros200 = UserParceiroItemDto[];
 
 export type AuthControllerGetUserParceirosQueryResponse = AuthControllerGetUserParceiros200;
 

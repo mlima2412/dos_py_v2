@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { CategoriaDespesas } from "./CategoriaDespesas.ts";
 
 export type CategoriaDespesasControllerFindOnePathParams = {
     /**
@@ -15,24 +16,7 @@ export type CategoriaDespesasControllerFindOnePathParams = {
 /**
  * @description Categoria de despesas encontrada
 */
-export type CategoriaDespesasControllerFindOne200 = {
-    /**
-     * @type number | undefined
-    */
-    idCategoria?: number | undefined;
-    /**
-     * @type string | undefined
-    */
-    descricao?: string | undefined;
-    /**
-     * @type boolean | undefined
-    */
-    ativo?: boolean | undefined;
-    /**
-     * @type string | undefined
-    */
-    createdAt?: string | undefined;
-};
+export type CategoriaDespesasControllerFindOne200 = CategoriaDespesas;
 
 /**
  * @description Não autorizado

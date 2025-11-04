@@ -20,6 +20,7 @@ import { SubCategoriaDespesaService } from './subcategoria-despesa.service';
 import { CreateSubCategoriaDespesaDto } from './dto/create-subcategoria-despesa.dto';
 import { UpdateSubCategoriaDespesaDto } from './dto/update-subcategoria-despesa.dto';
 import { SubCategoriaDespesa } from './entities/subcategoria-despesa.entity';
+import { SubCategoriaDespesaResponseDto } from './dto/subcategoria-despesa-response.dto';
 
 @ApiTags('subcategoria-despesa')
 @ApiBearerAuth('JWT-auth')
