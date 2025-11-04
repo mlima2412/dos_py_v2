@@ -10,7 +10,7 @@ export interface SelectedSkusListProps<T = Record<string, unknown>> {
 		sku: T & {
 			id: number;
 			cor?: string;
-			codCor?: string;
+			codCor?: string | number;
 			tamanho?: string;
 		};
 		product: T & {

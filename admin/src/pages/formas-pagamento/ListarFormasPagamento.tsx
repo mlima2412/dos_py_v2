@@ -6,7 +6,8 @@ import {
 	getSortedRowModel,
 	getPaginationRowModel,
 	flexRender,
-	SortingState,
+	type ColumnDef,
+	type SortingState,
 } from "@tanstack/react-table";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,9 @@ import {
 	useFormasPagamento,
 	useFormaPagamentoMutations,
 } from "@/hooks/useFormasPagamento";
+import type { FormaPagamentoResponseDto } from "@/api-client";
+
+type FormaPagamento = FormaPagamentoResponseDto;
 
 export const ListarFormasPagamento: React.FC = () => {
 	const { t } = useTranslation("common");
@@ -52,7 +56,7 @@ export const ListarFormasPagamento: React.FC = () => {
 	} = useFormaPagamentoMutations();
 
 	// Filtrar dados baseado na pesquisa
-	const filteredData = useMemo(() => {
+	const filteredData = useMemo<FormaPagamento[]>(() => {
 		if (!globalFilter) return formasPagamento;
 
 		return formasPagamento.filter(method =>
@@ -61,21 +65,22 @@ export const ListarFormasPagamento: React.FC = () => {
 	}, [formasPagamento, globalFilter]);
 
 	// Colunas da tabela
-	const columns = useMemo(
+	const columns = useMemo<ColumnDef<FormaPagamento>[]>(
 		() => [
 			{
 				accessorKey: "nome",
 				header: t("paymentMethods.columns.name"),
-				cell: ({ getValue }: { getValue: () => unknown }) => (
-					<div className="font-medium">{getValue()}</div>
-				),
+				cell: ({ getValue }) => {
+					const nome = (getValue() as string) ?? "";
+					return <div className="font-medium">{nome}</div>;
+				},
 			},
 			{
 				accessorKey: "taxa",
 				header: () => (
 					<div className="text-center">{t("paymentMethods.columns.tax")}</div>
 				),
-				cell: ({ getValue }: { getValue: () => unknown }) => {
+				cell: ({ getValue }) => {
 					const taxa = getValue();
 					return (
 						<div className="text-center">
@@ -93,8 +98,8 @@ export const ListarFormasPagamento: React.FC = () => {
 						{t("paymentMethods.columns.discountApplied")}
 					</div>
 				),
-				cell: ({ getValue }: { getValue: () => unknown }) => {
-					const impostoPosCalculo = getValue();
+				cell: ({ getValue }) => {
+					const impostoPosCalculo = getValue() as boolean | undefined;
 					return (
 						<div className="text-center">
 							{impostoPosCalculo ? (
@@ -113,7 +118,7 @@ export const ListarFormasPagamento: React.FC = () => {
 						{t("paymentMethods.columns.daysToRelease")}
 					</div>
 				),
-				cell: ({ getValue }: { getValue: () => unknown }) => {
+				cell: ({ getValue }) => {
 					const dias = getValue();
 					const diasNumber = Number(dias);
 					return (
@@ -130,7 +135,7 @@ export const ListarFormasPagamento: React.FC = () => {
 			{
 				id: "actions",
 				header: t("paymentMethods.columns.actions"),
-				cell: ({ row }: { row: { original: Record<string, unknown> } }) => {
+				cell: ({ row }) => {
 					const formaPagamento = row.original;
 
 					return (
@@ -168,7 +173,7 @@ export const ListarFormasPagamento: React.FC = () => {
 				},
 			},
 		],
-		[isActivating, isDeactivating]
+		[t, isActivating, isDeactivating]
 	);
 
 	const table = useReactTable({

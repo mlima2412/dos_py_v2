@@ -42,9 +42,12 @@ BreadcrumbItem.displayName = "BreadcrumbItem";
 
 type BreadcrumbLinkProps = React.ComponentPropsWithoutRef<"a"> & {
 	asChild?: boolean;
-} & Pick<
-	LinkProps,
+	href?: string;
+} & Partial<
+	Pick<
+		LinkProps,
 		"to" | "replace" | "state" | "preventScrollReset" | "relative"
+	>
 >;
 
 const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(

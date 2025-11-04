@@ -43,7 +43,7 @@ interface SkuData {
 	publicId?: string;
 	cor?: string;
 	tamanho?: string;
-	codCor?: number;
+	codCor?: string | number;
 	qtdMinima?: number;
 	produto?: {
 		id?: number;
@@ -236,7 +236,7 @@ export const TransferenciaEstoque: React.FC = () => {
 				publicId: skuData.publicId || estoqueSku.skuId.toString(),
 				cor: skuData.cor || "",
 				tamanho: skuData.tamanho || "",
-				codCor: skuData.codCor || 0,
+				codCor: Number(skuData.codCor ?? 0),
 				qtdMinima: skuData.qtdMinima || 0,
 				estoque: estoqueSku.qtd,
 			};
@@ -621,7 +621,9 @@ export const TransferenciaEstoque: React.FC = () => {
 						title={t("inventory.transfer.selectedSkus")}
 						emptyMessage={t("inventory.transfer.noSkusSelected")}
 						showStockLimit={true}
-						maxQuantity={sku => sku.estoque}
+						maxQuantity={sku =>
+							Number((sku as { estoque?: number }).estoque ?? 0)
+						}
 						scrollAreaHeight="h-[800px]"
 					/>
 				</div>

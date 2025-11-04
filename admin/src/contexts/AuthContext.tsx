@@ -1,6 +1,7 @@
 import React, { useState, useEffect, ReactNode } from "react";
 import {
 	AuthControllerGetProfile200,
+	AuthControllerGetUserParceiros200,
 	authControllerGetProfile,
 	authControllerLogin,
 } from "@/api-client";
@@ -13,11 +14,13 @@ interface AuthProviderProps {
 	children: ReactNode;
 }
 
+type ParceiroItem = AuthControllerGetUserParceiros200[0];
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 	const [user, setUser] = useState<AuthControllerGetProfile200 | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [selectedPartnerData, setSelectedPartnerData] =
-		useState<AuthControllerGetProfile200 | null>(null);
+		useState<ParceiroItem | null>(null);
 	const queryClient = useQueryClient();
 
 	const isAuthenticated = !!user;
@@ -81,9 +84,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 		setUser(profile);
 	};
 
-	const updateSelectedPartner = (
-		partnerData: AuthControllerGetProfile200 | null
-	) => {
+	const updateSelectedPartner = (partnerData: ParceiroItem | null) => {
 		setSelectedPartnerData(partnerData);
 	};
 

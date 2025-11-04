@@ -1,9 +1,10 @@
 import { useEffect, useCallback, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import type { ZodTypeAny } from "zod";
 
 import { useToast } from "@/hooks/useToast";
 import { usePartnerContext } from "@/hooks/usePartnerContext";
@@ -23,32 +24,30 @@ import {
 } from "@/api-client";
 import { Produto, CategoriaProduto, Fornecedor, Currency } from "@/api-client";
 
-// Função para criar schema com traduções
-const createFormSchema = (t: (key: string) => string) =>
-	import("zod").then(({ z }) =>
-		z.object({
-			nome: z
-				.string()
-				.min(1, t("products.validations.nameRequired"))
-				.min(2, t("products.validations.nameMinLength"))
-				.max(255, t("products.validations.nameMaxLength")),
-			descricao: z.string().optional(),
-			categoriaId: z.string().optional(),
-			fornecedorId: z.string().optional(),
-			currencyId: z.string().optional(),
-			precoCompra: z
-				.number()
-				.min(0.01, t("products.validations.purchasePriceMin")),
-			precoVenda: z.number().min(0.01, t("products.validations.salePriceMin")),
-			ativo: z.boolean(),
-			consignado: z.boolean(),
-			imgURL: z
-				.string()
-				.url(t("products.validations.imageUrlInvalid"))
-				.optional()
-				.or(z.literal("")),
-		})
-	);
+// Lazy load schema to avoid bundling zod twice
+const createFormSchema = async (t: (key: string) => string) => {
+	const { z } = await import("zod");
+	return z.object({
+		nome: z
+			.string()
+			.min(1, t("products.validations.nameRequired"))
+			.min(2, t("products.validations.nameMinLength"))
+			.max(255, t("products.validations.nameMaxLength")),
+		descricao: z.string().default(""),
+		categoriaId: z.string().default(""),
+		fornecedorId: z.string().default(""),
+		currencyId: z.string().default(""),
+		precoCompra: z.number().min(0.01, t("products.validations.purchasePriceMin")),
+		precoVenda: z.number().min(0.01, t("products.validations.salePriceMin")),
+		ativo: z.boolean(),
+		consignado: z.boolean(),
+		imgURL: z
+			.string()
+			.url(t("products.validations.imageUrlInvalid"))
+			.or(z.literal(""))
+			.default(""),
+	});
+};
 
 interface UseProdutoFormProps {
 	produto?: Produto;
@@ -75,15 +74,16 @@ export const useProdutoForm = ({
 	const [precoCompraInput, setPrecoCompraInput] = useState<string>("");
 	const [precoVendaInput, setPrecoVendaInput] = useState<string>("");
 
-	const [formSchema, setFormSchema] = useState<ReturnType<typeof z.object> | null>(null);
+	const [formSchema, setFormSchema] = useState<ZodTypeAny | null>(null);
 
-	// Criar schema com traduções
 	useEffect(() => {
 		createFormSchema(t).then(setFormSchema);
 	}, [t]);
 
 	const form = useForm<ProdutoFormData>({
-		resolver: formSchema ? zodResolver(formSchema) : undefined,
+		resolver: formSchema
+			? (zodResolver(formSchema as never) as unknown as Resolver<ProdutoFormData>)
+			: undefined,
 		defaultValues: PRODUTO_FORM_DEFAULTS,
 	});
 

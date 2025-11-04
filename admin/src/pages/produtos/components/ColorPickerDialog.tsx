@@ -13,7 +13,12 @@ import {
 import { Button } from "@/components/ui/button";
 
 interface ColorPickerDialogProps {
-	sku: Record<string, unknown> & { publicId: string; codCor?: string; cor?: string; tamanho?: string };
+	sku: {
+		publicId: string;
+		codCor?: string | number;
+		cor?: string;
+		tamanho?: string;
+	};
 	onColorChange: (skuId: string, codCor: string) => void;
 }
 

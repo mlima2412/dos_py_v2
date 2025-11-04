@@ -397,8 +397,11 @@ export const ConferenciaPage: React.FC = () => {
 					},
 				});
 
+				const processedCount = resultado?.processados ?? 0;
 				toast.success(
-					`${t("conference.details.adjustmentsProcessed")} ${resultado.totalProcessados} ${t("conference.details.itemsAdjusted")}, ${resultado.totalIgnorados} ${t("conference.details.itemsIgnored")}.`
+					`${t("conference.details.adjustmentsProcessed")} ${processedCount} ${t(
+						"conference.details.itemsAdjusted"
+					)}.`
 				);
 			} else {
 				toast.info(t("conference.details.noAdjustmentsNeeded"));

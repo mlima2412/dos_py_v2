@@ -6,7 +6,10 @@ import {
 	useVendaControllerFindOne,
 } from "@/api-client";
 import { useLocaisEstoque } from "@/hooks/useEstoques";
-import type { ProdutosPorLocalResponseDto } from "@/api-client/types";
+import type {
+	ProdutosPorLocalResponseDto,
+	VendaItemEntity,
+} from "@/api-client/types";
 import type {
 	VendaFormMode,
 	VendaFormValues,
@@ -84,9 +87,18 @@ export const useVendaData = ({
 		}
 	);
 
-	const produtosDisponiveis = useMemo<ProdutosPorLocalResponseDto[]>(() => {
-		return Array.isArray(produtosData) ? produtosData : [];
-	}, [produtosData]);
+const produtosDisponiveis = useMemo<ProdutosPorLocalResponseDto[]>(() => {
+	return Array.isArray(produtosData) ? produtosData : [];
+}, [produtosData]);
+
+const produtosErrorNormalized = useMemo<Error | null>(() => {
+	if (!produtosError) return null;
+	const message =
+		(produtosError.data as { message?: string })?.message ||
+		produtosError.statusText ||
+		t("common.loadError");
+	return new Error(message);
+}, [produtosError, t]);
 
 	// Enrich items with product data when available
 	useEffect(() => {
@@ -146,11 +158,16 @@ export const useVendaData = ({
 			}
 		);
 
+type VendaItemWithProduto = VendaItemEntity & {
+	produtoId?: number;
+	produtoNome?: string;
+};
+
 	const mapVendaItemToFormData = useCallback(
-		(item: T & { id: number; skuId: number; produtoId: number; qtdReservada: number; precoUnit: number; desconto?: number; tipo: string }): VendaItemFormData => ({
+		(item: VendaItemWithProduto): VendaItemFormData => ({
 			remoteId: item.id,
 			skuId: item.skuId,
-			productId: item.produtoId,
+			productId: item.produtoId ?? 0,
 			qtdReservada: item.qtdReservada,
 			precoUnit: item.precoUnit,
 			desconto: item.desconto ?? 0,
@@ -171,7 +188,7 @@ export const useVendaData = ({
 		isLoadingLocais,
 		produtosDisponiveis,
 		isLoadingProdutos,
-		produtosError,
+		produtosError: produtosErrorNormalized,
 		vendaExistente,
 		isLoadingVenda,
 		mapVendaItemToFormData,

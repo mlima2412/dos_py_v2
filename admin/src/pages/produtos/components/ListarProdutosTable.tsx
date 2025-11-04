@@ -48,6 +48,7 @@ import { useToast } from "@/hooks/useToast";
 import {
 	useProdutoSkuControllerCreate,
 	type CreateProdutoSkuDto,
+	type Produto,
 } from "@/api-client";
 import { DialogSku } from "./DialogSku";
 
@@ -62,7 +63,7 @@ export const ListarProdutosTable: React.FC = () => {
 	const [sortField, setSortField] = useState<"nome" | null>(null);
 	const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 	const [isSkuDialogOpen, setIsSkuDialogOpen] = useState(false);
-	const [selectedProduto, setSelectedProduto] = useState<Record<string, unknown> | null>(null);
+	const [selectedProduto, setSelectedProduto] = useState<Produto | null>(null);
 
 	// Debounce para busca
 	const debouncedSearch = useDebounce(search, 500);
@@ -147,7 +148,11 @@ export const ListarProdutosTable: React.FC = () => {
 		}
 	};
 
-	const handleCreateSku = async (skuData: { cor?: string; tamanho?: string; qtdMinima?: number }) => {
+	const handleCreateSku = async (skuData: {
+		cor?: string;
+		tamanho?: string;
+		qtdMinima?: number;
+	}) => {
 		if (!selectedPartnerId || !selectedProduto) return;
 
 		try {
@@ -175,7 +180,7 @@ export const ListarProdutosTable: React.FC = () => {
 		}
 	};
 
-	const handleOpenSkuDialog = (produto: Record<string, unknown>) => {
+	const handleOpenSkuDialog = (produto: Produto) => {
 		setSelectedProduto(produto);
 		setIsSkuDialogOpen(true);
 	};

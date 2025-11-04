@@ -99,7 +99,7 @@ interface UseVendaFormProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const useVendaForm = (props: UseVendaFormProps) => {
+export const useVendaForm = (_props: UseVendaFormProps) => {
 	const formMethods = useForm<VendaFormValues>({
 		defaultValues,
 		resolver: zodResolver(vendaFormSchema) as Resolver<VendaFormValues>,

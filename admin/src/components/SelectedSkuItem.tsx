@@ -6,7 +6,7 @@ export interface SelectedSkuItemProps<T = Record<string, unknown>> {
 	sku: T & {
 		id: number;
 		cor?: string;
-		codCor?: string;
+		codCor?: string | number;
 		tamanho?: string;
 	};
 	product: T & {
@@ -15,7 +15,16 @@ export interface SelectedSkuItemProps<T = Record<string, unknown>> {
 	};
 	quantity: number;
 	onRemove: (skuId: number) => void;
-	onIncrement: (skuId: number, currentQuantity: number, sku: T & { id: number; cor?: string; codCor?: string; tamanho?: string }) => void;
+	onIncrement: (
+		skuId: number,
+		currentQuantity: number,
+		sku: T & {
+			id: number;
+			cor?: string;
+			codCor?: string | number;
+			tamanho?: string;
+		}
+	) => void;
 	onDecrement: (skuId: number, currentQuantity: number) => void;
 	isAtMaxLimit?: boolean;
 	enabledStockAdjustment?: boolean;
