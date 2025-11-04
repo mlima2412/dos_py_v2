@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Spinner } from "@/components/ui/spinner";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { useSubCategoriaDespesaControllerFindAll } from "@/api-client";
 import type { SubCategoriaDespesaControllerFindAll200 } from "@/api-client/types";
 
@@ -72,17 +71,17 @@ const ListarSubCategoriaDespesas: React.FC = () => {
 
 	if (isLoading) {
 		return (
-			<DashboardLayout>
+			
 				<div className="flex items-center justify-center min-h-[400px]">
 					<Spinner size="lg" />
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	if (error) {
 		return (
-			<DashboardLayout>
+			
 				<div className="flex items-center justify-center min-h-[400px]">
 					<div className="text-center">
 						<p className="text-destructive mb-4">
@@ -93,12 +92,12 @@ const ListarSubCategoriaDespesas: React.FC = () => {
 						</Button>
 					</div>
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-6">
 				{/* Header com Breadcrumb e Botão */}
 				<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -213,7 +212,7 @@ const ListarSubCategoriaDespesas: React.FC = () => {
 					</CardContent>
 				</Card>
 			</div>
-		</DashboardLayout>
+		
 	);
 };
 

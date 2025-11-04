@@ -1,7 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -144,26 +143,26 @@ export const VisualizarTransferencia: React.FC = () => {
 
 	if (error) {
 		return (
-			<DashboardLayout>
+			
 				<div className="flex items-center justify-center py-8">
 					<div className="text-destructive">{t("common.loadError")}</div>
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	if (isLoading) {
 		return (
-			<DashboardLayout>
+			
 				<div className="flex items-center justify-center py-8">
 					<div className="text-muted-foreground">{t("common.loading")}</div>
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-6">
 				{/* Breadcrumb */}
 				<Breadcrumb>
@@ -410,6 +409,6 @@ export const VisualizarTransferencia: React.FC = () => {
 					</Card>
 				</div>
 			</div>
-		</DashboardLayout>
+		
 	);
 };

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { DashboardLayout } from "../../../components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
 	Breadcrumb,
@@ -171,7 +170,7 @@ export const VisualizarEstoque: React.FC = () => {
 	};
 
 	return (
-		<DashboardLayout>
+		<>
 			<div className="space-y-6">
 				{/* Breadcrumb */}
 				<Breadcrumb>
@@ -309,6 +308,6 @@ export const VisualizarEstoque: React.FC = () => {
 					onSuccess={handleAdjustSuccess}
 				/>
 			)}
-		</DashboardLayout>
+		</>
 	);
 };

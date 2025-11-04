@@ -1,7 +1,6 @@
 import { useParams, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 
@@ -50,11 +49,11 @@ export function FormularioCliente() {
 	// Loading state
 	if (isLoadingCliente) {
 		return (
-			<DashboardLayout>
+			
 				<div className="flex items-center justify-center h-64">
 					<Spinner size="lg" />
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
@@ -82,7 +81,7 @@ export function FormularioCliente() {
 	];
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-6">
 				<FormHeader isViewing={isViewing} isEditing={isEditing} />
 
@@ -251,6 +250,6 @@ export function FormularioCliente() {
 					</CardContent>
 				</Card>
 			</div>
-		</DashboardLayout>
+		
 	);
 }

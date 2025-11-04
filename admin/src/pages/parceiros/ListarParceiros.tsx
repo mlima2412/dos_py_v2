@@ -9,7 +9,6 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Plus, Search } from "lucide-react";
 
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -98,7 +97,7 @@ export default function ListarParceiros() {
 	};
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-6">
 				<div className="flex items-center justify-between">
 					<div>
@@ -247,6 +246,6 @@ export default function ListarParceiros() {
 					</CardContent>
 				</Card>
 			</div>
-		</DashboardLayout>
+		
 	);
 }

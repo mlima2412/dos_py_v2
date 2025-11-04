@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { ChevronRight, MoreHorizontal } from "lucide-react";
+import { Link, type LinkProps } from "react-router-dom";
 
 import { cn } from "@/lib/utils";
 
@@ -39,29 +40,66 @@ const BreadcrumbItem = React.forwardRef<
 ));
 BreadcrumbItem.displayName = "BreadcrumbItem";
 
-const BreadcrumbLink = React.forwardRef<
-	HTMLAnchorElement,
-	React.ComponentPropsWithoutRef<"a"> & {
-		asChild?: boolean;
-	}
->(({ asChild, className, ...props }, ref) => {
-	if (asChild) {
+type BreadcrumbLinkProps = React.ComponentPropsWithoutRef<"a"> & {
+	asChild?: boolean;
+} & Pick<
+	LinkProps,
+		"to" | "replace" | "state" | "preventScrollReset" | "relative"
+>;
+
+const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(
+	(
+		{
+			asChild,
+			className,
+			href,
+			to,
+			replace,
+			state,
+			preventScrollReset,
+			relative,
+			...props
+		},
+		ref
+	) => {
+		if (asChild) {
+			return (
+				<Slot
+					className={cn("transition-colors hover:text-foreground", className)}
+					{...props}
+				/>
+			);
+		}
+
+		const isInternalHref =
+			typeof href === "string" && href.startsWith("/") && !href.startsWith("//");
+		const targetTo = to ?? (isInternalHref ? href : undefined);
+
+		if (targetTo) {
+			return (
+				<Link
+					ref={ref}
+					to={targetTo}
+					replace={replace}
+					state={state}
+					preventScrollReset={preventScrollReset}
+					relative={relative}
+					className={cn("transition-colors hover:text-foreground", className)}
+					{...props}
+				/>
+			);
+		}
+
 		return (
-			<Slot
+			<a
+				ref={ref}
 				className={cn("transition-colors hover:text-foreground", className)}
+				href={href}
 				{...props}
 			/>
 		);
 	}
-
-	return (
-		<a
-			ref={ref}
-			className={cn("transition-colors hover:text-foreground", className)}
-			{...props}
-		/>
-	);
-});
+);
 BreadcrumbLink.displayName = "BreadcrumbLink";
 
 const BreadcrumbPage = React.forwardRef<

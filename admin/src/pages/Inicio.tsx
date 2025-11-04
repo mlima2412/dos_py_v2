@@ -1,5 +1,4 @@
 import React from "react";
-import { DashboardLayout } from "../components/layout/DashboardLayout";
 import {
 	Card,
 	CardContent,
@@ -16,7 +15,7 @@ export const Inicio: React.FC = () => {
 	const { t } = useTranslation();
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-6">
 				<div>
 					<h1 className="text-3xl font-bold tracking-tight">
@@ -190,6 +189,6 @@ export const Inicio: React.FC = () => {
 					</Card>
 				</div>
 			</div>
-		</DashboardLayout>
+		
 	);
 };

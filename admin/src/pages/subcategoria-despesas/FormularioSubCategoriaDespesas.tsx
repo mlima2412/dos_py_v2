@@ -25,7 +25,6 @@ import {
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Spinner } from "@/components/ui/spinner";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import {
 	useSubCategoriaDespesaControllerCreate,
 	useSubCategoriaDespesaControllerUpdate,
@@ -154,17 +153,17 @@ const FormularioSubCategoriaDespesas: React.FC = () => {
 
 	if (isLoading) {
 		return (
-			<DashboardLayout>
+			
 				<div className="flex items-center justify-center min-h-[400px]">
 					<Spinner size="lg" />
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	if (isEditing && errorSubCategoria) {
 		return (
-			<DashboardLayout>
+			
 				<div className="flex items-center justify-center min-h-[400px]">
 					<div className="text-center">
 						<p className="text-destructive mb-4">
@@ -175,12 +174,12 @@ const FormularioSubCategoriaDespesas: React.FC = () => {
 						</Button>
 					</div>
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-6">
 				{/* Breadcrumb */}
 				<Breadcrumb>
@@ -307,7 +306,7 @@ const FormularioSubCategoriaDespesas: React.FC = () => {
 					</CardContent>
 				</Card>
 			</div>
-		</DashboardLayout>
+		
 	);
 };
 

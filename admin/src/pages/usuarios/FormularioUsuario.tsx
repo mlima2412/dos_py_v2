@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -356,16 +355,16 @@ export function FormularioUsuario() {
 
 	if (isLoading) {
 		return (
-			<DashboardLayout>
+			
 				<div className="flex items-center justify-center min-h-[400px]">
 					<Spinner size="lg" />
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-6">
 				{/* Breadcrumb */}
 				<Breadcrumb>
@@ -724,6 +723,6 @@ export function FormularioUsuario() {
 					</CardContent>
 				</Card>
 			</div>
-		</DashboardLayout>
+		
 	);
 }

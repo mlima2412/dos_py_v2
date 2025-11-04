@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
-import { DashboardLayout } from "../../../components/layout/DashboardLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -125,16 +124,16 @@ export const ListarTransferencias: React.FC = () => {
 
 	if (error) {
 		return (
-			<DashboardLayout>
+			
 				<div className="flex items-center justify-center py-8">
 					<div className="text-destructive">{t("common.loadError")}</div>
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-6">
 				{/* Breadcrumb */}
 				<Breadcrumb>
@@ -296,6 +295,6 @@ export const ListarTransferencias: React.FC = () => {
 					</CardContent>
 				</Card>
 			</div>
-		</DashboardLayout>
+		
 	);
 };

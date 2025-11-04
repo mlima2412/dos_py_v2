@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import {
 	Breadcrumb,
@@ -236,13 +235,13 @@ export const ListagemVendas: React.FC<ListagemVendasProps> = ({ tipo }) => {
 
 	if (!selectedPartnerId) {
 		return (
-			<DashboardLayout>
+			
 				<div className="text-center">
 					<p className="text-muted-foreground">
 						{t("common.noPartnerSelected")}
 					</p>
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
@@ -263,7 +262,7 @@ export const ListagemVendas: React.FC<ListagemVendasProps> = ({ tipo }) => {
 	};
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-6">
 				{/* Breadcrumb e Botão Nova Venda */}
 				<div className="flex justify-between items-center">
@@ -467,6 +466,6 @@ export const ListagemVendas: React.FC<ListagemVendasProps> = ({ tipo }) => {
 					</CardContent>
 				</Card>
 			</div>
-		</DashboardLayout>
+		
 	);
 };

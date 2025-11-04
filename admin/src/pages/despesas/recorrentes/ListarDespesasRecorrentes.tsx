@@ -8,7 +8,6 @@ import {
 	flexRender,
 	SortingState,
 } from "@tanstack/react-table";
-import { DashboardLayout } from "../../../components/layout/DashboardLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -112,7 +111,7 @@ export const ListarDespesasRecorrentes: React.FC = () => {
 	});
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-2">
 				{/* Breadcrumb e Botão Criar Despesa Recorrente */}
 				<div className="flex justify-between items-center">
@@ -251,7 +250,7 @@ export const ListarDespesasRecorrentes: React.FC = () => {
 					</CardContent>
 				</Card>
 			</div>
-		</DashboardLayout>
+		
 	);
 };
 

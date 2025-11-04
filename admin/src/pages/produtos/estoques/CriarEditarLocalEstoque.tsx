@@ -6,7 +6,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { z } from "zod";
 import { Save, X, Loader2 } from "lucide-react";
 
-import { DashboardLayout } from "../../../components/layout/DashboardLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -169,19 +168,19 @@ export const CriarEditarLocalEstoque: React.FC<
 	// Mostrar loading se estiver carregando dados
 	if (isLoadingLocal && !isCreate) {
 		return (
-			<DashboardLayout>
+			
 				<div className="flex items-center justify-center h-64">
 					<div className="flex items-center gap-2">
 						<Loader2 className="h-6 w-6 animate-spin" />
 						<span>{t("common.loading")}</span>
 					</div>
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-6">
 				{/* Breadcrumb */}
 				<Breadcrumb>
@@ -343,6 +342,6 @@ export const CriarEditarLocalEstoque: React.FC<
 					</CardContent>
 				</Card>
 			</div>
-		</DashboardLayout>
+		
 	);
 };

@@ -9,7 +9,6 @@ import { Save, X } from "lucide-react";
 
 import { useToast } from "@/hooks/useToast";
 
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -354,16 +353,16 @@ export function FormularioDespesa() {
 
 	if (isLoadingDespesa && isEditing) {
 		return (
-			<DashboardLayout>
+			
 				<div className="flex items-center justify-center h-64">
 					<Spinner size="lg" />
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-6">
 				<Breadcrumb>
 					<BreadcrumbList>
@@ -854,6 +853,6 @@ export function FormularioDespesa() {
 					</CardContent>
 				</Card>
 			</div>
-		</DashboardLayout>
+		
 	);
 }

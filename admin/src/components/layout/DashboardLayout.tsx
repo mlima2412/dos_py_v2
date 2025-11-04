@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
 import { cn } from "@/lib/utils";
+import { Outlet } from "react-router-dom";
 
 interface DashboardLayoutProps {
-	children: React.ReactNode;
+	children?: React.ReactNode;
 }
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
@@ -40,6 +41,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 		setSidebarOpen(false);
 	};
 
+	const content = children ?? <Outlet />;
+
 	return (
 		<div className="min-h-screen bg-background">
 			{/* Header */}
@@ -58,7 +61,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 					"min-h-[calc(100vh-4rem)]"
 				)}
 			>
-				<div className="p-4">{children}</div>
+				<div className="p-4">{content}</div>
 			</main>
 		</div>
 	);

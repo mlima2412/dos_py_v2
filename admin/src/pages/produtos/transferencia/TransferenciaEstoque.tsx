@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { DashboardLayout } from "../../../components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -403,7 +402,7 @@ export const TransferenciaEstoque: React.FC = () => {
 	}, [selectedProductId]);
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-6">
 				{/* Breadcrumb */}
 				<Breadcrumb>
@@ -655,6 +654,6 @@ export const TransferenciaEstoque: React.FC = () => {
 					</Button>
 				</div>
 			</div>
-		</DashboardLayout>
+		
 	);
 };

@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -348,41 +347,35 @@ export const FinalizarPedidoCompra: React.FC = () => {
 
 	if (!selectedPartnerId) {
 		return (
-			<DashboardLayout>
-				<div className="text-center text-muted-foreground">
-					{t("common.noPartnerSelected")}
-				</div>
-			</DashboardLayout>
+			<div className="text-center text-muted-foreground">
+				{t("common.noPartnerSelected")}
+			</div>
 		);
 	}
 
 	if (isLoadingPedido || isLoadingCurrencies) {
 		return (
-			<DashboardLayout>
-				<div className="text-center text-muted-foreground">
-					{t("common.loading")}
-				</div>
-			</DashboardLayout>
+			<div className="text-center text-muted-foreground">
+				{t("common.loading")}
+			</div>
 		);
 	}
 
 	if (pedidoError || !pedido) {
 		return (
-			<DashboardLayout>
-				<div className="text-center space-y-4">
-					<p className="text-destructive">
-						{t("purchaseOrders.finalize.messages.loadError")}
-					</p>
-					<Button variant="outline" onClick={handleCancel}>
-						{t("common.back")}
-					</Button>
-				</div>
-			</DashboardLayout>
+			<div className="text-center space-y-4">
+				<p className="text-destructive">
+					{t("purchaseOrders.finalize.messages.loadError")}
+				</p>
+				<Button variant="outline" onClick={handleCancel}>
+					{t("common.back")}
+				</Button>
+			</div>
 		);
 	}
 
 	return (
-		<DashboardLayout>
+		<>
 			<Breadcrumb>
 				<BreadcrumbList>
 					<BreadcrumbItem>
@@ -685,6 +678,6 @@ export const FinalizarPedidoCompra: React.FC = () => {
 					</AlertDialogContent>
 				</AlertDialog>
 			</div>
-		</DashboardLayout>
+		</>
 	);
 };

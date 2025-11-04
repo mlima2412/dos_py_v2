@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { usePartner } from "@/hooks/usePartner";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import {
 	Breadcrumb,
@@ -786,45 +785,37 @@ export const FormularioPedidoCompra: React.FC = () => {
 
 	if (!selectedPartnerId) {
 		return (
-			<DashboardLayout>
-				<div className="text-center">
-					<p className="text-muted-foreground">
-						{t("common.noPartnerSelected")}
-					</p>
-				</div>
-			</DashboardLayout>
+			<div className="text-center">
+				<p className="text-muted-foreground">{t("common.noPartnerSelected")}</p>
+			</div>
 		);
 	}
 
 	if (publicId && isLoadingPedido && !pedidoAtual) {
 		return (
-			<DashboardLayout>
-				<div className="text-center">
-					<p className="text-muted-foreground">{t("common.loading")}</p>
-				</div>
-			</DashboardLayout>
+			<div className="text-center">
+				<p className="text-muted-foreground">{t("common.loading")}</p>
+			</div>
 		);
 	}
 
 	if (publicId && errorPedido && !pedidoAtual) {
 		return (
-			<DashboardLayout>
-				<div className="text-center space-y-2">
-					<p className="text-destructive">
-						{t("purchaseOrders.form.messages.loadError", {
-							defaultValue: "Não foi possível carregar o pedido de compra.",
-						})}
-					</p>
-					<Button variant="outline" onClick={() => navigate("/pedidoCompra")}>
-						{t("common.back", { defaultValue: "Voltar" })}
-					</Button>
-				</div>
-			</DashboardLayout>
+			<div className="text-center space-y-2">
+				<p className="text-destructive">
+					{t("purchaseOrders.form.messages.loadError", {
+						defaultValue: "Não foi possível carregar o pedido de compra.",
+					})}
+				</p>
+				<Button variant="outline" onClick={() => navigate("/pedidoCompra")}>
+					{t("common.back", { defaultValue: "Voltar" })}
+				</Button>
+			</div>
 		);
 	}
 
 	return (
-		<DashboardLayout>
+		<>
 			{/* alinhe as duas divs no eixo da linha */}
 			<div className="class flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 				<div>
@@ -961,6 +952,6 @@ export const FormularioPedidoCompra: React.FC = () => {
 					)}
 				</>
 			)}
-		</DashboardLayout>
+		</>
 	);
 };

@@ -8,7 +8,6 @@ import {
 	flexRender,
 	SortingState,
 } from "@tanstack/react-table";
-import { DashboardLayout } from "../../components/layout/DashboardLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -198,7 +197,7 @@ export const ListarFormasPagamento: React.FC = () => {
 	};
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-2">
 				{/* Breadcrumb e Botão Criar Forma de Pagamento */}
 				<div className="flex justify-between items-center">
@@ -324,6 +323,6 @@ export const ListarFormasPagamento: React.FC = () => {
 					</CardContent>
 				</Card>
 			</div>
-		</DashboardLayout>
+		
 	);
 };

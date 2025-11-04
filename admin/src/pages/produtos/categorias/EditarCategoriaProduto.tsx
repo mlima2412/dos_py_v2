@@ -1,7 +1,6 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -36,26 +35,26 @@ export const EditarCategoriaProduto: React.FC = () => {
 
 	if (isLoading) {
 		return (
-			<DashboardLayout>
+			
 				<div className="space-y-6">
 					<LoadingMessage columns={1} message={t("common.loading")} />
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	if (error || !categoria) {
 		return (
-			<DashboardLayout>
+			
 				<div className="space-y-6">
 					<LoadingMessage columns={1} message={t("common.loadError")} />
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-6">
 				{/* Breadcrumb */}
 				<Breadcrumb>
@@ -85,6 +84,6 @@ export const EditarCategoriaProduto: React.FC = () => {
 					onCancel={handleCancel}
 				/>
 			</div>
-		</DashboardLayout>
+		
 	);
 };

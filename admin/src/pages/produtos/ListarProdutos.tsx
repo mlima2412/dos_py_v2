@@ -1,7 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -23,7 +22,7 @@ export const ListarProdutos: React.FC = () => {
 	};
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-6">
 				{/* Breadcrumb e Botão Criar Produto */}
 				<div className="flex justify-between items-center">
@@ -47,6 +46,6 @@ export const ListarProdutos: React.FC = () => {
 				{/* Conteúdo principal */}
 				<ListarProdutosTable />
 			</div>
-		</DashboardLayout>
+		
 	);
 };

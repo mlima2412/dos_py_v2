@@ -37,6 +37,7 @@ import {
 } from "./pages/pedido-compra";
 import { PedidoCompraPrintPage } from "./pages/pedido-compra/print";
 import { VendasRoutes } from "./pages/vendas/vendas";
+import { DashboardLayout } from "./components/layout/DashboardLayout";
 
 import { ThemeProvider } from "./components/theme-provider";
 import "./i18n";
@@ -64,215 +65,79 @@ function App() {
 									<Route path="/login" element={<Login />} />
 									<Route path="/forgot-password" element={<ForgotPassword />} />
 									<Route path="/reset-password" element={<ResetPassword />} />
+
 									<Route
-										path="/dashboard"
 										element={
 											<ProtectedRoute>
-												<Dashboard />
+												<DashboardLayout />
 											</ProtectedRoute>
 										}
-									/>
-									<Route
-										path="/inicio"
-										element={
-											<ProtectedRoute>
-												<Inicio />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/usuarios"
-										element={
-											<ProtectedRoute>
-												<ListarUsuarios />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/usuarios/criar"
-										element={
-											<ProtectedRoute>
-												<FormularioUsuario />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/usuarios/editar/:publicId"
-										element={
-											<ProtectedRoute>
-												<FormularioUsuario />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/parceiros/*"
-										element={
-											<ProtectedRoute>
-												<Parceiros />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/canais-origem/*"
-										element={
-											<ProtectedRoute>
-												<CanaisOrigem />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/tipos-despesa/*"
-										element={
-											<ProtectedRoute>
-												<CategoriaDespesas />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/subtipos-despesa/*"
-										element={
-											<ProtectedRoute>
-												<SubCategoriaDespesas />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/despesas/*"
-										element={
-											<ProtectedRoute>
-												<DespesasPage />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/fornecedores/*"
-										element={
-											<ProtectedRoute>
-												<FornecedoresRoutes />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/clientes/*"
-										element={
-											<ProtectedRoute>
-												<ClientesRoutes />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/produto/categorias/*"
-										element={
-											<ProtectedRoute>
-												<CategoriasProdutoRoutes />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/produtos/*"
-										element={
-											<ProtectedRoute>
-												<ProdutosRoutes />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/estoques/*"
-										element={
-											<ProtectedRoute>
-												<EstoquesRoutes />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/formaPagamento"
-										element={
-											<ProtectedRoute>
-												<ListarFormasPagamento />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/formaPagamento/criar"
-										element={
-											<ProtectedRoute>
-												<FormularioFormaPagamento />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/formaPagamento/editar/:id"
-										element={
-											<ProtectedRoute>
-												<FormularioFormaPagamento />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/formaPagamento/visualizar/:id"
-										element={
-											<ProtectedRoute>
-												<FormularioFormaPagamento />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/pedidoCompra"
-										element={
-											<ProtectedRoute>
-												<PedidoCompraPage />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/pedidoCompra/criar"
-										element={
-											<ProtectedRoute>
-												<FormularioPedidoCompra />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/pedidoCompra/visualizar/:publicId"
-										element={
-											<ProtectedRoute>
-												<FormularioPedidoCompra />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/pedidoCompra/finalizar/:publicId"
-										element={
-											<ProtectedRoute>
-												<FinalizarPedidoCompra />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/pedidoCompra/etiquetas/:publicId"
-										element={
-											<ProtectedRoute>
-												<ImprimirEtiquetas />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/pedidoCompra/imprimir/:publicId"
-										element={
-											<ProtectedRoute>
-												<PedidoCompraPrintPage />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/pedidoVendas/*"
-										element={
-											<ProtectedRoute>
-												<VendasRoutes />
-											</ProtectedRoute>
-										}
-									/>
-									<Route path="/" element={<Navigate to="/inicio" replace />} />
+									>
+										<Route path="/dashboard" element={<Dashboard />} />
+										<Route path="/inicio" element={<Inicio />} />
+										<Route path="/usuarios" element={<ListarUsuarios />} />
+										<Route path="/usuarios/criar" element={<FormularioUsuario />} />
+										<Route
+											path="/usuarios/editar/:publicId"
+											element={<FormularioUsuario />}
+										/>
+										<Route path="/parceiros/*" element={<Parceiros />} />
+										<Route path="/canais-origem/*" element={<CanaisOrigem />} />
+										<Route path="/tipos-despesa/*" element={<CategoriaDespesas />} />
+										<Route
+											path="/subtipos-despesa/*"
+											element={<SubCategoriaDespesas />}
+										/>
+										<Route path="/despesas/*" element={<DespesasPage />} />
+										<Route path="/fornecedores/*" element={<FornecedoresRoutes />} />
+										<Route path="/clientes/*" element={<ClientesRoutes />} />
+										<Route
+											path="/produto/categorias/*"
+											element={<CategoriasProdutoRoutes />}
+										/>
+										<Route path="/produtos/*" element={<ProdutosRoutes />} />
+										<Route path="/estoques/*" element={<EstoquesRoutes />} />
+										<Route
+											path="/formaPagamento"
+											element={<ListarFormasPagamento />}
+										/>
+										<Route
+											path="/formaPagamento/criar"
+											element={<FormularioFormaPagamento />}
+										/>
+										<Route
+											path="/formaPagamento/editar/:id"
+											element={<FormularioFormaPagamento />}
+										/>
+										<Route
+											path="/formaPagamento/visualizar/:id"
+											element={<FormularioFormaPagamento />}
+										/>
+										<Route path="/pedidoCompra" element={<PedidoCompraPage />} />
+										<Route
+											path="/pedidoCompra/criar"
+											element={<FormularioPedidoCompra />}
+										/>
+										<Route
+											path="/pedidoCompra/visualizar/:publicId"
+											element={<FormularioPedidoCompra />}
+										/>
+										<Route
+											path="/pedidoCompra/finalizar/:publicId"
+											element={<FinalizarPedidoCompra />}
+										/>
+										<Route
+											path="/pedidoCompra/etiquetas/:publicId"
+											element={<ImprimirEtiquetas />}
+										/>
+										<Route
+											path="/pedidoCompra/imprimir/:publicId"
+											element={<PedidoCompraPrintPage />}
+										/>
+										<Route path="/pedidoVendas/*" element={<VendasRoutes />} />
+										<Route path="/" element={<Navigate to="/inicio" replace />} />
+									</Route>
+
 									{/* Rota 404 - deve ser a última */}
 									<Route path="*" element={<NotFound />} />
 								</Routes>

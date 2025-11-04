@@ -9,7 +9,6 @@ import { usePartnerContext } from "@/hooks/usePartnerContext";
 import { useProdutoData } from "@/hooks/useProdutoData";
 import { useProdutoForm } from "@/hooks/useProdutoForm";
 
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -260,16 +259,16 @@ export function FormularioProduto() {
 
 	if (isLoadingProduto && isEditing) {
 		return (
-			<DashboardLayout>
+			
 				<div className="flex items-center justify-center h-64">
 					<Spinner size="lg" />
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-6 h-full flex flex-col">
 				<Breadcrumb>
 					<BreadcrumbList>
@@ -705,6 +704,6 @@ export function FormularioProduto() {
 					</AlertDialogContent>
 				</AlertDialog>
 			</div>
-		</DashboardLayout>
+		
 	);
 }

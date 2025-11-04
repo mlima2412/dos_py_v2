@@ -1,4 +1,4 @@
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
+
 import { EventCalendar } from "@/components/EventCalendar";
 import {
 	Breadcrumb,
@@ -14,7 +14,7 @@ export function ContasPagarCalendar() {
 	const { t } = useTranslation();
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-6">
 				{/* Breadcrumb */}
 				<Breadcrumb>
@@ -38,7 +38,7 @@ export function ContasPagarCalendar() {
 				{/* Calendário de eventos */}
 				<EventCalendar className="w-full" />
 			</div>
-		</DashboardLayout>
+		
 	);
 }
 

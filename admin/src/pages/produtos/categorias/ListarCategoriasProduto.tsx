@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -37,7 +36,7 @@ export const ListarCategoriasProduto: React.FC = () => {
 	};
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-6">
 				{/* Breadcrumb e Botão Criar Categoria */}
 				<div className="flex justify-between items-center">
@@ -69,6 +68,6 @@ export const ListarCategoriasProduto: React.FC = () => {
 					<ListarCategorias />
 				)}
 			</div>
-		</DashboardLayout>
+		
 	);
 };

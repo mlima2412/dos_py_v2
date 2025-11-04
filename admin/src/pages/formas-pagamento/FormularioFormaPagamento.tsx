@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { DashboardLayout } from "../../components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -138,7 +137,7 @@ export const FormularioFormaPagamento: React.FC = () => {
 
 	if (isLoadingData && (mode === "edit" || mode === "view")) {
 		return (
-			<DashboardLayout>
+			
 				<div className="space-y-2">
 					<div className="flex justify-between items-center">
 						<Breadcrumb>
@@ -165,12 +164,12 @@ export const FormularioFormaPagamento: React.FC = () => {
 						</CardContent>
 					</Card>
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-2">
 				{/* Breadcrumb */}
 				<div className="flex justify-between items-center">
@@ -384,6 +383,6 @@ export const FormularioFormaPagamento: React.FC = () => {
 					</CardContent>
 				</Card>
 			</div>
-		</DashboardLayout>
+		
 	);
 };

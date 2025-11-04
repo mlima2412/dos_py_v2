@@ -3,7 +3,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { usePartner } from "@/hooks/usePartner";
 import { useDebounce } from "@/hooks/useDebounce";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import {
 	Breadcrumb,
@@ -323,18 +322,18 @@ export const ListagemPedidoCompra: React.FC = () => {
 
 	if (!selectedPartnerId) {
 		return (
-			<DashboardLayout>
+			
 				<div className="text-center">
 					<p className="text-muted-foreground">
 						{t("common.noPartnerSelected")}
 					</p>
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-6">
 				{/* Breadcrumb */}
 				<Breadcrumb>
@@ -407,6 +406,6 @@ export const ListagemPedidoCompra: React.FC = () => {
 					</CardContent>
 				</Card>
 			</div>
-		</DashboardLayout>
+		
 	);
 };

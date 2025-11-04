@@ -9,7 +9,6 @@ import { useToast } from "@/hooks/useToast";
 import { ResponseErrorConfig } from "@/lib/fetch-client";
 import { usePartnerContext } from "@/hooks/usePartnerContext";
 
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -202,16 +201,16 @@ export function FormularioFornecedor() {
 
 	if (isEditing && isLoadingFornecedor) {
 		return (
-			<DashboardLayout>
+			
 				<div className="flex items-center justify-center h-64">
 					<Spinner size="lg" />
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-6">
 				{/* Breadcrumb */}
 				<Breadcrumb>
@@ -362,6 +361,6 @@ export function FormularioFornecedor() {
 					</CardContent>
 				</Card>
 			</div>
-		</DashboardLayout>
+		
 	);
 }

@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, useNavigate } from "react-router-dom";
-import { DashboardLayout } from "../../../components/layout/DashboardLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -435,18 +434,18 @@ export const ConferenciaPage: React.FC = () => {
 	// Loading state
 	if (isViewing && isLoadingConferencia) {
 		return (
-			<DashboardLayout>
+			
 				<div className="flex items-center justify-center py-8">
 					<div className="text-muted-foreground">{t("common.loading")}</div>
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	// Error state
 	if (isViewing && (conferenciaError || !conferencia)) {
 		return (
-			<DashboardLayout>
+			
 				<div className="flex items-center justify-center py-8">
 					<div className="text-destructive">
 						{conferenciaError
@@ -454,12 +453,12 @@ export const ConferenciaPage: React.FC = () => {
 							: t("conference.details.conferenceError")}
 					</div>
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-4">
 				{/* Breadcrumb */}
 				<div className="flex items-center justify-between">
@@ -698,6 +697,6 @@ export const ConferenciaPage: React.FC = () => {
 					isLoading={processarAjustes.isPending}
 				/>
 			</div>
-		</DashboardLayout>
+		
 	);
 };

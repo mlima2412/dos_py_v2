@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
 	Breadcrumb,
@@ -71,18 +70,18 @@ export function Dashboard() {
 
 	if (error) {
 		return (
-			<DashboardLayout>
+			
 				<div className="p-6">
 					<div className="text-red-500">
 						Erro ao carregar dados do dashboard: {error.message}
 					</div>
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-6">
 				{/* Breadcrumb e Seletor de Ano */}
 				<div className="flex items-center justify-between">
@@ -228,6 +227,6 @@ export function Dashboard() {
 					<YearlyExpensesChart year={selectedYear} />
 				</div>
 			</div>
-		</DashboardLayout>
+		
 	);
 }

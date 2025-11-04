@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Spinner } from "@/components/ui/spinner";
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { useCategoriaDespesasControllerFindAll } from "@/api-client";
 import type { CategoriaDespesasControllerFindAll200 } from "@/api-client/types";
 
@@ -61,17 +60,17 @@ const ListarCategoriaDespesas: React.FC = () => {
 
 	if (isLoading) {
 		return (
-			<DashboardLayout>
+			
 				<div className="flex items-center justify-center min-h-[400px]">
 					<Spinner size="lg" />
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	if (error) {
 		return (
-			<DashboardLayout>
+			
 				<div className="flex items-center justify-center min-h-[400px]">
 					<div className="text-center">
 						<p className="text-destructive mb-4">Erro ao carregar categorias</p>
@@ -80,12 +79,12 @@ const ListarCategoriaDespesas: React.FC = () => {
 						</Button>
 					</div>
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-2">
 				{/* Breadcrumb e Botão Criar */}
 				<div className="flex justify-between items-center">
@@ -210,7 +209,7 @@ const ListarCategoriaDespesas: React.FC = () => {
 					</CardContent>
 				</Card>
 			</div>
-		</DashboardLayout>
+		
 	);
 };
 

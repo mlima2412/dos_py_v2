@@ -1,4 +1,4 @@
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Construction } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -7,7 +7,7 @@ export function DespesasRecorrentesEmConstrucao() {
 	const { t } = useTranslation();
 
 	return (
-		<DashboardLayout>
+		
 			<div className="container mx-auto p-6">
 				<Card className="max-w-md mx-auto">
 					<CardHeader className="text-center">
@@ -23,7 +23,7 @@ export function DespesasRecorrentesEmConstrucao() {
 					</CardContent>
 				</Card>
 			</div>
-		</DashboardLayout>
+		
 	);
 }
 

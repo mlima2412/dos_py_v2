@@ -7,7 +7,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { DashboardLayout } from "../components/layout/DashboardLayout";
 import { useTranslation } from "react-i18next";
 
 export const Dashboard: React.FC = () => {
@@ -15,7 +14,7 @@ export const Dashboard: React.FC = () => {
 	const { t } = useTranslation();
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-6">
 				<div>
 					<h1 className="text-3xl font-bold tracking-tight">
@@ -118,6 +117,6 @@ export const Dashboard: React.FC = () => {
 					</Card>
 				</div>
 			</div>
-		</DashboardLayout>
+		
 	);
 };

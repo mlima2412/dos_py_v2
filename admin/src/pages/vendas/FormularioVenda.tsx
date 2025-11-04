@@ -11,7 +11,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { FormProvider } from "react-hook-form";
 import { Loader2 } from "lucide-react";
 
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -526,26 +525,26 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 
 	if (!selectedPartnerId) {
 		return (
-			<DashboardLayout>
+			
 				<div className="p-6 text-center text-muted-foreground">
 					{t("common.noPartnerSelected")}
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	if (mode !== "create" && isLoadingVenda) {
 		return (
-			<DashboardLayout>
+			
 				<div className="flex h-full items-center justify-center">
 					<Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
 				</div>
-			</DashboardLayout>
+			
 		);
 	}
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-6">
 				<Breadcrumb>
 					<BreadcrumbList>
@@ -657,7 +656,7 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 					</div>
 				</FormProvider>
 			</div>
-		</DashboardLayout>
+		
 	);
 };
 

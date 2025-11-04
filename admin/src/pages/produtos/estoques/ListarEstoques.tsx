@@ -8,7 +8,6 @@ import {
 	flexRender,
 	SortingState,
 } from "@tanstack/react-table";
-import { DashboardLayout } from "../../../components/layout/DashboardLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -132,7 +131,7 @@ export const ListarEstoques: React.FC = () => {
 	};
 
 	return (
-		<DashboardLayout>
+		
 			<div className="space-y-2">
 				<div className="flex items-center justify-between">
 					<Breadcrumb>
@@ -280,6 +279,6 @@ export const ListarEstoques: React.FC = () => {
 					</CardContent>
 				</Card>
 			</div>
-		</DashboardLayout>
+		
 	);
 };
