@@ -8,8 +8,8 @@ import { paginatedDespesaResponseDtoSchema } from "./paginatedDespesaResponseDto
 import { z } from "zod/v4";
 
 export const despesasControllerFindPaginatedQueryParamsSchema = z.object({
-    "page": z.optional(z.string().default("1").describe("Número da página")),
-"limit": z.optional(z.string().default("20").describe("Número de itens por página")),
+    "page": z.string().default("1").describe("Número da página"),
+"limit": z.string().default("20").describe("Número de itens por página"),
 "search": z.optional(z.string().describe("Termo de busca para filtrar por descrição")),
 "fornecedorId": z.optional(z.string().describe("ID do fornecedor para filtrar")),
 "subCategoriaId": z.optional(z.string().describe("ID da subcategoria para filtrar"))

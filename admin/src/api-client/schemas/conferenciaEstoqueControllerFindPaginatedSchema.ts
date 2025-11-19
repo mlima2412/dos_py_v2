@@ -8,8 +8,8 @@ import { paginatedConferenciaEstoqueResponseDtoSchema } from "./paginatedConfere
 import { z } from "zod/v4";
 
 export const conferenciaEstoqueControllerFindPaginatedQueryParamsSchema = z.object({
-    "page": z.optional(z.coerce.number().default(1).describe("Número da página")),
-"limit": z.optional(z.coerce.number().default(20).describe("Número de itens por página")),
+    "page": z.coerce.number().default(1).describe("Número da página"),
+"limit": z.coerce.number().default(20).describe("Número de itens por página"),
 "search": z.optional(z.string().describe("Termo de busca")),
 "status": z.optional(z.enum(["PENDENTE", "EM_ANDAMENTO", "CONCLUIDA", "FINALIZADA", "CANCELADA"]).describe("Filtrar por status")),
 "localEstoqueId": z.optional(z.coerce.number().describe("ID do local de estoque"))

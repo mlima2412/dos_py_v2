@@ -6,15 +6,15 @@
 
 export type CreateParcelamentoDto = {
     /**
-     * @description ID do pagamento associado
-     * @type number
-    */
-    idPagamento: number;
-    /**
      * @description ID do cliente associado
      * @type number
     */
     clienteId: number;
+    /**
+     * @description ID da venda associada
+     * @type number
+    */
+    vendaId: number;
     /**
      * @description Valor total parcelado
      * @type number
@@ -26,11 +26,6 @@ export type CreateParcelamentoDto = {
      * @type number | undefined
     */
     valorPago?: number | undefined;
-    /**
-     * @description ID da forma de pagamento
-     * @type number
-    */
-    idFormaPag: number;
     /**
      * @description Situação (1 - Aberto, 2 - Concluído)
      * @default 1

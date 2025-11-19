@@ -21,13 +21,13 @@ export const produtosPorLocalResponseDtoSchema = z.object({
 "ativo": z.boolean().describe("Status ativo do produto"),
 "consignado": z.boolean().describe("Produto consignado"),
 get "categoria"(){
-                return z.optional(categoriaResponseDtoSchema.describe("Categoria do produto"))
+                return categoriaResponseDtoSchema.describe("Categoria do produto").optional()
               },
 get "fornecedor"(){
-                return z.optional(fornecedorResponseDtoSchema.describe("Fornecedor do produto"))
+                return fornecedorResponseDtoSchema.describe("Fornecedor do produto").optional()
               },
 get "currency"(){
-                return z.optional(currencyResponseDtoSchema.describe("Moeda do produto"))
+                return currencyResponseDtoSchema.describe("Moeda do produto").optional()
               },
 get "ProdutoSKU"(){
                 return z.array(produtoSKUEstoqueResponseDtoSchema).describe("SKUs do produto com informações de estoque")

@@ -183,6 +183,7 @@
 		"conditionals": "Condicionais",
 		"installments": "Parcelamentos",
 		"gifts": "Brindes & Permutas",
+		"giftsAndExchanges": "Brindes & Permutas",
 		"administration": "Administração",
 		"users": "Usuários",
 		"partners": "Parceiros",
@@ -1781,6 +1782,65 @@
 				"percentageLabel": "Porcentagem do desconto",
 				"itemPrice": "Preço do item"
 			}
+		}
+	},
+	"installments": {
+		"title": "Parcelamentos",
+		"searchByClient": "Buscar por cliente...",
+		"noResults": "Nenhum parcelamento encontrado",
+		"selectStatus": "Situação",
+		"statusFilter": {
+			"all": "Todos",
+			"open": "Em Aberto",
+			"completed": "Concluído"
+		},
+		"notFound": "Parcelamento não encontrado",
+		"view": "Visualizar Parcelamento",
+		"details": "Detalhes do Parcelamento",
+		"workInProgress": "Esta página está em desenvolvimento. Em breve você poderá visualizar e gerenciar os detalhes do parcelamento.",
+		"saleInfo": "Pedido - Cliente",
+		"saleDate": "Data da Venda",
+		"seller": "Vendedor",
+		"totalValue": "Valor Total",
+		"paidValue": "Total Pago",
+		"balance": "A Pagar",
+		"open": "Em Aberto",
+		"completed": "Pago",
+		"installmentsList": "Lista de Parcelas",
+		"noInstallments": "Nenhuma parcela definida. Este é um parcelamento flexível.",
+		"installmentNumber": "#Parcela",
+		"value": "Valor",
+		"dueDate": "Vencimento",
+		"paymentDate": "Data Pagamento",
+		"markAsPaid": "Marcar Paga",
+		"addPayment": "Adicionar Pagamento",
+		"registerPayment": "Registrar Pagamento",
+		"registerPaymentDescription": "Informe o valor do pagamento espontâneo para este parcelamento flexível.",
+		"paymentValue": "Valor do Pagamento",
+		"confirmPayment": "Confirmar Pagamento",
+		"confirmPaymentDescription": "Tem certeza que deseja marcar esta parcela como paga?",
+		"columns": {
+			"saleId": "ID Venda",
+			"client": "Cliente",
+			"saleDate": "Data da Venda",
+			"totalValue": "Valor Total",
+			"paidValue": "Valor Pago",
+			"status": "Situação"
+		},
+		"status": {
+			"pending": "Pendente",
+			"paid": "Pago",
+			"paidLate": "Pago em Atraso"
+		},
+		"actions": {
+			"view": "Visualizar"
+		},
+		"messages": {
+			"parcelaPagaSuccess": "Parcela marcada como paga com sucesso!",
+			"parcelaPagaError": "Erro ao marcar parcela como paga",
+			"parcelaCriadaSuccess": "Pagamento registrado com sucesso!",
+			"parcelaCriadaError": "Erro ao registrar pagamento",
+			"valorInvalido": "Valor inválido. Informe um valor maior que zero."
 		}
 	}
 }

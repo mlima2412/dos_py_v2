@@ -31,7 +31,7 @@ import { UserId } from '../auth/decorators/user-id.decorator';
 import { Venda } from './entities/venda.entity';
 import { FinalizeVendaDiretaDto } from './dto/finalize-venda-direta.dto';
 import { FinalizeVendaSemPagamentoDto } from './dto/finalize-venda-sem-pagamento.dto';
-import { VendaStatus } from '@prisma/client';
+import { VendaStatus, VendaTipo } from '@prisma/client';
 
 @ApiTags('Venda')
 @Controller('venda')
@@ -115,11 +115,29 @@ export class VendaController {
     schema: { type: 'integer', example: 1 },
   })
   @ApiOperation({
-    summary: 'Buscar vendas paginadas (busca principal, sem relações)',
+    summary: 'Buscar vendas paginadas com filtros',
   })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
   @ApiQuery({ name: 'status', required: false, enum: VendaStatus })
+  @ApiQuery({
+    name: 'filterType',
+    required: false,
+    enum: ['pedido', 'venda', 'condicional', 'brindePermuta'],
+    description: 'Tipo de filtro predefinido baseado no menu',
+  })
+  @ApiQuery({
+    name: 'tipo',
+    required: false,
+    enum: VendaTipo,
+    description: 'Tipo de venda para filtro adicional',
+  })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    description: 'Termo de busca por nome do cliente',
+  })
   @ApiResponse({
     status: 200,
     description: 'Vendas paginadas',
@@ -132,7 +150,18 @@ export class VendaController {
     const page = Number(query.page ?? 1);
     const limit = Number(query.limit ?? 10);
     const status = query.status as VendaStatus | undefined;
-    return this.vendaService.paginate(parceiroId, page, limit, status);
+    const filterType = query.filterType;
+    const tipo = query.tipo as VendaTipo | undefined;
+    const search = query.search;
+    return this.vendaService.paginate(
+      parceiroId,
+      page,
+      limit,
+      status,
+      filterType,
+      tipo,
+      search,
+    );
   }
 
   @Get(':publicId')

@@ -25,21 +25,11 @@ export type ConferenciaEstoqueControllerRemoveHeaderParams = {
 */
 export type ConferenciaEstoqueControllerRemove204 = any;
 
-/**
- * @description Não é possível remover conferência em andamento
-*/
-export type ConferenciaEstoqueControllerRemove400 = any;
-
-/**
- * @description Conferência de estoque não encontrada
-*/
-export type ConferenciaEstoqueControllerRemove404 = any;
-
 export type ConferenciaEstoqueControllerRemoveMutationResponse = ConferenciaEstoqueControllerRemove204;
 
 export type ConferenciaEstoqueControllerRemoveMutation = {
     Response: ConferenciaEstoqueControllerRemove204;
     PathParams: ConferenciaEstoqueControllerRemovePathParams;
     HeaderParams: ConferenciaEstoqueControllerRemoveHeaderParams;
-    Errors: ConferenciaEstoqueControllerRemove400 | ConferenciaEstoqueControllerRemove404;
+    Errors: any;
 };

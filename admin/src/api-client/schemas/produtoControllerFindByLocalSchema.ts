@@ -12,7 +12,7 @@ export const produtoControllerFindByLocalPathParamsSchema = z.object({
     }) as unknown as z.ZodType<ProdutoControllerFindByLocalPathParams>
 
 export const produtoControllerFindByLocalQueryParamsSchema = z.object({
-    "apenasComEstoque": z.optional(z.boolean().default(true).describe("Se deve incluir apenas produtos com estoque (qtd > 0)")),
+    "apenasComEstoque": z.boolean().default(true).describe("Se deve incluir apenas produtos com estoque (qtd > 0)"),
 "fornecedorId": z.optional(z.string().describe("ID público do fornecedor para filtrar produtos"))
     }) as unknown as z.ZodType<ProdutoControllerFindByLocalQueryParams>
 

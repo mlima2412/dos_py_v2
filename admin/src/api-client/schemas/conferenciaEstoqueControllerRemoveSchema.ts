@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { ConferenciaEstoqueControllerRemovePathParams, ConferenciaEstoqueControllerRemoveHeaderParams, ConferenciaEstoqueControllerRemove204, ConferenciaEstoqueControllerRemove400, ConferenciaEstoqueControllerRemove404, ConferenciaEstoqueControllerRemoveMutationResponse } from "../types/ConferenciaEstoqueControllerRemove.ts";
+import type { ConferenciaEstoqueControllerRemovePathParams, ConferenciaEstoqueControllerRemoveHeaderParams, ConferenciaEstoqueControllerRemove204, ConferenciaEstoqueControllerRemoveMutationResponse } from "../types/ConferenciaEstoqueControllerRemove.ts";
 import { z } from "zod/v4";
 
 export const conferenciaEstoqueControllerRemovePathParamsSchema = z.object({
@@ -18,15 +18,5 @@ export const conferenciaEstoqueControllerRemoveHeaderParamsSchema = z.object({
  * @description Conferência de estoque removida com sucesso
  */
 export const conferenciaEstoqueControllerRemove204Schema = z.unknown() as unknown as z.ZodType<ConferenciaEstoqueControllerRemove204>
-
-/**
- * @description Não é possível remover conferência em andamento
- */
-export const conferenciaEstoqueControllerRemove400Schema = z.unknown() as unknown as z.ZodType<ConferenciaEstoqueControllerRemove400>
-
-/**
- * @description Conferência de estoque não encontrada
- */
-export const conferenciaEstoqueControllerRemove404Schema = z.unknown() as unknown as z.ZodType<ConferenciaEstoqueControllerRemove404>
 
 export const conferenciaEstoqueControllerRemoveMutationResponseSchema = conferenciaEstoqueControllerRemove204Schema as unknown as z.ZodType<ConferenciaEstoqueControllerRemoveMutationResponse>

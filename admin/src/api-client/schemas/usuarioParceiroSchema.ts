@@ -16,12 +16,12 @@ export const usuarioParceiroSchema = z.object({
 "perfilId": z.coerce.number().describe("ID do perfil"),
 "createdAt": z.string().datetime().describe("Data de criação da relação"),
 get "Usuario"(){
-                return z.optional(usuarioSchema.describe("Dados do usuário relacionado"))
+                return usuarioSchema.describe("Dados do usuário relacionado").optional()
               },
 get "Parceiro"(){
-                return z.optional(parceiroSchema.describe("Dados do parceiro relacionado"))
+                return parceiroSchema.describe("Dados do parceiro relacionado").optional()
               },
 get "perfil"(){
-                return z.optional(perfilSchema.describe("Dados do perfil relacionado"))
+                return perfilSchema.describe("Dados do perfil relacionado").optional()
               }
     }) as unknown as z.ZodType<UsuarioParceiro>

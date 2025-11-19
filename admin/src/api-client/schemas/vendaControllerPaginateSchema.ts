@@ -8,9 +8,12 @@ import { paginatedVendaResponseDtoSchema } from "./paginatedVendaResponseDtoSche
 import { z } from "zod/v4";
 
 export const vendaControllerPaginateQueryParamsSchema = z.object({
-    "page": z.optional(z.coerce.number().default(1).describe("Página atual")),
-"limit": z.optional(z.coerce.number().default(10).describe("Quantidade de itens por página")),
-"status": z.optional(z.enum(["PEDIDO", "ABERTA", "CONFIRMADA", "CONFIRMADA_PARCIAL", "CONFIRMADA_TOTAL", "CANCELADA"]).describe("Status opcional para filtro"))
+    "page": z.coerce.number().default(1).describe("Página atual"),
+"limit": z.coerce.number().default(10).describe("Quantidade de itens por página"),
+"status": z.optional(z.enum(["PEDIDO", "ABERTA", "CONFIRMADA", "CONFIRMADA_PARCIAL", "CONFIRMADA_TOTAL", "CANCELADA"]).describe("Status opcional para filtro")),
+"filterType": z.optional(z.enum(["pedido", "venda", "condicional", "brindePermuta"]).describe("Tipo de filtro predefinido baseado no menu")),
+"tipo": z.optional(z.enum(["DIRETA", "CONDICIONAL", "BRINDE", "PERMUTA"]).describe("Tipo de venda para filtro adicional")),
+"search": z.optional(z.string().describe("Termo de busca por nome do cliente"))
     }) as unknown as z.ZodType<VendaControllerPaginateQueryParams>
 
 export const vendaControllerPaginateHeaderParamsSchema = z.object({

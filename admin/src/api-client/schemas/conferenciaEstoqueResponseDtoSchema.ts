@@ -18,6 +18,6 @@ export const conferenciaEstoqueResponseDtoSchema = z.object({
 "Usuario": z.coerce.string().describe("Nome do usuário responsável pela conferência"),
 "status": z.enum(["PENDENTE", "EM_ANDAMENTO", "FINALIZADA", "CANCELADA", "CONCLUIDA"]).describe("Status da conferência"),
 get "itens"(){
-                return z.optional(z.array(conferenciaItemSimplificadoDtoSchema).describe("Itens da conferência com dados simplificados"))
+                return z.array(conferenciaItemSimplificadoDtoSchema).describe("Itens da conferência com dados simplificados").optional()
               }
     }) as unknown as z.ZodType<ConferenciaEstoqueResponseDto>

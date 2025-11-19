@@ -173,6 +173,7 @@
 		"conditionals": "Condicionales",
 		"installments": "Cuotas",
 		"gifts": "Brindes & Canjes",
+		"giftsAndExchanges": "Brindes & Canjes",
 		"administration": "Administración",
 		"users": "Usuarios",
 		"partners": "Socios",
@@ -1640,6 +1641,90 @@
 				"percentageLabel": "Porcentaje del descuento",
 				"itemPrice": "Precio del ítem"
 			}
+		}
+	},
+	"installments": {
+		"title": "Pagos a Plazos",
+		"searchByClient": "Buscar por cliente...",
+		"noResults": "No se encontraron pagos a plazos",
+		"selectStatus": "Situación",
+		"statusFilter": {
+			"all": "Todos",
+			"open": "Abierto",
+			"completed": "Concluido"
+		},
+		"view": "Ver Pago a Plazos",
+		"details": "Detalles del Pago a Plazos",
+		"workInProgress": "Esta página está en desarrollo. Pronto podrás ver y gestionar los detalles del pago a plazos.",
+		"columns": {
+			"saleId": "ID Venta",
+			"client": "Cliente",
+			"saleDate": "Fecha de Venta",
+			"totalValue": "Valor Total",
+			"paidValue": "Valor Pagado",
+			"status": "Estado"
+		},
+		"actions": {
+			"view": "Ver"
+		},
+		"labels": {
+			"saleNumber": "Venta #",
+			"saleDate": "Fecha de la Venta",
+			"seller": "Vendedor",
+			"totalValue": "Valor Total",
+			"paidValue": "Valor Pagado",
+			"status": "Estado",
+			"balance": "Saldo A Pagar",
+			"installment": "Cuota",
+			"dueDate": "Vencimiento",
+			"value": "Valor",
+			"paymentDate": "Fecha de Pago",
+			"paymentValue": "Valor del Pago",
+			"spontaneousPayment": "Pago Espontáneo"
+		},
+		"statuses": {
+			"open": "Abierto",
+			"completed": "Concluido",
+			"pending": "Pendiente",
+			"paid": "Pagada",
+			"overdue": "Vencida"
+		},
+		"buttons": {
+			"markAsPaid": "Marcar como Pagada",
+			"spontaneousPayment": "Pago Espontáneo",
+			"cancel": "Cancelar",
+			"confirm": "Confirmar"
+		},
+		"dialogs": {
+			"confirmPayment": {
+				"title": "Confirmar Pago",
+				"description": "¿Confirmas el pago de la cuota {{number}}?",
+				"paymentDate": "Fecha del Pago"
+			},
+			"spontaneousPayment": {
+				"title": "Pago Espontáneo",
+				"description": "Registra un pago de valor libre. El sistema creará una nueva cuota con este valor y la marcará como pagada automáticamente.",
+				"valueLabel": "Valor del Pago",
+				"valuePlaceholder": "0,00",
+				"dateLabel": "Fecha del Pago",
+				"remainingBalance": "Saldo Restante"
+			}
+		},
+		"messages": {
+			"paymentSuccess": "¡Cuota marcada como pagada con éxito!",
+			"paymentError": "Error al marcar cuota como pagada. Inténtalo de nuevo.",
+			"spontaneousPaymentSuccess": "¡Pago espontáneo registrado con éxito!",
+			"spontaneousPaymentError": "Error al registrar pago espontáneo. Inténtalo de nuevo.",
+			"loadError": "Error al cargar datos del pago a plazos.",
+			"notFound": "Pago a plazos no encontrado.",
+			"invalidValue": "El valor del pago debe ser mayor que cero.",
+			"valueTooHigh": "El valor del pago no puede ser mayor que el saldo restante."
+		},
+		"validation": {
+			"valueRequired": "El valor del pago es obligatorio",
+			"valueMin": "El valor debe ser mayor que cero",
+			"valueMax": "El valor no puede ser mayor que {{max}}",
+			"dateRequired": "La fecha del pago es obligatoria"
 		}
 	}
 }

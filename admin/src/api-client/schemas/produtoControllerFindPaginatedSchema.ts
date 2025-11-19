@@ -8,8 +8,8 @@ import { paginatedProdutoResponseDtoSchema } from "./paginatedProdutoResponseDto
 import { z } from "zod/v4";
 
 export const produtoControllerFindPaginatedQueryParamsSchema = z.object({
-    "page": z.optional(z.string().default("1").describe("Número da página")),
-"limit": z.optional(z.string().default("20").describe("Número de itens por página")),
+    "page": z.string().default("1").describe("Número da página"),
+"limit": z.string().default("20").describe("Número de itens por página"),
 "search": z.optional(z.string().describe("Termo de busca para filtrar por nome do produto")),
 "categoriaId": z.optional(z.string().describe("ID da categoria para filtrar")),
 "ativo": z.optional(z.string().describe("Filtrar apenas produtos ativos"))

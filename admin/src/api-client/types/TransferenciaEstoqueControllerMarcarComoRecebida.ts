@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { PublicIdResponseDto } from "./PublicIdResponseDto.ts";
 
 export type TransferenciaEstoqueControllerMarcarComoRecebidaPathParams = {
     /**
@@ -23,12 +24,7 @@ export type TransferenciaEstoqueControllerMarcarComoRecebidaHeaderParams = {
 /**
  * @description Transferência marcada como recebida com sucesso
 */
-export type TransferenciaEstoqueControllerMarcarComoRecebida200 = {
-    /**
-     * @type string | undefined
-    */
-    publicId?: string | undefined;
-};
+export type TransferenciaEstoqueControllerMarcarComoRecebida200 = PublicIdResponseDto;
 
 /**
  * @description Transferência não encontrada

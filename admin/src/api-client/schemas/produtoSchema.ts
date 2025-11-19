@@ -27,18 +27,18 @@ export const produtoSchema = z.object({
 "fornecedorId": z.optional(z.coerce.number().describe("ID do fornecedor do produto")),
 "currencyId": z.optional(z.coerce.number().describe("ID da moeda do produto")),
 get "categoria"(){
-                return z.optional(categoriaProdutoSchema.describe("Categoria do produto"))
+                return categoriaProdutoSchema.describe("Categoria do produto").optional()
               },
 get "Parceiro"(){
                 return parceiroSchema.describe("Parceiro proprietário do produto")
               },
 get "fornecedor"(){
-                return z.optional(fornecedorSchema.describe("Fornecedor do produto"))
+                return fornecedorSchema.describe("Fornecedor do produto").optional()
               },
 get "currency"(){
-                return z.optional(currencySchema.describe("Moeda do produto"))
+                return currencySchema.describe("Moeda do produto").optional()
               },
 get "ProdutoSKU"(){
-                return z.optional(z.array(produtoSKUSchema).describe("SKUs do produto"))
+                return z.array(produtoSKUSchema).describe("SKUs do produto").optional()
               }
     }) as unknown as z.ZodType<Produto>

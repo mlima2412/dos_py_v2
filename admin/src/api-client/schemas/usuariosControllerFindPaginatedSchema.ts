@@ -4,7 +4,7 @@
 */
 
 import type { UsuariosControllerFindPaginatedQueryParams, UsuariosControllerFindPaginated200, UsuariosControllerFindPaginatedQueryResponse } from "../types/UsuariosControllerFindPaginated.ts";
-import { usuarioSchema } from "./usuarioSchema.ts";
+import { paginatedUsuarioResponseDtoSchema } from "./paginatedUsuarioResponseDtoSchema.ts";
 import { z } from "zod/v4";
 
 export const usuariosControllerFindPaginatedQueryParamsSchema = z.object({
@@ -18,14 +18,6 @@ export const usuariosControllerFindPaginatedQueryParamsSchema = z.object({
 /**
  * @description Lista paginada de usuários retornada com sucesso
  */
-export const usuariosControllerFindPaginated200Schema = z.object({
-    get "data"(){
-                return z.optional(z.array(usuarioSchema))
-              },
-"total": z.optional(z.coerce.number().describe("Total de registros")),
-"page": z.optional(z.coerce.number().describe("Página atual")),
-"limit": z.optional(z.coerce.number().describe("Itens por página")),
-"totalPages": z.optional(z.coerce.number().describe("Total de páginas"))
-    }) as unknown as z.ZodType<UsuariosControllerFindPaginated200>
+export const usuariosControllerFindPaginated200Schema = paginatedUsuarioResponseDtoSchema as unknown as z.ZodType<UsuariosControllerFindPaginated200>
 
 export const usuariosControllerFindPaginatedQueryResponseSchema = usuariosControllerFindPaginated200Schema as unknown as z.ZodType<UsuariosControllerFindPaginatedQueryResponse>

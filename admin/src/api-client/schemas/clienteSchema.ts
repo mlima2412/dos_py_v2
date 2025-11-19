@@ -30,9 +30,9 @@ export const clienteSchema = z.object({
 "ultimaCompra": z.string().datetime().describe("Data da última compra do cliente"),
 "qtdCompras": z.coerce.number().describe("Quantidade de compras do cliente"),
 get "parceiro"(){
-                return z.optional(parceiroSchema.describe("Parceiro associado ao cliente"))
+                return parceiroSchema.describe("Parceiro associado ao cliente").optional()
               },
 get "canalOrigem"(){
-                return z.optional(canalOrigemSchema.describe("Canal de origem do cliente"))
+                return canalOrigemSchema.describe("Canal de origem do cliente").optional()
               }
     }) as unknown as z.ZodType<Cliente>

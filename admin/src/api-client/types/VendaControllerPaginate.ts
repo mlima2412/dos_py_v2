@@ -16,6 +16,24 @@ export const vendaControllerPaginateQueryParamsStatusEnum = {
 
 export type VendaControllerPaginateQueryParamsStatusEnumKey = (typeof vendaControllerPaginateQueryParamsStatusEnum)[keyof typeof vendaControllerPaginateQueryParamsStatusEnum];
 
+export const vendaControllerPaginateQueryParamsFilterTypeEnum = {
+    "pedido": "pedido",
+    "venda": "venda",
+    "condicional": "condicional",
+    "brindePermuta": "brindePermuta"
+} as const;
+
+export type VendaControllerPaginateQueryParamsFilterTypeEnumKey = (typeof vendaControllerPaginateQueryParamsFilterTypeEnum)[keyof typeof vendaControllerPaginateQueryParamsFilterTypeEnum];
+
+export const vendaControllerPaginateQueryParamsTipoEnum = {
+    "DIRETA": "DIRETA",
+    "CONDICIONAL": "CONDICIONAL",
+    "BRINDE": "BRINDE",
+    "PERMUTA": "PERMUTA"
+} as const;
+
+export type VendaControllerPaginateQueryParamsTipoEnumKey = (typeof vendaControllerPaginateQueryParamsTipoEnum)[keyof typeof vendaControllerPaginateQueryParamsTipoEnum];
+
 export type VendaControllerPaginateQueryParams = {
     /**
      * @description Página atual
@@ -34,6 +52,21 @@ export type VendaControllerPaginateQueryParams = {
      * @type string | undefined
     */
     status?: VendaControllerPaginateQueryParamsStatusEnumKey | undefined;
+    /**
+     * @description Tipo de filtro predefinido baseado no menu
+     * @type string | undefined
+    */
+    filterType?: VendaControllerPaginateQueryParamsFilterTypeEnumKey | undefined;
+    /**
+     * @description Tipo de venda para filtro adicional
+     * @type string | undefined
+    */
+    tipo?: VendaControllerPaginateQueryParamsTipoEnumKey | undefined;
+    /**
+     * @description Termo de busca por nome do cliente
+     * @type string | undefined
+    */
+    search?: string | undefined;
 };
 
 export type VendaControllerPaginateHeaderParams = {

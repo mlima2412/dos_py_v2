@@ -30,7 +30,7 @@ get "enviadoPorUsuario"(){
                 return usuarioResponseDtoSchema.describe("Usuário que enviou")
               },
 get "recebidoPorUsuario"(){
-                return z.optional(usuarioResponseDtoSchema.describe("Usuário que recebeu"))
+                return usuarioResponseDtoSchema.describe("Usuário que recebeu").optional()
               },
 get "TransferenciaEstoqueItem"(){
                 return z.array(transferenciaEstoqueItemResponseDtoSchema).describe("Itens da transferência")

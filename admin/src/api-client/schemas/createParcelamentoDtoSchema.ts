@@ -7,10 +7,9 @@ import type { CreateParcelamentoDto } from "../types/CreateParcelamentoDto.ts";
 import { z } from "zod/v4";
 
 export const createParcelamentoDtoSchema = z.object({
-    "idPagamento": z.coerce.number().describe("ID do pagamento associado"),
-"clienteId": z.coerce.number().describe("ID do cliente associado"),
+    "clienteId": z.coerce.number().describe("ID do cliente associado"),
+"vendaId": z.coerce.number().describe("ID da venda associada"),
 "valorTotal": z.coerce.number().describe("Valor total parcelado"),
 "valorPago": z.optional(z.coerce.number().default(0).describe("Valor já pago")),
-"idFormaPag": z.coerce.number().describe("ID da forma de pagamento"),
 "situacao": z.optional(z.coerce.number().default(1).describe("Situação (1 - Aberto, 2 - Concluído)"))
     }) as unknown as z.ZodType<CreateParcelamentoDto>

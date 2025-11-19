@@ -4,6 +4,7 @@
 */
 
 import type { TransferenciaEstoqueControllerMarcarComoRecebidaPathParams, TransferenciaEstoqueControllerMarcarComoRecebidaHeaderParams, TransferenciaEstoqueControllerMarcarComoRecebida200, TransferenciaEstoqueControllerMarcarComoRecebida404, TransferenciaEstoqueControllerMarcarComoRecebida409, TransferenciaEstoqueControllerMarcarComoRecebidaMutationResponse } from "../types/TransferenciaEstoqueControllerMarcarComoRecebida.ts";
+import { publicIdResponseDtoSchema } from "./publicIdResponseDtoSchema.ts";
 import { z } from "zod/v4";
 
 export const transferenciaEstoqueControllerMarcarComoRecebidaPathParamsSchema = z.object({
@@ -17,9 +18,7 @@ export const transferenciaEstoqueControllerMarcarComoRecebidaHeaderParamsSchema 
 /**
  * @description Transferência marcada como recebida com sucesso
  */
-export const transferenciaEstoqueControllerMarcarComoRecebida200Schema = z.object({
-    "publicId": z.optional(z.coerce.string())
-    }) as unknown as z.ZodType<TransferenciaEstoqueControllerMarcarComoRecebida200>
+export const transferenciaEstoqueControllerMarcarComoRecebida200Schema = publicIdResponseDtoSchema as unknown as z.ZodType<TransferenciaEstoqueControllerMarcarComoRecebida200>
 
 /**
  * @description Transferência não encontrada

@@ -22,9 +22,9 @@ export const parceiroSchema = z.object({
 "thumburl": z.optional(z.coerce.string().describe("URL da imagem reduzida do parceiro")),
 "createdAt": z.string().datetime().describe("Data de criação do parceiro"),
 get "clientes"(){
-                return z.optional(z.array(clienteSchema).describe("Clientes associados ao parceiro"))
+                return z.array(clienteSchema).describe("Clientes associados ao parceiro").optional()
               },
 get "currency"(){
-                return z.optional(currencySchema.describe("Moeda do parceiro"))
+                return currencySchema.describe("Moeda do parceiro").optional()
               }
     }) as unknown as z.ZodType<Parceiro>

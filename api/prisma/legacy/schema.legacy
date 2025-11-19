@@ -1,0 +1,302 @@
+
+// alter sequence "Venda_idVenda_seq" restart with 1;
+// alter sequence "VendaItem_idVendaItem_seq" restart with 1;
+// alter sequence "VendasRealizadas_id_seq" restart with 1;
+// alter sequence "MovimentoEstoque_id_seq" restart with 1;
+// alter sequence "VendasRealizadas_id_seq"' restart with 1
+// alter sequence "Despesas_idDespesa_seq" restart with 1
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DOSPY_DATABASEURL") 
+}
+
+model Categoria {
+  id        Int       @id @default(autoincrement())
+  descricao String
+  Produto   Produto[]
+}
+
+model Cliente {
+  id               Int       @id @default(autoincrement())
+  nome             String
+  email            String?   
+  redeSocial       String?
+  ruc              String?
+  celular          String?
+  endereco         String?
+  cidade           String?
+  estado           String?
+  dataCadastro     DateTime  @default(now())
+  dataAtualizacao  DateTime  @default(now())
+  dataUltimaCompra DateTime?
+  ativo            Boolean   @default(true)
+  diaAniversario   Int?
+  mesAniversario   Int?
+  valorCredito     Float?    @default(0)
+  Venda            Venda[]
+  movimentoCredito movimentoCredito[]
+  parcelamento     parcelamento[]
+}
+
+model Moedas {
+  idMoeda      Int            @id @default(autoincrement())
+  nome         String
+  currency     String
+  locale       String
+  PedidoCompra PedidoCompra[]
+}
+
+model Fornecedor {
+  id           Int            @id @default(autoincrement())
+  nome         String
+  email        String?        @unique
+  redeSocial   String?
+  ruc          String?        @default("")
+  celular      String?
+  endereco     String?
+  cidade       String?
+  estado       String?
+  dataCadastro DateTime       @default(now())
+  ultimaCompra DateTime?
+  ativo        Boolean        @default(true)
+  PedidoCompra PedidoCompra[]
+}
+
+model Produto {
+  id              Int               @id @default(autoincrement())
+  nome            String
+  dataCadastro    DateTime          @default(now())
+  ativo           Boolean           @default(true)
+  consignado      Boolean           @default(false)
+  categoriaId     Int?
+  observacao      String?
+  categoria       Categoria?        @relation(fields: [categoriaId], references: [id])
+  ProdutoVariante ProdutoVariante[]
+}
+
+model ProdutoVariante {
+  id               Int                @id @default(autoincrement())
+  produtoId        Int
+  cor              String?
+  codCor           Int?
+  tamanho          String?
+  qtd              Int                @default(0)
+  qtdMinima        Int                @default(0)
+  dataUltimaCompra DateTime?
+  precoCompra      Float?             @default(0)
+  precoVenda       Float?             @default(0)
+  MovimentoEstoque MovimentoEstoque[]
+  PedidoCompraItem PedidoCompraItem[]
+  VendaItem        VendaItem[]
+  produto          Produto            @relation(fields: [produtoId], references: [id])
+}
+
+model PedidoCompra {
+  id               Int                @id @default(autoincrement())
+  fornecedorId     Int
+  dataPedido       DateTime           @default(now())
+  dataEntrega      DateTime?
+  dataPagamento    DateTime?
+  valorFrete       Float?             @default(0)
+  valorTotal       Float?             @default(0)
+  valorPago        Float?             @default(0)
+  valorRestante    Float?             @default(0)
+  observacao       String?
+  situacao         Int                @default(1)
+  valorComissao    Float?             @default(0)
+  cotacao          Float?             @default(1)
+  idMoeda          Int?
+  consignado       Boolean            @default(false)
+  MovimentoEstoque MovimentoEstoque[]
+  fornecedor       Fornecedor         @relation(fields: [fornecedorId], references: [id])
+  Moedas           Moedas?            @relation(fields: [idMoeda], references: [idMoeda])
+  PedidoCompraItem PedidoCompraItem[]
+  Despesas         Despesas[]
+}
+
+model PedidoCompraItem {
+  id                Int             @id @default(autoincrement())
+  pedidoCompraId    Int
+  produtoVarianteId Int
+  qtd               Int             @default(0)
+  precoCompra       Float?          @default(0)
+  precoVenda        Float?          @default(0)
+  desconto          Float?          @default(0)
+  observacao        String?
+  pedidoCompra      PedidoCompra    @relation(fields: [pedidoCompraId], references: [id])
+  produtoVariante   ProdutoVariante @relation(fields: [produtoVarianteId], references: [id])
+}
+
+model MovimentoEstoque {
+  id                Int             @id @default(autoincrement())
+  produtoVarianteId Int
+  pedidoCompraId    Int?
+  idVenda           Int?
+  tipoMovimento     Int             @default(1)
+  qtd               Int             @default(0)
+  valorUnitario     Float?          @default(0)
+  dataMovimento     DateTime        @default(now())
+  observacao        String?
+  venda             Venda?          @relation(fields: [idVenda], references: [idVenda])
+  pedidoCompra      PedidoCompra?   @relation(fields: [pedidoCompraId], references: [id])
+  produtoVariante   ProdutoVariante @relation(fields: [produtoVarianteId], references: [id])
+}
+
+model CategoriaDespesas {
+  idCategoria   Int             @id @default(autoincrement())
+  descricao     String
+  ItensDespesas ItensDespesas[]
+}
+
+model ItensDespesas {
+  idItem      Int               @id @default(autoincrement())
+  categoriaId Int
+  descricao   String
+  Despesas    Despesas[]
+
+  categoria   CategoriaDespesas @relation(fields: [categoriaId], references: [idCategoria])
+}
+
+model Despesas {
+  idDespesa      Int           @id @default(autoincrement())
+  dataDespesa    DateTime      @default(now())
+  valorDespesa   Float
+  descricao      String
+  itemId         Int
+  pedidoVendaId  Int?
+  pedidoCompraId Int?
+  item           ItensDespesas @relation(fields: [itemId], references: [idItem])
+  pedidoVenda    Venda?        @relation(fields: [pedidoVendaId], references: [idVenda])
+  pedidoCompra   PedidoCompra? @relation(fields: [pedidoCompraId], references: [id])
+}
+
+model formaPagamento {
+  idFormaPag      Int             @id @default(autoincrement())
+  nome            String
+  desconto        Float?          @default(0)
+  taxa            Float?          @default(0) 
+  idItemDespesa   Int?
+  ivaPosCalculo   Boolean         @default(false)
+  Venda           Venda[]
+}
+
+model VendasRealizadas {
+  id               Int           @id @default(autoincrement())
+  dataVenda        DateTime      @default(now())
+  valorTotal       Float         @default(0)
+  desconto         Float         @default(0)
+  pedidoVendaId    Int           
+  Venda            Venda         @relation(fields: [pedidoVendaId], references: [idVenda])
+}
+
+//A tabela vendas representa um pedido de venda, consignação, reserva ou devolução com diferença de preço ou troca.
+model Venda {
+  idVenda          Int           @id @default(autoincrement())
+  tipoVenda        String        @default("Venda")
+  situacao         Int           @default(1) // 1 - Aberto, 2 - Fechado 3 - Concluído 4 - Cancelado
+  clienteId        Int
+  formaPagamentoId Int
+  dataVenda        DateTime      @default(now())
+  valorTotal       Float         @default(0)
+  entregaInicial   Float         @default(0)
+  desconto         Float         @default(0)
+  valorDelivery    Float         @default(0)
+  valorIva         Float         @default(0)
+  faturaNumero     Int?
+  nomeFatura       String?
+  observacao       String
+  vendaRealizadaId Int?
+  cliente          Cliente        @relation(fields: [clienteId], references: [id])
+  formaPagamento   formaPagamento @relation(fields: [formaPagamentoId], references: [idFormaPag])
+  VendaItem        VendaItem[]
+  MovimentoEstoque MovimentoEstoque[]
+  vendasRealizadas VendasRealizadas[] // Relação de 1 para muitos
+  devolucao        devolucao[]
+  Despesas         Despesas[]
+  movimentoCredito movimentoCredito[]
+  parcelamento     parcelamento[]
+}
+
+
+model VendaItem {
+  idVendaItem       Int             @id @default(autoincrement())
+  vendaId           Int
+  produtoVarianteId Int
+  qtd               Int             @default(0)
+  precoVenda        Float
+  desconto          Float           @default(0)
+  observacao        String
+  confirmado        Boolean         @default(false)
+  qtdDevolvida      Int             @default(0)
+  venda             Venda           @relation(fields: [vendaId], references: [idVenda])
+  produtoVariante   ProdutoVariante @relation(fields: [produtoVarianteId], references: [id])
+  devolucaoItem     devolucaoItem[]
+}
+
+model devolucao {
+  idDevolucao   Int           @id @default(autoincrement())
+  vendaId       Int
+  dataDevolucao DateTime      @default(now())
+  valorTotal    Float         @default(0)
+  observacao    String
+  venda         Venda         @relation(fields: [vendaId], references: [idVenda])
+  devolucaoItem devolucaoItem[]
+}
+
+model devolucaoItem {
+  idDevolucaoItem  Int           @id @default(autoincrement())
+  devolucaoId      Int
+  vendaItemId      Int
+  qtdDevolvida     Int           @default(0)
+  observacao       String
+  devolucao        devolucao     @relation(fields: [devolucaoId], references: [idDevolucao])
+  vendaItem        VendaItem     @relation(fields: [vendaItemId], references: [idVendaItem])
+}
+
+model movimentoCredito {
+  id                 Int       @id @default(autoincrement())
+  clienteId          Int
+  dataOperacao       DateTime  @default(now())
+  operacao           Int       @default(1) // 1 - Crédito, 2 - Débito
+  valor              Float     @default(0)
+  observacao         String
+  vendaId            Int
+  venda              Venda     @relation(fields: [vendaId], references: [idVenda])
+  cliente            Cliente   @relation(fields: [clienteId], references: [id])
+}
+
+model parcelamento {
+  id              Int       @id @default(autoincrement())
+  clienteId       Int
+  vendaId         Int
+  valorTotal      Float
+  valorPago       Float
+  situacao        Int       @default(1) // 1 - Aberto, 2 - Concluido 
+  cliente         Cliente   @relation(fields: [clienteId], references: [id])
+  venda           Venda     @relation(fields: [vendaId], references: [idVenda])
+  parcelas        parcelas[] 
+}
+
+model parcelas {
+  idparcela          Int          @id @default(autoincrement())
+  idParcelamento     Int
+  valorPago          Float
+  dataPagamento      DateTime     @default(now())
+  parcelamento       parcelamento @relation(fields: [idParcelamento], references: [id])
+}
+
+model usuarios {
+  idUsuario       Int      @id @default(autoincrement())
+  nome            String
+  email           String   @unique
+  senha           String
+  ativo           Boolean  @default(true)
+  dataCadastro    DateTime @default(now())
+  dataAtualizacao DateTime @default(now())
+}

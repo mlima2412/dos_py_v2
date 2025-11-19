@@ -22,9 +22,9 @@ get "Usuario"(){
                 return usuarioResponseDtoSchema.describe("Informações do usuário")
               },
 get "localOrigem"(){
-                return z.optional(localEstoqueResponseDtoSchema.describe("Local de origem"))
+                return localEstoqueResponseDtoSchema.describe("Local de origem").optional()
               },
 get "localDestino"(){
-                return z.optional(localEstoqueResponseDtoSchema.describe("Local de destino"))
+                return localEstoqueResponseDtoSchema.describe("Local de destino").optional()
               }
     }) as unknown as z.ZodType<MovimentoEstoqueResponseDto>

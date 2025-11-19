@@ -25,7 +25,7 @@ export const despesaRecorrenteSchema = z.object({
 "currencyId": z.optional(z.coerce.number().describe("ID da moeda da despesa")),
 "cotacao": z.optional(z.coerce.number().describe("Cotação da moeda no momento da despesa")),
 get "fornecedor"(){
-                return z.optional(fornecedorSchema.describe("Fornecedor da despesa"))
+                return fornecedorSchema.describe("Fornecedor da despesa").optional()
               },
 get "parceiro"(){
                 return parceiroSchema.describe("Parceiro responsável pela despesa")
@@ -34,6 +34,6 @@ get "subCategoria"(){
                 return subCategoriaDespesaSchema.describe("Subcategoria da despesa")
               },
 get "currency"(){
-                return z.optional(currencySchema.describe("Moeda da despesa"))
+                return currencySchema.describe("Moeda da despesa").optional()
               }
     }) as unknown as z.ZodType<DespesaRecorrente>

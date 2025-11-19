@@ -549,8 +549,8 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 				<Breadcrumb>
 					<BreadcrumbList>
 						<BreadcrumbItem>
-							<BreadcrumbLink href="/pedidoVendas">
-								{t("salesOrders.form.breadcrumb.section")}
+							<BreadcrumbLink href="/pedidoVendas/pedidos">
+								{t("menu.openOrders")}
 							</BreadcrumbLink>
 						</BreadcrumbItem>
 						<BreadcrumbSeparator />

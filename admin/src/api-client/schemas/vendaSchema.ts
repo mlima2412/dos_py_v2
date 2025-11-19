@@ -30,6 +30,6 @@ export const vendaSchema = z.object({
 "clienteSobrenome": z.optional(z.coerce.string().describe("Sobrenome do cliente")),
 "usuarioNome": z.optional(z.coerce.string().describe("Nome do usuário que criou a venda")),
 get "VendaItem"(){
-                return z.optional(z.array(vendaItemEntitySchema).describe("Itens vendidos"))
+                return z.array(vendaItemEntitySchema).describe("Itens vendidos").optional()
               }
     }) as unknown as z.ZodType<Venda>

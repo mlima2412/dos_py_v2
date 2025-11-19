@@ -11,15 +11,15 @@ export type Parcelamento = {
     */
     id: number;
     /**
-     * @description ID do pagamento associado
-     * @type number
-    */
-    idPagamento: number;
-    /**
      * @description ID do cliente associado
      * @type number
     */
     clienteId: number;
+    /**
+     * @description ID da venda associada
+     * @type number
+    */
+    vendaId: number;
     /**
      * @description Valor total parcelado
      * @type number
@@ -32,21 +32,11 @@ export type Parcelamento = {
     */
     valorPago: number;
     /**
-     * @description ID da forma de pagamento
-     * @type number
-    */
-    idFormaPag: number;
-    /**
      * @description Situação do parcelamento (1 - Aberto, 2 - Concluído)
      * @default 1
      * @type number
     */
     situacao: number;
-    /**
-     * @description Nome da forma de pagamento
-     * @type string | undefined
-    */
-    formaPagamentoNome?: string | undefined;
     /**
      * @description Nome do cliente
      * @type string | undefined

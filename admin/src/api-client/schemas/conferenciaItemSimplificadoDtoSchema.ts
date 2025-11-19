@@ -16,6 +16,6 @@ export const conferenciaItemSimplificadoDtoSchema = z.object({
 "diferenca": z.coerce.number().describe("Diferença entre sistema e conferência"),
 "ajustado": z.boolean().describe("Se o item foi ajustado"),
 get "sku"(){
-                return z.optional(skuSimplificadoDtoSchema.describe("Dados simplificados do SKU"))
+                return skuSimplificadoDtoSchema.describe("Dados simplificados do SKU").optional()
               }
     }) as unknown as z.ZodType<ConferenciaItemSimplificadoDto>

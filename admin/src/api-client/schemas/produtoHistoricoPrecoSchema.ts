@@ -13,6 +13,6 @@ export const produtoHistoricoPrecoSchema = z.object({
 "preco": z.coerce.number().describe("Preço do produto"),
 "data": z.string().datetime().describe("Data do registro do preço"),
 get "Produto"(){
-                return z.optional(produtoSchema.describe("Produto relacionado"))
+                return produtoSchema.describe("Produto relacionado").optional()
               }
     }) as unknown as z.ZodType<ProdutoHistoricoPreco>

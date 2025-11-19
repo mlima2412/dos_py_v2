@@ -309,20 +309,9 @@ export class VendaService {
         finalizeDto.numeroFatura ?? venda.numeroFatura ?? null;
 
       // Limpar pagamentos/parcelamentos antigos (caso existam rascunhos)
-      await tx.parcelas.deleteMany({
-        where: {
-          Parcelamento: {
-            Pagamento: {
-              vendaId: venda.id,
-            },
-          },
-        },
-      });
       await tx.parcelamento.deleteMany({
         where: {
-          Pagamento: {
-            vendaId: venda.id,
-          },
+          vendaId: venda.id,
         },
       });
       await tx.pagamento.deleteMany({
@@ -365,7 +354,7 @@ export class VendaService {
         });
       }
 
-      // Criar pagamentos e parcelamentos
+      // Criar pagamentos
       for (const pagamento of finalizeDto.pagamentos) {
         const formaPagamento = await tx.formaPagamento.findFirst({
           where: {
@@ -380,7 +369,7 @@ export class VendaService {
           );
         }
 
-        const pagamentoCriado = await tx.pagamento.create({
+        await tx.pagamento.create({
           data: {
             vendaId: venda.id,
             formaPagamentoId: pagamento.formaPagamentoId,
@@ -393,87 +382,101 @@ export class VendaService {
             entrada: pagamento.entrada ?? false,
           },
         });
+      }
 
-        if (pagamento.tipo === TipoVenda.A_VISTA_IMEDIATA) {
-          continue;
-        }
+      // Filtrar pagamentos parcelados (não à vista) para criar um único parcelamento
+      const pagamentosParcelados = finalizeDto.pagamentos.filter(
+        (p) => p.tipo !== TipoVenda.A_VISTA_IMEDIATA,
+      );
 
+      if (pagamentosParcelados.length > 0) {
+        // Calcular valor total do parcelamento (soma de todos os pagamentos parcelados)
+        const valorTotalParcelamento = pagamentosParcelados.reduce(
+          (acc, p) => acc + p.valor,
+          0,
+        );
+
+        // Criar um único parcelamento para a venda
         const parcelamento = await tx.parcelamento.create({
           data: {
-            idPagamento: pagamentoCriado.id,
+            vendaId: venda.id,
             clienteId: venda.clienteId,
-            valorTotal: pagamento.valor,
+            valorTotal: valorTotalParcelamento,
             valorPago: 0,
-            idFormaPag: pagamento.formaPagamentoId,
             situacao: 1,
           },
         });
 
-        if (pagamento.tipo === TipoVenda.A_PRAZO_SEM_PARCELAS) {
-          if (!pagamento.vencimento) {
-            throw new BadRequestException(
-              'Data de vencimento obrigatória para pagamento a prazo',
-            );
-          }
+        // Criar parcelas baseadas em cada forma de pagamento parcelada
+        let numeroParcela = 1;
 
-          await tx.parcelas.create({
-            data: {
-              parcelamentoId: parcelamento.id,
-              numero: 1,
-              valor: new Decimal(pagamento.valor),
-              vencimento: new Date(pagamento.vencimento),
-              status: ParcelaStatus.PENDENTE,
-            },
-          });
-          continue;
-        }
-
-        if (pagamento.tipo === TipoVenda.PARCELADO) {
-          if (!pagamento.numeroParcelas || pagamento.numeroParcelas < 2) {
-            throw new BadRequestException(
-              'Pagamento parcelado deve ter pelo menos 2 parcelas',
-            );
-          }
-
-          if (!pagamento.primeiraParcelaData) {
-            throw new BadRequestException(
-              'Data da primeira parcela é obrigatória para pagamento parcelado',
-            );
-          }
-
-          const primeiraParcelaDate = new Date(pagamento.primeiraParcelaData);
-          const numeroParcelas = pagamento.numeroParcelas;
-          const totalParcelado = new Decimal(pagamento.valor);
-          const valorParcelaBase = totalParcelado
-            .div(numeroParcelas)
-            .toDecimalPlaces(2);
-
-          let acumulado = new Decimal(0);
-
-          for (let i = 1; i <= numeroParcelas; i++) {
-            let valorParcela = valorParcelaBase;
-            if (i === numeroParcelas) {
-              valorParcela = totalParcelado.sub(acumulado);
-            } else {
-              acumulado = acumulado.add(valorParcelaBase);
+        for (const pagamento of pagamentosParcelados) {
+          if (pagamento.tipo === TipoVenda.A_PRAZO_SEM_PARCELAS) {
+            if (!pagamento.vencimento) {
+              throw new BadRequestException(
+                'Data de vencimento obrigatória para pagamento a prazo',
+              );
             }
-
-            const vencimento = this.addMonths(primeiraParcelaDate, i - 1);
 
             await tx.parcelas.create({
               data: {
                 parcelamentoId: parcelamento.id,
-                numero: i,
-                valor: valorParcela,
-                vencimento,
+                numero: numeroParcela++,
+                valor: new Decimal(pagamento.valor),
+                vencimento: new Date(pagamento.vencimento),
                 status: ParcelaStatus.PENDENTE,
               },
             });
+            continue;
           }
-          continue;
-        }
 
-        // TipoVenda.PARCELADO_FLEXIVEL não gera parcelas iniciais
+          if (pagamento.tipo === TipoVenda.PARCELADO) {
+            if (!pagamento.numeroParcelas || pagamento.numeroParcelas < 2) {
+              throw new BadRequestException(
+                'Pagamento parcelado deve ter pelo menos 2 parcelas',
+              );
+            }
+
+            if (!pagamento.primeiraParcelaData) {
+              throw new BadRequestException(
+                'Data da primeira parcela é obrigatória para pagamento parcelado',
+              );
+            }
+
+            const primeiraParcelaDate = new Date(pagamento.primeiraParcelaData);
+            const numeroParcelas = pagamento.numeroParcelas;
+            const totalParcelado = new Decimal(pagamento.valor);
+            const valorParcelaBase = totalParcelado
+              .div(numeroParcelas)
+              .toDecimalPlaces(2);
+
+            let acumulado = new Decimal(0);
+
+            for (let i = 1; i <= numeroParcelas; i++) {
+              let valorParcela = valorParcelaBase;
+              if (i === numeroParcelas) {
+                valorParcela = totalParcelado.sub(acumulado);
+              } else {
+                acumulado = acumulado.add(valorParcelaBase);
+              }
+
+              const vencimento = this.addMonths(primeiraParcelaDate, i - 1);
+
+              await tx.parcelas.create({
+                data: {
+                  parcelamentoId: parcelamento.id,
+                  numero: numeroParcela++,
+                  valor: valorParcela,
+                  vencimento,
+                  status: ParcelaStatus.PENDENTE,
+                },
+              });
+            }
+            continue;
+          }
+
+          // TipoVenda.PARCELADO_FLEXIVEL não gera parcelas iniciais
+        }
       }
 
       // Atualizar venda com totais e status
@@ -498,7 +501,7 @@ export class VendaService {
           qtdCompras: { increment: 1 },
           // atualiza o ruccnpj do cliente se estiver vazio
           ruccnpj:
-            nomeFatura.length === 0 && ruccnpj.length > 0 ? ruccnpj : null,
+            nomeFatura?.length === 0 && ruccnpj?.length > 0 ? ruccnpj : null,
         },
       });
 
@@ -871,11 +874,75 @@ export class VendaService {
     page: number,
     limit: number,
     status?: VendaStatus,
+    filterType?: 'pedido' | 'venda' | 'condicional' | 'brindePermuta',
+    tipo?: VendaTipo,
+    search?: string,
   ): Promise<{ data: Venda[]; total: number; page: number; limit: number }> {
-    const where: any = { parceiroId };
-    if (status) {
+    const where: Prisma.VendaWhereInput = { parceiroId };
+
+    // Aplicar filtros predefinidos baseados no menu
+    if (filterType) {
+      switch (filterType) {
+        case 'pedido':
+          // Pedidos em aberto: status = PEDIDO (qualquer tipo)
+          where.status = VendaStatus.PEDIDO;
+          break;
+        case 'venda':
+          // Vendas realizadas: tipo DIRETA ou CONDICIONAL com status CONFIRMADA, CONFIRMADA_TOTAL ou CONFIRMADA_PARCIAL
+          where.tipo = { in: [VendaTipo.DIRETA, VendaTipo.CONDICIONAL] };
+          where.status = {
+            in: [
+              VendaStatus.CONFIRMADA,
+              VendaStatus.CONFIRMADA_TOTAL,
+              VendaStatus.CONFIRMADA_PARCIAL,
+            ],
+          };
+          break;
+        case 'condicional':
+          // Condicionais: tipo CONDICIONAL com status CONFIRMADA
+          where.tipo = VendaTipo.CONDICIONAL;
+          where.status = VendaStatus.CONFIRMADA;
+          break;
+        case 'brindePermuta':
+          // Brindes e Permutas: tipo BRINDE ou PERMUTA com status CONFIRMADA
+          where.tipo = { in: [VendaTipo.BRINDE, VendaTipo.PERMUTA] };
+          where.status = VendaStatus.CONFIRMADA;
+          break;
+      }
+    } else if (status) {
+      // Filtro legado por status único
       where.status = status;
     }
+
+    // Filtro adicional por tipo de venda (select no frontend)
+    if (tipo && !filterType) {
+      where.tipo = tipo;
+    } else if (tipo && filterType) {
+      // Se filterType já foi aplicado, adicionar tipo como filtro adicional apenas se compatível
+      if (filterType === 'venda') {
+        // Para vendas realizadas, permitir filtrar entre DIRETA e CONDICIONAL
+        if (tipo === VendaTipo.DIRETA || tipo === VendaTipo.CONDICIONAL) {
+          where.tipo = tipo;
+        }
+      } else if (filterType === 'brindePermuta') {
+        // Para brindes e permutas, permitir filtrar entre BRINDE e PERMUTA
+        if (tipo === VendaTipo.BRINDE || tipo === VendaTipo.PERMUTA) {
+          where.tipo = tipo;
+        }
+      }
+    }
+
+    // Filtro por termo de busca (nome do cliente)
+    if (search && search.trim()) {
+      const searchTerm = search.trim();
+      where.Cliente = {
+        OR: [
+          { nome: { contains: searchTerm, mode: 'insensitive' } },
+          { sobrenome: { contains: searchTerm, mode: 'insensitive' } },
+        ],
+      };
+    }
+
     const [total, data] = await this.prisma.$transaction([
       this.prisma.venda.count({ where }),
       this.prisma.venda.findMany({

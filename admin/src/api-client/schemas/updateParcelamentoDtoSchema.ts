@@ -7,10 +7,9 @@ import type { UpdateParcelamentoDto } from "../types/UpdateParcelamentoDto.ts";
 import { z } from "zod/v4";
 
 export const updateParcelamentoDtoSchema = z.object({
-    "idPagamento": z.optional(z.coerce.number().describe("ID do pagamento associado")),
-"clienteId": z.optional(z.coerce.number().describe("ID do cliente associado")),
+    "clienteId": z.optional(z.coerce.number().describe("ID do cliente associado")),
+"vendaId": z.optional(z.coerce.number().describe("ID da venda associada")),
 "valorTotal": z.optional(z.coerce.number().describe("Valor total parcelado")),
 "valorPago": z.optional(z.coerce.number().default(0).describe("Valor já pago")),
-"idFormaPag": z.optional(z.coerce.number().describe("ID da forma de pagamento")),
 "situacao": z.optional(z.coerce.number().default(1).describe("Situação (1 - Aberto, 2 - Concluído)"))
     }) as unknown as z.ZodType<UpdateParcelamentoDto>

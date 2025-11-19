@@ -15,6 +15,6 @@ export const canalOrigemSchema = z.object({
 "ativo": z.boolean().describe("Status ativo do canal de origem"),
 "createdAt": z.string().datetime().describe("Data de criação do canal de origem"),
 get "clientes"(){
-                return z.optional(z.array(clienteSchema).describe("Clientes associados ao canal de origem"))
+                return z.array(clienteSchema).describe("Clientes associados ao canal de origem").optional()
               }
     }) as unknown as z.ZodType<CanalOrigem>

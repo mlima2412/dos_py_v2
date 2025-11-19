@@ -17,10 +17,10 @@ export const contasPagarParcelasSchema = z.object({
 "pago": z.boolean().describe("Indica se a parcela foi paga"),
 "contasPagarId": z.coerce.number().describe("ID da conta a pagar relacionada"),
 get "contasPagar"(){
-                return z.optional(contasPagarSchema.describe("Conta a pagar relacionada"))
+                return contasPagarSchema.describe("Conta a pagar relacionada").optional()
               },
 get "currency"(){
-                return z.optional(currencySchema.describe("Moeda da parcela"))
+                return currencySchema.describe("Moeda da parcela").optional()
               },
 "currencyId": z.coerce.number().describe("ID da moeda")
     }) as unknown as z.ZodType<ContasPagarParcelas>

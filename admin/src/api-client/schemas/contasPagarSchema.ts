@@ -18,9 +18,9 @@ export const contasPagarSchema = z.object({
 "saldo": z.coerce.number().describe("Saldo atual da conta (soma dos valores pagos)"),
 "pago": z.boolean().describe("Indica se a conta foi totalmente paga"),
 get "contasPagarParcelas"(){
-                return z.optional(z.array(contasPagarParcelasSchema).describe("Parcelas da conta a pagar"))
+                return z.array(contasPagarParcelasSchema).describe("Parcelas da conta a pagar").optional()
               },
 get "despesa"(){
-                return z.optional(despesaSchema.describe("Despesa relacionada"))
+                return despesaSchema.describe("Despesa relacionada").optional()
               }
     }) as unknown as z.ZodType<ContasPagar>

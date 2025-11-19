@@ -3,7 +3,7 @@
 * Do not edit manually.
 */
 
-import type { Usuario } from "./Usuario.ts";
+import type { PaginatedUsuarioResponseDto } from "./PaginatedUsuarioResponseDto.ts";
 
 export type UsuariosControllerFindPaginatedQueryParams = {
     /**
@@ -31,32 +31,7 @@ export type UsuariosControllerFindPaginatedQueryParams = {
 /**
  * @description Lista paginada de usuários retornada com sucesso
 */
-export type UsuariosControllerFindPaginated200 = {
-    /**
-     * @type array | undefined
-    */
-    data?: Usuario[] | undefined;
-    /**
-     * @description Total de registros
-     * @type number | undefined
-    */
-    total?: number | undefined;
-    /**
-     * @description Página atual
-     * @type number | undefined
-    */
-    page?: number | undefined;
-    /**
-     * @description Itens por página
-     * @type number | undefined
-    */
-    limit?: number | undefined;
-    /**
-     * @description Total de páginas
-     * @type number | undefined
-    */
-    totalPages?: number | undefined;
-};
+export type UsuariosControllerFindPaginated200 = PaginatedUsuarioResponseDto;
 
 export type UsuariosControllerFindPaginatedQueryResponse = UsuariosControllerFindPaginated200;
 

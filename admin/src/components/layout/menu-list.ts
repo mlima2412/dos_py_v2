@@ -192,7 +192,7 @@ export function getMenuList(
 						},
 						{
 							href: "/pedidoVendas/brinde",
-							label: t("menu.gifts"),
+							label: t("menu.giftsAndExchanges"),
 							active: pathname.includes("/pedidoVendas/brinde"),
 						},
 						{

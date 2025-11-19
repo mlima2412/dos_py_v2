@@ -15,6 +15,6 @@ export const userProfileDtoSchema = z.object({
 "telefone": z.optional(z.coerce.string().describe("Telefone do usuário")),
 "avatar": z.optional(z.coerce.string().describe("URL do avatar do usuário")),
 get "perfil"(){
-                return z.optional(perfilDtoSchema.describe("Perfil do usuário"))
+                return perfilDtoSchema.describe("Perfil do usuário").optional()
               }
     }) as unknown as z.ZodType<UserProfileDto>

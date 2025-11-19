@@ -1,6 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import { ListagemVendas } from "./ListagemVendas";
 import { FormularioVenda } from "./FormularioVenda";
+import { ListagemParcelamentos } from "./ListagemParcelamentos";
+import { VisualizarParcelamento } from "./VisualizarParcelamento";
 
 export function VendasRoutes() {
 	return (
@@ -12,10 +14,11 @@ export function VendasRoutes() {
 				path="condicionais"
 				element={<ListagemVendas tipo="condicional" />}
 			/>
-			<Route path="brinde" element={<ListagemVendas tipo="brinde" />} />
+			<Route path="brinde" element={<ListagemVendas tipo="brindePermuta" />} />
+			<Route path="parcelamentos" element={<ListagemParcelamentos />} />
 			<Route
-				path="parcelamentos"
-				element={<ListagemVendas tipo="parcelamento" />}
+				path="parcelamentos/visualizar/:id"
+				element={<VisualizarParcelamento />}
 			/>
 			<Route path="novo" element={<FormularioVenda mode="create" />} />
 			<Route

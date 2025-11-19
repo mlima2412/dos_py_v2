@@ -13,6 +13,7 @@ import { EstoqueSkuService } from '../src/estoque-sku/estoque-sku.service';
 import { FornecedoresService } from '../src/fornecedores/fornecedores.service';
 import { PedidoCompraService } from '../src/pedido-compra/pedido-compra.service';
 import { PedidoCompraItemService } from '../src/pedido-compra-item/pedido-compra-item.service';
+import { PrismaService } from '../src/prisma/prisma.service';
 
 import {
   CreateDespesaDto,
@@ -27,8 +28,126 @@ import { CreateEstoqueSkuDto } from '../src/estoque-sku/dto/create-estoque-sku.d
 import { uuidv7 } from 'uuidv7';
 import { CreateFornecedorDto } from 'src/fornecedores/dto/create-fornecedor.dto';
 import { CreatePedidoCompraDto } from 'src/pedido-compra/dto/create-pedido-compra.dto';
-import { PedidoCompra } from '@prisma/client';
+import {
+  ParcelaStatus,
+  PedidoCompra,
+  Prisma,
+  TipoVenda,
+  VendaItemTipo,
+  VendaStatus,
+  VendaTipo,
+} from '@prisma/client';
 import { CreatePedidoCompraItemDto } from 'src/pedido-compra-item/dto/create-pedido-compra-item.dto';
+
+const DEFAULT_PARCEIRO_ID = Number(process.env.SEED_PARCEIRO_ID ?? 1);
+const DEFAULT_USUARIO_ID = Number(process.env.SEED_USUARIO_ID ?? 1);
+const DEFAULT_LOCAL_SAIDA_ID = Number(process.env.SEED_LOCAL_SAIDA_ID ?? 1);
+
+// Mapeamento de IDs de forma de pagamento v1 -> v2
+const formaPagamentoMap = new Map<number, number>();
+
+// Formas de pagamento a serem ignoradas na migração
+const IGNORED_FORMA_PAGAMENTO = ['Brinde', 'Permuta', 'Parcelamento'];
+
+const BRINDE_KEYWORDS = ['brinde'];
+const PERMUTA_KEYWORDS = ['permuta'];
+const PARCELAMENTO_KEYWORDS = ['parcel'];
+
+const normalize = (value?: string | null) =>
+  (value ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+    .toLowerCase();
+
+const decimalOrUndefined = (value?: number | string | null) =>
+  value === null || value === undefined ? undefined : new Prisma.Decimal(value);
+
+const decimalOrZero = (value?: number | string | null) =>
+  value === null || value === undefined
+    ? new Prisma.Decimal(0)
+    : new Prisma.Decimal(value);
+
+const isPagamentoParcelado = (formaPagamentoNome?: string | null) =>
+  normalize(formaPagamentoNome).length > 0 &&
+  PARCELAMENTO_KEYWORDS.some(keyword =>
+    normalize(formaPagamentoNome).includes(keyword),
+  );
+
+const includesKeyword = (value: string, list: string[]) =>
+  list.some(keyword => value.includes(keyword));
+
+function mapVendaTipo(
+  legacyTipoVenda?: string | null,
+  formaPagamentoNome?: string | null,
+): VendaTipo {
+  const pagamento = normalize(formaPagamentoNome);
+  if (pagamento && includesKeyword(pagamento, BRINDE_KEYWORDS)) {
+    return VendaTipo.BRINDE;
+  }
+  if (pagamento && includesKeyword(pagamento, PERMUTA_KEYWORDS)) {
+    return VendaTipo.PERMUTA;
+  }
+
+  const tipo = normalize(legacyTipoVenda);
+  if (
+    tipo.includes('consig') ||
+    tipo.includes('condic') ||
+    tipo.includes('reserva')
+  ) {
+    return VendaTipo.CONDICIONAL;
+  }
+  return VendaTipo.DIRETA;
+}
+
+const mapVendaItemTipo = (vendaTipo: VendaTipo): VendaItemTipo => {
+  switch (vendaTipo) {
+    case VendaTipo.CONDICIONAL:
+      return VendaItemTipo.CONDICIONAL;
+    case VendaTipo.BRINDE:
+      return VendaItemTipo.BRINDE;
+    case VendaTipo.PERMUTA:
+      return VendaItemTipo.PERMUTA;
+    default:
+      return VendaItemTipo.NORMAL;
+  }
+};
+
+function mapVendaStatus(
+  situacao: number | null | undefined,
+  itens: any[],
+  vendaTipo: VendaTipo,
+): VendaStatus {
+  // situacao = 1 sempre é PEDIDO (não finalizado)
+  if (situacao === 1) {
+    return VendaStatus.PEDIDO;
+  }
+
+  // Para CONDICIONAL com situacao = 3 ou 4, CONFIRMADA_TOTAL
+  if (
+    vendaTipo === VendaTipo.CONDICIONAL &&
+    (situacao === 3 || situacao === 4)
+  ) {
+    return VendaStatus.CONFIRMADA_TOTAL;
+  }
+
+  switch (situacao) {
+    case 2:
+      return VendaStatus.CONFIRMADA;
+    case 3: {
+      const hasDevolucao = itens?.some(
+        item => Number(item.qtdDevolvida ?? 0) > 0,
+      );
+      return hasDevolucao
+        ? VendaStatus.CONFIRMADA_PARCIAL
+        : VendaStatus.CONFIRMADA_TOTAL;
+    }
+    case 4:
+      return VendaStatus.CANCELADA;
+    default:
+      return VendaStatus.PEDIDO;
+  }
+}
 
 async function fetchDespesaFromLegacy(app, legacyDb) {
   console.log('🌱 Migrando Despesas');
@@ -286,6 +405,409 @@ async function fetchProdutosFromLegacy(app, legacyDb) {
   }
 }
 
+async function fetchFormaPagamentoFromLegacy(legacyDb, prisma: PrismaService) {
+  console.log('🌱 Migrando Formas de Pagamento');
+  const formasPagamento = await legacyDb.query(
+    'SELECT * FROM public."formaPagamento" ORDER BY "idFormaPag" ASC',
+  );
+
+  let migrated = 0;
+  let skipped = 0;
+
+  for (const raw of formasPagamento.rows) {
+    // Ignorar formas de pagamento específicas
+    if (IGNORED_FORMA_PAGAMENTO.includes(raw.nome)) {
+      console.log(`  - Ignorando forma de pagamento: ${raw.nome}`);
+      skipped++;
+      continue;
+    }
+
+    // Verificar se já existe com o mesmo nome para o parceiro
+    const existing = await prisma.formaPagamento.findFirst({
+      where: {
+        nome: raw.nome,
+        parceiroId: DEFAULT_PARCEIRO_ID,
+      },
+      select: { idFormaPag: true },
+    });
+
+    if (existing) {
+      formaPagamentoMap.set(raw.idFormaPag, existing.idFormaPag);
+      console.log(
+        `  - Forma de pagamento "${raw.nome}" já existe, usando ID ${existing.idFormaPag}`,
+      );
+      skipped++;
+      continue;
+    }
+
+    console.log(`  - Criando forma de pagamento: ${raw.nome}`);
+    const created = await prisma.formaPagamento.create({
+      data: {
+        parceiroId: DEFAULT_PARCEIRO_ID,
+        nome: raw.nome,
+        taxa: raw.taxa ? new Prisma.Decimal(raw.taxa) : new Prisma.Decimal(0),
+        tempoLiberacao: 0,
+        impostoPosCalculo: raw.ivaPosCalculo ?? false,
+        ativo: true,
+      },
+    });
+
+    // Mapear ID antigo para novo
+    formaPagamentoMap.set(raw.idFormaPag, created.idFormaPag);
+    migrated++;
+  }
+
+  console.log(
+    `✅ Migração de formas de pagamento concluída: ${migrated} migradas, ${skipped} ignoradas/existentes.`,
+  );
+}
+
+async function fetchVendasFromLegacy(legacyDb, prisma: PrismaService) {
+  console.log('🌱 Migrando Vendas');
+  const [usuario, parceiro, local] = await Promise.all([
+    prisma.usuario.findUnique({
+      where: { id: DEFAULT_USUARIO_ID },
+      select: { id: true },
+    }),
+    prisma.parceiro.findUnique({
+      where: { id: DEFAULT_PARCEIRO_ID },
+      select: { id: true },
+    }),
+    prisma.localEstoque.findUnique({
+      where: { id: DEFAULT_LOCAL_SAIDA_ID },
+      select: { id: true },
+    }),
+  ]);
+
+  if (!usuario || !parceiro || !local) {
+    throw new Error(
+      'IDs padrão de usuário, parceiro ou local de saída não encontrados. Configure as variáveis SEED_PARCEIRO_ID, SEED_USUARIO_ID e SEED_LOCAL_SAIDA_ID antes de migrar vendas.',
+    );
+  }
+
+  const vendas = await legacyDb.query(`
+    SELECT v.*, fp.nome as "formaPagamentoNome"
+    FROM public."Venda" v
+    LEFT JOIN public."formaPagamento" fp ON fp."idFormaPag" = v."formaPagamentoId"
+    ORDER BY v."idVenda" ASC
+  `);
+
+  const total = vendas.rows.length;
+  let migrated = 0;
+  let skipped = 0;
+
+  for (const raw of vendas.rows) {
+    const itens = await legacyDb.query(
+      'SELECT * FROM public."VendaItem" WHERE "vendaId" = $1 ORDER BY "idVendaItem" ASC',
+      [raw.idVenda],
+    );
+    const legacyParcelamento = await legacyDb.query(
+      'SELECT * FROM public."parcelamento" WHERE "vendaId" = $1 LIMIT 1',
+      [raw.idVenda],
+    );
+    const parcelamentoRow = legacyParcelamento.rows[0];
+    const parcelas = parcelamentoRow
+      ? await legacyDb.query(
+          'SELECT * FROM public."parcelas" WHERE "idParcelamento" = $1 ORDER BY "idparcela" ASC',
+          [parcelamentoRow.id],
+        )
+      : { rows: [] };
+
+    const itensValorBruto = itens.rows.reduce(
+      (sum: Prisma.Decimal, item) => {
+        const preco = new Prisma.Decimal(item.precoVenda ?? 0);
+        const qtd = new Prisma.Decimal(item.qtd ?? 0);
+        return sum.add(preco.mul(qtd));
+      },
+      new Prisma.Decimal(0),
+    );
+    const valorTotalVenda =
+      raw.valorTotal != null ? new Prisma.Decimal(raw.valorTotal) : itensValorBruto;
+
+    await prisma.$transaction(async tx => {
+      const vendaTipo = mapVendaTipo(raw.tipoVenda, raw.formaPagamentoNome);
+      const vendaStatus = mapVendaStatus(raw.situacao, itens.rows, vendaTipo);
+
+      const createdVenda = await tx.venda.create({
+        data: {
+          publicId: uuidv7(),
+          idv1: raw.idVenda,
+          usuarioId: DEFAULT_USUARIO_ID,
+          parceiroId: DEFAULT_PARCEIRO_ID,
+          localSaidaId: DEFAULT_LOCAL_SAIDA_ID,
+          clienteId: raw.clienteId,
+          tipo: vendaTipo,
+          status: vendaStatus,
+          dataVenda: raw.dataVenda,
+          valorFrete: decimalOrUndefined(raw.valorDelivery),
+          valorTotal: valorTotalVenda,
+          desconto: decimalOrUndefined(raw.desconto),
+          ruccnpj: null,
+          nomeFatura: raw.nomeFatura ?? null,
+          numeroFatura: raw.faturaNumero ? raw.faturaNumero.toString() : null,
+          observacao: raw.observacao ?? null,
+          valorComissao: decimalOrUndefined(raw.valorIva),
+        },
+      });
+
+      await migrateVendaItems(
+        tx,
+        createdVenda.id,
+        itens.rows,
+        vendaTipo,
+        raw.situacao,
+      );
+
+      // Criar Pagamento para vendas DIRETA e CONDICIONAL (não para BRINDE e PERMUTA)
+      if (
+        vendaTipo === VendaTipo.DIRETA ||
+        vendaTipo === VendaTipo.CONDICIONAL
+      ) {
+        const formaPagamentoIdV2 = formaPagamentoMap.get(raw.formaPagamentoId);
+
+        if (formaPagamentoIdV2) {
+          const entregaInicial = new Prisma.Decimal(raw.entregaInicial ?? 0);
+          const valorRestante = valorTotalVenda.sub(entregaInicial);
+          const temParcelamento =
+            !!parcelamentoRow || isPagamentoParcelado(raw.formaPagamentoNome);
+
+          // Se há entrada inicial, criar pagamento de entrada
+          if (entregaInicial.greaterThan(0)) {
+            await tx.pagamento.create({
+              data: {
+                vendaId: createdVenda.id,
+                formaPagamentoId: formaPagamentoIdV2,
+                tipo: TipoVenda.A_VISTA_IMEDIATA,
+                valor: entregaInicial,
+                valorDelivery: decimalOrUndefined(raw.valorDelivery),
+                entrada: true,
+              },
+            });
+
+            // Se há valor restante e não há parcelamento, criar pagamento do restante
+            if (valorRestante.greaterThan(0) && !temParcelamento) {
+              await tx.pagamento.create({
+                data: {
+                  vendaId: createdVenda.id,
+                  formaPagamentoId: formaPagamentoIdV2,
+                  tipo: TipoVenda.A_VISTA_IMEDIATA,
+                  valor: valorRestante,
+                  entrada: false,
+                },
+              });
+            }
+          } else if (!temParcelamento) {
+            // Se não há entrada e não há parcelamento, criar pagamento único
+            await tx.pagamento.create({
+              data: {
+                vendaId: createdVenda.id,
+                formaPagamentoId: formaPagamentoIdV2,
+                tipo: TipoVenda.A_VISTA_IMEDIATA,
+                valor: valorTotalVenda,
+                valorDelivery: decimalOrUndefined(raw.valorDelivery),
+                entrada: false,
+              },
+            });
+          }
+        } else {
+          console.warn(
+            `  - Forma de pagamento ${raw.formaPagamentoId} não encontrada no mapeamento para venda ${raw.idVenda}`,
+          );
+        }
+      }
+
+      await migrateParcelamentoForVenda(
+        tx,
+        {
+          vendaId: createdVenda.id,
+          clienteId: raw.clienteId,
+          valorTotal: valorTotalVenda,
+          formaPagamentoNome: raw.formaPagamentoNome,
+          entregaInicial: new Prisma.Decimal(raw.entregaInicial ?? 0),
+        },
+        parcelamentoRow,
+        parcelas.rows,
+      );
+    });
+
+    migrated++;
+    const shouldLogProgress =
+      migrated <= 5 || // log early items to mostrar progresso imediato
+      migrated % 25 === 0 ||
+      migrated === total;
+    if (shouldLogProgress) {
+      console.log(`  - Venda ${raw.idVenda} migrada (${migrated}/${total})`);
+    }
+  }
+
+  console.log(
+    `✅ Migração de vendas concluída: ${migrated} migradas, ${skipped} já existiam.`,
+  );
+}
+
+async function migrateVendaItems(
+  tx: Prisma.TransactionClient,
+  vendaId: number,
+  legacyItens: any[],
+  vendaTipo: VendaTipo,
+  situacao?: number,
+) {
+  if (!legacyItens?.length) {
+    return;
+  }
+  const itemTipo = mapVendaItemTipo(vendaTipo);
+
+  // Para CONDICIONAL com situação >= 2, migrar apenas itens confirmados
+  const isCondicionalFinalizada =
+    vendaTipo === VendaTipo.CONDICIONAL && situacao && situacao >= 2;
+
+  for (const item of legacyItens) {
+    // Para condicionais finalizadas, ignorar itens não confirmados
+    if (isCondicionalFinalizada && !item.confirmado) {
+      continue;
+    }
+
+    const skuId = item.produtoVarianteId;
+    const skuExists = await tx.produtoSKU.findUnique({
+      where: { id: skuId },
+      select: { id: true },
+    });
+    if (!skuExists) {
+      console.warn(
+        `SKU ${skuId} não encontrado para venda ${vendaId}, item ${item.idVendaItem} ignorado`,
+      );
+      continue;
+    }
+
+    const qtdReservada = Number(item.qtd ?? 0);
+    const qtdDevolvida = Number(item.qtdDevolvida ?? 0);
+
+    // Para CONDICIONAL finalizada: qtdAceita = qtdReservada (cliente ficou com tudo que foi confirmado)
+    // Para outros casos: manter lógica original
+    let qtdAceita: number;
+    if (isCondicionalFinalizada) {
+      qtdAceita = qtdReservada;
+    } else {
+      qtdAceita = item.confirmado
+        ? Math.max(qtdReservada - qtdDevolvida, 0)
+        : 0;
+    }
+
+    await tx.vendaItem.create({
+      data: {
+        vendaId,
+        skuId,
+        tipo: itemTipo,
+        qtdReservada,
+        qtdAceita,
+        qtdDevolvida: isCondicionalFinalizada ? 0 : qtdDevolvida,
+        desconto: decimalOrUndefined(item.desconto),
+        precoUnit: decimalOrZero(item.precoVenda),
+        observacao: item.observacao ?? null,
+      },
+    });
+  }
+}
+
+async function migrateParcelamentoForVenda(
+  tx: Prisma.TransactionClient,
+  context: {
+    vendaId: number;
+    clienteId: number;
+    valorTotal: Prisma.Decimal;
+    formaPagamentoNome?: string | null;
+    entregaInicial?: Prisma.Decimal;
+  },
+  legacyParcelamento?: any,
+  legacyParcelas?: any[],
+) {
+  const shouldCreateParcelamento =
+    !!legacyParcelamento || isPagamentoParcelado(context.formaPagamentoNome);
+
+  if (!shouldCreateParcelamento) {
+    return;
+  }
+
+  const valorTotalParcelamento = legacyParcelamento?.valorTotal
+    ? new Prisma.Decimal(legacyParcelamento.valorTotal)
+    : context.valorTotal;
+  const valorPagoLegacy = legacyParcelamento?.valorPago
+    ? new Prisma.Decimal(legacyParcelamento.valorPago)
+    : (context.entregaInicial ?? new Prisma.Decimal(0));
+
+  const parcelamento = await tx.parcelamento.create({
+    data: {
+      vendaId: context.vendaId,
+      clienteId: context.clienteId,
+      valorTotal: valorTotalParcelamento.toNumber(),
+      valorPago: valorPagoLegacy.toNumber(),
+      situacao: legacyParcelamento?.situacao ?? 1,
+    },
+  });
+
+  await tx.venda.update({
+    where: { id: context.vendaId },
+    data: { parcelamentoId: parcelamento.id },
+  });
+
+  let numeroSequencial = 1;
+  let totalPago = new Prisma.Decimal(0);
+  const parcelasRows = legacyParcelas ?? [];
+
+  for (const parcela of parcelasRows) {
+    const valor = new Prisma.Decimal(parcela.valorPago ?? 0);
+    totalPago = totalPago.add(valor);
+    await tx.parcelas.create({
+      data: {
+        parcelamentoId: parcelamento.id,
+        numero: numeroSequencial++,
+        valor: valor,
+        vencimento: null,
+        recebidoEm: parcela.dataPagamento
+          ? new Date(parcela.dataPagamento)
+          : null,
+        status: ParcelaStatus.PAGO,
+      },
+    });
+  }
+
+  if (!parcelasRows.length && valorPagoLegacy.greaterThan(0)) {
+    totalPago = totalPago.add(valorPagoLegacy);
+    await tx.parcelas.create({
+      data: {
+        parcelamentoId: parcelamento.id,
+        numero: numeroSequencial++,
+        valor: valorPagoLegacy,
+        vencimento: null,
+        recebidoEm: null,
+        status: ParcelaStatus.PAGO,
+      },
+    });
+  }
+
+  const saldo = valorTotalParcelamento.sub(totalPago);
+
+  if (saldo.greaterThan(0)) {
+    await tx.parcelas.create({
+      data: {
+        parcelamentoId: parcelamento.id,
+        numero: numeroSequencial++,
+        valor: saldo,
+        vencimento: null,
+        status: ParcelaStatus.PENDENTE,
+      },
+    });
+  }
+
+  await tx.parcelamento.update({
+    where: { id: parcelamento.id },
+    data: {
+      valorPago: totalPago.toNumber(),
+      situacao: saldo.greaterThan(0) ? 1 : 2,
+    },
+  });
+}
+
 async function run() {
   const app = await NestFactory.createApplicationContext(SeedModule, {
     logger: ['error', 'warn'],
@@ -297,6 +819,7 @@ async function run() {
   try {
     console.log('🌱 Iniciando migração DOSv1 para DOSv2...');
     console.log('PATH:', process.env.LEGACY_DATABASE_URL);
+    const prisma = app.get(PrismaService);
 
     await fetchCategoriaFromLegacy(app, legacyDb);
     await fetchSubCategoriaFromLegacy(app, legacyDb);
@@ -305,6 +828,11 @@ async function run() {
     await fetchProdutosFromLegacy(app, legacyDb);
     await fetchFornecedoresFromLegacy(app, legacyDb);
     await fetchPedidoCompraFromLegacy(app, legacyDb);
+
+    // Migrar formas de pagamento antes das vendas (para ter o mapeamento de IDs)
+    await fetchFormaPagamentoFromLegacy(legacyDb, prisma);
+
+    await fetchVendasFromLegacy(legacyDb, prisma);
 
     legacyDb.end();
     console.log('Seed concluído com sucesso.');

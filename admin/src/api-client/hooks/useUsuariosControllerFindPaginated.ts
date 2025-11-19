@@ -14,7 +14,6 @@ export const usuariosControllerFindPaginatedQueryKey = (params: UsuariosControll
 export type UsuariosControllerFindPaginatedQueryKey = ReturnType<typeof usuariosControllerFindPaginatedQueryKey>
 
 /**
- * @summary Listar usuários com paginação, busca e filtros
  * {@link /usuarios/paginated}
  */
 export async function usuariosControllerFindPaginated(params: UsuariosControllerFindPaginatedQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
@@ -37,7 +36,6 @@ export function usuariosControllerFindPaginatedQueryOptions(params: UsuariosCont
 }
 
 /**
- * @summary Listar usuários com paginação, busca e filtros
  * {@link /usuarios/paginated}
  */
 export function useUsuariosControllerFindPaginated<TData = UsuariosControllerFindPaginatedQueryResponse, TQueryData = UsuariosControllerFindPaginatedQueryResponse, TQueryKey extends QueryKey = UsuariosControllerFindPaginatedQueryKey>(params: UsuariosControllerFindPaginatedQueryParams, options: 

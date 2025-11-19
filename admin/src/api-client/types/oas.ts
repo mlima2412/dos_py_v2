@@ -351,31 +351,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Usuario"
-                      }
-                    },
-                    "total": {
-                      "type": "number",
-                      "description": "Total de registros"
-                    },
-                    "page": {
-                      "type": "number",
-                      "description": "Página atual"
-                    },
-                    "limit": {
-                      "type": "number",
-                      "description": "Itens por página"
-                    },
-                    "totalPages": {
-                      "type": "number",
-                      "description": "Total de páginas"
-                    }
-                  }
+                  "$ref": "#/components/schemas/PaginatedUsuarioResponseDto"
                 }
               }
             }
@@ -386,7 +362,6 @@ export const oas = {
             "JWT-auth": []
           }
         ],
-        "summary": "Listar usuários com paginação, busca e filtros",
         "tags": [
           "Usuarios"
         ]
@@ -7533,13 +7508,7 @@ export const oas = {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "publicId": {
-                      "type": "string",
-                      "example": "01234567-89ab-cdef-0123-456789abcdef"
-                    }
-                  }
+                  "$ref": "#/components/schemas/PublicIdResponseDto"
                 }
               }
             }
@@ -7983,12 +7952,6 @@ export const oas = {
         "responses": {
           "204": {
             "description": "Conferência de estoque removida com sucesso"
-          },
-          "400": {
-            "description": "Não é possível remover conferência em andamento"
-          },
-          "404": {
-            "description": "Conferência de estoque não encontrada"
           }
         },
         "security": [
@@ -10199,6 +10162,45 @@ export const oas = {
             }
           },
           {
+            "name": "filterType",
+            "required": false,
+            "in": "query",
+            "description": "Tipo de filtro predefinido baseado no menu",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pedido",
+                "venda",
+                "condicional",
+                "brindePermuta"
+              ]
+            }
+          },
+          {
+            "name": "tipo",
+            "required": false,
+            "in": "query",
+            "description": "Tipo de venda para filtro adicional",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "DIRETA",
+                "CONDICIONAL",
+                "BRINDE",
+                "PERMUTA"
+              ]
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Termo de busca por nome do cliente",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "x-parceiro-id",
             "in": "header",
             "description": "ID do parceiro logado",
@@ -11054,35 +11056,136 @@ export const oas = {
         "tags": [
           "Parcelamento"
         ]
-      },
+      }
+    },
+    "/parcelamento/parceiro": {
       "get": {
-        "operationId": "ParcelamentoController_findAll",
+        "operationId": "ParcelamentoController_findAllByParceiro",
         "parameters": [
           {
-            "name": "pagamentoId",
+            "name": "x-parceiro-id",
             "required": true,
-            "in": "query",
+            "in": "header",
+            "description": "ID do parceiro",
             "schema": {
-              "type": "number"
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Lista de parcelamentos",
+            "description": "Lista de parcelamentos do parceiro",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Parcelamento"
+                    "$ref": "#/components/schemas/ParcelamentoComVendaDto"
                   }
                 }
               }
             }
           }
         },
-        "summary": "Listar parcelamentos por pagamento",
+        "summary": "Listar todos os parcelamentos do parceiro",
+        "tags": [
+          "Parcelamento"
+        ]
+      }
+    },
+    "/parcelamento/cliente/{clienteId}": {
+      "get": {
+        "operationId": "ParcelamentoController_findByCliente",
+        "parameters": [
+          {
+            "name": "clienteId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "x-parceiro-id",
+            "required": true,
+            "in": "header",
+            "description": "ID do parceiro",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de parcelamentos do cliente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ParcelamentoComVendaDto"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Cliente não pertence ao parceiro"
+          },
+          "404": {
+            "description": "Cliente não encontrado"
+          }
+        },
+        "summary": "Listar todos os parcelamentos de um cliente",
+        "tags": [
+          "Parcelamento"
+        ]
+      }
+    },
+    "/parcelamento/{id}/parcelas": {
+      "get": {
+        "operationId": "ParcelamentoController_findParcelas",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "x-parceiro-id",
+            "required": true,
+            "in": "header",
+            "description": "ID do parceiro",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de parcelas do parcelamento",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ParcelaDto"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Parcelamento não pertence ao parceiro"
+          },
+          "404": {
+            "description": "Parcelamento não encontrado"
+          }
+        },
+        "summary": "Listar todas as parcelas de um parcelamento",
         "tags": [
           "Parcelamento"
         ]
@@ -11178,6 +11281,126 @@ export const oas = {
           }
         },
         "summary": "Remover um Parcelamento",
+        "tags": [
+          "Parcelamento"
+        ]
+      }
+    },
+    "/parcelamento/parcela/{parcelaId}/marcar-paga": {
+      "patch": {
+        "operationId": "ParcelamentoController_marcarParcelaPaga",
+        "parameters": [
+          {
+            "name": "parcelaId",
+            "required": true,
+            "in": "path",
+            "description": "ID da parcela",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "x-parceiro-id",
+            "required": true,
+            "in": "header",
+            "description": "ID do parceiro",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarcarParcelaPagaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Parcela marcada como paga",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParcelaDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parcela já está paga"
+          },
+          "403": {
+            "description": "Parcela não pertence ao parceiro"
+          },
+          "404": {
+            "description": "Parcela não encontrada"
+          }
+        },
+        "summary": "Marcar uma parcela como paga",
+        "tags": [
+          "Parcelamento"
+        ]
+      }
+    },
+    "/parcelamento/{id}/parcela-espontanea": {
+      "post": {
+        "operationId": "ParcelamentoController_criarParcelaEspontanea",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do parcelamento",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "x-parceiro-id",
+            "required": true,
+            "in": "header",
+            "description": "ID do parceiro",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CriarParcelaEspontaneaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Parcela criada e marcada como paga",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParcelaDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Valor maior que saldo restante"
+          },
+          "403": {
+            "description": "Parcelamento não pertence ao parceiro"
+          },
+          "404": {
+            "description": "Parcelamento não encontrado"
+          }
+        },
+        "summary": "Criar parcela espontânea (pagamento flexível)",
         "tags": [
           "Parcelamento"
         ]
@@ -11766,6 +11989,45 @@ export const oas = {
           "provider",
           "ativo",
           "createdAt"
+        ]
+      },
+      "PaginatedUsuarioResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Lista de usuários",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Usuario"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Total de registros",
+            "example": 100
+          },
+          "page": {
+            "type": "number",
+            "description": "Página atual",
+            "example": 1
+          },
+          "limit": {
+            "type": "number",
+            "description": "Limite de registros por página",
+            "example": 20
+          },
+          "totalPages": {
+            "type": "number",
+            "description": "Total de páginas",
+            "example": 5
+          }
+        },
+        "required": [
+          "data",
+          "total",
+          "page",
+          "limit",
+          "totalPages"
         ]
       },
       "UpdateUsuarioDto": {
@@ -13650,7 +13912,7 @@ export const oas = {
           "publicId": {
             "type": "string",
             "description": "ID público da conta a pagar",
-            "example": "019a4c52-6998-7b6c-9e40-8b4edbb263dc"
+            "example": "019a9bcd-8b26-772f-972a-2c5f9b576b6c"
           },
           "despesaId": {
             "type": "number",
@@ -13720,7 +13982,7 @@ export const oas = {
           "publicId": {
             "type": "string",
             "description": "ID público da parcela",
-            "example": "019a4c52-6997-7251-ad83-a5374f29c177"
+            "example": "019a9bcd-8b26-772f-972a-2c5e180906c5"
           },
           "dataPagamento": {
             "format": "date-time",
@@ -15604,6 +15866,19 @@ export const oas = {
           }
         }
       },
+      "PublicIdResponseDto": {
+        "type": "object",
+        "properties": {
+          "publicId": {
+            "type": "string",
+            "description": "Public ID da transferência",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          }
+        },
+        "required": [
+          "publicId"
+        ]
+      },
       "TransferenciaSkuSimplesDto": {
         "type": "object",
         "properties": {
@@ -17462,13 +17737,13 @@ export const oas = {
       "CreateParcelamentoDto": {
         "type": "object",
         "properties": {
-          "idPagamento": {
-            "type": "number",
-            "description": "ID do pagamento associado"
-          },
           "clienteId": {
             "type": "number",
             "description": "ID do cliente associado"
+          },
+          "vendaId": {
+            "type": "number",
+            "description": "ID da venda associada"
           },
           "valorTotal": {
             "type": "number",
@@ -17479,10 +17754,6 @@ export const oas = {
             "description": "Valor já pago",
             "default": 0
           },
-          "idFormaPag": {
-            "type": "number",
-            "description": "ID da forma de pagamento"
-          },
           "situacao": {
             "type": "number",
             "description": "Situação (1 - Aberto, 2 - Concluído)",
@@ -17490,10 +17761,9 @@ export const oas = {
           }
         },
         "required": [
-          "idPagamento",
           "clienteId",
-          "valorTotal",
-          "idFormaPag"
+          "vendaId",
+          "valorTotal"
         ]
       },
       "Parcelamento": {
@@ -17503,13 +17773,13 @@ export const oas = {
             "type": "number",
             "description": "ID do parcelamento"
           },
-          "idPagamento": {
-            "type": "number",
-            "description": "ID do pagamento associado"
-          },
           "clienteId": {
             "type": "number",
             "description": "ID do cliente associado"
+          },
+          "vendaId": {
+            "type": "number",
+            "description": "ID da venda associada"
           },
           "valorTotal": {
             "type": "number",
@@ -17520,18 +17790,10 @@ export const oas = {
             "description": "Valor já pago neste parcelamento",
             "default": 0
           },
-          "idFormaPag": {
-            "type": "number",
-            "description": "ID da forma de pagamento"
-          },
           "situacao": {
             "type": "number",
             "description": "Situação do parcelamento (1 - Aberto, 2 - Concluído)",
             "default": 1
-          },
-          "formaPagamentoNome": {
-            "type": "string",
-            "description": "Nome da forma de pagamento"
           },
           "clienteNome": {
             "type": "string",
@@ -17540,24 +17802,127 @@ export const oas = {
         },
         "required": [
           "id",
-          "idPagamento",
           "clienteId",
+          "vendaId",
           "valorTotal",
           "valorPago",
-          "idFormaPag",
           "situacao"
+        ]
+      },
+      "ParcelamentoComVendaDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "ID do parcelamento"
+          },
+          "vendaId": {
+            "type": "number",
+            "description": "ID da venda"
+          },
+          "clienteId": {
+            "type": "number",
+            "description": "ID do cliente"
+          },
+          "clienteNome": {
+            "type": "string",
+            "description": "Nome do cliente"
+          },
+          "dataVenda": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Data da venda"
+          },
+          "valorTotal": {
+            "type": "number",
+            "description": "Valor total do parcelamento"
+          },
+          "valorPago": {
+            "type": "number",
+            "description": "Valor já pago"
+          },
+          "situacao": {
+            "type": "number",
+            "description": "Situação do parcelamento (1 - Aberto, 2 - Concluído)"
+          },
+          "situacaoDescricao": {
+            "type": "string",
+            "description": "Descrição da situação (Aberto/Concluído)"
+          }
+        },
+        "required": [
+          "id",
+          "vendaId",
+          "clienteId",
+          "clienteNome",
+          "dataVenda",
+          "valorTotal",
+          "valorPago",
+          "situacao",
+          "situacaoDescricao"
+        ]
+      },
+      "ParcelaDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "ID da parcela"
+          },
+          "parcelamentoId": {
+            "type": "number",
+            "description": "ID do parcelamento"
+          },
+          "numero": {
+            "type": "number",
+            "description": "Número da parcela"
+          },
+          "valor": {
+            "type": "number",
+            "description": "Valor da parcela"
+          },
+          "vencimento": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Data de vencimento (null para parcelamento flexível)",
+            "nullable": true
+          },
+          "recebidoEm": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Data em que foi recebido",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "description": "Status da parcela (PENDENTE, PAGO, PAGO_ATRASADO)",
+            "enum": [
+              "PENDENTE",
+              "PAGO",
+              "PAGO_ATRASADO"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "parcelamentoId",
+          "numero",
+          "valor",
+          "vencimento",
+          "recebidoEm",
+          "status"
         ]
       },
       "UpdateParcelamentoDto": {
         "type": "object",
         "properties": {
-          "idPagamento": {
-            "type": "number",
-            "description": "ID do pagamento associado"
-          },
           "clienteId": {
             "type": "number",
             "description": "ID do cliente associado"
+          },
+          "vendaId": {
+            "type": "number",
+            "description": "ID da venda associada"
           },
           "valorTotal": {
             "type": "number",
@@ -17568,16 +17933,40 @@ export const oas = {
             "description": "Valor já pago",
             "default": 0
           },
-          "idFormaPag": {
-            "type": "number",
-            "description": "ID da forma de pagamento"
-          },
           "situacao": {
             "type": "number",
             "description": "Situação (1 - Aberto, 2 - Concluído)",
             "default": 1
           }
         }
+      },
+      "MarcarParcelaPagaDto": {
+        "type": "object",
+        "properties": {
+          "dataPagamento": {
+            "type": "string",
+            "description": "Data do pagamento",
+            "example": "2024-01-15T10:30:00Z"
+          }
+        }
+      },
+      "CriarParcelaEspontaneaDto": {
+        "type": "object",
+        "properties": {
+          "valor": {
+            "type": "number",
+            "description": "Valor da parcela",
+            "example": 150.5
+          },
+          "dataPagamento": {
+            "type": "string",
+            "description": "Data do pagamento",
+            "example": "2024-01-15T10:30:00Z"
+          }
+        },
+        "required": [
+          "valor"
+        ]
       },
       "CreateParcelaDto": {
         "type": "object",

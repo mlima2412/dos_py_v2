@@ -8,8 +8,8 @@ import { paginatedProdutoSkuResponseDtoSchema } from "./paginatedProdutoSkuRespo
 import { z } from "zod/v4";
 
 export const produtoSkuControllerFindPaginatedQueryParamsSchema = z.object({
-    "page": z.optional(z.string().default("1").describe("Número da página")),
-"limit": z.optional(z.string().default("20").describe("Número de itens por página")),
+    "page": z.string().default("1").describe("Número da página"),
+"limit": z.string().default("20").describe("Número de itens por página"),
 "search": z.optional(z.string().describe("Termo de busca para filtrar por cor ou tamanho")),
 "produtoId": z.optional(z.string().describe("ID do produto para filtrar")),
 "ativo": z.optional(z.string().describe("Filtrar apenas produtos ativos"))

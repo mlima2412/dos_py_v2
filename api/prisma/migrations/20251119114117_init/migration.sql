@@ -10,6 +10,21 @@ CREATE TYPE "public"."FrequenciaEnum" AS ENUM ('SEMANAL', 'QUINZENAL', 'MENSAL',
 -- CreateEnum
 CREATE TYPE "public"."TipoMovimento" AS ENUM ('ENTRADA', 'SAIDA', 'TRANSFERENCIA', 'CONDICIONAL', 'DEVOLUCAO', 'AJUSTE');
 
+-- CreateEnum
+CREATE TYPE "public"."VendaTipo" AS ENUM ('DIRETA', 'CONDICIONAL', 'BRINDE', 'PERMUTA');
+
+-- CreateEnum
+CREATE TYPE "public"."VendaStatus" AS ENUM ('PEDIDO', 'ABERTA', 'CONFIRMADA', 'CONFIRMADA_PARCIAL', 'CONFIRMADA_TOTAL', 'CANCELADA');
+
+-- CreateEnum
+CREATE TYPE "public"."VendaItemTipo" AS ENUM ('NORMAL', 'CONDICIONAL', 'BRINDE', 'PERMUTA');
+
+-- CreateEnum
+CREATE TYPE "public"."TipoVenda" AS ENUM ('A_VISTA_IMEDIATA', 'A_PRAZO_SEM_PARCELAS', 'PARCELADO', 'PARCELADO_FLEXIVEL');
+
+-- CreateEnum
+CREATE TYPE "public"."ParcelaStatus" AS ENUM ('PENDENTE', 'PAGO', 'PAGO_ATRASADO');
+
 -- CreateTable
 CREATE TABLE "public"."perfil" (
     "id" SERIAL NOT NULL,
@@ -117,8 +132,6 @@ CREATE TABLE "public"."cliente" (
     "rede_social" TEXT,
     "celular" TEXT,
     "ruccnpj" TEXT,
-    "ruccnpj_secundario" TEXT,
-    "nome_fatura" TEXT,
     "endereco" TEXT,
     "cidade" TEXT,
     "cep" TEXT,
@@ -445,6 +458,86 @@ CREATE TABLE "public"."pedido_compra_item" (
     CONSTRAINT "pedido_compra_item_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "public"."pagamento" (
+    "id" SERIAL NOT NULL,
+    "venda_id" INTEGER NOT NULL,
+    "forma_pagamento_id" INTEGER NOT NULL,
+    "tipo" "public"."TipoVenda" NOT NULL,
+    "valor" DECIMAL(65,30) NOT NULL,
+    "valor_delivery" DECIMAL(12,3),
+    "entrada" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "pagamento_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."parcelamento" (
+    "id" SERIAL NOT NULL,
+    "venda_id" INTEGER NOT NULL,
+    "cliente_id" INTEGER NOT NULL,
+    "valor_total" DOUBLE PRECISION NOT NULL,
+    "valor_pago" DOUBLE PRECISION NOT NULL,
+    "situacao" INTEGER NOT NULL DEFAULT 1,
+
+    CONSTRAINT "parcelamento_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."parcelas" (
+    "id" SERIAL NOT NULL,
+    "parcelamento_id" INTEGER NOT NULL,
+    "numero" INTEGER NOT NULL,
+    "valor" DECIMAL(65,30) NOT NULL,
+    "vencimento" TIMESTAMP(3),
+    "recebido_em" TIMESTAMP(3),
+    "status" "public"."ParcelaStatus" NOT NULL DEFAULT 'PENDENTE',
+
+    CONSTRAINT "parcelas_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."venda" (
+    "id" SERIAL NOT NULL,
+    "public_id" TEXT NOT NULL,
+    "idv1" INTEGER,
+    "usuario_id" INTEGER NOT NULL,
+    "parceiro_id" INTEGER NOT NULL,
+    "local_saida_id" INTEGER NOT NULL,
+    "cliente_id" INTEGER NOT NULL,
+    "tipo" "public"."VendaTipo" NOT NULL DEFAULT 'DIRETA',
+    "status" "public"."VendaStatus" NOT NULL DEFAULT 'PEDIDO',
+    "data_venda" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "data_entrega" TIMESTAMP(3),
+    "valor_frete" DECIMAL(12,3) DEFAULT 0,
+    "valor_total" DECIMAL(12,3) DEFAULT 0,
+    "desconto" DECIMAL(12,3) DEFAULT 0,
+    "ruccnpj" TEXT,
+    "nome_fatura" TEXT,
+    "numero_fatura" TEXT,
+    "observacao" TEXT,
+    "valor_comissao" DECIMAL(12,3) DEFAULT 0,
+    "parcelamento_id" INTEGER,
+
+    CONSTRAINT "venda_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."venda_item" (
+    "id" SERIAL NOT NULL,
+    "venda_id" INTEGER NOT NULL,
+    "sku_id" INTEGER NOT NULL,
+    "tipo" "public"."VendaItemTipo" NOT NULL DEFAULT 'NORMAL',
+    "qtd_reservada" INTEGER NOT NULL,
+    "qtd_aceita" INTEGER NOT NULL DEFAULT 0,
+    "qtd_devolvida" INTEGER NOT NULL DEFAULT 0,
+    "desconto" DECIMAL(12,3) DEFAULT 0,
+    "preco_unit" DECIMAL(12,3) NOT NULL,
+    "observacao" TEXT,
+
+    CONSTRAINT "venda_item_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "usuario_public_id_key" ON "public"."usuario"("public_id");
 
@@ -543,6 +636,15 @@ CREATE UNIQUE INDEX "conferencia_estoque_public_id_key" ON "public"."conferencia
 
 -- CreateIndex
 CREATE UNIQUE INDEX "pedido_compra_public_id_key" ON "public"."pedido_compra"("public_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "venda_public_id_key" ON "public"."venda"("public_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "venda_idv1_key" ON "public"."venda"("idv1");
+
+-- CreateIndex
+CREATE INDEX "venda_parceiro_id_cliente_id_idx" ON "public"."venda"("parceiro_id", "cliente_id");
 
 -- AddForeignKey
 ALTER TABLE "public"."password_reset_token" ADD CONSTRAINT "password_reset_token_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."usuario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -714,3 +816,36 @@ ALTER TABLE "public"."pedido_compra_item" ADD CONSTRAINT "pedido_compra_item_ped
 
 -- AddForeignKey
 ALTER TABLE "public"."pedido_compra_item" ADD CONSTRAINT "pedido_compra_item_sku_id_fkey" FOREIGN KEY ("sku_id") REFERENCES "public"."produto_sku"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."pagamento" ADD CONSTRAINT "pagamento_venda_id_fkey" FOREIGN KEY ("venda_id") REFERENCES "public"."venda"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."pagamento" ADD CONSTRAINT "pagamento_forma_pagamento_id_fkey" FOREIGN KEY ("forma_pagamento_id") REFERENCES "public"."forma_pagamento"("idFormaPag") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."parcelamento" ADD CONSTRAINT "parcelamento_cliente_id_fkey" FOREIGN KEY ("cliente_id") REFERENCES "public"."cliente"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."parcelas" ADD CONSTRAINT "parcelas_parcelamento_id_fkey" FOREIGN KEY ("parcelamento_id") REFERENCES "public"."parcelamento"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."venda" ADD CONSTRAINT "venda_cliente_id_fkey" FOREIGN KEY ("cliente_id") REFERENCES "public"."cliente"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."venda" ADD CONSTRAINT "venda_usuario_id_fkey" FOREIGN KEY ("usuario_id") REFERENCES "public"."usuario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."venda" ADD CONSTRAINT "venda_parceiro_id_fkey" FOREIGN KEY ("parceiro_id") REFERENCES "public"."parceiro"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."venda" ADD CONSTRAINT "venda_local_saida_id_fkey" FOREIGN KEY ("local_saida_id") REFERENCES "public"."local_estoque"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."venda" ADD CONSTRAINT "venda_parcelamento_id_fkey" FOREIGN KEY ("parcelamento_id") REFERENCES "public"."parcelamento"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."venda_item" ADD CONSTRAINT "venda_item_venda_id_fkey" FOREIGN KEY ("venda_id") REFERENCES "public"."venda"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."venda_item" ADD CONSTRAINT "venda_item_sku_id_fkey" FOREIGN KEY ("sku_id") REFERENCES "public"."produto_sku"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -16,14 +16,14 @@ export const pedidoCompraSchema = z.object({
 "dataPedido": z.string().datetime().describe("Data do pedido"),
 "dataEntrega": z.optional(z.string().datetime().describe("Data de entrega prevista")),
 get "valorFrete"(){
-                return z.optional(iSchema.describe("Valor do frete"))
+                return iSchema.describe("Valor do frete").optional()
               },
 get "valorTotal"(){
-                return z.optional(iSchema.describe("Valor total do pedido"))
+                return iSchema.describe("Valor total do pedido").optional()
               },
 "observacao": z.optional(z.coerce.string().describe("Observações do pedido")),
 get "valorComissao"(){
-                return z.optional(iSchema.describe("Valor da comissão"))
+                return iSchema.describe("Valor da comissão").optional()
               },
 "cotacao": z.optional(z.coerce.number().describe("Cotação da moeda")),
 "currencyId": z.optional(z.coerce.number().describe("ID da moeda")),

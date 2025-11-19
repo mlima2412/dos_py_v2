@@ -2,13 +2,13 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsNumber, IsOptional, Min } from 'class-validator';
 
 export class CreateParcelamentoDto {
-  @ApiProperty({ description: 'ID do pagamento associado' })
-  @IsInt()
-  idPagamento: number;
-
   @ApiProperty({ description: 'ID do cliente associado' })
   @IsInt()
   clienteId: number;
+
+  @ApiProperty({ description: 'ID da venda associada' })
+  @IsInt()
+  vendaId: number;
 
   @ApiProperty({ description: 'Valor total parcelado' })
   @IsNumber()
@@ -21,11 +21,11 @@ export class CreateParcelamentoDto {
   @IsOptional()
   valorPago?: number;
 
-  @ApiProperty({ description: 'ID da forma de pagamento' })
-  @IsInt()
-  idFormaPag: number;
-
-  @ApiProperty({ description: 'Situação (1 - Aberto, 2 - Concluído)', required: false, default: 1 })
+  @ApiProperty({
+    description: 'Situação (1 - Aberto, 2 - Concluído)',
+    required: false,
+    default: 1,
+  })
   @IsInt()
   @IsOptional()
   situacao?: number;
