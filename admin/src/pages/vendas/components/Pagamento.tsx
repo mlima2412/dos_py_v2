@@ -47,6 +47,7 @@ interface PagamentoProps {
 	onBack: () => void;
 	tipoVenda: VendaTipoEnumKey;
 	shouldShowBillingAndPayment: boolean;
+	valorTotalVenda?: number | null; // Valor total salvo no banco (para vendas finalizadas)
 }
 
 export const Pagamento: React.FC<PagamentoProps> = ({
@@ -67,6 +68,7 @@ export const Pagamento: React.FC<PagamentoProps> = ({
 	tipoVenda,
 	shouldShowBillingAndPayment,
 	vendaResumo,
+	valorTotalVenda,
 }) => {
 	const { t } = useTranslation("common");
 	const navigate = useNavigate();
@@ -96,8 +98,14 @@ export const Pagamento: React.FC<PagamentoProps> = ({
 
 	const pagamentos = watch("pagamentos") || [];
 
+	// Para vendas finalizadas (view), usar o valorTotal do banco
+	// Para criar/editar, usar o total recalculado
+	const totalVenda = mode === "view" && valorTotalVenda != null
+		? valorTotalVenda
+		: totals.total;
+
 	const totalAlocado = pagamentos.reduce((sum, pag) => sum + pag.valor, 0);
-	const faltaAlocar = totals.total - totalAlocado;
+	const faltaAlocar = totalVenda - totalAlocado;
 	const totalmenteAlocado = Math.abs(faltaAlocar) < 0.01;
 	const jaTemEntrada = pagamentos.some(p => p.entrada);
 
@@ -175,7 +183,7 @@ export const Pagamento: React.FC<PagamentoProps> = ({
 									{t("salesOrders.form.labels.total")}:
 								</span>
 								<span className="font-semibold">
-									{formatCurrency(totals.total)}
+									{formatCurrency(totalVenda)}
 								</span>
 							</div>
 							<Separator />
@@ -183,7 +191,7 @@ export const Pagamento: React.FC<PagamentoProps> = ({
 								<span>{t("salesOrders.form.labels.totalAllocated")}:</span>
 								<span
 									className={cn(
-										totalAlocado > totals.total && "text-destructive"
+										totalAlocado > totalVenda && "text-destructive"
 									)}
 								>
 									{formatCurrency(totalAlocado)}

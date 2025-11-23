@@ -20,6 +20,9 @@ CREATE TYPE "public"."VendaStatus" AS ENUM ('PEDIDO', 'ABERTA', 'CONFIRMADA', 'C
 CREATE TYPE "public"."VendaItemTipo" AS ENUM ('NORMAL', 'CONDICIONAL', 'BRINDE', 'PERMUTA');
 
 -- CreateEnum
+CREATE TYPE "public"."DescontoTipo" AS ENUM ('VALOR', 'PERCENTUAL');
+
+-- CreateEnum
 CREATE TYPE "public"."TipoVenda" AS ENUM ('A_VISTA_IMEDIATA', 'A_PRAZO_SEM_PARCELAS', 'PARCELADO', 'PARCELADO_FLEXIVEL');
 
 -- CreateEnum
@@ -127,7 +130,6 @@ CREATE TABLE "public"."cliente" (
     "id" SERIAL NOT NULL,
     "public_id" TEXT NOT NULL,
     "nome" TEXT NOT NULL,
-    "sobrenome" TEXT,
     "email" TEXT,
     "rede_social" TEXT,
     "celular" TEXT,
@@ -268,6 +270,29 @@ CREATE TABLE "public"."rollup_despesas_mensais_categoria" (
     "realized" DECIMAL(12,3) NOT NULL DEFAULT 0.0,
 
     CONSTRAINT "rollup_despesas_mensais_categoria_pkey" PRIMARY KEY ("parceiro_id","ym","categoria_id","sub_categoria_id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."rollup_vendas_mensais" (
+    "parceiro_id" INTEGER NOT NULL,
+    "ym" TEXT NOT NULL,
+    "valor_total" DECIMAL(12,3) NOT NULL DEFAULT 0.0,
+    "quantidade" INTEGER NOT NULL DEFAULT 0,
+    "desconto_total" DECIMAL(12,3) NOT NULL DEFAULT 0.0,
+    "desconto_count" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "rollup_vendas_mensais_pkey" PRIMARY KEY ("parceiro_id","ym")
+);
+
+-- CreateTable
+CREATE TABLE "public"."rollup_vendas_mensais_tipo" (
+    "parceiro_id" INTEGER NOT NULL,
+    "ym" TEXT NOT NULL,
+    "tipo" "public"."VendaTipo" NOT NULL,
+    "valor_total" DECIMAL(12,3) NOT NULL DEFAULT 0.0,
+    "quantidade" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "rollup_vendas_mensais_tipo_pkey" PRIMARY KEY ("parceiro_id","ym","tipo")
 );
 
 -- CreateTable
@@ -532,6 +557,8 @@ CREATE TABLE "public"."venda_item" (
     "qtd_aceita" INTEGER NOT NULL DEFAULT 0,
     "qtd_devolvida" INTEGER NOT NULL DEFAULT 0,
     "desconto" DECIMAL(12,3) DEFAULT 0,
+    "desconto_tipo" "public"."DescontoTipo" DEFAULT 'VALOR',
+    "desconto_valor" DECIMAL(12,3) DEFAULT 0,
     "preco_unit" DECIMAL(12,3) NOT NULL,
     "observacao" TEXT,
 
@@ -717,6 +744,12 @@ ALTER TABLE "public"."rollup_despesas_mensais_categoria" ADD CONSTRAINT "rollup_
 
 -- AddForeignKey
 ALTER TABLE "public"."rollup_despesas_mensais_categoria" ADD CONSTRAINT "rollup_despesas_mensais_categoria_sub_categoria_id_fkey" FOREIGN KEY ("sub_categoria_id") REFERENCES "public"."subcategoria_despesa"("subcategoria_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."rollup_vendas_mensais" ADD CONSTRAINT "rollup_vendas_mensais_parceiro_id_fkey" FOREIGN KEY ("parceiro_id") REFERENCES "public"."parceiro"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."rollup_vendas_mensais_tipo" ADD CONSTRAINT "rollup_vendas_mensais_tipo_parceiro_id_fkey" FOREIGN KEY ("parceiro_id") REFERENCES "public"."parceiro"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "public"."produto" ADD CONSTRAINT "produto_parceiro_id_fkey" FOREIGN KEY ("parceiro_id") REFERENCES "public"."parceiro"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -12,7 +12,6 @@ export const clienteSchema = z.object({
     "id": z.coerce.number().describe("ID único do cliente"),
 "publicId": z.coerce.string().describe("ID público do cliente"),
 "nome": z.coerce.string().describe("Nome do cliente"),
-"sobrenome": z.optional(z.coerce.string().describe("Sobrenome do cliente")),
 "email": z.optional(z.coerce.string().describe("Email do cliente")),
 "redeSocial": z.optional(z.coerce.string().describe("Rede social do cliente")),
 "celular": z.optional(z.coerce.string().describe("Celular do cliente")),

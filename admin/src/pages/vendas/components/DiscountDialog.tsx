@@ -11,19 +11,22 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import type { DescontoTipo } from "../types";
 
 export interface DiscountDialogProps {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
-	currentDiscount?: number;
+	currentDiscountType?: DescontoTipo;
+	currentDiscountValue?: number;
 	itemPrice: number;
-	onConfirm: (discount: number) => void;
+	onConfirm: (discountValue: number, discountType: DescontoTipo) => void;
 }
 
 export const DiscountDialog: React.FC<DiscountDialogProps> = ({
 	open,
 	onOpenChange,
-	currentDiscount = 0,
+	currentDiscountType = "VALOR",
+	currentDiscountValue = 0,
 	itemPrice,
 	onConfirm,
 }) => {
@@ -33,16 +36,21 @@ export const DiscountDialog: React.FC<DiscountDialogProps> = ({
 
 	useEffect(() => {
 		if (open) {
-			// Initialize with current discount value
-			if (currentDiscount > 0) {
-				setDiscountValue(currentDiscount.toFixed(2));
-				setDiscountPercentage("");
+			// Initialize with current discount based on type
+			if (currentDiscountValue > 0) {
+				if (currentDiscountType === "PERCENTUAL") {
+					setDiscountPercentage(currentDiscountValue.toFixed(2));
+					setDiscountValue("");
+				} else {
+					setDiscountValue(currentDiscountValue.toFixed(2));
+					setDiscountPercentage("");
+				}
 			} else {
 				setDiscountValue("");
 				setDiscountPercentage("");
 			}
 		}
-	}, [open, currentDiscount]);
+	}, [open, currentDiscountValue, currentDiscountType]);
 
 	const handleDiscountValueChange = (value: string) => {
 		setDiscountValue(value);
@@ -59,21 +67,30 @@ export const DiscountDialog: React.FC<DiscountDialogProps> = ({
 	};
 
 	const handleConfirm = () => {
-		let finalDiscount = 0;
+		let discountValueToSend = 0;
+		let discountType: DescontoTipo = "VALOR";
 
 		if (discountValue) {
-			finalDiscount = parseFloat(discountValue);
+			// Desconto em valor absoluto
+			discountValueToSend = Math.max(0, parseFloat(discountValue));
+			discountType = "VALOR";
+
+			// Validate discount doesn't exceed item price
+			if (discountValueToSend > itemPrice) {
+				discountValueToSend = itemPrice;
+			}
 		} else if (discountPercentage) {
-			const percentage = parseFloat(discountPercentage);
-			finalDiscount = (itemPrice * percentage) / 100;
+			// Desconto em percentual
+			discountValueToSend = Math.max(0, parseFloat(discountPercentage));
+			discountType = "PERCENTUAL";
+
+			// Validate percentage doesn't exceed 100%
+			if (discountValueToSend > 100) {
+				discountValueToSend = 100;
+			}
 		}
 
-		// Validate discount doesn't exceed item price
-		if (finalDiscount > itemPrice) {
-			finalDiscount = itemPrice;
-		}
-
-		onConfirm(Math.max(0, finalDiscount));
+		onConfirm(discountValueToSend, discountType);
 		onOpenChange(false);
 	};
 

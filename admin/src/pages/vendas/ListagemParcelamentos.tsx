@@ -43,11 +43,12 @@ export const ListagemParcelamentos: React.FC = () => {
 	const [situacaoFilter, setSituacaoFilter] = useState<string>("all");
 
 	const parceiroId = selectedPartnerId ? Number(selectedPartnerId) : null;
+	const parceiroHeaderId = parceiroId !== null ? parceiroId.toString() : "";
 
 	// Buscar parcelamentos
 	const { data: parcelamentosData, isLoading } =
 		useParcelamentoControllerFindAllByParceiro(
-			{ "x-parceiro-id": parceiroId ?? 0 },
+			{ "x-parceiro-id": parceiroHeaderId },
 			{
 				query: {
 					enabled: !!parceiroId,
@@ -131,9 +132,7 @@ export const ListagemParcelamentos: React.FC = () => {
 	if (!selectedPartnerId) {
 		return (
 			<div className="text-center">
-				<p className="text-muted-foreground">
-					{t("common.noPartnerSelected")}
-				</p>
+				<p className="text-muted-foreground">{t("common.noPartnerSelected")}</p>
 			</div>
 		);
 	}
@@ -175,9 +174,15 @@ export const ListagemParcelamentos: React.FC = () => {
 						<SelectValue placeholder={t("installments.selectStatus")} />
 					</SelectTrigger>
 					<SelectContent>
-						<SelectItem value="all">{t("installments.statusFilter.all")}</SelectItem>
-						<SelectItem value="open">{t("installments.statusFilter.open")}</SelectItem>
-						<SelectItem value="completed">{t("installments.statusFilter.completed")}</SelectItem>
+						<SelectItem value="all">
+							{t("installments.statusFilter.all")}
+						</SelectItem>
+						<SelectItem value="open">
+							{t("installments.statusFilter.open")}
+						</SelectItem>
+						<SelectItem value="completed">
+							{t("installments.statusFilter.completed")}
+						</SelectItem>
 					</SelectContent>
 				</Select>
 			</div>
@@ -205,7 +210,9 @@ export const ListagemParcelamentos: React.FC = () => {
 										</TableHead>
 										<TableHead>{t("installments.columns.client")}</TableHead>
 										<TableHead>{t("installments.columns.saleDate")}</TableHead>
-										<TableHead>{t("installments.columns.totalValue")}</TableHead>
+										<TableHead>
+											{t("installments.columns.totalValue")}
+										</TableHead>
 										<TableHead>{t("installments.columns.paidValue")}</TableHead>
 										<TableHead>{t("installments.columns.status")}</TableHead>
 										<TableHead className="text-right w-[60px]"></TableHead>
@@ -217,9 +224,7 @@ export const ListagemParcelamentos: React.FC = () => {
 											<TableCell className="font-medium">
 												#{parcelamento.vendaId}
 											</TableCell>
-											<TableCell>
-												{parcelamento.clienteNome || "-"}
-											</TableCell>
+											<TableCell>{parcelamento.clienteNome || "-"}</TableCell>
 											<TableCell>
 												{formatDate(parcelamento.dataVenda)}
 											</TableCell>

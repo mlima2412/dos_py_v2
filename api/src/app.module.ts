@@ -43,6 +43,7 @@ import { VendaItemModule } from './venda-item/venda-item.module';
 import { PagamentoModule } from './pagamento/pagamento.module';
 import { ParcelamentoModule } from './parcelamento/parcelamento.module';
 import { ParcelasModule } from './parcelas/parcelas.module';
+import { VendaCacheModule } from './cash/vendas/venda-cache.module';
 
 @Module({
   imports: [
@@ -83,6 +84,7 @@ import { ParcelasModule } from './parcelas/parcelas.module';
     PagamentoModule,
     ParcelamentoModule,
     ParcelasModule,
+    VendaCacheModule,
   ],
   controllers: [AppController],
   providers: [

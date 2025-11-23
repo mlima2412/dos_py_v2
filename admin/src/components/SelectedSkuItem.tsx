@@ -52,8 +52,10 @@ export const SelectedSkuItem = <T,>({
 }: SelectedSkuItemProps<T>) => {
 	const { formatCurrency } = useCurrencyFormatter();
 
-	// Calculate final price (price - discount)
-	const finalPrice = price - (discount || 0);
+	// Calculate final price per unit
+	// discount is the TOTAL discount for all units, so we divide by quantity
+	const discountPerUnit = quantity > 0 ? (discount || 0) / quantity : 0;
+	const finalPrice = price - discountPerUnit;
 
 	return (
 		<div

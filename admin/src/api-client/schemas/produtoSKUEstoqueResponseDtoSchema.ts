@@ -11,7 +11,7 @@ export const produtoSKUEstoqueResponseDtoSchema = z.object({
 "publicId": z.coerce.string().describe("ID público do SKU"),
 "cor": z.coerce.string().describe("Cor do produto"),
 "tamanho": z.coerce.string().describe("Tamanho do produto"),
-"codCor": z.coerce.number().describe("Código da cor"),
+"codCor": z.optional(z.coerce.string().describe("Código hexadecimal da cor (sem #)")),
 "qtdMinima": z.coerce.number().describe("Quantidade mínima em estoque"),
 "estoque": z.coerce.number().describe("Quantidade atual em estoque")
     }) as unknown as z.ZodType<ProdutoSKUEstoqueResponseDto>

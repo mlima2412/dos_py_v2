@@ -29,6 +29,7 @@ import { uuidv7 } from 'uuidv7';
 import { CreateFornecedorDto } from 'src/fornecedores/dto/create-fornecedor.dto';
 import { CreatePedidoCompraDto } from 'src/pedido-compra/dto/create-pedido-compra.dto';
 import {
+  DescontoTipo,
   ParcelaStatus,
   PedidoCompra,
   Prisma,
@@ -38,9 +39,11 @@ import {
   VendaTipo,
 } from '@prisma/client';
 import { CreatePedidoCompraItemDto } from 'src/pedido-compra-item/dto/create-pedido-compra-item.dto';
+import { VendaRollupService } from '../src/cash/vendas/venda-rollup.service';
 
-const DEFAULT_PARCEIRO_ID = Number(process.env.SEED_PARCEIRO_ID ?? 1);
-const DEFAULT_USUARIO_ID = Number(process.env.SEED_USUARIO_ID ?? 1);
+// Força o parceiro/usuário padrão para 1 durante a importação legado -> v2
+const DEFAULT_PARCEIRO_ID = 1;
+const DEFAULT_USUARIO_ID = 1;
 const DEFAULT_LOCAL_SAIDA_ID = Number(process.env.SEED_LOCAL_SAIDA_ID ?? 1);
 
 // Mapeamento de IDs de forma de pagamento v1 -> v2
@@ -149,6 +152,15 @@ function mapVendaStatus(
   }
 }
 
+const CONFIRMED_VENDA_STATUSES: VendaStatus[] = [
+  VendaStatus.CONFIRMADA,
+  VendaStatus.CONFIRMADA_TOTAL,
+  VendaStatus.CONFIRMADA_PARCIAL,
+];
+
+const isVendaConfirmada = (status: VendaStatus) =>
+  CONFIRMED_VENDA_STATUSES.includes(status);
+
 async function fetchDespesaFromLegacy(app, legacyDb) {
   console.log('🌱 Migrando Despesas');
   const despesas = await legacyDb.query('SELECT * FROM public."Despesas"');
@@ -226,18 +238,19 @@ async function fetchClientesFromLegacy(app, legacyDb) {
       id: raw.id,
       publicId: uuidv7(),
       parceiroId: 1,
-      nome: raw.nome.split(' ')[0],
-      // o sobrenome precisa ser todo o resto do nome
-      sobrenome: raw.nome.split(' ').slice(1).join(' '),
+      nome: raw.nome,
       email: raw.email,
       // Se o número de celular começar com +595, ele já está no formato correto
-      // Se não, adiciona o +595 e remove o 0 inicial
-      celular: raw.celular?.startsWith('+595')
-        ? raw.celular
-        : '+595' + raw.celular?.replace('0', ''),
+      // Se não tiver celular, deixa null. Se tiver, adiciona o +595 e remove o 0 inicial
+      celular:
+        !raw.celular || raw.celular.trim() === ''
+          ? null
+          : raw.celular.startsWith('+595')
+            ? raw.celular
+            : '+595' + raw.celular.replace('0', ''),
       redeSocial: raw.redeSocial,
-      // cnpj em branco ou com lenght = 0 precisa ser null
-      ruccnpj: raw.ruc?.lenght > 0 ? raw.ruc : null,
+      // cnpj em branco ou com length = 0 precisa ser null
+      ruccnpj: raw.ruc,
       createdAt: raw.dataCadastro,
       updatedAt: raw.dataAtualizacao,
       ultimaCompra: raw.dataUltimaCompra ? raw.dataUltimaCompra : null,
@@ -462,7 +475,11 @@ async function fetchFormaPagamentoFromLegacy(legacyDb, prisma: PrismaService) {
   );
 }
 
-async function fetchVendasFromLegacy(legacyDb, prisma: PrismaService) {
+async function fetchVendasFromLegacy(
+  legacyDb,
+  prisma: PrismaService,
+  vendaRollupService: VendaRollupService,
+) {
   console.log('🌱 Migrando Vendas');
   const [usuario, parceiro, local] = await Promise.all([
     prisma.usuario.findUnique({
@@ -513,18 +530,21 @@ async function fetchVendasFromLegacy(legacyDb, prisma: PrismaService) {
         )
       : { rows: [] };
 
-    const itensValorBruto = itens.rows.reduce(
-      (sum: Prisma.Decimal, item) => {
-        const preco = new Prisma.Decimal(item.precoVenda ?? 0);
-        const qtd = new Prisma.Decimal(item.qtd ?? 0);
-        return sum.add(preco.mul(qtd));
-      },
-      new Prisma.Decimal(0),
-    );
+    const itensValorBruto = itens.rows.reduce((sum: Prisma.Decimal, item) => {
+      const preco = new Prisma.Decimal(item.precoVenda ?? 0);
+      const qtd = new Prisma.Decimal(item.qtd ?? 0);
+      return sum.add(preco.mul(qtd));
+    }, new Prisma.Decimal(0));
     const valorTotalVenda =
-      raw.valorTotal != null ? new Prisma.Decimal(raw.valorTotal) : itensValorBruto;
+      raw.valorTotal != null
+        ? new Prisma.Decimal(raw.valorTotal)
+        : itensValorBruto;
 
-    await prisma.$transaction(async tx => {
+    // Calcular valor líquido (após desconto) para os pagamentos
+    const descontoVenda = decimalOrZero(raw.desconto);
+    const valorLiquidoVenda = valorTotalVenda.sub(descontoVenda);
+
+    const vendaPersistida = await prisma.$transaction(async tx => {
       const vendaTipo = mapVendaTipo(raw.tipoVenda, raw.formaPagamentoNome);
       const vendaStatus = mapVendaStatus(raw.situacao, itens.rows, vendaTipo);
 
@@ -540,13 +560,13 @@ async function fetchVendasFromLegacy(legacyDb, prisma: PrismaService) {
           status: vendaStatus,
           dataVenda: raw.dataVenda,
           valorFrete: decimalOrUndefined(raw.valorDelivery),
-          valorTotal: valorTotalVenda,
+          valorTotal: valorLiquidoVenda,
           desconto: decimalOrUndefined(raw.desconto),
           ruccnpj: null,
           nomeFatura: raw.nomeFatura ?? null,
           numeroFatura: raw.faturaNumero ? raw.faturaNumero.toString() : null,
           observacao: raw.observacao ?? null,
-          valorComissao: decimalOrUndefined(raw.valorIva),
+          valorComissao: null,
         },
       });
 
@@ -567,7 +587,7 @@ async function fetchVendasFromLegacy(legacyDb, prisma: PrismaService) {
 
         if (formaPagamentoIdV2) {
           const entregaInicial = new Prisma.Decimal(raw.entregaInicial ?? 0);
-          const valorRestante = valorTotalVenda.sub(entregaInicial);
+          const valorRestante = valorLiquidoVenda.sub(entregaInicial);
           const temParcelamento =
             !!parcelamentoRow || isPagamentoParcelado(raw.formaPagamentoNome);
 
@@ -603,7 +623,7 @@ async function fetchVendasFromLegacy(legacyDb, prisma: PrismaService) {
                 vendaId: createdVenda.id,
                 formaPagamentoId: formaPagamentoIdV2,
                 tipo: TipoVenda.A_VISTA_IMEDIATA,
-                valor: valorTotalVenda,
+                valor: valorLiquidoVenda,
                 valorDelivery: decimalOrUndefined(raw.valorDelivery),
                 entrada: false,
               },
@@ -621,14 +641,42 @@ async function fetchVendasFromLegacy(legacyDb, prisma: PrismaService) {
         {
           vendaId: createdVenda.id,
           clienteId: raw.clienteId,
-          valorTotal: valorTotalVenda,
+          valorTotal: valorLiquidoVenda,
           formaPagamentoNome: raw.formaPagamentoNome,
           entregaInicial: new Prisma.Decimal(raw.entregaInicial ?? 0),
         },
         parcelamentoRow,
         parcelas.rows,
       );
+
+      return {
+        vendaTipo,
+        vendaStatus,
+        valorTotalVenda,
+        valorLiquidoVenda,
+        createdVenda,
+      };
     });
+
+    const isConditionalVenda =
+      vendaPersistida.vendaTipo === VendaTipo.CONDICIONAL;
+    const conditionalFinalizada =
+      isConditionalVenda && Number(raw.situacao ?? 0) === 4;
+    const shouldRegisterRollup = isVendaConfirmada(
+      vendaPersistida.vendaStatus,
+    )
+      ? !isConditionalVenda || conditionalFinalizada
+      : false;
+
+    if (shouldRegisterRollup) {
+      await vendaRollupService.registerVendaConfirmada({
+        parceiroId: vendaPersistida.createdVenda.parceiroId,
+        dataVenda: vendaPersistida.createdVenda.dataVenda,
+        tipo: vendaPersistida.vendaTipo,
+        valorTotal: vendaPersistida.valorLiquidoVenda,
+        descontoTotal: vendaPersistida.createdVenda.desconto ?? 0,
+      });
+    }
 
     migrated++;
     const shouldLogProgress =
@@ -693,6 +741,19 @@ async function migrateVendaItems(
         : 0;
     }
 
+    // Na v1, descontos eram sempre percentuais quando existiam
+    const descontoValorV1 = item.desconto ? Number(item.desconto) : null;
+    const temDesconto = descontoValorV1 !== null && descontoValorV1 > 0;
+
+    // Calcular desconto absoluto se houver desconto percentual
+    let descontoCalculado: Prisma.Decimal | undefined = undefined;
+    if (temDesconto) {
+      const precoUnit = new Prisma.Decimal(item.precoVenda ?? 0);
+      const totalItem = precoUnit.mul(qtdReservada);
+      // Desconto era sempre percentual na v1
+      descontoCalculado = totalItem.mul(descontoValorV1).div(100);
+    }
+
     await tx.vendaItem.create({
       data: {
         vendaId,
@@ -701,7 +762,13 @@ async function migrateVendaItems(
         qtdReservada,
         qtdAceita,
         qtdDevolvida: isCondicionalFinalizada ? 0 : qtdDevolvida,
-        desconto: decimalOrUndefined(item.desconto),
+        desconto: descontoCalculado,
+        descontoTipo: temDesconto
+          ? DescontoTipo.PERCENTUAL
+          : DescontoTipo.VALOR,
+        descontoValor: temDesconto
+          ? new Prisma.Decimal(descontoValorV1)
+          : undefined,
         precoUnit: decimalOrZero(item.precoVenda),
         observacao: item.observacao ?? null,
       },
@@ -820,6 +887,7 @@ async function run() {
     console.log('🌱 Iniciando migração DOSv1 para DOSv2...');
     console.log('PATH:', process.env.LEGACY_DATABASE_URL);
     const prisma = app.get(PrismaService);
+    const vendaRollupService = app.get(VendaRollupService);
 
     await fetchCategoriaFromLegacy(app, legacyDb);
     await fetchSubCategoriaFromLegacy(app, legacyDb);
@@ -832,7 +900,7 @@ async function run() {
     // Migrar formas de pagamento antes das vendas (para ter o mapeamento de IDs)
     await fetchFormaPagamentoFromLegacy(legacyDb, prisma);
 
-    await fetchVendasFromLegacy(legacyDb, prisma);
+    await fetchVendasFromLegacy(legacyDb, prisma, vendaRollupService);
 
     legacyDb.end();
     console.log('Seed concluído com sucesso.');

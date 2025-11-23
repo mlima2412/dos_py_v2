@@ -30,7 +30,7 @@ interface EstoqueSkuData {
 	publicId?: string;
 	cor?: string;
 	tamanho?: string;
-	codCor?: number;
+	codCor?: string;
 	qtdMinima?: number;
 	produto?: {
 		id?: number;
@@ -59,8 +59,12 @@ interface UseVendaMutationsProps {
 	setSelectedProductId: (id: number | null) => void;
 	skuSearchCode: string;
 	setSkuSearchCode: (code: string) => void;
-	skuListingRef: React.RefObject<{ scrollToItem: (skuId: number) => void } | null>;
-	selectedSkusRef: React.RefObject<{ scrollToItem: (skuId: number) => void } | null>;
+	skuListingRef: React.RefObject<{
+		scrollToItem: (skuId: number) => void;
+	} | null>;
+	selectedSkusRef: React.RefObject<{
+		scrollToItem: (skuId: number) => void;
+	} | null>;
 }
 
 export const useVendaMutations = ({
@@ -140,7 +144,8 @@ export const useVendaMutations = ({
 			onError: error => {
 				console.error("Erro ao remover item da venda:", error);
 				const mensagem =
-					error?.data?.message ?? t("salesOrders.form.messages.removeItemError");
+					error?.data?.message ??
+					t("salesOrders.form.messages.removeItemError");
 				showError(mensagem);
 			},
 		},
@@ -199,7 +204,6 @@ export const useVendaMutations = ({
 						status: result.status,
 						clienteId: result.clienteId,
 						clienteNome: result.clienteNome,
-						clienteSobrenome: result.clienteSobrenome,
 					});
 					return result;
 				}
@@ -214,7 +218,6 @@ export const useVendaMutations = ({
 					status: updated.status,
 					clienteId: updated.clienteId ?? prev?.clienteId,
 					clienteNome: updated.clienteNome ?? prev?.clienteNome,
-					clienteSobrenome: updated.clienteSobrenome ?? prev?.clienteSobrenome,
 				}));
 				return updated;
 			} catch (error) {
@@ -239,7 +242,8 @@ export const useVendaMutations = ({
 		async (
 			sku: ProdutoSKUEstoqueResponseDto,
 			product: ProdutosPorLocalResponseDto,
-			discount: number = 0
+			discountValue: number = 0,
+			discountType: "VALOR" | "PERCENTUAL" = "VALOR"
 		): Promise<boolean> => {
 			if (mode === "view") return false;
 			if (!vendaResumo?.id || !parceiroIdNumber) {
@@ -267,7 +271,8 @@ export const useVendaMutations = ({
 							data: {
 								qtdReservada: newQuantity,
 								precoUnit: Number(current.precoUnit),
-								desconto: Number(current.desconto ?? 0),
+								descontoValor: Number(current.descontoValor ?? 0),
+								descontoTipo: current.descontoTipo ?? "VALOR",
 							},
 						});
 					} else {
@@ -277,7 +282,8 @@ export const useVendaMutations = ({
 								skuId: sku.id,
 								qtdReservada: newQuantity,
 								precoUnit: Number(current.precoUnit),
-								desconto: Number(current.desconto ?? 0),
+								descontoValor: Number(current.descontoValor ?? 0),
+								descontoTipo: current.descontoTipo ?? "VALOR",
 								tipo: current.tipo ?? "NORMAL",
 							},
 							headers: { "x-parceiro-id": parceiroIdNumber },
@@ -313,7 +319,8 @@ export const useVendaMutations = ({
 						skuId: sku.id,
 						qtdReservada: 1,
 						precoUnit: Number(product.precoVenda ?? 0),
-						desconto: Number(discount),
+						descontoValor: Number(discountValue),
+						descontoTipo: discountType,
 						tipo: "NORMAL",
 					},
 					headers: { "x-parceiro-id": parceiroIdNumber },
@@ -326,6 +333,8 @@ export const useVendaMutations = ({
 					qtdReservada: created.qtdReservada ?? 1,
 					precoUnit: Number(created.precoUnit ?? product.precoVenda ?? 0),
 					desconto: Number(created.desconto ?? 0),
+					descontoTipo: created.descontoTipo ?? "VALOR",
+					descontoValor: Number(created.descontoValor ?? 0),
 					observacao: "",
 					tipo: created.tipo ?? "NORMAL",
 					productName: product.nome,
@@ -408,7 +417,8 @@ export const useVendaMutations = ({
 						data: {
 							qtdReservada: safeValue,
 							precoUnit: Number(item.precoUnit),
-							desconto: Number(item.desconto ?? 0),
+							descontoValor: Number(item.descontoValor ?? 0),
+							descontoTipo: item.descontoTipo ?? "VALOR",
 						},
 					});
 				} catch (error) {
@@ -462,7 +472,7 @@ export const useVendaMutations = ({
 					publicId: skuData.publicId || estoqueSku.skuId.toString(),
 					cor: skuData.cor || "",
 					tamanho: skuData.tamanho || "",
-					codCor: skuData.codCor ?? 0,
+					codCor: skuData.codCor,
 					qtdMinima: skuData.qtdMinima ?? 0,
 					estoque: estoqueSku.qtd,
 				};
@@ -489,14 +499,19 @@ export const useVendaMutations = ({
 
 				const resolvedProduct = productFromList ?? fallbackProduct;
 				const resolvedSku =
-					productFromList?.ProdutoSKU?.find(item => item.id === skuForSale.id) ??
-					skuForSale;
+					productFromList?.ProdutoSKU?.find(
+						item => item.id === skuForSale.id
+					) ?? skuForSale;
 
 				if (resolvedProduct.id) {
 					setSelectedProductId(resolvedProduct.id);
 				}
 
-				const added = await handleAddSku(resolvedSku, resolvedProduct, discount);
+				const added = await handleAddSku(
+					resolvedSku,
+					resolvedProduct,
+					discount
+				);
 				if (!added) {
 					return null;
 				}
@@ -559,7 +574,7 @@ export const useVendaMutations = ({
 				publicId: skuData.publicId || estoqueSku.skuId.toString(),
 				cor: skuData.cor || "",
 				tamanho: skuData.tamanho || "",
-				codCor: skuData.codCor ?? 0,
+				codCor: skuData.codCor,
 				qtdMinima: skuData.qtdMinima ?? 0,
 				estoque: estoqueSku.qtd,
 			};
@@ -598,29 +613,46 @@ export const useVendaMutations = ({
 			showError(t("salesOrders.form.messages.searchSkuServerError"));
 			return null;
 		}
-	}, [produtosDisponiveis, selectedLocalId, setSelectedProductId, showError, skuSearchCode, t]);
+	}, [
+		produtosDisponiveis,
+		selectedLocalId,
+		setSelectedProductId,
+		showError,
+		skuSearchCode,
+		t,
+	]);
 
 	const handleUpdateDiscount = useCallback(
-		async (skuId: number, discount: number) => {
+		async (skuId: number, discountValue: number, discountType: "VALOR" | "PERCENTUAL") => {
 			if (mode === "view") return;
 			const index = itensSelecionados.findIndex(item => item.skuId === skuId);
 			if (index === -1) return;
 
 			const item = itensSelecionados[index];
-			const safeDiscount = Math.max(0, discount);
+			const safeDiscountValue = Math.max(0, discountValue);
 
 			if (item.remoteId && vendaResumo?.id && parceiroIdNumber) {
 				try {
-					await vendaItemUpdateMutation.mutateAsync({
+					const updated = await vendaItemUpdateMutation.mutateAsync({
 						id: String(item.remoteId),
 						params: { vendaId: String(vendaResumo.id) },
 						headers: { "x-parceiro-id": parceiroIdNumber },
 						data: {
 							qtdReservada: item.qtdReservada,
 							precoUnit: Number(item.precoUnit),
-							desconto: Number(safeDiscount),
+							descontoValor: Number(safeDiscountValue),
+							descontoTipo: discountType,
 						},
 					});
+
+					// Update with the calculated discount from backend
+					update(index, {
+						...item,
+						desconto: Number(updated.desconto ?? 0),
+						descontoTipo: updated.descontoTipo ?? discountType,
+						descontoValor: Number(updated.descontoValor ?? safeDiscountValue),
+					});
+					return;
 				} catch (error) {
 					console.error(error);
 					showError(t("salesOrders.form.messages.itemsSaveError"));
@@ -628,7 +660,12 @@ export const useVendaMutations = ({
 				}
 			}
 
-			update(index, { ...item, desconto: safeDiscount });
+			// If no remoteId, just update locally (will be saved on next save)
+			update(index, {
+				...item,
+				descontoValor: safeDiscountValue,
+				descontoTipo: discountType,
+			});
 		},
 		[
 			itensSelecionados,

@@ -13,6 +13,8 @@ export const createVendaItemDtoSchema = z.object({
 "qtdReservada": z.coerce.number().describe("Quantidade reservada"),
 "qtdAceita": z.optional(z.coerce.number().describe("Quantidade aceita (cliente ficou)")),
 "qtdDevolvida": z.optional(z.coerce.number().describe("Quantidade devolvida")),
-"desconto": z.optional(z.coerce.number().describe("Desconto por item")),
+"desconto": z.optional(z.coerce.number().describe("Desconto calculado final (em valor)")),
+"descontoTipo": z.optional(z.enum(["VALOR", "PERCENTUAL"]).describe("Tipo de desconto")),
+"descontoValor": z.optional(z.coerce.number().describe("Valor original informado (R$ ou %)")),
 "precoUnit": z.coerce.number().describe("Preço unitário")
     }) as unknown as z.ZodType<CreateVendaItemDto>

@@ -192,6 +192,7 @@ export { pagamentoControllerFindAllQueryParamsSchema, pagamentoControllerFindAll
 export { pagamentoControllerFindOnePathParamsSchema, pagamentoControllerFindOneHeaderParamsSchema, pagamentoControllerFindOne200Schema, pagamentoControllerFindOne404Schema, pagamentoControllerFindOneQueryResponseSchema } from "./pagamentoControllerFindOneSchema.ts";
 export { pagamentoControllerRemovePathParamsSchema, pagamentoControllerRemoveHeaderParamsSchema, pagamentoControllerRemove204Schema, pagamentoControllerRemove404Schema, pagamentoControllerRemoveMutationResponseSchema } from "./pagamentoControllerRemoveSchema.ts";
 export { pagamentoControllerUpdatePathParamsSchema, pagamentoControllerUpdateHeaderParamsSchema, pagamentoControllerUpdate200Schema, pagamentoControllerUpdate404Schema, pagamentoControllerUpdateMutationRequestSchema, pagamentoControllerUpdateMutationResponseSchema } from "./pagamentoControllerUpdateSchema.ts";
+export { pagamentoEntitySchema } from "./pagamentoEntitySchema.ts";
 export { pagamentoSchema } from "./pagamentoSchema.ts";
 export { paginatedClienteResponseDtoSchema } from "./paginatedClienteResponseDtoSchema.ts";
 export { paginatedConferenciaEstoqueResponseDtoSchema } from "./paginatedConferenciaEstoqueResponseDtoSchema.ts";
@@ -305,6 +306,8 @@ export { rollupClassificacaoControllerGetClassesAnoQueryParamsSchema, rollupClas
 export { rollupClassificacaoControllerGetClassesMesQueryParamsSchema, rollupClassificacaoControllerGetClassesMes200Schema, rollupClassificacaoControllerGetClassesMesQueryResponseSchema } from "./rollupClassificacaoControllerGetClassesMesSchema.ts";
 export { rollupControllerGetSummaryQueryParamsSchema, rollupControllerGetSummary200Schema, rollupControllerGetSummaryQueryResponseSchema } from "./rollupControllerGetSummarySchema.ts";
 export { rollupControllerGetYearSummaryQueryParamsSchema, rollupControllerGetYearSummary200Schema, rollupControllerGetYearSummaryQueryResponseSchema } from "./rollupControllerGetYearSummarySchema.ts";
+export { rollupVendasControllerGetResumoAnualQueryParamsSchema, rollupVendasControllerGetResumoAnual200Schema, rollupVendasControllerGetResumoAnualQueryResponseSchema } from "./rollupVendasControllerGetResumoAnualSchema.ts";
+export { rollupVendasControllerGetResumoMensalQueryParamsSchema, rollupVendasControllerGetResumoMensal200Schema, rollupVendasControllerGetResumoMensalQueryResponseSchema } from "./rollupVendasControllerGetResumoMensalSchema.ts";
 export { skuSimplificadoDtoSchema } from "./skuSimplificadoDtoSchema.ts";
 export { subCategoriaDespesaControllerCreate201Schema, subCategoriaDespesaControllerCreate401Schema, subCategoriaDespesaControllerCreate404Schema, subCategoriaDespesaControllerCreate409Schema, subCategoriaDespesaControllerCreateMutationRequestSchema, subCategoriaDespesaControllerCreateMutationResponseSchema } from "./subCategoriaDespesaControllerCreateSchema.ts";
 export { subCategoriaDespesaControllerFindAll200Schema, subCategoriaDespesaControllerFindAll401Schema, subCategoriaDespesaControllerFindAllQueryResponseSchema } from "./subCategoriaDespesaControllerFindAllSchema.ts";

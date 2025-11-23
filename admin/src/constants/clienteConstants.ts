@@ -1,6 +1,5 @@
 export const CLIENTE_FORM_DEFAULTS = {
 	nome: "",
-	sobrenome: "",
 	ruccnpj: "",
 	email: "",
 	celular: "",

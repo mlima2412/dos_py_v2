@@ -4,7 +4,6 @@ import { z } from "zod";
 export const createClienteFormSchema = (t: (key: string) => string) =>
 	z.object({
 		nome: z.string().min(1, t("clients.validations.name")),
-		sobrenome: z.string().optional(),
 		ruccnpj: z.string().optional(),
 		email: z
 			.string()

@@ -106,7 +106,7 @@ export class ParcelamentoService {
       select: { id: true },
     });
 
-    const vendaIds = vendas.map((v) => v.id);
+    const vendaIds = vendas.map(v => v.id);
 
     if (vendaIds.length === 0) {
       return [];
@@ -135,7 +135,7 @@ export class ParcelamentoService {
     const vendasDetalhes = await this.prisma.venda.findMany({
       where: {
         id: {
-          in: parcelamentos.map((p) => p.vendaId),
+          in: parcelamentos.map(p => p.vendaId),
         },
       },
       select: {
@@ -144,12 +144,10 @@ export class ParcelamentoService {
       },
     });
 
-    const vendasMap = new Map(
-      vendasDetalhes.map((v) => [v.id, v.dataVenda]),
-    );
+    const vendasMap = new Map(vendasDetalhes.map(v => [v.id, v.dataVenda]));
 
     // Mapear para o DTO de resposta
-    return parcelamentos.map((p) => ({
+    return parcelamentos.map(p => ({
       id: p.id,
       vendaId: p.vendaId,
       clienteId: p.clienteId,
@@ -212,7 +210,7 @@ export class ParcelamentoService {
     });
 
     // Mapear para o DTO de resposta
-    return parcelamentos.map((p) => ({
+    return parcelamentos.map(p => ({
       id: p.id,
       vendaId: p.vendaId,
       clienteId: p.clienteId,
@@ -270,7 +268,7 @@ export class ParcelamentoService {
     });
 
     // Mapear para o DTO
-    return parcelas.map((p) => ({
+    return parcelas.map(p => ({
       id: p.id,
       parcelamentoId: p.parcelamentoId,
       numero: p.numero,
@@ -317,7 +315,9 @@ export class ParcelamentoService {
       !parcela.Parcelamento?.vendas ||
       parcela.Parcelamento.vendas.length === 0
     ) {
-      throw new ForbiddenException('Parcela não pertence ao parceiro informado');
+      throw new ForbiddenException(
+        'Parcela não pertence ao parceiro informado',
+      );
     }
 
     if (parcela.status === 'PAGO' || parcela.status === 'PAGO_ATRASADO') {

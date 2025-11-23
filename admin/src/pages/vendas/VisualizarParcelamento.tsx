@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -57,6 +57,7 @@ export const VisualizarParcelamento: React.FC = () => {
 	const [paymentValue, setPaymentValue] = useState("");
 
 	const parceiroId = selectedPartnerId ? Number(selectedPartnerId) : 0;
+	const parceiroHeaderId = parceiroId ? parceiroId.toString() : "";
 	const parcelamentoId = id ? Number(id) : 0;
 
 	// Buscar parcelamento
@@ -71,7 +72,7 @@ export const VisualizarParcelamento: React.FC = () => {
 	const { data: parcelas, isLoading: isLoadingParcelas } =
 		useParcelamentoControllerFindParcelas(
 			parcelamentoId,
-			{ "x-parceiro-id": parceiroId },
+			{ "x-parceiro-id": parceiroHeaderId },
 			{
 				query: {
 					enabled: !!parcelamentoId && !!parceiroId,
@@ -100,7 +101,7 @@ export const VisualizarParcelamento: React.FC = () => {
 		try {
 			await marcarPagaMutation.mutateAsync({
 				parcelaId: selectedParcelaId,
-				headers: { "x-parceiro-id": parceiroId },
+				headers: { "x-parceiro-id": parceiroHeaderId },
 				data: {},
 			});
 
@@ -115,10 +116,9 @@ export const VisualizarParcelamento: React.FC = () => {
 			queryClient.invalidateQueries({
 				queryKey: ["parcelamentoControllerFindOne"],
 			});
-		} catch (error: any) {
-			toast.error(
-				error?.message || t("installments.messages.parcelaPagaError")
-			);
+		} catch (error) {
+			const errorMessage = error instanceof Error ? error.message : t("installments.messages.parcelaPagaError");
+			toast.error(errorMessage);
 		}
 	}, [
 		selectedParcelaId,
@@ -144,7 +144,7 @@ export const VisualizarParcelamento: React.FC = () => {
 		try {
 			await criarEspontaneaMutation.mutateAsync({
 				id: parcelamentoId,
-				headers: { "x-parceiro-id": parceiroId },
+				headers: { "x-parceiro-id": parceiroHeaderId },
 				data: { valor },
 			});
 
@@ -159,10 +159,9 @@ export const VisualizarParcelamento: React.FC = () => {
 			queryClient.invalidateQueries({
 				queryKey: ["parcelamentoControllerFindOne"],
 			});
-		} catch (error: any) {
-			toast.error(
-				error?.message || t("installments.messages.parcelaCriadaError")
-			);
+		} catch (error) {
+			const errorMessage = error instanceof Error ? error.message : t("installments.messages.parcelaCriadaError");
+			toast.error(errorMessage);
 		}
 	}, [
 		paymentValue,

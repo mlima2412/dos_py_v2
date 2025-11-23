@@ -171,6 +171,8 @@ type VendaItemWithProduto = VendaItemEntity & {
 			qtdReservada: item.qtdReservada,
 			precoUnit: item.precoUnit,
 			desconto: item.desconto ?? 0,
+			descontoTipo: (item.descontoTipo as "VALOR" | "PERCENTUAL") ?? "VALOR",
+			descontoValor: item.descontoValor ?? 0,
 			observacao: "",
 			tipo: item.tipo,
 			productName:

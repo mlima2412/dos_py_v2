@@ -13,13 +13,17 @@ export type VendaFormMode = "create" | "edit" | "view";
 
 export type VendaFormStep = "basic" | "items" | "billing" | "review";
 
+export type DescontoTipo = "VALOR" | "PERCENTUAL";
+
 export interface VendaItemFormData {
 	remoteId?: number;
 	skuId: number;
 	productId?: number;
 	qtdReservada: number;
 	precoUnit: number;
-	desconto?: number;
+	desconto?: number; // Desconto calculado final (R$)
+	descontoTipo?: DescontoTipo; // Tipo de desconto aplicado
+	descontoValor?: number; // Valor original informado (R$ ou %)
 	observacao?: string;
 	tipo?: VendaItemEntity["tipo"];
 	productName?: string;
@@ -67,7 +71,6 @@ export interface VendaSummary {
 	status?: VendaStatusEnumKey;
 	clienteId?: number;
 	clienteNome?: string;
-	clienteSobrenome?: string;
 	localSaidaNome?: string;
 }
 
@@ -75,12 +78,19 @@ export interface VendaFormHandlers {
 	onAddSku: (
 		sku: ProdutoSKUEstoqueResponseDto,
 		product: ProdutosPorLocalResponseDto,
-		discount?: number
+		discountValue?: number,
+		discountType?: DescontoTipo
 	) => Promise<boolean>;
 	onRemoveItem: (skuId: number) => Promise<void>;
 	onUpdateQuantity: (skuId: number, qty: number) => Promise<void>;
-	onUpdateDiscount: (skuId: number, discount: number) => Promise<void>;
-	onSearchSkuByCode: (discount?: number) => Promise<null | { sku: ProdutoSKUEstoqueResponseDto; product: ProdutosPorLocalResponseDto; }>;
+	onUpdateDiscount: (skuId: number, discountValue: number, discountType: DescontoTipo) => Promise<void>;
+	onSearchSkuByCode: (
+		discountValue?: number,
+		discountType?: DescontoTipo
+	) => Promise<null | {
+		sku: ProdutoSKUEstoqueResponseDto;
+		product: ProdutosPorLocalResponseDto;
+	}>;
 }
 
 export interface VendaTotals {

@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { PagamentoEntity } from "./PagamentoEntity.ts";
 import type { VendaItemEntity } from "./VendaItemEntity.ts";
 
 export const vendaTipoEnum = {
@@ -122,11 +123,6 @@ export type Venda = {
     */
     clienteNome?: string | undefined;
     /**
-     * @description Sobrenome do cliente
-     * @type string | undefined
-    */
-    clienteSobrenome?: string | undefined;
-    /**
      * @description Nome do usuário que criou a venda
      * @type string | undefined
     */
@@ -136,4 +132,9 @@ export type Venda = {
      * @type array | undefined
     */
     VendaItem?: VendaItemEntity[] | undefined;
+    /**
+     * @description Pagamentos da venda
+     * @type array | undefined
+    */
+    Pagamento?: PagamentoEntity[] | undefined;
 };

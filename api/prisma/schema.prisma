@@ -116,6 +116,8 @@ model Parceiro {
   formaPagamento                 FormaPagamento[]
   PedidoCompra                   PedidoCompra[]
   Venda                          Venda[]
+  RollupVendasMensais            RollupVendasMensais[]
+  RollupVendasMensaisTipo        RollupVendasMensaisTipo[]
 
   @@map("parceiro")
 }
@@ -136,7 +138,6 @@ model Cliente {
   id            Int            @id @default(autoincrement())
   publicId      String         @unique @map("public_id")
   nome          String
-  sobrenome     String?
   email         String?
   redeSocial    String?        @map("rede_social")
   celular       String?
@@ -330,6 +331,31 @@ model RollupDespesasMensaisCategoria {
 
   @@id([parceiro_id, ym, categoria_id, sub_categoria_id])
   @@map("rollup_despesas_mensais_categoria")
+}
+
+model RollupVendasMensais {
+  parceiro_id Int      @map("parceiro_id")
+  ym          String   @map("ym")
+  valor_total Decimal  @default(0.0) @map("valor_total") @db.Decimal(12, 3)
+  quantidade  Int      @default(0) @map("quantidade")
+  desconto_total Decimal @default(0.0) @map("desconto_total") @db.Decimal(12, 3)
+  desconto_count Int     @default(0) @map("desconto_count")
+  Parceiro    Parceiro @relation(fields: [parceiro_id], references: [id])
+
+  @@id([parceiro_id, ym])
+  @@map("rollup_vendas_mensais")
+}
+
+model RollupVendasMensaisTipo {
+  parceiro_id Int       @map("parceiro_id")
+  ym          String    @map("ym")
+  tipo        VendaTipo @map("tipo")
+  valor_total Decimal   @default(0.0) @map("valor_total") @db.Decimal(12, 3)
+  quantidade  Int       @default(0) @map("quantidade")
+  Parceiro    Parceiro  @relation(fields: [parceiro_id], references: [id])
+
+  @@id([parceiro_id, ym, tipo])
+  @@map("rollup_vendas_mensais_tipo")
 }
 
 // Categoria agrupam produtos para uma melhor pesquisa e estatística
@@ -619,6 +645,11 @@ enum VendaItemTipo {
   PERMUTA
 }
 
+enum DescontoTipo {
+  VALOR       // Desconto em valor absoluto (moeda)
+  PERCENTUAL  // Desconto em percentual (%)
+}
+
 enum TipoVenda {
   A_VISTA_IMEDIATA
   A_PRAZO_SEM_PARCELAS
@@ -709,18 +740,20 @@ model Venda {
 }
 
 model VendaItem {
-  id           Int           @id @default(autoincrement())
-  vendaId      Int           @map("venda_id")
-  skuId        Int           @map("sku_id")
-  tipo         VendaItemTipo @default(NORMAL) @map("tipo")
-  qtdReservada Int           @map("qtd_reservada")
-  qtdAceita    Int           @default(0) @map("qtd_aceita") // cliente ficou
-  qtdDevolvida Int           @default(0) @map("qtd_devolvida") // cliente devolveu
-  desconto     Decimal?      @default(0) @map("desconto") @db.Decimal(12, 3) // desconto do item
-  precoUnit    Decimal       @map("preco_unit") @db.Decimal(12, 3)
-  observacao   String?       @map("observacao")
-  Venda        Venda         @relation(fields: [vendaId], references: [id], onDelete: Cascade)
-  ProdutoSKU   ProdutoSKU    @relation(fields: [skuId], references: [id])
+  id            Int           @id @default(autoincrement())
+  vendaId       Int           @map("venda_id")
+  skuId         Int           @map("sku_id")
+  tipo          VendaItemTipo @default(NORMAL) @map("tipo")
+  qtdReservada  Int           @map("qtd_reservada")
+  qtdAceita     Int           @default(0) @map("qtd_aceita") // cliente ficou
+  qtdDevolvida  Int           @default(0) @map("qtd_devolvida") // cliente devolveu
+  desconto      Decimal?      @default(0) @map("desconto") @db.Decimal(12, 3) // desconto calculado final em valor absoluto (R$)
+  descontoTipo  DescontoTipo? @default(VALOR) @map("desconto_tipo") // tipo de desconto aplicado
+  descontoValor Decimal?      @default(0) @map("desconto_valor") @db.Decimal(12, 3) // valor original informado pelo usuário
+  precoUnit     Decimal       @map("preco_unit") @db.Decimal(12, 3)
+  observacao    String?       @map("observacao")
+  Venda         Venda         @relation(fields: [vendaId], references: [id], onDelete: Cascade)
+  ProdutoSKU    ProdutoSKU    @relation(fields: [skuId], references: [id])
 
   @@map("venda_item")
 }

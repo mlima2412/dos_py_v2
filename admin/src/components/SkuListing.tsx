@@ -353,7 +353,7 @@ const SkuListingComponent = forwardRef<SkuListingRef, SkuListingProps>(
 																<div
 																	className="w-4 h-4 rounded-full border"
 																	style={{
-																		backgroundColor: `#${sku.codCor.toString(16).padStart(6, "0")}`,
+																		backgroundColor: `#${sku.codCor}`,
 																	}}
 																/>
 															)}

@@ -33,7 +33,14 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { useVendaControllerPaginate } from "@/api-client";
 import type { Venda } from "@/api-client/types";
 interface ListagemVendasProps {
-	tipo: "all" | "pedido" | "venda" | "condicional" | "parcelamento" | "brinde" | "brindePermuta";
+	tipo:
+		| "all"
+		| "pedido"
+		| "venda"
+		| "condicional"
+		| "parcelamento"
+		| "brinde"
+		| "brindePermuta";
 }
 export const ListagemVendas: React.FC<ListagemVendasProps> = ({ tipo }) => {
 	const { t } = useTranslation("common");
@@ -66,7 +73,10 @@ export const ListagemVendas: React.FC<ListagemVendasProps> = ({ tipo }) => {
 			page: currentPage,
 			limit: itemsPerPage,
 			filterType: getFilterType(),
-			tipo: tipoVenda !== "all" ? tipoVenda as "DIRETA" | "CONDICIONAL" | "BRINDE" | "PERMUTA" : undefined,
+			tipo:
+				tipoVenda !== "all"
+					? (tipoVenda as "DIRETA" | "CONDICIONAL" | "BRINDE" | "PERMUTA")
+					: undefined,
 			search: debouncedSearchTerm || undefined,
 		},
 		{
@@ -85,10 +95,8 @@ export const ListagemVendas: React.FC<ListagemVendasProps> = ({ tipo }) => {
 		// Ordenar por cliente (única operação no frontend)
 		if (sortByCliente) {
 			vendas.sort((a, b) => {
-				const nomeA =
-					`${a.clienteNome || ""} ${a.clienteSobrenome || ""}`.trim();
-				const nomeB =
-					`${b.clienteNome || ""} ${b.clienteSobrenome || ""}`.trim();
+				const nomeA = (a.clienteNome || "").trim();
+				const nomeB = (b.clienteNome || "").trim();
 				return sortByCliente === "asc"
 					? nomeA.localeCompare(nomeB)
 					: nomeB.localeCompare(nomeA);
@@ -317,8 +325,7 @@ export const ListagemVendas: React.FC<ListagemVendasProps> = ({ tipo }) => {
 													#{venda.id}
 												</TableCell>
 												<TableCell>
-													{`${venda.clienteNome || ""} ${venda.clienteSobrenome || ""}`.trim() ||
-														"-"}
+													{venda.clienteNome || "-"}
 												</TableCell>
 												<TableCell>{formatDate(venda.dataVenda)}</TableCell>
 												<TableCell>{calculateTotal(venda)}</TableCell>

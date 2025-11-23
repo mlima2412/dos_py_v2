@@ -74,8 +74,7 @@ O componente gerencia automaticamente:
 - **Loading**: Exibe mensagem de carregamento enquanto busca os clientes
 - **Error**: Exibe mensagem de erro se a busca falhar
 - **Empty**: Exibe mensagem quando não há clientes para o parceiro
-- **Search**: Filtra clientes por nome completo (nome + sobrenome) conforme o usuário digita
-- **Nome Completo**: Combina automaticamente nome e sobrenome do cliente para exibição
+- **Search**: Filtra clientes por nome conforme o usuário digita
 
 ## Integração com Formulários
 
@@ -109,6 +108,3 @@ export const FormularioVenda: React.FC = () => {
 - A busca é habilitada apenas se `parceiroId` não estiver vazio
 - O componente usa as traduções do i18n para mensagens padrão
 - Todos os clientes são carregados de uma vez (não há paginação)
-- **Nome Completo**: O componente automaticamente concatena `nome` e `sobrenome` do cliente
-  - Se o cliente tem sobrenome: exibe "Nome Sobrenome"
-  - Se o cliente não tem sobrenome: exibe apenas "Nome"

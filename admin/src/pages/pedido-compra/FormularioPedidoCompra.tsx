@@ -175,16 +175,6 @@ export const FormularioPedidoCompra: React.FC = () => {
 				: 0;
 		};
 
-		const normalizeCodCor = (value: unknown): number => {
-			if (typeof value === "number" && Number.isFinite(value)) {
-				return value;
-			}
-			if (typeof value === "string") {
-				const parsed = Number(value);
-				return Number.isNaN(parsed) ? 0 : parsed;
-			}
-			return 0;
-		};
 
 		return produtosResponse.map(produto => ({
 			id: produto.id,
@@ -223,7 +213,7 @@ export const FormularioPedidoCompra: React.FC = () => {
 				publicId: sku.publicId,
 				cor: sku.cor ?? "",
 				tamanho: sku.tamanho ?? "",
-				codCor: normalizeCodCor(sku.codCor),
+				codCor: sku.codCor,
 				qtdMinima: sku.qtdMinima ?? 0,
 				estoque: normalizeEstoque(sku),
 			})),
@@ -283,7 +273,7 @@ export const FormularioPedidoCompra: React.FC = () => {
 						publicId: String(item.skuId),
 						cor: "",
 						tamanho: "",
-						codCor: 0,
+						codCor: undefined,
 						qtdMinima: 0,
 						estoque: 0,
 					};
@@ -911,7 +901,7 @@ export const FormularioPedidoCompra: React.FC = () => {
 									onAddSku={handleSkuAddition}
 									onPriceChange={handleProductPriceUpdate}
 									labels={productSkuPickerLabels}
-									isEnabled={pedidoData?.status === 1}
+									isEnabled={!pedidoData || pedidoData?.status === 1}
 								/>
 
 								<SelectedSkusCard
@@ -920,7 +910,7 @@ export const FormularioPedidoCompra: React.FC = () => {
 									onUpdateQuantity={handleUpdateQuantity}
 									emptyMessage={selectedProductsEmpty}
 									title={selectedProductsTitle}
-									isEnabled={pedidoData?.status === 1}
+									isEnabled={!pedidoData || pedidoData?.status === 1}
 								/>
 							</div>
 						</div>

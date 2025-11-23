@@ -14,7 +14,7 @@ export const vendaControllerPaginateQueryKey = (params?: VendaControllerPaginate
 export type VendaControllerPaginateQueryKey = ReturnType<typeof vendaControllerPaginateQueryKey>
 
 /**
- * @summary Buscar vendas paginadas (busca principal, sem relações)
+ * @summary Buscar vendas paginadas com filtros
  * {@link /venda/paginate}
  */
 export async function vendaControllerPaginate(headers: VendaControllerPaginateHeaderParams, params?: VendaControllerPaginateQueryParams, config: Partial<RequestConfig> & { client?: typeof fetch } = {}) {
@@ -37,7 +37,7 @@ export function vendaControllerPaginateQueryOptions(headers: VendaControllerPagi
 }
 
 /**
- * @summary Buscar vendas paginadas (busca principal, sem relações)
+ * @summary Buscar vendas paginadas com filtros
  * {@link /venda/paginate}
  */
 export function useVendaControllerPaginate<TData = VendaControllerPaginateQueryResponse, TQueryData = VendaControllerPaginateQueryResponse, TQueryKey extends QueryKey = VendaControllerPaginateQueryKey>(headers: VendaControllerPaginateHeaderParams, params?: VendaControllerPaginateQueryParams, options: 

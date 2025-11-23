@@ -22,12 +22,20 @@ import { FinalizeVendaDiretaDto } from './dto/finalize-venda-direta.dto';
 import { FinalizeVendaSemPagamentoDto } from './dto/finalize-venda-sem-pagamento.dto';
 import { DespesasService } from '../despesas/despesas.service';
 import { TipoPagamento } from '../despesas/dto/create-despesa.dto';
+import { VendaRollupService } from '../cash/vendas/venda-rollup.service';
+
+const CONFIRMED_STATUS_FOR_ROLLUP: VendaStatus[] = [
+  VendaStatus.CONFIRMADA,
+  VendaStatus.CONFIRMADA_PARCIAL,
+  VendaStatus.CONFIRMADA_TOTAL,
+];
 
 @Injectable()
 export class VendaService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly despesasService: DespesasService,
+    private readonly vendaRollupService: VendaRollupService,
   ) {}
 
   private mapToVendaEntity(data: any): Venda {
@@ -52,7 +60,6 @@ export class VendaService {
       valorComissao:
         data.valorComissao != null ? Number(data.valorComissao) : null,
       clienteNome: data.Cliente?.nome,
-      clienteSobrenome: data.Cliente?.sobrenome,
       usuarioNome: data.Usuario?.nome,
       VendaItem: data.VendaItem
         ? data.VendaItem.map((vi: any) => ({
@@ -64,6 +71,8 @@ export class VendaService {
             qtdAceita: vi.qtdAceita,
             qtdDevolvida: vi.qtdDevolvida,
             desconto: vi.desconto != null ? Number(vi.desconto) : null,
+            descontoTipo: vi.descontoTipo ?? null,
+            descontoValor: vi.descontoValor != null ? Number(vi.descontoValor) : null,
             precoUnit: Number(vi.precoUnit),
             skuPublicId: vi.ProdutoSKU?.publicId,
             skuCor: vi.ProdutoSKU?.cor ?? null,
@@ -76,6 +85,19 @@ export class VendaService {
               vi.ProdutoSKU?.produto?.precoVenda != null
                 ? Number(vi.ProdutoSKU.produto.precoVenda)
                 : undefined,
+          }))
+        : undefined,
+      Pagamento: data.Pagamento
+        ? data.Pagamento.map((pag: any) => ({
+            id: pag.id,
+            vendaId: pag.vendaId,
+            formaPagamentoId: pag.formaPagamentoId,
+            tipo: pag.tipo,
+            valor: pag.valor != null ? Number(pag.valor) : 0,
+            valorDelivery:
+              pag.valorDelivery != null ? Number(pag.valorDelivery) : null,
+            entrada: pag.entrada,
+            formaPagamentoNome: pag.FormaPagamento?.nome,
           }))
         : undefined,
     });
@@ -92,6 +114,16 @@ export class VendaService {
       return new Decimal(0);
     }
     return new Decimal(value);
+  }
+
+  private shouldRegisterRollup(status: VendaStatus, tipo: VendaTipo): boolean {
+    if (!CONFIRMED_STATUS_FOR_ROLLUP.includes(status)) {
+      return false;
+    }
+    if (tipo === VendaTipo.CONDICIONAL) {
+      return status === VendaStatus.CONFIRMADA_TOTAL;
+    }
+    return true;
   }
 
   private addMonths(baseDate: Date, months: number): Date {
@@ -179,7 +211,19 @@ export class VendaService {
         valorComissao: true,
       },
     });
-    return this.mapToVendaEntity(created);
+    const venda = this.mapToVendaEntity(created);
+
+    if (this.shouldRegisterRollup(venda.status, venda.tipo)) {
+      await this.vendaRollupService.registerVendaConfirmada({
+        parceiroId: venda.parceiroId,
+        dataVenda: venda.dataVenda,
+        tipo: venda.tipo,
+        valorTotal: venda.valorTotal ?? 0,
+        descontoTotal: venda.desconto ?? 0,
+      });
+    }
+
+    return venda;
   }
 
   async finalizarDireta(
@@ -188,11 +232,11 @@ export class VendaService {
     parceiroId: number,
     usuarioId: number,
   ): Promise<Venda> {
-    return this.prisma.$transaction(async tx => {
+    const vendaFinalizada = await this.prisma.$transaction(async tx => {
       const venda = await tx.venda.findFirst({
         where: { publicId, parceiroId },
         include: {
-          Cliente: { select: { id: true, nome: true, sobrenome: true } },
+          Cliente: { select: { id: true, nome: true } },
           Usuario: { select: { id: true, nome: true } },
           VendaItem: {
             include: {
@@ -386,7 +430,7 @@ export class VendaService {
 
       // Filtrar pagamentos parcelados (não à vista) para criar um único parcelamento
       const pagamentosParcelados = finalizeDto.pagamentos.filter(
-        (p) => p.tipo !== TipoVenda.A_VISTA_IMEDIATA,
+        p => p.tipo !== TipoVenda.A_VISTA_IMEDIATA,
       );
 
       if (pagamentosParcelados.length > 0) {
@@ -508,7 +552,7 @@ export class VendaService {
       const vendaAtualizada = await tx.venda.findUnique({
         where: { id: venda.id },
         include: {
-          Cliente: { select: { id: true, nome: true, sobrenome: true } },
+          Cliente: { select: { id: true, nome: true } },
           Usuario: { select: { id: true, nome: true } },
           VendaItem: {
             include: {
@@ -535,6 +579,16 @@ export class VendaService {
 
       return this.mapToVendaEntity(vendaAtualizada);
     });
+
+    await this.vendaRollupService.registerVendaConfirmada({
+      parceiroId,
+      dataVenda: vendaFinalizada.dataVenda,
+      tipo: vendaFinalizada.tipo,
+      valorTotal: vendaFinalizada.valorTotal ?? 0,
+      descontoTotal: vendaFinalizada.desconto ?? 0,
+    });
+
+    return vendaFinalizada;
   }
   async finalizarBrindePermuta(
     publicId: string,
@@ -542,11 +596,11 @@ export class VendaService {
     parceiroId: number,
     usuarioId: number,
   ): Promise<Venda> {
-    return this.prisma.$transaction(async tx => {
+    const vendaFinalizada = await this.prisma.$transaction(async tx => {
       const venda = await tx.venda.findFirst({
         where: { publicId, parceiroId },
         include: {
-          Cliente: { select: { id: true, nome: true, sobrenome: true } },
+          Cliente: { select: { id: true, nome: true } },
           Usuario: { select: { id: true, nome: true } },
           VendaItem: {
             include: {
@@ -782,7 +836,7 @@ export class VendaService {
       const vendaAtualizada = await tx.venda.findUnique({
         where: { id: venda.id },
         include: {
-          Cliente: { select: { id: true, nome: true, sobrenome: true } },
+          Cliente: { select: { id: true, nome: true } },
           Usuario: { select: { id: true, nome: true } },
           VendaItem: {
             include: {
@@ -809,6 +863,16 @@ export class VendaService {
 
       return this.mapToVendaEntity(vendaAtualizada);
     });
+
+    await this.vendaRollupService.registerVendaConfirmada({
+      parceiroId,
+      dataVenda: vendaFinalizada.dataVenda,
+      tipo: vendaFinalizada.tipo,
+      valorTotal: vendaFinalizada.valorTotal ?? 0,
+      descontoTotal: vendaFinalizada.desconto ?? 0,
+    });
+
+    return vendaFinalizada;
   }
 
   async findAll(parceiroId: number): Promise<Venda[]> {
@@ -832,7 +896,7 @@ export class VendaService {
         numeroFatura: true,
         observacao: true,
         valorComissao: true,
-        Cliente: { select: { id: true, nome: true, sobrenome: true } },
+        Cliente: { select: { id: true, nome: true } },
         Usuario: { select: { id: true, nome: true } },
         VendaItem: {
           select: {
@@ -936,10 +1000,7 @@ export class VendaService {
     if (search && search.trim()) {
       const searchTerm = search.trim();
       where.Cliente = {
-        OR: [
-          { nome: { contains: searchTerm, mode: 'insensitive' } },
-          { sobrenome: { contains: searchTerm, mode: 'insensitive' } },
-        ],
+        OR: [{ nome: { contains: searchTerm, mode: 'insensitive' } }],
       };
     }
 
@@ -963,11 +1024,13 @@ export class VendaService {
           dataEntrega: true,
           valorFrete: true,
           desconto: true,
+          valorTotal: true,
           ruccnpj: true,
           numeroFatura: true,
+          nomeFatura: true,
           observacao: true,
           valorComissao: true,
-          Cliente: { select: { id: true, nome: true, sobrenome: true } },
+          Cliente: { select: { id: true, nome: true } },
           Usuario: { select: { id: true, nome: true } },
           VendaItem: {
             select: {
@@ -979,6 +1042,8 @@ export class VendaService {
               qtdAceita: true,
               qtdDevolvida: true,
               desconto: true,
+              descontoTipo: true,
+              descontoValor: true,
               precoUnit: true,
             },
           },
@@ -1010,13 +1075,13 @@ export class VendaService {
         dataEntrega: true,
         valorFrete: true,
         desconto: true,
+        valorTotal: true,
         ruccnpj: true,
         numeroFatura: true,
+        nomeFatura: true,
         observacao: true,
         valorComissao: true,
-        Cliente: { select: { id: true, nome: true, sobrenome: true } },
-        Usuario: { select: { id: true, nome: true } },
-        // Evitar incluir outras relações na busca principal
+        Cliente: { select: { id: true, nome: true } },
         VendaItem: {
           select: {
             id: true,
@@ -1027,6 +1092,8 @@ export class VendaService {
             qtdAceita: true,
             qtdDevolvida: true,
             desconto: true,
+            descontoTipo: true,
+            descontoValor: true,
             precoUnit: true,
             ProdutoSKU: {
               select: {
@@ -1043,6 +1110,22 @@ export class VendaService {
                     precoVenda: true,
                   },
                 },
+              },
+            },
+          },
+        },
+        Pagamento: {
+          select: {
+            id: true,
+            vendaId: true,
+            formaPagamentoId: true,
+            tipo: true,
+            valor: true,
+            valorDelivery: true,
+            entrada: true,
+            FormaPagamento: {
+              select: {
+                nome: true,
               },
             },
           },

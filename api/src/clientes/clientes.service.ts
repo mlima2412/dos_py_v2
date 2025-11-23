@@ -26,7 +26,6 @@ export class ClientesService {
         id: clienteEntity.id,
         publicId: clienteEntity.publicId,
         nome: clienteEntity.nome,
-        sobrenome: clienteEntity.sobrenome || null,
         email: clienteEntity.email || null,
         redeSocial: clienteEntity.redeSocial || null,
         celular: clienteEntity.celular || null,
@@ -104,7 +103,6 @@ export class ClientesService {
     // Clean undefined values and convert to null for optional fields
     const cleanedData = {
       ...updateClienteDto,
-      sobrenome: updateClienteDto.sobrenome || null,
       email: updateClienteDto.email || null,
       redeSocial: updateClienteDto.redeSocial || null,
       celular: updateClienteDto.celular || null,
@@ -202,12 +200,11 @@ export class ClientesService {
     // Filtro obrigatório por parceiro
     andConditions.push({ parceiroId });
 
-    // Filtro de busca (nome, sobrenome ou email)
+    // Filtro de busca (nome ou email)
     if (search) {
       andConditions.push({
         OR: [
           { nome: { contains: search, mode: 'insensitive' } },
-          { sobrenome: { contains: search, mode: 'insensitive' } },
           { email: { contains: search, mode: 'insensitive' } },
         ],
       });

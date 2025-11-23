@@ -108,16 +108,17 @@ export const SelecaoItens: React.FC<SelecaoItensProps> = ({
 		}
 	};
 
-	const handleDiscountConfirm = async (discount: number) => {
+	const handleDiscountConfirm = async (discountValue: number, discountType: "VALOR" | "PERCENTUAL") => {
 		if (editingSkuId !== null) {
 			// Editing existing item
-			await handlers.onUpdateDiscount(editingSkuId, discount);
+			await handlers.onUpdateDiscount(editingSkuId, discountValue, discountType);
 		} else if (pendingAddition) {
 			// Adding new item
 			await handlers.onAddSku(
 				pendingAddition.sku,
 				pendingAddition.product,
-				discount
+				discountValue,
+				discountType
 			);
 		}
 		setPendingAddition(null);
@@ -262,10 +263,16 @@ export const SelecaoItens: React.FC<SelecaoItensProps> = ({
 			<DiscountDialog
 				open={discountDialogOpen}
 				onOpenChange={setDiscountDialogOpen}
-				currentDiscount={
+				currentDiscountType={
 					editingSkuId !== null
 						? (itensSelecionados.find(i => i.skuId === editingSkuId)
-								?.desconto ?? 0)
+								?.descontoTipo ?? "VALOR")
+						: "VALOR"
+				}
+				currentDiscountValue={
+					editingSkuId !== null
+						? (itensSelecionados.find(i => i.skuId === editingSkuId)
+								?.descontoValor ?? 0)
 						: 0
 				}
 				itemPrice={editingItemPrice}

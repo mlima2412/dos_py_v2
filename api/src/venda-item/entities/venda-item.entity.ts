@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { VendaItemTipo } from '@prisma/client';
+import { VendaItemTipo, DescontoTipo } from '@prisma/client';
 
 export class VendaItemEntity {
   @ApiProperty({ description: 'ID do item da venda', example: 1 })
@@ -23,8 +23,24 @@ export class VendaItemEntity {
   @ApiProperty({ description: 'Quantidade devolvida', example: 0, required: false })
   qtdDevolvida?: number;
 
-  @ApiProperty({ description: 'Desconto do item', example: 0, required: false, type: 'number' })
+  @ApiProperty({ description: 'Desconto calculado final (em valor)', example: 0, required: false, type: 'number' })
   desconto?: number | null;
+
+  @ApiProperty({
+    description: 'Tipo de desconto aplicado',
+    enum: DescontoTipo,
+    example: DescontoTipo.VALOR,
+    required: false
+  })
+  descontoTipo?: DescontoTipo | null;
+
+  @ApiProperty({
+    description: 'Valor original informado (R$ ou %)',
+    example: 10,
+    required: false,
+    type: 'number'
+  })
+  descontoValor?: number | null;
 
   @ApiProperty({ description: 'Preço unitário', example: 99.9, type: 'number' })
   precoUnit: number;

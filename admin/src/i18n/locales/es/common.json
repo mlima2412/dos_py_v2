@@ -141,6 +141,21 @@
 			"december": "Diciembre"
 		}
 	},
+	"salesDashboard": {
+		"title": "Panel de Ventas",
+		"selectYear": "Seleccione el año",
+		"selectMonth": "Seleccione el mes",
+		"totalMonth": "Total del Mes",
+		"currentMonth": "Ventas confirmadas en el mes seleccionado",
+		"totalYear": "Total del Año",
+		"currentYear": "Ventas confirmadas en {{year}}",
+		"monthlyAverage": "Promedio Mensual",
+		"averageHelper": "Promedio mensual de ventas confirmadas",
+		"lineChartTitle": "Evolución Mensual de Ventas",
+		"lineChartDescription": "Todos los meses del año",
+		"monthlyDiscountLabel": "Descuentos del mes",
+		"yearlyDiscountLabel": "Descuentos del año"
+	},
 	"header": {
 		"profile": "Preferencias",
 		"logout": "Salir"
@@ -168,6 +183,7 @@
 			"recurring": "Gastos Recurrentes"
 		},
 		"sales": "Ventas",
+		"salesDashboard": "Panel de Ventas",
 		"openOrders": "Pedidos en Abierto",
 		"completedSales": "Ventas Realizadas",
 		"conditionals": "Condicionales",
@@ -191,7 +207,6 @@
 		"search": "Buscar clientes...",
 		"noResults": "Ningún cliente encontrado",
 		"name": "Nombre",
-		"surname": "Apellido",
 		"email": "e-Mail",
 		"columns": {
 			"fullName": "Nombre Completo",
@@ -202,7 +217,6 @@
 		},
 		"labels": {
 			"name": "Nombre",
-			"surname": "Apellido",
 			"ruccnpj": "RUC/CNPJ",
 			"email": "E-mail",
 			"cellphone": "Celular",
@@ -224,7 +238,6 @@
 		},
 		"placeholders": {
 			"name": "Ingresa el nombre",
-			"surname": "Ingresa el apellido",
 			"ruccnpj": "Ingresa el RUC/CNPJ",
 			"email": "Ingresa el e-mail",
 			"cellphone": "Ingresa el celular",
@@ -261,7 +274,6 @@
 		},
 		"validations": {
 			"name": "El nombre es obligatorio",
-			"surname": "El apellido es obligatorio",
 			"email": "El e-mail debe tener un formato válido",
 			"cellphone": "El celular es obligatorio",
 			"socialMedia": "La red social es obligatoria",

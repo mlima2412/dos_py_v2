@@ -59,9 +59,7 @@ export function useResponsiveColumns(
 					const cliente = row.original;
 					return (
 						<div>
-							<div className="font-medium">
-								{cliente.nome} {cliente.sobrenome}
-							</div>
+							<div className="font-medium">{cliente.nome}</div>
 							<div className="text-sm text-muted-foreground">
 								{cliente.celular || "-"}
 							</div>
@@ -154,7 +152,7 @@ export function useResponsiveColumns(
 		{
 			accessorKey: "nome",
 			header: t("clients.columns.fullName"),
-			cell: ({ row }) => `${row.original.nome} ${row.original.sobrenome || ""}`,
+			cell: ({ row }) => row.original.nome,
 		},
 		{
 			accessorKey: "celular",

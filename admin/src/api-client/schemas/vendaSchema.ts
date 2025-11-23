@@ -4,6 +4,7 @@
 */
 
 import type { Venda } from "../types/Venda.ts";
+import { pagamentoEntitySchema } from "./pagamentoEntitySchema.ts";
 import { vendaItemEntitySchema } from "./vendaItemEntitySchema.ts";
 import { z } from "zod/v4";
 
@@ -27,9 +28,11 @@ export const vendaSchema = z.object({
 "observacao": z.optional(z.coerce.string().describe("Observação da venda")),
 "valorComissao": z.optional(z.coerce.number().describe("Valor da comissão")),
 "clienteNome": z.optional(z.coerce.string().describe("Nome do cliente")),
-"clienteSobrenome": z.optional(z.coerce.string().describe("Sobrenome do cliente")),
 "usuarioNome": z.optional(z.coerce.string().describe("Nome do usuário que criou a venda")),
 get "VendaItem"(){
                 return z.array(vendaItemEntitySchema).describe("Itens vendidos").optional()
+              },
+get "Pagamento"(){
+                return z.array(pagamentoEntitySchema).describe("Pagamentos da venda").optional()
               }
     }) as unknown as z.ZodType<Venda>

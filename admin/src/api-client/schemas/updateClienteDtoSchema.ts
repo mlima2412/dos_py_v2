@@ -10,7 +10,6 @@ export const updateClienteDtoSchema = z.object({
     "id": z.optional(z.coerce.number().describe("ID do cliente")),
 "publicId": z.optional(z.coerce.string().describe("Public ID do cliente")),
 "nome": z.optional(z.coerce.string().describe("Nome do cliente")),
-"sobrenome": z.optional(z.coerce.string().describe("Sobrenome do cliente")),
 "email": z.optional(z.coerce.string().describe("Email do cliente")),
 "redeSocial": z.optional(z.coerce.string().describe("Rede social do cliente")),
 "celular": z.optional(z.coerce.string().describe("Celular do cliente")),

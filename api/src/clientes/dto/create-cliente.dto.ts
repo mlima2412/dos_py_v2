@@ -33,15 +33,6 @@ export class CreateClienteDto {
   nome: string;
 
   @ApiProperty({
-    description: 'Sobrenome do cliente',
-    example: 'Silva',
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  sobrenome?: string;
-
-  @ApiProperty({
     description: 'Email do cliente',
     example: 'joao.silva@email.com',
     required: false,

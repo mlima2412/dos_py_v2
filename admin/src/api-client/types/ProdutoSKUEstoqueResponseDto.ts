@@ -26,10 +26,10 @@ export type ProdutoSKUEstoqueResponseDto = {
     */
     tamanho: string;
     /**
-     * @description Código da cor
-     * @type number
+     * @description Código hexadecimal da cor (sem #)
+     * @type string | undefined
     */
-    codCor: number;
+    codCor?: string | undefined;
     /**
      * @description Quantidade mínima em estoque
      * @type number

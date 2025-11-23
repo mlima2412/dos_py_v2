@@ -58,8 +58,8 @@ export class ProdutoSKUEstoqueResponseDto {
   @ApiProperty({ example: 'M', description: 'Tamanho do produto' })
   tamanho: string;
 
-  @ApiProperty({ example: 255, description: 'Código da cor' })
-  codCor: number;
+  @ApiProperty({ example: 'FF5733', description: 'Código hexadecimal da cor (sem #)', required: false })
+  codCor?: string;
 
   @ApiProperty({ example: 5, description: 'Quantidade mínima em estoque' })
   qtdMinima: number;

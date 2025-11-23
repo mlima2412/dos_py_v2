@@ -8,7 +8,7 @@ import { CreateVendaItemDto } from './dto/create-venda-item.dto';
 import { UpdateVendaItemDto } from './dto/update-venda-item.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Decimal } from '@prisma/client/runtime/library';
-import { VendaItemTipo, VendaStatus } from '@prisma/client';
+import { VendaItemTipo, VendaStatus, DescontoTipo } from '@prisma/client';
 import { VendaItemEntity } from './entities/venda-item.entity';
 
 @Injectable()
@@ -25,12 +25,39 @@ export class VendaItemService {
       qtdAceita: data.qtdAceita,
       qtdDevolvida: data.qtdDevolvida,
       desconto: data.desconto != null ? Number(data.desconto) : null,
+      descontoTipo: data.descontoTipo ?? null,
+      descontoValor: data.descontoValor != null ? Number(data.descontoValor) : null,
       precoUnit: Number(data.precoUnit),
       skuPublicId: data.ProdutoSKU?.publicId,
       skuCor: data.ProdutoSKU?.cor ?? null,
       skuCodCor: data.ProdutoSKU?.codCor ?? null,
       skuTamanho: data.ProdutoSKU?.tamanho ?? null,
     };
+  }
+
+  /**
+   * Calcula o desconto em valor absoluto baseado no tipo e valor informado
+   */
+  private calculateDesconto(
+    descontoTipo: DescontoTipo | undefined,
+    descontoValor: number | undefined,
+    precoUnit: Decimal,
+    qtdReservada: number,
+  ): Decimal {
+    if (!descontoValor || descontoValor <= 0) {
+      return new Decimal(0);
+    }
+
+    const tipo = descontoTipo ?? DescontoTipo.VALOR;
+
+    if (tipo === DescontoTipo.PERCENTUAL) {
+      // Desconto percentual: calcula sobre o total do item (preço * quantidade)
+      const totalItem = precoUnit.mul(qtdReservada);
+      return totalItem.mul(descontoValor).div(100);
+    } else {
+      // Desconto em valor: usa o valor direto
+      return new Decimal(descontoValor);
+    }
   }
 
   async create(createVendaItemDto: CreateVendaItemDto, parceiroId: number): Promise<VendaItemEntity> {
@@ -58,6 +85,14 @@ export class VendaItemService {
       throw new ForbiddenException('SKU não pertence ao parceiro informado');
     }
 
+    const precoUnit = new Decimal(createVendaItemDto.precoUnit);
+    const descontoCalculado = this.calculateDesconto(
+      createVendaItemDto.descontoTipo,
+      createVendaItemDto.descontoValor ?? undefined,
+      precoUnit,
+      createVendaItemDto.qtdReservada,
+    );
+
     const created = await this.prisma.vendaItem.create({
       data: {
         vendaId: createVendaItemDto.vendaId,
@@ -66,11 +101,10 @@ export class VendaItemService {
         qtdReservada: createVendaItemDto.qtdReservada,
         qtdAceita: createVendaItemDto.qtdAceita ?? 0,
         qtdDevolvida: createVendaItemDto.qtdDevolvida ?? 0,
-        desconto:
-          createVendaItemDto.desconto != null
-            ? new Decimal(createVendaItemDto.desconto)
-            : undefined,
-        precoUnit: new Decimal(createVendaItemDto.precoUnit),
+        desconto: descontoCalculado,
+        descontoTipo: createVendaItemDto.descontoTipo ?? DescontoTipo.VALOR,
+        descontoValor: createVendaItemDto.descontoValor != null ? new Decimal(createVendaItemDto.descontoValor) : undefined,
+        precoUnit,
       },
       select: {
         id: true,
@@ -81,6 +115,8 @@ export class VendaItemService {
         qtdAceita: true,
         qtdDevolvida: true,
         desconto: true,
+        descontoTipo: true,
+        descontoValor: true,
         precoUnit: true,
         ProdutoSKU: {
           select: {
@@ -119,6 +155,8 @@ export class VendaItemService {
         qtdAceita: true,
         qtdDevolvida: true,
         desconto: true,
+        descontoTipo: true,
+        descontoValor: true,
         precoUnit: true,
         ProdutoSKU: {
           select: {
@@ -145,6 +183,8 @@ export class VendaItemService {
         qtdAceita: true,
         qtdDevolvida: true,
         desconto: true,
+        descontoTipo: true,
+        descontoValor: true,
         precoUnit: true,
         ProdutoSKU: {
           select: {
@@ -183,6 +223,22 @@ export class VendaItemService {
       throw new ForbiddenException('Venda não pertence ao parceiro informado');
     }
 
+    // Se descontoTipo ou descontoValor foram fornecidos, recalcular o desconto
+    let descontoCalculado: Decimal | undefined = undefined;
+    if (updateVendaItemDto.descontoTipo !== undefined || updateVendaItemDto.descontoValor !== undefined) {
+      const precoUnit = updateVendaItemDto.precoUnit != null
+        ? new Decimal(updateVendaItemDto.precoUnit)
+        : new Decimal((existing as any).precoUnit ?? 0);
+      const qtdReservada = updateVendaItemDto.qtdReservada ?? (existing as any).qtdReservada ?? 1;
+
+      descontoCalculado = this.calculateDesconto(
+        updateVendaItemDto.descontoTipo,
+        updateVendaItemDto.descontoValor ?? undefined,
+        precoUnit,
+        qtdReservada,
+      );
+    }
+
     const updated = await this.prisma.vendaItem.update({
       where: { id },
       data: {
@@ -190,10 +246,11 @@ export class VendaItemService {
         qtdReservada: updateVendaItemDto.qtdReservada ?? undefined,
         qtdAceita: updateVendaItemDto.qtdAceita ?? undefined,
         qtdDevolvida: updateVendaItemDto.qtdDevolvida ?? undefined,
-        desconto:
-          updateVendaItemDto.desconto != null
-            ? new Decimal(updateVendaItemDto.desconto)
-            : undefined,
+        desconto: descontoCalculado,
+        descontoTipo: updateVendaItemDto.descontoTipo ?? undefined,
+        descontoValor: updateVendaItemDto.descontoValor != null
+          ? new Decimal(updateVendaItemDto.descontoValor)
+          : undefined,
         precoUnit:
           updateVendaItemDto.precoUnit != null
             ? new Decimal(updateVendaItemDto.precoUnit)
@@ -208,6 +265,8 @@ export class VendaItemService {
         qtdAceita: true,
         qtdDevolvida: true,
         desconto: true,
+        descontoTipo: true,
+        descontoValor: true,
         precoUnit: true,
         ProdutoSKU: {
           select: {

@@ -43,7 +43,7 @@ interface SkuData {
 	publicId?: string;
 	cor?: string;
 	tamanho?: string;
-	codCor?: string | number;
+	codCor?: string;
 	qtdMinima?: number;
 	produto?: {
 		id?: number;
@@ -236,7 +236,7 @@ export const TransferenciaEstoque: React.FC = () => {
 				publicId: skuData.publicId || estoqueSku.skuId.toString(),
 				cor: skuData.cor || "",
 				tamanho: skuData.tamanho || "",
-				codCor: Number(skuData.codCor ?? 0),
+				codCor: skuData.codCor,
 				qtdMinima: skuData.qtdMinima || 0,
 				estoque: estoqueSku.qtd,
 			};

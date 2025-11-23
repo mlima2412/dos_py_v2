@@ -13,6 +13,13 @@ export const createVendaItemDtoTipoEnum = {
 
 export type CreateVendaItemDtoTipoEnumKey = (typeof createVendaItemDtoTipoEnum)[keyof typeof createVendaItemDtoTipoEnum];
 
+export const createVendaItemDtoDescontoTipoEnum = {
+    "VALOR": "VALOR",
+    "PERCENTUAL": "PERCENTUAL"
+} as const;
+
+export type CreateVendaItemDtoDescontoTipoEnumKey = (typeof createVendaItemDtoDescontoTipoEnum)[keyof typeof createVendaItemDtoDescontoTipoEnum];
+
 export type CreateVendaItemDto = {
     /**
      * @description ID da venda
@@ -45,10 +52,20 @@ export type CreateVendaItemDto = {
     */
     qtdDevolvida?: number | undefined;
     /**
-     * @description Desconto por item
+     * @description Desconto calculado final (em valor)
      * @type number | undefined
     */
     desconto?: number | undefined;
+    /**
+     * @description Tipo de desconto
+     * @type string | undefined
+    */
+    descontoTipo?: CreateVendaItemDtoDescontoTipoEnumKey | undefined;
+    /**
+     * @description Valor original informado (R$ ou %)
+     * @type number | undefined
+    */
+    descontoValor?: number | undefined;
     /**
      * @description Preço unitário
      * @type number

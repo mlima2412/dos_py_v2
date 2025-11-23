@@ -176,6 +176,11 @@ export function getMenuList(
 					icon: ShoppingCartIcon,
 					submenus: [
 						{
+							href: "/pedidoVendas/dashboard",
+							label: t("menu.salesDashboard"),
+							active: pathname.includes("/pedidoVendas/dashboard"),
+						},
+						{
 							href: "/pedidoVendas/pedidos",
 							label: t("menu.openOrders"),
 							active: pathname.includes("/pedidoVendas/pedidos"),

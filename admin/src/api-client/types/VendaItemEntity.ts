@@ -13,6 +13,13 @@ export const vendaItemEntityTipoEnum = {
 
 export type VendaItemEntityTipoEnumKey = (typeof vendaItemEntityTipoEnum)[keyof typeof vendaItemEntityTipoEnum];
 
+export const vendaItemEntityDescontoTipoEnum = {
+    "VALOR": "VALOR",
+    "PERCENTUAL": "PERCENTUAL"
+} as const;
+
+export type VendaItemEntityDescontoTipoEnumKey = (typeof vendaItemEntityDescontoTipoEnum)[keyof typeof vendaItemEntityDescontoTipoEnum];
+
 export type VendaItemEntity = {
     /**
      * @description ID do item da venda
@@ -50,10 +57,20 @@ export type VendaItemEntity = {
     */
     qtdDevolvida?: number | undefined;
     /**
-     * @description Desconto do item
+     * @description Desconto calculado final (em valor)
      * @type number | undefined
     */
     desconto?: number | undefined;
+    /**
+     * @description Tipo de desconto aplicado
+     * @type string | undefined
+    */
+    descontoTipo?: VendaItemEntityDescontoTipoEnumKey | undefined;
+    /**
+     * @description Valor original informado (R$ ou %)
+     * @type number | undefined
+    */
+    descontoValor?: number | undefined;
     /**
      * @description Preço unitário
      * @type number

@@ -2243,7 +2243,7 @@ export const oas = {
             "name": "search",
             "required": false,
             "in": "query",
-            "description": "Termo de busca para filtrar por nome, sobrenome ou email",
+            "description": "Termo de busca para filtrar por nome ou email",
             "schema": {
               "example": "João Silva",
               "type": "string"
@@ -10167,13 +10167,13 @@ export const oas = {
             "in": "query",
             "description": "Tipo de filtro predefinido baseado no menu",
             "schema": {
-              "type": "string",
               "enum": [
                 "pedido",
                 "venda",
                 "condicional",
                 "brindePermuta"
-              ]
+              ],
+              "type": "string"
             }
           },
           {
@@ -10182,13 +10182,13 @@ export const oas = {
             "in": "query",
             "description": "Tipo de venda para filtro adicional",
             "schema": {
-              "type": "string",
               "enum": [
                 "DIRETA",
                 "CONDICIONAL",
                 "BRINDE",
                 "PERMUTA"
-              ]
+              ],
+              "type": "string"
             }
           },
           {
@@ -10228,7 +10228,7 @@ export const oas = {
             "JWT-auth": []
           }
         ],
-        "summary": "Buscar vendas paginadas (busca principal, sem relações)",
+        "summary": "Buscar vendas paginadas com filtros",
         "tags": [
           "Venda"
         ]
@@ -10500,6 +10500,82 @@ export const oas = {
         "summary": "Finalizar brinde sem pagamentos e baixa de estoque",
         "tags": [
           "Venda"
+        ]
+      }
+    },
+    "/dashboard/vendas/mes": {
+      "get": {
+        "operationId": "RollupVendasController_getResumoMensal",
+        "parameters": [
+          {
+            "name": "parceiroId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "ym",
+            "required": true,
+            "in": "query",
+            "description": "Formato YYYYMM",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Obter resumo mensal de vendas",
+        "tags": [
+          "CashVenda"
+        ]
+      }
+    },
+    "/dashboard/vendas/ano": {
+      "get": {
+        "operationId": "RollupVendasController_getResumoAnual",
+        "parameters": [
+          {
+            "name": "parceiroId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "year",
+            "required": true,
+            "in": "query",
+            "description": "Formato YYYY",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Obter resumo anual de vendas",
+        "tags": [
+          "CashVenda"
         ]
       }
     },
@@ -12578,11 +12654,6 @@ export const oas = {
             "description": "Nome do cliente",
             "example": "João"
           },
-          "sobrenome": {
-            "type": "string",
-            "description": "Sobrenome do cliente",
-            "example": "Silva"
-          },
           "email": {
             "type": "string",
             "description": "Email do cliente",
@@ -12940,11 +13011,6 @@ export const oas = {
             "description": "Nome do cliente",
             "example": "João"
           },
-          "sobrenome": {
-            "type": "string",
-            "description": "Sobrenome do cliente",
-            "example": "Silva"
-          },
           "email": {
             "type": "string",
             "description": "Email do cliente",
@@ -13093,11 +13159,6 @@ export const oas = {
             "type": "string",
             "description": "Nome do cliente",
             "example": "João"
-          },
-          "sobrenome": {
-            "type": "string",
-            "description": "Sobrenome do cliente",
-            "example": "Silva"
           },
           "email": {
             "type": "string",
@@ -13912,7 +13973,7 @@ export const oas = {
           "publicId": {
             "type": "string",
             "description": "ID público da conta a pagar",
-            "example": "019a9bcd-8b26-772f-972a-2c5f9b576b6c"
+            "example": "019ab274-0f59-78f2-b7c2-1c50bac2d106"
           },
           "despesaId": {
             "type": "number",
@@ -13982,7 +14043,7 @@ export const oas = {
           "publicId": {
             "type": "string",
             "description": "ID público da parcela",
-            "example": "019a9bcd-8b26-772f-972a-2c5e180906c5"
+            "example": "019ab274-0f58-7216-bff7-95e5f0207658"
           },
           "dataPagamento": {
             "format": "date-time",
@@ -14855,9 +14916,9 @@ export const oas = {
             "description": "Tamanho do produto"
           },
           "codCor": {
-            "type": "number",
-            "example": 255,
-            "description": "Código da cor"
+            "type": "string",
+            "example": "FF5733",
+            "description": "Código hexadecimal da cor (sem #)"
           },
           "qtdMinima": {
             "type": "number",
@@ -14875,7 +14936,6 @@ export const oas = {
           "publicId",
           "cor",
           "tamanho",
-          "codCor",
           "qtdMinima",
           "estoque"
         ]
@@ -17211,8 +17271,22 @@ export const oas = {
           },
           "desconto": {
             "type": "number",
-            "description": "Desconto do item",
+            "description": "Desconto calculado final (em valor)",
             "example": 0
+          },
+          "descontoTipo": {
+            "type": "string",
+            "description": "Tipo de desconto aplicado",
+            "enum": [
+              "VALOR",
+              "PERCENTUAL"
+            ],
+            "example": "VALOR"
+          },
+          "descontoValor": {
+            "type": "number",
+            "description": "Valor original informado (R$ ou %)",
+            "example": 10
           },
           "precoUnit": {
             "type": "number",
@@ -17243,6 +17317,57 @@ export const oas = {
           "tipo",
           "qtdReservada",
           "precoUnit"
+        ]
+      },
+      "PagamentoEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "ID do pagamento"
+          },
+          "vendaId": {
+            "type": "number",
+            "description": "ID da venda associada"
+          },
+          "formaPagamentoId": {
+            "type": "number",
+            "description": "ID da forma de pagamento"
+          },
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "A_VISTA_IMEDIATA",
+              "A_PRAZO_SEM_PARCELAS",
+              "PARCELADO",
+              "PARCELADO_FLEXIVEL"
+            ],
+            "description": "Tipo do pagamento"
+          },
+          "valor": {
+            "type": "number",
+            "description": "Valor pago"
+          },
+          "valorDelivery": {
+            "type": "number",
+            "description": "Valor do delivery"
+          },
+          "entrada": {
+            "type": "boolean",
+            "description": "Indica se é pagamento de entrada"
+          },
+          "formaPagamentoNome": {
+            "type": "string",
+            "description": "Nome da forma de pagamento"
+          }
+        },
+        "required": [
+          "id",
+          "vendaId",
+          "formaPagamentoId",
+          "tipo",
+          "valor",
+          "entrada"
         ]
       },
       "Venda": {
@@ -17355,11 +17480,6 @@ export const oas = {
             "description": "Nome do cliente",
             "example": "João"
           },
-          "clienteSobrenome": {
-            "type": "string",
-            "description": "Sobrenome do cliente",
-            "example": "Silva"
-          },
           "usuarioNome": {
             "type": "string",
             "description": "Nome do usuário que criou a venda",
@@ -17370,6 +17490,13 @@ export const oas = {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/VendaItemEntity"
+            }
+          },
+          "Pagamento": {
+            "description": "Pagamentos da venda",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PagamentoEntity"
             }
           }
         },
@@ -17528,8 +17655,22 @@ export const oas = {
           },
           "desconto": {
             "type": "number",
-            "description": "Desconto por item",
+            "description": "Desconto calculado final (em valor)",
             "example": 0
+          },
+          "descontoTipo": {
+            "type": "string",
+            "description": "Tipo de desconto",
+            "enum": [
+              "VALOR",
+              "PERCENTUAL"
+            ],
+            "example": "VALOR"
+          },
+          "descontoValor": {
+            "type": "number",
+            "description": "Valor original informado (R$ ou %)",
+            "example": 10
           },
           "precoUnit": {
             "type": "number",
@@ -17584,8 +17725,22 @@ export const oas = {
           },
           "desconto": {
             "type": "number",
-            "description": "Desconto por item",
+            "description": "Desconto calculado final (em valor)",
             "example": 0
+          },
+          "descontoTipo": {
+            "type": "string",
+            "description": "Tipo de desconto",
+            "enum": [
+              "VALOR",
+              "PERCENTUAL"
+            ],
+            "example": "VALOR"
+          },
+          "descontoValor": {
+            "type": "number",
+            "description": "Valor original informado (R$ ou %)",
+            "example": 10
           },
           "precoUnit": {
             "type": "number",

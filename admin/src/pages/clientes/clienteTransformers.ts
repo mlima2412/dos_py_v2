@@ -4,7 +4,6 @@ import { CreateClienteDto, UpdateClienteDto } from "@/api-client";
 
 export const transformClienteToForm = (cliente: Cliente): ClienteFormData => ({
 	nome: cliente.nome || "",
-	sobrenome: cliente.sobrenome || "",
 	ruccnpj: cliente.ruccnpj || "",
 	email: cliente.email || "",
 	celular: cliente.celular || "",

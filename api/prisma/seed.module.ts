@@ -12,6 +12,7 @@ import { EstoqueSkuModule } from '../src/estoque-sku/estoque-sku.module';
 import { FornecedoresModule } from '../src/fornecedores/fornecedores.module';
 import { PedidoCompraModule } from '../src/pedido-compra/pedido-compra.module';
 import { PedidoCompraItemModule } from '../src/pedido-compra-item/pedido-compra-item.module';
+import { VendaCacheModule } from '../src/cash/vendas/venda-cache.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -26,6 +27,7 @@ import { PedidoCompraItemModule } from '../src/pedido-compra-item/pedido-compra-
     FornecedoresModule,
     PedidoCompraModule,
     PedidoCompraItemModule,
+    VendaCacheModule,
   ],
 })
 export class SeedModule {}

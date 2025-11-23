@@ -19,7 +19,7 @@ export type ClientesControllerFindPaginatedQueryParams = {
     */
     limit?: string | undefined;
     /**
-     * @description Termo de busca para filtrar por nome, sobrenome ou email
+     * @description Termo de busca para filtrar por nome ou email
      * @type string | undefined
     */
     search?: string | undefined;

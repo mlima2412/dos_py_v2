@@ -35,6 +35,7 @@ import type {
 	VendaFormStep,
 	VendaSummary,
 	VendaFormHandlers,
+	PagamentoFormData,
 } from "./types";
 import { useVendaForm } from "./hooks/useVendaForm";
 import { useVendaData } from "./hooks/useVendaData";
@@ -62,17 +63,27 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 	const { success: showSuccess, error: showError } = useToast();
 	const { selectedPartnerId } = usePartnerContext();
 
+	const [vendaResumo, setVendaResumo] = useState<VendaSummary>();
+
+	// Se a venda já estiver finalizada, força modo "view" mesmo que a rota seja "edit"
+	const effectiveMode: VendaFormMode = useMemo(() => {
+		if (mode === "create") return "create";
+		if (vendaResumo?.status && ["CONFIRMADA_TOTAL", "CONFIRMADA_PARCIAL"].includes(vendaResumo.status)) {
+			return "view";
+		}
+		return mode;
+	}, [mode, vendaResumo?.status]);
+
 	const [activeStep, setActiveStep] = useState<VendaFormStep>("basic");
 	const [canAccessItems, setCanAccessItems] = useState<boolean>(
-		mode !== "create"
+		effectiveMode !== "create"
 	);
 	const [canAccessBilling, setCanAccessBilling] = useState<boolean>(
-		mode !== "create"
+		effectiveMode !== "create"
 	);
 	const [canAccessReview, setCanAccessReview] = useState<boolean>(
-		mode === "view"
+		effectiveMode === "view"
 	);
-	const [vendaResumo, setVendaResumo] = useState<VendaSummary>();
 	const [selectedProductId, setSelectedProductId] = useState<number | null>(
 		null
 	);
@@ -101,7 +112,7 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 		remove,
 		replace,
 	} = useVendaForm({
-		mode,
+		mode: effectiveMode,
 		publicId,
 		setVendaResumo,
 		setCanAccessItems,
@@ -113,7 +124,7 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 
 	// Initialize data hooks with form functions
 	const dataHook = useVendaData({
-		mode,
+		mode: effectiveMode,
 		publicId,
 		parceiroIdNumber,
 		selectedLocalPublicId: null,
@@ -133,11 +144,21 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 
 	// Update form when vendaExistente is loaded
 	useEffect(() => {
-		if (mode === "create") return;
+		if (effectiveMode === "create") return;
 		if (!vendaExistente || !mapVendaItemToFormData) return;
 		if (hasInitializedVendaRef.current) return;
 
 		const itens = vendaExistente.VendaItem?.map(mapVendaItemToFormData) || [];
+
+		// Map pagamentos from API to form format
+		const pagamentos: PagamentoFormData[] =
+			vendaExistente.Pagamento?.map(pag => ({
+				tipo: pag.tipo,
+				formaPagamentoId: pag.formaPagamentoId,
+				valor: pag.valor,
+				entrada: pag.entrada,
+				valorDelivery: pag.valorDelivery ?? undefined,
+			})) || [];
 
 		// Reset form with all data from vendaExistente
 		formMethods.reset({
@@ -164,6 +185,7 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 			faturaEmNomeCliente: !vendaExistente.nomeFatura,
 			nomeFatura: vendaExistente.nomeFatura ?? null,
 			ruccnpjFatura: vendaExistente.ruccnpj ?? null,
+			pagamentos,
 		});
 
 		setVendaResumo({
@@ -172,13 +194,12 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 			status: vendaExistente.status,
 			clienteId: vendaExistente.clienteId,
 			clienteNome: vendaExistente.clienteNome,
-			clienteSobrenome: vendaExistente.clienteSobrenome,
 		});
 		setCanAccessItems(true);
 		setCanAccessBilling(itens.length > 0);
-		setCanAccessReview(mode === "view" || itens.length > 0);
+		setCanAccessReview(effectiveMode === "view" || itens.length > 0);
 		hasInitializedVendaRef.current = true;
-	}, [vendaExistente, mapVendaItemToFormData, mode, formMethods]);
+	}, [vendaExistente, mapVendaItemToFormData, effectiveMode, formMethods]);
 
 	// Reset initialization ref when publicId changes
 	useEffect(() => {
@@ -230,7 +251,7 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 		handleSearchSkuByCode,
 		findSkuByCode,
 	} = useVendaMutations({
-		mode,
+		mode: effectiveMode,
 		parceiroIdNumber,
 		vendaResumo,
 		setVendaResumo,
@@ -271,28 +292,30 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 		},
 	});
 
-	const finalizacaoBrindePermutaMutation = useVendaControllerFinalizarBrindePermuta({
-		mutation: {
-			onSuccess: () => {
-				showSuccess(t("salesOrders.form.messages.finalizeSuccess"));
-				if (vendaResumo?.publicId) {
+	const finalizacaoBrindePermutaMutation =
+		useVendaControllerFinalizarBrindePermuta({
+			mutation: {
+				onSuccess: () => {
+					showSuccess(t("salesOrders.form.messages.finalizeSuccess"));
+					if (vendaResumo?.publicId) {
+						queryClient.invalidateQueries({
+							queryKey: vendaControllerFindOneQueryKey(vendaResumo.publicId),
+						});
+					}
 					queryClient.invalidateQueries({
-						queryKey: vendaControllerFindOneQueryKey(vendaResumo.publicId),
+						queryKey: vendaControllerPaginateQueryKey(),
 					});
-				}
-				queryClient.invalidateQueries({
-					queryKey: vendaControllerPaginateQueryKey(),
-				});
-				navigate("/pedidoVendas");
+					navigate("/pedidoVendas");
+				},
+				onError: error => {
+					console.error("Erro ao finalizar brinde/permuta:", error);
+					const mensagem =
+						error?.data?.message ??
+						t("salesOrders.form.messages.finalizeError");
+					showError(mensagem);
+				},
 			},
-			onError: error => {
-				console.error("Erro ao finalizar brinde/permuta:", error);
-				const mensagem =
-					error?.data?.message ?? t("salesOrders.form.messages.finalizeError");
-				showError(mensagem);
-			},
-		},
-	});
+		});
 
 	// Reset selected product when location changes
 	useEffect(() => {
@@ -302,7 +325,7 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 
 	// Update billing and review access based on items and sale type
 	useEffect(() => {
-		if (mode === "view") {
+		if (effectiveMode === "view") {
 			setCanAccessBilling(shouldShowBillingAndPayment);
 			setCanAccessReview(true);
 			return;
@@ -311,7 +334,7 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 		// Só permite acesso ao faturamento se tiver itens E se o tipo de venda exigir
 		setCanAccessBilling(hasItems && shouldShowBillingAndPayment);
 		setCanAccessReview(hasItems);
-	}, [itensSelecionados.length, mode, shouldShowBillingAndPayment]);
+	}, [itensSelecionados.length, effectiveMode, shouldShowBillingAndPayment]);
 
 	const handleStepChange = useCallback(
 		(nextStep: VendaFormStep) => {
@@ -525,107 +548,102 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 
 	if (!selectedPartnerId) {
 		return (
-			
-				<div className="p-6 text-center text-muted-foreground">
-					{t("common.noPartnerSelected")}
-				</div>
-			
+			<div className="p-6 text-center text-muted-foreground">
+				{t("common.noPartnerSelected")}
+			</div>
 		);
 	}
 
-	if (mode !== "create" && isLoadingVenda) {
+	if (effectiveMode !== "create" && isLoadingVenda) {
 		return (
-			
-				<div className="flex h-full items-center justify-center">
-					<Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-				</div>
-			
+			<div className="flex h-full items-center justify-center">
+				<Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+			</div>
 		);
 	}
 
 	return (
-		
-			<div className="space-y-6">
-				<Breadcrumb>
-					<BreadcrumbList>
-						<BreadcrumbItem>
-							<BreadcrumbLink href="/pedidoVendas/pedidos">
-								{t("menu.openOrders")}
-							</BreadcrumbLink>
-						</BreadcrumbItem>
-						<BreadcrumbSeparator />
-						<BreadcrumbItem>
-							<BreadcrumbPage>
-								{t("salesOrders.form.breadcrumb.list")}
-							</BreadcrumbPage>
-						</BreadcrumbItem>
-					</BreadcrumbList>
-				</Breadcrumb>
+		<div className="space-y-6">
+			<Breadcrumb>
+				<BreadcrumbList>
+					<BreadcrumbItem>
+						<BreadcrumbLink href="/pedidoVendas/pedidos">
+							{t("menu.openOrders")}
+						</BreadcrumbLink>
+					</BreadcrumbItem>
+					<BreadcrumbSeparator />
+					<BreadcrumbItem>
+						<BreadcrumbPage>
+							{t("salesOrders.form.breadcrumb.list")}
+						</BreadcrumbPage>
+					</BreadcrumbItem>
+				</BreadcrumbList>
+			</Breadcrumb>
 
-				<FormProvider {...formMethods}>
-					<div className="space-y-6">
-						<NavigationSteps
-							activeStep={activeStep}
-							canAccessItems={canAccessItems}
-							canAccessBilling={canAccessBilling}
-							canAccessReview={canAccessReview}
-							onStepChange={handleStepChange}
+			<FormProvider {...formMethods}>
+				<div className="space-y-6">
+					<NavigationSteps
+						activeStep={activeStep}
+						canAccessItems={canAccessItems}
+						canAccessBilling={canAccessBilling}
+						canAccessReview={canAccessReview}
+						onStepChange={handleStepChange}
+					/>
+
+					{activeStep === "basic" && selectedPartnerId && (
+						<DadosBasicos
+							mode={effectiveMode}
+							// eslint-disable-next-line @typescript-eslint/no-explicit-any
+							control={control as any}
+							selectedPartnerId={selectedPartnerId}
+							locaisOptions={locaisOptions}
+							isLoadingLocais={isLoadingLocais}
+							onSave={handleStepOneSave}
+							isSaving={isSavingBasic}
 						/>
+					)}
 
-						{activeStep === "basic" && selectedPartnerId && (
-							<DadosBasicos
-								mode={mode}
-								// eslint-disable-next-line @typescript-eslint/no-explicit-any
-								control={control as any}
-								selectedPartnerId={selectedPartnerId}
-								locaisOptions={locaisOptions}
-								isLoadingLocais={isLoadingLocais}
-								onSave={handleStepOneSave}
-								isSaving={isSavingBasic}
-							/>
-						)}
+					{activeStep === "items" && (
+						<SelecaoItens
+							mode={effectiveMode}
+							vendaId={vendaResumo?.id}
+							produtosDisponiveis={dataHook.produtosDisponiveis}
+							isLoadingProdutos={dataHook.isLoadingProdutos}
+							produtosError={dataHook.produtosError}
+							selectedLocal={selectedLocal}
+							selectedProductId={selectedProductId}
+							setSelectedProductId={setSelectedProductId}
+							skuSearchCode={skuSearchCode}
+							setSkuSearchCode={setSkuSearchCode}
+							itensSelecionados={itensSelecionados}
+							totals={totals}
+							formatCurrency={formatCurrency}
+							handlers={handlers}
+							skuListingRef={skuListingRef}
+							selectedSkusRef={selectedSkusRef}
+							findSkuByCode={findSkuByCode}
+							onBack={() => setActiveStep("basic")}
+							onNext={() =>
+								setActiveStep(
+									shouldShowBillingAndPayment ? "billing" : "review"
+								)
+							}
+						/>
+					)}
 
-						{activeStep === "items" && (
-							<SelecaoItens
-								mode={mode}
-								vendaId={vendaResumo?.id}
-								produtosDisponiveis={dataHook.produtosDisponiveis}
-								isLoadingProdutos={dataHook.isLoadingProdutos}
-								produtosError={dataHook.produtosError}
-								selectedLocal={selectedLocal}
-								selectedProductId={selectedProductId}
-								setSelectedProductId={setSelectedProductId}
-								skuSearchCode={skuSearchCode}
-								setSkuSearchCode={setSkuSearchCode}
-								itensSelecionados={itensSelecionados}
-								totals={totals}
-								formatCurrency={formatCurrency}
-								handlers={handlers}
-								skuListingRef={skuListingRef}
-								selectedSkusRef={selectedSkusRef}
-								findSkuByCode={findSkuByCode}
-								onBack={() => setActiveStep("basic")}
-								onNext={() =>
-									setActiveStep(
-										shouldShowBillingAndPayment ? "billing" : "review"
-									)
-								}
-							/>
-						)}
+					{activeStep === "billing" && (
+						<FaturamentoForm
+							mode={effectiveMode}
+							setValue={setValue}
+							watch={watch}
+							onBack={() => setActiveStep("items")}
+							onNext={() => setActiveStep("review")}
+						/>
+					)}
 
-						{activeStep === "billing" && (
-							<FaturamentoForm
-								mode={mode}
-								setValue={setValue}
-								watch={watch}
-								onBack={() => setActiveStep("items")}
-								onNext={() => setActiveStep("review")}
-							/>
-						)}
-
-						{activeStep === "review" && (
-							<Pagamento
-								mode={mode}
+					{activeStep === "review" && (
+						<Pagamento
+								mode={effectiveMode}
 								vendaResumo={vendaResumo}
 								getValues={getValues}
 								setValue={setValue}
@@ -645,18 +663,16 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 								}
 								isSubmitting={isSubmitting}
 								onBack={() =>
-									setActiveStep(
-										shouldShowBillingAndPayment ? "billing" : "items"
-									)
+									setActiveStep(shouldShowBillingAndPayment ? "billing" : "items")
 								}
 								tipoVenda={tipoVenda}
 								shouldShowBillingAndPayment={shouldShowBillingAndPayment}
+								valorTotalVenda={vendaExistente?.valorTotal ?? null}
 							/>
 						)}
-					</div>
-				</FormProvider>
-			</div>
-		
+				</div>
+			</FormProvider>
+		</div>
 	);
 };
 

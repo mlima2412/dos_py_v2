@@ -3,11 +3,13 @@ import { ListagemVendas } from "./ListagemVendas";
 import { FormularioVenda } from "./FormularioVenda";
 import { ListagemParcelamentos } from "./ListagemParcelamentos";
 import { VisualizarParcelamento } from "./VisualizarParcelamento";
+import { DashboardVendas } from "./DashboardVendas";
 
 export function VendasRoutes() {
 	return (
 		<Routes>
 			<Route index element={<ListagemVendas tipo="all" />} />
+			<Route path="dashboard" element={<DashboardVendas />} />
 			<Route path="pedidos" element={<ListagemVendas tipo="pedido" />} />
 			<Route path="vendas" element={<ListagemVendas tipo="venda" />} />
 			<Route

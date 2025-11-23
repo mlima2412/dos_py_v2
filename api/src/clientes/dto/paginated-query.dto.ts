@@ -21,7 +21,7 @@ export class PaginatedQueryDto {
   limit?: string = '20';
 
   @ApiPropertyOptional({
-    description: 'Termo de busca para filtrar por nome, sobrenome ou email',
+    description: 'Termo de busca para filtrar por nome ou email',
     example: 'João Silva',
   })
   @IsOptional()

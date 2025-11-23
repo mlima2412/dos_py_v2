@@ -24,13 +24,6 @@ export class Cliente {
   nome: string;
 
   @ApiProperty({
-    description: 'Sobrenome do cliente',
-    example: 'Silva',
-    required: false,
-  })
-  sobrenome?: string;
-
-  @ApiProperty({
     description: 'Email do cliente',
     example: 'joao.silva@email.com',
     required: false,

@@ -142,6 +142,21 @@
 			"december": "Dezembro"
 		}
 	},
+	"salesDashboard": {
+		"title": "Painel de Vendas",
+		"selectYear": "Selecione o ano",
+		"selectMonth": "Selecione o mês",
+		"totalMonth": "Total do Mês",
+		"currentMonth": "Vendas confirmadas no mês selecionado",
+		"totalYear": "Total do Ano",
+		"currentYear": "Vendas confirmadas em {{year}}",
+		"monthlyAverage": "Média Mensal",
+		"averageHelper": "Média mensal de vendas confirmadas",
+		"lineChartTitle": "Evolução Mensal de Vendas",
+		"lineChartDescription": "Todos os meses do ano",
+		"monthlyDiscountLabel": "Descontos no mês",
+		"yearlyDiscountLabel": "Descontos no ano"
+	},
 	"navigation": {
 		"dashboard": "Dashboard",
 		"users": "Usuários",
@@ -178,6 +193,7 @@
 		},
 		"paymentMethods": "Forma de Pagamento",
 		"sales": "Vendas",
+		"salesDashboard": "Painel de Vendas",
 		"openOrders": "Pedidos em Aberto",
 		"completedSales": "Vendas Realizadas",
 		"conditionals": "Condicionais",
@@ -200,7 +216,6 @@
 		"search": "Buscar clientes...",
 		"noResults": "Nenhum cliente encontrado",
 		"name": "Nome",
-		"surname": "Sobrenome",
 		"email": "e-Mail",
 		"columns": {
 			"fullName": "Nome Completo",
@@ -211,7 +226,6 @@
 		},
 		"labels": {
 			"name": "Nome",
-			"surname": "Sobrenome",
 			"ruccnpj": "RUC/CNPJ",
 			"email": "E-mail",
 			"cellphone": "Celular",
@@ -233,7 +247,6 @@
 		},
 		"placeholders": {
 			"name": "Digite o nome",
-			"surname": "Digite o sobrenome",
 			"ruccnpj": "Digite o RUC/CNPJ",
 			"email": "Digite o e-mail",
 			"cellphone": "Digite o celular",
@@ -269,7 +282,6 @@
 		},
 		"validations": {
 			"name": "O nome é obrigatório",
-			"surname": "O sobrenome é obrigatório",
 			"email": "O e-mail deve ter um formato válido",
 			"cellphone": "O celular é obrigatório",
 			"socialMedia": "A rede social é obrigatória",

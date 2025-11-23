@@ -30,11 +30,6 @@ export type Cliente = {
     */
     nome: string;
     /**
-     * @description Sobrenome do cliente
-     * @type string | undefined
-    */
-    sobrenome?: string | undefined;
-    /**
      * @description Email do cliente
      * @type string | undefined
     */

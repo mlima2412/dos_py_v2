@@ -69,13 +69,18 @@ export const FaturamentoForm: React.FC<FaturamentoFormProps> = ({
 		{ "x-parceiro-id": parceiroIdNumber ?? 0 },
 		{
 			query: {
-				enabled: !!clienteId && !!parceiroIdNumber && desejaFatura && !faturaEmNomeCliente,
+				enabled:
+					!!clienteId &&
+					!!parceiroIdNumber &&
+					desejaFatura &&
+					!faturaEmNomeCliente,
 			},
 		}
 	);
 
 	const clienteTemRucCnpj = !!clienteData?.ruccnpj;
-	const mostrarCampoRucCnpj = desejaFatura && faturaEmNomeCliente && !clienteTemRucCnpj;
+	const mostrarCampoRucCnpj =
+		desejaFatura && faturaEmNomeCliente && !clienteTemRucCnpj;
 	const mostrarDadosTerceiro = desejaFatura && !faturaEmNomeCliente;
 	const temNomesAnteriores = nomesAnteriores && nomesAnteriores.length > 0;
 
@@ -157,7 +162,7 @@ export const FaturamentoForm: React.FC<FaturamentoFormProps> = ({
 											{t("salesOrders.form.labels.customerName")}
 											{clienteData && (
 												<span className="ml-2 text-muted-foreground">
-													({clienteData.nome} {clienteData.sobrenome})
+													({clienteData.nome})
 												</span>
 											)}
 										</Label>
@@ -247,7 +252,9 @@ export const FaturamentoForm: React.FC<FaturamentoFormProps> = ({
 												id="nome-fatura"
 												value={nomeFatura ?? ""}
 												onChange={e => setValue("nomeFatura", e.target.value)}
-												placeholder={t("salesOrders.form.placeholders.fullName")}
+												placeholder={t(
+													"salesOrders.form.placeholders.fullName"
+												)}
 												disabled={mode === "view"}
 												required
 											/>
@@ -259,7 +266,9 @@ export const FaturamentoForm: React.FC<FaturamentoFormProps> = ({
 											<Input
 												id="ruccnpj-terceiro"
 												value={ruccnpjFatura ?? ""}
-												onChange={e => setValue("ruccnpjFatura", e.target.value)}
+												onChange={e =>
+													setValue("ruccnpjFatura", e.target.value)
+												}
 												placeholder="Ex: 12.345.678/0001-90"
 												disabled={mode === "view"}
 												required

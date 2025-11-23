@@ -94,7 +94,8 @@ export const PagamentoDialog: React.FC<PagamentoDialogProps> = ({
 				// Valores padrão para novo pagamento
 				setTipoPagamento("A_VISTA_IMEDIATA");
 				setFormaPagamentoId(formasPagamento[0]?.idFormaPag || 0);
-				setValorInput("");
+				// Preencher automaticamente com o valor que falta alocar
+				setValorInput(faltaAlocar > 0 ? String(faltaAlocar.toFixed(2)) : "");
 				setEntrada(!jaTemEntrada); // Se já tem entrada, não marcar por padrão
 				setValorDelivery(undefined);
 				setNumeroParcelas(1);
@@ -102,7 +103,7 @@ export const PagamentoDialog: React.FC<PagamentoDialogProps> = ({
 				setVencimento(undefined);
 			}
 		}
-	}, [open, editingPayment, formasPagamento, jaTemEntrada]);
+	}, [open, editingPayment, formasPagamento, jaTemEntrada, faltaAlocar]);
 
 	const handleSave = () => {
 		// Para PARCELADO, usar o valor que falta alocar

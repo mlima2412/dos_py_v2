@@ -34,19 +34,9 @@ export const ClientSelector: React.FC<ClientSelectorProps> = ({
 		},
 	});
 
-	// Transformar clientes para incluir nome completo
-	const clientesComNomeCompleto = React.useMemo(() => {
-		return clientes.map(cliente => ({
-			...cliente,
-			nome: cliente.sobrenome
-				? `${cliente.nome} ${cliente.sobrenome}`
-				: cliente.nome,
-		}));
-	}, [clientes]);
-
 	return (
 		<ItemSelector
-			items={clientesComNomeCompleto}
+			items={clientes}
 			selectedItemId={selectedClientId}
 			onItemSelect={onClientSelect}
 			isLoading={isLoading}
