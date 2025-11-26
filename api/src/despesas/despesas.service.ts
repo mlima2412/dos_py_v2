@@ -808,6 +808,69 @@ export class DespesasService {
   async listYears(parceiroId: number) {
     return await this.rollupDespesasCacheService.listYears(parceiroId);
   }
+
+  /**
+   * Busca despesas para relatório com filtros
+   */
+  async getExpensesForReport(
+    parceiroId: number,
+    year?: string,
+    month?: number,
+  ) {
+    const where: any = {
+      parceiroId: parceiroId,
+    };
+
+    // Filtrar por ano e/ou mês
+    if (year && year !== 'all') {
+      if (month) {
+        // Filtrar por ano e mês específicos
+        const startDate = new Date(parseInt(year), month - 1, 1);
+        const endDate = new Date(parseInt(year), month, 0, 23, 59, 59, 999);
+        where.dataRegistro = {
+          gte: startDate,
+          lte: endDate,
+        };
+      } else {
+        // Filtrar apenas por ano
+        const startDate = new Date(parseInt(year), 0, 1);
+        const endDate = new Date(parseInt(year), 11, 31, 23, 59, 59, 999);
+        where.dataRegistro = {
+          gte: startDate,
+          lte: endDate,
+        };
+      }
+    }
+
+    const despesas = await this.prisma.despesa.findMany({
+      where,
+      include: {
+        subCategoria: {
+          include: {
+            categoria: true,
+          },
+        },
+        fornecedor: true,
+        currency: true,
+        parceiro: true,
+        ContasPagar: {
+          include: {
+            ContasPagarParcelas: {
+              orderBy: {
+                dataVencimento: 'asc',
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        dataRegistro: 'asc',
+      },
+    });
+
+    return despesas;
+  }
+
   /**
    * Remove do cache uma despesa que está sendo deletada
    */

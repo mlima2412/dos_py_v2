@@ -20,15 +20,11 @@ import {
 import { Venda } from './entities/venda.entity';
 import { FinalizeVendaDiretaDto } from './dto/finalize-venda-direta.dto';
 import { FinalizeVendaSemPagamentoDto } from './dto/finalize-venda-sem-pagamento.dto';
+import { ProcessDevolucaoItemDto } from './dto/process-devolucao-item.dto';
+import { FinalizeVendaCondicionalDto } from './dto/finalize-venda-condicional.dto';
 import { DespesasService } from '../despesas/despesas.service';
 import { TipoPagamento } from '../despesas/dto/create-despesa.dto';
 import { VendaRollupService } from '../cash/vendas/venda-rollup.service';
-
-const CONFIRMED_STATUS_FOR_ROLLUP: VendaStatus[] = [
-  VendaStatus.CONFIRMADA,
-  VendaStatus.CONFIRMADA_PARCIAL,
-  VendaStatus.CONFIRMADA_TOTAL,
-];
 
 @Injectable()
 export class VendaService {
@@ -74,6 +70,7 @@ export class VendaService {
             descontoTipo: vi.descontoTipo ?? null,
             descontoValor: vi.descontoValor != null ? Number(vi.descontoValor) : null,
             precoUnit: Number(vi.precoUnit),
+            custoCompra: vi.custoCompra != null ? Number(vi.custoCompra) : null,
             skuPublicId: vi.ProdutoSKU?.publicId,
             skuCor: vi.ProdutoSKU?.cor ?? null,
             skuCodCor: vi.ProdutoSKU?.codCor ?? null,
@@ -116,15 +113,6 @@ export class VendaService {
     return new Decimal(value);
   }
 
-  private shouldRegisterRollup(status: VendaStatus, tipo: VendaTipo): boolean {
-    if (!CONFIRMED_STATUS_FOR_ROLLUP.includes(status)) {
-      return false;
-    }
-    if (tipo === VendaTipo.CONDICIONAL) {
-      return status === VendaStatus.CONFIRMADA_TOTAL;
-    }
-    return true;
-  }
 
   private addMonths(baseDate: Date, months: number): Date {
     const result = new Date(baseDate);
@@ -213,15 +201,8 @@ export class VendaService {
     });
     const venda = this.mapToVendaEntity(created);
 
-    if (this.shouldRegisterRollup(venda.status, venda.tipo)) {
-      await this.vendaRollupService.registerVendaConfirmada({
-        parceiroId: venda.parceiroId,
-        dataVenda: venda.dataVenda,
-        tipo: venda.tipo,
-        valorTotal: venda.valorTotal ?? 0,
-        descontoTotal: venda.desconto ?? 0,
-      });
-    }
+    // Vendas sempre começam com status PEDIDO, então não precisamos registrar rollup aqui.
+    // O rollup será registrado apenas quando a venda for finalizada (finalizarDireta, finalizarCondicional, etc.)
 
     return venda;
   }
@@ -389,11 +370,26 @@ export class VendaService {
           },
         });
 
+        // Buscar o precoCompra do produto
+        const produto = await tx.produto.findFirst({
+          where: {
+            ProdutoSKU: {
+              some: {
+                id: item.skuId,
+              },
+            },
+          },
+          select: {
+            precoCompra: true,
+          },
+        });
+
         await tx.vendaItem.update({
           where: { id: item.id },
           data: {
             qtdAceita: item.qtdReservada,
             qtdDevolvida: 0,
+            custoCompra: produto?.precoCompra ?? new Decimal(0),
           },
         });
       }
@@ -527,7 +523,7 @@ export class VendaService {
       await tx.venda.update({
         where: { id: venda.id },
         data: {
-          status: VendaStatus.CONFIRMADA_TOTAL,
+          status: VendaStatus.CONFIRMADA,
           valorFrete,
           desconto: descontoTotal,
           valorComissao,
@@ -578,6 +574,13 @@ export class VendaService {
       }
 
       return this.mapToVendaEntity(vendaAtualizada);
+    });
+
+    console.log('[VendaService] Calling registerVendaConfirmada after finalizarDireta:', {
+      parceiroId,
+      dataVenda: vendaFinalizada.dataVenda,
+      tipo: vendaFinalizada.tipo,
+      valorTotal: vendaFinalizada.valorTotal,
     });
 
     await this.vendaRollupService.registerVendaConfirmada({
@@ -731,11 +734,26 @@ export class VendaService {
           },
         });
 
+        // Buscar o precoCompra do produto
+        const produto = await tx.produto.findFirst({
+          where: {
+            ProdutoSKU: {
+              some: {
+                id: item.skuId,
+              },
+            },
+          },
+          select: {
+            precoCompra: true,
+          },
+        });
+
         await tx.vendaItem.update({
           where: { id: item.id },
           data: {
             qtdAceita: item.qtdReservada,
             qtdDevolvida: 0,
+            custoCompra: produto?.precoCompra ?? new Decimal(0),
           },
         });
       }
@@ -806,7 +824,7 @@ export class VendaService {
       await tx.venda.update({
         where: { id: venda.id },
         data: {
-          status: VendaStatus.CONFIRMADA_TOTAL,
+          status: VendaStatus.CONFIRMADA,
           valorFrete,
           desconto: descontoTotal,
           valorComissao,
@@ -864,6 +882,13 @@ export class VendaService {
       return this.mapToVendaEntity(vendaAtualizada);
     });
 
+    console.log('[VendaService] Calling registerVendaConfirmada after finalizarBrindePermuta:', {
+      parceiroId,
+      dataVenda: vendaFinalizada.dataVenda,
+      tipo: vendaFinalizada.tipo,
+      valorTotal: vendaFinalizada.valorTotal,
+    });
+
     await this.vendaRollupService.registerVendaConfirmada({
       parceiroId,
       dataVenda: vendaFinalizada.dataVenda,
@@ -909,6 +934,7 @@ export class VendaService {
             qtdDevolvida: true,
             desconto: true,
             precoUnit: true,
+            custoCompra: true,
             ProdutoSKU: {
               select: {
                 id: true,
@@ -952,7 +978,7 @@ export class VendaService {
           where.status = VendaStatus.PEDIDO;
           break;
         case 'venda':
-          // Vendas realizadas: tipo DIRETA ou CONDICIONAL com status CONFIRMADA, CONFIRMADA_TOTAL ou CONFIRMADA_PARCIAL
+          // Vendas realizadas: DIRETA/BRINDE/PERMUTA (status CONFIRMADA) + CONDICIONAL (status CONFIRMADA_TOTAL ou CONFIRMADA_PARCIAL)
           where.tipo = { in: [VendaTipo.DIRETA, VendaTipo.CONDICIONAL] };
           where.status = {
             in: [
@@ -963,9 +989,9 @@ export class VendaService {
           };
           break;
         case 'condicional':
-          // Condicionais: tipo CONDICIONAL com status CONFIRMADA
+          // Condicionais: tipo CONDICIONAL com status ABERTA (produtos enviados aguardando retorno)
           where.tipo = VendaTipo.CONDICIONAL;
-          where.status = VendaStatus.CONFIRMADA;
+          where.status = VendaStatus.ABERTA;
           break;
         case 'brindePermuta':
           // Brindes e Permutas: tipo BRINDE ou PERMUTA com status CONFIRMADA
@@ -1045,6 +1071,7 @@ export class VendaService {
               descontoTipo: true,
               descontoValor: true,
               precoUnit: true,
+              custoCompra: true,
             },
           },
         },
@@ -1095,6 +1122,7 @@ export class VendaService {
             descontoTipo: true,
             descontoValor: true,
             precoUnit: true,
+            custoCompra: true,
             ProdutoSKU: {
               select: {
                 id: true,
@@ -1217,6 +1245,638 @@ export class VendaService {
       nomeFatura: r.nomeFatura ?? null,
       ruccnpj: r.ruccnpj ?? null,
     }));
+  }
+
+  async confirmarCondicional(
+    publicId: string,
+    parceiroId: number,
+    usuarioId: number,
+  ): Promise<Venda> {
+    return await this.prisma.$transaction(async tx => {
+      // 1. Buscar venda
+      const venda = await tx.venda.findFirst({
+        where: { publicId, parceiroId },
+        include: {
+          Cliente: { select: { id: true, nome: true } },
+          Usuario: { select: { id: true, nome: true } },
+          VendaItem: {
+            include: {
+              ProdutoSKU: {
+                include: {
+                  produto: {
+                    select: { id: true, parceiroId: true, nome: true },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!venda) {
+        throw new NotFoundException('Venda não encontrada');
+      }
+
+      // 2. Validações
+      if (venda.tipo !== VendaTipo.CONDICIONAL) {
+        throw new BadRequestException(
+          'Apenas vendas condicionais podem usar este endpoint',
+        );
+      }
+
+      if (venda.status !== VendaStatus.PEDIDO) {
+        throw new BadRequestException('Condicional já foi confirmada anteriormente');
+      }
+
+      if (!venda.localSaidaId) {
+        throw new BadRequestException('Venda não possui local de saída definido');
+      }
+
+      if (!venda.VendaItem.length) {
+        throw new BadRequestException('Venda sem itens não pode ser confirmada');
+      }
+
+      const localSaidaId = venda.localSaidaId;
+
+      // 3. Validar estoque disponível
+      for (const item of venda.VendaItem) {
+        const estoque = await tx.estoqueSKU.findUnique({
+          where: {
+            localId_skuId: {
+              localId: localSaidaId,
+              skuId: item.skuId,
+            },
+          },
+          select: { qtd: true },
+        });
+
+        if (!estoque || estoque.qtd < item.qtdReservada) {
+          throw new BadRequestException(
+            `Estoque insuficiente para o SKU ${item.skuId} no local selecionado`,
+          );
+        }
+      }
+
+      // 4. Baixar estoque e criar movimentos tipo CONDICIONAL
+      for (const item of venda.VendaItem) {
+        await tx.movimentoEstoque.create({
+          data: {
+            skuId: item.skuId,
+            tipo: TipoMovimento.CONDICIONAL,
+            qtd: item.qtdReservada,
+            idUsuario: usuarioId,
+            localOrigemId: localSaidaId,
+            observacao: `Saída condicional - Venda ${venda.id}`,
+          },
+        });
+
+        await tx.estoqueSKU.update({
+          where: {
+            localId_skuId: {
+              localId: localSaidaId,
+              skuId: item.skuId,
+            },
+          },
+          data: {
+            qtd: {
+              decrement: item.qtdReservada,
+            },
+          },
+        });
+      }
+
+      // 5. Atualizar status da venda para ABERTA
+      await tx.venda.update({
+        where: { id: venda.id },
+        data: {
+          status: VendaStatus.ABERTA,
+        },
+      });
+
+      // 6. Buscar venda atualizada
+      const vendaAtualizada = await tx.venda.findUnique({
+        where: { id: venda.id },
+        include: {
+          Cliente: { select: { id: true, nome: true } },
+          Usuario: { select: { id: true, nome: true } },
+          VendaItem: {
+            include: {
+              ProdutoSKU: {
+                include: {
+                  produto: {
+                    select: {
+                      id: true,
+                      publicId: true,
+                      nome: true,
+                      precoVenda: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!vendaAtualizada) {
+        throw new NotFoundException('Erro ao confirmar condicional');
+      }
+
+      return this.mapToVendaEntity(vendaAtualizada);
+    });
+  }
+
+  async processarDevolucao(
+    publicId: string,
+    devolucaoDto: ProcessDevolucaoItemDto,
+    parceiroId: number,
+    usuarioId: number,
+  ): Promise<Venda> {
+    return await this.prisma.$transaction(async tx => {
+      // 1. Buscar venda
+      const venda = await tx.venda.findFirst({
+        where: { publicId, parceiroId },
+        include: {
+          VendaItem: true,
+        },
+      });
+
+      if (!venda) {
+        throw new NotFoundException('Venda não encontrada');
+      }
+
+      // 2. Validações
+      if (venda.tipo !== VendaTipo.CONDICIONAL) {
+        throw new BadRequestException(
+          'Apenas vendas condicionais podem ter devoluções',
+        );
+      }
+
+      if (venda.status !== VendaStatus.ABERTA) {
+        throw new BadRequestException(
+          'Apenas condicionais com status ABERTA podem processar devoluções',
+        );
+      }
+
+      if (!venda.localSaidaId) {
+        throw new BadRequestException('Venda não possui local de saída definido');
+      }
+
+      // 3. Buscar item da venda
+      const vendaItem = venda.VendaItem.find(
+        item => item.skuId === devolucaoDto.skuId,
+      );
+
+      if (!vendaItem) {
+        throw new BadRequestException('SKU não pertence a esta venda');
+      }
+
+      // 4. Validar quantidade de devolução
+      const qtdJaDevolvida = vendaItem.qtdDevolvida;
+      const qtdReservada = vendaItem.qtdReservada;
+      const novaQtdDevolvida = qtdJaDevolvida + devolucaoDto.qtdDevolvida;
+
+      if (novaQtdDevolvida > qtdReservada) {
+        throw new BadRequestException(
+          `Quantidade de devolução (${novaQtdDevolvida}) excede quantidade reservada (${qtdReservada})`,
+        );
+      }
+
+      // 5. Criar movimento de DEVOLUCAO (entrada no estoque)
+      await tx.movimentoEstoque.create({
+        data: {
+          skuId: devolucaoDto.skuId,
+          tipo: TipoMovimento.DEVOLUCAO,
+          qtd: devolucaoDto.qtdDevolvida,
+          idUsuario: usuarioId,
+          localDestinoId: venda.localSaidaId,
+          observacao: `Devolução condicional - Venda ${venda.id}`,
+        },
+      });
+
+      // 6. Incrementar estoque
+      await tx.estoqueSKU.upsert({
+        where: {
+          localId_skuId: {
+            localId: venda.localSaidaId,
+            skuId: devolucaoDto.skuId,
+          },
+        },
+        update: {
+          qtd: {
+            increment: devolucaoDto.qtdDevolvida,
+          },
+        },
+        create: {
+          localId: venda.localSaidaId,
+          skuId: devolucaoDto.skuId,
+          qtd: devolucaoDto.qtdDevolvida,
+        },
+      });
+
+      // 7. Atualizar qtdDevolvida no VendaItem
+      await tx.vendaItem.update({
+        where: { id: vendaItem.id },
+        data: {
+          qtdDevolvida: novaQtdDevolvida,
+        },
+      });
+
+      // 8. Buscar venda atualizada
+      const vendaAtualizada = await tx.venda.findUnique({
+        where: { id: venda.id },
+        include: {
+          Cliente: { select: { id: true, nome: true } },
+          Usuario: { select: { id: true, nome: true } },
+          VendaItem: {
+            include: {
+              ProdutoSKU: {
+                include: {
+                  produto: {
+                    select: {
+                      id: true,
+                      publicId: true,
+                      nome: true,
+                      precoVenda: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!vendaAtualizada) {
+        throw new NotFoundException('Erro ao processar devolução');
+      }
+
+      return this.mapToVendaEntity(vendaAtualizada);
+    });
+  }
+
+  async finalizarCondicional(
+    publicId: string,
+    finalizeDto: FinalizeVendaCondicionalDto,
+    parceiroId: number,
+  ): Promise<Venda> {
+    const vendaFinalizada = await this.prisma.$transaction(async tx => {
+      // 1. Buscar venda
+      const venda = await tx.venda.findFirst({
+        where: { publicId, parceiroId },
+        include: {
+          Cliente: { select: { id: true, nome: true } },
+          Usuario: { select: { id: true, nome: true } },
+          VendaItem: {
+            include: {
+              ProdutoSKU: {
+                include: {
+                  produto: {
+                    select: {
+                      id: true,
+                      parceiroId: true,
+                      nome: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!venda) {
+        throw new NotFoundException('Venda não encontrada');
+      }
+
+      // 2. Validações
+      if (venda.tipo !== VendaTipo.CONDICIONAL) {
+        throw new BadRequestException(
+          'Apenas vendas condicionais podem usar este endpoint',
+        );
+      }
+
+      if (venda.status !== VendaStatus.ABERTA) {
+        throw new BadRequestException(
+          'Apenas condicionais com status ABERTA podem ser finalizadas',
+        );
+      }
+
+      if (!venda.VendaItem.length) {
+        throw new BadRequestException('Venda sem itens não pode ser finalizada');
+      }
+
+      // 3. Calcular itens aceitos e totais
+      let totalItensAceitos = 0;
+      const itensSubtotal = venda.VendaItem.reduce((acc, item) => {
+        const qtdAceita = item.qtdReservada - item.qtdDevolvida;
+        totalItensAceitos += qtdAceita;
+        return acc.add(
+          this.toDecimal(item.precoUnit).mul(new Decimal(qtdAceita)),
+        );
+      }, new Decimal(0));
+
+      // Validar se tem pelo menos 1 item aceito
+      if (totalItensAceitos === 0) {
+        throw new BadRequestException(
+          'Não é possível finalizar: todos os itens foram devolvidos. Use o cancelamento.',
+        );
+      }
+
+      const descontoItens = venda.VendaItem.reduce((acc, item) => {
+        const qtdAceita = item.qtdReservada - item.qtdDevolvida;
+        if (qtdAceita === 0) return acc; // Não considerar desconto de itens devolvidos
+
+        // Desconto proporcional aos itens aceitos
+        const descontoOriginal = this.toDecimal(item.desconto);
+        const fatorProporcional = new Decimal(qtdAceita).div(item.qtdReservada);
+        const descontoProporcional = descontoOriginal.mul(fatorProporcional);
+
+        return acc.add(descontoProporcional);
+      }, new Decimal(0));
+
+      const descontoTotal = this.toDecimal(
+        finalizeDto.descontoTotal ?? venda.desconto,
+      ).toDecimalPlaces(2);
+      const valorFrete = this.toDecimal(
+        finalizeDto.valorFrete ?? venda.valorFrete,
+      ).toDecimalPlaces(2);
+      const valorComissao = this.toDecimal(
+        finalizeDto.valorComissao ?? venda.valorComissao,
+      ).toDecimalPlaces(2);
+
+      let totalVenda = itensSubtotal.sub(descontoItens).sub(descontoTotal);
+      totalVenda = totalVenda.add(valorFrete).toDecimalPlaces(2);
+
+      if (totalVenda.lessThan(0)) {
+        throw new BadRequestException('Total da venda não pode ser negativo');
+      }
+
+      // 4. Validar pagamentos
+      const totalPagamentos = finalizeDto.pagamentos.reduce(
+        (acc, pagamento) => acc.add(new Decimal(pagamento.valor)),
+        new Decimal(0),
+      );
+
+      const tolerance = new Decimal(0.01);
+      if (totalPagamentos.sub(totalVenda).abs().greaterThan(tolerance)) {
+        throw new BadRequestException(
+          'Soma dos pagamentos deve ser igual ao total da venda',
+        );
+      }
+
+      const nomeFatura = finalizeDto.nomeFatura ?? venda.nomeFatura ?? null;
+      const ruccnpj = finalizeDto.ruccnpj ?? venda.ruccnpj ?? null;
+      const numeroFatura = finalizeDto.numeroFatura ?? venda.numeroFatura ?? null;
+
+      // 5. Atualizar qtdAceita em cada item e registrar custoCompra
+      for (const item of venda.VendaItem) {
+        const qtdAceita = item.qtdReservada - item.qtdDevolvida;
+
+        // Buscar o precoCompra do produto
+        const produto = await tx.produto.findFirst({
+          where: {
+            ProdutoSKU: {
+              some: {
+                id: item.skuId,
+              },
+            },
+          },
+          select: {
+            precoCompra: true,
+          },
+        });
+
+        await tx.vendaItem.update({
+          where: { id: item.id },
+          data: {
+            qtdAceita,
+            custoCompra: produto?.precoCompra ?? new Decimal(0),
+          },
+        });
+      }
+
+      // 6. Limpar pagamentos/parcelamentos antigos
+      await tx.parcelamento.deleteMany({
+        where: { vendaId: venda.id },
+      });
+      await tx.pagamento.deleteMany({
+        where: { vendaId: venda.id },
+      });
+
+      // 7. Criar pagamentos (mesma lógica de finalizarDireta)
+      for (const pagamento of finalizeDto.pagamentos) {
+        const formaPagamento = await tx.formaPagamento.findFirst({
+          where: {
+            idFormaPag: pagamento.formaPagamentoId,
+            parceiroId,
+          },
+        });
+
+        if (!formaPagamento) {
+          throw new BadRequestException(
+            'Forma de pagamento inválida para o parceiro',
+          );
+        }
+
+        await tx.pagamento.create({
+          data: {
+            vendaId: venda.id,
+            formaPagamentoId: pagamento.formaPagamentoId,
+            tipo: pagamento.tipo,
+            valor: new Decimal(pagamento.valor),
+            valorDelivery:
+              pagamento.valorDelivery != null
+                ? new Decimal(pagamento.valorDelivery)
+                : undefined,
+            entrada: pagamento.entrada ?? false,
+          },
+        });
+      }
+
+      // 8. Processar parcelamentos (mesma lógica de finalizarDireta)
+      const pagamentosParcelados = finalizeDto.pagamentos.filter(
+        p => p.tipo !== TipoVenda.A_VISTA_IMEDIATA,
+      );
+
+      if (pagamentosParcelados.length > 0) {
+        const valorTotalParcelamento = pagamentosParcelados.reduce(
+          (acc, p) => acc + p.valor,
+          0,
+        );
+
+        const parcelamento = await tx.parcelamento.create({
+          data: {
+            vendaId: venda.id,
+            clienteId: venda.clienteId,
+            valorTotal: valorTotalParcelamento,
+            valorPago: 0,
+            situacao: 1,
+          },
+        });
+
+        let numeroParcela = 1;
+
+        for (const pagamento of pagamentosParcelados) {
+          if (pagamento.tipo === TipoVenda.A_PRAZO_SEM_PARCELAS) {
+            if (!pagamento.vencimento) {
+              throw new BadRequestException(
+                'Data de vencimento obrigatória para pagamento a prazo',
+              );
+            }
+
+            await tx.parcelas.create({
+              data: {
+                parcelamentoId: parcelamento.id,
+                numero: numeroParcela++,
+                valor: new Decimal(pagamento.valor),
+                vencimento: new Date(pagamento.vencimento),
+                status: ParcelaStatus.PENDENTE,
+              },
+            });
+            continue;
+          }
+
+          if (pagamento.tipo === TipoVenda.PARCELADO) {
+            if (!pagamento.numeroParcelas || pagamento.numeroParcelas < 2) {
+              throw new BadRequestException(
+                'Pagamento parcelado deve ter pelo menos 2 parcelas',
+              );
+            }
+
+            if (!pagamento.primeiraParcelaData) {
+              throw new BadRequestException(
+                'Data da primeira parcela é obrigatória para pagamento parcelado',
+              );
+            }
+
+            const primeiraParcelaDate = new Date(pagamento.primeiraParcelaData);
+            const numeroParcelas = pagamento.numeroParcelas;
+            const totalParcelado = new Decimal(pagamento.valor);
+            const valorParcelaBase = totalParcelado
+              .div(numeroParcelas)
+              .toDecimalPlaces(2);
+
+            let acumulado = new Decimal(0);
+
+            for (let i = 1; i <= numeroParcelas; i++) {
+              let valorParcela = valorParcelaBase;
+              if (i === numeroParcelas) {
+                valorParcela = totalParcelado.sub(acumulado);
+              } else {
+                acumulado = acumulado.add(valorParcelaBase);
+              }
+
+              const vencimento = this.addMonths(primeiraParcelaDate, i - 1);
+
+              await tx.parcelas.create({
+                data: {
+                  parcelamentoId: parcelamento.id,
+                  numero: numeroParcela++,
+                  valor: valorParcela,
+                  vencimento,
+                  status: ParcelaStatus.PENDENTE,
+                },
+              });
+            }
+            continue;
+          }
+        }
+      }
+
+      // 9. Determinar status final
+      let statusFinal: VendaStatus;
+      const todosDevolvidos = venda.VendaItem.every(
+        item => item.qtdReservada === item.qtdDevolvida,
+      );
+      const algumDevolvido = venda.VendaItem.some(item => item.qtdDevolvida > 0);
+
+      if (todosDevolvidos) {
+        statusFinal = VendaStatus.CANCELADA;
+      } else if (algumDevolvido) {
+        statusFinal = VendaStatus.CONFIRMADA_PARCIAL;
+      } else {
+        statusFinal = VendaStatus.CONFIRMADA_TOTAL;
+      }
+
+      // 10. Atualizar venda
+      await tx.venda.update({
+        where: { id: venda.id },
+        data: {
+          status: statusFinal,
+          valorFrete,
+          desconto: descontoTotal,
+          valorComissao,
+          valorTotal: totalVenda,
+          nomeFatura,
+          ruccnpj,
+          numeroFatura,
+        },
+      });
+
+      // 11. Atualizar cliente
+      await tx.cliente.update({
+        where: { id: venda.clienteId },
+        data: {
+          ultimaCompra: new Date(),
+          qtdCompras: { increment: 1 },
+          ruccnpj:
+            nomeFatura?.length === 0 && ruccnpj?.length > 0 ? ruccnpj : null,
+        },
+      });
+
+      // 12. Buscar venda finalizada
+      const vendaAtualizada = await tx.venda.findUnique({
+        where: { id: venda.id },
+        include: {
+          Cliente: { select: { id: true, nome: true } },
+          Usuario: { select: { id: true, nome: true } },
+          VendaItem: {
+            include: {
+              ProdutoSKU: {
+                include: {
+                  produto: {
+                    select: {
+                      id: true,
+                      publicId: true,
+                      nome: true,
+                      precoVenda: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!vendaAtualizada) {
+        throw new NotFoundException('Erro ao finalizar condicional');
+      }
+
+      return this.mapToVendaEntity(vendaAtualizada);
+    });
+
+    // 13. Registrar no rollup (apenas se não foi cancelada)
+    if (vendaFinalizada.status !== VendaStatus.CANCELADA) {
+      console.log('[VendaService] Calling registerVendaConfirmada after finalizarCondicional:', {
+        parceiroId,
+        status: vendaFinalizada.status,
+        dataVenda: vendaFinalizada.dataVenda,
+        tipo: vendaFinalizada.tipo,
+        valorTotal: vendaFinalizada.valorTotal,
+      });
+
+      await this.vendaRollupService.registerVendaConfirmada({
+        parceiroId,
+        dataVenda: vendaFinalizada.dataVenda,
+        tipo: vendaFinalizada.tipo,
+        valorTotal: vendaFinalizada.valorTotal ?? 0,
+        descontoTotal: vendaFinalizada.desconto ?? 0,
+      });
+    }
+
+    return vendaFinalizada;
   }
 
   async remove(publicId: string, parceiroId: number): Promise<void> {

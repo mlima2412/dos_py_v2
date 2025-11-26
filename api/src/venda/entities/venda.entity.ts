@@ -93,6 +93,14 @@ export class VendaItemEntity {
   @ApiProperty({ description: 'Preço unitário', example: 99.9, type: 'number' })
   precoUnit: number;
 
+  @ApiProperty({
+    description: 'Custo de compra do produto no momento da venda',
+    example: 50.0,
+    required: false,
+    type: 'number',
+  })
+  custoCompra?: number | null;
+
   @ApiProperty({ description: 'Public ID do SKU', required: false })
   skuPublicId?: string;
 

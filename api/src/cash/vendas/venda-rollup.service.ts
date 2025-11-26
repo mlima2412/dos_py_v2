@@ -43,6 +43,13 @@ export class VendaRollupService {
     descontoDelta?: Decimal | number | string;
     descontoCountDelta?: number;
   }) {
+    console.log('[VendaRollupService] applyDelta called with:', {
+      parceiroId: params.parceiroId,
+      dataVenda: params.dataVenda,
+      tipo: params.tipo,
+      valorDelta: params.valorDelta.toString(),
+    });
+
     const quantidadeDelta = params.quantidadeDelta ?? 1;
     const valorDelta = this.normalizeDecimal(params.valorDelta);
     const descontoDelta = this.normalizeDecimal(params.descontoDelta ?? 0);
@@ -109,6 +116,13 @@ export class VendaRollupService {
     valorTotal: Decimal | number | string | null | undefined;
     descontoTotal?: Decimal | number | string | null | undefined;
   }) {
+    console.log('[VendaRollupService] registerVendaConfirmada called with:', {
+      parceiroId: params.parceiroId,
+      dataVenda: params.dataVenda,
+      tipo: params.tipo,
+      valorTotal: params.valorTotal?.toString(),
+    });
+
     const valor = params.valorTotal ?? 0;
     const desconto = params.descontoTotal ?? 0;
     const hasDiscount = this.hasPositiveValue(desconto);
@@ -130,6 +144,13 @@ export class VendaRollupService {
     valorTotal: Decimal | number | string | null | undefined;
     descontoTotal?: Decimal | number | string | null | undefined;
   }) {
+    console.log('[VendaRollupService] revertVendaConfirmada called with:', {
+      parceiroId: params.parceiroId,
+      dataVenda: params.dataVenda,
+      tipo: params.tipo,
+      valorTotal: params.valorTotal?.toString(),
+    });
+
     const valor = params.valorTotal ?? 0;
     const delta =
       valor instanceof Decimal

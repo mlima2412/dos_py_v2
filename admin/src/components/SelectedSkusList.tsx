@@ -20,6 +20,8 @@ export interface SelectedSkusListProps<T = Record<string, unknown>> {
 		quantity: number;
 		discount?: number;
 		price?: number;
+		qtdDevolvida?: number; // Quantidade devolvida (vendas condicionais)
+		qtdReservada?: number; // Quantidade reservada total
 	}>;
 	onRemoveSku: (skuId: number) => void;
 	onUpdateQuantity: (skuId: number, quantity: number) => void;
@@ -125,10 +127,14 @@ const SelectedSkusListComponent = forwardRef<
 			onUpdateQuantity(skuId, newQuantity);
 		};
 
+		// Calcular total de itens (quantidade aceita, não devolvida)
 		const totalItems = selectedSkus.reduce(
 			(sum, item) => sum + item.quantity,
 			0
 		);
+
+		// Calcular quantidade de SKUs únicos (excluindo totalmente devolvidos)
+		const uniqueItems = selectedSkus.filter(item => item.quantity > 0).length;
 
 		return (
 			<Card>
@@ -139,9 +145,9 @@ const SelectedSkusListComponent = forwardRef<
 							{title || t("purchaseOrders.form.labels.selectedProducts")}
 						</div>
 						<div>
-							{selectedSkus.length > 0 && (
+							{uniqueItems > 0 && (
 								<span className="text-xs font-normal text-muted-foreground">
-									{selectedSkus.length} itens, {totalItems}{" "}
+									{uniqueItems} {uniqueItems === 1 ? "item" : "itens"}, {totalItems}{" "}
 									{totalItems === 1 ? "pc" : "pcs"}
 								</span>
 							)}
@@ -164,13 +170,18 @@ const SelectedSkusListComponent = forwardRef<
 							className={`${scrollAreaHeight} w-full rounded-md`}
 						>
 							<div className="space-y-1 pr-2">
-								{selectedSkus.map(({ sku, product, quantity, discount, price }) => {
+								{selectedSkus.map(({ sku, product, quantity, discount, price, qtdDevolvida, qtdReservada }) => {
 									const maxQty =
 										showStockLimit && maxQuantity
 											? maxQuantity(sku)
 											: undefined;
 									const isAtMaxLimit =
 										maxQty !== undefined && quantity >= maxQty;
+
+									// Determinar se o item foi totalmente devolvido
+									const isReturned = qtdReservada !== undefined &&
+										qtdDevolvida !== undefined &&
+										qtdDevolvida >= qtdReservada;
 
 									return (
 										<SelectedSkuItem
@@ -194,6 +205,9 @@ const SelectedSkusListComponent = forwardRef<
 											discount={discount}
 											price={price}
 											onDoubleClick={onEditDiscount}
+											qtdDevolvida={qtdDevolvida}
+											qtdReservada={qtdReservada}
+											isReturned={isReturned}
 										/>
 									);
 								})}

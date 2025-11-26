@@ -111,7 +111,8 @@ export class RollupVendasCacheService {
 
   async refreshMonthly(parceiroId: number, ym: string) {
     const payload = await this.loadMonthlyFromDB(parceiroId, ym);
-    await this.redis.set(this.monthlyKey(parceiroId, ym), JSON.stringify(payload));
+    const key = this.monthlyKey(parceiroId, ym);
+    await this.redis.set(key, JSON.stringify(payload));
     await this.redis.hset(this.monthlyDiscountKey(parceiroId, ym), {
       total: payload.desconto_total,
       count: payload.desconto_count.toString(),
@@ -208,6 +209,32 @@ export class RollupVendasCacheService {
       count: payload.desconto_count.toString(),
     });
     return payload;
+  }
+
+  async getAvailableYears(parceiroId: number): Promise<{ ano: number }[]> {
+    const anos = await this.prisma.rollupVendasMensais.findMany({
+      where: {
+        parceiro_id: parceiroId,
+      },
+      select: {
+        ym: true,
+      },
+      distinct: ['ym'],
+      orderBy: {
+        ym: 'desc',
+      },
+    });
+
+    // Extrair anos únicos do formato YYYY-MM
+    const anosUnicos = new Set<number>();
+    anos.forEach(item => {
+      const year = parseInt(item.ym.substring(0, 4));
+      anosUnicos.add(year);
+    });
+
+    return Array.from(anosUnicos)
+      .sort((a, b) => b - a) // Ordenar descendente
+      .map(ano => ({ ano }));
   }
 
 }

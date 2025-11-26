@@ -20,6 +20,8 @@ export interface VendaItemFormData {
 	skuId: number;
 	productId?: number;
 	qtdReservada: number;
+	qtdDevolvida?: number; // Quantidade devolvida (vendas condicionais)
+	qtdAceita?: number; // Quantidade aceita = qtdReservada - qtdDevolvida
 	precoUnit: number;
 	desconto?: number; // Desconto calculado final (R$)
 	descontoTipo?: DescontoTipo; // Tipo de desconto aplicado
@@ -91,6 +93,7 @@ export interface VendaFormHandlers {
 		sku: ProdutoSKUEstoqueResponseDto;
 		product: ProdutosPorLocalResponseDto;
 	}>;
+	onProcessarDevolucao?: (skuId: number) => Promise<void>; // Handler para processar devolução (vendas condicionais)
 }
 
 export interface VendaTotals {

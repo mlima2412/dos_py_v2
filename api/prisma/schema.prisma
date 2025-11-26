@@ -751,6 +751,7 @@ model VendaItem {
   descontoTipo  DescontoTipo? @default(VALOR) @map("desconto_tipo") // tipo de desconto aplicado
   descontoValor Decimal?      @default(0) @map("desconto_valor") @db.Decimal(12, 3) // valor original informado pelo usuário
   precoUnit     Decimal       @map("preco_unit") @db.Decimal(12, 3)
+  custoCompra   Decimal?      @default(0) @map("custo_compra") @db.Decimal(12, 3) // custo de compra do produto no momento da venda
   observacao    String?       @map("observacao")
   Venda         Venda         @relation(fields: [vendaId], references: [id], onDelete: Cascade)
   ProdutoSKU    ProdutoSKU    @relation(fields: [skuId], references: [id])

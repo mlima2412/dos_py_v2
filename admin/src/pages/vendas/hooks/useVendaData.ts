@@ -169,6 +169,8 @@ type VendaItemWithProduto = VendaItemEntity & {
 			skuId: item.skuId,
 			productId: item.produtoId ?? 0,
 			qtdReservada: item.qtdReservada,
+			qtdDevolvida: item.qtdDevolvida ?? 0,
+			qtdAceita: item.qtdAceita ?? item.qtdReservada,
 			precoUnit: item.precoUnit,
 			desconto: item.desconto ?? 0,
 			descontoTipo: (item.descontoTipo as "VALOR" | "PERCENTUAL") ?? "VALOR",

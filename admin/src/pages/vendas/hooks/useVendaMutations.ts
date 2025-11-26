@@ -193,7 +193,10 @@ export const useVendaMutations = ({
 			};
 
 			try {
-				if (mode === "create" || !vendaResumo?.publicId) {
+				// Se já existe publicId, SEMPRE atualizar (independente do mode)
+			// O mode apenas indica a intenção inicial, mas após criar a venda
+			// todas as operações subsequentes devem ser updates
+			if (!vendaResumo?.publicId) {
 					const result = await vendaCreateMutation.mutateAsync({
 						data: dto,
 						headers: { "x-parceiro-id": parceiroIdNumber },
@@ -227,7 +230,6 @@ export const useVendaMutations = ({
 			}
 		},
 		[
-			mode,
 			parceiroIdNumber,
 			showError,
 			t,

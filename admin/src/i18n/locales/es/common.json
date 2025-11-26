@@ -568,6 +568,20 @@
 			"processOrderSuccess": "¡Pedido de compra finalizado con éxito!",
 			"processOrderError": "Error al finalizar pedido de compra. Inténtalo de nuevo."
 		},
+		"reports": {
+			"title": "Informe de Gastos",
+			"description": "Selecciona las opciones para generar el informe en PDF",
+			"generateReport": "Generar Informe",
+			"reportType": "Tipo de Informe",
+			"synthetic": "Sintético",
+			"analytical": "Analítico",
+			"year": "Año",
+			"allYears": "Todos los Años",
+			"month": "Mes",
+			"allMonths": "Todos los Meses",
+			"selectYearFirst": "Selecciona un año específico para elegir el mes",
+			"generate": "Generar Informe"
+		},
 		"validation": {
 			"descriptionRequired": "Descripción es obligatoria",
 			"valueRequired": "Valor es obligatorio",
@@ -1522,7 +1536,8 @@
 				"itemsTable": "Detalle de los ítems",
 				"billing": "Datos de facturación",
 				"review": "Revisión y confirmación",
-				"itemsSummary": "Resumen de los ítems"
+				"itemsSummary": "Resumen de los ítems",
+				"returnItems": "Procesar Devoluciones"
 			},
 			"breadcrumb": {
 				"section": "Venta",
@@ -1586,7 +1601,10 @@
 				"rucCnpj": "RUC/CNPJ",
 				"invoiceName": "Nombre para factura",
 				"previousInvoiceNames": "Nombres usados anteriormente",
-				"newInvoiceName": "Nuevo nombre"
+				"newInvoiceName": "Nuevo nombre",
+				"returnedQuantity": "Cant Devuelta",
+				"acceptedQuantity": "Cant Aceptada",
+				"effectiveness": "Efectividad"
 			},
 			"paymentTypes": {
 				"A_VISTA_IMEDIATA": "Al contado",
@@ -1609,7 +1627,8 @@
 				"thirdPartyRucCnpj": "Ingresa el RUC/CNPJ",
 				"customerRucCnpj": "Ingresa el RUC/CNPJ del cliente",
 				"fullName": "Escribe el nombre completo",
-				"selectPreviousName": "Selecciona un nombre anterior o crea nuevo"
+				"selectPreviousName": "Selecciona un nombre anterior o crea nuevo",
+				"scanToReturn": "Escanear código para devolver"
 			},
 			"actions": {
 				"saveAndContinue": "Guardar y continuar",
@@ -1621,8 +1640,11 @@
 				"confirmSale": "Confirmar venta",
 				"confirmGift": "Confirmar obsequio",
 				"confirmExchange": "Confirmar permuta",
-				"confirmConditional": "Confirmar condicional",
-				"backToList": "Volver al listado"
+				"confirmConditional": "Confirmar envío",
+				"finalizeConditional": "Finalizar Condicional",
+				"processReturn": "Procesar Devolución",
+				"backToList": "Volver al listado",
+				"proceedToPayment": "Continuar al pago"
 			},
 			"messages": {
 				"partnerRequired": "Selecciona un socio para continuar.",
@@ -1644,7 +1666,17 @@
 				"finalizeSuccess": "¡Venta finalizada con éxito!",
 				"finalizeError": "No fue posible finalizar la venta.",
 				"noPaymentsAdded": "No hay formas de pago agregadas",
-				"customerNeedsRucCnpj": "El cliente no tiene RUC/CNPJ registrado. Por favor, ingresa el RUC/CNPJ para emitir la factura."
+				"customerNeedsRucCnpj": "El cliente no tiene RUC/CNPJ registrado. Por favor, ingresa el RUC/CNPJ para emitir la factura.",
+				"returnProcessed": "Devolución procesada con éxito",
+				"conditionalFinalized": "Venta condicional finalizada",
+				"returnError": "Error al procesar devolución",
+				"itemAlreadyReturned": "Este artículo ya fue devuelto completamente",
+				"allItemsReturned": "Todos los artículos fueron devueltos",
+				"scanToReturnMode": "⚠️ Modo de devolución activo: escanea los productos devueltos",
+				"condicionalAbertaInfo": "Esta venta condicional está abierta. Procesa las devoluciones en la pestaña de ítems antes de finalizar y registrar los pagos.",
+				"completePaymentFirst": "Completa el valor de los pagos antes de finalizar",
+				"conditionalConfirmed": "¡Venta condicional confirmada con éxito! Los productos fueron dados de baja del inventario.",
+				"confirmConditionalError": "Error al confirmar el envío de la venta condicional"
 			},
 			"discount": {
 				"title": "Descuento",
@@ -1668,6 +1700,43 @@
 		"view": "Ver Pago a Plazos",
 		"details": "Detalles del Pago a Plazos",
 		"workInProgress": "Esta página está en desarrollo. Pronto podrás ver y gestionar los detalles del pago a plazos.",
+		"notFound": "Pago a plazos no encontrado",
+		"saleInfo": "Pedido - Cliente",
+		"saleOrder": "Pedido",
+		"saleOrderOf": "Pedido #{{id}} de:",
+		"viewOrder": "Ver pedido",
+		"saleDate": "Fecha de Venta",
+		"seller": "Vendedor",
+		"totalValue": "Valor Total",
+		"paidValue": "Total Pagado",
+		"balance": "A Pagar",
+		"open": "Abierto",
+		"completed": "Pagado",
+		"installmentsList": "Lista de Cuotas",
+		"noInstallments": "Ninguna cuota definida. Este es un pago a plazos flexible.",
+		"installmentNumber": "#Cuota",
+		"value": "Valor",
+		"dueDate": "Vencimiento",
+		"paymentDate": "Fecha de Pago",
+		"markAsPaid": "Marcar como Pagada",
+		"addPayment": "Agregar Pago",
+		"registerPayment": "Registrar Pago",
+		"registerPaymentDescription": "Informa el valor del pago espontáneo para este pago a plazos flexible.",
+		"paymentValue": "Valor del Pago",
+		"confirmPayment": "Confirmar Pago",
+		"confirmPaymentDescription": "¿Estás seguro de que deseas marcar esta cuota como pagada?",
+		"status": {
+			"pending": "Pendiente",
+			"paid": "Pagada",
+			"paidLate": "Pagada con Retraso"
+		},
+		"messages": {
+			"parcelaPagaSuccess": "¡Cuota marcada como pagada con éxito!",
+			"parcelaPagaError": "Error al marcar cuota como pagada",
+			"parcelaCriadaSuccess": "¡Pago registrado con éxito!",
+			"parcelaCriadaError": "Error al registrar pago",
+			"valorInvalido": "Valor inválido. Informa un valor mayor que cero."
+		},
 		"columns": {
 			"saleId": "ID Venta",
 			"client": "Cliente",
@@ -1738,5 +1807,16 @@
 			"valueMax": "El valor no puede ser mayor que {{max}}",
 			"dateRequired": "La fecha del pago es obligatoria"
 		}
+	},
+	"sales": {
+		"reports": {
+			"title": "Informe de Ventas",
+			"description": "Genere informes de ventas por período",
+			"year": "Año",
+			"allYears": "Todos los Años",
+			"selectYear": "Seleccione el año",
+			"generate": "Generar Informe"
+		},
+		"noResults": "Sin resultados"
 	}
 }

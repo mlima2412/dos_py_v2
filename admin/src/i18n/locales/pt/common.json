@@ -610,6 +610,20 @@
 			"processOrderSuccess": "Pedido de compra finalizado com sucesso!",
 			"processOrderError": "Erro ao finalizar pedido de compra. Tente novamente."
 		},
+		"reports": {
+			"title": "Relatório de Despesas",
+			"description": "Selecione as opções para gerar o relatório em PDF",
+			"generateReport": "Gerar Relatório",
+			"reportType": "Tipo de Relatório",
+			"synthetic": "Sintético",
+			"analytical": "Analítico",
+			"year": "Ano",
+			"allYears": "Todos os Anos",
+			"month": "Mês",
+			"allMonths": "Todos os Meses",
+			"selectYearFirst": "Selecione um ano específico para escolher o mês",
+			"generate": "Gerar Relatório"
+		},
 		"validation": {
 			"descriptionRequired": "Descrição é obrigatória",
 			"valueRequired": "Valor é obrigatório",
@@ -1663,7 +1677,8 @@
 				"itemsTable": "Detalhes dos itens",
 				"billing": "Dados de faturamento",
 				"review": "Revisão e confirmação",
-				"itemsSummary": "Resumo dos itens"
+				"itemsSummary": "Resumo dos itens",
+				"returnItems": "Processar Devoluções"
 			},
 			"breadcrumb": {
 				"section": "Venda",
@@ -1727,7 +1742,10 @@
 				"rucCnpj": "RUC/CNPJ",
 				"invoiceName": "Nome para fatura",
 				"previousInvoiceNames": "Nomes usados anteriormente",
-				"newInvoiceName": "Novo nome"
+				"newInvoiceName": "Novo nome",
+				"returnedQuantity": "Qtd Devolvida",
+				"acceptedQuantity": "Qtd Aceita",
+				"effectiveness": "Efetividade"
 			},
 			"paymentTypes": {
 				"A_VISTA_IMEDIATA": "À vista",
@@ -1750,7 +1768,8 @@
 				"thirdPartyRucCnpj": "Informe o RUC/CNPJ",
 				"customerRucCnpj": "Informe o RUC/CNPJ do cliente",
 				"fullName": "Digite o nome completo",
-				"selectPreviousName": "Selecione um nome anterior ou crie novo"
+				"selectPreviousName": "Selecione um nome anterior ou crie novo",
+				"scanToReturn": "Escanear código para devolver"
 			},
 			"actions": {
 				"saveAndContinue": "Salvar e avançar",
@@ -1762,8 +1781,11 @@
 				"confirmSale": "Confirmar venda",
 				"confirmGift": "Confirmar brinde",
 				"confirmExchange": "Confirmar permuta",
-				"confirmConditional": "Confirmar condicional",
-				"backToList": "Voltar para listagem"
+				"confirmConditional": "Confirmar envio",
+				"finalizeConditional": "Finalizar Condicional",
+				"processReturn": "Processar Devolução",
+				"backToList": "Voltar para listagem",
+				"proceedToPayment": "Prosseguir para pagamento"
 			},
 			"messages": {
 				"partnerRequired": "Selecione um parceiro para continuar.",
@@ -1785,7 +1807,17 @@
 				"finalizeSuccess": "Venda finalizada com sucesso!",
 				"finalizeError": "Não foi possível finalizar a venda.",
 				"noPaymentsAdded": "Nenhuma forma de pagamento adicionada",
-				"customerNeedsRucCnpj": "O cliente não possui RUC/CNPJ cadastrado. Por favor, informe o RUC/CNPJ para emitir a nota fiscal."
+				"customerNeedsRucCnpj": "O cliente não possui RUC/CNPJ cadastrado. Por favor, informe o RUC/CNPJ para emitir a nota fiscal.",
+				"returnProcessed": "Devolução processada com sucesso",
+				"conditionalFinalized": "Venda condicional finalizada",
+				"returnError": "Erro ao processar devolução",
+				"itemAlreadyReturned": "Este item já foi totalmente devolvido",
+				"allItemsReturned": "Todos os itens foram devolvidos",
+				"scanToReturnMode": "⚠️ Modo de devolução ativo: escaneie os produtos devolvidos",
+				"condicionalAbertaInfo": "Esta venda condicional está aberta. Processe as devoluções na aba de itens antes de finalizar e registrar os pagamentos.",
+				"completePaymentFirst": "Complete o valor dos pagamentos antes de finalizar",
+				"conditionalConfirmed": "Venda condicional confirmada com sucesso! Os produtos foram baixados do estoque.",
+				"confirmConditionalError": "Erro ao confirmar envio da venda condicional"
 			},
 			"discount": {
 				"title": "Desconto",
@@ -1811,6 +1843,9 @@
 		"details": "Detalhes do Parcelamento",
 		"workInProgress": "Esta página está em desenvolvimento. Em breve você poderá visualizar e gerenciar os detalhes do parcelamento.",
 		"saleInfo": "Pedido - Cliente",
+		"saleOrder": "Pedido",
+		"saleOrderOf": "Pedido #{{id}} de:",
+		"viewOrder": "Ver pedido",
 		"saleDate": "Data da Venda",
 		"seller": "Vendedor",
 		"totalValue": "Valor Total",
@@ -1854,5 +1889,16 @@
 			"parcelaCriadaError": "Erro ao registrar pagamento",
 			"valorInvalido": "Valor inválido. Informe um valor maior que zero."
 		}
+	},
+	"sales": {
+		"reports": {
+			"title": "Relatório de Vendas",
+			"description": "Gere relatórios de vendas por período",
+			"year": "Ano",
+			"allYears": "Todos os Anos",
+			"selectYear": "Selecione o ano",
+			"generate": "Gerar Relatório"
+		},
+		"noResults": "Sem resultados"
 	}
 }

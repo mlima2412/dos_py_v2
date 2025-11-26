@@ -105,6 +105,8 @@ export type { DespesasControllerFindOneQueryKey } from "./useDespesasControllerF
 export type { DespesasControllerFindOneSuspenseQueryKey } from "./useDespesasControllerFindOneSuspense.ts";
 export type { DespesasControllerFindPaginatedQueryKey } from "./useDespesasControllerFindPaginated.ts";
 export type { DespesasControllerFindPaginatedSuspenseQueryKey } from "./useDespesasControllerFindPaginatedSuspense.ts";
+export type { DespesasControllerGetReportDataQueryKey } from "./useDespesasControllerGetReportData.ts";
+export type { DespesasControllerGetReportDataSuspenseQueryKey } from "./useDespesasControllerGetReportDataSuspense.ts";
 export type { DespesasControllerListYearsQueryKey } from "./useDespesasControllerListYears.ts";
 export type { DespesasControllerListYearsSuspenseQueryKey } from "./useDespesasControllerListYearsSuspense.ts";
 export type { DespesasControllerRemoveMutationKey } from "./useDespesasControllerRemove.ts";
@@ -345,8 +347,10 @@ export type { UsuariosControllerFindPaginatedQueryKey } from "./useUsuariosContr
 export type { UsuariosControllerFindPaginatedSuspenseQueryKey } from "./useUsuariosControllerFindPaginatedSuspense.ts";
 export type { UsuariosControllerInitializeSystemMutationKey } from "./useUsuariosControllerInitializeSystem.ts";
 export type { UsuariosControllerUpdateMutationKey } from "./useUsuariosControllerUpdate.ts";
+export type { VendaControllerConfirmarCondicionalMutationKey } from "./useVendaControllerConfirmarCondicional.ts";
 export type { VendaControllerCreateMutationKey } from "./useVendaControllerCreate.ts";
 export type { VendaControllerFinalizarBrindePermutaMutationKey } from "./useVendaControllerFinalizarBrindePermuta.ts";
+export type { VendaControllerFinalizarCondicionalMutationKey } from "./useVendaControllerFinalizarCondicional.ts";
 export type { VendaControllerFinalizeDiretaMutationKey } from "./useVendaControllerFinalizeDireta.ts";
 export type { VendaControllerFindAllQueryKey } from "./useVendaControllerFindAll.ts";
 export type { VendaControllerFindAllSuspenseQueryKey } from "./useVendaControllerFindAllSuspense.ts";
@@ -356,6 +360,7 @@ export type { VendaControllerFindOneQueryKey } from "./useVendaControllerFindOne
 export type { VendaControllerFindOneSuspenseQueryKey } from "./useVendaControllerFindOneSuspense.ts";
 export type { VendaControllerPaginateQueryKey } from "./useVendaControllerPaginate.ts";
 export type { VendaControllerPaginateSuspenseQueryKey } from "./useVendaControllerPaginateSuspense.ts";
+export type { VendaControllerProcessarDevolucaoMutationKey } from "./useVendaControllerProcessarDevolucao.ts";
 export type { VendaControllerRemoveMutationKey } from "./useVendaControllerRemove.ts";
 export type { VendaControllerUpdateMutationKey } from "./useVendaControllerUpdate.ts";
 export type { VendaItemControllerCreateMutationKey } from "./useVendaItemControllerCreate.ts";
@@ -793,6 +798,14 @@ export { despesasControllerFindPaginatedSuspenseQueryKey } from "./useDespesasCo
 export { despesasControllerFindPaginatedSuspense } from "./useDespesasControllerFindPaginatedSuspense.ts";
 export { despesasControllerFindPaginatedSuspenseQueryOptions } from "./useDespesasControllerFindPaginatedSuspense.ts";
 export { useDespesasControllerFindPaginatedSuspense } from "./useDespesasControllerFindPaginatedSuspense.ts";
+export { despesasControllerGetReportDataQueryKey } from "./useDespesasControllerGetReportData.ts";
+export { despesasControllerGetReportData } from "./useDespesasControllerGetReportData.ts";
+export { despesasControllerGetReportDataQueryOptions } from "./useDespesasControllerGetReportData.ts";
+export { useDespesasControllerGetReportData } from "./useDespesasControllerGetReportData.ts";
+export { despesasControllerGetReportDataSuspenseQueryKey } from "./useDespesasControllerGetReportDataSuspense.ts";
+export { despesasControllerGetReportDataSuspense } from "./useDespesasControllerGetReportDataSuspense.ts";
+export { despesasControllerGetReportDataSuspenseQueryOptions } from "./useDespesasControllerGetReportDataSuspense.ts";
+export { useDespesasControllerGetReportDataSuspense } from "./useDespesasControllerGetReportDataSuspense.ts";
 export { despesasControllerListYearsQueryKey } from "./useDespesasControllerListYears.ts";
 export { despesasControllerListYears } from "./useDespesasControllerListYears.ts";
 export { despesasControllerListYearsQueryOptions } from "./useDespesasControllerListYears.ts";
@@ -1753,6 +1766,10 @@ export { usuariosControllerUpdateMutationKey } from "./useUsuariosControllerUpda
 export { usuariosControllerUpdate } from "./useUsuariosControllerUpdate.ts";
 export { usuariosControllerUpdateMutationOptions } from "./useUsuariosControllerUpdate.ts";
 export { useUsuariosControllerUpdate } from "./useUsuariosControllerUpdate.ts";
+export { vendaControllerConfirmarCondicionalMutationKey } from "./useVendaControllerConfirmarCondicional.ts";
+export { vendaControllerConfirmarCondicional } from "./useVendaControllerConfirmarCondicional.ts";
+export { vendaControllerConfirmarCondicionalMutationOptions } from "./useVendaControllerConfirmarCondicional.ts";
+export { useVendaControllerConfirmarCondicional } from "./useVendaControllerConfirmarCondicional.ts";
 export { vendaControllerCreateMutationKey } from "./useVendaControllerCreate.ts";
 export { vendaControllerCreate } from "./useVendaControllerCreate.ts";
 export { vendaControllerCreateMutationOptions } from "./useVendaControllerCreate.ts";
@@ -1761,6 +1778,10 @@ export { vendaControllerFinalizarBrindePermutaMutationKey } from "./useVendaCont
 export { vendaControllerFinalizarBrindePermuta } from "./useVendaControllerFinalizarBrindePermuta.ts";
 export { vendaControllerFinalizarBrindePermutaMutationOptions } from "./useVendaControllerFinalizarBrindePermuta.ts";
 export { useVendaControllerFinalizarBrindePermuta } from "./useVendaControllerFinalizarBrindePermuta.ts";
+export { vendaControllerFinalizarCondicionalMutationKey } from "./useVendaControllerFinalizarCondicional.ts";
+export { vendaControllerFinalizarCondicional } from "./useVendaControllerFinalizarCondicional.ts";
+export { vendaControllerFinalizarCondicionalMutationOptions } from "./useVendaControllerFinalizarCondicional.ts";
+export { useVendaControllerFinalizarCondicional } from "./useVendaControllerFinalizarCondicional.ts";
 export { vendaControllerFinalizeDiretaMutationKey } from "./useVendaControllerFinalizeDireta.ts";
 export { vendaControllerFinalizeDireta } from "./useVendaControllerFinalizeDireta.ts";
 export { vendaControllerFinalizeDiretaMutationOptions } from "./useVendaControllerFinalizeDireta.ts";
@@ -1797,6 +1818,10 @@ export { vendaControllerPaginateSuspenseQueryKey } from "./useVendaControllerPag
 export { vendaControllerPaginateSuspense } from "./useVendaControllerPaginateSuspense.ts";
 export { vendaControllerPaginateSuspenseQueryOptions } from "./useVendaControllerPaginateSuspense.ts";
 export { useVendaControllerPaginateSuspense } from "./useVendaControllerPaginateSuspense.ts";
+export { vendaControllerProcessarDevolucaoMutationKey } from "./useVendaControllerProcessarDevolucao.ts";
+export { vendaControllerProcessarDevolucao } from "./useVendaControllerProcessarDevolucao.ts";
+export { vendaControllerProcessarDevolucaoMutationOptions } from "./useVendaControllerProcessarDevolucao.ts";
+export { useVendaControllerProcessarDevolucao } from "./useVendaControllerProcessarDevolucao.ts";
 export { vendaControllerRemoveMutationKey } from "./useVendaControllerRemove.ts";
 export { vendaControllerRemove } from "./useVendaControllerRemove.ts";
 export { vendaControllerRemoveMutationOptions } from "./useVendaControllerRemove.ts";

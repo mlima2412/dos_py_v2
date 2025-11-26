@@ -10,6 +10,9 @@ export class Parcelamento {
   @ApiProperty({ description: 'ID da venda associada' })
   vendaId: number;
 
+  @ApiProperty({ description: 'Public ID da venda associada', required: false })
+  vendaPublicId?: string;
+
   @ApiProperty({ description: 'Valor total parcelado' })
   valorTotal: number;
 

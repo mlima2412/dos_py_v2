@@ -363,7 +363,7 @@ export const ListagemVendas: React.FC<ListagemVendasProps> = ({ tipo }) => {
 														>
 															<Eye className="h-4 w-4" />
 														</Button>
-														{venda.status === "PEDIDO" && (
+														{(venda.status === "PEDIDO" || venda.status === "ABERTA") && (
 															<Button
 																variant="ghost"
 																size="icon"

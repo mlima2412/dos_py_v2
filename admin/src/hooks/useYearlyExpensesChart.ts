@@ -92,8 +92,7 @@ export function useYearlyExpensesChart(year?: number) {
 						totalRealized += realized;
 					}
 				} catch (error) {
-					// Se não encontrar dados para o mês, continua
-					console.warn(`Dados não encontrados para ${ym}:`, error);
+					// Se não encontrar dados para o mês, continua silenciosamente
 				}
 			}
 

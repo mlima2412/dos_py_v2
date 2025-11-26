@@ -560,6 +560,7 @@ CREATE TABLE "public"."venda_item" (
     "desconto_tipo" "public"."DescontoTipo" DEFAULT 'VALOR',
     "desconto_valor" DECIMAL(12,3) DEFAULT 0,
     "preco_unit" DECIMAL(12,3) NOT NULL,
+    "custo_compra" DECIMAL(12,3) DEFAULT 0,
     "observacao" TEXT,
 
     CONSTRAINT "venda_item_pkey" PRIMARY KEY ("id")

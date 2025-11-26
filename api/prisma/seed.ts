@@ -50,7 +50,8 @@ const DEFAULT_LOCAL_SAIDA_ID = Number(process.env.SEED_LOCAL_SAIDA_ID ?? 1);
 const formaPagamentoMap = new Map<number, number>();
 
 // Formas de pagamento a serem ignoradas na migração
-const IGNORED_FORMA_PAGAMENTO = ['Brinde', 'Permuta', 'Parcelamento'];
+// Nota: Parcelamento foi removido desta lista porque vendas parceladas precisam de pagamento
+const IGNORED_FORMA_PAGAMENTO = ['Brinde', 'Permuta'];
 
 const BRINDE_KEYWORDS = ['brinde'];
 const PERMUTA_KEYWORDS = ['permuta'];
@@ -126,30 +127,55 @@ function mapVendaStatus(
     return VendaStatus.PEDIDO;
   }
 
-  // Para CONDICIONAL com situacao = 3 ou 4, CONFIRMADA_TOTAL
+  // Para vendas DIRETA, BRINDE e PERMUTA: sempre CONFIRMADA quando finalizadas
   if (
-    vendaTipo === VendaTipo.CONDICIONAL &&
-    (situacao === 3 || situacao === 4)
+    vendaTipo === VendaTipo.DIRETA ||
+    vendaTipo === VendaTipo.BRINDE ||
+    vendaTipo === VendaTipo.PERMUTA
   ) {
-    return VendaStatus.CONFIRMADA_TOTAL;
+    if (situacao === 2 || situacao === 3) {
+      return VendaStatus.CONFIRMADA;
+    }
+    if (situacao === 4) {
+      return VendaStatus.CANCELADA;
+    }
   }
 
-  switch (situacao) {
-    case 2:
-      return VendaStatus.CONFIRMADA;
-    case 3: {
-      const hasDevolucao = itens?.some(
-        item => Number(item.qtdDevolvida ?? 0) > 0,
-      );
-      return hasDevolucao
-        ? VendaStatus.CONFIRMADA_PARCIAL
-        : VendaStatus.CONFIRMADA_TOTAL;
-    }
-    case 4:
+  // Para CONDICIONAL: analisar devoluções
+  if (vendaTipo === VendaTipo.CONDICIONAL) {
+    if (situacao === 4) {
       return VendaStatus.CANCELADA;
-    default:
-      return VendaStatus.PEDIDO;
+    }
+
+    // situacao 2 = ABERTA em DOSv2 e 3 = finalizada
+    if (situacao === 2) {
+      return VendaStatus.ABERTA;
+    }
+
+    if (situacao === 3) {
+      // Verificar se houve algum item NÃO confirmado (devolvido)
+      const hasItemNaoConfirmado = itens?.some(
+        item => item.confirmado === false,
+      );
+
+      // Se todos os itens foram confirmados = sem devoluções
+      const todosConfirmados = itens?.every(
+        item => item.confirmado === true,
+      );
+
+      if (todosConfirmados) {
+        return VendaStatus.CONFIRMADA_TOTAL;
+      } else if (hasItemNaoConfirmado) {
+        return VendaStatus.CONFIRMADA_PARCIAL;
+      } else {
+        // Fallback: se não houver info de confirmação, assume total
+        return VendaStatus.CONFIRMADA_TOTAL;
+      }
+    }
   }
+
+  // Default: PEDIDO
+  return VendaStatus.PEDIDO;
 }
 
 const CONFIRMED_VENDA_STATUSES: VendaStatus[] = [
@@ -541,11 +567,23 @@ async function fetchVendasFromLegacy(
         : itensValorBruto;
 
     // Calcular valor líquido (após desconto) para os pagamentos
-    const descontoVenda = decimalOrZero(raw.desconto);
-    const valorLiquidoVenda = valorTotalVenda.sub(descontoVenda);
+    const vendaTipoResolved = mapVendaTipo(
+      raw.tipoVenda,
+      raw.formaPagamentoNome,
+    );
+    const isBrindeVenda = vendaTipoResolved === VendaTipo.BRINDE;
+    const descontoVenda = isBrindeVenda
+      ? new Prisma.Decimal(0)
+      : decimalOrZero(raw.desconto);
+    const valorLiquidoVenda = isBrindeVenda
+      ? valorTotalVenda
+      : valorTotalVenda.sub(descontoVenda);
+    const descontoParaPersistir = isBrindeVenda
+      ? undefined
+      : decimalOrUndefined(raw.desconto);
 
     const vendaPersistida = await prisma.$transaction(async tx => {
-      const vendaTipo = mapVendaTipo(raw.tipoVenda, raw.formaPagamentoNome);
+      const vendaTipo = vendaTipoResolved;
       const vendaStatus = mapVendaStatus(raw.situacao, itens.rows, vendaTipo);
 
       const createdVenda = await tx.venda.create({
@@ -561,7 +599,7 @@ async function fetchVendasFromLegacy(
           dataVenda: raw.dataVenda,
           valorFrete: decimalOrUndefined(raw.valorDelivery),
           valorTotal: valorLiquidoVenda,
-          desconto: decimalOrUndefined(raw.desconto),
+          desconto: descontoParaPersistir,
           ruccnpj: null,
           nomeFatura: raw.nomeFatura ?? null,
           numeroFatura: raw.faturaNumero ? raw.faturaNumero.toString() : null,
@@ -578,11 +616,13 @@ async function fetchVendasFromLegacy(
         raw.situacao,
       );
 
-      // Criar Pagamento para vendas DIRETA e CONDICIONAL (não para BRINDE e PERMUTA)
-      if (
+      // Criar Pagamento apenas quando a venda estiver concluída
+      const shouldCreatePagamento =
         vendaTipo === VendaTipo.DIRETA ||
-        vendaTipo === VendaTipo.CONDICIONAL
-      ) {
+        (vendaTipo === VendaTipo.CONDICIONAL &&
+          vendaStatus !== VendaStatus.ABERTA);
+
+      if (shouldCreatePagamento) {
         const formaPagamentoIdV2 = formaPagamentoMap.get(raw.formaPagamentoId);
 
         if (formaPagamentoIdV2) {
@@ -604,20 +644,46 @@ async function fetchVendasFromLegacy(
               },
             });
 
-            // Se há valor restante e não há parcelamento, criar pagamento do restante
-            if (valorRestante.greaterThan(0) && !temParcelamento) {
-              await tx.pagamento.create({
-                data: {
-                  vendaId: createdVenda.id,
-                  formaPagamentoId: formaPagamentoIdV2,
-                  tipo: TipoVenda.A_VISTA_IMEDIATA,
-                  valor: valorRestante,
-                  entrada: false,
-                },
-              });
+            // Se há valor restante
+            if (valorRestante.greaterThan(0)) {
+              if (temParcelamento) {
+                // Criar pagamento do tipo PARCELADO para o valor restante
+                await tx.pagamento.create({
+                  data: {
+                    vendaId: createdVenda.id,
+                    formaPagamentoId: formaPagamentoIdV2,
+                    tipo: TipoVenda.PARCELADO,
+                    valor: valorRestante,
+                    entrada: false,
+                  },
+                });
+              } else {
+                // Criar pagamento à vista do restante
+                await tx.pagamento.create({
+                  data: {
+                    vendaId: createdVenda.id,
+                    formaPagamentoId: formaPagamentoIdV2,
+                    tipo: TipoVenda.A_VISTA_IMEDIATA,
+                    valor: valorRestante,
+                    entrada: false,
+                  },
+                });
+              }
             }
-          } else if (!temParcelamento) {
-            // Se não há entrada e não há parcelamento, criar pagamento único
+          } else if (temParcelamento) {
+            // Se não há entrada mas há parcelamento, criar pagamento PARCELADO do valor total
+            await tx.pagamento.create({
+              data: {
+                vendaId: createdVenda.id,
+                formaPagamentoId: formaPagamentoIdV2,
+                tipo: TipoVenda.PARCELADO,
+                valor: valorLiquidoVenda,
+                valorDelivery: decimalOrUndefined(raw.valorDelivery),
+                entrada: false,
+              },
+            });
+          } else {
+            // Se não há entrada e não há parcelamento, criar pagamento único à vista
             await tx.pagamento.create({
               data: {
                 vendaId: createdVenda.id,
@@ -660,13 +726,14 @@ async function fetchVendasFromLegacy(
 
     const isConditionalVenda =
       vendaPersistida.vendaTipo === VendaTipo.CONDICIONAL;
+    const isPermutaVenda = vendaPersistida.vendaTipo === VendaTipo.PERMUTA;
     const conditionalFinalizada =
       isConditionalVenda && Number(raw.situacao ?? 0) === 4;
-    const shouldRegisterRollup = isVendaConfirmada(
-      vendaPersistida.vendaStatus,
-    )
-      ? !isConditionalVenda || conditionalFinalizada
-      : false;
+    const isConfirmedVenda = isVendaConfirmada(vendaPersistida.vendaStatus);
+    const shouldRegisterRollup =
+      isConfirmedVenda &&
+      !isPermutaVenda &&
+      (!isConditionalVenda || conditionalFinalizada);
 
     if (shouldRegisterRollup) {
       await vendaRollupService.registerVendaConfirmada({
@@ -716,11 +783,18 @@ async function migrateVendaItems(
     }
 
     const skuId = item.produtoVarianteId;
-    const skuExists = await tx.produtoSKU.findUnique({
+    const sku = await tx.produtoSKU.findUnique({
       where: { id: skuId },
-      select: { id: true },
+      select: {
+        id: true,
+        produto: {
+          select: {
+            precoCompra: true,
+          },
+        },
+      },
     });
-    if (!skuExists) {
+    if (!sku) {
       console.warn(
         `SKU ${skuId} não encontrado para venda ${vendaId}, item ${item.idVendaItem} ignorado`,
       );
@@ -743,7 +817,15 @@ async function migrateVendaItems(
 
     // Na v1, descontos eram sempre percentuais quando existiam
     const descontoValorV1 = item.desconto ? Number(item.desconto) : null;
-    const temDesconto = descontoValorV1 !== null && descontoValorV1 > 0;
+    let temDesconto = descontoValorV1 !== null && descontoValorV1 > 0;
+
+    // Para BRINDE: ignorar desconto (corrigir brindes com 100% de desconto)
+    if (vendaTipo === VendaTipo.BRINDE && temDesconto) {
+      console.log(
+        `  - Removendo desconto ${descontoValorV1}% de brinde (venda ${vendaId}, item ${item.idVendaItem})`,
+      );
+      temDesconto = false;
+    }
 
     // Calcular desconto absoluto se houver desconto percentual
     let descontoCalculado: Prisma.Decimal | undefined = undefined;
@@ -770,6 +852,9 @@ async function migrateVendaItems(
           ? new Prisma.Decimal(descontoValorV1)
           : undefined,
         precoUnit: decimalOrZero(item.precoVenda),
+        custoCompra: sku.produto?.precoCompra
+          ? new Prisma.Decimal(sku.produto.precoCompra)
+          : new Prisma.Decimal(0),
         observacao: item.observacao ?? null,
       },
     });
@@ -821,56 +906,70 @@ async function migrateParcelamentoForVenda(
   let totalPago = new Prisma.Decimal(0);
   const parcelasRows = legacyParcelas ?? [];
 
+  // Buscar a data da venda uma vez para usar como fallback
+  let dataVendaFallback: Date | null = null;
+  if (parcelasRows.length > 0) {
+    const venda = await tx.venda.findUnique({
+      where: { id: context.vendaId },
+      select: { dataVenda: true },
+    });
+    dataVendaFallback = venda?.dataVenda ?? new Date();
+  }
+
   for (const parcela of parcelasRows) {
     const valor = new Prisma.Decimal(parcela.valorPago ?? 0);
     totalPago = totalPago.add(valor);
+    // Se a parcela está sendo marcada como PAGA, deve ter uma data de recebimento
+    const recebidoEm = parcela.dataPagamento
+      ? new Date(parcela.dataPagamento)
+      : dataVendaFallback;
     await tx.parcelas.create({
       data: {
         parcelamentoId: parcelamento.id,
         numero: numeroSequencial++,
         valor: valor,
         vencimento: null,
-        recebidoEm: parcela.dataPagamento
-          ? new Date(parcela.dataPagamento)
-          : null,
+        recebidoEm,
         status: ParcelaStatus.PAGO,
       },
     });
   }
 
-  if (!parcelasRows.length && valorPagoLegacy.greaterThan(0)) {
-    totalPago = totalPago.add(valorPagoLegacy);
+  // Se não há parcelas no legado mas há valor pago NO PARCELAMENTO DO LEGADO,
+  // criar uma parcela já paga. Não criar se valorPago vem apenas da entregaInicial
+  // (que já foi registrada como Pagamento separado)
+  const valorPagoDoParcelamentoLegado = legacyParcelamento?.valorPago
+    ? new Prisma.Decimal(legacyParcelamento.valorPago)
+    : new Prisma.Decimal(0);
+
+  if (!parcelasRows.length && valorPagoDoParcelamentoLegado.greaterThan(0)) {
+    totalPago = totalPago.add(valorPagoDoParcelamentoLegado);
+    // Buscar a data da venda para usar como data de recebimento
+    const venda = await tx.venda.findUnique({
+      where: { id: context.vendaId },
+      select: { dataVenda: true },
+    });
     await tx.parcelas.create({
       data: {
         parcelamentoId: parcelamento.id,
         numero: numeroSequencial++,
-        valor: valorPagoLegacy,
+        valor: valorPagoDoParcelamentoLegado,
         vencimento: null,
-        recebidoEm: null,
+        recebidoEm: venda?.dataVenda ?? new Date(),
         status: ParcelaStatus.PAGO,
       },
     });
   }
 
-  const saldo = valorTotalParcelamento.sub(totalPago);
-
-  if (saldo.greaterThan(0)) {
-    await tx.parcelas.create({
-      data: {
-        parcelamentoId: parcelamento.id,
-        numero: numeroSequencial++,
-        valor: saldo,
-        vencimento: null,
-        status: ParcelaStatus.PENDENTE,
-      },
-    });
-  }
+  // NÃO criar parcelas PENDENTES na migração - apenas migrar parcelas já pagas
+  // O saldo pendente será gerenciado pelo sistema quando o usuário registrar pagamentos
+  const saldoRestante = valorTotalParcelamento.sub(totalPago);
 
   await tx.parcelamento.update({
     where: { id: parcelamento.id },
     data: {
       valorPago: totalPago.toNumber(),
-      situacao: saldo.greaterThan(0) ? 1 : 2,
+      situacao: saldoRestante.greaterThan(0) ? 1 : 2,
     },
   });
 }

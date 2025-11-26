@@ -71,4 +71,9 @@ export type UpdateVendaItemDto = {
      * @type number | undefined
     */
     precoUnit?: number | undefined;
+    /**
+     * @description Custo de compra do produto no momento da venda
+     * @type number | undefined
+    */
+    custoCompra?: number | undefined;
 };

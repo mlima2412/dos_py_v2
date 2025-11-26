@@ -309,9 +309,9 @@ export function FormularioParceiro() {
 												</SelectTrigger>
 												<SelectContent>
 													{isLoadingCurrencies ? (
-														<SelectItem value="" disabled>
+														<div className="px-2 py-1.5 text-sm text-muted-foreground">
 															{t("common.loading")}
-														</SelectItem>
+														</div>
 													) : (
 														currencies?.map(currency => (
 															<SelectItem

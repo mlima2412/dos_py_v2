@@ -21,6 +21,11 @@ export type Parcelamento = {
     */
     vendaId: number;
     /**
+     * @description Public ID da venda associada
+     * @type string | undefined
+    */
+    vendaPublicId?: string | undefined;
+    /**
      * @description Valor total parcelado
      * @type number
     */

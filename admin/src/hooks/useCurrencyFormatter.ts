@@ -10,7 +10,6 @@ export const useCurrencyFormatter = () => {
 
 	const formatCurrency = React.useCallback(
 		(amount: number): string => {
-			console.log(selectedPartnerLocale, selectedPartnerIsoCode);
 			// Se não temos informações de moeda do parceiro, usar Real brasileiro como fallback
 			if (!selectedPartnerLocale || !selectedPartnerIsoCode) {
 				return new Intl.NumberFormat("pt-BR", {
@@ -21,20 +20,12 @@ export const useCurrencyFormatter = () => {
 
 			try {
 				// Usar locale e isoCode específicos do parceiro
-				const value = new Intl.NumberFormat(selectedPartnerLocale, {
+				return new Intl.NumberFormat(selectedPartnerLocale, {
 					style: "currency",
 					currency: selectedPartnerIsoCode,
 				}).format(amount);
-				console.log("Formatted currency:", value);
-				return value;
 			} catch (error) {
-				console.warn("Erro ao formatar moeda:", {
-					locale: selectedPartnerLocale,
-					currency: selectedPartnerIsoCode,
-					error,
-				});
-
-				// Fallback para formato simples
+				// Fallback para formato simples em caso de erro
 				return `${selectedPartnerIsoCode} ${amount.toFixed(2)}`;
 			}
 		},

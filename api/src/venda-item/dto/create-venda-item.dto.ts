@@ -64,4 +64,15 @@ export class CreateVendaItemDto {
   @IsNumber()
   @Min(0)
   precoUnit: number;
+
+  @ApiProperty({
+    description: 'Custo de compra do produto no momento da venda',
+    example: 50.0,
+    required: false,
+    type: 'number'
+  })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  custoCompra?: number | null;
 }

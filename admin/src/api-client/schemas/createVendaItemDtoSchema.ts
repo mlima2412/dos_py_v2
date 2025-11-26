@@ -16,5 +16,6 @@ export const createVendaItemDtoSchema = z.object({
 "desconto": z.optional(z.coerce.number().describe("Desconto calculado final (em valor)")),
 "descontoTipo": z.optional(z.enum(["VALOR", "PERCENTUAL"]).describe("Tipo de desconto")),
 "descontoValor": z.optional(z.coerce.number().describe("Valor original informado (R$ ou %)")),
-"precoUnit": z.coerce.number().describe("Preço unitário")
+"precoUnit": z.coerce.number().describe("Preço unitário"),
+"custoCompra": z.optional(z.coerce.number().describe("Custo de compra do produto no momento da venda"))
     }) as unknown as z.ZodType<CreateVendaItemDto>

@@ -19,6 +19,7 @@ export class ParcelamentoService {
     return {
       id: p.id,
       vendaId: p.vendaId,
+      vendaPublicId: p.vendas?.[0]?.publicId,
       clienteId: p.clienteId,
       valorTotal: p.valorTotal,
       valorPago: p.valorPago,
@@ -54,6 +55,18 @@ export class ParcelamentoService {
   async findOne(id: number): Promise<Parcelamento> {
     const item = await this.prisma.parcelamento.findUnique({
       where: { id },
+      include: {
+        cliente: {
+          select: {
+            nome: true,
+          },
+        },
+        vendas: {
+          select: {
+            publicId: true,
+          },
+        },
+      },
     });
     if (!item) throw new NotFoundException('Parcelamento não encontrado');
     return this.mapToEntity(item);

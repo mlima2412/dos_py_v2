@@ -71,4 +71,9 @@ export type CreateVendaItemDto = {
      * @type number
     */
     precoUnit: number;
+    /**
+     * @description Custo de compra do produto no momento da venda
+     * @type number | undefined
+    */
+    custoCompra?: number | undefined;
 };

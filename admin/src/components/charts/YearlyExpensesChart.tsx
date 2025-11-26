@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { TrendingUp } from "lucide-react";
 import { useYearlyExpensesChart } from "@/hooks/useYearlyExpensesChart";
 import { useCurrencyFormatter } from "@/hooks/useCurrencyFormatter";
+import { ExpenseReportDialog } from "@/components/dialogs/ExpenseReportDialog";
 
 interface YearlyExpensesChartProps {
 	year?: number;
@@ -98,19 +99,24 @@ export function YearlyExpensesChart({ year }: YearlyExpensesChartProps) {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>
-					{t("dashboard.expenses.paid")}
-					<Badge
-						variant="outline"
-						className="text-green-600 bg-green-600/10 border-none ml-2 items-center gap-2"
-					>
-						<TrendingUp className="h-4 w-4" />
-						<span>{formatCurrency(data.totalRealized)}</span>
-					</Badge>
-				</CardTitle>
-				<CardDescription>
-					{periodText} {year || new Date().getFullYear()}
-				</CardDescription>
+				<div className="flex items-start justify-between">
+					<div className="space-y-1.5">
+						<CardTitle>
+							{t("dashboard.expenses.paid")}
+							<Badge
+								variant="outline"
+								className="text-green-600 bg-green-600/10 border-none ml-2 items-center gap-2"
+							>
+								<TrendingUp className="h-4 w-4" />
+								<span>{formatCurrency(data.totalRealized)}</span>
+							</Badge>
+						</CardTitle>
+						<CardDescription>
+							{periodText} {year || new Date().getFullYear()}
+						</CardDescription>
+					</div>
+					<ExpenseReportDialog currentYear={year} />
+				</div>
 			</CardHeader>
 			<CardContent>
 				<ChartContainer config={chartConfig} className="h-[200px] w-full">

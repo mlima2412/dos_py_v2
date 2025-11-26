@@ -26,6 +26,8 @@ import {
 	vendaControllerPaginateQueryKey,
 	useVendaControllerFinalizeDireta,
 	useVendaControllerFinalizarBrindePermuta,
+	useVendaControllerFinalizarCondicional,
+	useVendaControllerConfirmarCondicional,
 } from "@/api-client";
 import type { SkuListingRef } from "@/components/SkuListing";
 import type { SelectedSkusListRef } from "@/components/SelectedSkusList";
@@ -41,6 +43,7 @@ import { useVendaForm } from "./hooks/useVendaForm";
 import { useVendaData } from "./hooks/useVendaData";
 import { useVendaMutations } from "./hooks/useVendaMutations";
 import { useVendaTotals } from "./hooks/useVendaTotals";
+import { useCondicionalDevolucao } from "./hooks/useCondicionalDevolucao";
 import { NavigationSteps } from "./components/NavigationSteps";
 import { DadosBasicos } from "./components/DadosBasicos";
 import { SelecaoItens } from "./components/SelecaoItens";
@@ -206,11 +209,40 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 		hasInitializedVendaRef.current = false;
 	}, [publicId]);
 
+	// Update form items when vendaExistente changes (for conditional returns)
+	useEffect(() => {
+		if (effectiveMode === "create") return;
+		if (!vendaExistente || !mapVendaItemToFormData) return;
+		if (!hasInitializedVendaRef.current) return; // Only update after initial load
+
+		const currentItens = watch("itens");
+		const newItens = vendaExistente.VendaItem?.map(mapVendaItemToFormData) || [];
+
+		// Check if items have changed (comparing qtdDevolvida)
+		const hasChanges = newItens.some((newItem, index) => {
+			const currentItem = currentItens[index];
+			if (!currentItem) return true;
+			return (
+				currentItem.qtdDevolvida !== newItem.qtdDevolvida ||
+				currentItem.qtdAceita !== newItem.qtdAceita
+			);
+		});
+
+		if (hasChanges) {
+			replace(newItens);
+		}
+	}, [vendaExistente, mapVendaItemToFormData, effectiveMode, watch, replace]);
+
 	const itensSelecionados = watch("itens");
 	const descontoTotal = watch("descontoTotal");
 	const valorFrete = watch("valorFrete");
 	const comissao = watch("comissao");
 	const tipoVenda = watch("tipo");
+
+	// Determinar se é uma venda condicional em modo devolução (status ABERTA)
+	const isCondicionalAberta = useMemo(() => {
+		return tipoVenda === "CONDICIONAL" && vendaResumo?.status === "ABERTA";
+	}, [tipoVenda, vendaResumo?.status]);
 
 	// Get selected local from locais options
 	const selectedLocal = useMemo(() => {
@@ -225,7 +257,8 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 		itensSelecionados,
 		descontoTotal,
 		valorFrete,
-		comissao
+		comissao,
+		isCondicionalAberta
 	);
 
 	// Determina se as abas de faturamento e pagamento devem ser mostradas
@@ -267,6 +300,21 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 		skuListingRef,
 		selectedSkusRef,
 	});
+
+	// Hook para processar devoluções em vendas condicionais
+	const { processarDevolucao } = useCondicionalDevolucao(
+		vendaResumo?.publicId,
+		parceiroIdNumber,
+		itensSelecionados,
+		() => {
+			// Callback após devolução bem-sucedida - recarregar venda
+			if (vendaResumo?.publicId) {
+				queryClient.invalidateQueries({
+					queryKey: vendaControllerFindOneQueryKey(vendaResumo.publicId),
+				});
+			}
+		}
+	);
 
 	// Finalization hooks
 	const finalizacaoMutation = useVendaControllerFinalizeDireta({
@@ -312,6 +360,56 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 					const mensagem =
 						error?.data?.message ??
 						t("salesOrders.form.messages.finalizeError");
+					showError(mensagem);
+				},
+			},
+		});
+
+	const finalizacaoCondicionalMutation =
+		useVendaControllerFinalizarCondicional({
+			mutation: {
+				onSuccess: () => {
+					showSuccess(t("salesOrders.form.messages.finalizeSuccess"));
+					if (vendaResumo?.publicId) {
+						queryClient.invalidateQueries({
+							queryKey: vendaControllerFindOneQueryKey(vendaResumo.publicId),
+						});
+					}
+					queryClient.invalidateQueries({
+						queryKey: vendaControllerPaginateQueryKey(),
+					});
+					navigate("/pedidoVendas");
+				},
+				onError: error => {
+					console.error("Erro ao finalizar condicional:", error);
+					const mensagem =
+						error?.data?.message ??
+						t("salesOrders.form.messages.finalizeError");
+					showError(mensagem);
+				},
+			},
+		});
+
+	const confirmarCondicionalMutation =
+		useVendaControllerConfirmarCondicional({
+			mutation: {
+				onSuccess: () => {
+					showSuccess(t("salesOrders.form.messages.conditionalConfirmed"));
+					if (vendaResumo?.publicId) {
+						queryClient.invalidateQueries({
+							queryKey: vendaControllerFindOneQueryKey(vendaResumo.publicId),
+						});
+					}
+					queryClient.invalidateQueries({
+						queryKey: vendaControllerPaginateQueryKey(),
+					});
+					navigate("/pedidoVendas");
+				},
+				onError: error => {
+					console.error("Erro ao confirmar condicional:", error);
+					const mensagem =
+						error?.data?.message ??
+						t("salesOrders.form.messages.confirmConditionalError");
 					showError(mensagem);
 				},
 			},
@@ -464,22 +562,65 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 				tipoVendaAtual === "CONDICIONAL" &&
 				vendaResumo?.status === "PEDIDO"
 			) {
-				// TODO: Implementar endpoint específico para confirmar CONDICIONAL
-				// await confirmarCondicional(vendaResumo.publicId, parceiroIdNumber);
-				showSuccess(
-					"Venda CONDICIONAL confirmada com sucesso (endpoint pendente)"
-				);
-				queryClient.invalidateQueries({
-					queryKey: vendaControllerFindOneQueryKey(vendaResumo.publicId),
+				// Confirmar envio de condicional (baixa estoque, muda status para ABERTA)
+				await confirmarCondicionalMutation.mutateAsync({
+					publicId: vendaResumo.publicId,
+					headers: {
+						"x-parceiro-id": parceiroIdNumber,
+					},
 				});
-				queryClient.invalidateQueries({
-					queryKey: vendaControllerPaginateQueryKey(),
-				});
-				navigate("/pedidoVendas");
 				return;
 			}
 
-			// 3. Validar e processar pagamentos para vendas normais (DIRETA ou CONDICIONAL não-PEDIDO)
+			// Se é CONDICIONAL com status ABERTA, finalizar após devoluções
+			if (
+				tipoVendaAtual === "CONDICIONAL" &&
+				vendaResumo?.status === "ABERTA"
+			) {
+				// 3a. Validar e processar pagamentos para vendas condicionais
+				const pagamentos = getValues("pagamentos") || [];
+
+				if (pagamentos.length === 0) {
+					showError("Adicione ao menos uma forma de pagamento");
+					return;
+				}
+
+				// 3b. Preparar payload de finalização
+				const pagamentosPayload = pagamentos.map(pagamento => ({
+					formaPagamentoId: pagamento.formaPagamentoId,
+					tipo: pagamento.tipo,
+					valor: pagamento.valor,
+					entrada: pagamento.entrada,
+					valorDelivery: pagamento.valorDelivery,
+					vencimento: pagamento.vencimento
+						? pagamento.vencimento.toISOString()
+						: undefined,
+					numeroParcelas: pagamento.numeroParcelas,
+					primeiraParcelaData: pagamento.primeiraParcelaData
+						? pagamento.primeiraParcelaData.toISOString()
+						: undefined,
+				}));
+
+				// 3c. Chamar endpoint de finalização de condicional
+				await finalizacaoCondicionalMutation.mutateAsync({
+					publicId: vendaResumo.publicId,
+					headers: {
+						"x-parceiro-id": parceiroIdNumber,
+					},
+					data: {
+						valorFrete: getValues("valorFrete") ?? undefined,
+						descontoTotal: getValues("descontoTotal") ?? undefined,
+						valorComissao: getValues("comissao") ?? undefined,
+						numeroFatura: getValues("numeroFatura") ?? undefined,
+						nomeFatura: getValues("nomeFatura") ?? undefined,
+						ruccnpj: getValues("ruccnpjFatura") ?? undefined,
+						pagamentos: pagamentosPayload as any, // Tipo gerado incorretamente pelo Kubb como any[][]
+					},
+				});
+				return;
+			}
+
+			// 3. Validar e processar pagamentos para vendas normais (DIRETA)
 			const pagamentos = getValues("pagamentos") || [];
 
 			if (pagamentos.length === 0) {
@@ -532,6 +673,7 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 		getValues,
 		finalizacaoMutation,
 		finalizacaoBrindePermutaMutation,
+		finalizacaoCondicionalMutation,
 		showError,
 		showSuccess,
 		queryClient,
@@ -628,6 +770,8 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 									shouldShowBillingAndPayment ? "billing" : "review"
 								)
 							}
+							isCondicionalAberta={isCondicionalAberta}
+							onProcessarDevolucao={processarDevolucao}
 						/>
 					)}
 
@@ -659,7 +803,8 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 								isFinalizing={
 									isFinalizing ||
 									finalizacaoMutation.isPending ||
-									finalizacaoBrindePermutaMutation.isPending
+									finalizacaoBrindePermutaMutation.isPending ||
+									finalizacaoCondicionalMutation.isPending
 								}
 								isSubmitting={isSubmitting}
 								onBack={() =>
@@ -668,6 +813,7 @@ export const FormularioVenda: React.FC<FormularioVendaProps> = ({ mode }) => {
 								tipoVenda={tipoVenda}
 								shouldShowBillingAndPayment={shouldShowBillingAndPayment}
 								valorTotalVenda={vendaExistente?.valorTotal ?? null}
+								isCondicionalAberta={isCondicionalAberta}
 							/>
 						)}
 				</div>

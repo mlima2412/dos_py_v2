@@ -70,18 +70,18 @@ export function Dashboard() {
 
 	if (error) {
 		return (
-			
+
 				<div className="p-6">
 					<div className="text-red-500">
 						Erro ao carregar dados do dashboard: {error.message}
 					</div>
 				</div>
-			
+
 		);
 	}
 
 	return (
-		
+
 			<div className="space-y-6">
 				{/* Breadcrumb e Seletor de Ano */}
 				<div className="flex items-center justify-between">
@@ -124,7 +124,7 @@ export function Dashboard() {
 							</div>
 						</CardHeader>
 						<CardContent>
-							<div className="text-2xl font-bold">
+							<div className="text-lg font-bold">
 								{isLoading ? "Carregando..." : totalMes}
 							</div>
 							<p className="text-xs text-muted-foreground">
@@ -143,7 +143,7 @@ export function Dashboard() {
 							</div>
 						</CardHeader>
 						<CardContent>
-							<div className="text-2xl font-bold">
+							<div className="text-lg font-bold">
 								{isLoading ? "Carregando..." : totalAno}
 							</div>
 							<p className="text-xs text-muted-foreground">
@@ -162,7 +162,7 @@ export function Dashboard() {
 							</div>
 						</CardHeader>
 						<CardContent>
-							<div className="text-2xl font-bold">
+							<div className="text-lg font-bold">
 								{isLoading ? "Carregando..." : pendentesMes}
 							</div>
 							<p className="text-xs text-muted-foreground">
@@ -181,7 +181,7 @@ export function Dashboard() {
 							</div>
 						</CardHeader>
 						<CardContent>
-							<div className="text-2xl font-bold">
+							<div className="text-lg font-bold">
 								{isLoading ? "Carregando..." : mediaMensal}
 							</div>
 							<p className="text-xs text-muted-foreground">
@@ -227,6 +227,6 @@ export function Dashboard() {
 					<YearlyExpensesChart year={selectedYear} />
 				</div>
 			</div>
-		
+
 	);
 }

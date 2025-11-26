@@ -23,6 +23,7 @@ import { CreateDespesaDto } from './dto/create-despesa.dto';
 import { PaginatedQueryDto } from './dto/paginated-query.dto';
 import { PaginatedDespesaResponseDto } from './dto/paginated-despesa-response.dto';
 import { YearItemDto } from './dto/year-item-response.dto';
+import { ExpenseReportFilterDto } from './dto/expense-report-filter.dto';
 
 import { Despesa } from './entities/despesa.entity';
 import { ParceiroId } from '../auth/decorators/parceiro-id.decorator';
@@ -124,6 +125,34 @@ export class DespesasController {
   })
   async listYears(@ParceiroId() parceiroId: number): Promise<YearItemDto[]> {
     return this.despesasService.listYears(parceiroId);
+  }
+
+  @Get('relatorio-dados')
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({
+    summary: 'Busca dados para geração de relatório de despesas',
+  })
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro logado',
+    required: true,
+    schema: { type: 'integer', example: 1 },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Dados das despesas para o relatório',
+  })
+  async getReportData(
+    @ParceiroId() parceiroId: number,
+    @Query('year') year?: string,
+    @Query('month') month?: string,
+  ) {
+    const monthNumber = month ? parseInt(month) : undefined;
+    return this.despesasService.getExpensesForReport(
+      parceiroId,
+      year,
+      monthNumber,
+    );
   }
 
   @Get(':publicId')

@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Plus, Minus, Trash2 } from "lucide-react";
 import { useCurrencyFormatter } from "@/hooks/useCurrencyFormatter";
+import { cn } from "@/lib/utils";
 
 export interface SelectedSkuItemProps<T = Record<string, unknown>> {
 	sku: T & {
@@ -33,6 +34,9 @@ export interface SelectedSkuItemProps<T = Record<string, unknown>> {
 	discount?: number;
 	price?: number;
 	onDoubleClick?: (skuId: number) => void;
+	qtdDevolvida?: number; // Quantidade devolvida (vendas condicionais)
+	qtdReservada?: number; // Quantidade reservada total
+	isReturned?: boolean; // Se foi totalmente devolvido (qtdDevolvida >= qtdReservada)
 }
 
 export const SelectedSkuItem = <T,>({
@@ -49,6 +53,9 @@ export const SelectedSkuItem = <T,>({
 	discount = 0,
 	price = 0,
 	onDoubleClick,
+	qtdDevolvida = 0,
+	qtdReservada,
+	isReturned = false,
 }: SelectedSkuItemProps<T>) => {
 	const { formatCurrency } = useCurrencyFormatter();
 
@@ -60,12 +67,20 @@ export const SelectedSkuItem = <T,>({
 	return (
 		<div
 			ref={el => setRef?.(sku.id, el)}
-			className="flex items-center justify-between p-1.5 border rounded-md transition-all duration-300 hover:border-[#FB5A4F] cursor-pointer"
+			className={cn(
+				"flex items-center justify-between p-1.5 border rounded-md transition-all duration-300 hover:border-[#FB5A4F] cursor-pointer",
+				isReturned && "opacity-50 bg-muted"
+			)}
 			onDoubleClick={() => onDoubleClick?.(sku.id)}
 		>
 			<div className="flex-1 min-w-0">
 				<div className="flex items-center gap-1">
-					<span className="font-mono text-xs">
+					<span
+						className={cn(
+							"font-mono text-xs",
+							isReturned && "line-through text-muted-foreground"
+						)}
+					>
 						{product.id.toString().padStart(3, "0")}-
 						{sku.id.toString().padStart(3, "0")}
 					</span>
@@ -86,7 +101,28 @@ export const SelectedSkuItem = <T,>({
 						<span className="text-xs text-muted-foreground">{sku.tamanho}</span>
 					)}
 				</div>
-				<p className="text-xs font-medium truncate mt-0.5">{product.nome}</p>
+				<p
+					className={cn(
+						"text-xs font-medium truncate mt-0.5",
+						isReturned && "line-through text-muted-foreground"
+					)}
+				>
+					{product.nome}
+				</p>
+
+				{/* Indicador de devolução */}
+				{qtdReservada && qtdDevolvida > 0 && (
+					<div className="flex items-center gap-1 mt-1">
+						<span className="text-xs text-orange-600">
+							Devolvido: {qtdDevolvida}/{qtdReservada}
+						</span>
+					</div>
+				)}
+				{isReturned && (
+					<span className="text-xs text-red-600 font-semibold">
+						✓ Totalmente Devolvido
+					</span>
+				)}
 			</div>
 			<div className="flex items-center gap-1">
 				{showDiscount && price > 0 && (

@@ -105,6 +105,8 @@ export type { DespesasControllerFindOneQueryKey } from "./hooks/useDespesasContr
 export type { DespesasControllerFindOneSuspenseQueryKey } from "./hooks/useDespesasControllerFindOneSuspense.ts";
 export type { DespesasControllerFindPaginatedQueryKey } from "./hooks/useDespesasControllerFindPaginated.ts";
 export type { DespesasControllerFindPaginatedSuspenseQueryKey } from "./hooks/useDespesasControllerFindPaginatedSuspense.ts";
+export type { DespesasControllerGetReportDataQueryKey } from "./hooks/useDespesasControllerGetReportData.ts";
+export type { DespesasControllerGetReportDataSuspenseQueryKey } from "./hooks/useDespesasControllerGetReportDataSuspense.ts";
 export type { DespesasControllerListYearsQueryKey } from "./hooks/useDespesasControllerListYears.ts";
 export type { DespesasControllerListYearsSuspenseQueryKey } from "./hooks/useDespesasControllerListYearsSuspense.ts";
 export type { DespesasControllerRemoveMutationKey } from "./hooks/useDespesasControllerRemove.ts";
@@ -345,8 +347,10 @@ export type { UsuariosControllerFindPaginatedQueryKey } from "./hooks/useUsuario
 export type { UsuariosControllerFindPaginatedSuspenseQueryKey } from "./hooks/useUsuariosControllerFindPaginatedSuspense.ts";
 export type { UsuariosControllerInitializeSystemMutationKey } from "./hooks/useUsuariosControllerInitializeSystem.ts";
 export type { UsuariosControllerUpdateMutationKey } from "./hooks/useUsuariosControllerUpdate.ts";
+export type { VendaControllerConfirmarCondicionalMutationKey } from "./hooks/useVendaControllerConfirmarCondicional.ts";
 export type { VendaControllerCreateMutationKey } from "./hooks/useVendaControllerCreate.ts";
 export type { VendaControllerFinalizarBrindePermutaMutationKey } from "./hooks/useVendaControllerFinalizarBrindePermuta.ts";
+export type { VendaControllerFinalizarCondicionalMutationKey } from "./hooks/useVendaControllerFinalizarCondicional.ts";
 export type { VendaControllerFinalizeDiretaMutationKey } from "./hooks/useVendaControllerFinalizeDireta.ts";
 export type { VendaControllerFindAllQueryKey } from "./hooks/useVendaControllerFindAll.ts";
 export type { VendaControllerFindAllSuspenseQueryKey } from "./hooks/useVendaControllerFindAllSuspense.ts";
@@ -356,6 +360,7 @@ export type { VendaControllerFindOneQueryKey } from "./hooks/useVendaControllerF
 export type { VendaControllerFindOneSuspenseQueryKey } from "./hooks/useVendaControllerFindOneSuspense.ts";
 export type { VendaControllerPaginateQueryKey } from "./hooks/useVendaControllerPaginate.ts";
 export type { VendaControllerPaginateSuspenseQueryKey } from "./hooks/useVendaControllerPaginateSuspense.ts";
+export type { VendaControllerProcessarDevolucaoMutationKey } from "./hooks/useVendaControllerProcessarDevolucao.ts";
 export type { VendaControllerRemoveMutationKey } from "./hooks/useVendaControllerRemove.ts";
 export type { VendaControllerUpdateMutationKey } from "./hooks/useVendaControllerUpdate.ts";
 export type { VendaItemControllerCreateMutationKey } from "./hooks/useVendaItemControllerCreate.ts";
@@ -492,6 +497,7 @@ export type { DespesasControllerCreateHeaderParams, DespesasControllerCreate201,
 export type { DespesasControllerFindAllHeaderParams, DespesasControllerFindAll200, DespesasControllerFindAllQueryResponse, DespesasControllerFindAllQuery } from "./types/DespesasControllerFindAll.ts";
 export type { DespesasControllerFindOnePathParams, DespesasControllerFindOneHeaderParams, DespesasControllerFindOne200, DespesasControllerFindOne404, DespesasControllerFindOneQueryResponse, DespesasControllerFindOneQuery } from "./types/DespesasControllerFindOne.ts";
 export type { DespesasControllerFindPaginatedQueryParams, DespesasControllerFindPaginated200, DespesasControllerFindPaginatedQueryResponse, DespesasControllerFindPaginatedQuery } from "./types/DespesasControllerFindPaginated.ts";
+export type { DespesasControllerGetReportDataQueryParams, DespesasControllerGetReportDataHeaderParams, DespesasControllerGetReportData200, DespesasControllerGetReportDataQueryResponse, DespesasControllerGetReportDataQuery } from "./types/DespesasControllerGetReportData.ts";
 export type { DespesasControllerListYearsHeaderParams, DespesasControllerListYears200, DespesasControllerListYearsQueryResponse, DespesasControllerListYearsQuery } from "./types/DespesasControllerListYears.ts";
 export type { DespesasControllerRemovePathParams, DespesasControllerRemoveHeaderParams, DespesasControllerRemove204, DespesasControllerRemove404, DespesasControllerRemoveMutationResponse, DespesasControllerRemoveMutation } from "./types/DespesasControllerRemove.ts";
 export type { DespesasRecorrentesControllerCreate201, DespesasRecorrentesControllerCreate400, DespesasRecorrentesControllerCreate401, DespesasRecorrentesControllerCreateMutationRequest, DespesasRecorrentesControllerCreateMutationResponse, DespesasRecorrentesControllerCreateMutation } from "./types/DespesasRecorrentesControllerCreate.ts";
@@ -513,6 +519,7 @@ export type { EstoqueSkuControllerFindOnePathParams, EstoqueSkuControllerFindOne
 export type { EstoqueSkuControllerRemovePathParams, EstoqueSkuControllerRemove204, EstoqueSkuControllerRemove404, EstoqueSkuControllerRemoveMutationResponse, EstoqueSkuControllerRemoveMutation } from "./types/EstoqueSkuControllerRemove.ts";
 export type { EstoqueSkuControllerUpdatePathParams, EstoqueSkuControllerUpdate200, EstoqueSkuControllerUpdate404, EstoqueSkuControllerUpdateMutationRequest, EstoqueSkuControllerUpdateMutationResponse, EstoqueSkuControllerUpdateMutation } from "./types/EstoqueSkuControllerUpdate.ts";
 export type { EtiquetaPedidoCompraDto } from "./types/EtiquetaPedidoCompraDto.ts";
+export type { FinalizeVendaCondicionalDto } from "./types/FinalizeVendaCondicionalDto.ts";
 export type { FinalizeVendaDiretaDto } from "./types/FinalizeVendaDiretaDto.ts";
 export type { FinalizeVendaSemPagamentoDto } from "./types/FinalizeVendaSemPagamentoDto.ts";
 export type { FormaPagamentoControllerAtivarPathParams, FormaPagamentoControllerAtivarHeaderParams, FormaPagamentoControllerAtivar200, FormaPagamentoControllerAtivar404, FormaPagamentoControllerAtivarMutationResponse, FormaPagamentoControllerAtivarMutation } from "./types/FormaPagamentoControllerAtivar.ts";
@@ -632,6 +639,7 @@ export type { PerfisControllerFindOnePathParams, PerfisControllerFindOne200, Per
 export type { PerfisControllerRemovePathParams, PerfisControllerRemove200, PerfisControllerRemove400, PerfisControllerRemove404, PerfisControllerRemoveMutationResponse, PerfisControllerRemoveMutation } from "./types/PerfisControllerRemove.ts";
 export type { PerfisControllerUpdatePathParams, PerfisControllerUpdate200, PerfisControllerUpdate400, PerfisControllerUpdate404, PerfisControllerUpdate409, PerfisControllerUpdateMutationRequest, PerfisControllerUpdateMutationResponse, PerfisControllerUpdateMutation } from "./types/PerfisControllerUpdate.ts";
 export type { ProcessaPedidoCompraDtoPaymentTypeEnumKey, ProcessaPedidoCompraDto } from "./types/ProcessaPedidoCompraDto.ts";
+export type { ProcessDevolucaoItemDto } from "./types/ProcessDevolucaoItemDto.ts";
 export type { Produto } from "./types/Produto.ts";
 export type { ProdutoControllerActivatePathParams, ProdutoControllerActivateHeaderParams, ProdutoControllerActivate200, ProdutoControllerActivate404, ProdutoControllerActivateMutationResponse, ProdutoControllerActivateMutation } from "./types/ProdutoControllerActivate.ts";
 export type { ProdutoControllerCreateHeaderParams, ProdutoControllerCreate201, ProdutoControllerCreate400, ProdutoControllerCreate409, ProdutoControllerCreateMutationRequest, ProdutoControllerCreateMutationResponse, ProdutoControllerCreateMutation } from "./types/ProdutoControllerCreate.ts";
@@ -746,13 +754,16 @@ export type { UsuariosControllerInitializeSystem201, UsuariosControllerInitializ
 export type { UsuariosControllerUpdatePathParams, UsuariosControllerUpdate200, UsuariosControllerUpdate400, UsuariosControllerUpdate404, UsuariosControllerUpdate409, UsuariosControllerUpdateMutationRequest, UsuariosControllerUpdateMutationResponse, UsuariosControllerUpdateMutation } from "./types/UsuariosControllerUpdate.ts";
 export type { ValidateTokenResponseDto } from "./types/ValidateTokenResponseDto.ts";
 export type { VendaTipoEnumKey, VendaStatusEnumKey, Venda } from "./types/Venda.ts";
+export type { VendaControllerConfirmarCondicionalPathParams, VendaControllerConfirmarCondicionalHeaderParams, VendaControllerConfirmarCondicional200, VendaControllerConfirmarCondicionalMutationResponse, VendaControllerConfirmarCondicionalMutation } from "./types/VendaControllerConfirmarCondicional.ts";
 export type { VendaControllerCreateHeaderParams, VendaControllerCreate201, VendaControllerCreate400, VendaControllerCreateMutationRequest, VendaControllerCreateMutationResponse, VendaControllerCreateMutation } from "./types/VendaControllerCreate.ts";
 export type { VendaControllerFinalizarBrindePermutaPathParams, VendaControllerFinalizarBrindePermutaHeaderParams, VendaControllerFinalizarBrindePermuta200, VendaControllerFinalizarBrindePermutaMutationRequest, VendaControllerFinalizarBrindePermutaMutationResponse, VendaControllerFinalizarBrindePermutaMutation } from "./types/VendaControllerFinalizarBrindePermuta.ts";
+export type { VendaControllerFinalizarCondicionalPathParams, VendaControllerFinalizarCondicionalHeaderParams, VendaControllerFinalizarCondicional200, VendaControllerFinalizarCondicionalMutationRequest, VendaControllerFinalizarCondicionalMutationResponse, VendaControllerFinalizarCondicionalMutation } from "./types/VendaControllerFinalizarCondicional.ts";
 export type { VendaControllerFinalizeDiretaPathParams, VendaControllerFinalizeDiretaHeaderParams, VendaControllerFinalizeDireta200, VendaControllerFinalizeDiretaMutationRequest, VendaControllerFinalizeDiretaMutationResponse, VendaControllerFinalizeDiretaMutation } from "./types/VendaControllerFinalizeDireta.ts";
 export type { VendaControllerFindAllHeaderParams, VendaControllerFindAll200, VendaControllerFindAllQueryResponse, VendaControllerFindAllQuery } from "./types/VendaControllerFindAll.ts";
 export type { VendaControllerFindInvoiceNamesPathParams, VendaControllerFindInvoiceNamesHeaderParams, VendaControllerFindInvoiceNames200, VendaControllerFindInvoiceNamesQueryResponse, VendaControllerFindInvoiceNamesQuery } from "./types/VendaControllerFindInvoiceNames.ts";
 export type { VendaControllerFindOnePathParams, VendaControllerFindOneHeaderParams, VendaControllerFindOne200, VendaControllerFindOne404, VendaControllerFindOneQueryResponse, VendaControllerFindOneQuery } from "./types/VendaControllerFindOne.ts";
 export type { VendaControllerPaginateQueryParamsStatusEnumKey, VendaControllerPaginateQueryParamsFilterTypeEnumKey, VendaControllerPaginateQueryParamsTipoEnumKey, VendaControllerPaginateQueryParams, VendaControllerPaginateHeaderParams, VendaControllerPaginate200, VendaControllerPaginateQueryResponse, VendaControllerPaginateQuery } from "./types/VendaControllerPaginate.ts";
+export type { VendaControllerProcessarDevolucaoPathParams, VendaControllerProcessarDevolucaoHeaderParams, VendaControllerProcessarDevolucao200, VendaControllerProcessarDevolucaoMutationRequest, VendaControllerProcessarDevolucaoMutationResponse, VendaControllerProcessarDevolucaoMutation } from "./types/VendaControllerProcessarDevolucao.ts";
 export type { VendaControllerRemovePathParams, VendaControllerRemoveHeaderParams, VendaControllerRemove204, VendaControllerRemove400, VendaControllerRemove401, VendaControllerRemove403, VendaControllerRemove404, VendaControllerRemoveMutationResponse, VendaControllerRemoveMutation } from "./types/VendaControllerRemove.ts";
 export type { VendaControllerUpdatePathParams, VendaControllerUpdateHeaderParams, VendaControllerUpdate200, VendaControllerUpdateMutationRequest, VendaControllerUpdateMutationResponse, VendaControllerUpdateMutation } from "./types/VendaControllerUpdate.ts";
 export type { VendaItemControllerCreateHeaderParams, VendaItemControllerCreate201, VendaItemControllerCreate400, VendaItemControllerCreateMutationRequest, VendaItemControllerCreateMutationResponse, VendaItemControllerCreateMutation } from "./types/VendaItemControllerCreate.ts";
@@ -1190,6 +1201,14 @@ export { despesasControllerFindPaginatedSuspenseQueryKey } from "./hooks/useDesp
 export { despesasControllerFindPaginatedSuspense } from "./hooks/useDespesasControllerFindPaginatedSuspense.ts";
 export { despesasControllerFindPaginatedSuspenseQueryOptions } from "./hooks/useDespesasControllerFindPaginatedSuspense.ts";
 export { useDespesasControllerFindPaginatedSuspense } from "./hooks/useDespesasControllerFindPaginatedSuspense.ts";
+export { despesasControllerGetReportDataQueryKey } from "./hooks/useDespesasControllerGetReportData.ts";
+export { despesasControllerGetReportData } from "./hooks/useDespesasControllerGetReportData.ts";
+export { despesasControllerGetReportDataQueryOptions } from "./hooks/useDespesasControllerGetReportData.ts";
+export { useDespesasControllerGetReportData } from "./hooks/useDespesasControllerGetReportData.ts";
+export { despesasControllerGetReportDataSuspenseQueryKey } from "./hooks/useDespesasControllerGetReportDataSuspense.ts";
+export { despesasControllerGetReportDataSuspense } from "./hooks/useDespesasControllerGetReportDataSuspense.ts";
+export { despesasControllerGetReportDataSuspenseQueryOptions } from "./hooks/useDespesasControllerGetReportDataSuspense.ts";
+export { useDespesasControllerGetReportDataSuspense } from "./hooks/useDespesasControllerGetReportDataSuspense.ts";
 export { despesasControllerListYearsQueryKey } from "./hooks/useDespesasControllerListYears.ts";
 export { despesasControllerListYears } from "./hooks/useDespesasControllerListYears.ts";
 export { despesasControllerListYearsQueryOptions } from "./hooks/useDespesasControllerListYears.ts";
@@ -2150,6 +2169,10 @@ export { usuariosControllerUpdateMutationKey } from "./hooks/useUsuariosControll
 export { usuariosControllerUpdate } from "./hooks/useUsuariosControllerUpdate.ts";
 export { usuariosControllerUpdateMutationOptions } from "./hooks/useUsuariosControllerUpdate.ts";
 export { useUsuariosControllerUpdate } from "./hooks/useUsuariosControllerUpdate.ts";
+export { vendaControllerConfirmarCondicionalMutationKey } from "./hooks/useVendaControllerConfirmarCondicional.ts";
+export { vendaControllerConfirmarCondicional } from "./hooks/useVendaControllerConfirmarCondicional.ts";
+export { vendaControllerConfirmarCondicionalMutationOptions } from "./hooks/useVendaControllerConfirmarCondicional.ts";
+export { useVendaControllerConfirmarCondicional } from "./hooks/useVendaControllerConfirmarCondicional.ts";
 export { vendaControllerCreateMutationKey } from "./hooks/useVendaControllerCreate.ts";
 export { vendaControllerCreate } from "./hooks/useVendaControllerCreate.ts";
 export { vendaControllerCreateMutationOptions } from "./hooks/useVendaControllerCreate.ts";
@@ -2158,6 +2181,10 @@ export { vendaControllerFinalizarBrindePermutaMutationKey } from "./hooks/useVen
 export { vendaControllerFinalizarBrindePermuta } from "./hooks/useVendaControllerFinalizarBrindePermuta.ts";
 export { vendaControllerFinalizarBrindePermutaMutationOptions } from "./hooks/useVendaControllerFinalizarBrindePermuta.ts";
 export { useVendaControllerFinalizarBrindePermuta } from "./hooks/useVendaControllerFinalizarBrindePermuta.ts";
+export { vendaControllerFinalizarCondicionalMutationKey } from "./hooks/useVendaControllerFinalizarCondicional.ts";
+export { vendaControllerFinalizarCondicional } from "./hooks/useVendaControllerFinalizarCondicional.ts";
+export { vendaControllerFinalizarCondicionalMutationOptions } from "./hooks/useVendaControllerFinalizarCondicional.ts";
+export { useVendaControllerFinalizarCondicional } from "./hooks/useVendaControllerFinalizarCondicional.ts";
 export { vendaControllerFinalizeDiretaMutationKey } from "./hooks/useVendaControllerFinalizeDireta.ts";
 export { vendaControllerFinalizeDireta } from "./hooks/useVendaControllerFinalizeDireta.ts";
 export { vendaControllerFinalizeDiretaMutationOptions } from "./hooks/useVendaControllerFinalizeDireta.ts";
@@ -2194,6 +2221,10 @@ export { vendaControllerPaginateSuspenseQueryKey } from "./hooks/useVendaControl
 export { vendaControllerPaginateSuspense } from "./hooks/useVendaControllerPaginateSuspense.ts";
 export { vendaControllerPaginateSuspenseQueryOptions } from "./hooks/useVendaControllerPaginateSuspense.ts";
 export { useVendaControllerPaginateSuspense } from "./hooks/useVendaControllerPaginateSuspense.ts";
+export { vendaControllerProcessarDevolucaoMutationKey } from "./hooks/useVendaControllerProcessarDevolucao.ts";
+export { vendaControllerProcessarDevolucao } from "./hooks/useVendaControllerProcessarDevolucao.ts";
+export { vendaControllerProcessarDevolucaoMutationOptions } from "./hooks/useVendaControllerProcessarDevolucao.ts";
+export { useVendaControllerProcessarDevolucao } from "./hooks/useVendaControllerProcessarDevolucao.ts";
 export { vendaControllerRemoveMutationKey } from "./hooks/useVendaControllerRemove.ts";
 export { vendaControllerRemove } from "./hooks/useVendaControllerRemove.ts";
 export { vendaControllerRemoveMutationOptions } from "./hooks/useVendaControllerRemove.ts";
@@ -2357,6 +2388,7 @@ export { despesasControllerCreateHeaderParamsSchema, despesasControllerCreate201
 export { despesasControllerFindAllHeaderParamsSchema, despesasControllerFindAll200Schema, despesasControllerFindAllQueryResponseSchema } from "./schemas/despesasControllerFindAllSchema.ts";
 export { despesasControllerFindOnePathParamsSchema, despesasControllerFindOneHeaderParamsSchema, despesasControllerFindOne200Schema, despesasControllerFindOne404Schema, despesasControllerFindOneQueryResponseSchema } from "./schemas/despesasControllerFindOneSchema.ts";
 export { despesasControllerFindPaginatedQueryParamsSchema, despesasControllerFindPaginated200Schema, despesasControllerFindPaginatedQueryResponseSchema } from "./schemas/despesasControllerFindPaginatedSchema.ts";
+export { despesasControllerGetReportDataQueryParamsSchema, despesasControllerGetReportDataHeaderParamsSchema, despesasControllerGetReportData200Schema, despesasControllerGetReportDataQueryResponseSchema } from "./schemas/despesasControllerGetReportDataSchema.ts";
 export { despesasControllerListYearsHeaderParamsSchema, despesasControllerListYears200Schema, despesasControllerListYearsQueryResponseSchema } from "./schemas/despesasControllerListYearsSchema.ts";
 export { despesasControllerRemovePathParamsSchema, despesasControllerRemoveHeaderParamsSchema, despesasControllerRemove204Schema, despesasControllerRemove404Schema, despesasControllerRemoveMutationResponseSchema } from "./schemas/despesasControllerRemoveSchema.ts";
 export { despesasRecorrentesControllerCreate201Schema, despesasRecorrentesControllerCreate400Schema, despesasRecorrentesControllerCreate401Schema, despesasRecorrentesControllerCreateMutationRequestSchema, despesasRecorrentesControllerCreateMutationResponseSchema } from "./schemas/despesasRecorrentesControllerCreateSchema.ts";
@@ -2378,6 +2410,7 @@ export { estoqueSkuControllerRemovePathParamsSchema, estoqueSkuControllerRemove2
 export { estoqueSkuControllerUpdatePathParamsSchema, estoqueSkuControllerUpdate200Schema, estoqueSkuControllerUpdate404Schema, estoqueSkuControllerUpdateMutationRequestSchema, estoqueSkuControllerUpdateMutationResponseSchema } from "./schemas/estoqueSkuControllerUpdateSchema.ts";
 export { estoqueSkuSchema } from "./schemas/estoqueSkuSchema.ts";
 export { etiquetaPedidoCompraDtoSchema } from "./schemas/etiquetaPedidoCompraDtoSchema.ts";
+export { finalizeVendaCondicionalDtoSchema } from "./schemas/finalizeVendaCondicionalDtoSchema.ts";
 export { finalizeVendaDiretaDtoSchema } from "./schemas/finalizeVendaDiretaDtoSchema.ts";
 export { finalizeVendaSemPagamentoDtoSchema } from "./schemas/finalizeVendaSemPagamentoDtoSchema.ts";
 export { formaPagamentoControllerAtivarPathParamsSchema, formaPagamentoControllerAtivarHeaderParamsSchema, formaPagamentoControllerAtivar200Schema, formaPagamentoControllerAtivar404Schema, formaPagamentoControllerAtivarMutationResponseSchema } from "./schemas/formaPagamentoControllerAtivarSchema.ts";
@@ -2496,6 +2529,7 @@ export { perfisControllerFindOnePathParamsSchema, perfisControllerFindOne200Sche
 export { perfisControllerRemovePathParamsSchema, perfisControllerRemove200Schema, perfisControllerRemove400Schema, perfisControllerRemove404Schema, perfisControllerRemoveMutationResponseSchema } from "./schemas/perfisControllerRemoveSchema.ts";
 export { perfisControllerUpdatePathParamsSchema, perfisControllerUpdate200Schema, perfisControllerUpdate400Schema, perfisControllerUpdate404Schema, perfisControllerUpdate409Schema, perfisControllerUpdateMutationRequestSchema, perfisControllerUpdateMutationResponseSchema } from "./schemas/perfisControllerUpdateSchema.ts";
 export { processaPedidoCompraDtoSchema } from "./schemas/processaPedidoCompraDtoSchema.ts";
+export { processDevolucaoItemDtoSchema } from "./schemas/processDevolucaoItemDtoSchema.ts";
 export { produtoControllerActivatePathParamsSchema, produtoControllerActivateHeaderParamsSchema, produtoControllerActivate200Schema, produtoControllerActivate404Schema, produtoControllerActivateMutationResponseSchema } from "./schemas/produtoControllerActivateSchema.ts";
 export { produtoControllerCreateHeaderParamsSchema, produtoControllerCreate201Schema, produtoControllerCreate400Schema, produtoControllerCreate409Schema, produtoControllerCreateMutationRequestSchema, produtoControllerCreateMutationResponseSchema } from "./schemas/produtoControllerCreateSchema.ts";
 export { produtoControllerDeactivatePathParamsSchema, produtoControllerDeactivateHeaderParamsSchema, produtoControllerDeactivate200Schema, produtoControllerDeactivate404Schema, produtoControllerDeactivateMutationResponseSchema } from "./schemas/produtoControllerDeactivateSchema.ts";
@@ -2609,13 +2643,16 @@ export { usuariosControllerFindPaginatedQueryParamsSchema, usuariosControllerFin
 export { usuariosControllerInitializeSystem201Schema, usuariosControllerInitializeSystemMutationResponseSchema } from "./schemas/usuariosControllerInitializeSystemSchema.ts";
 export { usuariosControllerUpdatePathParamsSchema, usuariosControllerUpdate200Schema, usuariosControllerUpdate400Schema, usuariosControllerUpdate404Schema, usuariosControllerUpdate409Schema, usuariosControllerUpdateMutationRequestSchema, usuariosControllerUpdateMutationResponseSchema } from "./schemas/usuariosControllerUpdateSchema.ts";
 export { validateTokenResponseDtoSchema } from "./schemas/validateTokenResponseDtoSchema.ts";
+export { vendaControllerConfirmarCondicionalPathParamsSchema, vendaControllerConfirmarCondicionalHeaderParamsSchema, vendaControllerConfirmarCondicional200Schema, vendaControllerConfirmarCondicionalMutationResponseSchema } from "./schemas/vendaControllerConfirmarCondicionalSchema.ts";
 export { vendaControllerCreateHeaderParamsSchema, vendaControllerCreate201Schema, vendaControllerCreate400Schema, vendaControllerCreateMutationRequestSchema, vendaControllerCreateMutationResponseSchema } from "./schemas/vendaControllerCreateSchema.ts";
 export { vendaControllerFinalizarBrindePermutaPathParamsSchema, vendaControllerFinalizarBrindePermutaHeaderParamsSchema, vendaControllerFinalizarBrindePermuta200Schema, vendaControllerFinalizarBrindePermutaMutationRequestSchema, vendaControllerFinalizarBrindePermutaMutationResponseSchema } from "./schemas/vendaControllerFinalizarBrindePermutaSchema.ts";
+export { vendaControllerFinalizarCondicionalPathParamsSchema, vendaControllerFinalizarCondicionalHeaderParamsSchema, vendaControllerFinalizarCondicional200Schema, vendaControllerFinalizarCondicionalMutationRequestSchema, vendaControllerFinalizarCondicionalMutationResponseSchema } from "./schemas/vendaControllerFinalizarCondicionalSchema.ts";
 export { vendaControllerFinalizeDiretaPathParamsSchema, vendaControllerFinalizeDiretaHeaderParamsSchema, vendaControllerFinalizeDireta200Schema, vendaControllerFinalizeDiretaMutationRequestSchema, vendaControllerFinalizeDiretaMutationResponseSchema } from "./schemas/vendaControllerFinalizeDiretaSchema.ts";
 export { vendaControllerFindAllHeaderParamsSchema, vendaControllerFindAll200Schema, vendaControllerFindAllQueryResponseSchema } from "./schemas/vendaControllerFindAllSchema.ts";
 export { vendaControllerFindInvoiceNamesPathParamsSchema, vendaControllerFindInvoiceNamesHeaderParamsSchema, vendaControllerFindInvoiceNames200Schema, vendaControllerFindInvoiceNamesQueryResponseSchema } from "./schemas/vendaControllerFindInvoiceNamesSchema.ts";
 export { vendaControllerFindOnePathParamsSchema, vendaControllerFindOneHeaderParamsSchema, vendaControllerFindOne200Schema, vendaControllerFindOne404Schema, vendaControllerFindOneQueryResponseSchema } from "./schemas/vendaControllerFindOneSchema.ts";
 export { vendaControllerPaginateQueryParamsSchema, vendaControllerPaginateHeaderParamsSchema, vendaControllerPaginate200Schema, vendaControllerPaginateQueryResponseSchema } from "./schemas/vendaControllerPaginateSchema.ts";
+export { vendaControllerProcessarDevolucaoPathParamsSchema, vendaControllerProcessarDevolucaoHeaderParamsSchema, vendaControllerProcessarDevolucao200Schema, vendaControllerProcessarDevolucaoMutationRequestSchema, vendaControllerProcessarDevolucaoMutationResponseSchema } from "./schemas/vendaControllerProcessarDevolucaoSchema.ts";
 export { vendaControllerRemovePathParamsSchema, vendaControllerRemoveHeaderParamsSchema, vendaControllerRemove204Schema, vendaControllerRemove400Schema, vendaControllerRemove401Schema, vendaControllerRemove403Schema, vendaControllerRemove404Schema, vendaControllerRemoveMutationResponseSchema } from "./schemas/vendaControllerRemoveSchema.ts";
 export { vendaControllerUpdatePathParamsSchema, vendaControllerUpdateHeaderParamsSchema, vendaControllerUpdate200Schema, vendaControllerUpdateMutationRequestSchema, vendaControllerUpdateMutationResponseSchema } from "./schemas/vendaControllerUpdateSchema.ts";
 export { vendaItemControllerCreateHeaderParamsSchema, vendaItemControllerCreate201Schema, vendaItemControllerCreate400Schema, vendaItemControllerCreateMutationRequestSchema, vendaItemControllerCreateMutationResponseSchema } from "./schemas/vendaItemControllerCreateSchema.ts";

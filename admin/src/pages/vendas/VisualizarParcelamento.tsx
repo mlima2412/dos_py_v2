@@ -1,7 +1,8 @@
 import React, { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import CurrencyInput from "react-currency-input-field";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
 	Breadcrumb,
@@ -28,7 +29,6 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Plus, CheckCircle2 } from "lucide-react";
 import { usePartnerContext } from "@/hooks/usePartnerContext";
@@ -37,6 +37,8 @@ import {
 	useParcelamentoControllerFindParcelas,
 	useParcelamentoControllerMarcarParcelaPaga,
 	useParcelamentoControllerCriarParcelaEspontanea,
+	parcelamentoControllerFindOneQueryKey,
+	parcelamentoControllerFindParcelasQueryKey,
 } from "@/api-client";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -110,11 +112,11 @@ export const VisualizarParcelamento: React.FC = () => {
 			setSelectedParcelaId(null);
 
 			// Atualizar dados
-			queryClient.invalidateQueries({
-				queryKey: ["parcelamentoControllerFindParcelas"],
+			await queryClient.invalidateQueries({
+				queryKey: parcelamentoControllerFindParcelasQueryKey(parcelamentoId),
 			});
-			queryClient.invalidateQueries({
-				queryKey: ["parcelamentoControllerFindOne"],
+			await queryClient.invalidateQueries({
+				queryKey: parcelamentoControllerFindOneQueryKey(parcelamentoId),
 			});
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : t("installments.messages.parcelaPagaError");
@@ -153,11 +155,11 @@ export const VisualizarParcelamento: React.FC = () => {
 			setPaymentValue("");
 
 			// Atualizar dados
-			queryClient.invalidateQueries({
-				queryKey: ["parcelamentoControllerFindParcelas"],
+			await queryClient.invalidateQueries({
+				queryKey: parcelamentoControllerFindParcelasQueryKey(parcelamentoId),
 			});
-			queryClient.invalidateQueries({
-				queryKey: ["parcelamentoControllerFindOne"],
+			await queryClient.invalidateQueries({
+				queryKey: parcelamentoControllerFindOneQueryKey(parcelamentoId),
 			});
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : t("installments.messages.parcelaCriadaError");
@@ -261,7 +263,7 @@ export const VisualizarParcelamento: React.FC = () => {
 						<BreadcrumbSeparator />
 						<BreadcrumbItem>
 							<BreadcrumbPage>
-								{t("installments.view")} #{parcelamento.vendaId}
+								{t("installments.view")}
 							</BreadcrumbPage>
 						</BreadcrumbItem>
 					</BreadcrumbList>
@@ -272,88 +274,83 @@ export const VisualizarParcelamento: React.FC = () => {
 				</Button>
 			</div>
 
-			{/* Cards Row 1 - Informações básicas */}
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-				<Card>
-					<CardHeader className="pb-3">
-						<CardTitle className="text-sm font-medium text-muted-foreground">
-							{t("installments.saleInfo")}
-						</CardTitle>
-					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold">
-							<span className="text-primary">#{parcelamento.vendaId}</span>
-						</div>
-						<p className="text-sm text-muted-foreground mt-1">
-							{parcelamento.clienteNome || t("common.noData")}
-						</p>
-					</CardContent>
-				</Card>
-
-				<Card>
-					<CardHeader className="pb-3">
-						<CardTitle className="text-sm font-medium text-muted-foreground">
-							{t("installments.saleDate")}
-						</CardTitle>
-					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold">
-							{formatDate(new Date())}
-						</div>
-					</CardContent>
-				</Card>
-
-				<Card>
-					<CardHeader className="pb-3">
-						<CardTitle className="text-sm font-medium text-muted-foreground">
-							{t("installments.seller")}
-						</CardTitle>
-					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold">
-							{t("common.user")} #{parcelamento.clienteId}
-						</div>
-					</CardContent>
-				</Card>
+			{/* Cliente - Nome destacado */}
+			<div className="text-lg font-semibold">
+				{parcelamento.clienteNome || t("common.noData")}
 			</div>
 
-			{/* Cards Row 2 - Valores */}
-			<div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+			{/* Cards Row - Informações compactas */}
+			<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
 				<Card>
-					<CardHeader className="pb-3">
-						<CardTitle className="text-sm font-medium text-muted-foreground">
+					<CardHeader className="pb-1 pt-3 px-4">
+						<CardTitle className="text-xs font-medium text-muted-foreground">
+							{t("installments.saleOrder")}
+						</CardTitle>
+					</CardHeader>
+					<CardContent className="px-4 pb-3">
+						{parcelamento.vendaPublicId ? (
+							<Link
+								to={`/pedidoVendas/visualizar/${parcelamento.vendaPublicId}`}
+								className="text-sm font-bold text-primary hover:underline"
+							>
+								#{parcelamento.vendaId}
+							</Link>
+						) : (
+							<div className="text-sm font-bold">
+								#{parcelamento.vendaId}
+							</div>
+						)}
+					</CardContent>
+				</Card>
+
+				<Card>
+					<CardHeader className="pb-1 pt-3 px-4">
+						<CardTitle className="text-xs font-medium text-muted-foreground">
 							{t("installments.totalValue")}
 						</CardTitle>
 					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold">
+					<CardContent className="px-4 pb-3">
+						<div className="text-sm font-bold truncate">
 							{formatCurrency(parcelamento.valorTotal)}
 						</div>
 					</CardContent>
 				</Card>
 
 				<Card>
-					<CardHeader className="pb-3">
-						<CardTitle className="text-sm font-medium text-muted-foreground">
+					<CardHeader className="pb-1 pt-3 px-4">
+						<CardTitle className="text-xs font-medium text-muted-foreground">
 							{t("installments.paidValue")}
 						</CardTitle>
 					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold text-green-600">
+					<CardContent className="px-4 pb-3">
+						<div className="text-sm font-bold text-green-600 truncate">
 							{formatCurrency(parcelamento.valorPago)}
 						</div>
 					</CardContent>
 				</Card>
 
 				<Card>
-					<CardHeader className="pb-3">
-						<CardTitle className="text-sm font-medium text-muted-foreground">
+					<CardHeader className="pb-1 pt-3 px-4">
+						<CardTitle className="text-xs font-medium text-muted-foreground">
+							{t("installments.balance")}
+						</CardTitle>
+					</CardHeader>
+					<CardContent className="px-4 pb-3">
+						<div className="text-sm font-bold text-orange-600 truncate">
+							{formatCurrency(saldoAPagar)}
+						</div>
+					</CardContent>
+				</Card>
+
+				<Card>
+					<CardHeader className="pb-1 pt-3 px-4">
+						<CardTitle className="text-xs font-medium text-muted-foreground">
 							{t("installments.columns.status")}
 						</CardTitle>
 					</CardHeader>
-					<CardContent>
+					<CardContent className="px-4 pb-3">
 						<span
-							className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${
+							className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
 								parcelamento.situacao === 2
 									? "bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400"
 									: "bg-yellow-50 text-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-400"
@@ -363,19 +360,6 @@ export const VisualizarParcelamento: React.FC = () => {
 								? t("installments.completed")
 								: t("installments.open")}
 						</span>
-					</CardContent>
-				</Card>
-
-				<Card>
-					<CardHeader className="pb-3">
-						<CardTitle className="text-sm font-medium text-muted-foreground">
-							{t("installments.balance")}
-						</CardTitle>
-					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold text-orange-600">
-							{formatCurrency(saldoAPagar)}
-						</div>
 					</CardContent>
 				</Card>
 			</div>
@@ -518,15 +502,17 @@ export const VisualizarParcelamento: React.FC = () => {
 							<Label htmlFor="paymentValue">
 								{t("installments.paymentValue")}
 							</Label>
-							<Input
+							<CurrencyInput
 								id="paymentValue"
-								type="number"
-								step="0.01"
-								min="0.01"
-								max={saldoAPagar}
+								placeholder="0,00"
 								value={paymentValue}
-								onChange={e => setPaymentValue(e.target.value)}
-								placeholder="0.00"
+								decimalsLimit={2}
+								intlConfig={{
+									locale: selectedPartnerLocale || "pt-BR",
+									currency: selectedPartnerIsoCode || "BRL",
+								}}
+								onValueChange={value => setPaymentValue(value || "")}
+								className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F45A4F] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 							/>
 						</div>
 					</div>

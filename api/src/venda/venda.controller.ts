@@ -31,6 +31,8 @@ import { UserId } from '../auth/decorators/user-id.decorator';
 import { Venda } from './entities/venda.entity';
 import { FinalizeVendaDiretaDto } from './dto/finalize-venda-direta.dto';
 import { FinalizeVendaSemPagamentoDto } from './dto/finalize-venda-sem-pagamento.dto';
+import { ProcessDevolucaoItemDto } from './dto/process-devolucao-item.dto';
+import { FinalizeVendaCondicionalDto } from './dto/finalize-venda-condicional.dto';
 import { VendaStatus, VendaTipo } from '@prisma/client';
 
 @ApiTags('Venda')
@@ -257,6 +259,99 @@ export class VendaController {
       finalizeDto,
       parceiroId,
       usuarioId,
+    );
+  }
+
+  @Patch(':publicId/confirmarCondicional')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro logado',
+    required: true,
+    schema: { type: 'integer', example: 1 },
+  })
+  @ApiOperation({
+    summary:
+      'Confirmar envio de produtos em condicional (baixa estoque, NÃO gera pagamento)',
+  })
+  @ApiParam({ name: 'publicId', description: 'ID público da venda' })
+  @ApiResponse({
+    status: 200,
+    description: 'Condicional confirmada',
+    type: Venda,
+  })
+  confirmarCondicional(
+    @Param('publicId') publicId: string,
+    @ParceiroId() parceiroId: number,
+    @UserId() usuarioId: number,
+  ): Promise<Venda> {
+    return this.vendaService.confirmarCondicional(
+      publicId,
+      parceiroId,
+      usuarioId,
+    );
+  }
+
+  @Patch(':publicId/processarDevolucao')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro logado',
+    required: true,
+    schema: { type: 'integer', example: 1 },
+  })
+  @ApiOperation({
+    summary: 'Processar devolução de item condicional (retorna ao estoque)',
+  })
+  @ApiParam({ name: 'publicId', description: 'ID público da venda' })
+  @ApiResponse({
+    status: 200,
+    description: 'Devolução processada',
+    type: Venda,
+  })
+  processarDevolucao(
+    @Param('publicId') publicId: string,
+    @Body() devolucaoDto: ProcessDevolucaoItemDto,
+    @ParceiroId() parceiroId: number,
+    @UserId() usuarioId: number,
+  ): Promise<Venda> {
+    return this.vendaService.processarDevolucao(
+      publicId,
+      devolucaoDto,
+      parceiroId,
+      usuarioId,
+    );
+  }
+
+  @Patch(':publicId/finalizarCondicional')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro logado',
+    required: true,
+    schema: { type: 'integer', example: 1 },
+  })
+  @ApiOperation({
+    summary: 'Finalizar venda condicional com pagamentos (calcula itens aceitos)',
+  })
+  @ApiParam({ name: 'publicId', description: 'ID público da venda' })
+  @ApiResponse({
+    status: 200,
+    description: 'Condicional finalizada',
+    type: Venda,
+  })
+  finalizarCondicional(
+    @Param('publicId') publicId: string,
+    @Body() finalizeDto: FinalizeVendaCondicionalDto,
+    @ParceiroId() parceiroId: number,
+  ): Promise<Venda> {
+    return this.vendaService.finalizarCondicional(
+      publicId,
+      finalizeDto,
+      parceiroId,
     );
   }
 

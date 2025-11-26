@@ -48,6 +48,7 @@ interface PagamentoProps {
 	tipoVenda: VendaTipoEnumKey;
 	shouldShowBillingAndPayment: boolean;
 	valorTotalVenda?: number | null; // Valor total salvo no banco (para vendas finalizadas)
+	isCondicionalAberta?: boolean; // Indica se é condicional em modo devolução
 }
 
 export const Pagamento: React.FC<PagamentoProps> = ({
@@ -69,6 +70,7 @@ export const Pagamento: React.FC<PagamentoProps> = ({
 	shouldShowBillingAndPayment,
 	vendaResumo,
 	valorTotalVenda,
+	isCondicionalAberta = false,
 }) => {
 	const { t } = useTranslation("common");
 	const navigate = useNavigate();
@@ -320,6 +322,17 @@ export const Pagamento: React.FC<PagamentoProps> = ({
 
 				<Separator />
 
+				{/* Mensagem para condicionais abertas */}
+				{isCondicionalAberta && (
+					<Card className="bg-orange-50 border-orange-200">
+						<CardContent className="py-4">
+							<p className="text-sm text-orange-800">
+								{t("salesOrders.form.messages.condicionalAbertaInfo")}
+							</p>
+						</CardContent>
+					</Card>
+				)}
+
 				{/* Card de Formas de Pagamento - Só aparece para vendas com pagamento */}
 				{shouldShowBillingAndPayment && (
 				<Card>
@@ -371,7 +384,7 @@ export const Pagamento: React.FC<PagamentoProps> = ({
 					</Button>
 				{mode !== "view" ? (
 					<div className="flex gap-2">
-						{shouldShowBillingAndPayment && (
+						{shouldShowBillingAndPayment && !isCondicionalAberta && (
 							<Button
 								variant="outline"
 								onClick={onSave}
@@ -387,10 +400,10 @@ export const Pagamento: React.FC<PagamentoProps> = ({
 								isSaving ||
 								isFinalizing ||
 								isSubmitting ||
-								(shouldShowBillingAndPayment && !totalmenteAlocado)
+								(shouldShowBillingAndPayment && !isCondicionalAberta && !totalmenteAlocado)
 							}
 							title={
-								shouldShowBillingAndPayment && !totalmenteAlocado
+								shouldShowBillingAndPayment && !isCondicionalAberta && !totalmenteAlocado
 									? t("salesOrders.form.messages.completePaymentFirst")
 									: ""
 							}
@@ -404,6 +417,8 @@ export const Pagamento: React.FC<PagamentoProps> = ({
 								? t("salesOrders.form.actions.confirmExchange")
 								: tipoVenda === "CONDICIONAL" && vendaResumo?.status === "PEDIDO"
 								? t("salesOrders.form.actions.confirmConditional")
+								: isCondicionalAberta
+								? t("salesOrders.form.actions.finalizeConditional")
 								: t("salesOrders.form.actions.confirmSale")}
 						</Button>
 					</div>

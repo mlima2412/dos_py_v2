@@ -10,6 +10,7 @@ export const parcelamentoSchema = z.object({
     "id": z.coerce.number().describe("ID do parcelamento"),
 "clienteId": z.coerce.number().describe("ID do cliente associado"),
 "vendaId": z.coerce.number().describe("ID da venda associada"),
+"vendaPublicId": z.optional(z.coerce.string().describe("Public ID da venda associada")),
 "valorTotal": z.coerce.number().describe("Valor total parcelado"),
 "valorPago": z.coerce.number().default(0).describe("Valor já pago neste parcelamento"),
 "situacao": z.coerce.number().default(1).describe("Situação do parcelamento (1 - Aberto, 2 - Concluído)"),

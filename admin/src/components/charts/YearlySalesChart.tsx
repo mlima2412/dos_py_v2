@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { TrendingUp } from "lucide-react";
 import { useYearlySalesChart } from "@/hooks/useYearlySalesChart";
 import { useCurrencyFormatter } from "@/hooks/useCurrencyFormatter";
+import { SalesReportDialog } from "@/components/dialogs/SalesReportDialog";
 
 interface YearlySalesChartProps {
 	year?: number;
@@ -79,19 +80,24 @@ export function YearlySalesChart({ year }: YearlySalesChartProps) {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>
-					{t("salesDashboard.lineChartTitle")}
-					<Badge
-						variant="outline"
-						className="text-blue-600 bg-blue-600/10 border-none ml-2 items-center gap-2"
-					>
-						<TrendingUp className="h-4 w-4" />
-						<span>{formatCurrency(data.totalSales)}</span>
+				<div className="flex items-start justify-between">
+					<div className="space-y-1.5">
+						<CardTitle>
+							{t("salesDashboard.lineChartTitle")}
+							<Badge
+								variant="outline"
+								className="text-blue-600 bg-blue-600/10 border-none ml-2 items-center gap-2"
+							>
+								<TrendingUp className="h-4 w-4" />
+								<span>{formatCurrency(data.totalSales)}</span>
 					</Badge>
 				</CardTitle>
 				<CardDescription>
 					{periodText} · {t("salesDashboard.lineChartDescription")}
 				</CardDescription>
+					</div>
+					<SalesReportDialog currentYear={year || new Date().getFullYear()} />
+				</div>
 			</CardHeader>
 			<CardContent>
 				<ChartContainer config={chartConfig} className="h-[240px] w-full">

@@ -30,4 +30,12 @@ export class RollupVendasController {
   ) {
     return this.cache.getYear(Number(parceiroId), year);
   }
+
+  @Get('anos')
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Listar anos disponíveis com vendas' })
+  @ApiQuery({ name: 'parceiroId', type: Number, required: true })
+  async getAnosDisponiveis(@Query('parceiroId') parceiroId: string) {
+    return this.cache.getAvailableYears(Number(parceiroId));
+  }
 }

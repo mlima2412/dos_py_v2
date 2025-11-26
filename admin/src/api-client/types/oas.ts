@@ -3487,6 +3487,53 @@ export const oas = {
         ]
       }
     },
+    "/despesas/relatorio-dados": {
+      "get": {
+        "operationId": "DespesasController_getReportData",
+        "parameters": [
+          {
+            "name": "year",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "month",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dados das despesas para o relatório"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Busca dados para geração de relatório de despesas",
+        "tags": [
+          "Despesas"
+        ]
+      }
+    },
     "/despesas/{publicId}": {
       "get": {
         "operationId": "DespesasController_findOne",
@@ -10503,6 +10550,167 @@ export const oas = {
         ]
       }
     },
+    "/venda/{publicId}/confirmarCondicional": {
+      "patch": {
+        "operationId": "VendaController_confirmarCondicional",
+        "parameters": [
+          {
+            "name": "publicId",
+            "required": true,
+            "in": "path",
+            "description": "ID público da venda",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Condicional confirmada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Venda"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Confirmar envio de produtos em condicional (baixa estoque, NÃO gera pagamento)",
+        "tags": [
+          "Venda"
+        ]
+      }
+    },
+    "/venda/{publicId}/processarDevolucao": {
+      "patch": {
+        "operationId": "VendaController_processarDevolucao",
+        "parameters": [
+          {
+            "name": "publicId",
+            "required": true,
+            "in": "path",
+            "description": "ID público da venda",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcessDevolucaoItemDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Devolução processada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Venda"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Processar devolução de item condicional (retorna ao estoque)",
+        "tags": [
+          "Venda"
+        ]
+      }
+    },
+    "/venda/{publicId}/finalizarCondicional": {
+      "patch": {
+        "operationId": "VendaController_finalizarCondicional",
+        "parameters": [
+          {
+            "name": "publicId",
+            "required": true,
+            "in": "path",
+            "description": "ID público da venda",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinalizeVendaCondicionalDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Condicional finalizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Venda"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Finalizar venda condicional com pagamentos (calcula itens aceitos)",
+        "tags": [
+          "Venda"
+        ]
+      }
+    },
     "/dashboard/vendas/mes": {
       "get": {
         "operationId": "RollupVendasController_getResumoMensal",
@@ -13973,7 +14181,7 @@ export const oas = {
           "publicId": {
             "type": "string",
             "description": "ID público da conta a pagar",
-            "example": "019ab274-0f59-78f2-b7c2-1c50bac2d106"
+            "example": "019abd0e-97ee-727c-a3e7-bf0eb88ef95c"
           },
           "despesaId": {
             "type": "number",
@@ -14043,7 +14251,7 @@ export const oas = {
           "publicId": {
             "type": "string",
             "description": "ID público da parcela",
-            "example": "019ab274-0f58-7216-bff7-95e5f0207658"
+            "example": "019abd0e-97ee-727c-a3e7-bf0d0d43e859"
           },
           "dataPagamento": {
             "format": "date-time",
@@ -17615,6 +17823,74 @@ export const oas = {
         "type": "object",
         "properties": {}
       },
+      "ProcessDevolucaoItemDto": {
+        "type": "object",
+        "properties": {
+          "skuId": {
+            "type": "integer",
+            "description": "ID do SKU a ser devolvido",
+            "example": 1
+          },
+          "qtdDevolvida": {
+            "type": "integer",
+            "description": "Quantidade sendo devolvida nesta operação",
+            "example": 1,
+            "minimum": 1
+          }
+        },
+        "required": [
+          "skuId",
+          "qtdDevolvida"
+        ]
+      },
+      "FinalizeVendaCondicionalDto": {
+        "type": "object",
+        "properties": {
+          "valorFrete": {
+            "type": "number",
+            "description": "Valor do frete",
+            "example": 10.5
+          },
+          "descontoTotal": {
+            "type": "number",
+            "description": "Desconto total da venda",
+            "example": 5
+          },
+          "valorComissao": {
+            "type": "number",
+            "description": "Valor da comissão",
+            "example": 15
+          },
+          "numeroFatura": {
+            "type": "string",
+            "description": "Número da fatura",
+            "example": "FAT-2024-001",
+            "maxLength": 255
+          },
+          "nomeFatura": {
+            "type": "string",
+            "description": "Nome para emissão da fatura",
+            "example": "João Silva",
+            "maxLength": 255
+          },
+          "ruccnpj": {
+            "type": "string",
+            "description": "RUC/CNPJ para emissão da fatura",
+            "example": "12345678901",
+            "maxLength": 255
+          },
+          "pagamentos": {
+            "description": "Lista de pagamentos da venda",
+            "items": {
+              "type": "array"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "pagamentos"
+        ]
+      },
       "CreateVendaItemDto": {
         "type": "object",
         "properties": {
@@ -17676,6 +17952,11 @@ export const oas = {
             "type": "number",
             "description": "Preço unitário",
             "example": 99.9
+          },
+          "custoCompra": {
+            "type": "number",
+            "description": "Custo de compra do produto no momento da venda",
+            "example": 50
           }
         },
         "required": [
@@ -17746,6 +18027,11 @@ export const oas = {
             "type": "number",
             "description": "Preço unitário",
             "example": 99.9
+          },
+          "custoCompra": {
+            "type": "number",
+            "description": "Custo de compra do produto no momento da venda",
+            "example": 50
           }
         }
       },
@@ -17935,6 +18221,10 @@ export const oas = {
           "vendaId": {
             "type": "number",
             "description": "ID da venda associada"
+          },
+          "vendaPublicId": {
+            "type": "string",
+            "description": "Public ID da venda associada"
           },
           "valorTotal": {
             "type": "number",
