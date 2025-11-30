@@ -1,5 +1,7 @@
 import i18n from "@/i18n";
 
+export const AUTH_EXPIRED_EVENT = "auth:expired";
+
 // Custom fetch client that automatically adds Authorization header
 export interface RequestConfig<TData = unknown> {
 	method?: string;
@@ -18,6 +20,7 @@ export interface ResponseErrorConfig<T = unknown> {
 
 class FetchClient {
 	private baseURL: string;
+	private refreshPromise: Promise<string | null> | null = null;
 
 	constructor(baseURL?: string) {
 		// Em desenvolvimento, usar proxy do Vite (/api)
@@ -77,9 +80,58 @@ class FetchClient {
 			: urlObj.pathname + urlObj.search;
 	}
 
+	private emitAuthExpiredEvent() {
+		if (typeof window !== "undefined") {
+			window.dispatchEvent(new Event(AUTH_EXPIRED_EVENT));
+		}
+	}
+
+	private clearStoredTokens() {
+		localStorage.removeItem("accessToken");
+		localStorage.removeItem("refresh_token");
+	}
+
+	private async refreshAccessToken(): Promise<string | null> {
+		if (!this.refreshPromise) {
+			this.refreshPromise = (async () => {
+				try {
+					const response = await fetch(this.buildURL("/auth/refresh"), {
+						method: "POST",
+						credentials: "include",
+						headers: {
+							"Content-Type": "application/json",
+						},
+					});
+
+					if (!response.ok) {
+						return null;
+					}
+
+					const data = await response.json().catch(() => null);
+					const newToken = data?.accessToken;
+
+					if (newToken) {
+						localStorage.setItem("accessToken", newToken);
+						return newToken;
+					}
+
+					return null;
+				} catch {
+					return null;
+				} finally {
+					this.refreshPromise = null;
+				}
+			})();
+		}
+
+		return this.refreshPromise;
+	}
+
 	async request<TResponse = unknown, TError = unknown, TData = unknown>(
-		config: RequestConfig<TData>
+		config: RequestConfig<TData>,
+		options: { retryOnAuthFailure?: boolean } = {}
 	): Promise<{ data: TResponse }> {
+		const { retryOnAuthFailure = true } = options;
 		const {
 			method = "GET",
 			url = "",
@@ -106,6 +158,7 @@ class FetchClient {
 			method,
 			headers: requestHeaders,
 			signal,
+			credentials: "include",
 		};
 
 		if (data && method !== "GET" && method !== "HEAD") {
@@ -122,6 +175,20 @@ class FetchClient {
 					statusText: response.statusText,
 					data: errorData as TError,
 				};
+
+				if (response.status === 401) {
+					if (retryOnAuthFailure) {
+						const refreshedToken = await this.refreshAccessToken();
+						if (refreshedToken) {
+							return this.request(config, { retryOnAuthFailure: false });
+						}
+					}
+
+					this.clearStoredTokens();
+					this.emitAuthExpiredEvent();
+					throw { ...error, code: "AUTH_EXPIRED" };
+				}
+
 				throw error;
 			}
 

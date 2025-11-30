@@ -18,7 +18,6 @@ import { Badge } from "@/components/ui/badge";
 import { TrendingUp } from "lucide-react";
 import { useYearlyExpensesChart } from "@/hooks/useYearlyExpensesChart";
 import { useCurrencyFormatter } from "@/hooks/useCurrencyFormatter";
-import { ExpenseReportDialog } from "@/components/dialogs/ExpenseReportDialog";
 
 interface YearlyExpensesChartProps {
 	year?: number;
@@ -115,7 +114,6 @@ export function YearlyExpensesChart({ year }: YearlyExpensesChartProps) {
 							{periodText} {year || new Date().getFullYear()}
 						</CardDescription>
 					</div>
-					<ExpenseReportDialog currentYear={year} />
 				</div>
 			</CardHeader>
 			<CardContent>

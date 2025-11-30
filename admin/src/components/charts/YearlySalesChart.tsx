@@ -18,7 +18,6 @@ import { Badge } from "@/components/ui/badge";
 import { TrendingUp } from "lucide-react";
 import { useYearlySalesChart } from "@/hooks/useYearlySalesChart";
 import { useCurrencyFormatter } from "@/hooks/useCurrencyFormatter";
-import { SalesReportDialog } from "@/components/dialogs/SalesReportDialog";
 
 interface YearlySalesChartProps {
 	year?: number;
@@ -96,7 +95,6 @@ export function YearlySalesChart({ year }: YearlySalesChartProps) {
 					{periodText} · {t("salesDashboard.lineChartDescription")}
 				</CardDescription>
 					</div>
-					<SalesReportDialog currentYear={year || new Date().getFullYear()} />
 				</div>
 			</CardHeader>
 			<CardContent>

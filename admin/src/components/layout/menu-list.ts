@@ -40,6 +40,16 @@ export function getMenuList(
 	t: (key: string) => string,
 	userProfile?: { id: number; nome: string } | null
 ): Group[] {
+	const isSalesDashboard = pathname.includes("/pedidoVendas/dashboard");
+	const isExpenseDashboard =
+		pathname === "/despesas" || pathname === "/despesas/";
+	const isSalesReport =
+		pathname.includes("/pedidoVendas/relatorios") ||
+		pathname.includes("/pedidoVendas/relatorio");
+	const isExpenseReport =
+		pathname.includes("/despesas/relatorios") ||
+		pathname.includes("/despesas/relatorio");
+
 	return [
 		{
 			groupLabel: "",
@@ -70,32 +80,6 @@ export function getMenuList(
 					icon: Truck,
 					submenus: [],
 				},
-				/*
-				{
-					href: "/produtos",
-					label: "Produtos",
-					active: pathname.includes("/produtos"),
-					icon: Shirt,
-					submenus: [
-						{
-							href: "/produtos",
-							label: "Primários",
-							active: pathname === "/produtos",
-						},
-						{
-							href: "/categoria",
-							label: "Categorias",
-							active: pathname === "/categorias",
-							icon: Tags,
-						},
-						{
-							href: "/compra",
-							label: "Pedido de Compra",
-							active: pathname === "/compra",
-						},
-					],
-				},
-				*/
 
 				{
 					href: "/produtos",
@@ -146,11 +130,6 @@ export function getMenuList(
 					icon: BadgeDollarSign,
 					submenus: [
 						{
-							href: "/despesas",
-							label: t("menu.expenses.panel"),
-							active: pathname === "/despesas",
-						},
-						{
 							href: "/despesas/correntes",
 							label: t("menu.expenses.actual"),
 							active: pathname.includes("/despesas/correntes"),
@@ -175,11 +154,6 @@ export function getMenuList(
 						pathname.includes("/vendas") || pathname.includes("/pedidoVendas"),
 					icon: ShoppingCartIcon,
 					submenus: [
-						{
-							href: "/pedidoVendas/dashboard",
-							label: t("menu.salesDashboard"),
-							active: pathname.includes("/pedidoVendas/dashboard"),
-						},
 						{
 							href: "/pedidoVendas/pedidos",
 							label: t("menu.openOrders"),
@@ -209,10 +183,50 @@ export function getMenuList(
 				},
 			],
 		},
-
 		// Menu de administração - apenas para administradores
 		...(userProfile?.nome === "ADMIN"
 			? [
+					{
+						groupLabel: t("menu.finances"),
+						menus: [
+							{
+								href: "/pedidoVendas/dashboard",
+								label: t("menu.dashboards.main"),
+								active: isSalesDashboard || isExpenseDashboard,
+								icon: LayoutGrid,
+								submenus: [
+									{
+										href: "/pedidoVendas/dashboard",
+										label: t("menu.dashboards.sales"),
+										active: isSalesDashboard,
+									},
+									{
+										href: "/despesas",
+										label: t("menu.dashboards.expenses"),
+										active: isExpenseDashboard,
+									},
+								],
+							},
+							{
+								href: "/pedidoVendas/relatorios",
+								label: t("menu.reports.main"),
+								active: isSalesReport || isExpenseReport,
+								icon: FolderTree,
+								submenus: [
+									{
+										href: "/pedidoVendas/relatorios",
+										label: t("menu.reports.sales"),
+										active: isSalesReport,
+									},
+									{
+										href: "/despesas/relatorios",
+										label: t("menu.reports.expenses"),
+										active: isExpenseReport,
+									},
+								],
+							},
+						],
+					},
 					{
 						groupLabel: t("menu.administration"),
 						menus: [

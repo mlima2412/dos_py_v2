@@ -12,7 +12,7 @@ export interface AuthContextType {
 	isAuthenticated: boolean;
 	selectedPartnerData: ParceiroItem | null;
 	login: (credentials: LoginDto) => Promise<void>;
-	logout: () => void;
+	logout: () => Promise<void>;
 	refreshProfile: () => Promise<void>;
 	updateSelectedPartner: (partnerData: ParceiroItem | null) => void;
 }

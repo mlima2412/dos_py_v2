@@ -5,6 +5,7 @@ import { ListagemParcelamentos } from "./ListagemParcelamentos";
 import { VisualizarParcelamento } from "./VisualizarParcelamento";
 import { DashboardVendas } from "./DashboardVendas";
 import { SalesReportPrintPage } from "./print/SalesReportPrintPage";
+import { SalesReportsPage } from "./RelatoriosVendas";
 
 export function VendasRoutes() {
 	return (
@@ -32,6 +33,7 @@ export function VendasRoutes() {
 				path="visualizar/:publicId"
 				element={<FormularioVenda mode="view" />}
 			/>
+			<Route path="relatorios" element={<SalesReportsPage />} />
 			<Route path="relatorio/imprimir" element={<SalesReportPrintPage />} />
 		</Routes>
 	);

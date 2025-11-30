@@ -171,7 +171,7 @@
 	},
 	"menu": {
 		"home": "Início",
-		"registrations": "Cadastros",
+		"registrations": "Registros",
 		"clients": "Clientes",
 		"suppliers": "Fornecedores",
 		"products": {
@@ -200,6 +200,19 @@
 		"installments": "Parcelamentos",
 		"gifts": "Brindes & Permutas",
 		"giftsAndExchanges": "Brindes & Permutas",
+
+		"finances": "Finanças",
+		"dashboards": {
+			"main": "Dashboards",
+			"sales": "Painel de Vendas",
+			"expenses": "Painel de Gastos"
+		},
+		"reports": {
+			"main": "Relatórios",
+			"sales": "Vendas",
+			"expenses": "Despesas"
+		},
+
 		"administration": "Administração",
 		"users": "Usuários",
 		"partners": "Parceiros",
@@ -537,11 +550,11 @@
 			"pendingPayments": "Contas a pagar",
 			"monthlyAverage": "Média mensal do ano",
 			"recentExpenses": "Despesas Recentes",
-			"categoryDistributionMonthly": "Por Categoria - Mensal",
-			"categoryDistributionYearly": "Por Categoria - Anual",
-			"yearlyClassification": "Por Classificação - Anual",
+			"categoryDistributionMonthly": "Categoria - Mês",
+			"categoryDistributionYearly": "Categoria - Ano",
+			"yearlyClassification": "Classificação - Ano",
 			"yearlyClassificationDesc": "Distribuição das despesas por classificação no ano",
-			"monthlyClassification": "Por Classificação - Mensal",
+			"monthlyClassification": "Classificação - Mês",
 			"monthlyClassificationDesc": "Distribuição das despesas por classificação no mês atual",
 			"classification": {
 				"total": "Total"
@@ -622,7 +635,8 @@
 			"month": "Mês",
 			"allMonths": "Todos os Meses",
 			"selectYearFirst": "Selecione um ano específico para escolher o mês",
-			"generate": "Gerar Relatório"
+			"generate": "Gerar Relatório",
+			"selectPartner": "Selecione um parceiro para gerar o relatório."
 		},
 		"validation": {
 			"descriptionRequired": "Descrição é obrigatória",
@@ -1897,7 +1911,9 @@
 			"year": "Ano",
 			"allYears": "Todos os Anos",
 			"selectYear": "Selecione o ano",
-			"generate": "Gerar Relatório"
+			"generate": "Gerar Relatório",
+			"selectPartner": "Selecione um parceiro para gerar o relatório.",
+			"errorLoadingYears": "Erro ao carregar anos disponíveis."
 		},
 		"noResults": "Sem resultados"
 	}

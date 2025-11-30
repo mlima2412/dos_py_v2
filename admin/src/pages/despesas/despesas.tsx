@@ -6,6 +6,7 @@ import { ContasPagarCalendar } from "./contas-pagar/ContasPagarCalendar";
 import { ListarDespesasRecorrentes } from "./recorrentes/ListarDespesasRecorrentes";
 import { FormularioDespesaRecorrente } from "./recorrentes/FormularioDespesaRecorrente";
 import { ExpenseReportPrintPage } from "./print/ExpenseReportPrintPage";
+import { ExpenseReportsPage } from "./RelatoriosDespesas";
 
 export function DespesasPage() {
 	return (
@@ -30,6 +31,7 @@ export function DespesasPage() {
 				path="recorrentes/visualizar/:id"
 				element={<FormularioDespesaRecorrente />}
 			/>
+			<Route path="relatorios" element={<ExpenseReportsPage />} />
 			<Route path="relatorio/imprimir" element={<ExpenseReportPrintPage />} />
 		</Routes>
 	);

@@ -1,14 +1,16 @@
-import React, { useState, useEffect, ReactNode } from "react";
+import React, { useState, useEffect, ReactNode, useCallback } from "react";
 import {
 	AuthControllerGetProfile200,
 	AuthControllerGetUserParceiros200,
 	authControllerGetProfile,
 	authControllerLogin,
+	authControllerLogout,
 } from "@/api-client";
 import { LoginDto } from "@/types/auth";
 import { AuthContext } from "./AuthContextDefinition";
 import { AuthContextType } from "./AuthContextType";
 import { useQueryClient } from "@tanstack/react-query";
+import { AUTH_EXPIRED_EVENT } from "@/lib/fetch-client";
 
 interface AuthProviderProps {
 	children: ReactNode;
@@ -25,6 +27,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
 	const isAuthenticated = !!user;
 
+	const performLocalLogout = useCallback(() => {
+		localStorage.removeItem("accessToken");
+		localStorage.removeItem("refresh_token");
+		queryClient.clear();
+		setSelectedPartnerData(null);
+		setUser(null);
+	}, [queryClient]);
+
 	// Verificar se há token salvo e carregar perfil do usuário
 	useEffect(() => {
 		const initializeAuth = async () => {
@@ -34,16 +44,38 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 					const profile = await authControllerGetProfile();
 					setUser(profile);
 				} catch {
-					// Token inválido, remover
-					localStorage.removeItem("accessToken");
-					localStorage.removeItem("refresh_token");
+					performLocalLogout();
 				}
 			}
 			setIsLoading(false);
 		};
 
 		initializeAuth();
-	}, []);
+	}, [performLocalLogout]);
+
+	useEffect(() => {
+		const handleAuthExpired = () => {
+			performLocalLogout();
+		};
+
+		window.addEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired);
+		return () => {
+			window.removeEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired);
+		};
+	}, [performLocalLogout]);
+
+	useEffect(() => {
+		const handleStorage = (event: StorageEvent) => {
+			if (event.key === "accessToken" && !event.newValue) {
+				performLocalLogout();
+			}
+		};
+
+		window.addEventListener("storage", handleStorage);
+		return () => {
+			window.removeEventListener("storage", handleStorage);
+		};
+	}, [performLocalLogout]);
 
 	const login = async (credentials: LoginDto) => {
 		try {
@@ -63,21 +95,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 		}
 	};
 
-	const logout = () => {
+	const logout = useCallback(async () => {
+		setIsLoading(true);
 		try {
-			// Clear tokens from localStorage
-			localStorage.removeItem("accessToken");
-			localStorage.removeItem("refresh_token");
-
-			// Invalidate all queries to clear cache
-			queryClient.invalidateQueries();
-
-			// Clear all cached data
-			queryClient.clear();
+			await authControllerLogout();
+		} catch (error) {
+			console.error("Erro ao fazer logout:", error);
 		} finally {
-			setUser(null);
+			performLocalLogout();
+			setIsLoading(false);
 		}
-	};
+	}, [performLocalLogout]);
 
 	const refreshProfile = async () => {
 		const profile = await authControllerGetProfile();

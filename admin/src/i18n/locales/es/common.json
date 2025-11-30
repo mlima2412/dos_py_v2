@@ -190,6 +190,19 @@
 		"installments": "Cuotas",
 		"gifts": "Brindes & Canjes",
 		"giftsAndExchanges": "Brindes & Canjes",
+
+		"finances": "Finanzas",
+		"dashboards": {
+			"main": "Paneles",
+			"sales": "Panel de Ventas",
+			"expenses": "Panel de Gastos"
+		},
+		"reports": {
+			"main": "Informes",
+			"sales": "Ventas",
+			"expenses": "Gastos"
+		},
+
 		"administration": "Administración",
 		"users": "Usuarios",
 		"partners": "Socios",
@@ -503,11 +516,11 @@
 			"pendingPayments": "Cuentas a Pagar",
 			"monthlyAverage": "Promedio mensual del año",
 			"recentExpenses": "Gastos Recientes",
-			"categoryDistributionMonthly": "Por Categoria - Mensal",
-			"categoryDistributionYearly": "Por Categoria - Anual",
-			"yearlyClassification": "Por Clasificación - Anual",
+			"categoryDistributionMonthly": "Categoria - Mês",
+			"categoryDistributionYearly": "Categoria - Año",
+			"yearlyClassification": "Clasificación - Año",
 			"yearlyClassificationDesc": "Distribución de gastos por clasificación en el año",
-			"monthlyClassification": "Por Clasificación - Mensual",
+			"monthlyClassification": "Clasificación - Mes",
 			"monthlyClassificationDesc": "Distribución de gastos por clasificación en el mes actual",
 			"classification": {
 				"total": "Total"
@@ -580,7 +593,8 @@
 			"month": "Mes",
 			"allMonths": "Todos los Meses",
 			"selectYearFirst": "Selecciona un año específico para elegir el mes",
-			"generate": "Generar Informe"
+			"generate": "Generar Informe",
+			"selectPartner": "Seleccione un socio para generar el informe."
 		},
 		"validation": {
 			"descriptionRequired": "Descripción es obligatoria",
@@ -1815,7 +1829,9 @@
 			"year": "Año",
 			"allYears": "Todos los Años",
 			"selectYear": "Seleccione el año",
-			"generate": "Generar Informe"
+			"generate": "Generar Informe",
+			"selectPartner": "Seleccione un socio para generar el informe.",
+			"errorLoadingYears": "Error al cargar los años disponibles."
 		},
 		"noResults": "Sin resultados"
 	}

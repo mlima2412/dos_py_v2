@@ -25,8 +25,8 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle }) => {
 	const navigate = useNavigate();
 	const { t } = useTranslation("common");
 
-	const handleLogout = () => {
-		logout();
+	const handleLogout = async () => {
+		await logout();
 		navigate("/login");
 	};
 

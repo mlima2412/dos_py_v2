@@ -74,15 +74,23 @@ export class AuthController {
     const result = await this.authService.login(loginDto);
     console.log(req.t('main.greeting'));
     // Configurar cookie para aplicação web (7 dias)
+    const isProduction = process.env.NODE_ENV === 'production';
+    let cookieDomain: string | undefined;
+
+    if (isProduction && process.env.FRONTEND_URL) {
+      try {
+        cookieDomain = new URL(process.env.FRONTEND_URL).hostname;
+      } catch {
+        cookieDomain = process.env.FRONTEND_URL;
+      }
+    }
+
     response.cookie('refreshToken', result.refreshToken, {
-      domain:
-        process.env.NODE_ENV === 'production'
-          ? process.env.FRONTEND_URL
-          : 'localhost',
+      domain: cookieDomain,
       httpOnly: true,
       path: '/',
-      secure: true,
-      sameSite: 'none',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias
     });
 
@@ -137,8 +145,25 @@ export class AuthController {
     type: LogoutResponseDto,
   })
   async logout(@Res({ passthrough: true }) response: Response): Promise<LogoutResponseDto> {
+    const isProduction = process.env.NODE_ENV === 'production';
+    let cookieDomain: string | undefined;
+
+    if (isProduction && process.env.FRONTEND_URL) {
+      try {
+        cookieDomain = new URL(process.env.FRONTEND_URL).hostname;
+      } catch {
+        cookieDomain = process.env.FRONTEND_URL;
+      }
+    }
+
     // Limpar cookie do refresh token
-    response.clearCookie('refreshToken');
+    response.clearCookie('refreshToken', {
+      domain: cookieDomain,
+      httpOnly: true,
+      path: '/',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
+    });
 
     return { message: 'Logout realizado com sucesso' };
   }
