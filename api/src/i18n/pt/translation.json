@@ -10,7 +10,27 @@
     "notRequested": "Se você não solicitou esta recuperação, ignore este email",
     "doNotShare": "Por segurança, não compartilhe este link com ninguém",
     "fallbackText": "Se o botão não funcionar, copie e cole o link abaixo no seu navegador:",
-    "footer": "Este é um email automático, não responda a esta mensagem."
+    "footer": "Este é um email automático, não responda a esta mensagem.",
+    "googleProviderNotAllowed": "Esta conta utiliza login com Google. Utilize o botão \"Continuar com Google\" para acessar o sistema.",
+    "invalidOrExpiredToken": "Token inválido ou expirado",
+    "validToken": "Token válido",
+    "passwordChanged": "Senha alterada com sucesso"
+  },
+  "invitation": {
+    "subject": "Convite para acessar o DOS",
+    "title": "Bem-vindo ao DOS",
+    "greeting": "Olá <strong>{{name}}</strong>,",
+    "intro": "Você foi convidado para acessar a plataforma DOS. Utilize sua conta Google autorizada para entrar.",
+    "instructions": "Clique no botão abaixo para abrir o sistema. Caso não reconheça este convite, ignore o email ou contate o administrador.",
+    "buttonText": "Acessar o sistema",
+    "footer": "Este é um email automático, não responda a esta mensagem.",
+    "local": {
+      "subject": "Defina sua senha - DOS",
+      "title": "Bem-vindo ao DOS",
+      "intro": "Você foi convidado para acessar a plataforma DOS. Para começar, você precisa definir sua senha de acesso.",
+      "instructions": "Este link é válido por 72 horas. Caso não reconheça este convite, ignore o email ou contate o administrador.",
+      "buttonText": "Definir minha senha"
+    }
   },
   "main": {
     "greeting": "Bem vindo ao backend da DOSPY!"

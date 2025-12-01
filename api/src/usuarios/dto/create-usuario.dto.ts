@@ -6,7 +6,9 @@ import {
   IsBoolean,
   MinLength,
   MaxLength,
+  IsEnum,
 } from 'class-validator';
+import { Linguagem } from '@prisma/client';
 
 export class CreateUsuarioDto {
   @ApiProperty({
@@ -84,4 +86,15 @@ export class CreateUsuarioDto {
   @IsOptional()
   @IsString()
   avatar?: string;
+
+  @ApiProperty({
+    description: 'Idioma preferido do usuário',
+    example: Linguagem.Portugues,
+    enum: Linguagem,
+    default: Linguagem.Portugues,
+    required: false,
+  })
+  @IsOptional()
+  @IsEnum(Linguagem, { message: 'Linguagem inválida' })
+  linguagem?: Linguagem;
 }

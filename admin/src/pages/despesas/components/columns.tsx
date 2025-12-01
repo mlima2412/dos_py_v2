@@ -24,6 +24,15 @@ type DespesaExtended = Despesa & {
 		idCategoria: number;
 		descricao: string;
 	};
+	contaDre?: {
+		id: number;
+		nome: string;
+		grupo?: {
+			id: number;
+			nome: string;
+			codigo: string;
+		};
+	};
 	currency?: {
 		id: number;
 		nome: string;
@@ -149,15 +158,15 @@ export const createColumns = (
 				<div className="text-sm">{row.original.fornecedor?.nome || "-"}</div>
 			),
 		}),
-		columnHelper.accessor(row => row.categoria?.descricao, {
-			id: "categoria",
+		columnHelper.accessor(row => row.contaDre?.nome, {
+			id: "contaDre",
 			header: ({ column }) => (
 				<Button
 					variant="ghost"
 					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
 					className="h-auto p-0 font-semibold"
 				>
-					{t("expenses.category")}
+					{t("expenses.dreAccount")}
 					{column.getIsSorted() === "asc" ? (
 						<ArrowUp className="ml-2 h-4 w-4" />
 					) : column.getIsSorted() === "desc" ? (
@@ -169,7 +178,7 @@ export const createColumns = (
 			),
 			cell: ({ row }) => (
 				<Badge variant="outline">
-					{row.original.categoria?.descricao || "-"}
+					{row.original.contaDre?.nome || "-"}
 				</Badge>
 			),
 		}),

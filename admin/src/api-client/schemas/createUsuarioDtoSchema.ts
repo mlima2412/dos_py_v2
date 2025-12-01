@@ -14,5 +14,6 @@ export const createUsuarioDtoSchema = z.object({
 "googleId": z.optional(z.coerce.string().describe("ID do Google para autenticação OAuth")),
 "senha": z.optional(z.coerce.string().min(6).describe("Senha do usuário")),
 "ativo": z.optional(z.boolean().default(true).describe("Status ativo do usuário")),
-"avatar": z.optional(z.coerce.string().describe("URL do avatar do usuário"))
+"avatar": z.optional(z.coerce.string().describe("URL do avatar do usuário")),
+"linguagem": z.enum(["Espanol", "Portugues"]).default("Portugues").describe("Idioma preferido do usuário")
     }) as unknown as z.ZodType<CreateUsuarioDto>

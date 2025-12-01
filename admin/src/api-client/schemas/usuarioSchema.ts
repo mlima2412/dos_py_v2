@@ -17,5 +17,6 @@ export const usuarioSchema = z.object({
 "senha": z.optional(z.coerce.string().describe("Senha do usuário (hash)")),
 "ativo": z.boolean().default(true).describe("Status ativo do usuário"),
 "avatar": z.optional(z.coerce.string().describe("URL do avatar do usuário")),
+"linguagem": z.enum(["Espanol", "Portugues"]).default("Portugues").describe("Idioma preferido para comunicações"),
 "createdAt": z.string().datetime().describe("Data de criação do usuário")
     }) as unknown as z.ZodType<Usuario>

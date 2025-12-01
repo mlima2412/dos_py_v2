@@ -18,6 +18,7 @@ interface UseDespesasParams {
 	parceiroId?: string;
 	fornecedorId?: string;
 	subCategoriaId?: string;
+	grupoDreId?: string;
 	limit?: number;
 }
 
@@ -27,6 +28,7 @@ export function useDespesas(params: UseDespesasParams = {}) {
 		parceiroId,
 		fornecedorId,
 		subCategoriaId,
+		grupoDreId,
 		limit = 20,
 	} = params;
 
@@ -36,12 +38,13 @@ export function useDespesas(params: UseDespesasParams = {}) {
 		search: search || "",
 		fornecedorId: fornecedorId || "",
 		subCategoriaId: subCategoriaId || "",
+		grupoDreId: grupoDreId || "",
 	};
 
 	return useInfiniteQuery({
 		queryKey: [
 			"despesas",
-			{ search, parceiroId, fornecedorId, subCategoriaId, limit },
+			{ search, parceiroId, fornecedorId, subCategoriaId, grupoDreId, limit },
 		],
 		queryFn: async ({ pageParam = 1 }) => {
 			const paginatedParams = {

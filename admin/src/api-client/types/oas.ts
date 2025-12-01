@@ -84,6 +84,38 @@ export const oas = {
         ]
       }
     },
+    "/auth/google": {
+      "post": {
+        "operationId": "AuthController_googleLogin",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleLoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login Google realizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Realizar login com Google",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
     "/auth/refresh": {
       "post": {
         "operationId": "AuthController_refresh",
@@ -3421,6 +3453,16 @@ export const oas = {
               "example": "1",
               "type": "string"
             }
+          },
+          {
+            "name": "grupoDreId",
+            "required": false,
+            "in": "query",
+            "description": "ID do grupo DRE para filtrar",
+            "schema": {
+              "example": "1",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3846,6 +3888,191 @@ export const oas = {
         "summary": "Obter resumo anual de despesas e média mensal",
         "tags": [
           "CashDespesaClassificacao"
+        ]
+      }
+    },
+    "/lancamento-dre/anos": {
+      "get": {
+        "operationId": "LancamentoDreController_getAnosDisponiveis",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lista anos disponíveis com lançamentos DRE",
+        "tags": [
+          "Lançamentos DRE"
+        ]
+      }
+    },
+    "/lancamento-dre/meses/{ano}": {
+      "get": {
+        "operationId": "LancamentoDreController_getMesesDisponiveis",
+        "parameters": [
+          {
+            "name": "ano",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lista meses disponíveis com lançamentos DRE para um ano",
+        "tags": [
+          "Lançamentos DRE"
+        ]
+      }
+    },
+    "/lancamento-dre/resumo": {
+      "get": {
+        "operationId": "LancamentoDreController_getResumoDRE",
+        "parameters": [
+          {
+            "name": "dataInicio",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "example": "2024-01-01",
+              "type": "string"
+            }
+          },
+          {
+            "name": "dataFim",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "example": "2024-12-31",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Gera resumo DRE para um período",
+        "tags": [
+          "Lançamentos DRE"
+        ]
+      }
+    },
+    "/lancamento-dre/lancamentos": {
+      "get": {
+        "operationId": "LancamentoDreController_getLancamentos",
+        "parameters": [
+          {
+            "name": "dataInicio",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "example": "2024-01-01",
+              "type": "string"
+            }
+          },
+          {
+            "name": "dataFim",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "example": "2024-12-31",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lista lançamentos DRE por período",
+        "tags": [
+          "Lançamentos DRE"
+        ]
+      }
+    },
+    "/lancamento-dre/processar-venda/{vendaId}": {
+      "post": {
+        "operationId": "LancamentoDreController_processarVenda",
+        "parameters": [
+          {
+            "name": "vendaId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Processa uma venda e cria lançamentos DRE",
+        "tags": [
+          "Lançamentos DRE"
+        ]
+      }
+    },
+    "/lancamento-dre/processar-despesa/{despesaId}": {
+      "post": {
+        "operationId": "LancamentoDreController_processarDespesa",
+        "parameters": [
+          {
+            "name": "despesaId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Processa uma despesa e cria lançamento DRE",
+        "tags": [
+          "Lançamentos DRE"
         ]
       }
     },
@@ -10787,6 +11014,35 @@ export const oas = {
         ]
       }
     },
+    "/dashboard/vendas/anos": {
+      "get": {
+        "operationId": "RollupVendasController_getAnosDisponiveis",
+        "parameters": [
+          {
+            "name": "parceiroId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Listar anos disponíveis com vendas",
+        "tags": [
+          "CashVenda"
+        ]
+      }
+    },
     "/venda-item": {
       "post": {
         "operationId": "VendaItemController_create",
@@ -11848,6 +12104,699 @@ export const oas = {
           "Parcelas"
         ]
       }
+    },
+    "/grupo-dre": {
+      "post": {
+        "operationId": "GrupoDreController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGrupoDreDto"
+              },
+              "examples": {
+                "receitas": {
+                  "summary": "Grupo de Receitas",
+                  "value": {
+                    "codigo": "1000",
+                    "nome": "Receitas de Vendas",
+                    "tipo": "RECEITA",
+                    "ordem": 1,
+                    "ativo": true
+                  }
+                },
+                "deducoes": {
+                  "summary": "Grupo de Deduções",
+                  "value": {
+                    "codigo": "2000",
+                    "nome": "Deduções sobre Receita",
+                    "tipo": "DEDUCAO",
+                    "ordem": 2,
+                    "ativo": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Grupo DRE criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GrupoDRE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          },
+          "409": {
+            "description": "Código do grupo DRE já está em uso"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Criar novo grupo DRE",
+        "tags": [
+          "grupo-dre"
+        ]
+      },
+      "get": {
+        "operationId": "GrupoDreController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Lista de grupos DRE retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GrupoDRE"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Listar todos os grupos DRE ativos",
+        "tags": [
+          "grupo-dre"
+        ]
+      }
+    },
+    "/grupo-dre/{id}": {
+      "get": {
+        "operationId": "GrupoDreController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do grupo DRE",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Grupo DRE encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GrupoDRE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          },
+          "404": {
+            "description": "Grupo DRE não encontrado"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Buscar grupo DRE por ID",
+        "tags": [
+          "grupo-dre"
+        ]
+      },
+      "patch": {
+        "operationId": "GrupoDreController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do grupo DRE",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGrupoDreDto"
+              },
+              "examples": {
+                "atualizarNome": {
+                  "summary": "Atualizar nome",
+                  "value": {
+                    "nome": "Receitas Operacionais"
+                  }
+                },
+                "desativar": {
+                  "summary": "Desativar grupo",
+                  "value": {
+                    "ativo": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Grupo DRE atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GrupoDRE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          },
+          "404": {
+            "description": "Grupo DRE não encontrado"
+          },
+          "409": {
+            "description": "Código do grupo DRE já está em uso"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Atualizar grupo DRE",
+        "tags": [
+          "grupo-dre"
+        ]
+      },
+      "delete": {
+        "operationId": "GrupoDreController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do grupo DRE",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Grupo DRE removido com sucesso"
+          },
+          "401": {
+            "description": "Não autorizado"
+          },
+          "404": {
+            "description": "Grupo DRE não encontrado"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Remover grupo DRE (soft delete)",
+        "tags": [
+          "grupo-dre"
+        ]
+      }
+    },
+    "/grupo-dre/codigo/{codigo}": {
+      "get": {
+        "operationId": "GrupoDreController_findByCodigo",
+        "parameters": [
+          {
+            "name": "codigo",
+            "required": true,
+            "in": "path",
+            "description": "Código do grupo DRE (ex: 1000)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Grupo DRE encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GrupoDRE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          },
+          "404": {
+            "description": "Grupo DRE não encontrado"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Buscar grupo DRE por código",
+        "tags": [
+          "grupo-dre"
+        ]
+      }
+    },
+    "/conta-dre": {
+      "post": {
+        "operationId": "ContaDreController_create",
+        "parameters": [
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContaDreDto"
+              },
+              "examples": {
+                "vendaProdutos": {
+                  "summary": "Venda de Produtos",
+                  "value": {
+                    "grupoId": 1,
+                    "codigo": "1001",
+                    "nome": "Venda de Produtos",
+                    "ordem": 1,
+                    "ativo": true
+                  }
+                },
+                "iva": {
+                  "summary": "IVA sobre Vendas",
+                  "value": {
+                    "grupoId": 2,
+                    "codigo": "2001",
+                    "nome": "IVA sobre Vendas",
+                    "ordem": 1,
+                    "ativo": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Conta DRE criada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContaDRE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          },
+          "404": {
+            "description": "Grupo DRE não encontrado"
+          },
+          "409": {
+            "description": "Já existe uma conta com este nome neste grupo"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Criar nova conta DRE",
+        "tags": [
+          "conta-dre"
+        ]
+      },
+      "get": {
+        "operationId": "ContaDreController_findAll",
+        "parameters": [
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de contas DRE retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContaDRE"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Listar todas as contas DRE do parceiro",
+        "tags": [
+          "conta-dre"
+        ]
+      }
+    },
+    "/conta-dre/grupo/{grupoId}": {
+      "get": {
+        "operationId": "ContaDreController_findByGrupo",
+        "parameters": [
+          {
+            "name": "grupoId",
+            "required": true,
+            "in": "path",
+            "description": "ID do grupo DRE",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de contas DRE do grupo retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContaDRE"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Listar contas DRE por grupo",
+        "tags": [
+          "conta-dre"
+        ]
+      }
+    },
+    "/conta-dre/tipo/{tipoGrupo}": {
+      "get": {
+        "description": "Retorna contas filtrando pelo tipo do grupo (RECEITA, DEDUCAO, CUSTO, DESPESA)",
+        "operationId": "ContaDreController_findByGrupoTipo",
+        "parameters": [
+          {
+            "name": "tipoGrupo",
+            "required": true,
+            "in": "path",
+            "description": "Tipo do grupo DRE (RECEITA, DEDUCAO, CUSTO, DESPESA)",
+            "schema": {
+              "enum": [
+                "RECEITA",
+                "DEDUCAO",
+                "CUSTO",
+                "DESPESA"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de contas DRE retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContaDRE"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Listar contas DRE por tipo de grupo",
+        "tags": [
+          "conta-dre"
+        ]
+      }
+    },
+    "/conta-dre/{id}": {
+      "get": {
+        "operationId": "ContaDreController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID da conta DRE",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Conta DRE encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContaDRE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          },
+          "404": {
+            "description": "Conta DRE não encontrada"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Buscar conta DRE por ID",
+        "tags": [
+          "conta-dre"
+        ]
+      },
+      "patch": {
+        "operationId": "ContaDreController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID da conta DRE",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateContaDreDto"
+              },
+              "examples": {
+                "atualizarNome": {
+                  "summary": "Atualizar nome",
+                  "value": {
+                    "nome": "Venda de Mercadorias"
+                  }
+                },
+                "desativar": {
+                  "summary": "Desativar conta",
+                  "value": {
+                    "ativo": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Conta DRE atualizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContaDRE"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          },
+          "404": {
+            "description": "Conta DRE não encontrada"
+          },
+          "409": {
+            "description": "Já existe uma conta com este nome neste grupo"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Atualizar conta DRE",
+        "tags": [
+          "conta-dre"
+        ]
+      },
+      "delete": {
+        "operationId": "ContaDreController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID da conta DRE",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Conta DRE removida com sucesso"
+          },
+          "401": {
+            "description": "Não autorizado"
+          },
+          "404": {
+            "description": "Conta DRE não encontrada"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Remover conta DRE (soft delete)",
+        "tags": [
+          "conta-dre"
+        ]
+      }
     }
   },
   "info": {
@@ -11969,6 +12918,19 @@ export const oas = {
         "required": [
           "accessToken",
           "user"
+        ]
+      },
+      "GoogleLoginDto": {
+        "type": "object",
+        "properties": {
+          "idToken": {
+            "type": "string",
+            "description": "ID Token retornado pelo Google Identity Services",
+            "example": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjU0NTMifQ..."
+          }
+        },
+        "required": [
+          "idToken"
         ]
       },
       "RefreshTokenDto": {
@@ -12196,11 +13158,22 @@ export const oas = {
             "type": "string",
             "description": "URL do avatar do usuário",
             "example": "https://exemplo.com/avatar.jpg"
+          },
+          "linguagem": {
+            "type": "string",
+            "description": "Idioma preferido do usuário",
+            "example": "Portugues",
+            "enum": [
+              "Espanol",
+              "Portugues"
+            ],
+            "default": "Portugues"
           }
         },
         "required": [
           "nome",
-          "email"
+          "email",
+          "linguagem"
         ]
       },
       "Usuario": {
@@ -12258,6 +13231,16 @@ export const oas = {
             "description": "URL do avatar do usuário",
             "example": "https://exemplo.com/avatar.jpg"
           },
+          "linguagem": {
+            "type": "string",
+            "description": "Idioma preferido para comunicações",
+            "example": "Portugues",
+            "enum": [
+              "Espanol",
+              "Portugues"
+            ],
+            "default": "Portugues"
+          },
           "createdAt": {
             "format": "date-time",
             "type": "string",
@@ -12272,6 +13255,7 @@ export const oas = {
           "email",
           "provider",
           "ativo",
+          "linguagem",
           "createdAt"
         ]
       },
@@ -12361,6 +13345,16 @@ export const oas = {
             "type": "string",
             "description": "URL do avatar do usuário",
             "example": "https://exemplo.com/avatar.jpg"
+          },
+          "linguagem": {
+            "type": "string",
+            "description": "Idioma preferido do usuário",
+            "example": "Portugues",
+            "enum": [
+              "Espanol",
+              "Portugues"
+            ],
+            "default": "Portugues"
           },
           "publicId": {
             "type": "string",
@@ -13663,12 +14657,16 @@ export const oas = {
             "type": "number",
             "description": "Cotação da moeda no momento da despesa",
             "example": 5.25
+          },
+          "contaDreId": {
+            "type": "number",
+            "description": "ID da conta DRE para classificação contábil",
+            "example": 1
           }
         },
         "required": [
           "valorTotal",
           "descricao",
-          "subCategoriaId",
           "parceiroId",
           "tipoPagamento"
         ]
@@ -13719,6 +14717,73 @@ export const oas = {
           "ativo",
           "createdAt",
           "categoria"
+        ]
+      },
+      "ContaDRE": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "ID interno da conta DRE",
+            "example": 1
+          },
+          "publicId": {
+            "type": "string",
+            "description": "ID público (UUID) da conta DRE",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          },
+          "grupoId": {
+            "type": "number",
+            "description": "ID do grupo DRE",
+            "example": 1
+          },
+          "parceiroId": {
+            "type": "number",
+            "description": "ID do parceiro",
+            "example": 1
+          },
+          "codigo": {
+            "type": "string",
+            "description": "Código contábil opcional",
+            "example": "1001"
+          },
+          "nome": {
+            "type": "string",
+            "description": "Nome da conta DRE",
+            "example": "Venda de Produtos"
+          },
+          "nomeV1": {
+            "type": "string",
+            "description": "Nome original da V1 para mapeamento na migração",
+            "example": "Taxa de Transação"
+          },
+          "ordem": {
+            "type": "number",
+            "description": "Ordem de exibição dentro do grupo",
+            "example": 1
+          },
+          "ativo": {
+            "type": "boolean",
+            "description": "Status ativo da conta",
+            "example": true,
+            "default": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Data de criação da conta",
+            "example": "2024-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "publicId",
+          "grupoId",
+          "parceiroId",
+          "nome",
+          "ordem",
+          "ativo",
+          "createdAt"
         ]
       },
       "Despesa": {
@@ -13796,6 +14861,19 @@ export const oas = {
             "allOf": [
               {
                 "$ref": "#/components/schemas/Currency"
+              }
+            ]
+          },
+          "contaDreId": {
+            "type": "number",
+            "description": "ID da conta DRE para classificação contábil",
+            "example": 1
+          },
+          "contaDre": {
+            "description": "Conta DRE da despesa",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ContaDRE"
               }
             ]
           }
@@ -13934,14 +15012,19 @@ export const oas = {
             "type": "number",
             "description": "Cotação da moeda no momento da despesa",
             "example": 5.25
+          },
+          "contaDreId": {
+            "type": "number",
+            "description": "ID da conta DRE para classificação contábil",
+            "example": 1
           }
         },
         "required": [
           "descricao",
           "valor",
           "diaVencimento",
-          "subCategoriaId",
-          "parceiroId"
+          "parceiroId",
+          "contaDreId"
         ]
       },
       "DespesaRecorrente": {
@@ -14134,6 +15217,11 @@ export const oas = {
             "type": "number",
             "description": "Cotação da moeda no momento da despesa",
             "example": 5.25
+          },
+          "contaDreId": {
+            "type": "number",
+            "description": "ID da conta DRE para classificação contábil",
+            "example": 1
           }
         }
       },
@@ -14181,7 +15269,7 @@ export const oas = {
           "publicId": {
             "type": "string",
             "description": "ID público da conta a pagar",
-            "example": "019abd0e-97ee-727c-a3e7-bf0eb88ef95c"
+            "example": "019ad783-ff85-7691-a372-17cf0559412b"
           },
           "despesaId": {
             "type": "number",
@@ -14251,7 +15339,7 @@ export const oas = {
           "publicId": {
             "type": "string",
             "description": "ID público da parcela",
-            "example": "019abd0e-97ee-727c-a3e7-bf0d0d43e859"
+            "example": "019ad783-ff85-7691-a372-17ce48b685e6"
           },
           "dataPagamento": {
             "format": "date-time",
@@ -18525,6 +19613,222 @@ export const oas = {
               "PAGO",
               "PAGO_ATRASADO"
             ]
+          }
+        }
+      },
+      "CreateGrupoDreDto": {
+        "type": "object",
+        "properties": {
+          "codigo": {
+            "type": "string",
+            "description": "Código do grupo DRE (ex: 1000, 2000)",
+            "example": "1000"
+          },
+          "nome": {
+            "type": "string",
+            "description": "Nome do grupo DRE",
+            "example": "Receitas de Vendas"
+          },
+          "tipo": {
+            "type": "string",
+            "description": "Tipo do grupo DRE",
+            "enum": [
+              "RECEITA",
+              "DEDUCAO",
+              "CUSTO",
+              "DESPESA"
+            ],
+            "example": "RECEITA"
+          },
+          "ordem": {
+            "type": "number",
+            "description": "Ordem de exibição na DRE",
+            "example": 1
+          },
+          "ativo": {
+            "type": "boolean",
+            "description": "Status ativo do grupo",
+            "example": true
+          }
+        },
+        "required": [
+          "codigo",
+          "nome",
+          "tipo",
+          "ordem"
+        ]
+      },
+      "GrupoDRE": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "ID interno do grupo DRE",
+            "example": 1
+          },
+          "publicId": {
+            "type": "string",
+            "description": "ID público (UUID) do grupo DRE",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          },
+          "codigo": {
+            "type": "string",
+            "description": "Código do grupo (ex: 1000, 2000)",
+            "example": "1000"
+          },
+          "nome": {
+            "type": "string",
+            "description": "Nome do grupo DRE",
+            "example": "Receitas de Vendas"
+          },
+          "tipo": {
+            "type": "string",
+            "description": "Tipo do grupo DRE",
+            "enum": [
+              "RECEITA",
+              "DEDUCAO",
+              "CUSTO",
+              "DESPESA"
+            ],
+            "example": "RECEITA"
+          },
+          "ordem": {
+            "type": "number",
+            "description": "Ordem de exibição na DRE",
+            "example": 1
+          },
+          "ativo": {
+            "type": "boolean",
+            "description": "Status ativo do grupo",
+            "example": true,
+            "default": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Data de criação do grupo",
+            "example": "2024-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "publicId",
+          "codigo",
+          "nome",
+          "tipo",
+          "ordem",
+          "ativo",
+          "createdAt"
+        ]
+      },
+      "UpdateGrupoDreDto": {
+        "type": "object",
+        "properties": {
+          "codigo": {
+            "type": "string",
+            "description": "Código do grupo DRE (ex: 1000, 2000)",
+            "example": "1000"
+          },
+          "nome": {
+            "type": "string",
+            "description": "Nome do grupo DRE",
+            "example": "Receitas de Vendas"
+          },
+          "tipo": {
+            "type": "string",
+            "description": "Tipo do grupo DRE",
+            "enum": [
+              "RECEITA",
+              "DEDUCAO",
+              "CUSTO",
+              "DESPESA"
+            ],
+            "example": "RECEITA"
+          },
+          "ordem": {
+            "type": "number",
+            "description": "Ordem de exibição na DRE",
+            "example": 1
+          },
+          "ativo": {
+            "type": "boolean",
+            "description": "Status ativo do grupo",
+            "example": true
+          }
+        }
+      },
+      "CreateContaDreDto": {
+        "type": "object",
+        "properties": {
+          "grupoId": {
+            "type": "number",
+            "description": "ID do grupo DRE",
+            "example": 1
+          },
+          "codigo": {
+            "type": "string",
+            "description": "Código contábil opcional",
+            "example": "1001"
+          },
+          "nome": {
+            "type": "string",
+            "description": "Nome da conta DRE",
+            "example": "Venda de Produtos"
+          },
+          "nomeV1": {
+            "type": "string",
+            "description": "Nome original da V1 para mapeamento na migração",
+            "example": "Taxa de Transação"
+          },
+          "ordem": {
+            "type": "number",
+            "description": "Ordem de exibição dentro do grupo",
+            "example": 1
+          },
+          "ativo": {
+            "type": "boolean",
+            "description": "Status ativo da conta",
+            "example": true
+          }
+        },
+        "required": [
+          "grupoId",
+          "nome",
+          "ordem"
+        ]
+      },
+      "UpdateContaDreDto": {
+        "type": "object",
+        "properties": {
+          "grupoId": {
+            "type": "number",
+            "description": "ID do grupo DRE",
+            "example": 1
+          },
+          "codigo": {
+            "type": "string",
+            "description": "Código contábil opcional",
+            "example": "1001"
+          },
+          "nome": {
+            "type": "string",
+            "description": "Nome da conta DRE",
+            "example": "Venda de Produtos"
+          },
+          "nomeV1": {
+            "type": "string",
+            "description": "Nome original da V1 para mapeamento na migração",
+            "example": "Taxa de Transação"
+          },
+          "ordem": {
+            "type": "number",
+            "description": "Ordem de exibição dentro do grupo",
+            "example": 1
+          },
+          "ativo": {
+            "type": "boolean",
+            "description": "Status ativo da conta",
+            "example": true
           }
         }
       }

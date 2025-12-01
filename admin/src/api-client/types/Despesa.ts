@@ -3,6 +3,7 @@
 * Do not edit manually.
 */
 
+import type { ContaDRE } from "./ContaDRE.ts";
 import type { Currency } from "./Currency.ts";
 import type { Fornecedor } from "./Fornecedor.ts";
 import type { SubCategoriaDespesa } from "./SubCategoriaDespesa.ts";
@@ -70,4 +71,13 @@ export type Despesa = {
      * @description Moeda da despesa
     */
     currency?: Currency | undefined;
+    /**
+     * @description ID da conta DRE para classificação contábil
+     * @type number | undefined
+    */
+    contaDreId?: number | undefined;
+    /**
+     * @description Conta DRE da despesa
+    */
+    contaDre?: ContaDRE | undefined;
 };

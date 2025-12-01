@@ -28,8 +28,6 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Combobox, type ComboboxOption } from "@/components/ui/combobox";
 import { Spinner } from "@/components/ui/spinner";
@@ -45,10 +43,9 @@ import { usePartnerContext } from "@/hooks/usePartnerContext";
 import {
 	useDespesasControllerCreate,
 	useDespesasControllerFindOne,
-	useCategoriaDespesasControllerFindAll,
-	useSubCategoriaDespesaControllerFindByCategoria,
 	useFornecedoresControllerFindAll,
 	useCurrencyControllerFindAllActive,
+	useContaDreControllerFindByGrupoTipo,
 	type CreateDespesaDto,
 	type ContasPagar,
 } from "@/api-client";
@@ -62,10 +59,7 @@ const createFormSchema = (t: (key: string) => string) =>
 		valorTotal: z.number().min(0.01, t("expenses.validation.valueMin")),
 		dataRegistro: z.date({ message: t("expenses.validation.dateRequired") }),
 		fornecedorId: z.string().optional(),
-		categoriaId: z.string().min(1, t("expenses.validation.categoryRequired")),
-		subCategoriaId: z
-			.string()
-			.min(1, t("expenses.validation.subcategoryRequired")),
+		contaDreId: z.string().min(1, t("expenses.validation.dreAccountRequired")),
 		currencyId: z.string().optional(),
 		cotacao: z.number().optional(),
 		tipoPagamento: z.enum(
@@ -95,12 +89,9 @@ export function FormularioDespesa() {
 	const isEditing = Boolean(id);
 	const isViewing = location.pathname.includes("/visualizar/");
 
-	const [selectedCategoria, setSelectedCategoria] = useState<string>("");
 	const [valorTotalInput, setValorTotalInput] = useState<string>("");
 	const [valorEntradaInput, setValorEntradaInput] = useState<string>("");
 	const [cotacaoInput, setCotacaoInput] = useState<string>("");
-
-	const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true);
 	const [tipoPagamento, setTipoPagamento] = useState<string>("avista");
 
 	// Criar schema com traduções
@@ -114,9 +105,8 @@ export function FormularioDespesa() {
 			valorTotal: 0,
 			dataRegistro: new Date(),
 			fornecedorId: "",
-			categoriaId: "",
-			subCategoriaId: "",
-			currencyId: "", // currencyId será selecionado pelo usuário no formulário
+			contaDreId: "",
+			currencyId: "",
 			cotacao: 0,
 			tipoPagamento: "A_VISTA_IMEDIATA",
 			valorEntrada: 0,
@@ -144,14 +134,6 @@ export function FormularioDespesa() {
 		}
 	);
 
-	const { data: categorias = [], isLoading: isLoadingCategorias } =
-		useCategoriaDespesasControllerFindAll();
-
-	const { data: subcategorias = [], isLoading: isLoadingSubcategorias } =
-		useSubCategoriaDespesaControllerFindByCategoria(Number(selectedCategoria), {
-			query: { enabled: Boolean(selectedCategoria) },
-		});
-
 	const fornecedoresHeaders = {
 		"x-parceiro-id": selectedPartnerId?.toString() ?? "",
 	};
@@ -163,6 +145,13 @@ export function FormularioDespesa() {
 
 	const { data: currencies = [], isLoading: isLoadingCurrencies } =
 		useCurrencyControllerFindAllActive();
+
+	const { data: contasDre = [], isLoading: isLoadingContasDre } =
+		useContaDreControllerFindByGrupoTipo(
+			"DESPESA",
+			{ "x-parceiro-id": Number(selectedPartnerId) || 0 },
+			{ query: { enabled: Boolean(selectedPartnerId) } }
+		);
 
 	// Mutations
 	const createMutation = useDespesasControllerCreate();
@@ -197,8 +186,6 @@ export function FormularioDespesa() {
 	// Populate form when editing
 	useEffect(() => {
 		if (despesa && isEditing) {
-			setIsInitialLoad(true);
-
 			// Determine payment type from parcelas
 			const tipoPagamentoDetectado = determineTipoPagamento(contasPagar || []);
 
@@ -207,8 +194,9 @@ export function FormularioDespesa() {
 				valorTotal: despesa.valorTotal,
 				dataRegistro: new Date(despesa.dataRegistro),
 				fornecedorId: despesa.fornecedorId?.toString() || "",
-				categoriaId: despesa.subCategoria?.categoriaId?.toString() || "",
-				subCategoriaId: "", // Será preenchido após carregar as subcategorias
+				contaDreId:
+					(despesa as unknown as { contaDreId?: number }).contaDreId?.toString() ||
+					"",
 				currencyId: despesa.currencyId?.toString() || "",
 				cotacao: despesa.cotacao || 0,
 				tipoPagamento: tipoPagamentoDetectado,
@@ -218,7 +206,6 @@ export function FormularioDespesa() {
 				dataVencimento: undefined,
 			});
 
-			setSelectedCategoria(despesa.subCategoria?.categoriaId?.toString() || "");
 			setValorTotalInput(despesa.valorTotal.toFixed(2).replace(".", ","));
 			setCotacaoInput(
 				despesa.cotacao ? despesa.cotacao.toFixed(4).replace(".", ",") : ""
@@ -235,46 +222,6 @@ export function FormularioDespesa() {
 		}
 	}, [despesa, isEditing, form, contasPagar]);
 
-	// Preencher subcategoria após carregar as subcategorias durante edição
-	useEffect(() => {
-		if (
-			despesa &&
-			isEditing &&
-			subcategorias.length > 0 &&
-			selectedCategoria &&
-			isInitialLoad
-		) {
-			const subCategoriaId = despesa.subCategoriaId?.toString() || "";
-			if (
-				subCategoriaId &&
-				subcategorias.some(
-					sub => sub.idSubCategoria?.toString() === subCategoriaId
-				)
-			) {
-				form.setValue("subCategoriaId", subCategoriaId);
-				// Aguardar um pouco para permitir que a subcategoria seja definida antes de marcar como não sendo carregamento inicial
-				setTimeout(() => setIsInitialLoad(false), 100);
-			} else {
-				// Se não encontrou a subcategoria, ainda assim marca como não sendo carregamento inicial
-				setTimeout(() => setIsInitialLoad(false), 100);
-			}
-		}
-	}, [
-		despesa,
-		isEditing,
-		subcategorias,
-		selectedCategoria,
-		form,
-		isInitialLoad,
-	]);
-
-	// Reset subcategoria when categoria changes (but not during initial load)
-	useEffect(() => {
-		if (selectedCategoria && !isInitialLoad && !isEditing) {
-			form.setValue("subCategoriaId", "");
-		}
-	}, [selectedCategoria, form, isInitialLoad, isEditing]);
-
 	const toast = useToast();
 
 	const onSubmit = async (data: FormData) => {
@@ -288,9 +235,9 @@ export function FormularioDespesa() {
 				descricao: data.descricao,
 				valorTotal: data.valorTotal,
 				dataRegistro: data.dataRegistro.toISOString(),
-				subCategoriaId: Number(data.subCategoriaId),
 				parceiroId: Number(selectedPartnerId!),
 				tipoPagamento: data.tipoPagamento,
+				contaDreId: Number(data.contaDreId),
 			};
 
 			// Adicionar campos opcionais apenas se tiverem valor
@@ -330,25 +277,39 @@ export function FormularioDespesa() {
 			});
 			toast.success(t("expenses.messages.createSuccess"));
 
-			navigate("/despesas");
+			// Limpar formulário para nova despesa em vez de navegar
+			form.reset({
+				descricao: "",
+				valorTotal: 0,
+				dataRegistro: new Date(),
+				fornecedorId: "",
+				contaDreId: "",
+				currencyId: "",
+				cotacao: 0,
+				tipoPagamento: "A_VISTA_IMEDIATA",
+				valorEntrada: 0,
+				numeroParcelas: 1,
+				dataPrimeiraParcela: undefined,
+				dataVencimento: undefined,
+			});
+			setValorTotalInput("");
+			setValorEntradaInput("");
+			setCotacaoInput("");
+			setTipoPagamento("avista");
 		} catch {
 			toast.error(t("expenses.messages.createError"));
 		}
 	};
 
 	// Prepare options for selects
-	const subcategoriaOptions: ComboboxOption[] = subcategorias
-		.filter(
-			subcategoria => subcategoria.idSubCategoria && subcategoria.descricao
-		)
-		.map(subcategoria => ({
-			value: subcategoria.idSubCategoria!.toString(),
-			label: subcategoria.descricao!,
-		}));
-
 	const fornecedorOptions: ComboboxOption[] = fornecedores.map(fornecedor => ({
 		value: fornecedor.id.toString(),
 		label: fornecedor.nome,
+	}));
+
+	const contaDreOptions: ComboboxOption[] = contasDre.map(conta => ({
+		value: conta.id.toString(),
+		label: conta.nome,
 	}));
 
 	if (isLoadingDespesa && isEditing) {
@@ -635,69 +596,25 @@ export function FormularioDespesa() {
 									</div>
 								)}
 
-								{/* Quarta linha: Categoria e Subcategoria */}
-								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+								{/* Conta DRE */}
+								<div className="grid grid-cols-1 gap-4">
 									<FormField
 										control={form.control}
-										name="categoriaId"
+										name="contaDreId"
 										render={({ field }) => (
 											<FormItem>
-												<FormLabel>{t("expenses.category")}</FormLabel>
-												<FormControl>
-													<RadioGroup
-														value={field.value}
-														onValueChange={value => {
-															field.onChange(value);
-															setSelectedCategoria(value);
-														}}
-														className="grid grid-cols-1 gap-2"
-														disabled={isLoadingCategorias || isViewing}
-													>
-														{categorias.map(categoria => (
-															<div
-																key={categoria.idCategoria}
-																className="flex items-center space-x-2"
-															>
-																<RadioGroupItem
-																	value={
-																		categoria.idCategoria?.toString() || ""
-																	}
-																	id={`categoria-${categoria.idCategoria}`}
-																/>
-																<Label
-																	htmlFor={`categoria-${categoria.idCategoria}`}
-																	className="text-sm font-normal cursor-pointer"
-																>
-																	{categoria.descricao}
-																</Label>
-															</div>
-														))}
-													</RadioGroup>
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-
-									<FormField
-										control={form.control}
-										name="subCategoriaId"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>{t("expenses.subcategory")}</FormLabel>
+												<FormLabel>
+													{t("expenses.dreAccount")}
+												</FormLabel>
 												<FormControl>
 													<Combobox
-														options={subcategoriaOptions}
+														options={contaDreOptions}
 														value={field.value}
 														onValueChange={field.onChange}
-														placeholder={t("expenses.selectSubcategory")}
-														searchPlaceholder={t("expenses.searchSubcategory")}
-														emptyText={t("expenses.noSubcategoryFound")}
-														disabled={
-															isLoadingSubcategorias ||
-															!selectedCategoria ||
-															isViewing
-														}
+														placeholder={t("expenses.selectDreAccount")}
+														searchPlaceholder={t("expenses.searchDreAccount")}
+														emptyText={t("expenses.noDreAccountFound")}
+														disabled={isLoadingContasDre || isViewing}
 													/>
 												</FormControl>
 												<FormMessage />

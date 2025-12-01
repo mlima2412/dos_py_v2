@@ -4,9 +4,15 @@ import { DespesasController } from './despesas.controller';
 import { PrismaModule } from '../prisma/prisma.module';
 import { DespesaCacheModule } from '../cash/despesas/despesa-cache/despesa-cache.module';
 import { DespesaClassificacaoCacheModule } from '../cash/despesas/despesa-classificacao-cache/despesa-classificacao-cache.module';
+import { LancamentoDreModule } from '../lancamento-dre/lancamento-dre.module';
 
 @Module({
-  imports: [PrismaModule, DespesaCacheModule, DespesaClassificacaoCacheModule],
+  imports: [
+    PrismaModule,
+    DespesaCacheModule,
+    DespesaClassificacaoCacheModule,
+    LancamentoDreModule,
+  ],
   controllers: [DespesasController],
   providers: [DespesasService],
   exports: [DespesasService],

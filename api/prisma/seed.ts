@@ -187,13 +187,57 @@ const CONFIRMED_VENDA_STATUSES: VendaStatus[] = [
 const isVendaConfirmada = (status: VendaStatus) =>
   CONFIRMED_VENDA_STATUSES.includes(status);
 
-async function fetchDespesaFromLegacy(app, legacyDb) {
+async function fetchDespesaFromLegacy(app, legacyDb, prisma: PrismaService) {
   console.log('🌱 Migrando Despesas');
-  const despesas = await legacyDb.query('SELECT * FROM public."Despesas"');
+
+  // Buscar despesas com o nome da subcategoria (ItensDespesas)
+  const despesas = await legacyDb.query(`
+    SELECT d.*, i.descricao as "subCategoriaDescricao"
+    FROM public."Despesas" d
+    LEFT JOIN public."ItensDespesas" i ON i."idItem" = d."itemId"
+  `);
+
   const despesaService = app.get(DespesasService);
+
+  // Cache de mapeamento subCategoria -> contaDreId
+  const contaDreCache = new Map<string, number | null>();
+
+  let migradas = 0;
+  let semMapeamento = 0;
+
   for (const raw of despesas.rows) {
-    // mapeie do legado -> DTO do seu service
-    console.log(`Criando a despesa:${raw.descricao}`);
+    // Buscar contaDreId baseado no nome da subcategoria (nomeV1)
+    let contaDreId: number | undefined = undefined;
+
+    if (raw.subCategoriaDescricao) {
+      // Verificar cache primeiro
+      if (contaDreCache.has(raw.subCategoriaDescricao)) {
+        contaDreId = contaDreCache.get(raw.subCategoriaDescricao) ?? undefined;
+      } else {
+        // Buscar ContaDRE pelo nomeV1
+        const contaDre = await prisma.contaDRE.findFirst({
+          where: {
+            parceiroId: DEFAULT_PARCEIRO_ID,
+            nomeV1: raw.subCategoriaDescricao,
+          },
+          select: { id: true },
+        });
+
+        contaDreCache.set(raw.subCategoriaDescricao, contaDre?.id ?? null);
+        contaDreId = contaDre?.id ?? undefined;
+
+        if (!contaDre) {
+          console.warn(
+            `  ⚠ Sem mapeamento DRE para subcategoria: "${raw.subCategoriaDescricao}"`,
+          );
+        }
+      }
+    }
+
+    console.log(
+      `Criando a despesa: ${raw.descricao} (contaDreId: ${contaDreId ?? 'N/A'})`,
+    );
+
     const dto: CreateDespesaDto = {
       tipoPagamento: TipoPagamentoEnum.A_VISTA_IMEDIATA,
       parceiroId: 1,
@@ -203,10 +247,20 @@ async function fetchDespesaFromLegacy(app, legacyDb) {
       valorEntrada: 0,
       dataRegistro: raw.dataDespesa,
       subCategoriaId: raw.itemId,
+      contaDreId: contaDreId,
     };
 
     await despesaService.create(dto, 1);
+    migradas++;
+
+    if (!contaDreId) {
+      semMapeamento++;
+    }
   }
+
+  console.log(
+    `✅ Despesas migradas: ${migradas}, sem mapeamento DRE: ${semMapeamento}`,
+  );
 }
 
 async function fetchCategoriaFromLegacy(app, legacyDb) {
@@ -990,7 +1044,7 @@ async function run() {
 
     await fetchCategoriaFromLegacy(app, legacyDb);
     await fetchSubCategoriaFromLegacy(app, legacyDb);
-    await fetchDespesaFromLegacy(app, legacyDb);
+    await fetchDespesaFromLegacy(app, legacyDb, prisma);
     await fetchClientesFromLegacy(app, legacyDb);
     await fetchProdutosFromLegacy(app, legacyDb);
     await fetchFornecedoresFromLegacy(app, legacyDb);

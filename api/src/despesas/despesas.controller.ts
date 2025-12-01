@@ -23,7 +23,6 @@ import { CreateDespesaDto } from './dto/create-despesa.dto';
 import { PaginatedQueryDto } from './dto/paginated-query.dto';
 import { PaginatedDespesaResponseDto } from './dto/paginated-despesa-response.dto';
 import { YearItemDto } from './dto/year-item-response.dto';
-import { ExpenseReportFilterDto } from './dto/expense-report-filter.dto';
 
 import { Despesa } from './entities/despesa.entity';
 import { ParceiroId } from '../auth/decorators/parceiro-id.decorator';
@@ -78,6 +77,10 @@ export class DespesasController {
       query.subCategoriaId && query.subCategoriaId.trim() !== ''
         ? parseInt(query.subCategoriaId, 10)
         : undefined;
+    const grupoDreIdNum =
+      query.grupoDreId && query.grupoDreId.trim() !== ''
+        ? parseInt(query.grupoDreId, 10)
+        : undefined;
     const searchTerm =
       query.search && query.search.trim() !== '' ? query.search : undefined;
 
@@ -88,6 +91,7 @@ export class DespesasController {
       parceiroId,
       fornecedorId: fornecedorIdNum,
       subCategoriaId: subCategoriaIdNum,
+      grupoDreId: grupoDreIdNum,
     });
   }
 

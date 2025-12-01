@@ -43,10 +43,12 @@ export class CreateDespesaDto {
   @ApiProperty({
     description: 'ID da subcategoria da despesa',
     example: 1,
+    required: false,
   })
+  @IsOptional()
   @IsInt()
   @Type(() => Number)
-  subCategoriaId: number;
+  subCategoriaId?: number;
 
   @ApiProperty({
     description: 'ID do parceiro responsável pela despesa',
@@ -132,4 +134,14 @@ export class CreateDespesaDto {
   @IsNumber({ maxDecimalPlaces: 3 })
   @Type(() => Number)
   cotacao?: number;
+
+  @ApiProperty({
+    description: 'ID da conta DRE para classificação contábil',
+    example: 1,
+    required: false,
+  })
+  @IsOptional()
+  @IsInt()
+  @Type(() => Number)
+  contaDreId?: number;
 }

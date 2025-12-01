@@ -10,7 +10,7 @@ export const createDespesaDtoSchema = z.object({
     "dataRegistro": z.optional(z.coerce.string().describe("Data do registro")),
 "valorTotal": z.coerce.number().describe("Valor da despesa"),
 "descricao": z.coerce.string().describe("Descrição da despesa"),
-"subCategoriaId": z.coerce.number().describe("ID da subcategoria da despesa"),
+"subCategoriaId": z.optional(z.coerce.number().describe("ID da subcategoria da despesa")),
 "parceiroId": z.coerce.number().describe("ID do parceiro responsável pela despesa"),
 "fornecedorId": z.optional(z.coerce.number().describe("ID do fornecedor da despesa")),
 "tipoPagamento": z.enum(["A_VISTA_IMEDIATA", "A_PRAZO_SEM_PARCELAS", "PARCELADO"]).describe("Tipo de pagamento da despesa"),
@@ -19,5 +19,6 @@ export const createDespesaDtoSchema = z.object({
 "numeroParcelas": z.optional(z.coerce.number().describe("Número de parcelas (apenas para pagamento parcelado)")),
 "dataVencimento": z.optional(z.coerce.string().describe("Data de vencimento (apenas para pagamento à prazo sem parcelas)")),
 "currencyId": z.optional(z.coerce.number().describe("ID da moeda da despesa")),
-"cotacao": z.optional(z.coerce.number().describe("Cotação da moeda no momento da despesa"))
+"cotacao": z.optional(z.coerce.number().describe("Cotação da moeda no momento da despesa")),
+"contaDreId": z.optional(z.coerce.number().describe("ID da conta DRE para classificação contábil"))
     }) as unknown as z.ZodType<CreateDespesaDto>

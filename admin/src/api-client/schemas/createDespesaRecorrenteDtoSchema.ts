@@ -13,9 +13,10 @@ export const createDespesaRecorrenteDtoSchema = z.object({
 "diaVencimento": z.coerce.number().describe("Dia do vencimento da despesa recorrente (1-31)"),
 "dataInicio": z.optional(z.coerce.string().describe("Data de início da despesa recorrente")),
 "dataFim": z.optional(z.coerce.string().describe("Data de fim da despesa recorrente")),
-"subCategoriaId": z.coerce.number().describe("ID da subcategoria da despesa"),
+"subCategoriaId": z.optional(z.coerce.number().describe("ID da subcategoria da despesa")),
 "parceiroId": z.coerce.number().describe("ID do parceiro responsável pela despesa"),
 "fornecedorId": z.optional(z.coerce.number().describe("ID do fornecedor da despesa")),
 "currencyId": z.optional(z.coerce.number().describe("ID da moeda da despesa")),
-"cotacao": z.optional(z.coerce.number().describe("Cotação da moeda no momento da despesa"))
+"cotacao": z.optional(z.coerce.number().describe("Cotação da moeda no momento da despesa")),
+"contaDreId": z.coerce.number().describe("ID da conta DRE para classificação contábil")
     }) as unknown as z.ZodType<CreateDespesaRecorrenteDto>

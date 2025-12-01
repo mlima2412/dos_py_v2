@@ -22,12 +22,14 @@ export class DespesasRecorrentesService {
       throw new BadRequestException('Parceiro não encontrado');
     }
 
-    // Validar se a subcategoria existe
-    const subCategoria = await this.prisma.subCategoriaDespesa.findUnique({
-      where: { idSubCategoria: createDespesaRecorrenteDto.subCategoriaId },
-    });
-    if (!subCategoria) {
-      throw new BadRequestException('Subcategoria não encontrada');
+    // Validar se a subcategoria existe (se fornecida)
+    if (createDespesaRecorrenteDto.subCategoriaId) {
+      const subCategoria = await this.prisma.subCategoriaDespesa.findUnique({
+        where: { idSubCategoria: createDespesaRecorrenteDto.subCategoriaId },
+      });
+      if (!subCategoria) {
+        throw new BadRequestException('Subcategoria não encontrada');
+      }
     }
 
     // Validar se o fornecedor existe (se fornecido)
@@ -37,6 +39,22 @@ export class DespesasRecorrentesService {
       });
       if (!fornecedor) {
         throw new BadRequestException('Fornecedor não encontrado');
+      }
+    }
+
+    // Validar se a conta DRE existe, pertence ao parceiro e está ativa (se fornecida)
+    if (createDespesaRecorrenteDto.contaDreId) {
+      const contaDre = await this.prisma.contaDRE.findFirst({
+        where: {
+          id: createDespesaRecorrenteDto.contaDreId,
+          parceiroId: createDespesaRecorrenteDto.parceiroId,
+          ativo: true,
+        },
+      });
+      if (!contaDre) {
+        throw new BadRequestException(
+          'Conta DRE não encontrada, não pertence ao parceiro ou está inativa',
+        );
       }
     }
 
@@ -62,6 +80,7 @@ export class DespesasRecorrentesService {
         fornecedorId: createDespesaRecorrenteDto.fornecedorId,
         currencyId: createDespesaRecorrenteDto.currencyId,
         cotacao: createDespesaRecorrenteDto.cotacao,
+        contaDreId: createDespesaRecorrenteDto.contaDreId,
       },
       include: {
         parceiro: true,
@@ -242,6 +261,27 @@ export class DespesasRecorrentesService {
       }
     }
 
+    // Validar se a conta DRE existe, pertence ao parceiro e está ativa (se fornecida)
+    if (updateDespesaRecorrenteDto.contaDreId) {
+      // Usar o parceiroId do DTO se fornecido, senão usar o da despesa existente
+      const parceiroIdParaValidacao =
+        updateDespesaRecorrenteDto.parceiroId ||
+        despesaRecorrenteExistente.parceiroId;
+
+      const contaDre = await this.prisma.contaDRE.findFirst({
+        where: {
+          id: updateDespesaRecorrenteDto.contaDreId,
+          parceiroId: parceiroIdParaValidacao,
+          ativo: true,
+        },
+      });
+      if (!contaDre) {
+        throw new BadRequestException(
+          'Conta DRE não encontrada, não pertence ao parceiro ou está inativa',
+        );
+      }
+    }
+
     const updateData: any = {};
 
     if (updateDespesaRecorrenteDto.descricao !== undefined) {
@@ -276,6 +316,9 @@ export class DespesasRecorrentesService {
     }
     if (updateDespesaRecorrenteDto.cotacao !== undefined) {
       updateData.cotacao = updateDespesaRecorrenteDto.cotacao;
+    }
+    if (updateDespesaRecorrenteDto.contaDreId !== undefined) {
+      updateData.contaDreId = updateDespesaRecorrenteDto.contaDreId;
     }
 
     const despesaRecorrente = await this.prisma.despesaRecorrente.update({

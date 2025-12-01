@@ -9,6 +9,7 @@ import {
   HttpStatus,
   UseGuards,
   Request,
+  UnauthorizedException,
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { AuthService } from './auth.service';
@@ -21,6 +22,7 @@ import { UserProfileDto } from './dto/user-profile.dto';
 import { UserParceiroItemDto } from './dto/user-parceiro-response.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Public } from './decorators/public.decorator';
+import { GoogleLoginDto } from './dto/google-login.dto';
 import {
   ApiTags,
   ApiOperation,
@@ -34,6 +36,28 @@ import { TFunction } from 'i18next';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  private setRefreshCookie(response: Response, refreshToken: string) {
+    const isProduction = process.env.NODE_ENV === 'production';
+    let cookieDomain: string | undefined;
+
+    if (isProduction && process.env.FRONTEND_URL) {
+      try {
+        cookieDomain = new URL(process.env.FRONTEND_URL).hostname;
+      } catch {
+        cookieDomain = process.env.FRONTEND_URL;
+      }
+    }
+
+    response.cookie('refreshToken', refreshToken, {
+      domain: cookieDomain,
+      httpOnly: true,
+      path: '/',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+  }
 
   @Public()
   @Post('login')
@@ -73,30 +97,38 @@ export class AuthController {
   ): Promise<LoginResponseDto> {
     const result = await this.authService.login(loginDto);
     console.log(req.t('main.greeting'));
-    // Configurar cookie para aplicação web (7 dias)
-    const isProduction = process.env.NODE_ENV === 'production';
-    let cookieDomain: string | undefined;
-
-    if (isProduction && process.env.FRONTEND_URL) {
-      try {
-        cookieDomain = new URL(process.env.FRONTEND_URL).hostname;
-      } catch {
-        cookieDomain = process.env.FRONTEND_URL;
-      }
-    }
-
-    response.cookie('refreshToken', result.refreshToken, {
-      domain: cookieDomain,
-      httpOnly: true,
-      path: '/',
-      secure: isProduction,
-      sameSite: isProduction ? 'none' : 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias
-    });
+    this.setRefreshCookie(response, result.refreshToken);
 
     return {
       accessToken: result.accessToken,
       user: result.user,
+      refreshToken: result.refreshToken,
+    };
+  }
+
+  @Public()
+  @Post('google')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Realizar login com Google' })
+  @ApiBody({
+    type: GoogleLoginDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Login Google realizado com sucesso',
+    type: LoginResponseDto,
+  })
+  async googleLogin(
+    @Body() googleLoginDto: GoogleLoginDto,
+    @Res({ passthrough: true }) response: Response,
+  ): Promise<LoginResponseDto> {
+    const result = await this.authService.loginWithGoogle(googleLoginDto);
+    this.setRefreshCookie(response, result.refreshToken);
+
+    return {
+      accessToken: result.accessToken,
+      user: result.user,
+      refreshToken: result.refreshToken,
     };
   }
 
@@ -125,10 +157,10 @@ export class AuthController {
   async refresh(@Body() refreshTokenDto: RefreshTokenDto, @Request() req): Promise<RefreshResponseDto> {
     // Priorizar refresh token do body (mobile) ou cookie (web)
     const refreshToken =
-      refreshTokenDto.refreshToken || req.cookies?.refreshToken;
+      refreshTokenDto?.refreshToken || req.cookies?.refreshToken;
 
     if (!refreshToken) {
-      throw new Error('Refresh token não fornecido');
+      throw new UnauthorizedException('Refresh token não fornecido');
     }
 
     return this.authService.refreshToken(refreshToken);

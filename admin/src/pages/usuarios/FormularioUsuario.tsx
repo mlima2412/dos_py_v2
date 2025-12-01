@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
@@ -50,6 +50,16 @@ interface ParceiroPerfilAssociation {
 	perfil?: { id: number; nome: string };
 }
 
+const LANGUAGE_VALUES = ["Portugues", "Espanol"] as const;
+type SupportedLanguage = (typeof LANGUAGE_VALUES)[number];
+
+const languageField = (t: ReturnType<typeof useTranslation>["t"]) =>
+	z.enum(LANGUAGE_VALUES, {
+		message: t("validation.required", {
+			field: t("users.language", { defaultValue: "Idioma" }),
+		}),
+	});
+
 // Schema de validação com i18n
 const createUserSchema = (t: ReturnType<typeof useTranslation>["t"]) =>
 	z.object({
@@ -62,6 +72,7 @@ const createUserSchema = (t: ReturnType<typeof useTranslation>["t"]) =>
 			.min(1, t("validation.required", { field: t("users.email") }))
 			.email(t("validation.email")),
 		telefone: z.string().optional(),
+		linguagem: languageField(t),
 	});
 
 const updateUserSchema = (t: ReturnType<typeof useTranslation>["t"]) =>
@@ -75,6 +86,7 @@ const updateUserSchema = (t: ReturnType<typeof useTranslation>["t"]) =>
 			.min(1, t("validation.required", { field: t("users.email") }))
 			.email(t("validation.email")),
 		telefone: z.string().optional(),
+		linguagem: languageField(t),
 	});
 
 type CreateUserFormData = z.infer<ReturnType<typeof createUserSchema>>;
@@ -84,26 +96,38 @@ type FormData = CreateUserFormData | UpdateUserFormData;
 // Usando UsuarioWithRelations do hook useUsers
 
 export function FormularioUsuario() {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 	const navigate = useNavigate();
 	const { publicId } = useParams<{ publicId?: string }>();
 	const toast = useToast();
 	const queryClient = useQueryClient();
 
+	const defaultLanguage: SupportedLanguage = i18n.resolvedLanguage
+		?.toLowerCase()
+		.startsWith("es")
+		? "Espanol"
+		: "Portugues";
+
 	const isEditing = Boolean(publicId);
 	const schema = isEditing ? updateUserSchema(t) : createUserSchema(t);
+	const languageOptions = [
+		{ value: "Portugues", label: t("languages.portuguese") },
+		{ value: "Espanol", label: t("languages.spanish") },
+	];
 
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 		reset,
+		control,
 	} = useForm<FormData>({
 		resolver: zodResolver(schema),
 		defaultValues: {
 			nome: "",
 			email: "",
 			telefone: "",
+			linguagem: defaultLanguage,
 		},
 	});
 
@@ -141,6 +165,9 @@ export function FormularioUsuario() {
 				nome: userData.nome || "",
 				email: userData.email || "",
 				telefone: userData.telefone || "",
+				linguagem:
+					(userData.linguagem as SupportedLanguage | undefined) ||
+					defaultLanguage,
 			};
 
 			reset(formData);
@@ -157,7 +184,7 @@ export function FormularioUsuario() {
 				setAssociations(existingAssociations);
 			}
 		}
-	}, [userData, isEditing, reset]);
+	}, [userData, isEditing, reset, defaultLanguage]);
 
 	// Funções para gerenciar associações
 	// Mutation para adicionar associação imediatamente
@@ -298,6 +325,7 @@ export function FormularioUsuario() {
 				nome: data.nome,
 				email: data.email,
 				telefone: data.telefone || undefined,
+				linguagem: data.linguagem,
 			});
 
 			// Criar a relação inicial UsuarioParceiro
@@ -329,6 +357,7 @@ export function FormularioUsuario() {
 				nome: data.nome,
 				email: data.email,
 				telefone: data.telefone || undefined,
+				linguagem: data.linguagem,
 			});
 
 			return response;
@@ -397,7 +426,7 @@ export function FormularioUsuario() {
 					<CardContent>
 						<form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
 							{/* Primeira Row: Nome, Email, Telefone */}
-							<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+							<div className="grid grid-cols-1 md:grid-cols-4 gap-6">
 								{/* Nome */}
 								<div className="space-y-2">
 									<Label htmlFor="nome">{t("users.name")} *</Label>
@@ -439,6 +468,49 @@ export function FormularioUsuario() {
 										{...register("telefone")}
 										placeholder={t("users.phonePlaceholder")}
 									/>
+								</div>
+
+								{/* Linguagem */}
+								<div className="space-y-2">
+									<Label htmlFor="linguagem">
+										{t("users.language")} *
+									</Label>
+									<Controller
+										name="linguagem"
+										control={control}
+										render={({ field }) => (
+											<Select
+												value={field.value}
+												onValueChange={value =>
+													field.onChange(value as SupportedLanguage)
+												}
+											>
+												<SelectTrigger id="linguagem">
+													<SelectValue
+														placeholder={t(
+															"users.languagePlaceholder",
+															{ defaultValue: "Selecione um idioma" }
+														)}
+													/>
+												</SelectTrigger>
+												<SelectContent>
+													{languageOptions.map(option => (
+														<SelectItem
+															key={option.value}
+															value={option.value}
+														>
+															{option.label}
+														</SelectItem>
+													))}
+												</SelectContent>
+											</Select>
+										)}
+									/>
+									{errors.linguagem && (
+										<p className="text-sm text-destructive">
+											{errors.linguagem.message}
+										</p>
+									)}
 								</div>
 							</div>
 

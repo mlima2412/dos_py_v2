@@ -88,8 +88,9 @@ export async function ensureSystemInitialized(prisma: PrismaService) {
     console.log('Parceiro inativo de teste já existe.');
   }
   const perfil = await prisma.perfil.findFirst();
+  const adminEmail = 'mlima001@gmail.com';
   const admin = await prisma.usuario.findFirst({
-    where: { nome: 'Admin' },
+    where: { email: adminEmail },
   });
 
   if (!perfil) {
@@ -141,19 +142,34 @@ export async function ensureSystemInitialized(prisma: PrismaService) {
 
   let usuarioAdmin = admin;
   if (!usuarioAdmin) {
-    const hashedPassword = await bcrypt.hash('123456', 10);
     usuarioAdmin = await prisma.usuario.create({
       data: {
         publicId: uuidv7(),
         nome: 'Admin',
-        email: 'mlima001@gmail.com',
-        senha: hashedPassword,
+        email: adminEmail,
+        provider: 'GOOGLE',
+        googleId: adminEmail,
+        senha: null,
         ativo: true,
       },
     });
     console.log('Admin criado automaticamente.');
   } else {
-    console.log('Admin já existe.');
+    const needsUpdate =
+      usuarioAdmin.provider !== 'GOOGLE' || usuarioAdmin.senha !== null;
+    if (needsUpdate) {
+      usuarioAdmin = await prisma.usuario.update({
+        where: { id: usuarioAdmin.id },
+        data: {
+          provider: 'GOOGLE',
+          googleId: usuarioAdmin.googleId || adminEmail,
+          senha: null,
+        },
+      });
+      console.log('Admin atualizado para usar login com Google.');
+    } else {
+      console.log('Admin já existe.');
+    }
   }
 
   // Garantir vínculo UsuarioParceiro

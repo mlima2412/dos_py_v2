@@ -188,9 +188,26 @@ const gruposDRE = [
 ];
 ```
 
-### 1.4 Mapeamento V1 → GrupoDRE
+### 1.4 Estratégia de Migração com Campo `nomeV1`
 
-Baseado no plano de contas da planilha `Planilha Padrão - DRE_DFC.xlsx`:
+O campo `nomeV1` na tabela `SubCategoriaDespesa` será usado para mapear as subcategorias existentes (V1) para as novas contas DRE (V2).
+
+**Fluxo de Migração:**
+
+1. **Passo 1 - Migração Prisma:** Criar as novas tabelas (`grupo_dre`, `conta_dre`, etc.) e adicionar campos `nomeV1` e `contaDreId` em `SubCategoriaDespesa`
+
+2. **Passo 2 - Preencher `nomeV1`:** Executar UPDATE para copiar o nome atual de cada subcategoria para `nomeV1`:
+   ```sql
+   UPDATE subcategoria_despesa SET nome_v1 = nome WHERE nome_v1 IS NULL;
+   ```
+
+3. **Passo 3 - Criar ContasDRE:** Para cada subcategoria, criar a ContaDRE correspondente baseado no mapeamento abaixo
+
+4. **Passo 4 - Vincular:** Atualizar `contaDreId` em cada subcategoria apontando para a ContaDRE criada
+
+5. **Passo 5 - Propagar para Despesas:** Atualizar `contaDreId` em todas as despesas baseado na subcategoria
+
+**Mapeamento Natureza V1 → GrupoDRE:**
 
 | Natureza V1 | Grupo DRE |
 |-------------|-----------|
@@ -205,6 +222,8 @@ Baseado no plano de contas da planilha `Planilha Padrão - DRE_DFC.xlsx`:
 | Receitas financeiras | 6100 - Receitas Financeiras |
 | Receita Operacional | 1000 - Receitas de Vendas |
 | Dedução sobre venda | 2000 - Deduções sobre Receita |
+
+**Nota:** O campo `nomeV1` permite rastrear qual era o nome original da classificação V1, facilitando validação e eventual rollback se necessário.
 
 ### 1.5 Endpoints da API
 
@@ -389,16 +408,13 @@ async function validarMigracao(prisma: PrismaClient, parceiroId: number) {
 ### 3.3 Ordem de Execução
 
 ```bash
-# 1. Backup
-pg_dump -h localhost -U postgres dosv2 > backup_pre_dre.sql
-
-# 2. Migration Prisma
+# 1. Migration Prisma
 npx prisma migrate dev --name add_dre_structure
 
-# 3. Script de migração
+# 2. Script de migração
 npx ts-node prisma/migrate-to-dre.ts
 
-# 4. Regenerar API client
+# 3. Regenerar API client
 cd ../admin && npm run generate:api
 ```
 
@@ -579,27 +595,33 @@ Adicionar seção com resumo DRE:
 
 ## Fase 4: Menu e Navegação (0.5 dia)
 
-### 4.1 Menu
+### 4.1 Menu - Dentro da Seção Finanças
 
 **Arquivo:** `admin/src/components/layout/menu-list.ts`
 
+As novas páginas de DRE devem ser adicionadas como sub-itens dentro da seção **Finanças** existente (não criar seção separada):
+
 ```typescript
+// Dentro do groupLabel: 'menu.finances' (Finanças)
 {
-  groupLabel: 'menu.dre',
+  groupLabel: 'menu.finances',
   menus: [
+    // ... itens existentes (Despesas, Contas a Pagar, etc.)
+
+    // Novos itens DRE:
     {
-      href: '/dre',
-      label: 'menu.dre.dashboard',
+      href: '/financas/dre',
+      label: 'menu.finances.dre',
       icon: BarChart3,
     },
     {
-      href: '/dre/plano-contas',
-      label: 'menu.dre.chartOfAccounts',
+      href: '/financas/plano-contas',
+      label: 'menu.finances.chartOfAccounts',
       icon: List,
     },
     {
-      href: '/dre/regras',
-      label: 'menu.dre.rules',
+      href: '/financas/regras-lancamento',
+      label: 'menu.finances.autoRules',
       icon: Settings2,
     },
   ],
@@ -611,9 +633,9 @@ Adicionar seção com resumo DRE:
 **Arquivo:** `admin/src/App.tsx` ou arquivo de rotas
 
 ```tsx
-<Route path="/dre" element={<DREPage />} />
-<Route path="/dre/plano-contas" element={<PlanoContas />} />
-<Route path="/dre/regras" element={<RegrasLancamento />} />
+<Route path="/financas/dre" element={<DREPage />} />
+<Route path="/financas/plano-contas" element={<PlanoContas />} />
+<Route path="/financas/regras-lancamento" element={<RegrasLancamento />} />
 ```
 
 ---
@@ -627,11 +649,10 @@ Adicionar seção com resumo DRE:
 ```json
 {
   "menu": {
-    "dre": {
-      "main": "DRE",
-      "dashboard": "Painel DRE",
+    "finances": {
+      "dre": "DRE",
       "chartOfAccounts": "Plano de Contas",
-      "rules": "Regras de Lançamento"
+      "autoRules": "Regras de Lançamento"
     }
   },
   "dre": {
@@ -675,11 +696,10 @@ Adicionar seção com resumo DRE:
 ```json
 {
   "menu": {
-    "dre": {
-      "main": "Estado de Resultados",
-      "dashboard": "Panel",
+    "finances": {
+      "dre": "Estado de Resultados",
       "chartOfAccounts": "Plan de Cuentas",
-      "rules": "Reglas de Lanzamiento"
+      "autoRules": "Reglas de Lanzamiento"
     }
   },
   "dre": {

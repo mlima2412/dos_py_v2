@@ -37,6 +37,7 @@ import {
 } from "./pages/pedido-compra";
 import { PedidoCompraPrintPage } from "./pages/pedido-compra/print";
 import { VendasRoutes } from "./pages/vendas/vendas";
+import { RelatorioDRE } from "./pages/dre/RelatorioDRE";
 import { DashboardLayout } from "./components/layout/DashboardLayout";
 
 import { ThemeProvider } from "./components/theme-provider";
@@ -135,6 +136,7 @@ function App() {
 											element={<PedidoCompraPrintPage />}
 										/>
 										<Route path="/pedidoVendas/*" element={<VendasRoutes />} />
+										<Route path="/dre" element={<RelatorioDRE />} />
 										<Route path="/" element={<Navigate to="/inicio" replace />} />
 									</Route>
 

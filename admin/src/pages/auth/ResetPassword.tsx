@@ -27,6 +27,20 @@ function ResetPassword() {
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [success, setSuccess] = useState(false);
 	const [error, setError] = useState("");
+	const GOOGLE_PROVIDER_ERROR_CODE = "GOOGLE_PROVIDER_ACCOUNT";
+
+	const extractErrorResponse = (error: unknown) => {
+		if (error && typeof error === "object") {
+			const maybeError = error as {
+				response?: { data?: { message?: string; code?: string } };
+			};
+			const data = maybeError.response?.data;
+			const message =
+				typeof data?.message === "string" ? data.message : undefined;
+			return { message, code: data?.code };
+		}
+		return { message: undefined, code: undefined };
+	};
 
 	// Validar token ao carregar a página
 	const {
@@ -51,12 +65,12 @@ function ResetPassword() {
 				setError("");
 			},
 			onError: (error: unknown) => {
-				const errorMessage =
-					error && typeof error === "object" && "response" in error
-						? (error as { response?: { data?: { message?: string } } }).response
-								?.data?.message
-						: undefined;
-				setError(errorMessage || t("resetPassword.invalidToken"));
+				const { message, code } = extractErrorResponse(error);
+				if (code === GOOGLE_PROVIDER_ERROR_CODE) {
+					setError(t("resetPassword.googleProviderNotAllowed"));
+					return;
+				}
+				setError(message || t("resetPassword.invalidToken"));
 			},
 		},
 	});
@@ -72,6 +86,12 @@ function ResetPassword() {
 			setError(t("resetPassword.invalidToken"));
 		}
 	}, [tokenError, t]);
+
+	useEffect(() => {
+		if (tokenValidation && tokenValidation.valid === false) {
+			setError(tokenValidation.message || t("resetPassword.invalidToken"));
+		}
+	}, [tokenValidation, t]);
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -111,6 +131,9 @@ function ResetPassword() {
 			</div>
 		);
 	}
+
+	const tokenIsInvalid =
+		Boolean(tokenValidation && tokenValidation.valid === false) && !success;
 
 	return (
 		<div className="min-h-screen grid lg:grid-cols-[70%_30%]">
@@ -158,6 +181,18 @@ function ResetPassword() {
 						</CardHeader>
 						<CardContent>
 							{!success ? (
+								tokenIsInvalid ? (
+									<div className="space-y-4 text-center">
+										{error && (
+											<div className="text-red-600 text-sm text-center bg-red-50 p-2 rounded">
+												{error}
+											</div>
+										)}
+										<Button asChild variant="outline" className="w-full">
+											<Link to="/login">{t("resetPassword.backToLogin")}</Link>
+										</Button>
+									</div>
+								) : (
 								<form onSubmit={handleSubmit} className="space-y-4">
 									{error && (
 										<div className="text-red-600 text-sm text-center bg-red-50 p-2 rounded">
@@ -212,7 +247,9 @@ function ResetPassword() {
 										variant="outline"
 										className="w-full"
 										disabled={
-											resetPasswordMutation.isPending || !tokenValidation
+											resetPasswordMutation.isPending ||
+											!tokenValidation ||
+											tokenValidation.valid === false
 										}
 									>
 										{resetPasswordMutation.isPending
@@ -229,6 +266,7 @@ function ResetPassword() {
 										</Link>
 									</div>
 								</form>
+								)
 							) : (
 								<div className="text-center space-y-4">
 									<div className="text-green-600 text-sm">

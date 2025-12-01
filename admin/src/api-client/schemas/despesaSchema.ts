@@ -4,6 +4,7 @@
 */
 
 import type { Despesa } from "../types/Despesa.ts";
+import { contaDRESchema } from "./contaDRESchema.ts";
 import { currencySchema } from "./currencySchema.ts";
 import { fornecedorSchema } from "./fornecedorSchema.ts";
 import { subCategoriaDespesaSchema } from "./subCategoriaDespesaSchema.ts";
@@ -28,5 +29,9 @@ get "subCategoria"(){
               },
 get "currency"(){
                 return currencySchema.describe("Moeda da despesa").optional()
+              },
+"contaDreId": z.optional(z.coerce.number().describe("ID da conta DRE para classificação contábil")),
+get "contaDre"(){
+                return contaDRESchema.describe("Conta DRE da despesa").optional()
               }
     }) as unknown as z.ZodType<Despesa>

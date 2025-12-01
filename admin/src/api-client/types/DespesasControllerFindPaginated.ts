@@ -33,6 +33,11 @@ export type DespesasControllerFindPaginatedQueryParams = {
      * @type string | undefined
     */
     subCategoriaId?: string | undefined;
+    /**
+     * @description ID do grupo DRE para filtrar
+     * @type string | undefined
+    */
+    grupoDreId?: string | undefined;
 };
 
 /**

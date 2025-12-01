@@ -25,6 +25,7 @@ model Usuario {
   provider                      String                 @default("LOCAL") // LOCAL, GOOGLE, FACEBOOK
   googleId                      String?                @map("google_id")
   senha                         String?
+  linguagem                     Linguagem              @default(Espanol)
   ativo                         Boolean                @default(true)
   avatar                        String?                @default("")
   createdAt                     DateTime               @default(now()) @map("created_at")
@@ -118,6 +119,7 @@ model Parceiro {
   Venda                          Venda[]
   RollupVendasMensais            RollupVendasMensais[]
   RollupVendasMensaisTipo        RollupVendasMensaisTipo[]
+  RollupDespesasMensaisDRE       RollupDespesasMensaisDRE[]
 
   @@map("parceiro")
 }
@@ -221,21 +223,23 @@ enum TipoPagamento {
 }
 
 model Despesa {
-  id             Int                 @id @default(autoincrement())
-  publicId       String              @unique @map("public_id")
-  dataRegistro   DateTime            @default(now()) @map("data_registro")
-  valorTotal     Decimal             @default(0.0) @map("valor_total") @db.Decimal(12, 3)
+  id             Int                  @id @default(autoincrement())
+  publicId       String               @unique @map("public_id")
+  dataRegistro   DateTime             @default(now()) @map("data_registro")
+  valorTotal     Decimal              @default(0.0) @map("valor_total") @db.Decimal(12, 3)
   descricao      String
-  tipoPagamento  TipoPagamento       @default(A_VISTA_IMEDIATA) @map("tipo_pagamento")
-  subCategoriaId Int                 @map("sub_categoria_id")
-  parceiroId     Int                 @map("parceiro_id")
-  fornecedorId   Int?                @map("fornecedor_id")
-  currencyId     Int?                @map("currency_id")
-  cotacao        Decimal?            @default(0.0) @map("cotacao") @db.Decimal(12, 3)
-  currency       Currency?           @relation(fields: [currencyId], references: [id])
-  fornecedor     Fornecedor?         @relation(fields: [fornecedorId], references: [id])
-  parceiro       Parceiro            @relation(fields: [parceiroId], references: [id])
-  subCategoria   SubCategoriaDespesa @relation(fields: [subCategoriaId], references: [idSubCategoria])
+  tipoPagamento  TipoPagamento        @default(A_VISTA_IMEDIATA) @map("tipo_pagamento")
+  subCategoriaId Int?                 @map("sub_categoria_id")
+  parceiroId     Int                  @map("parceiro_id")
+  fornecedorId   Int?                 @map("fornecedor_id")
+  currencyId     Int?                 @map("currency_id")
+  cotacao        Decimal?             @default(0.0) @map("cotacao") @db.Decimal(12, 3)
+  contaDreId     Int?                 @map("conta_dre_id")
+  currency       Currency?            @relation(fields: [currencyId], references: [id])
+  fornecedor     Fornecedor?          @relation(fields: [fornecedorId], references: [id])
+  parceiro       Parceiro             @relation(fields: [parceiroId], references: [id])
+  subCategoria   SubCategoriaDespesa? @relation(fields: [subCategoriaId], references: [idSubCategoria])
+  contaDre       ContaDRE?            @relation(fields: [contaDreId], references: [id])
   ContasPagar    ContasPagar[]
 
   @@map("despesa")
@@ -243,23 +247,25 @@ model Despesa {
 
 // Boilerplate para geração automática no contas a pagar
 model DespesaRecorrente {
-  id             Int                 @id @default(autoincrement())
-  publicId       String              @unique @map("public_id")
+  id             Int                  @id @default(autoincrement())
+  publicId       String               @unique @map("public_id")
   descricao      String
-  valor          Decimal             @default(0.0) @db.Decimal(12, 3)
-  frequencia     FrequenciaEnum      @default(MENSAL)
-  diaVencimento  Int                 @map("dia_vencimento")
-  dataInicio     DateTime            @default(now()) @map("data_inicio")
-  dataFim        DateTime?           @map("data_fim")
-  subCategoriaId Int                 @map("sub_categoria_id")
-  parceiroId     Int                 @map("parceiro_id")
-  fornecedorId   Int?                @map("fornecedor_id")
-  currencyId     Int?                @map("currency_id")
-  cotacao        Decimal?            @default(0.0) @db.Decimal(12, 3)
-  currency       Currency?           @relation(fields: [currencyId], references: [id])
-  fornecedor     Fornecedor?         @relation(fields: [fornecedorId], references: [id])
-  parceiro       Parceiro            @relation(fields: [parceiroId], references: [id])
-  subCategoria   SubCategoriaDespesa @relation(fields: [subCategoriaId], references: [idSubCategoria])
+  valor          Decimal              @default(0.0) @db.Decimal(12, 3)
+  frequencia     FrequenciaEnum       @default(MENSAL)
+  diaVencimento  Int                  @map("dia_vencimento")
+  dataInicio     DateTime             @default(now()) @map("data_inicio")
+  dataFim        DateTime?            @map("data_fim")
+  subCategoriaId Int?                 @map("sub_categoria_id")
+  parceiroId     Int                  @map("parceiro_id")
+  fornecedorId   Int?                 @map("fornecedor_id")
+  currencyId     Int?                 @map("currency_id")
+  cotacao        Decimal?             @default(0.0) @db.Decimal(12, 3)
+  contaDreId     Int?                 @map("conta_dre_id")
+  currency       Currency?            @relation(fields: [currencyId], references: [id])
+  fornecedor     Fornecedor?          @relation(fields: [fornecedorId], references: [id])
+  parceiro       Parceiro             @relation(fields: [parceiroId], references: [id])
+  subCategoria   SubCategoriaDespesa? @relation(fields: [subCategoriaId], references: [idSubCategoria])
+  contaDre       ContaDRE?            @relation(fields: [contaDreId], references: [id])
 
   @@map("despesa_recorrente")
 }
@@ -271,6 +277,102 @@ enum FrequenciaEnum {
   TRIMESTRAL
   SEMESTRAL
   ANUAL
+}
+
+// DRE - Demonstração de Resultado do Exercício
+enum TipoDRE {
+  RECEITA
+  DEDUCAO
+  CUSTO
+  DESPESA
+}
+
+model GrupoDRE {
+  id                       Int                        @id @default(autoincrement())
+  publicId                 String                     @unique @map("public_id")
+  codigo                   String                     @unique @map("codigo")
+  nome                     String
+  tipo                     TipoDRE
+  ordem                    Int                        @default(0)
+  ativo                    Boolean                    @default(true)
+  createdAt                DateTime                   @default(now()) @map("created_at")
+  ContaDRE                 ContaDRE[]
+  RollupDespesasMensaisDRE RollupDespesasMensaisDRE[]
+
+  @@map("grupo_dre")
+}
+
+model ContaDRE {
+  id                        Int                         @id @default(autoincrement())
+  publicId                  String                      @unique @map("public_id")
+  grupoId                   Int                         @map("grupo_id")
+  parceiroId                Int                         @map("parceiro_id")
+  codigo                    String?                     @map("codigo")
+  nome                      String
+  nomeV1                    String?                     @map("nome_v1")
+  ordem                     Int                         @default(0)
+  ativo                     Boolean                     @default(true)
+  createdAt                 DateTime                    @default(now()) @map("created_at")
+  grupo                     GrupoDRE                    @relation(fields: [grupoId], references: [id])
+  despesas                  Despesa[]
+  despesasRecorrentes       DespesaRecorrente[]
+  regrasLancamento          RegraLancamentoAutomatico[]
+  lancamentosDRE            LancamentoDRE[]
+  RollupDespesasMensaisDRE  RollupDespesasMensaisDRE[]
+
+  @@unique([parceiroId, grupoId, nome], name: "parceiroId_grupoId_nome")
+  @@map("conta_dre")
+}
+
+model Imposto {
+  id                          Int                          @id @default(autoincrement())
+  publicId                    String                       @unique @map("public_id")
+  parceiroId                  Int                          @map("parceiro_id")
+  nome                        String
+  sigla                       String
+  percentual                  Decimal                      @default(0.0) @db.Decimal(12, 3)
+  ativo                       Boolean                      @default(true)
+  createdAt                   DateTime                     @default(now()) @map("created_at")
+  RegraLancamentoAutomatico   RegraLancamentoAutomatico[]
+
+  @@unique([parceiroId, sigla], name: "parceiroId_sigla")
+  @@map("imposto")
+}
+
+model RegraLancamentoAutomatico {
+  id            Int       @id @default(autoincrement())
+  publicId      String    @unique @map("public_id")
+  contaDreId    Int       @map("conta_dre_id")
+  parceiroId    Int       @map("parceiro_id")
+  impostoId     Int?      @map("imposto_id")
+  nome          String
+  tipoGatilho   String    @map("tipo_gatilho")
+  tipoVenda     String?   @map("tipo_venda")
+  campoOrigem   String?   @map("campo_origem")
+  percentual    Decimal?  @db.Decimal(12, 3)
+  ativo         Boolean   @default(true)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  conta         ContaDRE  @relation(fields: [contaDreId], references: [id])
+  imposto       Imposto?  @relation(fields: [impostoId], references: [id])
+
+  @@map("regra_lancamento_automatico")
+}
+
+model LancamentoDRE {
+  id             Int       @id @default(autoincrement())
+  publicId       String    @unique @map("public_id")
+  contaDreId     Int       @map("conta_dre_id")
+  parceiroId     Int       @map("parceiro_id")
+  vendaId        Int?      @map("venda_id")
+  despesaId      Int?      @map("despesa_id")
+  tipoOrigem     String?   @map("tipo_origem")
+  valor          Decimal   @db.Decimal(12, 3)
+  dataLancamento DateTime  @default(now()) @map("data_lancamento")
+  descricao      String?
+  createdAt      DateTime  @default(now()) @map("created_at")
+  conta          ContaDRE  @relation(fields: [contaDreId], references: [id])
+
+  @@map("lancamento_dre")
 }
 
 model ContasPagar {
@@ -331,6 +433,22 @@ model RollupDespesasMensaisCategoria {
 
   @@id([parceiro_id, ym, categoria_id, sub_categoria_id])
   @@map("rollup_despesas_mensais_categoria")
+}
+
+// Rollup de despesas usando ContaDRE/GrupoDRE
+model RollupDespesasMensaisDRE {
+  parceiro_id  Int     @map("parceiro_id")
+  grupo_dre_id Int     @map("grupo_dre_id")
+  conta_dre_id Int     @map("conta_dre_id")
+  ym           String  @map("ym")
+  realized     Decimal @default(0.0) @map("realized") @db.Decimal(12, 3)
+
+  Parceiro Parceiro @relation(fields: [parceiro_id], references: [id])
+  GrupoDRE GrupoDRE @relation(fields: [grupo_dre_id], references: [id])
+  ContaDRE ContaDRE @relation(fields: [conta_dre_id], references: [id])
+
+  @@id([parceiro_id, ym, grupo_dre_id, conta_dre_id])
+  @@map("rollup_despesas_mensais_dre")
 }
 
 model RollupVendasMensais {

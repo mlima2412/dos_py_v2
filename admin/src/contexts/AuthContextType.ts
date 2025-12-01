@@ -12,6 +12,7 @@ export interface AuthContextType {
 	isAuthenticated: boolean;
 	selectedPartnerData: ParceiroItem | null;
 	login: (credentials: LoginDto) => Promise<void>;
+	loginWithGoogle: (idToken: string) => Promise<void>;
 	logout: () => Promise<void>;
 	refreshProfile: () => Promise<void>;
 	updateSelectedPartner: (partnerData: ParceiroItem | null) => void;

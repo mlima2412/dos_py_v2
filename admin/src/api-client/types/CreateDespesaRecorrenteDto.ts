@@ -48,9 +48,9 @@ export type CreateDespesaRecorrenteDto = {
     dataFim?: string | undefined;
     /**
      * @description ID da subcategoria da despesa
-     * @type number
+     * @type number | undefined
     */
-    subCategoriaId: number;
+    subCategoriaId?: number | undefined;
     /**
      * @description ID do parceiro responsável pela despesa
      * @type number
@@ -71,4 +71,9 @@ export type CreateDespesaRecorrenteDto = {
      * @type number | undefined
     */
     cotacao?: number | undefined;
+    /**
+     * @description ID da conta DRE para classificação contábil
+     * @type number
+    */
+    contaDreId: number;
 };

@@ -10,7 +10,22 @@ import { Despesa } from './entities/despesa.entity';
 import { DespesaCacheService } from '../cash/despesas/despesa-cache/despesa-cache.service';
 import { RollupDespesasCacheService } from '../cash/despesas/despesa-cache/rollup-despesas-cache.service';
 import { DespesaClassificacaoCacheService } from '../cash/despesas/despesa-classificacao-cache/despesa-classiificacao-cache.service';
+import { LancamentoDreService } from '../lancamento-dre/lancamento-dre.service';
 import { Decimal } from '@prisma/client/runtime/library';
+
+/**
+ * Resultado da criação de despesa dentro de transação
+ * Inclui a despesa criada e um callback para processamento pós-commit
+ */
+export interface CreateWithinTransactionResult {
+  despesa: Despesa;
+  /**
+   * Callback para processar lançamento DRE após o commit da transação.
+   * IMPORTANTE: Deve ser chamado pelo serviço que invocou createWithinTransaction
+   * APÓS o commit da transação, caso contrário o lançamento DRE não será criado.
+   */
+  postCommitCallback: () => Promise<void>;
+}
 
 @Injectable()
 export class DespesasService {
@@ -19,6 +34,7 @@ export class DespesasService {
     private despesaCacheService: DespesaCacheService,
     private rollupDespesasCacheService: RollupDespesasCacheService,
     private DespesaClassificacaoCacheService: DespesaClassificacaoCacheService,
+    private lancamentoDreService: LancamentoDreService,
   ) {}
 
   async create(
@@ -34,13 +50,16 @@ export class DespesasService {
       throw new BadRequestException('Parceiro não encontrado');
     }
 
-    // Verificar se a subcategoria existe
-    const subCategoria = await this.prisma.subCategoriaDespesa.findUnique({
-      where: { idSubCategoria: createDespesaDto.subCategoriaId },
-    });
+    // Verificar se a subcategoria existe (se fornecida)
+    let subCategoria = null;
+    if (createDespesaDto.subCategoriaId) {
+      subCategoria = await this.prisma.subCategoriaDespesa.findUnique({
+        where: { idSubCategoria: createDespesaDto.subCategoriaId },
+      });
 
-    if (!subCategoria) {
-      throw new BadRequestException('Subcategoria não encontrada');
+      if (!subCategoria) {
+        throw new BadRequestException('Subcategoria não encontrada');
+      }
     }
 
     // Verificar se o fornecedor existe (se fornecido)
@@ -51,6 +70,23 @@ export class DespesasService {
 
       if (!fornecedor) {
         throw new BadRequestException('Fornecedor não encontrado');
+      }
+    }
+
+    // Verificar se a conta DRE existe, pertence ao parceiro e está ativa (se fornecida)
+    if (createDespesaDto.contaDreId) {
+      const contaDre = await this.prisma.contaDRE.findFirst({
+        where: {
+          id: createDespesaDto.contaDreId,
+          parceiroId: parceiroId,
+          ativo: true,
+        },
+      });
+
+      if (!contaDre) {
+        throw new BadRequestException(
+          'Conta DRE não encontrada, não pertence ao parceiro ou está inativa',
+        );
       }
     }
 
@@ -79,9 +115,8 @@ export class DespesasService {
       }
     }
 
-    return await this.prisma.$transaction(async prisma => {
+    const result = await this.prisma.$transaction(async prisma => {
       // Criar instância da entidade com valores padrão
-      console.log('>>>>>', createDespesaDto.currencyId, parceiro.currencyId);
       const despesaEntity = Despesa.create({
         valorTotal: createDespesaDto.valorTotal,
         descricao: createDespesaDto.descricao,
@@ -111,6 +146,7 @@ export class DespesasService {
             ? createDespesaDto.currencyId
             : parceiro.currencyId,
           cotacao: createDespesaDto.cotacao,
+          contaDreId: createDespesaDto.contaDreId,
         },
         include: {
           parceiro: true,
@@ -118,6 +154,11 @@ export class DespesasService {
           subCategoria: {
             include: {
               categoria: true,
+            },
+          },
+          contaDre: {
+            include: {
+              grupo: true,
             },
           },
         },
@@ -145,28 +186,59 @@ export class DespesasService {
       // Atualizar cache de despesas
       await this.updateCacheForNewDespesa(despesa, createDespesaDto);
 
-      // Atualizar cache de despesas classificacao
-      await this.DespesaClassificacaoCacheService.updateDespesaClassificacaoCache(
-        despesa.parceiroId,
-        despesa.dataRegistro,
-        despesa.subCategoria.categoriaId,
-        despesa.subCategoriaId,
-        new Decimal(despesa.valorTotal),
-        despesa.subCategoria.descricao,
-        despesa.subCategoria.categoria.descricao,
-      );
+      // Atualizar cache de despesas classificacao usando ContaDRE (tabela rollup_despesas_mensais_dre)
+      if (despesa.contaDreId && despesa.contaDre) {
+        await this.DespesaClassificacaoCacheService.updateDespesaClassificacaoCacheDRE(
+          despesa.parceiroId,
+          despesa.dataRegistro,
+          despesa.contaDre.grupoId, // GrupoDRE como "categoria"
+          despesa.contaDreId, // ContaDRE como "classificação"
+          new Decimal(despesa.valorTotal),
+          despesa.contaDre.nome, // Nome da ContaDRE
+          despesa.contaDre.grupo?.nome || '', // Nome do GrupoDRE
+        );
+      } else if (despesa.subCategoria) {
+        // Fallback para o cache antigo se não tiver contaDreId
+        await this.DespesaClassificacaoCacheService.updateDespesaClassificacaoCache(
+          despesa.parceiroId,
+          despesa.dataRegistro,
+          despesa.subCategoria.categoriaId,
+          despesa.subCategoriaId,
+          new Decimal(despesa.valorTotal),
+          despesa.subCategoria.descricao,
+          despesa.subCategoria.categoria.descricao,
+        );
+      }
 
       // incremente o contador de despesas no ano.
       await this.rollupDespesasCacheService.incrYear(
         parceiroId,
-        new Date(createDespesaDto.dataRegistro).getFullYear().toString(),
+        despesa.dataRegistro.getFullYear().toString(),
       );
+
       return {
         ...despesa,
         valorTotal: Number(despesa.valorTotal),
         cotacao: despesa.cotacao ? Number(despesa.cotacao) : null,
       } as Despesa;
     });
+
+    // Criar lançamento DRE para a despesa (se tiver contaDreId)
+    // Deve ser feito fora da transação para que a despesa já exista no banco
+    // Erros no processamento DRE não devem impedir a criação da despesa,
+    // pois ela já foi persistida. Log do erro para investigação posterior.
+    if (result.contaDreId) {
+      try {
+        await this.lancamentoDreService.processarDespesa(parceiroId, result.id);
+      } catch (error) {
+        console.error(
+          `Erro ao processar lançamento DRE para despesa ${result.id}:`,
+          error,
+        );
+      }
+    }
+
+    return result;
   }
 
   private async createContasPagarParcelas(
@@ -289,12 +361,31 @@ export class DespesasService {
   /**
    * Cria uma despesa dentro de uma transação externa
    * Usado para integração com outros serviços que precisam manter transação
+   *
+   * IMPORTANTE: O chamador DEVE executar o postCommitCallback APÓS o commit
+   * da transação para garantir que o lançamento DRE e atualizações de cache
+   * sejam executados corretamente. Se a transação for revertida, NÃO execute
+   * o callback - isso evita inconsistências nos agregados de cache.
+   *
+   * @example
+   * ```typescript
+   * const postCommitCallbacks: (() => Promise<void>)[] = [];
+   *
+   * await this.prisma.$transaction(async (tx) => {
+   *   const { despesa, postCommitCallback } = await this.despesasService.createWithinTransaction(dto, parceiroId, tx);
+   *   postCommitCallbacks.push(postCommitCallback);
+   *   // ... outras operações
+   * });
+   *
+   * // Executar callbacks SOMENTE após commit bem-sucedido
+   * await Promise.all(postCommitCallbacks.map(cb => cb()));
+   * ```
    */
   async createWithinTransaction(
     createDespesaDto: CreateDespesaDto,
     parceiroId: number,
     tx: any,
-  ): Promise<Despesa> {
+  ): Promise<CreateWithinTransactionResult> {
     // Verificar se o parceiro existe
     const parceiro = await tx.parceiro.findUnique({
       where: { id: parceiroId },
@@ -304,13 +395,15 @@ export class DespesasService {
       throw new BadRequestException('Parceiro não encontrado');
     }
 
-    // Verificar se a subcategoria existe
-    const subCategoria = await tx.subCategoriaDespesa.findUnique({
-      where: { idSubCategoria: createDespesaDto.subCategoriaId },
-    });
+    // Verificar se a subcategoria existe (se fornecida)
+    if (createDespesaDto.subCategoriaId) {
+      const subCategoria = await tx.subCategoriaDespesa.findUnique({
+        where: { idSubCategoria: createDespesaDto.subCategoriaId },
+      });
 
-    if (!subCategoria) {
-      throw new BadRequestException('Subcategoria não encontrada');
+      if (!subCategoria) {
+        throw new BadRequestException('Subcategoria não encontrada');
+      }
     }
 
     // Verificar se o fornecedor existe (se fornecido)
@@ -321,6 +414,23 @@ export class DespesasService {
 
       if (!fornecedor) {
         throw new BadRequestException('Fornecedor não encontrado');
+      }
+    }
+
+    // Verificar se a conta DRE existe, pertence ao parceiro e está ativa (se fornecida)
+    if (createDespesaDto.contaDreId) {
+      const contaDre = await tx.contaDRE.findFirst({
+        where: {
+          id: createDespesaDto.contaDreId,
+          parceiroId: parceiroId,
+          ativo: true,
+        },
+      });
+
+      if (!contaDre) {
+        throw new BadRequestException(
+          'Conta DRE não encontrada, não pertence ao parceiro ou está inativa',
+        );
       }
     }
 
@@ -375,6 +485,7 @@ export class DespesasService {
         fornecedorId: createDespesaDto.fornecedorId,
         currencyId: createDespesaDto.currencyId,
         cotacao: createDespesaDto.cotacao,
+        contaDreId: createDespesaDto.contaDreId,
       },
       include: {
         parceiro: true,
@@ -382,6 +493,11 @@ export class DespesasService {
         subCategoria: {
           include: {
             categoria: true,
+          },
+        },
+        contaDre: {
+          include: {
+            grupo: true,
           },
         },
       },
@@ -402,31 +518,86 @@ export class DespesasService {
     // Criar ContasPagarParcelas baseado no tipo de pagamento
     await this.createContasPagarParcelas(tx, contasPagar.id, createDespesaDto);
 
-    // Atualizar cache de despesas (fora da transação)
-    await this.updateCacheForNewDespesa(despesa, createDespesaDto);
+    // NOTE: Todas as operações de cache e DRE são adiadas para o postCommitCallback.
+    // Isso garante que, se a transação do chamador falhar e for revertida,
+    // os agregados de cache (rollup tables, Redis) e lançamentos DRE não serão
+    // atualizados com dados de despesas que não existem mais.
 
-    // Atualizar cache de despesas classificacao (fora da transação)
-    await this.DespesaClassificacaoCacheService.updateDespesaClassificacaoCache(
-      despesa.parceiroId,
-      despesa.dataRegistro,
-      despesa.subCategoria.categoriaId,
-      despesa.subCategoriaId,
-      new Decimal(despesa.valorTotal),
-      despesa.subCategoria.descricao,
-      despesa.subCategoria.categoria.descricao,
-    );
-
-    // incremente o contador de despesas no ano (fora da transação)
-    await this.rollupDespesasCacheService.incrYear(
-      parceiroId,
-      new Date(createDespesaDto.dataRegistro).getFullYear().toString(),
-    );
-
-    return {
+    const result = {
       ...despesa,
       valorTotal: Number(despesa.valorTotal),
       cotacao: despesa.cotacao ? Number(despesa.cotacao) : null,
     } as Despesa;
+
+    // Captura dados necessários para o callback (snapshot no momento da criação)
+    const callbackData = {
+      despesaId: result.id,
+      parceiroId: despesa.parceiroId,
+      dataRegistro: despesa.dataRegistro,
+      contaDreId: despesa.contaDreId,
+      contaDre: despesa.contaDre,
+      subCategoria: despesa.subCategoria,
+      subCategoriaId: despesa.subCategoriaId,
+      valorTotal: despesa.valorTotal,
+    };
+
+    // Retorna a despesa e um callback para processar cache e DRE após o commit
+    // O chamador DEVE executar o postCommitCallback SOMENTE após commit bem-sucedido
+    const postCommitCallback = async (): Promise<void> => {
+      try {
+        // 1. Atualizar cache de despesas
+        await this.updateCacheForNewDespesa(despesa, createDespesaDto);
+
+        // 2. Atualizar cache de classificação DRE
+        if (callbackData.contaDreId && callbackData.contaDre) {
+          await this.DespesaClassificacaoCacheService.updateDespesaClassificacaoCacheDRE(
+            callbackData.parceiroId,
+            callbackData.dataRegistro,
+            callbackData.contaDre.grupoId,
+            callbackData.contaDreId,
+            new Decimal(callbackData.valorTotal),
+            callbackData.contaDre.nome,
+            callbackData.contaDre.grupo?.nome || '',
+          );
+        } else if (callbackData.subCategoria) {
+          await this.DespesaClassificacaoCacheService.updateDespesaClassificacaoCache(
+            callbackData.parceiroId,
+            callbackData.dataRegistro,
+            callbackData.subCategoria.categoriaId,
+            callbackData.subCategoriaId,
+            new Decimal(callbackData.valorTotal),
+            callbackData.subCategoria.descricao,
+            callbackData.subCategoria.categoria.descricao,
+          );
+        }
+
+        // 3. Incrementar contador de despesas no ano
+        await this.rollupDespesasCacheService.incrYear(
+          callbackData.parceiroId,
+          callbackData.dataRegistro.getFullYear().toString(),
+        );
+
+        // 4. Processar lançamento DRE (se aplicável)
+        if (callbackData.contaDreId) {
+          await this.lancamentoDreService.processarDespesa(
+            callbackData.parceiroId,
+            callbackData.despesaId,
+          );
+        }
+      } catch (error) {
+        // Erros no processamento pós-commit são logados mas não impedem o fluxo
+        // A despesa já foi persistida com sucesso
+        console.error(
+          `Erro ao processar cache/DRE pós-commit para despesa ${callbackData.despesaId}:`,
+          error,
+        );
+      }
+    };
+
+    return {
+      despesa: result,
+      postCommitCallback,
+    };
   }
 
   async findAll(): Promise<Despesa[]> {
@@ -435,6 +606,7 @@ export class DespesasService {
         parceiro: true,
         fornecedor: true,
         subCategoria: true,
+        contaDre: true,
       },
       orderBy: { dataRegistro: 'desc' },
     });
@@ -455,6 +627,7 @@ export class DespesasService {
         parceiro: true,
         fornecedor: true,
         currency: true,
+        contaDre: true,
         subCategoria: {
           include: {
             categoria: true,
@@ -580,9 +753,17 @@ export class DespesasService {
     parceiroId: number;
     fornecedorId?: number;
     subCategoriaId?: number;
+    grupoDreId?: number;
   }) {
-    const { page, limit, search, parceiroId, fornecedorId, subCategoriaId } =
-      params;
+    const {
+      page,
+      limit,
+      search,
+      parceiroId,
+      fornecedorId,
+      subCategoriaId,
+      grupoDreId,
+    } = params;
     const skip = (page - 1) * limit;
 
     // Construir filtros
@@ -609,6 +790,17 @@ export class DespesasService {
       andConditions.push({ subCategoriaId });
     }
 
+    // Filtro por grupo DRE (via contaDre)
+    if (grupoDreId) {
+      andConditions.push({
+        contaDre: {
+          is: {
+            grupoId: grupoDreId,
+          },
+        },
+      });
+    }
+
     if (andConditions.length > 0) {
       where.AND = andConditions;
     }
@@ -621,6 +813,11 @@ export class DespesasService {
           parceiro: true,
           fornecedor: true,
           currency: true,
+          contaDre: {
+            include: {
+              grupo: true,
+            },
+          },
           subCategoria: {
             include: {
               categoria: true,
@@ -702,6 +899,11 @@ export class DespesasService {
             categoria: true,
           },
         },
+        contaDre: {
+          include: {
+            grupo: true,
+          },
+        },
         ContasPagar: {
           include: {
             ContasPagarParcelas: true,
@@ -713,13 +915,34 @@ export class DespesasService {
     if (!existingDespesa) {
       throw new NotFoundException('Despesa não encontrada');
     }
-    await this.DespesaClassificacaoCacheService.removeDespesaClassificacaoCache(
-      existingDespesa.parceiroId,
-      existingDespesa.dataRegistro,
-      existingDespesa.subCategoria.categoria.idCategoria,
-      existingDespesa.subCategoriaId,
-      existingDespesa.valorTotal,
-    );
+
+    // Remover lançamentos DRE associados (deve ser feito ANTES de deletar a despesa)
+    if (existingDespesa.contaDreId) {
+      await this.lancamentoDreService.removerLancamentoDespesa(
+        parceiroId,
+        existingDespesa.id,
+      );
+    }
+
+    // Remover do cache de classificação DRE se tiver contaDreId
+    if (existingDespesa.contaDreId && existingDespesa.contaDre) {
+      await this.DespesaClassificacaoCacheService.removeDespesaClassificacaoCacheDRE(
+        existingDespesa.parceiroId,
+        existingDespesa.dataRegistro,
+        existingDespesa.contaDre.grupoId,
+        existingDespesa.contaDreId,
+        existingDespesa.valorTotal,
+      );
+    } else if (existingDespesa.subCategoria) {
+      // Remover do cache de classificação antigo apenas se tiver subcategoria e não tiver contaDreId
+      await this.DespesaClassificacaoCacheService.removeDespesaClassificacaoCache(
+        existingDespesa.parceiroId,
+        existingDespesa.dataRegistro,
+        existingDespesa.subCategoria.categoria.idCategoria,
+        existingDespesa.subCategoriaId,
+        existingDespesa.valorTotal,
+      );
+    }
 
     // Remover do cache antes de deletar
     await this.removeCacheForDeletedDespesa(existingDespesa);

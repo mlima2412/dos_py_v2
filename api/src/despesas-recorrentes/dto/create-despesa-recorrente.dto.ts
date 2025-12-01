@@ -68,10 +68,12 @@ export class CreateDespesaRecorrenteDto {
   @ApiProperty({
     description: 'ID da subcategoria da despesa',
     example: 1,
+    required: false,
   })
+  @IsOptional()
   @IsNumber()
   @IsPositive()
-  subCategoriaId: number;
+  subCategoriaId?: number;
 
   @ApiProperty({
     description: 'ID do parceiro responsável pela despesa',
@@ -110,4 +112,14 @@ export class CreateDespesaRecorrenteDto {
   @IsNumber({ maxDecimalPlaces: 3 })
   @IsPositive()
   cotacao?: number;
+
+  @ApiProperty({
+    description: 'ID da conta DRE para classificação contábil',
+    example: 1,
+    required: false,
+  })
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  contaDreId?: number;
 }

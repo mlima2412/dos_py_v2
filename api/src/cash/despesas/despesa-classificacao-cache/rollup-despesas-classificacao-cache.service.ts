@@ -289,11 +289,15 @@ export class RollupDespesasClassificacaoCacheService {
         ),
       ) || 0;
     const rows = await this.redis.zrevrange(k, 0, -1, 'WITHSCORES'); // [catId, score, ...]
-    const ids = [],
-      vals = [];
+    const ids: string[] = [];
+    const vals: number[] = [];
     for (let i = 0; i < rows.length; i += 2) {
       ids.push(rows[i]);
       vals.push(Number(rows[i + 1]));
+    }
+    // Se não houver ids, retornar array vazio para evitar erro no hmget
+    if (ids.length === 0) {
+      return [];
     }
     const dict = await this.redis.hmget('app:dospy:dict:cat', ...ids);
     return ids.map((id, i) => {

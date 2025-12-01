@@ -4,6 +4,13 @@
 */
 
 
+export const updateUsuarioDtoLinguagemEnum = {
+    "Espanol": "Espanol",
+    "Portugues": "Portugues"
+} as const;
+
+export type UpdateUsuarioDtoLinguagemEnumKey = (typeof updateUsuarioDtoLinguagemEnum)[keyof typeof updateUsuarioDtoLinguagemEnum];
+
 export type UpdateUsuarioDto = {
     /**
      * @description Nome completo do usuário
@@ -50,6 +57,12 @@ export type UpdateUsuarioDto = {
      * @type string | undefined
     */
     avatar?: string | undefined;
+    /**
+     * @description Idioma preferido do usuário
+     * @default "Portugues"
+     * @type string | undefined
+    */
+    linguagem?: UpdateUsuarioDtoLinguagemEnumKey | undefined;
     /**
      * @description ID público do usuário para identificação
      * @type string

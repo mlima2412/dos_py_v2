@@ -14,8 +14,15 @@
 		"or": "ou",
 		"continueWith": "Continuar com",
 		"google": "Google",
+		"googleSignIn": "Continuar com Google",
 		"errors": {
-			"noActivePartner": "Parceiro não encontrado ou inativo. Entre em contato com o administrador."
+			"noActivePartner": "Parceiro não encontrado ou inativo. Entre em contato com o administrador.",
+			"googleNotConfigured": "Login com Google indisponível. Configure o CLIENT_ID corretamente.",
+			"googleInit": "Não foi possível inicializar o login com Google. Atualize a página e tente novamente.",
+			"googlePopupBlocked": "Não foi possível abrir a janela do Google. Verifique se o popup não foi bloqueado e tente novamente.",
+			"googleCancelled": "Login com Google cancelado pelo usuário.",
+			"googleFailed": "Não foi possível concluir o login com Google.",
+			"googleCredentialMissing": "Token do Google não recebido. Tente novamente."
 		}
 	},
 	"forgotPassword": {
@@ -30,7 +37,8 @@
 		"checkEmail": "Verifique sua caixa de entrada para as instruções de recuperação.",
 		"successMessage": "Instruções enviadas com sucesso!",
 		"error": {
-			"forgotPasswordError": "Erro ao enviar email de recuperação"
+			"forgotPasswordError": "Erro ao enviar email de recuperação",
+			"googleProviderNotAllowed": "Esta conta utiliza login com Google. Use o botão \"Continuar com Google\" para acessar."
 		}
 	},
 	"resetPassword": {
@@ -47,7 +55,8 @@
 		"successMessage": "Sua senha foi alterada. Você pode fazer login agora.",
 		"invalidToken": "Token inválido ou expirado",
 		"passwordMismatch": "As senhas não coincidem",
-		"passwordTooShort": "A senha deve ter pelo menos 6 caracteres"
+		"passwordTooShort": "A senha deve ter pelo menos 6 caracteres",
+		"googleProviderNotAllowed": "Esta conta utiliza login com Google. Use o botão \"Continuar com Google\" para acessar."
 	},
 	"common": {
 		"home": "Início",
@@ -102,6 +111,10 @@
 		"page": "Página",
 		"back": "Voltar",
 		"download": "Baixar"
+	},
+	"languages": {
+		"portuguese": "Português",
+		"spanish": "Espanhol"
 	},
 	"dashboard": {
 		"title": "Dashboard",
@@ -210,7 +223,8 @@
 		"reports": {
 			"main": "Relatórios",
 			"sales": "Vendas",
-			"expenses": "Despesas"
+			"expenses": "Despesas",
+			"dre": "DRE"
 		},
 
 		"administration": "Administração",
@@ -333,6 +347,7 @@
 		"name": "Nome",
 		"email": "E-mail",
 		"phone": "Telefone",
+		"language": "Idioma preferido",
 		"partner": "Parceiro",
 		"profile": "Perfil",
 		"password": "Senha",
@@ -345,6 +360,7 @@
 		"namePlaceholder": "Digite o nome completo",
 		"emailPlaceholder": "Digite o e-mail",
 		"phonePlaceholder": "Digite o telefone",
+		"languagePlaceholder": "Selecione um idioma",
 		"passwordPlaceholder": "Digite a senha",
 		"passwordPlaceholderEdit": "Digite uma nova senha (opcional)",
 		"confirmPasswordPlaceholder": "Confirme a senha",
@@ -520,6 +536,8 @@
 		"dueDate": "Vencimento",
 		"category": "Categoria",
 		"subcategory": "Classificação",
+		"grupoDre": "Grupo DRE",
+		"filterByGrupoDre": "Filtrar por Grupo DRE",
 		"selectDate": "Selecione uma data",
 		"selectDueDate": "Selecione a data de vencimento",
 		"selectPaymentType": "Selecione o tipo de pagamento",
@@ -533,12 +551,16 @@
 		"selectSupplier": "Selecione um fornecedor",
 		"selectCategory": "Selecione uma categoria",
 		"selectSubcategory": "Selecione uma subcategoria",
+		"selectDreAccount": "Selecione uma conta DRE",
 		"searchCurrency": "Buscar moeda...",
 		"searchSupplier": "Buscar fornecedor...",
 		"searchSubcategory": "Buscar subcategoria...",
+		"searchDreAccount": "Buscar conta DRE...",
 		"noCurrencyFound": "Nenhuma moeda encontrada",
 		"noSupplierFound": "Nenhum fornecedor encontrado",
 		"noSubcategoryFound": "Nenhuma subcategoria encontrada",
+		"noDreAccountFound": "Nenhuma conta DRE encontrada",
+		"dreAccount": "Conta DRE",
 		"dashboard": {
 			"title": "Dashboard de Despesas",
 			"totalMonth": "Total do Mês",
@@ -649,6 +671,7 @@
 			"currencyRequired": "Moeda é obrigatória",
 			"categoryRequired": "Categoria é obrigatória",
 			"subcategoryRequired": "Subcategoria é obrigatória",
+			"dreAccountRequired": "Conta DRE é obrigatória",
 			"exchangeRequired": "Cotação é obrigatória",
 			"valueMin": "Valor deve ser maior que zero",
 			"exchangeMin": "Cotação deve ser maior que zero",
@@ -1916,5 +1939,29 @@
 			"errorLoadingYears": "Erro ao carregar anos disponíveis."
 		},
 		"noResults": "Sem resultados"
+	},
+	"dre": {
+		"title": "Demonstração do Resultado (DRE)",
+		"year": "Ano",
+		"month": "Mês",
+		"allMonths": "Todos os Meses",
+		"selectYear": "Selecione o ano",
+		"selectMonth": "Selecione o mês",
+		"selectPartner": "Selecione um parceiro para visualizar o DRE.",
+		"noData": "Nenhum dado encontrado",
+		"noDataDescription": "Não há lançamentos para o período selecionado.",
+		"account": "Conta",
+		"value": "Valor",
+		"subtotal": "Subtotal",
+		"print": "Imprimir",
+		"totals": {
+			"grossRevenue": "RECEITA BRUTA",
+			"deductions": "(-) Deduções sobre Receita",
+			"netRevenue": "(=) RECEITA LÍQUIDA",
+			"costs": "(-) Custos (CMV)",
+			"grossProfit": "(=) LUCRO BRUTO",
+			"expenses": "(-) Despesas Operacionais",
+			"operatingProfit": "(=) RESULTADO OPERACIONAL"
+		}
 	}
 }

@@ -71,4 +71,9 @@ export type UpdateDespesaRecorrenteDto = {
      * @type number | undefined
     */
     cotacao?: number | undefined;
+    /**
+     * @description ID da conta DRE para classificação contábil
+     * @type number | undefined
+    */
+    contaDreId?: number | undefined;
 };

@@ -5,12 +5,14 @@ import {
 	authControllerGetProfile,
 	authControllerLogin,
 	authControllerLogout,
+	type LoginResponseDto,
 } from "@/api-client";
 import { LoginDto } from "@/types/auth";
 import { AuthContext } from "./AuthContextDefinition";
 import { AuthContextType } from "./AuthContextType";
 import { useQueryClient } from "@tanstack/react-query";
 import { AUTH_EXPIRED_EVENT } from "@/lib/fetch-client";
+import fetchClient from "@/lib/fetch-client";
 
 interface AuthProviderProps {
 	children: ReactNode;
@@ -77,19 +79,38 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 		};
 	}, [performLocalLogout]);
 
+	const persistLogin = async (loginResponse: LoginResponseDto) => {
+		if (loginResponse.accessToken) {
+			localStorage.setItem("accessToken", loginResponse.accessToken);
+		}
+
+		const profile = await authControllerGetProfile();
+		setUser(profile);
+	};
+
 	const login = async (credentials: LoginDto) => {
 		try {
 			setIsLoading(true);
 			const loginResponse = await authControllerLogin(credentials);
+			await persistLogin(loginResponse);
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
-			// Salvar token no localStorage
-			if (loginResponse.accessToken) {
-				localStorage.setItem("accessToken", loginResponse.accessToken);
-			}
-
-			// Carregar perfil do usuário após login
-			const profile = await authControllerGetProfile();
-			setUser(profile);
+	const loginWithGoogle = async (idToken: string) => {
+		try {
+			setIsLoading(true);
+			const { data } = await fetchClient<
+				LoginResponseDto,
+				unknown,
+				{ idToken: string }
+			>({
+				method: "POST",
+				url: "/auth/google",
+				data: { idToken },
+			});
+			await persistLogin(data);
 		} finally {
 			setIsLoading(false);
 		}
@@ -122,6 +143,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 		isAuthenticated,
 		selectedPartnerData,
 		login,
+		loginWithGoogle,
 		logout,
 		refreshProfile,
 		updateSelectedPartner,

@@ -594,7 +594,7 @@ export class PedidoCompraService {
     parceiroId: number,
     usuarioId: number,
   ): Promise<PedidoCompra> {
-    return await this.prisma.$transaction(async tx => {
+    const result = await this.prisma.$transaction(async tx => {
       // 1. Localizar o pedido de compra e validar
       const pedidoCompra = await tx.pedidoCompra.findFirst({
         where: {
@@ -632,19 +632,21 @@ export class PedidoCompraService {
       // 2. Validar dados de pagamento
       this.validatePaymentData(processaPedidoCompraDto);
 
-      // 3. Buscar subcategoria "Entrada de Estoque"
-      const subCategoriaEntradaEstoque = await tx.subCategoriaDespesa.findFirst(
-        {
-          where: {
-            descricao: 'Entrada de Estoque',
-            ativo: true,
+      // 3. Buscar ContaDRE "Compra de Produtos" do tipo CUSTO
+      const contaDreCMV = await tx.contaDRE.findFirst({
+        where: {
+          nome: 'Compra de Produtos',
+          parceiroId: pedidoCompra.parceiroId,
+          ativo: true,
+          grupo: {
+            tipo: 'CUSTO',
           },
         },
-      );
+      });
 
-      if (!subCategoriaEntradaEstoque) {
+      if (!contaDreCMV) {
         throw new NotFoundException(
-          'Subcategoria "Entrada de Estoque" não encontrada',
+          'Conta DRE "Compra de Produtos" não encontrada. Verifique se existe uma conta com este nome no grupo de CUSTO.',
         );
       }
 
@@ -722,6 +724,9 @@ export class PedidoCompraService {
         );
       }
 
+      // Coletar callbacks para executar após o commit da transação
+      const postCommitCallbacks: (() => Promise<void>)[] = [];
+
       if (
         processaPedidoCompraDto.paymentType === TipoPagamentoPedido.PARCELADO &&
         processaPedidoCompraDto.entryValue &&
@@ -731,42 +736,48 @@ export class PedidoCompraService {
         const despesaEntradaData = this.createDespesaData(
           processaPedidoCompraDto,
           pedidoCompra,
-          subCategoriaEntradaEstoque.idSubCategoria,
+          contaDreCMV.id,
           true, // isEntryValue
         );
 
-        await this.despesasService.createWithinTransaction(
-          despesaEntradaData,
-          pedidoCompra.parceiroId,
-          tx,
-        );
+        const { postCommitCallback: entradaCallback } =
+          await this.despesasService.createWithinTransaction(
+            despesaEntradaData,
+            pedidoCompra.parceiroId,
+            tx,
+          );
+        postCommitCallbacks.push(entradaCallback);
 
         //Criar despesa parcelada para o valor restante
         const despesaParceladaData = this.createDespesaData(
           processaPedidoCompraDto,
           pedidoCompra,
-          subCategoriaEntradaEstoque.idSubCategoria,
+          contaDreCMV.id,
           false, // isEntryValue
         );
 
-        await this.despesasService.createWithinTransaction(
-          despesaParceladaData,
-          pedidoCompra.parceiroId,
-          tx,
-        );
+        const { postCommitCallback: parceladaCallback } =
+          await this.despesasService.createWithinTransaction(
+            despesaParceladaData,
+            pedidoCompra.parceiroId,
+            tx,
+          );
+        postCommitCallbacks.push(parceladaCallback);
       } else {
         // Criar despesa única
         const despesaData = this.createDespesaData(
           processaPedidoCompraDto,
           pedidoCompra,
-          subCategoriaEntradaEstoque.idSubCategoria,
+          contaDreCMV.id,
         );
 
-        await this.despesasService.createWithinTransaction(
-          despesaData,
-          pedidoCompra.parceiroId,
-          tx,
-        );
+        const { postCommitCallback } =
+          await this.despesasService.createWithinTransaction(
+            despesaData,
+            pedidoCompra.parceiroId,
+            tx,
+          );
+        postCommitCallbacks.push(postCommitCallback);
       }
 
       // 9. Atualizar status do pedido para FINALIZADO
@@ -784,13 +795,21 @@ export class PedidoCompraService {
       });
 
       // atualiza a data da ultima compra para o fornecedor do pedido
-      await this.prisma.fornecedor.update({
+      await tx.fornecedor.update({
         where: { id: pedidoCompra.fornecedorId },
         data: { ultimaCompra: new Date() },
       });
 
-      return PedidoCompra.create(pedidoAtualizado);
+      return {
+        pedido: PedidoCompra.create(pedidoAtualizado),
+        postCommitCallbacks,
+      };
     });
+
+    // Executar callbacks de lançamento DRE após o commit da transação
+    await Promise.all(result.postCommitCallbacks.map(cb => cb()));
+
+    return result.pedido;
   }
 
   private validatePaymentData(dto: ProcessaPedidoCompraDto): void {
@@ -820,7 +839,7 @@ export class PedidoCompraService {
   private createDespesaData(
     dto: ProcessaPedidoCompraDto,
     pedidoCompra: any,
-    subCategoriaId: number,
+    contaDreId: number,
     isEntryValue?: boolean,
   ): CreateDespesaDto {
     const now = new Date();
@@ -858,7 +877,7 @@ export class PedidoCompraService {
       tipoPagamento: isEntryValue
         ? TipoPagamento.A_VISTA_IMEDIATA
         : this.mapPaymentType(dto.paymentType),
-      subCategoriaId: subCategoriaId,
+      contaDreId: contaDreId,
       parceiroId: pedidoCompra.parceiroId,
       fornecedorId: pedidoCompra.fornecedorId,
       currencyId: moedaParceiro.id,

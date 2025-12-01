@@ -3,6 +3,7 @@ import {
   BadRequestException,
   NotFoundException,
   ForbiddenException,
+  Logger,
 } from '@nestjs/common';
 import { CreateVendaDto } from './dto/create-venda.dto';
 import { UpdateVendaDto } from './dto/update-venda.dto';
@@ -25,13 +26,17 @@ import { FinalizeVendaCondicionalDto } from './dto/finalize-venda-condicional.dt
 import { DespesasService } from '../despesas/despesas.service';
 import { TipoPagamento } from '../despesas/dto/create-despesa.dto';
 import { VendaRollupService } from '../cash/vendas/venda-rollup.service';
+import { LancamentoDreService } from '../lancamento-dre/lancamento-dre.service';
 
 @Injectable()
 export class VendaService {
+  private readonly logger = new Logger(VendaService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly despesasService: DespesasService,
     private readonly vendaRollupService: VendaRollupService,
+    private readonly lancamentoDreService: LancamentoDreService,
   ) {}
 
   private mapToVendaEntity(data: any): Venda {
@@ -576,12 +581,7 @@ export class VendaService {
       return this.mapToVendaEntity(vendaAtualizada);
     });
 
-    console.log('[VendaService] Calling registerVendaConfirmada after finalizarDireta:', {
-      parceiroId,
-      dataVenda: vendaFinalizada.dataVenda,
-      tipo: vendaFinalizada.tipo,
-      valorTotal: vendaFinalizada.valorTotal,
-    });
+    this.logger.log(`[finalizarDireta] Registrando venda ${vendaFinalizada.id} no rollup`);
 
     await this.vendaRollupService.registerVendaConfirmada({
       parceiroId,
@@ -591,8 +591,21 @@ export class VendaService {
       descontoTotal: vendaFinalizada.desconto ?? 0,
     });
 
+    // Processar lançamentos DRE
+    try {
+      const dreResult = await this.lancamentoDreService.processarVenda(parceiroId, vendaFinalizada.id);
+      this.logger.log(
+        `[finalizarDireta] Venda ${vendaFinalizada.id} processada no DRE: ` +
+        `${dreResult.lancamentos} lançamentos, Receita: ${dreResult.receita}, Deduções: ${dreResult.deducoes}`,
+      );
+    } catch (error) {
+      this.logger.warn(`[finalizarDireta] Erro ao processar DRE para venda ${vendaFinalizada.id}: ${error}`);
+      // Não interrompe o fluxo - DRE pode ser reprocessado depois
+    }
+
     return vendaFinalizada;
   }
+
   async finalizarBrindePermuta(
     publicId: string,
     finalizeDto: FinalizeVendaSemPagamentoDto,
@@ -652,6 +665,9 @@ export class VendaService {
       }
 
       const localSaidaId = venda.localSaidaId;
+
+      // Callback para processar DRE da despesa após commit (só para PERMUTA)
+      let despesaPostCommitCallback: (() => Promise<void>) | null = null;
 
       // Validar estoque disponível
       for (const item of venda.VendaItem) {
@@ -803,21 +819,23 @@ export class VendaService {
         }
 
         // Criar despesa usando o service
-        await this.despesasService.createWithinTransaction(
-          {
-            descricao: `Permuta com a venda ${venda.id}`,
-            valorTotal: totalVenda.toNumber(),
-            dataRegistro: new Date().toISOString(),
-            tipoPagamento: TipoPagamento.A_VISTA_IMEDIATA,
-            subCategoriaId: subCategoria.idSubCategoria,
-            parceiroId: parceiroId,
-            fornecedorId: undefined,
-            currencyId: parceiro.currencyId,
-            cotacao: undefined,
-          },
-          parceiroId,
-          tx,
-        );
+        const { postCommitCallback } =
+          await this.despesasService.createWithinTransaction(
+            {
+              descricao: `Permuta com a venda ${venda.id}`,
+              valorTotal: totalVenda.toNumber(),
+              dataRegistro: new Date().toISOString(),
+              tipoPagamento: TipoPagamento.A_VISTA_IMEDIATA,
+              subCategoriaId: subCategoria.idSubCategoria,
+              parceiroId: parceiroId,
+              fornecedorId: undefined,
+              currencyId: parceiro.currencyId,
+              cotacao: undefined,
+            },
+            parceiroId,
+            tx,
+          );
+        despesaPostCommitCallback = postCommitCallback;
       }
 
       // Atualizar venda com totais e status
@@ -879,25 +897,41 @@ export class VendaService {
         throw new NotFoundException('Erro ao finalizar venda');
       }
 
-      return this.mapToVendaEntity(vendaAtualizada);
+      return {
+        venda: this.mapToVendaEntity(vendaAtualizada),
+        despesaPostCommitCallback,
+      };
     });
 
-    console.log('[VendaService] Calling registerVendaConfirmada after finalizarBrindePermuta:', {
-      parceiroId,
-      dataVenda: vendaFinalizada.dataVenda,
-      tipo: vendaFinalizada.tipo,
-      valorTotal: vendaFinalizada.valorTotal,
-    });
+    // Executar callback de lançamento DRE da despesa após o commit da transação
+    if (vendaFinalizada.despesaPostCommitCallback) {
+      await vendaFinalizada.despesaPostCommitCallback();
+    }
+
+    const venda = vendaFinalizada.venda;
+
+    this.logger.log(`[finalizarBrindePermuta] Registrando venda ${venda.id} no rollup`);
 
     await this.vendaRollupService.registerVendaConfirmada({
       parceiroId,
-      dataVenda: vendaFinalizada.dataVenda,
-      tipo: vendaFinalizada.tipo,
-      valorTotal: vendaFinalizada.valorTotal ?? 0,
-      descontoTotal: vendaFinalizada.desconto ?? 0,
+      dataVenda: venda.dataVenda,
+      tipo: venda.tipo,
+      valorTotal: venda.valorTotal ?? 0,
+      descontoTotal: venda.desconto ?? 0,
     });
 
-    return vendaFinalizada;
+    // Processar lançamentos DRE
+    try {
+      const dreResult = await this.lancamentoDreService.processarVenda(parceiroId, venda.id);
+      this.logger.log(
+        `[finalizarBrindePermuta] Venda ${venda.id} processada no DRE: ` +
+        `${dreResult.lancamentos} lançamentos, Receita: ${dreResult.receita}, Deduções: ${dreResult.deducoes}`,
+      );
+    } catch (error) {
+      this.logger.warn(`[finalizarBrindePermuta] Erro ao processar DRE para venda ${venda.id}: ${error}`);
+    }
+
+    return venda;
   }
 
   async findAll(parceiroId: number): Promise<Venda[]> {
@@ -1857,15 +1891,9 @@ export class VendaService {
       return this.mapToVendaEntity(vendaAtualizada);
     });
 
-    // 13. Registrar no rollup (apenas se não foi cancelada)
+    // 13. Registrar no rollup e DRE (apenas se não foi cancelada)
     if (vendaFinalizada.status !== VendaStatus.CANCELADA) {
-      console.log('[VendaService] Calling registerVendaConfirmada after finalizarCondicional:', {
-        parceiroId,
-        status: vendaFinalizada.status,
-        dataVenda: vendaFinalizada.dataVenda,
-        tipo: vendaFinalizada.tipo,
-        valorTotal: vendaFinalizada.valorTotal,
-      });
+      this.logger.log(`[finalizarCondicional] Registrando venda ${vendaFinalizada.id} no rollup`);
 
       await this.vendaRollupService.registerVendaConfirmada({
         parceiroId,
@@ -1874,6 +1902,17 @@ export class VendaService {
         valorTotal: vendaFinalizada.valorTotal ?? 0,
         descontoTotal: vendaFinalizada.desconto ?? 0,
       });
+
+      // Processar lançamentos DRE
+      try {
+        const dreResult = await this.lancamentoDreService.processarVenda(parceiroId, vendaFinalizada.id);
+        this.logger.log(
+          `[finalizarCondicional] Venda ${vendaFinalizada.id} processada no DRE: ` +
+          `${dreResult.lancamentos} lançamentos, Receita: ${dreResult.receita}, Deduções: ${dreResult.deducoes}`,
+        );
+      } catch (error) {
+        this.logger.warn(`[finalizarCondicional] Erro ao processar DRE para venda ${vendaFinalizada.id}: ${error}`);
+      }
     }
 
     return vendaFinalizada;

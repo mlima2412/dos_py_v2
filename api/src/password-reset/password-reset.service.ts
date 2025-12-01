@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  HttpStatus,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { RequestPasswordResetDto } from './dto/request-password-reset.dto';
@@ -11,13 +12,52 @@ import { Resend } from 'resend';
 import { Usuario } from '../usuarios/entities/usuario.entity';
 import i18next from 'i18next';
 
+const GOOGLE_PROVIDER_ERROR_CODE = 'GOOGLE_PROVIDER_ACCOUNT';
+const DEFAULT_LANGUAGE = 'pt';
+
 @Injectable()
 export class PasswordResetService {
   constructor(private prisma: PrismaService) {}
 
+  private getTranslator(lang?: string) {
+    const language = lang || DEFAULT_LANGUAGE;
+    try {
+      return i18next.getFixedT(language);
+    } catch {
+      return i18next.getFixedT(DEFAULT_LANGUAGE);
+    }
+  }
+
+  private getGoogleProviderMessage(lang?: string) {
+    const t = this.getTranslator(lang);
+    const translated = t('password-reset.googleProviderNotAllowed');
+    if (!translated || translated === 'password-reset.googleProviderNotAllowed') {
+      return 'Esta conta utiliza login com Google. Use o botão do Google para entrar.';
+    }
+    return translated;
+  }
+
+  private throwGoogleProviderError(lang?: string): never {
+    const message = this.getGoogleProviderMessage(lang);
+    throw new BadRequestException({
+      statusCode: HttpStatus.BAD_REQUEST,
+      message,
+      code: GOOGLE_PROVIDER_ERROR_CODE,
+    });
+  }
+
+  private ensurePasswordResetAllowed(
+    user: { provider?: string } | null,
+    lang?: string,
+  ): void {
+    if (user?.provider?.toUpperCase() === 'GOOGLE') {
+      this.throwGoogleProviderError(lang);
+    }
+  }
+
   async requestPasswordReset(
     requestDto: RequestPasswordResetDto,
-    lang: string,
+    lang?: string,
   ): Promise<{ message: string }> {
     // Verificar se o usuário existe com o email fornecido
     const user = await this.prisma.usuario.findFirst({
@@ -30,6 +70,7 @@ export class PasswordResetService {
     if (!user) {
       throw new NotFoundException('Usuário não encontrado ou inativo');
     }
+    this.ensurePasswordResetAllowed(user, lang);
 
     // Verificar se existe uma solicitação anterior válida (não expirada e não utilizada)
     const existingToken = await this.prisma.passwordResetToken.findFirst({
@@ -74,7 +115,10 @@ export class PasswordResetService {
 
   async resetPassword(
     resetDto: ResetPasswordDto,
+    lang?: string,
   ): Promise<{ message: string }> {
+    const t = this.getTranslator(lang);
+
     // Buscar o token
     const resetToken = await this.prisma.passwordResetToken.findFirst({
       where: {
@@ -90,8 +134,9 @@ export class PasswordResetService {
     });
 
     if (!resetToken) {
-      throw new BadRequestException('Token inválido ou expirado');
+      throw new BadRequestException(t('password-reset.invalidOrExpiredToken'));
     }
+    this.ensurePasswordResetAllowed(resetToken.user, lang);
 
     // Criar instância da entidade Usuario para criptografar a senha
     const usuarioEntity = new Usuario(resetToken.user);
@@ -127,16 +172,16 @@ export class PasswordResetService {
       },
     });
 
-    return { message: 'Senha alterada com sucesso' };
+    return { message: t('password-reset.passwordChanged') };
   }
 
   private async sendPasswordResetEmail(
     email: string,
     nome: string,
     token: string,
-    lang,
+    lang?: string,
   ): Promise<void> {
-    const t = i18next.getFixedT(lang);
+    const t = this.getTranslator(lang);
 
     const resend = new Resend(process.env.RESEND_API);
 
@@ -204,7 +249,10 @@ export class PasswordResetService {
 
   async validateToken(
     token: string,
+    lang?: string,
   ): Promise<{ valid: boolean; message?: string }> {
+    const t = this.getTranslator(lang);
+
     const resetToken = await this.prisma.passwordResetToken.findFirst({
       where: {
         token,
@@ -213,12 +261,52 @@ export class PasswordResetService {
           gt: new Date(),
         },
       },
+      include: {
+        user: true,
+      },
     });
 
     if (!resetToken) {
-      return { valid: false, message: 'Token inválido ou expirado' };
+      return { valid: false, message: t('password-reset.invalidOrExpiredToken') };
     }
 
-    return { valid: true };
+    if (resetToken.user?.provider?.toUpperCase() === 'GOOGLE') {
+      return {
+        valid: false,
+        message: this.getGoogleProviderMessage(lang),
+      };
+    }
+
+    return { valid: true, message: t('password-reset.validToken') };
+  }
+
+  /**
+   * Cria um token de convite para definição de senha inicial.
+   * Usado quando um novo usuário local é criado.
+   * Token válido por 72 horas (mais tempo que reset normal).
+   */
+  async createInvitationToken(userId: number): Promise<string> {
+    const token = nanoid(32);
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + 72); // Expira em 72 horas
+
+    await this.prisma.passwordResetToken.create({
+      data: {
+        userId,
+        token,
+        expiresAt,
+      },
+    });
+
+    return token;
+  }
+
+  /**
+   * Retorna a URL base do frontend
+   */
+  getBaseUrl(): string {
+    return process.env.NODE_ENV === 'production'
+      ? process.env.COMPLETE_FRONTEND_URL || 'http://localhost:5173'
+      : 'http://localhost:5173';
   }
 }

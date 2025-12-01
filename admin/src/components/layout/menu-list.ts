@@ -210,7 +210,7 @@ export function getMenuList(
 							{
 								href: "/pedidoVendas/relatorios",
 								label: t("menu.reports.main"),
-								active: isSalesReport || isExpenseReport,
+								active: isSalesReport || isExpenseReport || pathname === "/dre",
 								icon: FolderTree,
 								submenus: [
 									{
@@ -222,6 +222,11 @@ export function getMenuList(
 										href: "/despesas/relatorios",
 										label: t("menu.reports.expenses"),
 										active: isExpenseReport,
+									},
+									{
+										href: "/dre",
+										label: t("menu.reports.dre"),
+										active: pathname === "/dre",
 									},
 								],
 							},

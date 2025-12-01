@@ -43,4 +43,12 @@ export class PaginatedQueryDto {
   @IsOptional()
   @IsString()
   subCategoriaId?: string;
+
+  @ApiPropertyOptional({
+    description: 'ID do grupo DRE para filtrar',
+    example: '1',
+  })
+  @IsOptional()
+  @IsString()
+  grupoDreId?: string;
 }

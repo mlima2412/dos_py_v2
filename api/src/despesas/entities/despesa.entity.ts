@@ -4,6 +4,7 @@ import { uuidv7 } from 'uuidv7';
 import { Fornecedor } from '../../fornecedores/entities/fornecedor.entity';
 import { SubCategoriaDespesa } from '../../subcategoria-despesa/entities/subcategoria-despesa.entity';
 import { Currency } from '../../currency/entities/currency.entity';
+import { ContaDRE } from '../../conta-dre/entities/conta-dre.entity';
 
 export class Despesa {
   @ApiProperty({
@@ -94,6 +95,20 @@ export class Despesa {
     required: false,
   })
   currency?: Currency;
+
+  @ApiProperty({
+    description: 'ID da conta DRE para classificação contábil',
+    example: 1,
+    required: false,
+  })
+  contaDreId: number | null;
+
+  @ApiProperty({
+    description: 'Conta DRE da despesa',
+    type: () => ContaDRE,
+    required: false,
+  })
+  contaDre?: ContaDRE;
 
   constructor(data?: Partial<Despesa>) {
     if (data) {

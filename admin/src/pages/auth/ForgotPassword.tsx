@@ -19,6 +19,20 @@ function ForgotPassword() {
 	const [email, setEmail] = useState("");
 	const [sent, setSent] = useState(false);
 	const [error, setError] = useState("");
+	const GOOGLE_PROVIDER_ERROR_CODE = "GOOGLE_PROVIDER_ACCOUNT";
+
+	const extractErrorResponse = (error: unknown) => {
+		if (error && typeof error === "object") {
+			const maybeError = error as {
+				response?: { data?: { message?: string; code?: string } };
+			};
+			const data = maybeError.response?.data;
+			const message =
+				typeof data?.message === "string" ? data.message : undefined;
+			return { message, code: data?.code };
+		}
+		return { message: undefined, code: undefined };
+	};
 
 	// Mutation para solicitar redefinição de senha
 	const requestPasswordResetMutation =
@@ -29,15 +43,12 @@ function ForgotPassword() {
 					setError("");
 				},
 				onError: (error: unknown) => {
-					const errorMessage =
-						error && typeof error === "object" && "response" in error
-							? (error as { response?: { data?: { message?: string } } })
-									.response?.data?.message ||
-								t("forgotPassword.error.forgotPasswordError")
-							: undefined;
-					setError(
-						errorMessage || t("forgotPassword.error.forgotPasswordError")
-					);
+					const { message, code } = extractErrorResponse(error);
+					if (code === GOOGLE_PROVIDER_ERROR_CODE) {
+						setError(t("forgotPassword.error.googleProviderNotAllowed"));
+						return;
+					}
+					setError(message || t("forgotPassword.error.forgotPasswordError"));
 				},
 			},
 		});

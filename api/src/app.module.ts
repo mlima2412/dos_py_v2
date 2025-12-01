@@ -44,6 +44,11 @@ import { PagamentoModule } from './pagamento/pagamento.module';
 import { ParcelamentoModule } from './parcelamento/parcelamento.module';
 import { ParcelasModule } from './parcelas/parcelas.module';
 import { VendaCacheModule } from './cash/vendas/venda-cache.module';
+import { GrupoDreModule } from './grupo-dre/grupo-dre.module';
+import { ContaDreModule } from './conta-dre/conta-dre.module';
+import { LancamentoDreModule } from './lancamento-dre/lancamento-dre.module';
+import { ImpostoModule } from './imposto/imposto.module';
+import { RegraLancamentoModule } from './regra-lancamento/regra-lancamento.module';
 
 @Module({
   imports: [
@@ -85,6 +90,11 @@ import { VendaCacheModule } from './cash/vendas/venda-cache.module';
     ParcelamentoModule,
     ParcelasModule,
     VendaCacheModule,
+    GrupoDreModule,
+    ContaDreModule,
+    LancamentoDreModule,
+    ImpostoModule,
+    RegraLancamentoModule,
   ],
   controllers: [AppController],
   providers: [

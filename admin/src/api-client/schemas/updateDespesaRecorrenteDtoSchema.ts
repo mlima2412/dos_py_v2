@@ -17,5 +17,6 @@ export const updateDespesaRecorrenteDtoSchema = z.object({
 "parceiroId": z.optional(z.coerce.number().describe("ID do parceiro responsável pela despesa")),
 "fornecedorId": z.optional(z.coerce.number().describe("ID do fornecedor da despesa")),
 "currencyId": z.optional(z.coerce.number().describe("ID da moeda da despesa")),
-"cotacao": z.optional(z.coerce.number().describe("Cotação da moeda no momento da despesa"))
+"cotacao": z.optional(z.coerce.number().describe("Cotação da moeda no momento da despesa")),
+"contaDreId": z.optional(z.coerce.number().describe("ID da conta DRE para classificação contábil"))
     }) as unknown as z.ZodType<UpdateDespesaRecorrenteDto>

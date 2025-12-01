@@ -4,6 +4,13 @@
 */
 
 
+export const usuarioLinguagemEnum = {
+    "Espanol": "Espanol",
+    "Portugues": "Portugues"
+} as const;
+
+export type UsuarioLinguagemEnumKey = (typeof usuarioLinguagemEnum)[keyof typeof usuarioLinguagemEnum];
+
 export type Usuario = {
     /**
      * @description ID interno do usuário
@@ -57,6 +64,12 @@ export type Usuario = {
      * @type string | undefined
     */
     avatar?: string | undefined;
+    /**
+     * @description Idioma preferido para comunicações
+     * @default "Portugues"
+     * @type string
+    */
+    linguagem: UsuarioLinguagemEnumKey;
     /**
      * @description Data de criação do usuário
      * @type string, date-time

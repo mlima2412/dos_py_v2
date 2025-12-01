@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -25,15 +25,122 @@ const Login: React.FC = () => {
 	const { t } = useTranslation();
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { login, isLoading } = useAuth();
+	const { login, loginWithGoogle, isLoading } = useAuth();
 
 	const [email, setEmail] = useState("mlima001@gmail.com");
 	const [password, setPassword] = useState("123456");
 	const [showPassword, setShowPassword] = useState(false);
 	const [error, setError] = useState("");
+	const [isGoogleButtonReady, setIsGoogleButtonReady] = useState(false);
+	const [isGoogleAuthenticating, setIsGoogleAuthenticating] = useState(false);
+	const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || "";
+	const googleInitializedRef = useRef(false);
+	const googleButtonRef = useRef<HTMLDivElement | null>(null);
 
 	// Redirecionar para onde o usuário estava tentando ir, ou para dashboard
 	const from = location.state?.from?.pathname || "/dashboard";
+
+	const handleGoogleCredential = useCallback(
+		async (credentialResponse: google.accounts.id.CredentialResponse) => {
+			if (!credentialResponse.credential) {
+				setError(t("login.errors.googleCredentialMissing"));
+				setIsGoogleAuthenticating(false);
+				return;
+			}
+
+			try {
+				setError("");
+				await loginWithGoogle(credentialResponse.credential);
+				navigate(from, { replace: true });
+			} catch (err) {
+				let message: string | undefined;
+				if (
+					err &&
+					typeof err === "object" &&
+					"data" in err &&
+					err.data &&
+					typeof err.data === "object" &&
+					err.data !== null &&
+					"message" in err.data
+				) {
+					message = (err.data as { message?: string }).message;
+				} else if (err instanceof Error) {
+					message = err.message;
+				}
+				setError(message || t("login.errors.googleFailed"));
+			} finally {
+				setIsGoogleAuthenticating(false);
+			}
+		},
+		[from, loginWithGoogle, navigate, t]
+	);
+
+	useEffect(() => {
+		if (!googleClientId) {
+			return;
+		}
+
+			const initializeGoogle = () => {
+				if (
+					googleInitializedRef.current ||
+					!window.google?.accounts?.id
+				) {
+					return;
+				}
+
+				window.google.accounts.id.initialize({
+					client_id: googleClientId,
+					callback: handleGoogleCredential,
+					auto_select: false,
+					use_fedcm_for_prompt: true,
+				});
+
+				if (googleButtonRef.current) {
+					window.google.accounts.id.renderButton(
+						googleButtonRef.current,
+						{
+							type: "standard",
+							size: "large",
+							theme: "outline",
+							text: "continue_with",
+							shape: "rectangular",
+							width: googleButtonRef.current.offsetWidth || 300,
+						}
+					);
+					setIsGoogleButtonReady(true);
+				}
+
+				googleInitializedRef.current = true;
+			};
+
+			if (window.google?.accounts?.id) {
+				initializeGoogle();
+			return;
+		}
+
+		const existingScript = document.getElementById("google-identity");
+		if (existingScript) {
+			existingScript.addEventListener("load", initializeGoogle);
+			return () => {
+				existingScript.removeEventListener("load", initializeGoogle);
+			};
+		}
+
+			const scriptElement = document.createElement("script");
+			scriptElement.src = "https://accounts.google.com/gsi/client";
+			scriptElement.async = true;
+			scriptElement.defer = true;
+			scriptElement.id = "google-identity";
+			scriptElement.onload = initializeGoogle;
+			scriptElement.onerror = () => {
+				setError(t("login.errors.googleInit"));
+			};
+			document.head.appendChild(scriptElement);
+
+			return () => {
+				scriptElement.onload = null;
+			};
+		}, [googleClientId, handleGoogleCredential, t]);
 
 	const handleLogin = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -59,11 +166,6 @@ const Login: React.FC = () => {
 		}
 	};
 
-	const handleGoogleLogin = () => {
-		// TODO: Implementar login com Google
-		setError("Login com Google ainda não implementado");
-	};
-
 	return (
 		<div className="min-h-screen grid lg:grid-cols-[70%_30%]">
 			{/* Left Column - Logo */}
@@ -71,7 +173,7 @@ const Login: React.FC = () => {
 				<div className="text-center">
 					<img
 						className="mx-auto h-48 w-auto mb-8"
-						src="/logo-central-color.png"
+						src="/logo-menu-color.png"
 						alt="Logo"
 					/>
 					<div className="flex justify-center">
@@ -87,7 +189,7 @@ const Login: React.FC = () => {
 					<div className="lg:hidden text-center space-y-4">
 						<img
 							className="mx-auto h-16 w-auto"
-							src="/logo-central-color.png"
+							src="/logo-menu-color.png"
 							alt="DOS Logo"
 						/>
 						<div className="flex justify-center">
@@ -194,33 +296,93 @@ const Login: React.FC = () => {
 								</div>
 							</div>
 
-							{/* Google Login Button */}
-							<Button
-								variant="outline"
-								onClick={handleGoogleLogin}
-								disabled={isLoading}
-								className="w-full"
-							>
-								<svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
-									<path
-										fill="#4285F4"
-										d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-									/>
-									<path
-										fill="#34A853"
-										d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-									/>
-									<path
-										fill="#FBBC05"
-										d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-									/>
-									<path
-										fill="#EA4335"
-										d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-									/>
-								</svg>
-								{isLoading ? "Entrando..." : "Continuar com Google"}
-							</Button>
+							<div className="space-y-2 relative">
+								<div
+									ref={googleButtonRef}
+									className="absolute opacity-0 pointer-events-none -z-10 h-0 overflow-hidden"
+									aria-hidden="true"
+								/>
+
+								<Button
+									variant="outline"
+									onClick={() => {
+										setError("");
+										if (!googleClientId) {
+											setError(
+												t("login.errors.googleNotConfigured")
+											);
+											return;
+										}
+
+										if (
+											!googleInitializedRef.current ||
+											!window.google?.accounts?.id
+										) {
+											setError(t("login.errors.googleInit"));
+											return;
+										}
+
+										const googleButton =
+											googleButtonRef.current?.querySelector(
+												'div[role="button"]'
+											);
+										if (!googleButton) {
+											setError(
+												t("login.errors.googleInit")
+											);
+											return;
+										}
+
+										setIsGoogleAuthenticating(true);
+										googleButton.dispatchEvent(
+											new MouseEvent("click", {
+												bubbles: true,
+												cancelable: true,
+											})
+										);
+									}}
+									disabled={
+										isLoading ||
+										isGoogleAuthenticating ||
+										!googleClientId ||
+										!isGoogleButtonReady
+									}
+									className="w-full"
+								>
+									<svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
+										<path
+											fill="#4285F4"
+											d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+										/>
+										<path
+											fill="#34A853"
+											d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+										/>
+										<path
+											fill="#FBBC05"
+											d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+										/>
+										<path
+											fill="#EA4335"
+											d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+										/>
+									</svg>
+									{isGoogleAuthenticating || isLoading
+										? t("common.loading")
+										: t("login.googleSignIn")}
+								</Button>
+
+								{!googleClientId && (
+									<p className="text-xs text-center text-muted-foreground">
+										{t("login.errors.googleNotConfigured")}
+									</p>
+								)}
+								{googleClientId && !isGoogleButtonReady && (
+									<p className="text-xs text-center text-muted-foreground">
+										{t("common.loading")}
+									</p>
+								)}
+							</div>
 						</CardContent>
 					</Card>
 				</div>

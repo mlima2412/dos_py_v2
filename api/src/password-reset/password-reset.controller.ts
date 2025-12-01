@@ -49,7 +49,7 @@ export class PasswordResetController {
     @Body() requestDto: RequestPasswordResetDto,
     @Req() req: Request & { language: string; t: TFunction },
   ) {
-    const lang = req.language || 'pt';
+    const lang = requestDto.language || req.language || 'pt';
     return this.passwordResetService.requestPasswordReset(requestDto, lang);
   }
 
@@ -67,8 +67,12 @@ export class PasswordResetController {
     status: 400,
     description: 'Token inválido ou expirado',
   })
-  async resetPassword(@Body() resetDto: ResetPasswordDto) {
-    return this.passwordResetService.resetPassword(resetDto);
+  async resetPassword(
+    @Body() resetDto: ResetPasswordDto,
+    @Req() req: Request & { language: string; t: TFunction },
+  ) {
+    const lang = resetDto.language || req.language || 'pt';
+    return this.passwordResetService.resetPassword(resetDto, lang);
   }
 
   @Public()
@@ -79,12 +83,23 @@ export class PasswordResetController {
     description: 'Token de recuperação de senha',
     example: 'abc123def456ghi789jkl012mno345pqr678',
   })
+  @ApiQuery({
+    name: 'language',
+    description: 'Idioma preferido para mensagens',
+    example: 'pt',
+    required: false,
+  })
   @ApiResponse({
     status: 200,
     description: 'Status de validação do token',
     type: ValidateTokenResponseDto,
   })
-  async validateToken(@Query('token') token: string) {
-    return this.passwordResetService.validateToken(token);
+  async validateToken(
+    @Query('token') token: string,
+    @Query('language') language?: string,
+    @Req() req?: Request & { language: string },
+  ) {
+    const lang = language || req?.language || 'pt';
+    return this.passwordResetService.validateToken(token, lang);
   }
 }

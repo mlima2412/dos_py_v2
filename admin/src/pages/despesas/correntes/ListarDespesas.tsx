@@ -11,6 +11,13 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 
 import {
 	Table,
@@ -35,6 +42,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useDespesas } from "@/hooks/useDespesas";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePartnerContext } from "@/hooks/usePartnerContext";
+import { useGrupoDreControllerFindAll } from "@/api-client/hooks";
 
 import { LoadingMessage } from "@/components/ui/TableSkeleton";
 import {
@@ -48,9 +56,22 @@ export const ListarDespesas: React.FC = () => {
 
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState("");
+	const [selectedGrupoDre, setSelectedGrupoDre] = useState<string>("all");
 
 	// Debounce para busca
 	const debouncedGlobalFilter = useDebounce(globalFilter, 500);
+
+	// Buscar grupos DRE para o filtro
+	const { data: gruposDre, isLoading: isLoadingGrupos } =
+		useGrupoDreControllerFindAll();
+
+	// Filtrar apenas grupos de tipo CUSTO e DESPESA, e ordenar por ordem
+	const gruposOrdenados = useMemo(() => {
+		if (!gruposDre) return [];
+		return [...gruposDre]
+			.filter(grupo => grupo.tipo === "CUSTO" || grupo.tipo === "DESPESA")
+			.sort((a, b) => a.ordem - b.ordem);
+	}, [gruposDre]);
 
 	// Buscar despesas com scroll infinito
 	const {
@@ -63,6 +84,7 @@ export const ListarDespesas: React.FC = () => {
 	} = useDespesas({
 		search: debouncedGlobalFilter,
 		parceiroId: selectedPartnerId || undefined,
+		grupoDreId: selectedGrupoDre !== "all" ? selectedGrupoDre : undefined,
 	});
 
 	// Flatten dos dados para a tabela
@@ -137,6 +159,25 @@ export const ListarDespesas: React.FC = () => {
 								className="pl-10"
 							/>
 						</div>
+					</div>
+					<div className="w-full sm:w-[200px]">
+						<Select
+							value={selectedGrupoDre}
+							onValueChange={setSelectedGrupoDre}
+							disabled={isLoadingGrupos}
+						>
+							<SelectTrigger>
+								<SelectValue placeholder={t("expenses.filterByGrupoDre")} />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem value="all">{t("common.all")}</SelectItem>
+								{gruposOrdenados.map(grupo => (
+									<SelectItem key={grupo.id} value={grupo.id.toString()}>
+										{grupo.codigo} - {grupo.nome}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
 					</div>
 				</div>
 

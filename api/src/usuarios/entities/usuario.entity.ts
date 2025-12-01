@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { uuidv7 } from 'uuidv7';
 import * as bcrypt from 'bcrypt';
+import { Linguagem } from '@prisma/client';
 
 export class Usuario {
   @ApiProperty({
@@ -70,6 +71,14 @@ export class Usuario {
   avatar: string | null;
 
   @ApiProperty({
+    description: 'Idioma preferido para comunicações',
+    example: Linguagem.Portugues,
+    enum: Linguagem,
+    default: Linguagem.Portugues,
+  })
+  linguagem: Linguagem;
+
+  @ApiProperty({
     description: 'Data de criação do usuário',
     example: '2024-01-01T00:00:00.000Z',
   })
@@ -85,6 +94,7 @@ export class Usuario {
     this.provider = this.provider || 'LOCAL';
     this.ativo = this.ativo ?? true;
     this.avatar = this.avatar || '';
+    this.linguagem = this.linguagem || Linguagem.Portugues;
     this.createdAt = this.createdAt || new Date();
   }
 

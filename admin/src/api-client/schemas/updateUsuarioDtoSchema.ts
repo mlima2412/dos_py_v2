@@ -15,5 +15,6 @@ export const updateUsuarioDtoSchema = z.object({
 "senha": z.optional(z.coerce.string().min(6).describe("Senha do usuário")),
 "ativo": z.optional(z.boolean().default(true).describe("Status ativo do usuário")),
 "avatar": z.optional(z.coerce.string().describe("URL do avatar do usuário")),
+"linguagem": z.optional(z.enum(["Espanol", "Portugues"]).default("Portugues").describe("Idioma preferido do usuário")),
 "publicId": z.coerce.string().describe("ID público do usuário para identificação")
     }) as unknown as z.ZodType<UpdateUsuarioDto>

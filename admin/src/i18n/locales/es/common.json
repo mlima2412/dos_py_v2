@@ -14,8 +14,15 @@
 		"or": "o",
 		"continueWith": "Continuar con",
 		"google": "Google",
+		"googleSignIn": "Continuar con Google",
 		"errors": {
-			"noActivePartner": "Socio no encontrado o inactivo. Contacta al administrador."
+			"noActivePartner": "Socio no encontrado o inactivo. Contacta al administrador.",
+			"googleNotConfigured": "Inicio de sesión con Google no disponible. Configura correctamente el CLIENT_ID.",
+			"googleInit": "No se pudo inicializar el inicio de sesión con Google. Actualiza la página e inténtalo nuevamente.",
+			"googlePopupBlocked": "No se pudo abrir la ventana de Google. Verifica si el popup no fue bloqueado e inténtalo otra vez.",
+			"googleCancelled": "Inicio de sesión con Google cancelado por el usuario.",
+			"googleFailed": "No fue posible completar el inicio de sesión con Google.",
+			"googleCredentialMissing": "Token de Google no recibido. Intenta nuevamente."
 		}
 	},
 	"forgotPassword": {
@@ -30,7 +37,8 @@
 		"checkEmail": "Revisa tu bandeja de entrada para las instrucciones de recuperación.",
 		"successMessage": "¡Instrucciones enviadas con éxito!",
 		"error": {
-			"forgotPasswordError": "Error al enviar correo de recuperación"
+			"forgotPasswordError": "Error al enviar correo de recuperación",
+			"googleProviderNotAllowed": "Esta cuenta utiliza el acceso con Google. Usa el botón \"Continuar con Google\" para ingresar."
 		}
 	},
 	"resetPassword": {
@@ -47,7 +55,8 @@
 		"successMessage": "Tu contraseña ha sido cambiada. Puedes iniciar sesión ahora.",
 		"invalidToken": "Token inválido o expirado",
 		"passwordMismatch": "Las contraseñas no coinciden",
-		"passwordTooShort": "La contraseña debe tener al menos 6 caracteres"
+		"passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
+		"googleProviderNotAllowed": "Esta cuenta utiliza el acceso con Google. Usa el botón \"Continuar con Google\" para ingresar."
 	},
 	"common": {
 		"home": "Inicio",
@@ -101,6 +110,10 @@
 		"page": "Página",
 		"back": "Volver",
 		"download": "Descargar"
+	},
+	"languages": {
+		"portuguese": "Portugués",
+		"spanish": "Español"
 	},
 	"dashboard": {
 		"title": "Dashboard",
@@ -200,7 +213,8 @@
 		"reports": {
 			"main": "Informes",
 			"sales": "Ventas",
-			"expenses": "Gastos"
+			"expenses": "Gastos",
+			"dre": "DRE"
 		},
 
 		"administration": "Administración",
@@ -390,6 +404,7 @@
 		"name": "Nombre",
 		"email": "Correo electrónico",
 		"phone": "Teléfono",
+		"language": "Idioma preferido",
 		"partner": "Socio",
 		"profile": "Perfil",
 		"password": "Contraseña",
@@ -400,6 +415,7 @@
 		"namePlaceholder": "Ingresa el nombre completo",
 		"emailPlaceholder": "Ingresa el correo electrónico",
 		"phonePlaceholder": "Ingresa el teléfono",
+		"languagePlaceholder": "Selecciona un idioma",
 		"passwordPlaceholder": "Ingresa la contraseña",
 		"passwordPlaceholderEdit": "Ingresa una nueva contraseña (opcional)",
 		"confirmPasswordPlaceholder": "Confirma la contraseña",
@@ -484,6 +500,8 @@
 		"dueDate": "Vencimiento",
 		"category": "Categoría",
 		"subcategory": "Clasificación",
+		"grupoDre": "Grupo DRE",
+		"filterByGrupoDre": "Filtrar por Grupo DRE",
 		"selectDate": "Selecciona una fecha",
 		"selectDueDate": "Selecciona la fecha de vencimiento",
 		"descriptionPlaceholder": "Ingresa la descripción del gasto",
@@ -499,12 +517,16 @@
 		"firstInstallmentDate": "Fecha de la primera cuota",
 		"selectCategory": "Selecciona una categoría",
 		"selectSubcategory": "Selecciona una subcategoría",
+		"selectDreAccount": "Selecciona una cuenta DRE",
 		"searchCurrency": "Buscar moneda...",
 		"searchSupplier": "Buscar proveedor...",
 		"searchSubcategory": "Buscar subcategoría...",
+		"searchDreAccount": "Buscar cuenta DRE...",
 		"noCurrencyFound": "Ninguna moneda encontrada",
 		"noSupplierFound": "Ningún proveedor encontrado",
 		"noSubcategoryFound": "Ninguna subcategoría encontrada",
+		"noDreAccountFound": "Ninguna cuenta DRE encontrada",
+		"dreAccount": "Cuenta DRE",
 		"dashboard": {
 			"title": "Dashboard de Gastos",
 			"totalMonth": "Total del Mes",
@@ -603,6 +625,7 @@
 			"currencyRequired": "Moneda es obligatoria",
 			"categoryRequired": "Categoría es obligatoria",
 			"subcategoryRequired": "Subcategoría es obligatoria",
+			"dreAccountRequired": "Cuenta DRE es obligatoria",
 			"exchangeRequired": "Cotización es obligatoria",
 			"valueMin": "Valor debe ser mayor que cero",
 			"exchangeMin": "Cotización debe ser mayor que cero"
@@ -1834,5 +1857,29 @@
 			"errorLoadingYears": "Error al cargar los años disponibles."
 		},
 		"noResults": "Sin resultados"
+	},
+	"dre": {
+		"title": "Estado de Resultados (DRE)",
+		"year": "Año",
+		"month": "Mes",
+		"allMonths": "Todos los Meses",
+		"selectYear": "Seleccione el año",
+		"selectMonth": "Seleccione el mes",
+		"selectPartner": "Seleccione un socio para ver el DRE.",
+		"noData": "No se encontraron datos",
+		"noDataDescription": "No hay lanzamientos para el período seleccionado.",
+		"account": "Cuenta",
+		"value": "Valor",
+		"subtotal": "Subtotal",
+		"print": "Imprimir",
+		"totals": {
+			"grossRevenue": "INGRESOS BRUTOS",
+			"deductions": "(-) Deducciones sobre Ingresos",
+			"netRevenue": "(=) INGRESOS NETOS",
+			"costs": "(-) Costos (CMV)",
+			"grossProfit": "(=) UTILIDAD BRUTA",
+			"expenses": "(-) Gastos Operativos",
+			"operatingProfit": "(=) RESULTADO OPERACIONAL"
+		}
 	}
 }

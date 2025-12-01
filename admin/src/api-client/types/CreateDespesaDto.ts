@@ -30,9 +30,9 @@ export type CreateDespesaDto = {
     descricao: string;
     /**
      * @description ID da subcategoria da despesa
-     * @type number
+     * @type number | undefined
     */
-    subCategoriaId: number;
+    subCategoriaId?: number | undefined;
     /**
      * @description ID do parceiro responsável pela despesa
      * @type number
@@ -78,4 +78,9 @@ export type CreateDespesaDto = {
      * @type number | undefined
     */
     cotacao?: number | undefined;
+    /**
+     * @description ID da conta DRE para classificação contábil
+     * @type number | undefined
+    */
+    contaDreId?: number | undefined;
 };

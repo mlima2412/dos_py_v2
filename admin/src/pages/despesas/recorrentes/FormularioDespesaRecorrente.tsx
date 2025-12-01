@@ -44,10 +44,9 @@ import {
 	useDespesasRecorrentesControllerCreate,
 	useDespesasRecorrentesControllerFindOne,
 	useDespesasRecorrentesControllerUpdate,
-	useCategoriaDespesasControllerFindAll,
-	useSubCategoriaDespesaControllerFindByCategoria,
 	useFornecedoresControllerFindActiveFornecedores,
 	useCurrencyControllerFindAllActive,
+	useContaDreControllerFindByGrupoTipo,
 	type CreateDespesaRecorrenteDto,
 	type UpdateDespesaRecorrenteDto,
 } from "@/api-client";
@@ -74,10 +73,7 @@ const createFormSchema = (t: (key: string) => string) =>
 		}),
 		dataFim: z.date().optional(),
 		fornecedorId: z.string().optional(),
-		categoriaId: z.string().optional(),
-		subCategoriaId: z
-			.string()
-			.min(1, t("recurringExpenses.validation.subcategoryRequired")),
+		contaDreId: z.string().min(1, t("expenses.validation.dreAccountRequired")),
 		currencyId: z.string().optional(),
 		cotacao: z.number().optional(),
 	});
@@ -93,7 +89,6 @@ export function FormularioDespesaRecorrente() {
 
 	const [valorInput, setValorInput] = useState<string>("");
 	const [cotacaoInput, setCotacaoInput] = useState<string>("");
-	const [selectedCategoria, setSelectedCategoria] = useState<string>("");
 
 	const fornecedoresHeaders = {
 		"x-parceiro-id": selectedPartnerId?.toString() ?? "",
@@ -113,9 +108,8 @@ export function FormularioDespesaRecorrente() {
 			dataInicio: new Date(),
 			dataFim: undefined,
 			fornecedorId: "",
-			categoriaId: "",
-			subCategoriaId: "",
-			currencyId: "", // currencyId será selecionado pelo usuário no formulário
+			contaDreId: "",
+			currencyId: "",
 			cotacao: 1,
 		},
 	});
@@ -124,13 +118,6 @@ export function FormularioDespesaRecorrente() {
 	const { data: despesaRecorrente, isLoading: isLoadingDespesa } =
 		useDespesasRecorrentesControllerFindOne(id!, {
 			query: { enabled: isEditing && Boolean(id) },
-		});
-
-	const { data: categorias = [] } = useCategoriaDespesasControllerFindAll();
-
-	const { data: subcategorias = [] } =
-		useSubCategoriaDespesaControllerFindByCategoria(Number(selectedCategoria), {
-			query: { enabled: Boolean(selectedCategoria) },
 		});
 
 	const { data: fornecedores = [] } =
@@ -144,6 +131,13 @@ export function FormularioDespesaRecorrente() {
 		);
 
 	const { data: currencies = [] } = useCurrencyControllerFindAllActive();
+
+	const { data: contasDre = [], isLoading: isLoadingContasDre } =
+		useContaDreControllerFindByGrupoTipo(
+			"DESPESA",
+			{ "x-parceiro-id": Number(selectedPartnerId) || 0 },
+			{ query: { enabled: Boolean(selectedPartnerId) } }
+		);
 
 	// Mutations
 	const createMutation = useDespesasRecorrentesControllerCreate({
@@ -181,14 +175,7 @@ export function FormularioDespesaRecorrente() {
 
 	// Populate form when editing
 	useEffect(() => {
-		console.log("useEffect triggered:", { despesaRecorrente, isEditing, id });
 		if (despesaRecorrente && isEditing) {
-			console.log("Populating form with data:", despesaRecorrente);
-			const subcategoriaId = despesaRecorrente.subCategoriaId?.toString() || "";
-			const categoriaId =
-				despesaRecorrente.subCategoria?.categoriaId?.toString() || "";
-
-			setSelectedCategoria(categoriaId);
 			setValorInput(despesaRecorrente.valor.toString());
 			setCotacaoInput(despesaRecorrente.cotacao?.toString() || "1");
 
@@ -208,8 +195,10 @@ export function FormularioDespesaRecorrente() {
 					? new Date(despesaRecorrente.dataFim)
 					: undefined,
 				fornecedorId: despesaRecorrente.fornecedorId?.toString() || "",
-				categoriaId: categoriaId,
-				subCategoriaId: subcategoriaId,
+				contaDreId:
+					(
+						despesaRecorrente as unknown as { contaDreId?: number }
+					).contaDreId?.toString() || "",
 				currencyId: despesaRecorrente.currencyId?.toString() || "",
 				cotacao: despesaRecorrente.cotacao || 1,
 			});
@@ -232,7 +221,7 @@ export function FormularioDespesaRecorrente() {
 			dataFim: data.dataFim?.toISOString(),
 			parceiroId: Number(selectedPartnerId),
 			fornecedorId: data.fornecedorId ? Number(data.fornecedorId) : undefined,
-			subCategoriaId: Number(data.subCategoriaId),
+			contaDreId: Number(data.contaDreId),
 			currencyId: data.currencyId ? Number(data.currencyId) : undefined,
 			cotacao: data.cotacao,
 		};
@@ -255,18 +244,6 @@ export function FormularioDespesaRecorrente() {
 	};
 
 	// Prepare options for comboboxes
-	const categoriaOptions: ComboboxOption[] = categorias.map(categoria => ({
-		value: categoria.idCategoria?.toString() || "",
-		label: categoria.descricao || "",
-	}));
-
-	const subcategoriaOptions: ComboboxOption[] = subcategorias.map(
-		subcategoria => ({
-			value: subcategoria.idSubCategoria?.toString() || "",
-			label: subcategoria.descricao || "",
-		})
-	);
-
 	const fornecedorOptions: ComboboxOption[] = fornecedores.map(fornecedor => ({
 		value: fornecedor.id.toString(),
 		label: fornecedor.nome,
@@ -275,6 +252,11 @@ export function FormularioDespesaRecorrente() {
 	const currencyOptions: ComboboxOption[] = currencies.map(currency => ({
 		value: currency.id?.toString() || "",
 		label: `${currency.isoCode || currency.prefixo} - ${currency.nome || ""}`,
+	}));
+
+	const contaDreOptions: ComboboxOption[] = contasDre.map(conta => ({
+		value: conta.id.toString(),
+		label: conta.nome,
 	}));
 
 	const frequencyOptions = [
@@ -512,54 +494,25 @@ export function FormularioDespesaRecorrente() {
 									/>
 								</div>
 
-								{/* Categoria e Subcategoria */}
-								<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+								{/* Conta DRE */}
+								<div className="grid grid-cols-1 gap-3">
 									<FormField
 										control={form.control}
-										name="categoriaId"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>{t("recurringExpenses.category")}</FormLabel>
-												<FormControl>
-													<Combobox
-														options={categoriaOptions}
-														value={field.value}
-														onValueChange={(value: string) => {
-															field.onChange(value);
-															setSelectedCategoria(value);
-															form.setValue("subCategoriaId", "");
-														}}
-														placeholder={t(
-															"recurringExpenses.categoryPlaceholder"
-														)}
-														emptyText={t("recurringExpenses.noCategoriesFound")}
-													/>
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-
-									<FormField
-										control={form.control}
-										name="subCategoriaId"
+										name="contaDreId"
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>
-													{t("recurringExpenses.subcategory")}
+													{t("expenses.dreAccount")}
 												</FormLabel>
 												<FormControl>
 													<Combobox
-														options={subcategoriaOptions}
+														options={contaDreOptions}
 														value={field.value}
 														onValueChange={field.onChange}
-														placeholder={t(
-															"recurringExpenses.subcategoryPlaceholder"
-														)}
-														emptyText={t(
-															"recurringExpenses.noSubcategoriesFound"
-														)}
-														disabled={!selectedCategoria}
+														placeholder={t("expenses.selectDreAccount")}
+														searchPlaceholder={t("expenses.searchDreAccount")}
+														emptyText={t("expenses.noDreAccountFound")}
+														disabled={isLoadingContasDre}
 													/>
 												</FormControl>
 												<FormMessage />

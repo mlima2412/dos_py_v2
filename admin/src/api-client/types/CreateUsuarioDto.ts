@@ -4,6 +4,13 @@
 */
 
 
+export const createUsuarioDtoLinguagemEnum = {
+    "Espanol": "Espanol",
+    "Portugues": "Portugues"
+} as const;
+
+export type CreateUsuarioDtoLinguagemEnumKey = (typeof createUsuarioDtoLinguagemEnum)[keyof typeof createUsuarioDtoLinguagemEnum];
+
 export type CreateUsuarioDto = {
     /**
      * @description Nome completo do usuário
@@ -50,4 +57,10 @@ export type CreateUsuarioDto = {
      * @type string | undefined
     */
     avatar?: string | undefined;
+    /**
+     * @description Idioma preferido do usuário
+     * @default "Portugues"
+     * @type string
+    */
+    linguagem: CreateUsuarioDtoLinguagemEnumKey;
 };
