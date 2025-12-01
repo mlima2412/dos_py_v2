@@ -254,10 +254,23 @@ export class ProdutoService {
     };
 
     if (search) {
-      whereCondition.nome = {
-        contains: search,
-        mode: 'insensitive',
-      };
+      // Verificar se a busca é um número (código do produto)
+      const searchAsNumber = parseInt(search, 10);
+      const isNumericSearch = !isNaN(searchAsNumber);
+
+      if (isNumericSearch) {
+        // Buscar por código (id) OU por nome
+        whereCondition.OR = [
+          { id: searchAsNumber },
+          { nome: { contains: search, mode: 'insensitive' } },
+        ];
+      } else {
+        // Buscar apenas por nome
+        whereCondition.nome = {
+          contains: search,
+          mode: 'insensitive',
+        };
+      }
     }
 
     if (categoriaId) {
