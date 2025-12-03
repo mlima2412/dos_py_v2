@@ -1,0 +1,1 @@
+{"type":"object","properties":{"publicId":{"type":"string","description":"Public ID da transferência","example":"01234567-89ab-cdef-0123-456789abcdef"}},"required":["publicId"],"x-readme-ref-name":"PublicIdResponseDto"}

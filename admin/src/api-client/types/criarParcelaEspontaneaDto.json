@@ -1,0 +1,1 @@
+{"type":"object","properties":{"valor":{"type":"number","description":"Valor da parcela","example":150.5},"dataPagamento":{"type":"string","description":"Data do pagamento","example":"2024-01-15T10:30:00Z"}},"required":["valor"],"x-readme-ref-name":"CriarParcelaEspontaneaDto"}

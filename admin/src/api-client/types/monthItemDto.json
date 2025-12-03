@@ -1,0 +1,1 @@
+{"type":"object","properties":{"ano":{"type":"string","description":"Ano","example":"2024"},"mes":{"type":"number","description":"Mês (1-12)","example":10},"total":{"type":"number","description":"Total de despesas no mês","example":15000.5}},"required":["ano","mes","total"],"x-readme-ref-name":"MonthItemDto"}

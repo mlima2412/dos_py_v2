@@ -86,5 +86,3 @@ prisma/dev.db*
 *.db
 *.sqlite
 *.sqlite3
-
-CLAUDE.md

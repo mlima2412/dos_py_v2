@@ -1,0 +1,1 @@
+{"type":"object","properties":{"idToken":{"type":"string","description":"ID Token retornado pelo Google Identity Services","example":"eyJhbGciOiJSUzI1NiIsImtpZCI6IjU0NTMifQ..."}},"required":["idToken"],"x-readme-ref-name":"GoogleLoginDto"}
