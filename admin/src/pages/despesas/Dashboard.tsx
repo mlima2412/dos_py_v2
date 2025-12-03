@@ -42,12 +42,15 @@ export function Dashboard() {
 	const [selectedYear, setSelectedYear] = useState<number>(
 		new Date().getFullYear()
 	);
+	const [selectedMonth, setSelectedMonth] = useState<number>(
+		new Date().getMonth() + 1
+	);
 	const { mesAtual, anoAtual, isLoading, error } =
-		useDashboardCompleto(selectedYear);
+		useDashboardCompleto(selectedYear, selectedMonth);
 	const { ano: classificacaoAno, mes: classificacaoMes } =
-		useClassificacaoCompleta(selectedYear);
+		useClassificacaoCompleta(selectedYear, selectedMonth);
 	const categoriaAno = useCategoriaAno(selectedYear);
-	const categoriaMes = useCategoriaMes(selectedYear, new Date().getMonth() + 1);
+	const categoriaMes = useCategoriaMes(selectedYear, selectedMonth);
 	const { formatCurrency } = useCurrencyFormatter();
 
 	// Valores formatados
@@ -97,19 +100,43 @@ export function Dashboard() {
 						</BreadcrumbList>
 					</Breadcrumb>
 
-					{/* Seletor de Ano */}
-					<Select
-						value={selectedYear.toString()}
-						onValueChange={value => setSelectedYear(parseInt(value))}
-					>
-						<SelectTrigger className="w-32">
-							<SelectValue />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="2024">2024</SelectItem>
-							<SelectItem value="2025">2025</SelectItem>
-						</SelectContent>
-					</Select>
+					{/* Seletores de Ano e Mês */}
+					<div className="flex items-center gap-2">
+						<Select
+							value={selectedMonth.toString()}
+							onValueChange={value => setSelectedMonth(parseInt(value))}
+						>
+							<SelectTrigger className="w-36">
+								<SelectValue />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem value="1">{t("dashboard.months.january")}</SelectItem>
+								<SelectItem value="2">{t("dashboard.months.february")}</SelectItem>
+								<SelectItem value="3">{t("dashboard.months.march")}</SelectItem>
+								<SelectItem value="4">{t("dashboard.months.april")}</SelectItem>
+								<SelectItem value="5">{t("dashboard.months.may")}</SelectItem>
+								<SelectItem value="6">{t("dashboard.months.june")}</SelectItem>
+								<SelectItem value="7">{t("dashboard.months.july")}</SelectItem>
+								<SelectItem value="8">{t("dashboard.months.august")}</SelectItem>
+								<SelectItem value="9">{t("dashboard.months.september")}</SelectItem>
+								<SelectItem value="10">{t("dashboard.months.october")}</SelectItem>
+								<SelectItem value="11">{t("dashboard.months.november")}</SelectItem>
+								<SelectItem value="12">{t("dashboard.months.december")}</SelectItem>
+							</SelectContent>
+						</Select>
+						<Select
+							value={selectedYear.toString()}
+							onValueChange={value => setSelectedYear(parseInt(value))}
+						>
+							<SelectTrigger className="w-24">
+								<SelectValue />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem value="2024">2024</SelectItem>
+								<SelectItem value="2025">2025</SelectItem>
+							</SelectContent>
+						</Select>
+					</div>
 				</div>
 
 				{/* Cards de Resumo */}

@@ -72,6 +72,11 @@ export class LancamentoDreService {
     const lancamentosCriados: number[] = [];
 
     for (const regra of regras) {
+      // Verificar se a regra requer fatura e se a venda tem fatura
+      if (regra.requerFatura && !venda.numeroFatura) {
+        continue; // Pular regra se requer fatura mas venda não tem
+      }
+
       let valor = new Decimal(0);
 
       // Determinar o valor base conforme campo de origem
@@ -92,8 +97,11 @@ export class LancamentoDreService {
           valor = venda.valorTotal ?? new Decimal(0);
       }
 
-      // Aplicar percentual se houver (para deduções como IVA)
-      if (regra.percentual) {
+      // Aplicar divisor se houver (ex: IVA = valorTotal / 11)
+      if (regra.divisor) {
+        valor = valor.div(regra.divisor);
+      } else if (regra.percentual) {
+        // Aplicar percentual se houver (para deduções como IVA)
         valor = valor.mul(regra.percentual).div(100);
       } else if (regra.imposto?.percentual) {
         valor = valor.mul(regra.imposto.percentual).div(100);
@@ -263,6 +271,126 @@ export class LancamentoDreService {
       ORDER BY mes ASC
     `;
     return result;
+  }
+
+  /**
+   * Cria as regras de lançamento automático padrão para vendas
+   * - Receita Bruta (100% do valor total)
+   *
+   * Nota: No Paraguai, o IVA funciona com compensação (crédito/débito).
+   * O IVA a pagar é registrado como despesa de Tributo quando há diferença a recolher.
+   * Não é calculado automaticamente sobre vendas.
+   */
+  async criarRegrasVendaPadrao(parceiroId: number): Promise<{ criadas: number; existentes: number }> {
+    // Buscar grupo de Receita
+    const grupoReceita = await this.prisma.grupoDRE.findFirst({
+      where: { codigo: '1000' },
+    });
+
+    if (!grupoReceita) {
+      throw new Error('Grupo DRE de Receita (1000) deve existir');
+    }
+
+    // Buscar ou criar conta de Venda de Produtos
+    let contaVendaProdutos = await this.prisma.contaDRE.findFirst({
+      where: {
+        parceiroId,
+        grupoId: grupoReceita.id,
+        nome: 'Venda de Produtos',
+      },
+    });
+
+    if (!contaVendaProdutos) {
+      contaVendaProdutos = await this.prisma.contaDRE.create({
+        data: {
+          publicId: uuidv7(),
+          grupoId: grupoReceita.id,
+          parceiroId,
+          nome: 'Venda de Produtos',
+          ordem: 1,
+        },
+      });
+    }
+
+    let criadas = 0;
+    let existentes = 0;
+
+    // Regra: Receita Bruta de Vendas
+    const regraReceitaExiste = await this.prisma.regraLancamentoAutomatico.findFirst({
+      where: {
+        parceiroId,
+        nome: 'Receita Bruta de Vendas',
+        ativo: true,
+      },
+    });
+
+    if (!regraReceitaExiste) {
+      await this.prisma.regraLancamentoAutomatico.create({
+        data: {
+          publicId: uuidv7(),
+          contaDreId: contaVendaProdutos.id,
+          parceiroId,
+          nome: 'Receita Bruta de Vendas',
+          tipoGatilho: 'VENDA_CONFIRMADA',
+          tipoVenda: null, // Aplica a todos os tipos
+          campoOrigem: 'valorTotal',
+          percentual: null, // 100%
+          ativo: true,
+        },
+      });
+      criadas++;
+      this.logger.log(`Regra 'Receita Bruta de Vendas' criada para parceiro ${parceiroId}`);
+    } else {
+      existentes++;
+    }
+
+    return { criadas, existentes };
+  }
+
+  /**
+   * Reprocessa todas as vendas de um parceiro para criar lançamentos DRE
+   */
+  async reprocessarTodasVendas(parceiroId: number): Promise<{
+    vendas: number;
+    lancamentos: number;
+    receita: number;
+    deducoes: number;
+    erros: number;
+  }> {
+    const vendas = await this.prisma.venda.findMany({
+      where: { parceiroId },
+      select: { id: true },
+    });
+
+    let totalLancamentos = 0;
+    let totalReceita = new Decimal(0);
+    let totalDeducoes = new Decimal(0);
+    let erros = 0;
+
+    for (const venda of vendas) {
+      try {
+        const result = await this.processarVenda(parceiroId, venda.id);
+        totalLancamentos += result.lancamentos;
+        totalReceita = totalReceita.add(result.receita);
+        totalDeducoes = totalDeducoes.add(result.deducoes);
+      } catch (error) {
+        this.logger.error(`Erro ao processar venda ${venda.id}: ${error.message}`);
+        erros++;
+      }
+    }
+
+    this.logger.log(
+      `Reprocessadas ${vendas.length} vendas: ${totalLancamentos} lançamentos, ` +
+      `Receita: ${totalReceita}, Deduções: ${totalDeducoes}, Erros: ${erros}`,
+    );
+
+    return {
+      vendas: vendas.length,
+      lancamentos: totalLancamentos,
+      receita: Number(totalReceita),
+      deducoes: Number(totalDeducoes),
+      erros,
+    };
   }
 
   /**

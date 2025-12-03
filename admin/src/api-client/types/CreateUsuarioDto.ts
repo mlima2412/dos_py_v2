@@ -60,7 +60,7 @@ export type CreateUsuarioDto = {
     /**
      * @description Idioma preferido do usuário
      * @default "Portugues"
-     * @type string
+     * @type string | undefined
     */
-    linguagem: CreateUsuarioDtoLinguagemEnumKey;
+    linguagem?: CreateUsuarioDtoLinguagemEnumKey | undefined;
 };

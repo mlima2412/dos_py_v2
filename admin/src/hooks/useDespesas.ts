@@ -19,6 +19,8 @@ interface UseDespesasParams {
 	fornecedorId?: string;
 	subCategoriaId?: string;
 	grupoDreId?: string;
+	year?: string;
+	month?: string;
 	limit?: number;
 }
 
@@ -29,22 +31,29 @@ export function useDespesas(params: UseDespesasParams = {}) {
 		fornecedorId,
 		subCategoriaId,
 		grupoDreId,
+		year,
+		month,
 		limit = 20,
 	} = params;
 
-	const queryParams: DespesasControllerFindPaginatedQueryParams = {
+	const queryParams: DespesasControllerFindPaginatedQueryParams & {
+		year?: string;
+		month?: string;
+	} = {
 		page: "1",
 		limit: limit.toString(),
 		search: search || "",
 		fornecedorId: fornecedorId || "",
 		subCategoriaId: subCategoriaId || "",
 		grupoDreId: grupoDreId || "",
+		year: year || "",
+		month: month || "",
 	};
 
 	return useInfiniteQuery({
 		queryKey: [
 			"despesas",
-			{ search, parceiroId, fornecedorId, subCategoriaId, grupoDreId, limit },
+			{ search, parceiroId, fornecedorId, subCategoriaId, grupoDreId, year, month, limit },
 		],
 		queryFn: async ({ pageParam = 1 }) => {
 			const paginatedParams = {

@@ -51,4 +51,20 @@ export class PaginatedQueryDto {
   @IsOptional()
   @IsString()
   grupoDreId?: string;
+
+  @ApiPropertyOptional({
+    description: 'Ano para filtrar (YYYY)',
+    example: '2024',
+  })
+  @IsOptional()
+  @IsString()
+  year?: string;
+
+  @ApiPropertyOptional({
+    description: 'Mês para filtrar (1-12)',
+    example: '6',
+  })
+  @IsOptional()
+  @IsString()
+  month?: string;
 }

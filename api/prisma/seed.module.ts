@@ -13,6 +13,8 @@ import { FornecedoresModule } from '../src/fornecedores/fornecedores.module';
 import { PedidoCompraModule } from '../src/pedido-compra/pedido-compra.module';
 import { PedidoCompraItemModule } from '../src/pedido-compra-item/pedido-compra-item.module';
 import { VendaCacheModule } from '../src/cash/vendas/venda-cache.module';
+import { LancamentoDreModule } from '../src/lancamento-dre/lancamento-dre.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -28,6 +30,7 @@ import { VendaCacheModule } from '../src/cash/vendas/venda-cache.module';
     PedidoCompraModule,
     PedidoCompraItemModule,
     VendaCacheModule,
+    LancamentoDreModule,
   ],
 })
 export class SeedModule {}

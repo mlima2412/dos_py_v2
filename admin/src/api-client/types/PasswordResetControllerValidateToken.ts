@@ -11,6 +11,11 @@ export type PasswordResetControllerValidateTokenQueryParams = {
      * @type string
     */
     token: string;
+    /**
+     * @description Idioma preferido para mensagens
+     * @type string | undefined
+    */
+    language?: string | undefined;
 };
 
 /**

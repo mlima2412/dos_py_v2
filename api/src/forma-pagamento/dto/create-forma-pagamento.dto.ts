@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsNumber, IsBoolean, IsOptional, Min, MaxLength } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber, IsBoolean, IsOptional, Min, Max, MaxLength } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateFormaPagamentoDto {
@@ -14,13 +14,16 @@ export class CreateFormaPagamentoDto {
   nome: string;
 
   @ApiProperty({
-    description: 'Taxa da forma de pagamento (em decimal)',
+    description: 'Taxa da forma de pagamento em formato percentual. Exemplo: 2.5 representa 2.5% (não 0.025). Valor máximo: 100',
     example: 2.5,
     required: false,
+    minimum: 0,
+    maximum: 100,
   })
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 3 })
   @Min(0)
+  @Max(100)
   @Type(() => Number)
   taxa?: number;
 
@@ -36,13 +39,23 @@ export class CreateFormaPagamentoDto {
   tempoLiberacao?: number = 0;
 
   @ApiProperty({
-    description: 'Se o imposto é calculado após o desconto da taxa',
+    description: 'Se o imposto (IVA) deve ser adicionado ao valor da taxa ao gerar despesa',
     example: false,
     default: false,
   })
   @IsOptional()
   @IsBoolean()
   impostoPosCalculo?: boolean = false;
+
+  @ApiProperty({
+    description: 'ID da conta DRE para gerar despesa automática quando há taxa',
+    example: 1,
+    required: false,
+  })
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  contaDreId?: number;
 
   @ApiProperty({
     description: 'Status ativo/inativo da forma de pagamento',

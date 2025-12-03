@@ -74,4 +74,16 @@ export class LancamentoDreController {
     const lancamentoId = await this.lancamentoDreService.processarDespesa(parceiroId, despesaId);
     return { lancamentoId };
   }
+
+  @Post('criar-regras-padrao')
+  @ApiOperation({ summary: 'Cria regras de lançamento automático padrão para vendas' })
+  async criarRegrasPadrao(@ParceiroId() parceiroId: number) {
+    return this.lancamentoDreService.criarRegrasVendaPadrao(parceiroId);
+  }
+
+  @Post('reprocessar-vendas')
+  @ApiOperation({ summary: 'Reprocessa todas as vendas para criar lançamentos DRE' })
+  async reprocessarVendas(@ParceiroId() parceiroId: number) {
+    return this.lancamentoDreService.reprocessarTodasVendas(parceiroId);
+  }
 }

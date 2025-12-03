@@ -42,7 +42,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useDespesas } from "@/hooks/useDespesas";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePartnerContext } from "@/hooks/usePartnerContext";
-import { useGrupoDreControllerFindAll } from "@/api-client/hooks";
+import { useGrupoDreControllerFindAll, useDespesasControllerListMonths } from "@/api-client/hooks";
 
 import { LoadingMessage } from "@/components/ui/TableSkeleton";
 import {
@@ -57,6 +57,7 @@ export const ListarDespesas: React.FC = () => {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState("");
 	const [selectedGrupoDre, setSelectedGrupoDre] = useState<string>("all");
+	const [selectedMonth, setSelectedMonth] = useState<string>("all");
 
 	// Debounce para busca
 	const debouncedGlobalFilter = useDebounce(globalFilter, 500);
@@ -73,6 +74,54 @@ export const ListarDespesas: React.FC = () => {
 			.sort((a, b) => a.ordem - b.ordem);
 	}, [gruposDre]);
 
+	// Buscar meses disponíveis para filtro (apenas meses com despesas)
+	const { data: monthsData } = useDespesasControllerListMonths(
+		{
+			"x-parceiro-id": selectedPartnerId ? parseInt(selectedPartnerId) : 0,
+		},
+		{
+			query: {
+				queryKey: [
+					{ url: "/despesas/DespesasMes" },
+					{ parceiroId: selectedPartnerId },
+				],
+				enabled: !!selectedPartnerId,
+			},
+		}
+	);
+
+	// Mapeamento de meses para labels traduzidos
+	const getMonthLabel = (mes: number) => {
+		const monthLabels: Record<number, string> = {
+			1: t("dashboard.months.january"),
+			2: t("dashboard.months.february"),
+			3: t("dashboard.months.march"),
+			4: t("dashboard.months.april"),
+			5: t("dashboard.months.may"),
+			6: t("dashboard.months.june"),
+			7: t("dashboard.months.july"),
+			8: t("dashboard.months.august"),
+			9: t("dashboard.months.september"),
+			10: t("dashboard.months.october"),
+			11: t("dashboard.months.november"),
+			12: t("dashboard.months.december"),
+		};
+		return monthLabels[mes] || "";
+	};
+
+	// Extrair ano e mês do filtro selecionado
+	const { filterYear, filterMonth } = useMemo(() => {
+		if (selectedMonth === "all") {
+			return { filterYear: undefined, filterMonth: undefined };
+		}
+		// Formato: "YYYY-MM"
+		if (selectedMonth.includes("-")) {
+			const [year, month] = selectedMonth.split("-");
+			return { filterYear: year, filterMonth: month };
+		}
+		return { filterYear: undefined, filterMonth: undefined };
+	}, [selectedMonth]);
+
 	// Buscar despesas com scroll infinito
 	const {
 		data: despesasData,
@@ -85,6 +134,8 @@ export const ListarDespesas: React.FC = () => {
 		search: debouncedGlobalFilter,
 		parceiroId: selectedPartnerId || undefined,
 		grupoDreId: selectedGrupoDre !== "all" ? selectedGrupoDre : undefined,
+		year: filterYear,
+		month: filterMonth,
 	});
 
 	// Flatten dos dados para a tabela
@@ -174,6 +225,27 @@ export const ListarDespesas: React.FC = () => {
 								{gruposOrdenados.map(grupo => (
 									<SelectItem key={grupo.id} value={grupo.id.toString()}>
 										{grupo.codigo} - {grupo.nome}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					</div>
+					<div className="w-full sm:w-[180px]">
+						<Select
+							value={selectedMonth}
+							onValueChange={setSelectedMonth}
+						>
+							<SelectTrigger>
+								<SelectValue placeholder={t("expenses.filterByMonth")} />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem value="all">{t("common.all")}</SelectItem>
+								{monthsData && monthsData.map(item => (
+									<SelectItem
+										key={`${item.ano}-${item.mes}`}
+										value={`${item.ano}-${item.mes}`}
+									>
+										{getMonthLabel(item.mes)} {item.ano}
 									</SelectItem>
 								))}
 							</SelectContent>

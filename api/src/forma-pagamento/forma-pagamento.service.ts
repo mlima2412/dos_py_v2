@@ -13,6 +13,25 @@ import { Decimal } from '@prisma/client/runtime/library';
 export class FormaPagamentoService {
   constructor(private prisma: PrismaService) {}
 
+  /**
+   * Valida se a conta DRE existe, pertence ao parceiro e está ativa
+   */
+  private async validateContaDre(contaDreId: number, parceiroId: number): Promise<void> {
+    const contaDre = await this.prisma.contaDRE.findFirst({
+      where: {
+        id: contaDreId,
+        parceiroId,
+        ativo: true,
+      },
+    });
+
+    if (!contaDre) {
+      throw new BadRequestException(
+        'Conta DRE não encontrada, não pertence ao parceiro ou está inativa',
+      );
+    }
+  }
+
   async create(
     createFormaPagamentoDto: CreateFormaPagamentoDto,
     parceiroId: number,
@@ -31,13 +50,34 @@ export class FormaPagamentoService {
       );
     }
 
+    // Validar conta DRE se fornecida
+    if (createFormaPagamentoDto.contaDreId) {
+      await this.validateContaDre(createFormaPagamentoDto.contaDreId, parceiroId);
+    }
+
+    // Validar formato da taxa (prevenir confusão entre decimal e percentual)
+    if (createFormaPagamentoDto.taxa !== undefined && createFormaPagamentoDto.taxa > 0) {
+      if (createFormaPagamentoDto.taxa < 0.1) {
+        throw new BadRequestException(
+          'Taxa parece estar em formato decimal. Use formato percentual (ex: 2.5 para 2.5%, não 0.025)',
+        );
+      }
+    }
+
+    // Validar que se há taxa > 0, deve haver contaDreId
+    if (createFormaPagamentoDto.taxa && createFormaPagamentoDto.taxa > 0 && !createFormaPagamentoDto.contaDreId) {
+      throw new BadRequestException(
+        'Quando há taxa configurada, é obrigatório informar a conta DRE para gerar despesa automática',
+      );
+    }
+
     // Criar entidade e validar regras de negócio
     const formaPagamentoData = {
       ...createFormaPagamentoDto,
       parceiroId,
       // Converter taxa para Decimal se fornecida
-      taxa: createFormaPagamentoDto.taxa !== undefined 
-        ? new Decimal(createFormaPagamentoDto.taxa) 
+      taxa: createFormaPagamentoDto.taxa !== undefined
+        ? new Decimal(createFormaPagamentoDto.taxa)
         : undefined,
     };
 
@@ -50,6 +90,7 @@ export class FormaPagamentoService {
         taxa: formaPagamentoEntity.taxa,
         tempoLiberacao: formaPagamentoEntity.tempoLiberacao,
         impostoPosCalculo: formaPagamentoEntity.impostoPosCalculo,
+        contaDreId: formaPagamentoEntity.contaDreId,
         ativo: formaPagamentoEntity.ativo,
       },
     });
@@ -136,13 +177,43 @@ export class FormaPagamentoService {
       }
     }
 
+    // Validar conta DRE se fornecida
+    if (updateFormaPagamentoDto.contaDreId) {
+      await this.validateContaDre(updateFormaPagamentoDto.contaDreId, parceiroId);
+    }
+
+    // Validar formato da taxa (prevenir confusão entre decimal e percentual)
+    if (updateFormaPagamentoDto.taxa !== undefined && updateFormaPagamentoDto.taxa > 0) {
+      if (updateFormaPagamentoDto.taxa < 0.1) {
+        throw new BadRequestException(
+          'Taxa parece estar em formato decimal. Use formato percentual (ex: 2.5 para 2.5%, não 0.025)',
+        );
+      }
+    }
+
+    // Determinar os valores finais de taxa e contaDreId
+    const finalTaxa = updateFormaPagamentoDto.taxa !== undefined
+      ? updateFormaPagamentoDto.taxa
+      : Number(existingFormaPagamento.taxa);
+    const finalContaDreId = updateFormaPagamentoDto.contaDreId !== undefined
+      ? updateFormaPagamentoDto.contaDreId
+      : existingFormaPagamento.contaDreId;
+
+    // Validar que se há taxa > 0, deve haver contaDreId
+    if (finalTaxa && finalTaxa > 0 && !finalContaDreId) {
+      throw new BadRequestException(
+        'Quando há taxa configurada, é obrigatório informar a conta DRE para gerar despesa automática',
+      );
+    }
+
     // Preparar dados para atualização, convertendo taxa se necessário
-    const updateData = {
+    const updateData: any = {
       ...updateFormaPagamentoDto,
-      taxa: updateFormaPagamentoDto.taxa !== undefined 
-        ? new Decimal(updateFormaPagamentoDto.taxa) 
-        : undefined,
     };
+
+    if (updateFormaPagamentoDto.taxa !== undefined) {
+      updateData.taxa = new Decimal(updateFormaPagamentoDto.taxa);
+    }
 
     const formaPagamento = await this.prisma.formaPagamento.update({
       where: { idFormaPag: id },
@@ -200,6 +271,7 @@ export class FormaPagamentoService {
       taxa: data.taxa,
       tempoLiberacao: data.tempoLiberacao,
       impostoPosCalculo: data.impostoPosCalculo,
+      contaDreId: data.contaDreId,
       ativo: data.ativo,
     });
   }

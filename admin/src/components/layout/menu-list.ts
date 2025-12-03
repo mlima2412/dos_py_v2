@@ -14,6 +14,7 @@ import {
 	UserCheck,
 	Radio,
 	FolderTree,
+	Settings2,
 } from "lucide-react";
 
 type Submenu = {
@@ -43,12 +44,16 @@ export function getMenuList(
 	const isSalesDashboard = pathname.includes("/pedidoVendas/dashboard");
 	const isExpenseDashboard =
 		pathname === "/despesas" || pathname === "/despesas/";
+	const isComparativeDashboard = pathname.includes("/financeiro/comparativo");
 	const isSalesReport =
 		pathname.includes("/pedidoVendas/relatorios") ||
 		pathname.includes("/pedidoVendas/relatorio");
 	const isExpenseReport =
 		pathname.includes("/despesas/relatorios") ||
 		pathname.includes("/despesas/relatorio");
+	const isSettingsPage =
+		pathname.includes("/financas/plano-contas") ||
+		pathname.includes("/financas/regras-lancamento");
 
 	return [
 		{
@@ -192,7 +197,7 @@ export function getMenuList(
 							{
 								href: "/pedidoVendas/dashboard",
 								label: t("menu.dashboards.main"),
-								active: isSalesDashboard || isExpenseDashboard,
+								active: isSalesDashboard || isExpenseDashboard || isComparativeDashboard,
 								icon: LayoutGrid,
 								submenus: [
 									{
@@ -204,6 +209,11 @@ export function getMenuList(
 										href: "/despesas",
 										label: t("menu.dashboards.expenses"),
 										active: isExpenseDashboard,
+									},
+									{
+										href: "/financeiro/comparativo",
+										label: t("menu.dashboards.comparative"),
+										active: isComparativeDashboard,
 									},
 								],
 							},
@@ -227,6 +237,24 @@ export function getMenuList(
 										href: "/dre",
 										label: t("menu.reports.dre"),
 										active: pathname === "/dre",
+									},
+								],
+							},
+							{
+								href: "/financas/plano-contas",
+								label: t("menu.settings.main"),
+								active: isSettingsPage,
+								icon: Settings2,
+								submenus: [
+									{
+										href: "/financas/plano-contas",
+										label: t("menu.settings.chartOfAccounts"),
+										active: pathname.includes("/financas/plano-contas"),
+									},
+									{
+										href: "/financas/regras-lancamento",
+										label: t("menu.settings.autoRules"),
+										active: pathname.includes("/financas/regras-lancamento"),
 									},
 								],
 							},

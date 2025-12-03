@@ -171,6 +171,22 @@
 		"monthlyDiscountLabel": "Descontos no mês",
 		"yearlyDiscountLabel": "Descontos no ano"
 	},
+	"comparativeDashboard": {
+		"title": "Dashboard Comparativo",
+		"selectYear": "Selecione o ano",
+		"totalRevenue": "Receitas Totais",
+		"totalExpenses": "Despesas Totais",
+		"balance": "Saldo",
+		"profitMargin": "Margem de Lucro",
+		"yearlyRevenue": "Total de receitas em {{year}}",
+		"yearlyExpenses": "Total de despesas em {{year}}",
+		"yearlyBalance": "Saldo do ano {{year}}",
+		"marginHelper": "Percentual do saldo sobre receitas",
+		"chartTitle": "Receitas vs Despesas",
+		"chartDescription": "Comparativo mensal",
+		"revenue": "Receitas",
+		"expenses": "Despesas"
+	},
 	"navigation": {
 		"dashboard": "Dashboard",
 		"users": "Usuários",
@@ -219,13 +235,19 @@
 		"dashboards": {
 			"main": "Dashboards",
 			"sales": "Painel de Vendas",
-			"expenses": "Painel de Gastos"
+			"expenses": "Painel de Gastos",
+			"comparative": "Dashboard Comparativo"
 		},
 		"reports": {
 			"main": "Relatórios",
 			"sales": "Vendas",
 			"expenses": "Despesas",
 			"dre": "DRE"
+		},
+		"settings": {
+			"main": "Configurações",
+			"chartOfAccounts": "Plano de Contas",
+			"autoRules": "Regras Automáticas"
 		},
 
 		"administration": "Administração",
@@ -539,6 +561,7 @@
 		"subcategory": "Classificação",
 		"grupoDre": "Grupo DRE",
 		"filterByGrupoDre": "Filtrar por Grupo DRE",
+		"filterByMonth": "Filtrar por Mês",
 		"selectDate": "Selecione uma data",
 		"selectDueDate": "Selecione a data de vencimento",
 		"selectPaymentType": "Selecione o tipo de pagamento",
@@ -1425,13 +1448,17 @@
 		"placeholders": {
 			"name": "Digite o nome da forma de pagamento",
 			"tax": "0,00",
-			"releaseTime": "0"
+			"releaseTime": "0",
+			"contaDre": "Buscar conta DRE...",
+			"searchContaDre": "Buscar..."
 		},
+		"noContaDreResults": "Nenhuma conta DRE encontrada",
 		"labels": {
 			"name": "Nome",
 			"tax": "Taxa (%)",
 			"releaseTime": "Tempo de Liberação (dias)",
-			"taxAfterCalculation": "Imposto Após Cálculo",
+			"taxAfterCalculation": "Adicionar IVA à Taxa",
+			"contaDre": "Conta DRE para Despesa",
 			"active": "Ativo"
 		},
 		"view": "Visualizar Forma de Pagamento",
@@ -1447,7 +1474,13 @@
 			"nameMinLength": "Nome deve ter pelo menos 2 caracteres",
 			"nameMaxLength": "Nome deve ter no máximo 255 caracteres",
 			"taxMin": "Taxa deve ser maior ou igual a zero",
-			"releaseTimeMin": "Tempo de liberação deve ser maior ou igual a zero"
+			"releaseTimeMin": "Tempo de liberação deve ser maior ou igual a zero",
+			"contaDreRequired": "Conta DRE é obrigatória quando há taxa configurada"
+		},
+		"hints": {
+			"tax": "Percentual descontado pela operadora do cartão",
+			"taxAfterCalculation": "Se marcado, o IVA (valor/11) será adicionado ao valor da taxa ao gerar a despesa",
+			"contaDre": "Conta do DRE onde a despesa será lançada automaticamente"
 		}
 	},
 	"purchaseOrders": {
@@ -1965,6 +1998,89 @@
 			"grossProfit": "(=) LUCRO BRUTO",
 			"expenses": "(-) Despesas Operacionais",
 			"operatingProfit": "(=) RESULTADO OPERACIONAL"
+		}
+	},
+	"chartOfAccounts": {
+		"title": "Plano de Contas",
+		"description": "Gerencie os grupos e contas do DRE",
+		"newGroup": "Novo Grupo",
+		"editGroup": "Editar Grupo",
+		"groupCode": "Código do Grupo",
+		"groupName": "Nome do Grupo",
+		"groupType": "Tipo",
+		"groupOrder": "Ordem",
+		"groupTypes": {
+			"RECEITA": "Receita",
+			"DEDUCAO": "Dedução",
+			"CUSTO": "Custo",
+			"DESPESA": "Despesa"
+		},
+		"deleteGroupConfirmTitle": "Excluir Grupo",
+		"deleteGroupConfirmDescription": "Tem certeza que deseja excluir este grupo? Todas as contas vinculadas também serão excluídas.",
+		"newAccount": "Nova Conta",
+		"editAccount": "Editar Conta",
+		"accountName": "Nome da Conta",
+		"accountCode": "Código",
+		"accountOrder": "Ordem",
+		"accountActive": "Ativa",
+		"noAccounts": "Nenhuma conta cadastrada neste grupo",
+		"messages": {
+			"groupCreateSuccess": "Grupo criado com sucesso",
+			"groupCreateError": "Erro ao criar grupo",
+			"groupUpdateSuccess": "Grupo atualizado com sucesso",
+			"groupUpdateError": "Erro ao atualizar grupo",
+			"groupDeleteSuccess": "Grupo excluído com sucesso",
+			"groupDeleteError": "Erro ao excluir grupo",
+			"createSuccess": "Conta criada com sucesso",
+			"createError": "Erro ao criar conta",
+			"updateSuccess": "Conta atualizada com sucesso",
+			"updateError": "Erro ao atualizar conta",
+			"deleteSuccess": "Conta excluída com sucesso",
+			"deleteError": "Erro ao excluir conta",
+			"deleteConfirmTitle": "Excluir Conta",
+			"deleteConfirmDescription": "Tem certeza que deseja excluir esta conta? Esta ação não pode ser desfeita.",
+			"toggleSuccess": "Status da conta alterado",
+			"toggleError": "Erro ao alterar status da conta"
+		}
+	},
+	"autoRules": {
+		"title": "Regras de Lançamento Automático",
+		"description": "Configure regras para lançamentos automáticos no DRE",
+		"newRule": "Nova Regra",
+		"editRule": "Editar Regra",
+		"ruleName": "Nome da Regra",
+		"triggerType": "Tipo de Gatilho",
+		"saleType": "Tipo de Venda",
+		"sourceField": "Campo Origem",
+		"account": "Conta DRE",
+		"tax": "Imposto",
+		"percentage": "Percentual",
+		"active": "Ativo",
+		"allSaleTypes": "Todos os tipos",
+		"triggers": {
+			"VENDA_CONFIRMADA": "Venda Confirmada",
+			"VENDA_COM_FATURA": "Venda com Fatura"
+		},
+		"saleTypes": {
+			"DIRETA": "Direta",
+			"CONDICIONAL": "Condicional",
+			"BRINDE": "Brinde",
+			"PERMUTA": "Permuta"
+		},
+		"sourceFields": {
+			"valorTotal": "Valor Total",
+			"valorFrete": "Valor do Frete",
+			"valorComissao": "Valor da Comissão"
+		},
+		"messages": {
+			"createSuccess": "Regra criada com sucesso",
+			"createError": "Erro ao criar regra",
+			"updateSuccess": "Regra atualizada com sucesso",
+			"updateError": "Erro ao atualizar regra",
+			"deleteSuccess": "Regra excluída com sucesso",
+			"deleteError": "Erro ao excluir regra",
+			"toggleSuccess": "Status da regra alterado",
+			"toggleError": "Erro ao alterar status da regra"
 		}
 	}
 }

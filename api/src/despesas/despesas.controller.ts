@@ -22,7 +22,7 @@ import { DespesasService } from './despesas.service';
 import { CreateDespesaDto } from './dto/create-despesa.dto';
 import { PaginatedQueryDto } from './dto/paginated-query.dto';
 import { PaginatedDespesaResponseDto } from './dto/paginated-despesa-response.dto';
-import { YearItemDto } from './dto/year-item-response.dto';
+import { YearItemDto, MonthItemDto } from './dto/year-item-response.dto';
 
 import { Despesa } from './entities/despesa.entity';
 import { ParceiroId } from '../auth/decorators/parceiro-id.decorator';
@@ -83,6 +83,12 @@ export class DespesasController {
         : undefined;
     const searchTerm =
       query.search && query.search.trim() !== '' ? query.search : undefined;
+    const yearStr =
+      query.year && query.year.trim() !== '' ? query.year : undefined;
+    const monthNum =
+      query.month && query.month.trim() !== ''
+        ? parseInt(query.month, 10)
+        : undefined;
 
     return this.despesasService.findPaginated({
       page: pageNum,
@@ -92,6 +98,8 @@ export class DespesasController {
       fornecedorId: fornecedorIdNum,
       subCategoriaId: subCategoriaIdNum,
       grupoDreId: grupoDreIdNum,
+      year: yearStr,
+      month: monthNum,
     });
   }
 
@@ -129,6 +137,26 @@ export class DespesasController {
   })
   async listYears(@ParceiroId() parceiroId: number): Promise<YearItemDto[]> {
     return this.despesasService.listYears(parceiroId);
+  }
+
+  @Get('DespesasMes')
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Lista todos os meses que tiveram despesas' })
+  @ApiHeader({
+    name: 'x-parceiro-id',
+    description: 'ID do parceiro logado',
+    required: true,
+    schema: { type: 'integer', example: 1 },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de meses com despesas',
+    type: [MonthItemDto],
+  })
+  async listMonths(
+    @ParceiroId() parceiroId: number,
+  ): Promise<MonthItemDto[]> {
+    return this.despesasService.listMonthsWithExpenses(parceiroId);
   }
 
   @Get('relatorio-dados')

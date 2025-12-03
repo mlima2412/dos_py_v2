@@ -13,7 +13,9 @@ export const despesasControllerFindPaginatedQueryParamsSchema = z.object({
 "search": z.optional(z.string().describe("Termo de busca para filtrar por descrição")),
 "fornecedorId": z.optional(z.string().describe("ID do fornecedor para filtrar")),
 "subCategoriaId": z.optional(z.string().describe("ID da subcategoria para filtrar")),
-"grupoDreId": z.optional(z.string().describe("ID do grupo DRE para filtrar"))
+"grupoDreId": z.optional(z.string().describe("ID do grupo DRE para filtrar")),
+"year": z.optional(z.string().describe("Ano para filtrar (YYYY)")),
+"month": z.optional(z.string().describe("Mês para filtrar (1-12)"))
     }) as unknown as z.ZodType<DespesasControllerFindPaginatedQueryParams>
 
 /**

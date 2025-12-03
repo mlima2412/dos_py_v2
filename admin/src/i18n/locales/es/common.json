@@ -170,6 +170,22 @@
 		"monthlyDiscountLabel": "Descuentos del mes",
 		"yearlyDiscountLabel": "Descuentos del año"
 	},
+	"comparativeDashboard": {
+		"title": "Dashboard Comparativo",
+		"selectYear": "Seleccione el año",
+		"totalRevenue": "Ingresos Totales",
+		"totalExpenses": "Gastos Totales",
+		"balance": "Saldo",
+		"profitMargin": "Margen de Ganancia",
+		"yearlyRevenue": "Total de ingresos en {{year}}",
+		"yearlyExpenses": "Total de gastos en {{year}}",
+		"yearlyBalance": "Saldo del año {{year}}",
+		"marginHelper": "Porcentaje del saldo sobre ingresos",
+		"chartTitle": "Ingresos vs Gastos",
+		"chartDescription": "Comparativo mensual",
+		"revenue": "Ingresos",
+		"expenses": "Gastos"
+	},
 	"header": {
 		"profile": "Preferencias",
 		"logout": "Salir"
@@ -209,13 +225,19 @@
 		"dashboards": {
 			"main": "Paneles",
 			"sales": "Panel de Ventas",
-			"expenses": "Panel de Gastos"
+			"expenses": "Panel de Gastos",
+			"comparative": "Dashboard Comparativo"
 		},
 		"reports": {
 			"main": "Informes",
 			"sales": "Ventas",
 			"expenses": "Gastos",
 			"dre": "DRE"
+		},
+		"settings": {
+			"main": "Configuraciones",
+			"chartOfAccounts": "Plan de Cuentas",
+			"autoRules": "Reglas Automáticas"
 		},
 
 		"administration": "Administración",
@@ -503,6 +525,7 @@
 		"subcategory": "Clasificación",
 		"grupoDre": "Grupo DRE",
 		"filterByGrupoDre": "Filtrar por Grupo DRE",
+		"filterByMonth": "Filtrar por Mes",
 		"selectDate": "Selecciona una fecha",
 		"selectDueDate": "Selecciona la fecha de vencimiento",
 		"descriptionPlaceholder": "Ingresa la descripción del gasto",
@@ -1291,13 +1314,17 @@
 		"placeholders": {
 			"name": "Ingresa el nombre de la forma de pago",
 			"tax": "0,00",
-			"releaseTime": "0"
+			"releaseTime": "0",
+			"contaDre": "Buscar cuenta DRE...",
+			"searchContaDre": "Buscar..."
 		},
+		"noContaDreResults": "Ninguna cuenta DRE encontrada",
 		"labels": {
 			"name": "Nombre",
 			"tax": "Tasa (%)",
 			"releaseTime": "Tiempo de Liberación (días)",
-			"taxAfterCalculation": "Impuesto Después del Cálculo",
+			"taxAfterCalculation": "Agregar IVA a la Tasa",
+			"contaDre": "Cuenta DRE para Gasto",
 			"active": "Activo"
 		},
 		"view": "Visualizar Forma de Pagamento",
@@ -1313,7 +1340,13 @@
 			"nameMinLength": "El nombre debe tener al menos 2 caracteres",
 			"nameMaxLength": "El nombre debe tener máximo 255 caracteres",
 			"taxMin": "La tasa debe ser mayor o igual a cero",
-			"releaseTimeMin": "El tiempo de liberación debe ser mayor o igual a cero"
+			"releaseTimeMin": "El tiempo de liberación debe ser mayor o igual a cero",
+			"contaDreRequired": "Cuenta DRE es obligatoria cuando hay tasa configurada"
+		},
+		"hints": {
+			"tax": "Porcentaje descontado por la operadora de tarjeta",
+			"taxAfterCalculation": "Si está marcado, el IVA (valor/11) se agregará al valor de la tasa al generar el gasto",
+			"contaDre": "Cuenta del DRE donde el gasto será registrado automáticamente"
 		}
 	},
 	"purchaseOrders": {
@@ -1883,6 +1916,89 @@
 			"grossProfit": "(=) UTILIDAD BRUTA",
 			"expenses": "(-) Gastos Operativos",
 			"operatingProfit": "(=) RESULTADO OPERACIONAL"
+		}
+	},
+	"chartOfAccounts": {
+		"title": "Plan de Cuentas",
+		"description": "Gestione los grupos y cuentas del Estado de Resultados",
+		"newGroup": "Nuevo Grupo",
+		"editGroup": "Editar Grupo",
+		"groupCode": "Código del Grupo",
+		"groupName": "Nombre del Grupo",
+		"groupType": "Tipo",
+		"groupOrder": "Orden",
+		"groupTypes": {
+			"RECEITA": "Ingreso",
+			"DEDUCAO": "Deducción",
+			"CUSTO": "Costo",
+			"DESPESA": "Gasto"
+		},
+		"deleteGroupConfirmTitle": "Eliminar Grupo",
+		"deleteGroupConfirmDescription": "¿Está seguro que desea eliminar este grupo? Todas las cuentas vinculadas también serán eliminadas.",
+		"newAccount": "Nueva Cuenta",
+		"editAccount": "Editar Cuenta",
+		"accountName": "Nombre de la Cuenta",
+		"accountCode": "Código",
+		"accountOrder": "Orden",
+		"accountActive": "Activa",
+		"noAccounts": "Ninguna cuenta registrada en este grupo",
+		"messages": {
+			"groupCreateSuccess": "Grupo creado con éxito",
+			"groupCreateError": "Error al crear grupo",
+			"groupUpdateSuccess": "Grupo actualizado con éxito",
+			"groupUpdateError": "Error al actualizar grupo",
+			"groupDeleteSuccess": "Grupo eliminado con éxito",
+			"groupDeleteError": "Error al eliminar grupo",
+			"createSuccess": "Cuenta creada con éxito",
+			"createError": "Error al crear cuenta",
+			"updateSuccess": "Cuenta actualizada con éxito",
+			"updateError": "Error al actualizar cuenta",
+			"deleteSuccess": "Cuenta eliminada con éxito",
+			"deleteError": "Error al eliminar cuenta",
+			"deleteConfirmTitle": "Eliminar Cuenta",
+			"deleteConfirmDescription": "¿Está seguro que desea eliminar esta cuenta? Esta acción no se puede deshacer.",
+			"toggleSuccess": "Estado de la cuenta cambiado",
+			"toggleError": "Error al cambiar estado de la cuenta"
+		}
+	},
+	"autoRules": {
+		"title": "Reglas de Lanzamiento Automático",
+		"description": "Configure reglas para lanzamientos automáticos en el Estado de Resultados",
+		"newRule": "Nueva Regla",
+		"editRule": "Editar Regla",
+		"ruleName": "Nombre de la Regla",
+		"triggerType": "Tipo de Disparador",
+		"saleType": "Tipo de Venta",
+		"sourceField": "Campo Origen",
+		"account": "Cuenta DRE",
+		"tax": "Impuesto",
+		"percentage": "Porcentaje",
+		"active": "Activo",
+		"allSaleTypes": "Todos los tipos",
+		"triggers": {
+			"VENDA_CONFIRMADA": "Venta Confirmada",
+			"VENDA_COM_FATURA": "Venta con Factura"
+		},
+		"saleTypes": {
+			"DIRETA": "Directa",
+			"CONDICIONAL": "Condicional",
+			"BRINDE": "Obsequio",
+			"PERMUTA": "Permuta"
+		},
+		"sourceFields": {
+			"valorTotal": "Valor Total",
+			"valorFrete": "Valor del Flete",
+			"valorComissao": "Valor de la Comisión"
+		},
+		"messages": {
+			"createSuccess": "Regla creada con éxito",
+			"createError": "Error al crear regla",
+			"updateSuccess": "Regla actualizada con éxito",
+			"updateError": "Error al actualizar regla",
+			"deleteSuccess": "Regla eliminada con éxito",
+			"deleteError": "Error al eliminar regla",
+			"toggleSuccess": "Estado de la regla cambiado",
+			"toggleError": "Error al cambiar estado de la regla"
 		}
 	}
 }

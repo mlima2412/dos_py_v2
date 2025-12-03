@@ -10,8 +10,9 @@ export const formaPagamentoResponseDtoSchema = z.object({
     "idFormaPag": z.coerce.number().describe("ID único da forma de pagamento"),
 "parceiroId": z.coerce.number().describe("ID do parceiro"),
 "nome": z.coerce.string().describe("Nome da forma de pagamento"),
-"taxa": z.optional(z.coerce.number().describe("Taxa da forma de pagamento (em decimal)")),
+"taxa": z.optional(z.coerce.number().describe("Taxa da forma de pagamento (em percentual)")),
 "tempoLiberacao": z.coerce.number().describe("Tempo de liberação em dias"),
-"impostoPosCalculo": z.boolean().describe("Se o imposto é calculado após o desconto da taxa"),
+"impostoPosCalculo": z.boolean().describe("Se o imposto (IVA) deve ser adicionado ao valor da taxa ao gerar despesa"),
+"contaDreId": z.optional(z.coerce.number().describe("ID da conta DRE para gerar despesa automática quando há taxa")),
 "ativo": z.boolean().describe("Status ativo/inativo da forma de pagamento")
     }) as unknown as z.ZodType<FormaPagamentoResponseDto>

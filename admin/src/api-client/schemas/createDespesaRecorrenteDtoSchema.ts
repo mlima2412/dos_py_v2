@@ -18,5 +18,5 @@ export const createDespesaRecorrenteDtoSchema = z.object({
 "fornecedorId": z.optional(z.coerce.number().describe("ID do fornecedor da despesa")),
 "currencyId": z.optional(z.coerce.number().describe("ID da moeda da despesa")),
 "cotacao": z.optional(z.coerce.number().describe("Cotação da moeda no momento da despesa")),
-"contaDreId": z.coerce.number().describe("ID da conta DRE para classificação contábil")
+"contaDreId": z.optional(z.coerce.number().describe("ID da conta DRE para classificação contábil"))
     }) as unknown as z.ZodType<CreateDespesaRecorrenteDto>

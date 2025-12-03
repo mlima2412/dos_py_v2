@@ -76,9 +76,16 @@ export class RegraLancamentoService {
     return regra;
   }
 
-  async findAll(parceiroId: number): Promise<RegraLancamentoAutomatico[]> {
+  async findAll(parceiroId: number, includeInactive = false): Promise<RegraLancamentoAutomatico[]> {
+    const whereClause: any = { parceiroId };
+
+    // Se não incluir inativas, filtrar apenas ativas
+    if (!includeInactive) {
+      whereClause.ativo = true;
+    }
+
     return this.prisma.regraLancamentoAutomatico.findMany({
-      where: { parceiroId, ativo: true },
+      where: whereClause,
       orderBy: { nome: 'asc' },
       include: {
         conta: {

@@ -319,6 +319,7 @@ model ContaDRE {
   regrasLancamento          RegraLancamentoAutomatico[]
   lancamentosDRE            LancamentoDRE[]
   RollupDespesasMensaisDRE  RollupDespesasMensaisDRE[]
+  formasPagamento           FormaPagamento[]
 
   @@unique([parceiroId, grupoId, nome], name: "parceiroId_grupoId_nome")
   @@map("conta_dre")
@@ -350,6 +351,8 @@ model RegraLancamentoAutomatico {
   tipoVenda     String?   @map("tipo_venda")
   campoOrigem   String?   @map("campo_origem")
   percentual    Decimal?  @db.Decimal(12, 3)
+  divisor       Decimal?  @db.Decimal(12, 3) // Para cálculos como IVA (valorTotal / 11)
+  requerFatura  Boolean   @default(false) @map("requer_fatura") // Só aplica se venda tiver fatura
   ativo         Boolean   @default(true)
   createdAt     DateTime  @default(now()) @map("created_at")
   conta         ContaDRE  @relation(fields: [contaDreId], references: [id])
@@ -694,8 +697,10 @@ model FormaPagamento {
   taxa              Decimal?    @default(0) @db.Decimal(12, 3)
   tempoLiberacao    Int         @default(0) @map("tempo_liberacao") // tempo em dias que o dinheiro irá ser liberado na conta bancaria
   impostoPosCalculo Boolean     @default(false) @map("imposto_pos_calculo")
+  contaDreId        Int?        @map("conta_dre_id") // conta DRE para gerar despesa automática quando há taxa
   ativo             Boolean     @default(true) @map("ativo")
   Parceiro          Parceiro    @relation(fields: [parceiroId], references: [id])
+  contaDre          ContaDRE?   @relation(fields: [contaDreId], references: [id])
   Pagamento         Pagamento[]
 
   @@map("forma_pagamento")

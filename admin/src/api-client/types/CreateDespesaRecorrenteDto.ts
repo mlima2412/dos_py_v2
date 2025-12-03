@@ -73,7 +73,7 @@ export type CreateDespesaRecorrenteDto = {
     cotacao?: number | undefined;
     /**
      * @description ID da conta DRE para classificação contábil
-     * @type number
+     * @type number | undefined
     */
-    contaDreId: number;
+    contaDreId?: number | undefined;
 };

@@ -38,6 +38,9 @@ import {
 import { PedidoCompraPrintPage } from "./pages/pedido-compra/print";
 import { VendasRoutes } from "./pages/vendas/vendas";
 import { RelatorioDRE } from "./pages/dre/RelatorioDRE";
+import { DashboardComparativo } from "./pages/financeiro/DashboardComparativo";
+import { PlanoContas } from "./pages/financas/PlanoContas";
+import { RegrasLancamento } from "./pages/financas/RegrasLancamento";
 import { DashboardLayout } from "./components/layout/DashboardLayout";
 
 import { ThemeProvider } from "./components/theme-provider";
@@ -137,6 +140,18 @@ function App() {
 										/>
 										<Route path="/pedidoVendas/*" element={<VendasRoutes />} />
 										<Route path="/dre" element={<RelatorioDRE />} />
+										<Route
+											path="/financeiro/comparativo"
+											element={<DashboardComparativo />}
+										/>
+										<Route
+											path="/financas/plano-contas"
+											element={<PlanoContas />}
+										/>
+										<Route
+											path="/financas/regras-lancamento"
+											element={<RegrasLancamento />}
+										/>
 										<Route path="/" element={<Navigate to="/inicio" replace />} />
 									</Route>
 

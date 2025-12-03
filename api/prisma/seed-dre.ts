@@ -11,17 +11,62 @@ async function seedGruposDRE() {
   console.log('🌱 Criando Grupos DRE padrão...');
 
   const grupos = [
-    { codigo: '1000', nome: 'Receitas de Vendas', tipo: TipoDRE.RECEITA, ordem: 1 },
-    { codigo: '2000', nome: 'Deduções sobre Receita', tipo: TipoDRE.DEDUCAO, ordem: 2 },
+    {
+      codigo: '1000',
+      nome: 'Receitas de Vendas',
+      tipo: TipoDRE.RECEITA,
+      ordem: 1,
+    },
+    {
+      codigo: '2000',
+      nome: 'Deduções sobre Receita',
+      tipo: TipoDRE.DEDUCAO,
+      ordem: 2,
+    },
     { codigo: '3000', nome: 'Custos (CMV)', tipo: TipoDRE.CUSTO, ordem: 3 },
     { codigo: '4000', nome: 'Custos Variáveis', tipo: TipoDRE.CUSTO, ordem: 4 },
-    { codigo: '5100', nome: 'Despesas com Pessoal', tipo: TipoDRE.DESPESA, ordem: 5 },
-    { codigo: '5200', nome: 'Despesas Administrativas', tipo: TipoDRE.DESPESA, ordem: 6 },
-    { codigo: '5300', nome: 'Despesas Operacionais', tipo: TipoDRE.DESPESA, ordem: 7 },
-    { codigo: '5400', nome: 'Despesas Comerciais', tipo: TipoDRE.DESPESA, ordem: 8 },
-    { codigo: '5500', nome: 'Despesas Tributárias', tipo: TipoDRE.DESPESA, ordem: 9 },
-    { codigo: '6100', nome: 'Receitas Financeiras', tipo: TipoDRE.RECEITA, ordem: 10 },
-    { codigo: '6200', nome: 'Despesas Financeiras', tipo: TipoDRE.DESPESA, ordem: 11 },
+    {
+      codigo: '5100',
+      nome: 'Despesas com Pessoal',
+      tipo: TipoDRE.DESPESA,
+      ordem: 5,
+    },
+    {
+      codigo: '5200',
+      nome: 'Despesas Administrativas',
+      tipo: TipoDRE.DESPESA,
+      ordem: 6,
+    },
+    {
+      codigo: '5300',
+      nome: 'Despesas Operacionais',
+      tipo: TipoDRE.DESPESA,
+      ordem: 7,
+    },
+    {
+      codigo: '5400',
+      nome: 'Despesas Comerciais',
+      tipo: TipoDRE.DESPESA,
+      ordem: 8,
+    },
+    {
+      codigo: '5500',
+      nome: 'Despesas Tributárias',
+      tipo: TipoDRE.DESPESA,
+      ordem: 9,
+    },
+    {
+      codigo: '6100',
+      nome: 'Receitas Financeiras',
+      tipo: TipoDRE.RECEITA,
+      ordem: 10,
+    },
+    {
+      codigo: '6200',
+      nome: 'Despesas Financeiras',
+      tipo: TipoDRE.DESPESA,
+      ordem: 11,
+    },
   ];
 
   for (const grupo of grupos) {
@@ -45,18 +90,19 @@ async function seedGruposDRE() {
  */
 const mapeamentoV1ParaDRE: Record<string, string> = {
   // CMV (3000)
-  'Aviamento': '3000',
-  'Bojos': '3000',
-  'Corte': '3000',
-  'Costura': '3000',
-  'Embalagens': '3000',
-  'Essências': '3000',
+  Aviamento: '3000',
+  Bojos: '3000',
+  Corte: '3000',
+  Costura: '3000',
+  Embalagens: '3000',
+  Essências: '3000',
   'Etiquetas e Tags': '3000',
-  'Facção': '3000',
+  Facção: '3000',
   'Insumos para produção': '3000',
-  'Meias': '3000',
-  'Silk': '3000',
-  'Tecidos': '3000',
+  Meias: '3000',
+  Silk: '3000',
+  Tecidos: '3000',
+  'Compra de Produtos': '3000', // Obrigatória para pedidos de compra
 
   // Custos Variáveis (4000)
   'Comissão sobre vendas': '4000',
@@ -70,17 +116,17 @@ const mapeamentoV1ParaDRE: Record<string, string> = {
   'Cursos e treinamentos': '5100',
   'Décimo Terceiro': '5100',
   'Exames Admissionais e Demissionais': '5100',
-  'Férias': '5100',
-  'FGTS': '5100',
+  Férias: '5100',
+  FGTS: '5100',
   'Horas Extras': '5100',
-  'INSS': '5100',
-  'IRRF': '5100',
+  INSS: '5100',
+  IRRF: '5100',
   'Pró-labore Sócio 1': '5100',
   'Pró-labore Sócio 2': '5100',
-  'Rescisão': '5100',
+  Rescisão: '5100',
   'Roupas Profissionais/Uniformes/EPI/EPC': '5100',
-  'Salários': '5100',
-  'Uniformes': '5100',
+  Salários: '5100',
+  Uniformes: '5100',
   'Vale transporte': '5100',
 
   // Despesas Administrativas (5200)
@@ -90,19 +136,19 @@ const mapeamentoV1ParaDRE: Record<string, string> = {
   'Aquisição de Sistemas e Softwares': '5200',
   'Assessorias e Consultorias': '5200',
   'Computadores e Periféricos': '5200',
-  'Contabilidade': '5200',
+  Contabilidade: '5200',
   'Copa e Cozinha': '5200',
   'Cópias e Impressões': '5200',
   'Despesas a identificar': '5200',
   'Despesas com viagens': '5200',
   'Despesas com Veículos': '5200',
-  'Energia': '5200',
+  Energia: '5200',
   'Energia Solar': '5200',
-  'Estacionamentos': '5200',
+  Estacionamentos: '5200',
   'Fretes sobre aquisições': '5200',
   'Honorários Advocatícios': '5200',
   'Hospedagens e Passagens': '5200',
-  'Imobilizado': '5200',
+  Imobilizado: '5200',
   'Insumos para informática': '5200',
   'Materiais de Escritório': '5200',
   'Materiais de Limpeza e Higiene': '5200',
@@ -111,58 +157,58 @@ const mapeamentoV1ParaDRE: Record<string, string> = {
   'Reformas Prediais': '5200',
   'Seguros de veículos': '5200',
   'Serviços terceirizados': '5200',
-  'Sistemas': '5200',
+  Sistemas: '5200',
   'Taxas Cartorárias': '5200',
   'Telefonia e Internet': '5200',
   'Vigilância e Segurança Patrimonial': '5200',
 
   // Despesas Operacionais (5300)
-  'Combustível': '5300',
+  Combustível: '5300',
   'Manutenção de Máquinas e Equipamentos': '5300',
   'Manutenção de Veículos': '5300',
   'Manutenção Predial': '5300',
-  'Modelista': '5300',
+  Modelista: '5300',
 
   // Despesas Comerciais (5400)
   'Assessoria Site': '5400',
   'E-mail Site': '5400',
-  'Eventos': '5400',
-  'Marketing': '5400',
-  'Parcerias': '5400',
+  Eventos: '5400',
+  Marketing: '5400',
+  Parcerias: '5400',
   'Plataforma Site': '5400',
   'Premiação de vendas': '5400',
 
   // Despesas Tributárias (5500)
-  'GNRE': '5500',
-  'IPTU': '5500',
-  'IPVA': '5500',
-  'ISS': '5500',
+  GNRE: '5500',
+  IPTU: '5500',
+  IPVA: '5500',
+  ISS: '5500',
   'Multas e Autos de Infrações': '5500',
-  'Protege': '5500',
+  Protege: '5500',
 
   // Despesas Financeiras (6200)
-  'Aplicação': '6200',
-  'Empréstimos': '6200',
+  Aplicação: '6200',
+  Empréstimos: '6200',
   'Tarifas Bancárias': '6200',
   'Taxa de Transação': '6200',
 
   // Receitas Financeiras (6100)
-  'Resgate': '6100',
+  Resgate: '6100',
 
   // ===============================================
   // Mapeamentos adicionais baseados na V2 atual
   // ===============================================
 
   // Administrativas → Despesas Administrativas (5200)
-  'Aluguel': '5200',
-  'Comunicação': '5200',
+  Aluguel: '5200',
+  Comunicação: '5200',
   'Contabilidade e Auditoria': '5200',
   'Gráfica e Impressões': '5200',
   'Recursos Humanos': '5100', // RH vai para Despesas com Pessoal
   'Registro de Marca': '5200',
   'Segurança Patrimonial': '5200',
   'Serviços de Limpeza': '5200',
-  'Tributos': '5500', // Tributos vai para Despesas Tributárias
+  Tributos: '5500', // Tributos vai para Despesas Tributárias
 
   // Financeiras
   'Energia Elétrica': '5200',
@@ -177,11 +223,11 @@ const mapeamentoV1ParaDRE: Record<string, string> = {
   'Entrada de Estoque': '3000', // CMV
   'Equipamentos operacionais': '5300', // Operacional
   'Equipamentos para Show Room': '5300', // Operacional
-  'Etiquetas': '3000', // CMV
+  Etiquetas: '3000', // CMV
   'Fitas de Presente': '3000', // CMV - Embalagens
-  'Fotos': '5400', // Comercial - Marketing
-  'Frete': '4000', // Custos Variáveis
-  'Manequim': '5300', // Operacional
+  Fotos: '5400', // Comercial - Marketing
+  Frete: '4000', // Custos Variáveis
+  Manequim: '5300', // Operacional
   'Materiais de consumo': '5200', // Administrativo
   'Participação de Eventos': '5400', // Comercial
   'Private Label': '3000', // CMV - Produção
@@ -199,7 +245,9 @@ const mapeamentoV1ParaDRE: Record<string, string> = {
  * @param parceiroId ID do parceiro
  */
 async function criarContasDREComMapeamentoV1(parceiroId: number) {
-  console.log(`\n🌱 Criando Contas DRE com mapeamento V1 (Parceiro ${parceiroId})...`);
+  console.log(
+    `\n🌱 Criando Contas DRE com mapeamento V1 (Parceiro ${parceiroId})...`,
+  );
 
   let criadas = 0;
   let ordem = 100; // Começa após as contas padrão de receitas
@@ -278,7 +326,9 @@ async function buscarContaDrePorNomeV1(
  * Para a migração real da V1, use buscarContaDrePorNomeV1()
  */
 async function migrarDespesasParaContaDRE(parceiroId: number) {
-  console.log(`\n🌱 Migrando Despesas para ContaDRE (Parceiro ${parceiroId})...`);
+  console.log(
+    `\n🌱 Migrando Despesas para ContaDRE (Parceiro ${parceiroId})...`,
+  );
 
   // Busca despesas sem contaDreId
   const todasDespesas = await prisma.despesa.findMany({
@@ -292,7 +342,7 @@ async function migrarDespesasParaContaDRE(parceiroId: number) {
   });
 
   // Filtra apenas as que têm subcategoria
-  const despesas = todasDespesas.filter((d) => d.subCategoria !== null);
+  const despesas = todasDespesas.filter(d => d.subCategoria !== null);
 
   let migradas = 0;
   let naoMapeadas = 0;
@@ -313,12 +363,16 @@ async function migrarDespesasParaContaDRE(parceiroId: number) {
       });
       migradas++;
     } else {
-      console.warn(`    ⚠ Sem mapeamento para: "${despesa.subCategoria.descricao}"`);
+      console.warn(
+        `    ⚠ Sem mapeamento para: "${despesa.subCategoria.descricao}"`,
+      );
       naoMapeadas++;
     }
   }
 
-  console.log(`✅ Despesas migradas: ${migradas}, sem mapeamento: ${naoMapeadas}`);
+  console.log(
+    `✅ Despesas migradas: ${migradas}, sem mapeamento: ${naoMapeadas}`,
+  );
 }
 
 /**
@@ -326,7 +380,9 @@ async function migrarDespesasParaContaDRE(parceiroId: number) {
  * Inclui a conta "Compra de Produtos" que é OBRIGATÓRIA para o processamento de pedidos de compra
  */
 async function criarContasDREPadraoCustos(parceiroId: number) {
-  console.log(`\n🌱 Criando Contas DRE padrão para custos (Parceiro ${parceiroId})...`);
+  console.log(
+    `\n🌱 Criando Contas DRE padrão para custos (Parceiro ${parceiroId})...`,
+  );
 
   // Grupo 3000 - Custos (CMV)
   const grupoCMV = await prisma.grupoDRE.findUnique({
@@ -371,7 +427,9 @@ async function criarContasDREPadraoCustos(parceiroId: number) {
  * Cria contas DRE padrão para receitas (Parceiro específico)
  */
 async function criarContasDREPadraoReceitas(parceiroId: number) {
-  console.log(`\n🌱 Criando Contas DRE padrão para receitas (Parceiro ${parceiroId})...`);
+  console.log(
+    `\n🌱 Criando Contas DRE padrão para receitas (Parceiro ${parceiroId})...`,
+  );
 
   // Grupo 1000 - Receitas de Vendas
   const grupoReceitas = await prisma.grupoDRE.findUnique({
@@ -527,7 +585,9 @@ async function main() {
     if (MIGRAR_DESPESAS_EXISTENTES) {
       await migrarDespesasParaContaDRE(parceiroId);
     } else {
-      console.log('\n⏭ Pulando migração de despesas (MIGRAR_DESPESAS !== true)');
+      console.log(
+        '\n⏭ Pulando migração de despesas (MIGRAR_DESPESAS !== true)',
+      );
     }
 
     // 6. Validar migração

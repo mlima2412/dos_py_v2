@@ -111,10 +111,51 @@ export class GrupoDreService {
     // Verificar se o grupo existe
     await this.findOne(id);
 
-    // Soft delete - marcar como inativo
-    await this.prisma.grupoDRE.update({
+    // Verificar se existem contas ativas vinculadas a este grupo
+    const contasAtivasCount = await this.prisma.contaDRE.count({
+      where: { grupoId: id, ativo: true },
+    });
+    if (contasAtivasCount > 0) {
+      throw new ConflictException(
+        `Não é possível excluir este grupo. Ele possui ${contasAtivasCount} conta(s) ativa(s) vinculada(s).`,
+      );
+    }
+
+    // Verificar se existem contas (mesmo inativas) com despesas vinculadas
+    const contasComDespesas = await this.prisma.contaDRE.findMany({
+      where: { grupoId: id },
+      select: { id: true, nome: true },
+    });
+
+    for (const conta of contasComDespesas) {
+      const despesasCount = await this.prisma.despesa.count({
+        where: { contaDreId: conta.id },
+      });
+      if (despesasCount > 0) {
+        throw new ConflictException(
+          `Não é possível excluir este grupo. A conta "${conta.nome}" está vinculada a ${despesasCount} despesa(s).`,
+        );
+      }
+
+      const lancamentosCount = await this.prisma.lancamentoDRE.count({
+        where: { contaDreId: conta.id },
+      });
+      if (lancamentosCount > 0) {
+        throw new ConflictException(
+          `Não é possível excluir este grupo. A conta "${conta.nome}" possui ${lancamentosCount} lançamento(s) no DRE.`,
+        );
+      }
+    }
+
+    // Hard delete - o grupo não tem contas em uso, pode ser excluído
+    // Primeiro excluir as contas inativas vinculadas
+    await this.prisma.contaDRE.deleteMany({
+      where: { grupoId: id },
+    });
+
+    // Depois excluir o grupo
+    await this.prisma.grupoDRE.delete({
       where: { id },
-      data: { ativo: false },
     });
   }
 }

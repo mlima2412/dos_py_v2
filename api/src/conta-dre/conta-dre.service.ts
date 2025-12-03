@@ -58,9 +58,15 @@ export class ContaDreService {
     return conta;
   }
 
-  async findAll(parceiroId: number): Promise<ContaDRE[]> {
+  async findAll(
+    parceiroId: number,
+    incluirInativos?: boolean,
+  ): Promise<ContaDRE[]> {
     return this.prisma.contaDRE.findMany({
-      where: { parceiroId, ativo: true },
+      where: {
+        parceiroId,
+        ...(incluirInativos ? {} : { ativo: true }),
+      },
       orderBy: [{ grupoId: 'asc' }, { ordem: 'asc' }],
       include: {
         grupo: true,
@@ -168,10 +174,59 @@ export class ContaDreService {
     // Verificar se a conta existe
     await this.findOne(id, parceiroId);
 
-    // Soft delete - marcar como inativo
-    await this.prisma.contaDRE.update({
+    // Verificar se a conta está em uso em despesas
+    const despesasCount = await this.prisma.despesa.count({
+      where: { contaDreId: id },
+    });
+    if (despesasCount > 0) {
+      throw new ConflictException(
+        `Não é possível excluir esta conta. Ela está vinculada a ${despesasCount} despesa(s).`,
+      );
+    }
+
+    // Verificar se a conta está em uso em despesas recorrentes
+    const despesasRecorrentesCount = await this.prisma.despesaRecorrente.count({
+      where: { contaDreId: id },
+    });
+    if (despesasRecorrentesCount > 0) {
+      throw new ConflictException(
+        `Não é possível excluir esta conta. Ela está vinculada a ${despesasRecorrentesCount} despesa(s) recorrente(s).`,
+      );
+    }
+
+    // Verificar se a conta está em uso em regras de lançamento
+    const regrasCount = await this.prisma.regraLancamentoAutomatico.count({
+      where: { contaDreId: id },
+    });
+    if (regrasCount > 0) {
+      throw new ConflictException(
+        `Não é possível excluir esta conta. Ela está vinculada a ${regrasCount} regra(s) de lançamento automático.`,
+      );
+    }
+
+    // Verificar se a conta está em uso em lançamentos DRE
+    const lancamentosCount = await this.prisma.lancamentoDRE.count({
+      where: { contaDreId: id },
+    });
+    if (lancamentosCount > 0) {
+      throw new ConflictException(
+        `Não é possível excluir esta conta. Ela possui ${lancamentosCount} lançamento(s) no DRE.`,
+      );
+    }
+
+    // Verificar se a conta está em uso em formas de pagamento
+    const formasPagamentoCount = await this.prisma.formaPagamento.count({
+      where: { contaDreId: id },
+    });
+    if (formasPagamentoCount > 0) {
+      throw new ConflictException(
+        `Não é possível excluir esta conta. Ela está vinculada a ${formasPagamentoCount} forma(s) de pagamento.`,
+      );
+    }
+
+    // Hard delete - a conta não está em uso, pode ser excluída
+    await this.prisma.contaDRE.delete({
       where: { id },
-      data: { ativo: false },
     });
   }
 }

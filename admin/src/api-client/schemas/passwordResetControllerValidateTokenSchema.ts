@@ -8,7 +8,8 @@ import { validateTokenResponseDtoSchema } from "./validateTokenResponseDtoSchema
 import { z } from "zod/v4";
 
 export const passwordResetControllerValidateTokenQueryParamsSchema = z.object({
-    "token": z.string().describe("Token de recuperação de senha")
+    "token": z.string().describe("Token de recuperação de senha"),
+"language": z.optional(z.string().describe("Idioma preferido para mensagens"))
     }) as unknown as z.ZodType<PasswordResetControllerValidateTokenQueryParams>
 
 /**

@@ -754,6 +754,8 @@ export class DespesasService {
     fornecedorId?: number;
     subCategoriaId?: number;
     grupoDreId?: number;
+    year?: string;
+    month?: number;
   }) {
     const {
       page,
@@ -763,6 +765,8 @@ export class DespesasService {
       fornecedorId,
       subCategoriaId,
       grupoDreId,
+      year,
+      month,
     } = params;
     const skip = (page - 1) * limit;
 
@@ -799,6 +803,32 @@ export class DespesasService {
           },
         },
       });
+    }
+
+    // Filtro por ano e/ou mês
+    if (year && year !== 'all') {
+      const yearNum = parseInt(year, 10);
+      if (month) {
+        // Filtrar por ano e mês específicos
+        const startDate = new Date(yearNum, month - 1, 1);
+        const endDate = new Date(yearNum, month, 0, 23, 59, 59, 999);
+        andConditions.push({
+          dataRegistro: {
+            gte: startDate,
+            lte: endDate,
+          },
+        });
+      } else {
+        // Filtrar apenas por ano
+        const startDate = new Date(yearNum, 0, 1);
+        const endDate = new Date(yearNum, 11, 31, 23, 59, 59, 999);
+        andConditions.push({
+          dataRegistro: {
+            gte: startDate,
+            lte: endDate,
+          },
+        });
+      }
     }
 
     if (andConditions.length > 0) {
@@ -1030,6 +1060,50 @@ export class DespesasService {
    */
   async listYears(parceiroId: number) {
     return await this.rollupDespesasCacheService.listYears(parceiroId);
+  }
+
+  /**
+   * Lista todos os meses que tiveram despesas, agrupados por ano
+   */
+  async listMonthsWithExpenses(parceiroId: number) {
+    const result = await this.prisma.despesa.groupBy({
+      by: ['dataRegistro'],
+      where: {
+        parceiroId,
+      },
+      _sum: {
+        valorTotal: true,
+      },
+    });
+
+    // Agrupar por ano-mês
+    const monthMap = new Map<string, { ano: string; mes: number; total: number }>();
+
+    for (const item of result) {
+      const date = new Date(item.dataRegistro);
+      const ano = date.getFullYear().toString();
+      const mes = date.getMonth() + 1;
+      const key = `${ano}-${mes}`;
+
+      if (monthMap.has(key)) {
+        const existing = monthMap.get(key)!;
+        existing.total += Number(item._sum.valorTotal || 0);
+      } else {
+        monthMap.set(key, {
+          ano,
+          mes,
+          total: Number(item._sum.valorTotal || 0),
+        });
+      }
+    }
+
+    // Converter para array e ordenar por ano desc, mês desc
+    return Array.from(monthMap.values()).sort((a, b) => {
+      if (a.ano !== b.ano) {
+        return parseInt(b.ano) - parseInt(a.ano);
+      }
+      return b.mes - a.mes;
+    });
   }
 
   /**

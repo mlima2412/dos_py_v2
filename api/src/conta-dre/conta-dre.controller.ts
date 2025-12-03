@@ -6,8 +6,10 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
   ParseIntPipe,
   ParseEnumPipe,
+  ParseBoolPipe,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -17,6 +19,7 @@ import {
   ApiParam,
   ApiBody,
   ApiHeader,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { ContaDreService } from './conta-dre.service';
 import { CreateContaDreDto } from './dto/create-conta-dre.dto';
@@ -93,14 +96,24 @@ export class ContaDreController {
     required: true,
     schema: { type: 'integer', example: 1 },
   })
+  @ApiQuery({
+    name: 'incluirInativos',
+    description: 'Incluir contas inativas na listagem',
+    required: false,
+    type: 'boolean',
+  })
   @ApiResponse({
     status: 200,
     description: 'Lista de contas DRE retornada com sucesso',
     type: [ContaDRE],
   })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
-  findAll(@ParceiroId() parceiroId: number): Promise<ContaDRE[]> {
-    return this.contaDreService.findAll(parceiroId);
+  findAll(
+    @ParceiroId() parceiroId: number,
+    @Query('incluirInativos', new ParseBoolPipe({ optional: true }))
+    incluirInativos?: boolean,
+  ): Promise<ContaDRE[]> {
+    return this.contaDreService.findAll(parceiroId, incluirInativos);
   }
 
   @Get('grupo/:grupoId')

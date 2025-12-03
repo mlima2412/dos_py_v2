@@ -212,12 +212,109 @@ export class VendaService {
     return venda;
   }
 
+  /**
+   * Gera despesas automáticas para formas de pagamento que possuem taxa configurada.
+   *
+   * IMPORTANTE: A taxa é armazenada em formato PERCENTUAL no banco de dados.
+   * Exemplo: 2.5 no banco significa 2.5% (não 0.025 em formato decimal)
+   *
+   * Fórmula:
+   * 1. Calcula valorTaxa = (valorPagamento × taxa%) ÷ 100
+   *    Exemplo: R$ 1000,00 × 2.5% ÷ 100 = R$ 25,00
+   * 2. Se impostoPosCalculo (IVA), adiciona: valorTaxa += valorTaxa ÷ 11
+   *    Exemplo: R$ 25,00 + (R$ 25,00 ÷ 11) = R$ 27,27
+   *
+   * A despesa é classificada na contaDreId configurada na forma de pagamento.
+   */
+  private async gerarDespesasTaxaPagamento(
+    vendaId: number,
+    parceiroId: number,
+    dataVenda: Date,
+    pagamentos: Array<{
+      formaPagamentoId: number;
+      valor: number;
+    }>,
+    tx: any,
+  ): Promise<Array<{ postCommitCallback: () => Promise<void> }>> {
+    const callbacks: Array<{ postCommitCallback: () => Promise<void> }> = [];
+
+    // Buscar moeda do parceiro
+    const parceiro = await tx.parceiro.findUnique({
+      where: { id: parceiroId },
+      select: { currencyId: true },
+    });
+
+    for (const pagamento of pagamentos) {
+      // Buscar forma de pagamento com taxa
+      const formaPagamento = await tx.formaPagamento.findFirst({
+        where: {
+          idFormaPag: pagamento.formaPagamentoId,
+          parceiroId,
+        },
+      });
+
+      if (!formaPagamento) {
+        continue;
+      }
+
+      const taxa = Number(formaPagamento.taxa || 0);
+
+      // Se não tem taxa ou não tem contaDreId, pular
+      if (taxa <= 0 || !formaPagamento.contaDreId) {
+        continue;
+      }
+
+      // Calcular valor da taxa: (valorPagamento * taxa) / 100
+      let valorDespesa = (pagamento.valor * taxa) / 100;
+
+      // Se impostoPosCalculo (IVA), adicionar: valorDespesa += valorDespesa / 11
+      if (formaPagamento.impostoPosCalculo) {
+        valorDespesa += valorDespesa / 11;
+      }
+
+      // Arredondar para 2 casas decimais
+      valorDespesa = Math.round(valorDespesa * 100) / 100;
+
+      if (valorDespesa <= 0) {
+        continue;
+      }
+
+      this.logger.log(
+        `[gerarDespesasTaxaPagamento] Gerando despesa de taxa para venda ${vendaId}, ` +
+        `forma: ${formaPagamento.nome}, taxa: ${taxa}%, IVA: ${formaPagamento.impostoPosCalculo}, ` +
+        `valor pagamento: ${pagamento.valor}, valor despesa: ${valorDespesa}`,
+      );
+
+      // Criar despesa usando o serviço (com moeda do parceiro)
+      const { postCommitCallback } = await this.despesasService.createWithinTransaction(
+        {
+          descricao: `Taxa ${formaPagamento.nome} - Venda #${vendaId}`,
+          valorTotal: valorDespesa,
+          dataRegistro: dataVenda.toISOString(),
+          tipoPagamento: TipoPagamento.A_VISTA_IMEDIATA,
+          contaDreId: formaPagamento.contaDreId,
+          parceiroId,
+          currencyId: parceiro?.currencyId ?? undefined,
+        },
+        parceiroId,
+        tx,
+      );
+
+      callbacks.push({ postCommitCallback });
+    }
+
+    return callbacks;
+  }
+
   async finalizarDireta(
     publicId: string,
     finalizeDto: FinalizeVendaDiretaDto,
     parceiroId: number,
     usuarioId: number,
   ): Promise<Venda> {
+    // Callbacks para processar despesas de taxa após o commit
+    let despesaTaxaCallbacks: Array<{ postCommitCallback: () => Promise<void> }> = [];
+
     const vendaFinalizada = await this.prisma.$transaction(async tx => {
       const venda = await tx.venda.findFirst({
         where: { publicId, parceiroId },
@@ -578,8 +675,29 @@ export class VendaService {
         throw new NotFoundException('Erro ao finalizar venda');
       }
 
+      // Gerar despesas automáticas para formas de pagamento com taxa
+      despesaTaxaCallbacks = await this.gerarDespesasTaxaPagamento(
+        venda.id,
+        parceiroId,
+        venda.dataVenda,
+        finalizeDto.pagamentos.map(p => ({
+          formaPagamentoId: p.formaPagamentoId,
+          valor: p.valor,
+        })),
+        tx,
+      );
+
       return this.mapToVendaEntity(vendaAtualizada);
     });
+
+    // Executar callbacks de despesas de taxa após o commit
+    for (const callback of despesaTaxaCallbacks) {
+      try {
+        await callback.postCommitCallback();
+      } catch (error) {
+        this.logger.warn(`[finalizarDireta] Erro ao processar callback de despesa de taxa: ${error}`);
+      }
+    }
 
     this.logger.log(`[finalizarDireta] Registrando venda ${vendaFinalizada.id} no rollup`);
 
@@ -1554,6 +1672,9 @@ export class VendaService {
     finalizeDto: FinalizeVendaCondicionalDto,
     parceiroId: number,
   ): Promise<Venda> {
+    // Callbacks para processar despesas de taxa após o commit
+    let despesaTaxaCallbacks: Array<{ postCommitCallback: () => Promise<void> }> = [];
+
     const vendaFinalizada = await this.prisma.$transaction(async tx => {
       // 1. Buscar venda
       const venda = await tx.venda.findFirst({
@@ -1888,10 +2009,31 @@ export class VendaService {
         throw new NotFoundException('Erro ao finalizar condicional');
       }
 
+      // 13. Gerar despesas automáticas para formas de pagamento com taxa
+      despesaTaxaCallbacks = await this.gerarDespesasTaxaPagamento(
+        venda.id,
+        parceiroId,
+        venda.dataVenda,
+        finalizeDto.pagamentos.map(p => ({
+          formaPagamentoId: p.formaPagamentoId,
+          valor: p.valor,
+        })),
+        tx,
+      );
+
       return this.mapToVendaEntity(vendaAtualizada);
     });
 
-    // 13. Registrar no rollup e DRE (apenas se não foi cancelada)
+    // Executar callbacks de despesas de taxa após o commit
+    for (const callback of despesaTaxaCallbacks) {
+      try {
+        await callback.postCommitCallback();
+      } catch (error) {
+        this.logger.warn(`[finalizarCondicional] Erro ao processar callback de despesa de taxa: ${error}`);
+      }
+    }
+
+    // 14. Registrar no rollup e DRE (apenas se não foi cancelada)
     if (vendaFinalizada.status !== VendaStatus.CANCELADA) {
       this.logger.log(`[finalizarCondicional] Registrando venda ${vendaFinalizada.id} no rollup`);
 

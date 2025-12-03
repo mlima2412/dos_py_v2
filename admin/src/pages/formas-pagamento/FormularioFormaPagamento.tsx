@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,11 +11,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import {
 	Form,
 	FormControl,
+	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
+import { Combobox } from "@/components/ui/combobox";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -30,20 +32,37 @@ import {
 	useFormaPagamento,
 	useFormaPagamentoMutations,
 } from "@/hooks/useFormasPagamento";
+import { useContaDreControllerFindAll } from "@/api-client/hooks/useContaDreControllerFindAll";
+import { usePartner } from "@/hooks/usePartner";
 
 // Schema de validação baseado no DTO
-const formaPagamentoSchema = z.object({
-	nome: z
-		.string()
-		.min(2, "Nome deve ter pelo menos 2 caracteres")
-		.max(255, "Nome deve ter no máximo 255 caracteres"),
-	taxa: z.number().min(0, "Taxa deve ser maior ou igual a zero").optional(),
-	tempoLiberacao: z
-		.number()
-		.min(0, "Tempo de liberação deve ser maior ou igual a zero"),
-	impostoPosCalculo: z.boolean(),
-	ativo: z.boolean(),
-});
+const formaPagamentoSchema = z
+	.object({
+		nome: z
+			.string()
+			.min(2, "Nome deve ter pelo menos 2 caracteres")
+			.max(255, "Nome deve ter no máximo 255 caracteres"),
+		taxa: z.number().min(0, "Taxa deve ser maior ou igual a zero").optional(),
+		tempoLiberacao: z
+			.number()
+			.min(0, "Tempo de liberação deve ser maior ou igual a zero"),
+		impostoPosCalculo: z.boolean(),
+		contaDreId: z.number().optional(),
+		ativo: z.boolean(),
+	})
+	.refine(
+		data => {
+			// Se taxa > 0, contaDreId é obrigatório
+			if (data.taxa && data.taxa > 0) {
+				return data.contaDreId !== undefined && data.contaDreId > 0;
+			}
+			return true;
+		},
+		{
+			message: "Conta DRE é obrigatória quando há taxa configurada",
+			path: ["contaDreId"],
+		}
+	);
 
 type FormaPagamentoFormData = z.infer<typeof formaPagamentoSchema>;
 
@@ -53,6 +72,7 @@ export const FormularioFormaPagamento: React.FC = () => {
 	const { t } = useTranslation("common");
 	const navigate = useNavigate();
 	const { id } = useParams<{ id: string }>();
+	const { selectedPartnerId } = usePartner();
 
 	// Determinar modo do formulário
 	const mode: FormMode = id
@@ -68,6 +88,26 @@ export const FormularioFormaPagamento: React.FC = () => {
 	const { createFormaPagamento, updateFormaPagamento, isCreating, isUpdating } =
 		useFormaPagamentoMutations();
 
+	// Buscar todas as contas DRE do parceiro
+	const headers = {
+		"x-parceiro-id": selectedPartnerId ? parseInt(selectedPartnerId) : 0,
+	};
+	const { data: contasDre, isLoading: isLoadingContasDre } =
+		useContaDreControllerFindAll(headers, {
+			query: {
+				enabled: !!selectedPartnerId,
+			},
+		});
+
+	// Preparar opções para o combobox
+	const contaDreOptions = useMemo(() => {
+		if (!contasDre) return [];
+		return contasDre.map(conta => ({
+			value: conta.id.toString(),
+			label: conta.nome,
+		}));
+	}, [contasDre]);
+
 	// Formulário
 	const form = useForm<FormaPagamentoFormData>({
 		resolver: zodResolver(formaPagamentoSchema),
@@ -76,9 +116,13 @@ export const FormularioFormaPagamento: React.FC = () => {
 			taxa: undefined,
 			tempoLiberacao: 0,
 			impostoPosCalculo: false,
+			contaDreId: undefined,
 			ativo: true,
 		},
 	});
+
+	// Observar o valor da taxa para mostrar/ocultar campo de conta DRE
+	const taxaValue = useWatch({ control: form.control, name: "taxa" });
 
 	// Carregar dados quando em modo de edição/visualização
 	useEffect(() => {
@@ -88,10 +132,14 @@ export const FormularioFormaPagamento: React.FC = () => {
 				taxa: formaPagamento.taxa,
 				tempoLiberacao: formaPagamento.tempoLiberacao,
 				impostoPosCalculo: formaPagamento.impostoPosCalculo,
+				contaDreId: formaPagamento.contaDreId,
 				ativo: formaPagamento.ativo,
 			});
 		}
 	}, [formaPagamento, mode, form]);
+
+	// Mostrar campo de conta DRE apenas quando taxa > 0
+	const showContaDreField = taxaValue !== undefined && taxaValue > 0;
 
 	// Função para submeter o formulário
 	const onSubmit = (data: FormaPagamentoFormData) => {
@@ -262,10 +310,49 @@ export const FormularioFormaPagamento: React.FC = () => {
 													}}
 												/>
 											</FormControl>
+											<FormDescription>
+												{t("paymentMethods.hints.tax")}
+											</FormDescription>
 											<FormMessage />
 										</FormItem>
 									)}
 								/>
+
+								{/* Conta DRE - visível apenas quando taxa > 0 */}
+								{showContaDreField && (
+									<FormField
+										control={form.control}
+										name="contaDreId"
+										render={({ field }) => (
+											<FormItem className="flex flex-col">
+												<FormLabel>
+													{t("paymentMethods.labels.contaDre")}
+												</FormLabel>
+												<FormControl>
+													<Combobox
+														options={contaDreOptions}
+														value={field.value?.toString() ?? ""}
+														onValueChange={value =>
+															field.onChange(value ? parseInt(value) : undefined)
+														}
+														placeholder={t(
+															"paymentMethods.placeholders.contaDre"
+														)}
+														searchPlaceholder={t(
+															"paymentMethods.placeholders.searchContaDre"
+														)}
+														emptyText={t("paymentMethods.noContaDreResults")}
+														disabled={mode === "view" || isLoadingContasDre}
+													/>
+												</FormControl>
+												<FormDescription>
+													{t("paymentMethods.hints.contaDre")}
+												</FormDescription>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								)}
 
 								{/* Tempo de Liberação */}
 								<FormField
@@ -299,27 +386,32 @@ export const FormularioFormaPagamento: React.FC = () => {
 									)}
 								/>
 
-								{/* Imposto Pós Cálculo */}
-								<FormField
-									control={form.control}
-									name="impostoPosCalculo"
-									render={({ field }) => (
-										<FormItem className="flex flex-row items-start space-x-3 space-y-0">
-											<FormControl>
-												<Checkbox
-													checked={field.value}
-													onCheckedChange={field.onChange}
-													disabled={mode === "view"}
-												/>
-											</FormControl>
-											<div className="space-y-1 leading-none">
-												<FormLabel>
-													{t("paymentMethods.labels.taxAfterCalculation")}
-												</FormLabel>
-											</div>
-										</FormItem>
-									)}
-								/>
+								{/* Imposto Pós Cálculo - visível apenas quando taxa > 0 */}
+								{showContaDreField && (
+									<FormField
+										control={form.control}
+										name="impostoPosCalculo"
+										render={({ field }) => (
+											<FormItem className="flex flex-row items-start space-x-3 space-y-0">
+												<FormControl>
+													<Checkbox
+														checked={field.value}
+														onCheckedChange={field.onChange}
+														disabled={mode === "view"}
+													/>
+												</FormControl>
+												<div className="space-y-1 leading-none">
+													<FormLabel>
+														{t("paymentMethods.labels.taxAfterCalculation")}
+													</FormLabel>
+													<FormDescription>
+														{t("paymentMethods.hints.taxAfterCalculation")}
+													</FormDescription>
+												</div>
+											</FormItem>
+										)}
+									/>
+								)}
 
 								{/* Ativo */}
 								<FormField

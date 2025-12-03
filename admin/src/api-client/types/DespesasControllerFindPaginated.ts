@@ -38,6 +38,16 @@ export type DespesasControllerFindPaginatedQueryParams = {
      * @type string | undefined
     */
     grupoDreId?: string | undefined;
+    /**
+     * @description Ano para filtrar (YYYY)
+     * @type string | undefined
+    */
+    year?: string | undefined;
+    /**
+     * @description Mês para filtrar (1-12)
+     * @type string | undefined
+    */
+    month?: string | undefined;
 };
 
 /**

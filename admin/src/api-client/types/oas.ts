@@ -641,6 +641,119 @@ export const oas = {
         ]
       }
     },
+    "/password-reset/request": {
+      "post": {
+        "operationId": "PasswordResetController_requestPasswordReset",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestPasswordResetDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Email de recuperação enviado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PasswordResetMessageResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado ou inativo"
+          }
+        },
+        "summary": "Solicitar recuperação de senha",
+        "tags": [
+          "password-reset"
+        ]
+      }
+    },
+    "/password-reset/reset": {
+      "post": {
+        "operationId": "PasswordResetController_resetPassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Senha alterada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PasswordResetMessageResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Token inválido ou expirado"
+          }
+        },
+        "summary": "Redefinir senha com token",
+        "tags": [
+          "password-reset"
+        ]
+      }
+    },
+    "/password-reset/validate-token": {
+      "get": {
+        "operationId": "PasswordResetController_validateToken",
+        "parameters": [
+          {
+            "name": "token",
+            "required": true,
+            "in": "query",
+            "description": "Token de recuperação de senha",
+            "schema": {
+              "example": "abc123def456ghi789jkl012mno345pqr678",
+              "type": "string"
+            }
+          },
+          {
+            "name": "language",
+            "required": false,
+            "in": "query",
+            "description": "Idioma preferido para mensagens",
+            "schema": {
+              "example": "pt",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status de validação do token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidateTokenResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Validar token de recuperação",
+        "tags": [
+          "password-reset"
+        ]
+      }
+    },
     "/perfis": {
       "post": {
         "operationId": "PerfisController_create",
@@ -3463,6 +3576,26 @@ export const oas = {
               "example": "1",
               "type": "string"
             }
+          },
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "description": "Ano para filtrar (YYYY)",
+            "schema": {
+              "example": "2024",
+              "type": "string"
+            }
+          },
+          {
+            "name": "month",
+            "required": false,
+            "in": "query",
+            "description": "Mês para filtrar (1-12)",
+            "schema": {
+              "example": "6",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3524,6 +3657,47 @@ export const oas = {
           }
         ],
         "summary": "Lista todos os anos que tiveram despesas",
+        "tags": [
+          "Despesas"
+        ]
+      }
+    },
+    "/despesas/DespesasMes": {
+      "get": {
+        "operationId": "DespesasController_listMonths",
+        "parameters": [
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de meses com despesas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MonthItemDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Lista todos os meses que tiveram despesas",
         "tags": [
           "Despesas"
         ]
@@ -4071,6 +4245,46 @@ export const oas = {
           }
         ],
         "summary": "Processa uma despesa e cria lançamento DRE",
+        "tags": [
+          "Lançamentos DRE"
+        ]
+      }
+    },
+    "/lancamento-dre/criar-regras-padrao": {
+      "post": {
+        "operationId": "LancamentoDreController_criarRegrasPadrao",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Cria regras de lançamento automático padrão para vendas",
+        "tags": [
+          "Lançamentos DRE"
+        ]
+      }
+    },
+    "/lancamento-dre/reprocessar-vendas": {
+      "post": {
+        "operationId": "LancamentoDreController_reprocessarVendas",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Reprocessa todas as vendas para criar lançamentos DRE",
         "tags": [
           "Lançamentos DRE"
         ]
@@ -5341,109 +5555,6 @@ export const oas = {
         "summary": "Desativar moeda",
         "tags": [
           "Currency"
-        ]
-      }
-    },
-    "/password-reset/request": {
-      "post": {
-        "operationId": "PasswordResetController_requestPasswordReset",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RequestPasswordResetDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Email de recuperação enviado com sucesso",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PasswordResetMessageResponseDto"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Usuário não encontrado ou inativo"
-          }
-        },
-        "summary": "Solicitar recuperação de senha",
-        "tags": [
-          "password-reset"
-        ]
-      }
-    },
-    "/password-reset/reset": {
-      "post": {
-        "operationId": "PasswordResetController_resetPassword",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ResetPasswordDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Senha alterada com sucesso",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PasswordResetMessageResponseDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Token inválido ou expirado"
-          }
-        },
-        "summary": "Redefinir senha com token",
-        "tags": [
-          "password-reset"
-        ]
-      }
-    },
-    "/password-reset/validate-token": {
-      "get": {
-        "operationId": "PasswordResetController_validateToken",
-        "parameters": [
-          {
-            "name": "token",
-            "required": true,
-            "in": "query",
-            "description": "Token de recuperação de senha",
-            "schema": {
-              "example": "abc123def456ghi789jkl012mno345pqr678",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Status de validação do token",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidateTokenResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "summary": "Validar token de recuperação",
-        "tags": [
-          "password-reset"
         ]
       }
     },
@@ -12797,6 +12908,715 @@ export const oas = {
           "conta-dre"
         ]
       }
+    },
+    "/imposto": {
+      "post": {
+        "operationId": "ImpostoController_create",
+        "parameters": [
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateImpostoDto"
+              },
+              "examples": {
+                "iva": {
+                  "summary": "IVA (Paraguai)",
+                  "value": {
+                    "nome": "Impuesto al Valor Agregado",
+                    "sigla": "IVA",
+                    "percentual": 10,
+                    "ativo": true
+                  }
+                },
+                "icms": {
+                  "summary": "ICMS (Brasil)",
+                  "value": {
+                    "nome": "Imposto sobre Circulação de Mercadorias",
+                    "sigla": "ICMS",
+                    "percentual": 18,
+                    "ativo": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Imposto criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Imposto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          },
+          "409": {
+            "description": "Já existe um imposto com esta sigla para este parceiro"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Criar novo imposto",
+        "tags": [
+          "imposto"
+        ]
+      },
+      "get": {
+        "operationId": "ImpostoController_findAll",
+        "parameters": [
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de impostos retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Imposto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Listar todos os impostos do parceiro",
+        "tags": [
+          "imposto"
+        ]
+      }
+    },
+    "/imposto/{id}": {
+      "get": {
+        "operationId": "ImpostoController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do imposto",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Imposto encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Imposto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          },
+          "404": {
+            "description": "Imposto não encontrado"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Buscar imposto por ID",
+        "tags": [
+          "imposto"
+        ]
+      },
+      "patch": {
+        "operationId": "ImpostoController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do imposto",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateImpostoDto"
+              },
+              "examples": {
+                "atualizarPercentual": {
+                  "summary": "Atualizar percentual",
+                  "value": {
+                    "percentual": 12
+                  }
+                },
+                "desativar": {
+                  "summary": "Desativar imposto",
+                  "value": {
+                    "ativo": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Imposto atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Imposto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          },
+          "404": {
+            "description": "Imposto não encontrado"
+          },
+          "409": {
+            "description": "Já existe um imposto com esta sigla para este parceiro"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Atualizar imposto",
+        "tags": [
+          "imposto"
+        ]
+      },
+      "delete": {
+        "operationId": "ImpostoController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do imposto",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Imposto removido com sucesso"
+          },
+          "401": {
+            "description": "Não autorizado"
+          },
+          "404": {
+            "description": "Imposto não encontrado"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Remover imposto (soft delete)",
+        "tags": [
+          "imposto"
+        ]
+      }
+    },
+    "/imposto/sigla/{sigla}": {
+      "get": {
+        "operationId": "ImpostoController_findBySigla",
+        "parameters": [
+          {
+            "name": "sigla",
+            "required": true,
+            "in": "path",
+            "description": "Sigla do imposto (ex: IVA)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Imposto encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Imposto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          },
+          "404": {
+            "description": "Imposto não encontrado"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Buscar imposto por sigla",
+        "tags": [
+          "imposto"
+        ]
+      }
+    },
+    "/regra-lancamento": {
+      "post": {
+        "operationId": "RegraLancamentoController_create",
+        "parameters": [
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRegraLancamentoDto"
+              },
+              "examples": {
+                "receitaVendas": {
+                  "summary": "Receita de Vendas",
+                  "value": {
+                    "contaDreId": 1,
+                    "nome": "Receita de Vendas",
+                    "tipoGatilho": "VENDA_CONFIRMADA",
+                    "campoOrigem": "valorTotal",
+                    "ativo": true
+                  }
+                },
+                "ivaVendas": {
+                  "summary": "IVA sobre Vendas",
+                  "value": {
+                    "contaDreId": 2,
+                    "impostoId": 1,
+                    "nome": "IVA sobre Vendas",
+                    "tipoGatilho": "VENDA_COM_FATURA",
+                    "campoOrigem": "valorTotal",
+                    "ativo": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Regra de lançamento criada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegraLancamentoAutomatico"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          },
+          "404": {
+            "description": "Conta DRE ou Imposto não encontrado"
+          },
+          "409": {
+            "description": "Já existe uma regra com este nome para este parceiro"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Criar nova regra de lançamento automático",
+        "tags": [
+          "regra-lancamento"
+        ]
+      },
+      "get": {
+        "operationId": "RegraLancamentoController_findAll",
+        "parameters": [
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de regras de lançamento retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RegraLancamentoAutomatico"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Listar todas as regras de lançamento do parceiro",
+        "tags": [
+          "regra-lancamento"
+        ]
+      }
+    },
+    "/regra-lancamento/gatilho/{tipoGatilho}": {
+      "get": {
+        "operationId": "RegraLancamentoController_findByTipoGatilho",
+        "parameters": [
+          {
+            "name": "tipoGatilho",
+            "required": true,
+            "in": "path",
+            "description": "Tipo de gatilho (VENDA_CONFIRMADA, VENDA_COM_FATURA)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tipoVenda",
+            "required": false,
+            "in": "query",
+            "description": "Tipo de venda para filtrar",
+            "schema": {
+              "enum": [
+                "DIRETA",
+                "CONDICIONAL",
+                "BRINDE",
+                "PERMUTA"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de regras retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RegraLancamentoAutomatico"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Listar regras por tipo de gatilho",
+        "tags": [
+          "regra-lancamento"
+        ]
+      }
+    },
+    "/regra-lancamento/{id}": {
+      "get": {
+        "operationId": "RegraLancamentoController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID da regra de lançamento",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Regra de lançamento encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegraLancamentoAutomatico"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          },
+          "404": {
+            "description": "Regra de lançamento não encontrada"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Buscar regra de lançamento por ID",
+        "tags": [
+          "regra-lancamento"
+        ]
+      },
+      "patch": {
+        "operationId": "RegraLancamentoController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID da regra de lançamento",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRegraLancamentoDto"
+              },
+              "examples": {
+                "atualizarPercentual": {
+                  "summary": "Atualizar percentual",
+                  "value": {
+                    "percentual": 12
+                  }
+                },
+                "desativar": {
+                  "summary": "Desativar regra",
+                  "value": {
+                    "ativo": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Regra de lançamento atualizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegraLancamentoAutomatico"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          },
+          "404": {
+            "description": "Regra de lançamento não encontrada"
+          },
+          "409": {
+            "description": "Já existe uma regra com este nome para este parceiro"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Atualizar regra de lançamento",
+        "tags": [
+          "regra-lancamento"
+        ]
+      },
+      "delete": {
+        "operationId": "RegraLancamentoController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID da regra de lançamento",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "x-parceiro-id",
+            "in": "header",
+            "description": "ID do parceiro logado",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Regra de lançamento removida com sucesso"
+          },
+          "401": {
+            "description": "Não autorizado"
+          },
+          "404": {
+            "description": "Regra de lançamento não encontrada"
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Remover regra de lançamento (soft delete)",
+        "tags": [
+          "regra-lancamento"
+        ]
+      }
     }
   },
   "info": {
@@ -13172,8 +13992,7 @@ export const oas = {
         },
         "required": [
           "nome",
-          "email",
-          "linguagem"
+          "email"
         ]
       },
       "Usuario": {
@@ -13364,6 +14183,82 @@ export const oas = {
         },
         "required": [
           "publicId"
+        ]
+      },
+      "RequestPasswordResetDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Email do usuário para envio do link de recuperação",
+            "example": "usuario@exemplo.com"
+          },
+          "language": {
+            "type": "string",
+            "description": "Idioma preferido para o email de recuperação",
+            "example": "pt-BR",
+            "default": "pt-BR"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "PasswordResetMessageResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Mensagem de sucesso",
+            "example": "Email de recuperação enviado com sucesso"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "ResetPasswordDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Token de recuperação de senha",
+            "example": "abc123def456ghi789jkl012mno345pqr678"
+          },
+          "newPassword": {
+            "type": "string",
+            "description": "Nova senha do usuário",
+            "example": "novaSenha123",
+            "minLength": 6
+          },
+          "language": {
+            "type": "string",
+            "description": "Idioma preferido para mensagens de erro",
+            "example": "pt"
+          }
+        },
+        "required": [
+          "token",
+          "newPassword"
+        ]
+      },
+      "ValidateTokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "valid": {
+            "type": "boolean",
+            "description": "Indica se o token é válido",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "description": "Mensagem descritiva",
+            "example": "Token válido"
+          }
+        },
+        "required": [
+          "valid",
+          "message"
         ]
       },
       "CreatePerfilDto": {
@@ -14947,6 +15842,31 @@ export const oas = {
           "total"
         ]
       },
+      "MonthItemDto": {
+        "type": "object",
+        "properties": {
+          "ano": {
+            "type": "string",
+            "description": "Ano",
+            "example": "2024"
+          },
+          "mes": {
+            "type": "number",
+            "description": "Mês (1-12)",
+            "example": 10
+          },
+          "total": {
+            "type": "number",
+            "description": "Total de despesas no mês",
+            "example": 15000.5
+          }
+        },
+        "required": [
+          "ano",
+          "mes",
+          "total"
+        ]
+      },
       "CreateDespesaRecorrenteDto": {
         "type": "object",
         "properties": {
@@ -15023,8 +15943,7 @@ export const oas = {
           "descricao",
           "valor",
           "diaVencimento",
-          "parceiroId",
-          "contaDreId"
+          "parceiroId"
         ]
       },
       "DespesaRecorrente": {
@@ -15269,7 +16188,7 @@ export const oas = {
           "publicId": {
             "type": "string",
             "description": "ID público da conta a pagar",
-            "example": "019ad783-ff85-7691-a372-17cf0559412b"
+            "example": "019ae166-fef2-72f6-bd46-846f9004b76c"
           },
           "despesaId": {
             "type": "number",
@@ -15339,7 +16258,7 @@ export const oas = {
           "publicId": {
             "type": "string",
             "description": "ID público da parcela",
-            "example": "019ad783-ff85-7691-a372-17ce48b685e6"
+            "example": "019ae166-fef2-72f6-bd46-846eac879ec6"
           },
           "dataPagamento": {
             "format": "date-time",
@@ -15600,77 +16519,6 @@ export const oas = {
             "default": true
           }
         }
-      },
-      "RequestPasswordResetDto": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "description": "Email do usuário para envio do link de recuperação",
-            "example": "usuario@exemplo.com"
-          },
-          "language": {
-            "type": "string",
-            "description": "Idioma preferido para o email de recuperação",
-            "example": "pt-BR",
-            "default": "pt-BR"
-          }
-        },
-        "required": [
-          "email"
-        ]
-      },
-      "PasswordResetMessageResponseDto": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "description": "Mensagem de sucesso",
-            "example": "Email de recuperação enviado com sucesso"
-          }
-        },
-        "required": [
-          "message"
-        ]
-      },
-      "ResetPasswordDto": {
-        "type": "object",
-        "properties": {
-          "token": {
-            "type": "string",
-            "description": "Token de recuperação de senha",
-            "example": "abc123def456ghi789jkl012mno345pqr678"
-          },
-          "newPassword": {
-            "type": "string",
-            "description": "Nova senha do usuário",
-            "example": "novaSenha123",
-            "minLength": 6
-          }
-        },
-        "required": [
-          "token",
-          "newPassword"
-        ]
-      },
-      "ValidateTokenResponseDto": {
-        "type": "object",
-        "properties": {
-          "valid": {
-            "type": "boolean",
-            "description": "Indica se o token é válido",
-            "example": true
-          },
-          "message": {
-            "type": "string",
-            "description": "Mensagem descritiva",
-            "example": "Token válido"
-          }
-        },
-        "required": [
-          "valid",
-          "message"
-        ]
       },
       "CreateCategoriaProdutoDto": {
         "type": "object",
@@ -17755,7 +18603,7 @@ export const oas = {
           },
           "taxa": {
             "type": "number",
-            "description": "Taxa da forma de pagamento (em decimal)",
+            "description": "Taxa da forma de pagamento (em percentual)",
             "example": 2.5
           },
           "tempoLiberacao": {
@@ -17766,9 +18614,14 @@ export const oas = {
           },
           "impostoPosCalculo": {
             "type": "boolean",
-            "description": "Se o imposto é calculado após o desconto da taxa",
+            "description": "Se o imposto (IVA) deve ser adicionado ao valor da taxa ao gerar despesa",
             "example": false,
             "default": false
+          },
+          "contaDreId": {
+            "type": "number",
+            "description": "ID da conta DRE para gerar despesa automática quando há taxa",
+            "example": 1
           },
           "ativo": {
             "type": "boolean",
@@ -17804,7 +18657,7 @@ export const oas = {
           },
           "taxa": {
             "type": "number",
-            "description": "Taxa da forma de pagamento (em decimal)",
+            "description": "Taxa da forma de pagamento (em percentual)",
             "example": 2.5
           },
           "tempoLiberacao": {
@@ -17814,8 +18667,13 @@ export const oas = {
           },
           "impostoPosCalculo": {
             "type": "boolean",
-            "description": "Se o imposto é calculado após o desconto da taxa",
+            "description": "Se o imposto (IVA) deve ser adicionado ao valor da taxa ao gerar despesa",
             "example": false
+          },
+          "contaDreId": {
+            "type": "number",
+            "description": "ID da conta DRE para gerar despesa automática quando há taxa",
+            "example": 1
           },
           "ativo": {
             "type": "boolean",
@@ -17843,7 +18701,7 @@ export const oas = {
           },
           "taxa": {
             "type": "number",
-            "description": "Taxa da forma de pagamento (em decimal)",
+            "description": "Taxa da forma de pagamento (em percentual)",
             "example": 2.5
           },
           "tempoLiberacao": {
@@ -17854,9 +18712,14 @@ export const oas = {
           },
           "impostoPosCalculo": {
             "type": "boolean",
-            "description": "Se o imposto é calculado após o desconto da taxa",
+            "description": "Se o imposto (IVA) deve ser adicionado ao valor da taxa ao gerar despesa",
             "example": false,
             "default": false
+          },
+          "contaDreId": {
+            "type": "number",
+            "description": "ID da conta DRE para gerar despesa automática quando há taxa",
+            "example": 1
           },
           "ativo": {
             "type": "boolean",
@@ -19828,6 +20691,328 @@ export const oas = {
           "ativo": {
             "type": "boolean",
             "description": "Status ativo da conta",
+            "example": true
+          }
+        }
+      },
+      "CreateImpostoDto": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "description": "Nome do imposto",
+            "example": "Impuesto al Valor Agregado"
+          },
+          "sigla": {
+            "type": "string",
+            "description": "Sigla do imposto",
+            "example": "IVA"
+          },
+          "percentual": {
+            "type": "number",
+            "description": "Percentual do imposto (0-100)",
+            "example": 10
+          },
+          "ativo": {
+            "type": "boolean",
+            "description": "Status ativo do imposto",
+            "example": true
+          }
+        },
+        "required": [
+          "nome",
+          "sigla",
+          "percentual"
+        ]
+      },
+      "Imposto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "ID interno do imposto",
+            "example": 1
+          },
+          "publicId": {
+            "type": "string",
+            "description": "ID público (UUID) do imposto",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          },
+          "parceiroId": {
+            "type": "number",
+            "description": "ID do parceiro",
+            "example": 1
+          },
+          "nome": {
+            "type": "string",
+            "description": "Nome do imposto",
+            "example": "Impuesto al Valor Agregado"
+          },
+          "sigla": {
+            "type": "string",
+            "description": "Sigla do imposto",
+            "example": "IVA"
+          },
+          "percentual": {
+            "description": "Percentual do imposto",
+            "example": 10,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/i"
+              }
+            ]
+          },
+          "ativo": {
+            "type": "boolean",
+            "description": "Status ativo do imposto",
+            "example": true,
+            "default": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Data de criação do imposto",
+            "example": "2024-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "publicId",
+          "parceiroId",
+          "nome",
+          "sigla",
+          "percentual",
+          "ativo",
+          "createdAt"
+        ]
+      },
+      "UpdateImpostoDto": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "description": "Nome do imposto",
+            "example": "Impuesto al Valor Agregado"
+          },
+          "sigla": {
+            "type": "string",
+            "description": "Sigla do imposto",
+            "example": "IVA"
+          },
+          "percentual": {
+            "type": "number",
+            "description": "Percentual do imposto (0-100)",
+            "example": 10
+          },
+          "ativo": {
+            "type": "boolean",
+            "description": "Status ativo do imposto",
+            "example": true
+          }
+        }
+      },
+      "CreateRegraLancamentoDto": {
+        "type": "object",
+        "properties": {
+          "contaDreId": {
+            "type": "number",
+            "description": "ID da conta DRE associada",
+            "example": 1
+          },
+          "impostoId": {
+            "type": "number",
+            "description": "ID do imposto (para deduções)",
+            "example": 1
+          },
+          "nome": {
+            "type": "string",
+            "description": "Nome da regra",
+            "example": "Receita de Vendas"
+          },
+          "tipoGatilho": {
+            "type": "string",
+            "description": "Tipo de gatilho",
+            "example": "VENDA_CONFIRMADA",
+            "enum": [
+              "VENDA_CONFIRMADA",
+              "VENDA_COM_FATURA"
+            ]
+          },
+          "tipoVenda": {
+            "type": "string",
+            "description": "Tipo de venda para filtrar",
+            "example": "DIRETA",
+            "enum": [
+              "DIRETA",
+              "CONDICIONAL",
+              "BRINDE",
+              "PERMUTA"
+            ]
+          },
+          "campoOrigem": {
+            "type": "string",
+            "description": "Campo origem para o cálculo",
+            "example": "valorTotal",
+            "enum": [
+              "valorTotal",
+              "valorFrete",
+              "valorComissao"
+            ]
+          },
+          "percentual": {
+            "type": "number",
+            "description": "Percentual a aplicar (sobrescreve imposto se informado)",
+            "example": 10
+          },
+          "ativo": {
+            "type": "boolean",
+            "description": "Status ativo da regra",
+            "example": true
+          }
+        },
+        "required": [
+          "contaDreId",
+          "nome",
+          "tipoGatilho"
+        ]
+      },
+      "RegraLancamentoAutomatico": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "ID interno da regra",
+            "example": 1
+          },
+          "publicId": {
+            "type": "string",
+            "description": "ID público (UUID) da regra",
+            "example": "01234567-89ab-cdef-0123-456789abcdef"
+          },
+          "contaDreId": {
+            "type": "number",
+            "description": "ID da conta DRE associada",
+            "example": 1
+          },
+          "parceiroId": {
+            "type": "number",
+            "description": "ID do parceiro",
+            "example": 1
+          },
+          "impostoId": {
+            "type": "number",
+            "description": "ID do imposto (para deduções)",
+            "example": 1
+          },
+          "nome": {
+            "type": "string",
+            "description": "Nome da regra",
+            "example": "Receita de Vendas"
+          },
+          "tipoGatilho": {
+            "type": "string",
+            "description": "Tipo de gatilho (VENDA_CONFIRMADA, VENDA_COM_FATURA)",
+            "example": "VENDA_CONFIRMADA"
+          },
+          "tipoVenda": {
+            "type": "string",
+            "description": "Tipo de venda para filtrar (DIRETA, CONDICIONAL, BRINDE, PERMUTA)",
+            "example": "DIRETA"
+          },
+          "campoOrigem": {
+            "type": "string",
+            "description": "Campo origem para o cálculo (valorTotal, valorFrete, valorComissao)",
+            "example": "valorTotal"
+          },
+          "percentual": {
+            "description": "Percentual a aplicar (sobrescreve imposto se informado)",
+            "example": 10,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/i"
+              }
+            ]
+          },
+          "ativo": {
+            "type": "boolean",
+            "description": "Status ativo da regra",
+            "example": true,
+            "default": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Data de criação da regra",
+            "example": "2024-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "publicId",
+          "contaDreId",
+          "parceiroId",
+          "nome",
+          "tipoGatilho",
+          "ativo",
+          "createdAt"
+        ]
+      },
+      "UpdateRegraLancamentoDto": {
+        "type": "object",
+        "properties": {
+          "contaDreId": {
+            "type": "number",
+            "description": "ID da conta DRE associada",
+            "example": 1
+          },
+          "impostoId": {
+            "type": "number",
+            "description": "ID do imposto (para deduções)",
+            "example": 1
+          },
+          "nome": {
+            "type": "string",
+            "description": "Nome da regra",
+            "example": "Receita de Vendas"
+          },
+          "tipoGatilho": {
+            "type": "string",
+            "description": "Tipo de gatilho",
+            "example": "VENDA_CONFIRMADA",
+            "enum": [
+              "VENDA_CONFIRMADA",
+              "VENDA_COM_FATURA"
+            ]
+          },
+          "tipoVenda": {
+            "type": "string",
+            "description": "Tipo de venda para filtrar",
+            "example": "DIRETA",
+            "enum": [
+              "DIRETA",
+              "CONDICIONAL",
+              "BRINDE",
+              "PERMUTA"
+            ]
+          },
+          "campoOrigem": {
+            "type": "string",
+            "description": "Campo origem para o cálculo",
+            "example": "valorTotal",
+            "enum": [
+              "valorTotal",
+              "valorFrete",
+              "valorComissao"
+            ]
+          },
+          "percentual": {
+            "type": "number",
+            "description": "Percentual a aplicar (sobrescreve imposto se informado)",
+            "example": 10
+          },
+          "ativo": {
+            "type": "boolean",
+            "description": "Status ativo da regra",
             "example": true
           }
         }

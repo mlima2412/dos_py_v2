@@ -8,8 +8,9 @@ import { z } from "zod/v4";
 
 export const createFormaPagamentoDtoSchema = z.object({
     "nome": z.coerce.string().max(255).describe("Nome da forma de pagamento"),
-"taxa": z.optional(z.coerce.number().describe("Taxa da forma de pagamento (em decimal)")),
+"taxa": z.optional(z.coerce.number().describe("Taxa da forma de pagamento (em percentual)")),
 "tempoLiberacao": z.coerce.number().default(0).describe("Tempo de liberação em dias"),
-"impostoPosCalculo": z.boolean().default(false).describe("Se o imposto é calculado após o desconto da taxa"),
+"impostoPosCalculo": z.boolean().default(false).describe("Se o imposto (IVA) deve ser adicionado ao valor da taxa ao gerar despesa"),
+"contaDreId": z.optional(z.coerce.number().describe("ID da conta DRE para gerar despesa automática quando há taxa")),
 "ativo": z.boolean().default(true).describe("Status ativo/inativo da forma de pagamento")
     }) as unknown as z.ZodType<CreateFormaPagamentoDto>

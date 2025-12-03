@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 DOSPY v2 is a business management platform split into two independent projects:
+
 - **admin/** - React + TypeScript + Vite frontend
 - **api/** - NestJS + Prisma backend
 
@@ -15,6 +16,7 @@ The projects communicate via REST API with automatic TypeScript client generatio
 ### Initial Setup
 
 **API (Backend):**
+
 ```bash
 cd api
 npm install
@@ -24,6 +26,7 @@ npm run dev  # Runs on http://localhost:3000
 ```
 
 **Admin (Frontend):**
+
 ```bash
 cd admin
 npm install
@@ -36,6 +39,7 @@ npm run dev          # Just start dev server
 ### Common Commands
 
 **API:**
+
 - `npm run dev` - Development with watch mode
 - `npm run build` - Compile TypeScript (includes i18n copy)
 - `npm run start:prod` - Run compiled version
@@ -44,6 +48,7 @@ npm run dev          # Just start dev server
 - `npm run lint` - Run ESLint
 
 **Admin:**
+
 - `npm run dev` - Development server
 - `npm run dev:with-api` - Regenerate API client and start dev
 - `npm run generate:api` - Generate API client from OpenAPI spec
@@ -57,15 +62,23 @@ npm run dev          # Just start dev server
 3. Run `npx prisma generate` to update Prisma client
 4. Restart the API dev server
 
+## MCP Servers
+
+In this project there are MCP for database connectivity available for use:
+-v1db-mcp-server is used for connectivity with the old version of the system and should not be used unless migration comparisons are relevant
+-v2db-mcp-server is used for application data pool. Before using keep in mind the @schema.prisma file to understand the structure of this database and avoid unnecessary select type trial and error
+
 ### Updating API Client
 
 When backend API changes:
+
 ```bash
 cd admin
 npm run generate:api  # Reads openapi.json and regenerates src/api-client/
 ```
 
 The API client is automatically generated using Kubb and includes:
+
 - TypeScript types (`src/api-client/types/`)
 - Zod schemas (`src/api-client/schemas/`)
 - React Query hooks (`src/api-client/hooks/`)
@@ -77,6 +90,7 @@ The API client is automatically generated using Kubb and includes:
 **Module-based architecture:** Each domain has its own module with controller, service, and DTOs following NestJS conventions.
 
 **Key patterns:**
+
 - **Authentication:** JWT-based with refresh tokens. Global `JwtAuthGuard` protects all routes by default (use `@Public()` decorator to skip).
 - **Multi-tenancy:** Partner system with `x-parceiro-id` header for data isolation. Users belong to partners via `UsuarioParceiro` junction table.
 - **Database:** PostgreSQL via Prisma ORM with comprehensive relations.
@@ -86,6 +100,7 @@ The API client is automatically generated using Kubb and includes:
 - **Redis:** Used for caching (despesas modules).
 
 **Core domains:**
+
 - **Auth & Users:** Authentication, user management, password reset, profiles (`perfis`)
 - **Partners:** Multi-tenant system (`parceiros`, `UsuarioParceiro`)
 - **Clients:** Customer management (`clientes`, `CanalOrigem`)
@@ -99,6 +114,7 @@ The API client is automatically generated using Kubb and includes:
 - **Currency:** Multi-currency support with exchange rates
 
 **Important details:**
+
 - `publicId` (UUID) is used for external references instead of auto-increment `id`
 - Most entities cascade delete related records
 - Stock movements create audit trail in `movimento_estoque`
@@ -108,6 +124,7 @@ The API client is automatically generated using Kubb and includes:
 ### Frontend (React)
 
 **Component structure:**
+
 - `pages/` - Route components organized by domain
 - `components/` - Reusable UI components (many use Radix UI primitives)
 - `contexts/` - React Context providers (`AuthContext`, `PartnerContext`)
@@ -116,6 +133,7 @@ The API client is automatically generated using Kubb and includes:
 - `i18n/` - Frontend internationalization
 
 **Key patterns:**
+
 - **API Communication:** Uses custom `fetch-client.ts` that auto-injects auth token, language header, and partner header
 - **State Management:** React Query for server state, Context API for auth/partner selection
 - **Routing:** React Router v6 with `ProtectedRoute` wrapper
@@ -124,6 +142,7 @@ The API client is automatically generated using Kubb and includes:
 - **Theming:** Dark/light mode via `next-themes`
 
 **Important conventions:**
+
 - All API calls go through Vite proxy (`/api` → `http://localhost:3000`)
 - Partner selection stored in `localStorage` as `selectedPartnerId`
 - Auth token in `localStorage` as `accessToken`
@@ -149,6 +168,7 @@ The API client is automatically generated using Kubb and includes:
 ## Testing
 
 **Backend:** Jest for unit and e2e tests
+
 ```bash
 cd api
 npm run test          # Unit tests
@@ -171,6 +191,7 @@ npm run test:e2e      # End-to-end tests
 ## Environment Variables
 
 **API (.env):**
+
 ```
 DATABASE_URL=postgresql://...
 JWT_SECRET=...
@@ -180,6 +201,7 @@ NODE_ENV=development
 ```
 
 **Admin (.env):**
+
 ```
 VITE_API_URL=/api  # Uses proxy in development
 ```

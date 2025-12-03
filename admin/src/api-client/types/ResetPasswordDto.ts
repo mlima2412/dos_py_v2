@@ -16,4 +16,9 @@ export type ResetPasswordDto = {
      * @type string
     */
     newPassword: string;
+    /**
+     * @description Idioma preferido para mensagens de erro
+     * @type string | undefined
+    */
+    language?: string | undefined;
 };

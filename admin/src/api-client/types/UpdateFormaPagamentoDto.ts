@@ -12,7 +12,7 @@ export type UpdateFormaPagamentoDto = {
     */
     nome?: string | undefined;
     /**
-     * @description Taxa da forma de pagamento (em decimal)
+     * @description Taxa da forma de pagamento (em percentual)
      * @type number | undefined
     */
     taxa?: number | undefined;
@@ -23,11 +23,16 @@ export type UpdateFormaPagamentoDto = {
     */
     tempoLiberacao?: number | undefined;
     /**
-     * @description Se o imposto é calculado após o desconto da taxa
+     * @description Se o imposto (IVA) deve ser adicionado ao valor da taxa ao gerar despesa
      * @default false
      * @type boolean | undefined
     */
     impostoPosCalculo?: boolean | undefined;
+    /**
+     * @description ID da conta DRE para gerar despesa automática quando há taxa
+     * @type number | undefined
+    */
+    contaDreId?: number | undefined;
     /**
      * @description Status ativo/inativo da forma de pagamento
      * @default true

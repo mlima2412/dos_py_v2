@@ -8,5 +8,6 @@ import { z } from "zod/v4";
 
 export const resetPasswordDtoSchema = z.object({
     "token": z.coerce.string().describe("Token de recuperação de senha"),
-"newPassword": z.coerce.string().min(6).describe("Nova senha do usuário")
+"newPassword": z.coerce.string().min(6).describe("Nova senha do usuário"),
+"language": z.optional(z.coerce.string().describe("Idioma preferido para mensagens de erro"))
     }) as unknown as z.ZodType<ResetPasswordDto>

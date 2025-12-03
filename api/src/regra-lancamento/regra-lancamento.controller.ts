@@ -99,6 +99,13 @@ export class RegraLancamentoController {
     required: true,
     schema: { type: 'integer', example: 1 },
   })
+  @ApiQuery({
+    name: 'includeInactive',
+    description: 'Incluir regras inativas na listagem',
+    required: false,
+    type: 'boolean',
+    example: false,
+  })
   @ApiResponse({
     status: 200,
     description: 'Lista de regras de lançamento retornada com sucesso',
@@ -107,8 +114,10 @@ export class RegraLancamentoController {
   @ApiResponse({ status: 401, description: 'Não autorizado' })
   findAll(
     @ParceiroId() parceiroId: number,
+    @Query('includeInactive') includeInactive?: string,
   ): Promise<RegraLancamentoAutomatico[]> {
-    return this.regraLancamentoService.findAll(parceiroId);
+    const shouldIncludeInactive = includeInactive === 'true';
+    return this.regraLancamentoService.findAll(parceiroId, shouldIncludeInactive);
   }
 
   @Get('gatilho/:tipoGatilho')

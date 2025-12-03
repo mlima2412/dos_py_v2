@@ -21,9 +21,11 @@ export class FormaPagamento {
   nome: string;
 
   @ApiProperty({
-    description: 'Taxa da forma de pagamento (em decimal)',
+    description: 'Taxa da forma de pagamento em formato percentual. Exemplo: 2.5 representa 2.5% (não 0.025). Armazenado como Decimal(12,3)',
     example: 2.5,
     required: false,
+    minimum: 0,
+    maximum: 100,
   })
   taxa?: Decimal;
 
@@ -34,10 +36,17 @@ export class FormaPagamento {
   tempoLiberacao: number;
 
   @ApiProperty({
-    description: 'Se o imposto é calculado após o desconto da taxa',
+    description: 'Se o imposto (IVA) deve ser adicionado ao valor da taxa ao gerar despesa',
     example: false,
   })
   impostoPosCalculo: boolean;
+
+  @ApiProperty({
+    description: 'ID da conta DRE para gerar despesa automática quando há taxa',
+    example: 1,
+    required: false,
+  })
+  contaDreId?: number;
 
   @ApiProperty({
     description: 'Status ativo/inativo da forma de pagamento',

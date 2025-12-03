@@ -40,6 +40,7 @@ import {
 } from '@prisma/client';
 import { CreatePedidoCompraItemDto } from 'src/pedido-compra-item/dto/create-pedido-compra-item.dto';
 import { VendaRollupService } from '../src/cash/vendas/venda-rollup.service';
+import { LancamentoDreService } from '../src/lancamento-dre/lancamento-dre.service';
 
 // Força o parceiro/usuário padrão para 1 durante a importação legado -> v2
 const DEFAULT_PARCEIRO_ID = 1;
@@ -559,6 +560,7 @@ async function fetchVendasFromLegacy(
   legacyDb,
   prisma: PrismaService,
   vendaRollupService: VendaRollupService,
+  lancamentoDreService: LancamentoDreService,
 ) {
   console.log('🌱 Migrando Vendas');
   const [usuario, parceiro, local] = await Promise.all([
@@ -797,6 +799,18 @@ async function fetchVendasFromLegacy(
         valorTotal: vendaPersistida.valorLiquidoVenda,
         descontoTotal: vendaPersistida.createdVenda.desconto ?? 0,
       });
+
+      // Processar lançamento DRE para vendas confirmadas
+      try {
+        await lancamentoDreService.processarVenda(
+          vendaPersistida.createdVenda.parceiroId,
+          vendaPersistida.createdVenda.id,
+        );
+      } catch (dreError) {
+        console.warn(
+          `  ⚠ Erro ao processar DRE para venda ${vendaPersistida.createdVenda.id}: ${dreError.message}`,
+        );
+      }
     }
 
     migrated++;
@@ -1041,6 +1055,7 @@ async function run() {
     console.log('PATH:', process.env.LEGACY_DATABASE_URL);
     const prisma = app.get(PrismaService);
     const vendaRollupService = app.get(VendaRollupService);
+    const lancamentoDreService = app.get(LancamentoDreService);
 
     await fetchCategoriaFromLegacy(app, legacyDb);
     await fetchSubCategoriaFromLegacy(app, legacyDb);
@@ -1053,7 +1068,21 @@ async function run() {
     // Migrar formas de pagamento antes das vendas (para ter o mapeamento de IDs)
     await fetchFormaPagamentoFromLegacy(legacyDb, prisma);
 
-    await fetchVendasFromLegacy(legacyDb, prisma, vendaRollupService);
+    // Criar regras de lançamento DRE antes de migrar vendas
+    console.log('🌱 Criando regras de lançamento DRE...');
+    const regrasResult = await lancamentoDreService.criarRegrasVendaPadrao(
+      DEFAULT_PARCEIRO_ID,
+    );
+    console.log(
+      `✅ Regras DRE: ${regrasResult.criadas} criadas, ${regrasResult.existentes} já existiam`,
+    );
+
+    await fetchVendasFromLegacy(
+      legacyDb,
+      prisma,
+      vendaRollupService,
+      lancamentoDreService,
+    );
 
     legacyDb.end();
     console.log('Seed concluído com sucesso.');

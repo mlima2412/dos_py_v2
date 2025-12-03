@@ -75,14 +75,14 @@ export function useDashboardAnual(year: number) {
 }
 
 /**
- * Hook para buscar dados do mês atual
+ * Hook para buscar dados do mês selecionado (ou atual)
  */
-export function useDashboardMesAtual(year?: number) {
+export function useDashboardMesAtual(year?: number, month?: number) {
 	const now = new Date();
 	const currentYear = year || now.getFullYear();
-	const month = now.getMonth() + 1; // getMonth() retorna 0-11
+	const currentMonth = month || now.getMonth() + 1; // getMonth() retorna 0-11
 
-	return useDashboardMensal(currentYear, month);
+	return useDashboardMensal(currentYear, currentMonth);
 }
 
 /**
@@ -98,8 +98,8 @@ export function useDashboardAnoAtual(year?: number) {
 /**
  * Hook combinado que retorna todos os dados necessários para o dashboard
  */
-export function useDashboardCompleto(year?: number) {
-	const mesAtual = useDashboardMesAtual(year);
+export function useDashboardCompleto(year?: number, month?: number) {
+	const mesAtual = useDashboardMesAtual(year, month);
 	const anoAtual = useDashboardAnoAtual(year);
 
 	return {
